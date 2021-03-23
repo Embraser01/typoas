@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create type from schema should handle array of strings 1`] = `"string[]"`;
+
+exports[`create type from schema should handle dates 1`] = `"Date"`;
+
+exports[`create type from schema should handle integer schema 1`] = `"number"`;
+
+exports[`create type from schema should handle object schema without properties 1`] = `
+"{
+    [key: string]: any;
+}"
+`;
+
+exports[`create type from schema should handle primitive boolean enums 1`] = `"true"`;
+
+exports[`create type from schema should handle primitive boolean schema 1`] = `"boolean"`;
+
+exports[`create type from schema should handle primitive number enums 1`] = `"1 | 6"`;
+
+exports[`create type from schema should handle primitive number schema 1`] = `"number"`;
+
+exports[`create type from schema should handle primitive string enums 1`] = `"'a' | 'b'"`;
+
+exports[`create type from schema should handle primitive string schema 1`] = `"string"`;
+
+exports[`create type from schema should handle simple object schema 1`] = `
+"{
+    a: string;
+    b?: number;
+}"
+`;
+
+exports[`create type from schema with complex object should allow additional properties if set to true 1`] = `
+"{
+    a: string;
+    b?: number;
+} & {
+    [key: string]: any;
+}"
+`;
+
+exports[`create type from schema with complex object should create nested objects 1`] = `
+"{
+    a: string;
+    b?: number;
+    c?: {
+        d?: string;
+        e?: {
+            f?: number;
+        };
+    };
+}"
+`;
+
+exports[`create type from schema with complex object should handle additionalProperties specific type 1`] = `
+"{
+    [key: string]: {
+        a?: string;
+    };
+}"
+`;
+
+exports[`create type from schema with complex object should handle anyOf 1`] = `"string | string[]"`;
+
+exports[`create type from schema with complex object should handle oneOf 1`] = `"string | string[]"`;
+
+exports[`create type from schema with refs should work in nested properties 1`] = `
+"{
+    a?: BaseItem;
+}"
+`;
+
+exports[`create type from schema with refs should work referencing ref 1`] = `"BaseItem"`;

@@ -1,5 +1,4 @@
-// typings of url-parse are incorrect...
-// @ts-ignore
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as URLParse from 'url-parse';
 
 export * from './isomorphic-fetch';
@@ -23,12 +22,6 @@ export enum HttpMethod {
  * Represents an HTTP file which will be transferred from or to a server.
  */
 export type HttpFile = Blob & { readonly name: string };
-
-export class HttpException extends Error {
-  public constructor(msg: string) {
-    super(msg);
-  }
-}
 
 /**
  * Represents the body of an outgoing HTTP request.
@@ -65,7 +58,7 @@ export class RequestContext {
    * Replaces the url set in the constructor with this url.
    *
    */
-  public setUrl(url: string) {
+  public setUrl(url: string): void {
     this.url = new URLParse(url, true);
   }
 
@@ -78,7 +71,7 @@ export class RequestContext {
    *
    * @param body the body of the request
    */
-  public setBody(body: RequestBody) {
+  public setBody(body: RequestBody): void {
     this.body = body;
   }
 
@@ -94,8 +87,8 @@ export class RequestContext {
     return this.body;
   }
 
-  public setQueryParam(name: string, value: string) {
-    let queryObj = this.url.query;
+  public setQueryParam(name: string, value: string): void {
+    const queryObj = this.url.query;
     queryObj[name] = value;
     this.url.set('query', queryObj);
   }
@@ -118,35 +111,8 @@ export class RequestContext {
 
 export interface ResponseBody {
   text(): Promise<string>;
-
   binary(): Promise<Blob>;
-}
-
-/**
- * Helper class to generate a `ResponseBody` from binary data
- */
-export class SelfDecodingBody implements ResponseBody {
-  constructor(private dataSource: Promise<Blob>) {}
-
-  binary(): Promise<Blob> {
-    return this.dataSource;
-  }
-
-  async text(): Promise<string> {
-    const data: Blob = await this.dataSource;
-    // @ts-ignore
-    if (data.text) {
-      // @ts-ignore
-      return data.text();
-    }
-
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => resolve(reader.result as string));
-      reader.addEventListener('error', () => reject(reader.error));
-      reader.readAsText(data);
-    });
-  }
+  json(): Promise<any>;
 }
 
 export class ResponseContext {

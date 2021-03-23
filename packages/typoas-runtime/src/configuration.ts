@@ -20,7 +20,7 @@ export class ServerConfiguration<T extends Record<string, string>>
    *
    * @param variableConfiguration a partial variable configuration for the variables contained in the url
    */
-  public setVariables(variableConfiguration: Partial<T>) {
+  public setVariables(variableConfiguration: Partial<T>): void {
     Object.assign(this.variableConfiguration, variableConfiguration);
   }
 

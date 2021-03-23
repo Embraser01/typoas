@@ -1,18 +1,3 @@
-export function applyTemplating(
-  val: string,
-  variables: Record<string, string>,
-  encodeURI?: boolean,
-): string {
-  return Object.entries(variables).reduce(
-    (url, [key, v]) =>
-      url.replace(
-        new RegExp(`{${key}}`, 'g'),
-        encodeURI ? encodeURIComponent(v) : v,
-      ),
-    val,
-  );
-}
-
 /**
  * Returns if a specific http code is in a given code range
  * where the code range is defined as a combination of digits
@@ -27,19 +12,43 @@ export function isCodeInRange(codeRange: string, code: number): boolean {
   }
   if (codeRange == code.toString()) {
     return true;
-  } else {
-    const codeString = code.toString();
-    if (codeString.length != codeRange.length) {
+  }
+
+  const codeString = code.toString();
+  if (codeString.length != codeRange.length) {
+    return false;
+  }
+  for (let i = 0; i < codeString.length; i++) {
+    if (
+      codeRange.charAt(i) != 'X' &&
+      codeRange.charAt(i) != codeString.charAt(i)
+    ) {
       return false;
     }
-    for (let i = 0; i < codeString.length; i++) {
-      if (
-        codeRange.charAt(i) != 'X' &&
-        codeRange.charAt(i) != codeString.charAt(i)
-      ) {
-        return false;
-      }
-    }
-    return true;
   }
+  return true;
+}
+
+/**
+ * Serialize a parameter from anything to string.
+ */
+export function serializeParameter(data: unknown): string {
+  if (typeof data === 'string') return data;
+  if (data instanceof Date) return data.toISOString();
+  if (typeof data === 'number') return data.toString();
+  return JSON.stringify(data);
+}
+
+export function applyTemplating(
+  val: string,
+  variables: Record<string, unknown>,
+): string {
+  return Object.entries(variables).reduce(
+    (url, [key, v]) =>
+      url.replace(
+        new RegExp(`{${key}}`, 'g'),
+        encodeURIComponent(serializeParameter(v)),
+      ),
+    val,
+  );
 }

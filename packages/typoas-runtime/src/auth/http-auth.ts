@@ -1,31 +1,30 @@
 import { AuthProvider, SecurityAuthentication } from './base';
 import { RequestContext } from '../http/http';
 
-type SupportedScheme = 'basic' | 'bearer';
-type HttpConfiguration = {
-  description?: string;
+export type SupportedScheme = 'basic' | 'bearer';
+export type HttpConfiguration = {
   scheme: SupportedScheme;
   bearerFormat: string;
 };
 
-type BasicAuthConfig = { username: string; password: string };
-type BearerAuthConfig = string;
+export type BasicAuthConfig = { username: string; password: string };
+export type BearerAuthConfig = string;
 
 export class HttpSecurityAuthentication implements SecurityAuthentication {
-  description?: string;
   scheme: SupportedScheme;
   bearerFormat: string;
 
   constructor(
     config: HttpConfiguration,
-    private provider: AuthProvider<BasicAuthConfig | BearerAuthConfig>,
+    private provider?: AuthProvider<BasicAuthConfig | BearerAuthConfig>,
   ) {
-    this.description = config.description;
     this.scheme = config.scheme;
     this.bearerFormat = config.bearerFormat;
   }
 
-  async applySecurityAuthentication(context: RequestContext) {
+  async applySecurityAuthentication(context: RequestContext): Promise<void> {
+    if (!this.provider) return;
+
     const config = await this.provider.getConfig();
     if (this.scheme === 'basic') {
       const { username, password } = config as BasicAuthConfig;

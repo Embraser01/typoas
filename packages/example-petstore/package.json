@@ -1,0 +1,18 @@
+{
+  "name": "@typoas/example-petstore",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "generate": "ts-node scripts/generate.ts"
+  },
+  "dependencies": {
+    "@typoas/runtime": "workspace:*",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.35",
+    "@types/node-fetch": "^2.5.8",
+    "@typoas/generator": "workspace:*",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
+}

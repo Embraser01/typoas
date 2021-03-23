@@ -1,12 +1,13 @@
 import { SchemaRefResolver } from './apply-transforms';
-import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
+import { SchemaObject, SchemasObject } from 'openapi3-ts';
 
 export class RefResolver implements SchemaRefResolver {
-  constructor(private specs: OpenAPIObject) {}
+  constructor(private schemas: SchemasObject) {}
 
   resolveSchema(ref: string): SchemaObject | undefined {
-    const [, schemaName] = /^#\/components\/schemas\/(\w+)/.exec(ref) || [];
+    const [, schemaName] =
+      /^#\/components\/schemas\/([a-zA-Z-_]+)/.exec(ref) || [];
 
-    return this.specs?.components?.schemas?.[schemaName];
+    return this.schemas?.[schemaName];
   }
 }

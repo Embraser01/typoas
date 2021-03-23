@@ -4,23 +4,17 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "jest"
+    "test:lint": "prettier . -c",
+    "test:eslint": "eslint .",
+    "test:jest": "yarn workspaces foreach -ptv run test:jest"
   },
   "dependencies": {
-    "@types/jest": "^26.0.21",
     "@types/node": "^14.14.35",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "eslint": "^7.22.0",
-    "jest": "^26.6.3",
-    "jest-environment-node": "^26.6.2",
+    "eslint-plugin-jest": "^24.3.2",
     "prettier": "^2.2.1",
-    "ts-jest": "^26.5.4",
     "typescript": "^4.2.3"
-  },
-  "dependenciesMeta": {
-    "typescript@4.2.3": {
-      "unplugged": true
-    }
   }
 }

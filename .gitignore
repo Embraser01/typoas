@@ -1,3 +1,9 @@
-# Project exclude paths
-/.yarn/
-/.pnp.cjs
+/.idea/
+
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
