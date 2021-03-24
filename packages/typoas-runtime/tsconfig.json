@@ -3,8 +3,9 @@
     "strict": true,
     "module": "commonjs",
     "target": "ES2018",
-    "sourceMap": true,
-    "lib": ["ES2018", "DOM"]
+    "declaration": true,
+    "lib": ["ES2018", "DOM"],
+    "outDir": "lib"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "lib"]
 }

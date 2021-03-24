@@ -3,8 +3,9 @@
     "strict": true,
     "module": "commonjs",
     "target": "ES2019",
-    "sourceMap": true,
-    "lib": ["ES2019"]
+    "declaration": true,
+    "lib": ["ES2019"],
+    "outDir": "lib"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "lib"]
 }
