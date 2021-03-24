@@ -2,248 +2,260 @@
 
 exports[`create full specs should generate client 1`] = `
 "export class PetStoreClient {
-    constructor(private server: runtime.BaseServerConfiguration, private http: runtime.HttpLibrary = new runtime.IsomorphicFetchHttpLibrary, private resolver: runtime.SchemaRefResolver = new runtime.RefResolver(JSON.parse('{\\"schemas\\":{\\"Order\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":10},\\"petId\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":198772},\\"quantity\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\",\\"example\\":7},\\"shipDate\\":{\\"type\\":\\"string\\",\\"format\\":\\"date-time\\"},\\"status\\":{\\"type\\":\\"string\\",\\"description\\":\\"Order Status\\",\\"example\\":\\"approved\\",\\"enum\\":[\\"placed\\",\\"approved\\",\\"delivered\\"]},\\"complete\\":{\\"type\\":\\"boolean\\"}},\\"xml\\":{\\"name\\":\\"order\\"}},\\"Customer\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":100000},\\"username\\":{\\"type\\":\\"string\\",\\"example\\":\\"fehguy\\"},\\"address\\":{\\"type\\":\\"array\\",\\"xml\\":{\\"name\\":\\"addresses\\",\\"wrapped\\":true},\\"items\\":{\\"$ref\\":\\"#/components/schemas/Address\\"}}},\\"xml\\":{\\"name\\":\\"customer\\"}},\\"Address\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"street\\":{\\"type\\":\\"string\\",\\"example\\":\\"437 Lytton\\"},\\"city\\":{\\"type\\":\\"string\\",\\"example\\":\\"Palo Alto\\"},\\"state\\":{\\"type\\":\\"string\\",\\"example\\":\\"CA\\"},\\"zip\\":{\\"type\\":\\"string\\",\\"example\\":\\"94301\\"}},\\"xml\\":{\\"name\\":\\"address\\"}},\\"Category\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":1},\\"name\\":{\\"type\\":\\"string\\",\\"example\\":\\"Dogs\\"}},\\"xml\\":{\\"name\\":\\"category\\"}},\\"User\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":10},\\"username\\":{\\"type\\":\\"string\\",\\"example\\":\\"theUser\\"},\\"firstName\\":{\\"type\\":\\"string\\",\\"example\\":\\"John\\"},\\"lastName\\":{\\"type\\":\\"string\\",\\"example\\":\\"James\\"},\\"email\\":{\\"type\\":\\"string\\",\\"example\\":\\"john@email.com\\"},\\"password\\":{\\"type\\":\\"string\\",\\"example\\":\\"12345\\"},\\"phone\\":{\\"type\\":\\"string\\",\\"example\\":\\"12345\\"},\\"userStatus\\":{\\"type\\":\\"integer\\",\\"description\\":\\"User Status\\",\\"format\\":\\"int32\\",\\"example\\":1}},\\"xml\\":{\\"name\\":\\"user\\"}},\\"Tag\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"name\\":{\\"type\\":\\"string\\"}},\\"xml\\":{\\"name\\":\\"tag\\"}},\\"Pet\\":{\\"required\\":[\\"name\\",\\"photoUrls\\"],\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":10},\\"name\\":{\\"type\\":\\"string\\",\\"example\\":\\"doggie\\"},\\"category\\":{\\"$ref\\":\\"#/components/schemas/Category\\"},\\"photoUrls\\":{\\"type\\":\\"array\\",\\"xml\\":{\\"wrapped\\":true},\\"items\\":{\\"type\\":\\"string\\",\\"xml\\":{\\"name\\":\\"photoUrl\\"}}},\\"tags\\":{\\"type\\":\\"array\\",\\"xml\\":{\\"wrapped\\":true},\\"items\\":{\\"$ref\\":\\"#/components/schemas/Tag\\"}},\\"status\\":{\\"type\\":\\"string\\",\\"description\\":\\"pet status in the store\\",\\"enum\\":[\\"available\\",\\"pending\\",\\"sold\\"]}},\\"xml\\":{\\"name\\":\\"pet\\"}},\\"ApiResponse\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"code\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"},\\"type\\":{\\"type\\":\\"string\\"},\\"message\\":{\\"type\\":\\"string\\"}},\\"xml\\":{\\"name\\":\\"##default\\"}}},\\"requestBodies\\":{\\"Pet\\":{\\"description\\":\\"Pet object that needs to be added to the store\\",\\"content\\":{\\"application/json\\":{\\"schema\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}},\\"application/xml\\":{\\"schema\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}}},\\"UserArray\\":{\\"description\\":\\"List of user object\\",\\"content\\":{\\"application/json\\":{\\"schema\\":{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/User\\"}}}}}},\\"securitySchemes\\":{\\"petstore_auth\\":{\\"type\\":\\"oauth2\\",\\"flows\\":{\\"implicit\\":{\\"authorizationUrl\\":\\"https://petstore3.swagger.io/oauth/authorize\\",\\"scopes\\":{\\"write:pets\\":\\"modify pets in your account\\",\\"read:pets\\":\\"read your pets\\"}}}},\\"api_key\\":{\\"type\\":\\"apiKey\\",\\"name\\":\\"api_key\\",\\"in\\":\\"header\\"}}}'))) { }
+    private authMethods: {
+        petstore_auth: r.SecurityAuthentication;
+        api_key: r.SecurityAuthentication;
+    };
+    constructor(private server: r.BaseServerConfiguration, authMethodConfig: AuthMethods, private http: r.HttpLibrary = new r.IsomorphicFetchHttpLibrary, private resolver: r.SchemaRefResolver = new r.RefResolver(JSON.parse('{\\"Order\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":10},\\"petId\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":198772},\\"quantity\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\",\\"example\\":7},\\"shipDate\\":{\\"type\\":\\"string\\",\\"format\\":\\"date-time\\"},\\"status\\":{\\"type\\":\\"string\\",\\"description\\":\\"Order Status\\",\\"example\\":\\"approved\\",\\"enum\\":[\\"placed\\",\\"approved\\",\\"delivered\\"]},\\"complete\\":{\\"type\\":\\"boolean\\"}},\\"xml\\":{\\"name\\":\\"order\\"}},\\"Customer\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":100000},\\"username\\":{\\"type\\":\\"string\\",\\"example\\":\\"fehguy\\"},\\"address\\":{\\"type\\":\\"array\\",\\"xml\\":{\\"name\\":\\"addresses\\",\\"wrapped\\":true},\\"items\\":{\\"$ref\\":\\"#/components/schemas/Address\\"}}},\\"xml\\":{\\"name\\":\\"customer\\"}},\\"Address\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"street\\":{\\"type\\":\\"string\\",\\"example\\":\\"437 Lytton\\"},\\"city\\":{\\"type\\":\\"string\\",\\"example\\":\\"Palo Alto\\"},\\"state\\":{\\"type\\":\\"string\\",\\"example\\":\\"CA\\"},\\"zip\\":{\\"type\\":\\"string\\",\\"example\\":\\"94301\\"}},\\"xml\\":{\\"name\\":\\"address\\"}},\\"Category\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":1},\\"name\\":{\\"type\\":\\"string\\",\\"example\\":\\"Dogs\\"}},\\"xml\\":{\\"name\\":\\"category\\"}},\\"User\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":10},\\"username\\":{\\"type\\":\\"string\\",\\"example\\":\\"theUser\\"},\\"firstName\\":{\\"type\\":\\"string\\",\\"example\\":\\"John\\"},\\"lastName\\":{\\"type\\":\\"string\\",\\"example\\":\\"James\\"},\\"email\\":{\\"type\\":\\"string\\",\\"example\\":\\"john@email.com\\"},\\"password\\":{\\"type\\":\\"string\\",\\"example\\":\\"12345\\"},\\"phone\\":{\\"type\\":\\"string\\",\\"example\\":\\"12345\\"},\\"userStatus\\":{\\"type\\":\\"integer\\",\\"description\\":\\"User Status\\",\\"format\\":\\"int32\\",\\"example\\":1}},\\"xml\\":{\\"name\\":\\"user\\"}},\\"Tag\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"name\\":{\\"type\\":\\"string\\"}},\\"xml\\":{\\"name\\":\\"tag\\"}},\\"Pet\\":{\\"required\\":[\\"name\\",\\"photoUrls\\"],\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\",\\"example\\":10},\\"name\\":{\\"type\\":\\"string\\",\\"example\\":\\"doggie\\"},\\"category\\":{\\"$ref\\":\\"#/components/schemas/Category\\"},\\"photoUrls\\":{\\"type\\":\\"array\\",\\"xml\\":{\\"wrapped\\":true},\\"items\\":{\\"type\\":\\"string\\",\\"xml\\":{\\"name\\":\\"photoUrl\\"}}},\\"tags\\":{\\"type\\":\\"array\\",\\"xml\\":{\\"wrapped\\":true},\\"items\\":{\\"$ref\\":\\"#/components/schemas/Tag\\"}},\\"status\\":{\\"type\\":\\"string\\",\\"description\\":\\"pet status in the store\\",\\"enum\\":[\\"available\\",\\"pending\\",\\"sold\\"]}},\\"xml\\":{\\"name\\":\\"pet\\"}},\\"ApiResponse\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"code\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"},\\"type\\":{\\"type\\":\\"string\\"},\\"message\\":{\\"type\\":\\"string\\"}},\\"xml\\":{\\"name\\":\\"##default\\"}}}'))) { this.authMethods = configureAuthMethods(authMethodConfig); }
     async updatePet(params: {}, body: Pet): Promise<Pet> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet', params), runtime.HttpMethod.PUT);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet', params), r.HttpMethod.PUT);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         requestContext.setBody(JSON.stringify(body));
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver) as Pet;
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        if (runtime.isCodeInRange('404', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        if (runtime.isCodeInRange('405', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver);
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        if (r.isCodeInRange('404', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        if (r.isCodeInRange('405', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async addPet(params: {}, body: Pet): Promise<Pet> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet', params), runtime.HttpMethod.POST);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet', params), r.HttpMethod.POST);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         requestContext.setBody(JSON.stringify(body));
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver) as Pet;
-        if (runtime.isCodeInRange('405', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver);
+        if (r.isCodeInRange('405', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async findPetsByStatus(params: {
         status?: 'available' | 'pending' | 'sold';
     }): Promise<Pet[]> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet/findByStatus', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/findByStatus', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         if (params.status !== undefined)
-            requestContext.setQueryParam('status', runtime.serializeParameter('status', params.status, 'form', true));
+            requestContext.setQueryParam('status', r.serializeParameter(params.status));
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver) as Pet[];
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver);
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async findPetsByTags(params: {
         tags?: string[];
     }): Promise<Pet[]> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet/findByTags', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/findByTags', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         if (params.tags !== undefined)
-            requestContext.setQueryParam('tags', runtime.serializeParameter('tags', params.tags, 'form', true));
+            requestContext.setQueryParam('tags', r.serializeParameter(params.tags));
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver) as Pet[];
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver);
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async getPetById(params: {
         petId: number;
     }): Promise<Pet> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet/{petId}', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+        await this.authMethods.api_key.applySecurityAuthentication(requestContext);
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver) as Pet;
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        if (runtime.isCodeInRange('404', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver);
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        if (r.isCodeInRange('404', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async updatePetWithForm(params: {
         petId: number;
         name?: string;
         status?: string;
     }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet/{petId}', params), runtime.HttpMethod.POST);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}', params), r.HttpMethod.POST);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         if (params.name !== undefined)
-            requestContext.setQueryParam('name', runtime.serializeParameter('name', params.name, 'form', true));
+            requestContext.setQueryParam('name', r.serializeParameter(params.name));
         if (params.status !== undefined)
-            requestContext.setQueryParam('status', runtime.serializeParameter('status', params.status, 'form', true));
+            requestContext.setQueryParam('status', r.serializeParameter(params.status));
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('405', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('405', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async deletePet(params: {
         api_key?: string;
         petId: number;
     }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet/{petId}', params), runtime.HttpMethod.DELETE);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}', params), r.HttpMethod.DELETE);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         if (params.api_key !== undefined)
-            requestContext.setHeaderParam('api_key', runtime.serializeParameter('api_key', params.api_key, 'simple', false));
+            requestContext.setHeaderParam('api_key', r.serializeParameter(params.api_key));
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async uploadFile(params: {
         petId: number;
         additionalMetadata?: string;
     }, body: any): Promise<ApiResponse> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/pet/{petId}/uploadImage', params), runtime.HttpMethod.POST);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}/uploadImage', params), r.HttpMethod.POST);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         if (params.additionalMetadata !== undefined)
-            requestContext.setQueryParam('additionalMetadata', runtime.serializeParameter('additionalMetadata', params.additionalMetadata, 'form', true));
+            requestContext.setQueryParam('additionalMetadata', r.serializeParameter(params.additionalMetadata));
         requestContext.setBody(JSON.stringify(body));
+        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/ApiResponse\\"}'), this.resolver) as ApiResponse;
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/ApiResponse\\"}'), this.resolver);
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async getInventory(params: {}): Promise<{
         [key: string]: number;
     }> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/store/inventory', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/inventory', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+        await this.authMethods.api_key.applySecurityAuthentication(requestContext);
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"object\\",\\"additionalProperties\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"}}'), this.resolver) as {
-                [key: string]: number;
-            };
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"object\\",\\"additionalProperties\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"}}'), this.resolver);
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async placeOrder(params: {}, body: Order): Promise<Order> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/store/order', params), runtime.HttpMethod.POST);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order', params), r.HttpMethod.POST);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         requestContext.setBody(JSON.stringify(body));
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Order\\"}'), this.resolver) as Order;
-        if (runtime.isCodeInRange('405', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Order\\"}'), this.resolver);
+        if (r.isCodeInRange('405', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async getOrderById(params: {
         orderId: number;
     }): Promise<Order> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/store/order/{orderId}', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order/{orderId}', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Order\\"}'), this.resolver) as Order;
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        if (runtime.isCodeInRange('404', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/Order\\"}'), this.resolver);
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        if (r.isCodeInRange('404', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async deleteOrder(params: {
         orderId: number;
     }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/store/order/{orderId}', params), runtime.HttpMethod.DELETE);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order/{orderId}', params), r.HttpMethod.DELETE);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        if (runtime.isCodeInRange('404', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        if (r.isCodeInRange('404', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async createUser(params: {}, body: User): Promise<User> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/user', params), runtime.HttpMethod.POST);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user', params), r.HttpMethod.POST);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         requestContext.setBody(JSON.stringify(body));
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('default', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver) as User;
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('default', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async createUsersWithListInput(params: {}, body: User[]): Promise<User> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/user/createWithList', params), runtime.HttpMethod.POST);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/createWithList', params), r.HttpMethod.POST);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         requestContext.setBody(JSON.stringify(body));
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver) as User;
-        if (runtime.isCodeInRange('default', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
+        if (r.isCodeInRange('default', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async loginUser(params: {
         username?: string;
         password?: string;
     }): Promise<string> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/user/login', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/login', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         if (params.username !== undefined)
-            requestContext.setQueryParam('username', runtime.serializeParameter('username', params.username, 'form', true));
+            requestContext.setQueryParam('username', r.serializeParameter(params.username));
         if (params.password !== undefined)
-            requestContext.setQueryParam('password', runtime.serializeParameter('password', params.password, 'form', true));
+            requestContext.setQueryParam('password', r.serializeParameter(params.password));
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"string\\"}'), this.resolver) as string;
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"type\\":\\"string\\"}'), this.resolver);
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async logoutUser(params: {}): Promise<any> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/user/logout', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/logout', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('default', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any;
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('default', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver);
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async getUserByName(params: {
         username: string;
     }): Promise<User> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/user/{username}', params), runtime.HttpMethod.GET);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/{username}', params), r.HttpMethod.GET);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('200', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver) as User;
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        if (runtime.isCodeInRange('404', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('200', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        if (r.isCodeInRange('404', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async updateUser(params: {
         username: string;
     }, body: User): Promise<any> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/user/{username}', params), runtime.HttpMethod.PUT);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/{username}', params), r.HttpMethod.PUT);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         requestContext.setBody(JSON.stringify(body));
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('default', response.httpStatusCode))
-            return runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any;
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('default', response.httpStatusCode))
+            return r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver);
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
     async deleteUser(params: {
         username: string;
     }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(runtime.applyTemplating('/user/{username}', params), runtime.HttpMethod.DELETE);
+        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/{username}', params), r.HttpMethod.DELETE);
         requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
         const response = await this.http.send(requestContext);
-        if (runtime.isCodeInRange('400', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        if (runtime.isCodeInRange('404', response.httpStatusCode))
-            throw new runtime.ApiException<any>(response.httpStatusCode, runtime.applyTransforms(await response.body.json(), JSON.parse('\\"\\"'), this.resolver) as any);
-        throw new runtime.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
+        if (r.isCodeInRange('400', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        if (r.isCodeInRange('404', response.httpStatusCode))
+            throw new r.ApiException<any>(response.httpStatusCode, r.applyTransforms(await response.body.json(), JSON.parse('{}'), this.resolver));
+        throw new r.ApiException<string>(response.httpStatusCode, 'Unknown API Status Code!');
     }
 }"
 `;

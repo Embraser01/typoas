@@ -4,10 +4,8 @@ import { RefResolver } from '../resolver';
 
 describe('apply transforms', () => {
   const resolver = new RefResolver({
-    schemas: {
-      A: { type: 'string' },
-      B: { type: 'string', format: 'date-time' },
-    },
+    A: { type: 'string' },
+    B: { type: 'string', format: 'date-time' },
   });
 
   it('should handle undefined and null', () => {
