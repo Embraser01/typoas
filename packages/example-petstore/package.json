@@ -1,5 +1,6 @@
 {
   "name": "@typoas/example-petstore",
+  "private": true,
   "scripts": {
     "start": "ts-node src/index.ts",
     "generate": "ts-node scripts/generate.ts"

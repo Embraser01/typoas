@@ -1,6 +1,7 @@
 {
   "name": "@typoas/runtime",
   "version": "0.0.1",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/embraser01/typoas",

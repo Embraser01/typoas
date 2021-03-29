@@ -16,7 +16,7 @@ Main features are:
 The project is split into 3 parts:
 
 - [`@typoas/generator`](./packages/typoas-generator) is used to generate the API specific code.
-- [`@typoas/cli`](./packages/typoas-cli) is a CLI entry point built on top of `@typoas/generator`.
+- [`@typoas/cli`](./packages/typoas-cli) is a CLI entry point built on top of `@typoas/generator` (soon).
 - [`@typoas/runtime`](./packages/typoas-runtime) is the package that will be used by the generated code.
 
 ## Installation
@@ -28,13 +28,7 @@ on `@typoas/runtime` that handles common things like serialization/authentificat
 
 ### Ues the generator from the CLI
 
-The generator `@typoas/generator` includes a CLI but also provide an API. To generate a new client:
-
-```bash
-yarn dlx @typoas/generator <your-openapi-specs.json>
-# or
-npx @typoas/generator <your-openapi-specs.json>
-```
+Typoas doesn't include a CLI yet but will soon.
 
 ### Use the generator from the API
 
