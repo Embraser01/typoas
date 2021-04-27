@@ -165,7 +165,7 @@ export function createOperationBodyFunction(
         undefined,
         [
           factory.createStringLiteral('Content-Type', true),
-          factory.createStringLiteral('application/json, */*;q=0.8', true),
+          factory.createStringLiteral('application/json', true),
         ],
       ),
     ),
