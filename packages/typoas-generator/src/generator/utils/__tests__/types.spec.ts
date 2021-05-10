@@ -187,6 +187,14 @@ describe('create type from schema', () => {
       expect(getStringFromNode(node)).toMatchSnapshot();
     });
 
+    it('should handle nullable props', () => {
+      const schema: SchemaObject = { type: 'integer', nullable: true };
+
+      const node = createTypeFromSchema(schema, new Context());
+
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
     it('should handle oneOf', () => {
       const schema: SchemaObject = {
         anyOf: [

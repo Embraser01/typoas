@@ -1,11 +1,10 @@
-/* eslint-disable */
 import * as r from '@typoas/runtime';
 export type SimpleUser = {
   login: string;
   id: number;
   node_id: string;
   avatar_url: string;
-  gravatar_id: string;
+  gravatar_id: string | null;
   url: string;
   html_url: string;
   followers_url: string;
@@ -20,14 +19,14 @@ export type SimpleUser = {
   type: string;
   site_admin: boolean;
   starred_at?: string;
-};
+} | null;
 export type Integration = {
   id: number;
   slug?: string;
   node_id: string;
   owner: any;
   name: string;
-  description: string;
+  description: string | null;
   external_url: string;
   html_url: string;
   created_at: Date;
@@ -70,20 +69,20 @@ export type WebhookConfig = {
   insecure_ssl?: WebhookConfigInsecureSsl;
 };
 export type Enterprise = {
-  description?: string;
+  description?: string | null;
   html_url: string;
-  website_url?: string;
+  website_url?: string | null;
   id: number;
   node_id: string;
   name: string;
   slug: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: Date | null;
+  updated_at: Date | null;
   avatar_url: string;
 };
 export type Installation = {
   id: number;
-  account: SimpleUser | Enterprise;
+  account: (SimpleUser | Enterprise) | null;
   repository_selection: 'all' | 'selected';
   access_tokens_url: string;
   repositories_url: string;
@@ -104,13 +103,13 @@ export type Installation = {
   events: string[];
   created_at: Date;
   updated_at: Date;
-  single_file_name: string;
+  single_file_name: string | null;
   has_multiple_single_files?: boolean;
   single_file_paths?: string[];
   app_slug: string;
   suspended_by?: any;
-  suspended_at?: Date;
-  contact_email?: string;
+  suspended_at?: Date | null;
+  contact_email?: string | null;
 };
 export type AppPermissions = {
   actions?: 'read' | 'write';
@@ -147,8 +146,8 @@ export type AppPermissions = {
 export type LicenseSimple = {
   key: string;
   name: string;
-  url: string;
-  spdx_id: string;
+  url: string | null;
+  spdx_id: string | null;
   node_id: string;
   html_url?: string;
 };
@@ -169,7 +168,7 @@ export type Repository = {
   owner: any;
   private: boolean;
   html_url: string;
-  description: string;
+  description: string | null;
   fork: boolean;
   url: string;
   archive_url: string;
@@ -210,11 +209,11 @@ export type Repository = {
   teams_url: string;
   trees_url: string;
   clone_url: string;
-  mirror_url: string;
+  mirror_url: string | null;
   hooks_url: string;
   svn_url: string;
-  homepage: string;
-  language: string;
+  homepage: string | null;
+  language: string | null;
   forks_count: number;
   stargazers_count: number;
   watchers_count: number;
@@ -231,9 +230,9 @@ export type Repository = {
   archived: boolean;
   disabled: boolean;
   visibility?: string;
-  pushed_at: Date;
-  created_at: Date;
-  updated_at: Date;
+  pushed_at: Date | null;
+  created_at: Date | null;
+  updated_at: Date | null;
   allow_rebase_merge?: boolean;
   template_repository?: {
     id?: number;
@@ -339,7 +338,7 @@ export type Repository = {
     allow_merge_commit?: boolean;
     subscribers_count?: number;
     network_count?: number;
-  };
+  } | null;
   temp_clone_token?: string;
   allow_squash_merge?: boolean;
   delete_branch_on_merge?: boolean;
@@ -375,7 +374,7 @@ export type ValidationError = {
     message?: string;
     code: string;
     index?: number;
-    value?: string | number | string[];
+    value?: (string | null) | (number | null) | (string[] | null);
   }[];
 };
 export type ApplicationGrant = {
@@ -394,7 +393,7 @@ export type ApplicationGrant = {
 export type ScopedInstallation = {
   permissions: AppPermissions;
   repository_selection: 'all' | 'selected';
-  single_file_name: string;
+  single_file_name: string | null;
   has_multiple_single_files?: boolean;
   single_file_paths?: string[];
   repositories_url: string;
@@ -403,20 +402,20 @@ export type ScopedInstallation = {
 export type Authorization = {
   id: number;
   url: string;
-  scopes: string[];
+  scopes: string[] | null;
   token: string;
-  token_last_eight: string;
-  hashed_token: string;
+  token_last_eight: string | null;
+  hashed_token: string | null;
   app: {
     client_id: string;
     name: string;
     url: string;
   };
-  note: string;
-  note_url: string;
+  note: string | null;
+  note_url: string | null;
   updated_at: Date;
   created_at: Date;
-  fingerprint: string;
+  fingerprint: string | null;
   user?: any;
   installation?: any;
 };
@@ -425,7 +424,7 @@ export type CodeOfConduct = {
   name: string;
   url: string;
   body?: string;
-  html_url: string;
+  html_url: string | null;
 };
 export type ContentReferenceAttachment = {
   id: number;
@@ -454,7 +453,7 @@ export type OrganizationSimple = {
   members_url: string;
   public_members_url: string;
   avatar_url: string;
-  description: string;
+  description: string | null;
 };
 export type SelectedActions = {
   github_owned_allowed: boolean;
@@ -493,7 +492,7 @@ export type AuthenticationToken = {
   expires_at: Date;
   permissions?: any;
   repositories?: Repository[];
-  single_file?: string;
+  single_file?: string | null;
   repository_selection?: 'all' | 'selected';
 };
 export type AuditLogEvent = {
@@ -557,7 +556,7 @@ export type Actor = {
   id: number;
   login: string;
   display_login?: string;
-  gravatar_id: string;
+  gravatar_id: string | null;
   url: string;
   avatar_url: string;
 };
@@ -566,7 +565,7 @@ export type Label = {
   node_id: string;
   url: string;
   name: string;
-  description: string;
+  description: string | null;
   color: string;
   default: boolean;
 };
@@ -579,14 +578,14 @@ export type Milestone = {
   number: number;
   state: 'open' | 'closed';
   title: string;
-  description: string;
+  description: string | null;
   creator: any;
   open_issues: number;
   closed_issues: number;
   created_at: Date;
   updated_at: Date;
-  closed_at: Date;
-  due_on: Date;
+  closed_at: Date | null;
+  due_on: Date | null;
 };
 export type Author_association =
   | 'COLLABORATOR'
@@ -613,19 +612,19 @@ export type IssueSimple = {
   user: any;
   labels: Label[];
   assignee: any;
-  assignees?: SimpleUser[];
+  assignees?: SimpleUser[] | null;
   milestone: any;
   locked: boolean;
-  active_lock_reason?: string;
+  active_lock_reason?: string | null;
   comments: number;
   pull_request?: {
-    merged_at?: Date;
-    diff_url: string;
-    html_url: string;
-    patch_url: string;
-    url: string;
+    merged_at?: Date | null;
+    diff_url: string | null;
+    html_url: string | null;
+    patch_url: string | null;
+    url: string | null;
   };
-  closed_at: Date;
+  closed_at: Date | null;
   created_at: Date;
   updated_at: Date;
   author_association: Author_association;
@@ -665,7 +664,7 @@ export type IssueComment = {
 };
 export type Event = {
   id: string;
-  type: string;
+  type: string | null;
   actor: Actor;
   repo: {
     id: number;
@@ -680,14 +679,14 @@ export type Event = {
     pages?: {
       page_name?: string;
       title?: string;
-      summary?: string;
+      summary?: string | null;
       action?: string;
       sha?: string;
       html_url?: string;
     }[];
   };
   public: boolean;
-  created_at: Date;
+  created_at: Date | null;
 };
 export type LinkWithType = {
   href: string;
@@ -734,7 +733,7 @@ export type BaseGist = {
   public: boolean;
   created_at: Date;
   updated_at: Date;
-  description: string;
+  description: string | null;
   comments: number;
   user: any;
   comments_url: string;
@@ -761,14 +760,14 @@ export type GistSimple = {
       size?: number;
       truncated?: boolean;
       content?: string;
-    };
+    } | null;
   };
   public?: boolean;
   created_at?: string;
   updated_at?: string;
-  description?: string;
+  description?: string | null;
   comments?: number;
-  user?: string;
+  user?: string | null;
   comments_url?: string;
   owner?: SimpleUser;
   truncated?: boolean;
@@ -819,25 +818,25 @@ export type Issue = {
         node_id?: string;
         url?: string;
         name?: string;
-        description?: string;
-        color?: string;
+        description?: string | null;
+        color?: string | null;
         default?: boolean;
       }
   )[];
   assignee: any;
-  assignees?: SimpleUser[];
+  assignees?: SimpleUser[] | null;
   milestone: any;
   locked: boolean;
-  active_lock_reason?: string;
+  active_lock_reason?: string | null;
   comments: number;
   pull_request?: {
-    merged_at?: Date;
-    diff_url: string;
-    html_url: string;
-    patch_url: string;
-    url: string;
+    merged_at?: Date | null;
+    diff_url: string | null;
+    html_url: string | null;
+    patch_url: string | null;
+    url: string | null;
   };
-  closed_at: Date;
+  closed_at: Date | null;
   created_at: Date;
   updated_at: Date;
   closed_by?: any;
@@ -852,8 +851,8 @@ export type Issue = {
 export type License = {
   key: string;
   name: string;
-  spdx_id: string;
-  url: string;
+  spdx_id: string | null;
+  url: string | null;
   node_id: string;
   html_url: string;
   description: string;
@@ -875,7 +874,7 @@ export type MarketplaceListingPlan = {
   yearly_price_in_cents: number;
   price_model: string;
   has_free_trial: boolean;
-  unit_name: string;
+  unit_name: string | null;
   state: string;
   bullets: string[];
 };
@@ -888,17 +887,17 @@ export type MarketplacePurchase = {
   marketplace_pending_change?: {
     is_installed?: boolean;
     effective_date?: string;
-    unit_count?: number;
+    unit_count?: number | null;
     id?: number;
     plan?: MarketplaceListingPlan;
-  };
+  } | null;
   marketplace_purchase: {
     billing_cycle?: string;
-    next_billing_date?: string;
+    next_billing_date?: string | null;
     is_installed?: boolean;
-    unit_count?: number;
+    unit_count?: number | null;
     on_free_trial?: boolean;
-    free_trial_ends_on?: string;
+    free_trial_ends_on?: string | null;
     updated_at?: string;
     plan?: MarketplaceListingPlan;
   };
@@ -922,10 +921,10 @@ export type MinimalRepository = {
   node_id: string;
   name: string;
   full_name: string;
-  owner: any;
+  owner: any | null;
   private: boolean;
   html_url: string;
-  description: string;
+  description: string | null;
   fork: boolean;
   url: string;
   archive_url: string;
@@ -966,11 +965,11 @@ export type MinimalRepository = {
   teams_url: string;
   trees_url: string;
   clone_url?: string;
-  mirror_url?: string;
+  mirror_url?: string | null;
   hooks_url: string;
   svn_url?: string;
-  homepage?: string;
-  language?: string;
+  homepage?: string | null;
+  language?: string | null;
   forks_count?: number;
   stargazers_count?: number;
   watchers_count?: number;
@@ -987,15 +986,15 @@ export type MinimalRepository = {
   archived?: boolean;
   disabled?: boolean;
   visibility?: string;
-  pushed_at?: Date;
-  created_at?: Date;
-  updated_at?: Date;
+  pushed_at?: Date | null;
+  created_at?: Date | null;
+  updated_at?: Date | null;
   permissions?: {
     admin?: boolean;
     push?: boolean;
     pull?: boolean;
   };
-  template_repository?: any;
+  template_repository?: any | null;
   temp_clone_token?: string;
   delete_branch_on_merge?: boolean;
   subscribers_count?: number;
@@ -1006,7 +1005,7 @@ export type MinimalRepository = {
     spdx_id?: string;
     url?: string;
     node_id?: string;
-  };
+  } | null;
   forks?: number;
   open_issues?: number;
   watchers?: number;
@@ -1023,15 +1022,15 @@ export type Thread = {
   reason: string;
   unread: boolean;
   updated_at: string;
-  last_read_at: string;
+  last_read_at: string | null;
   url: string;
   subscription_url: string;
 };
 export type ThreadSubscription = {
   subscribed: boolean;
   ignored: boolean;
-  reason: string;
-  created_at: Date;
+  reason: string | null;
+  created_at: Date | null;
   url: string;
   thread_url?: string;
   repository_url?: string;
@@ -1048,13 +1047,13 @@ export type OrganizationFull = {
   members_url: string;
   public_members_url: string;
   avatar_url: string;
-  description: string;
+  description: string | null;
   name?: string;
   company?: string;
   blog?: string;
   location?: string;
   email?: string;
-  twitter_username?: string;
+  twitter_username?: string | null;
   is_verified?: boolean;
   has_organization_projects: boolean;
   has_repository_projects: boolean;
@@ -1067,10 +1066,10 @@ export type OrganizationFull = {
   type: string;
   total_private_repos?: number;
   owned_private_repos?: number;
-  private_gists?: number;
-  disk_usage?: number;
-  collaborators?: number;
-  billing_email?: string;
+  private_gists?: number | null;
+  disk_usage?: number | null;
+  collaborators?: number | null;
+  billing_email?: string | null;
   plan?: {
     name: string;
     space: number;
@@ -1078,9 +1077,9 @@ export type OrganizationFull = {
     filled_seats?: number;
     seats?: number;
   };
-  default_repository_permission?: string;
-  members_can_create_repositories?: boolean;
-  two_factor_requirement_enabled?: boolean;
+  default_repository_permission?: string | null;
+  members_can_create_repositories?: boolean | null;
+  two_factor_requirement_enabled?: boolean | null;
   members_allowed_repository_creation_type?: string;
   members_can_create_public_repositories?: boolean;
   members_can_create_private_repositories?: boolean;
@@ -1129,15 +1128,15 @@ export type CredentialAuthorization = {
   credential_authorized_at: Date;
   scopes?: string[];
   fingerprint?: string;
-  credential_accessed_at?: Date;
-  authorized_credential_id?: number;
-  authorized_credential_title?: string;
-  authorized_credential_note?: string;
+  credential_accessed_at?: Date | null;
+  authorized_credential_id?: number | null;
+  authorized_credential_title?: string | null;
+  authorized_credential_note?: string | null;
 };
 export type OrganizationInvitation = {
   id: number;
-  login: string;
-  email: string;
+  login: string | null;
+  email: string | null;
   role: string;
   created_at: string;
   failed_at?: string;
@@ -1190,20 +1189,20 @@ export type TeamSimple = {
   url: string;
   members_url: string;
   name: string;
-  description: string;
+  description: string | null;
   permission: string;
   privacy?: string;
   html_url: string;
   repositories_url: string;
   slug: string;
   ldap_dn?: string;
-};
+} | null;
 export type Team = {
   id: number;
   node_id: string;
   name: string;
   slug: string;
-  description: string;
+  description: string | null;
   privacy?: string;
   permission: string;
   url: string;
@@ -1286,7 +1285,7 @@ export type Project = {
   id: number;
   node_id: string;
   name: string;
-  body: string;
+  body: string | null;
   number: number;
   state: string;
   creator: any;
@@ -1311,7 +1310,7 @@ export type TeamFull = {
   html_url: string;
   name: string;
   slug: string;
-  description: string;
+  description: string | null;
   privacy?: 'closed' | 'secret';
   permission: string;
   members_url: string;
@@ -1332,7 +1331,7 @@ export type TeamDiscussion = {
   comments_count: number;
   comments_url: string;
   created_at: Date;
-  last_edited_at: Date;
+  last_edited_at: Date | null;
   html_url: string;
   node_id: string;
   number: number;
@@ -1350,7 +1349,7 @@ export type TeamDiscussionComment = {
   body_html: string;
   body_version: string;
   created_at: Date;
-  last_edited_at: Date;
+  last_edited_at: Date | null;
   discussion_url: string;
   html_url: string;
   node_id: string;
@@ -1387,7 +1386,7 @@ export type TeamProject = {
   id: number;
   node_id: string;
   name: string;
-  body: string;
+  body: string | null;
   number: number;
   state: string;
   creator: SimpleUser;
@@ -1418,7 +1417,7 @@ export type TeamRepository = {
   owner: any;
   private: boolean;
   html_url: string;
-  description: string;
+  description: string | null;
   fork: boolean;
   url: string;
   archive_url: string;
@@ -1459,11 +1458,11 @@ export type TeamRepository = {
   teams_url: string;
   trees_url: string;
   clone_url: string;
-  mirror_url: string;
+  mirror_url: string | null;
   hooks_url: string;
   svn_url: string;
-  homepage: string;
-  language: string;
+  homepage: string | null;
+  language: string | null;
   forks_count: number;
   stargazers_count: number;
   watchers_count: number;
@@ -1480,11 +1479,11 @@ export type TeamRepository = {
   archived: boolean;
   disabled: boolean;
   visibility?: string;
-  pushed_at: Date;
-  created_at: Date;
-  updated_at: Date;
+  pushed_at: Date | null;
+  created_at: Date | null;
+  updated_at: Date | null;
   allow_rebase_merge?: boolean;
-  template_repository?: any;
+  template_repository?: any | null;
   temp_clone_token?: string;
   allow_squash_merge?: boolean;
   delete_branch_on_merge?: boolean;
@@ -1499,7 +1498,7 @@ export type ProjectCard = {
   url: string;
   id: number;
   node_id: string;
-  note: string;
+  note: string | null;
   creator: any;
   created_at: Date;
   updated_at: Date;
@@ -1542,7 +1541,7 @@ export type CodeOfConductSimple = {
   url: string;
   key: string;
   name: string;
-  html_url: string;
+  html_url: string | null;
 };
 export type FullRepository = {
   id: number;
@@ -1552,7 +1551,7 @@ export type FullRepository = {
   owner: any;
   private: boolean;
   html_url: string;
-  description: string;
+  description: string | null;
   fork: boolean;
   url: string;
   archive_url: string;
@@ -1593,11 +1592,11 @@ export type FullRepository = {
   teams_url: string;
   trees_url: string;
   clone_url: string;
-  mirror_url: string;
+  mirror_url: string | null;
   hooks_url: string;
   svn_url: string;
-  homepage: string;
-  language: string;
+  homepage: string | null;
+  language: string | null;
   forks_count: number;
   stargazers_count: number;
   watchers_count: number;
@@ -1623,8 +1622,8 @@ export type FullRepository = {
     push: boolean;
   };
   allow_rebase_merge?: boolean;
-  template_repository?: any;
-  temp_clone_token?: string;
+  template_repository?: any | null;
+  temp_clone_token?: string | null;
   allow_squash_merge?: boolean;
   delete_branch_on_merge?: boolean;
   allow_merge_commit?: boolean;
@@ -1649,9 +1648,9 @@ export type Artifact = {
   url: string;
   archive_download_url: string;
   expired: boolean;
-  created_at: Date;
+  created_at: Date | null;
   expires_at: Date;
-  updated_at: Date;
+  updated_at: Date | null;
 };
 export type Job = {
   id: number;
@@ -1660,19 +1659,19 @@ export type Job = {
   node_id: string;
   head_sha: string;
   url: string;
-  html_url: string;
+  html_url: string | null;
   status: 'queued' | 'in_progress' | 'completed';
-  conclusion: string;
+  conclusion: string | null;
   started_at: Date;
-  completed_at: Date;
+  completed_at: Date | null;
   name: string;
   steps?: {
     status: 'queued' | 'in_progress' | 'completed';
-    conclusion: string;
+    conclusion: string | null;
     name: string;
     number: number;
-    started_at?: Date;
-    completed_at?: Date;
+    started_at?: Date | null;
+    completed_at?: Date | null;
   }[];
   check_run_url: string;
 };
@@ -1713,26 +1712,26 @@ export type SimpleCommit = {
   author: {
     name: string;
     email: string;
-  };
+  } | null;
   committer: {
     name: string;
     email: string;
-  };
+  } | null;
 };
 export type WorkflowRun = {
   id: number;
   name?: string;
   node_id: string;
-  head_branch: string;
+  head_branch: string | null;
   head_sha: string;
   run_number: number;
   event: string;
-  status: string;
-  conclusion: string;
+  status: string | null;
+  conclusion: string | null;
   workflow_id: number;
   url: string;
   html_url: string;
-  pull_requests: PullRequestMinimal[];
+  pull_requests: PullRequestMinimal[] | null;
   created_at: Date;
   updated_at: Date;
   jobs_url: string;
@@ -1771,7 +1770,7 @@ export type PendingDeployment = {
     html_url?: string;
   };
   wait_timer: number;
-  wait_timer_started_at: Date;
+  wait_timer_started_at: Date | null;
   current_user_can_approve: boolean;
   reviewers: {
     type?: DeploymentReviewerType;
@@ -1788,7 +1787,7 @@ export type Deployment = {
   payload: any;
   original_environment?: string;
   environment: string;
-  description: string;
+  description: string | null;
   creator: any;
   created_at: Date;
   updated_at: Date;
@@ -1895,12 +1894,12 @@ export type BranchRestrictionPolicy = {
     html_url?: string;
     name?: string;
     slug?: string;
-    description?: string;
+    description?: string | null;
     privacy?: string;
     permission?: string;
     members_url?: string;
     repositories_url?: string;
-    parent?: string;
+    parent?: string | null;
   }[];
   apps: {
     id?: number;
@@ -1987,8 +1986,8 @@ export type GitUser = {
 export type Verification = {
   verified: boolean;
   reason: string;
-  payload: string;
-  signature: string;
+  payload: string | null;
+  signature: string | null;
 };
 export type Commit = {
   url: string;
@@ -2095,7 +2094,7 @@ export type DeploymentSimple = {
   task: string;
   original_environment?: string;
   environment: string;
-  description: string;
+  description: string | null;
   created_at: Date;
   updated_at: Date;
   statuses_url: string;
@@ -2108,32 +2107,35 @@ export type CheckRun = {
   id: number;
   head_sha: string;
   node_id: string;
-  external_id: string;
+  external_id: string | null;
   url: string;
-  html_url: string;
-  details_url: string;
+  html_url: string | null;
+  details_url: string | null;
   status: 'queued' | 'in_progress' | 'completed';
   conclusion:
-    | 'success'
-    | 'failure'
-    | 'neutral'
-    | 'cancelled'
-    | 'skipped'
-    | 'timed_out'
-    | 'action_required';
-  started_at: Date;
-  completed_at: Date;
+    | (
+        | 'success'
+        | 'failure'
+        | 'neutral'
+        | 'cancelled'
+        | 'skipped'
+        | 'timed_out'
+        | 'action_required'
+      )
+    | null;
+  started_at: Date | null;
+  completed_at: Date | null;
   output: {
-    title: string;
-    summary: string;
-    text: string;
+    title: string | null;
+    summary: string | null;
+    text: string | null;
     annotations_count: number;
     annotations_url: string;
   };
   name: string;
   check_suite: {
     id: number;
-  };
+  } | null;
   app: any;
   pull_requests: any;
   deployment?: DeploymentSimple;
@@ -2142,36 +2144,39 @@ export type CheckAnnotation = {
   path: string;
   start_line: number;
   end_line: number;
-  start_column: number;
-  end_column: number;
-  annotation_level: string;
-  title: string;
-  message: string;
-  raw_details: string;
+  start_column: number | null;
+  end_column: number | null;
+  annotation_level: string | null;
+  title: string | null;
+  message: string | null;
+  raw_details: string | null;
   blob_href: string;
 };
 export type CheckSuite = {
   id: number;
   node_id: string;
-  head_branch: string;
+  head_branch: string | null;
   head_sha: string;
-  status: 'queued' | 'in_progress' | 'completed';
+  status: ('queued' | 'in_progress' | 'completed') | null;
   conclusion:
-    | 'success'
-    | 'failure'
-    | 'neutral'
-    | 'cancelled'
-    | 'skipped'
-    | 'timed_out'
-    | 'action_required';
-  url: string;
-  before: string;
-  after: string;
-  pull_requests: PullRequestMinimal[];
+    | (
+        | 'success'
+        | 'failure'
+        | 'neutral'
+        | 'cancelled'
+        | 'skipped'
+        | 'timed_out'
+        | 'action_required'
+      )
+    | null;
+  url: string | null;
+  before: string | null;
+  after: string | null;
+  pull_requests: PullRequestMinimal[] | null;
   app: any;
   repository: MinimalRepository;
-  created_at: Date;
-  updated_at: Date;
+  created_at: Date | null;
+  updated_at: Date | null;
   head_commit: SimpleCommit;
   latest_check_runs_count: number;
   check_runs_url: string;
@@ -2186,7 +2191,7 @@ export type CheckSuitePreference = {
   repository: Repository;
 };
 export type CodeScanningAnalysisToolName = string;
-export type CodeScanningAnalysisToolGuid = string;
+export type CodeScanningAnalysisToolGuid = string | null;
 export type CodeScanningRef = string;
 export type CodeScanningAlertState = 'open' | 'closed' | 'dismissed' | 'fixed';
 export type AlertNumber = number;
@@ -2194,15 +2199,15 @@ export type AlertCreatedAt = Date;
 export type AlertUrl = string;
 export type AlertHtmlUrl = string;
 export type AlertInstancesUrl = string;
-export type CodeScanningAlertDismissedAt = Date;
-export type CodeScanningAlertDismissedReason = string;
+export type CodeScanningAlertDismissedAt = Date | null;
+export type CodeScanningAlertDismissedReason = string | null;
 export type CodeScanningAlertRuleSummary = {
-  id?: string;
+  id?: string | null;
   name?: string;
-  severity?: 'none' | 'note' | 'warning' | 'error';
+  severity?: ('none' | 'note' | 'warning' | 'error') | null;
   description?: string;
 };
-export type CodeScanningAnalysisToolVersion = string;
+export type CodeScanningAnalysisToolVersion = string | null;
 export type CodeScanningAnalysisTool = {
   name?: CodeScanningAnalysisToolName;
   version?: CodeScanningAnalysisToolVersion;
@@ -2218,10 +2223,8 @@ export type CodeScanningAlertLocation = {
   end_column?: number;
 };
 export type CodeScanningAlertClassification =
-  | 'source'
-  | 'generated'
-  | 'test'
-  | 'library';
+  | ('source' | 'generated' | 'test' | 'library')
+  | null;
 export type CodeScanningAlertInstance = {
   ref?: CodeScanningRef;
   analysis_key?: CodeScanningAnalysisAnalysisKey;
@@ -2250,9 +2253,9 @@ export type CodeScanningAlertItems = {
   most_recent_instance: CodeScanningAlertInstance;
 };
 export type CodeScanningAlertRule = {
-  id?: string;
+  id?: string | null;
   name?: string;
-  severity?: 'none' | 'note' | 'warning' | 'error';
+  severity?: ('none' | 'note' | 'warning' | 'error') | null;
   description?: string;
   full_description?: string;
   tags?: string[];
@@ -2294,15 +2297,15 @@ export type CodeScanningAnalysis = {
   deletable: boolean;
 };
 export type CodeScanningAnalysisDeletion = {
-  next_analysis_url: string;
-  confirm_delete_url: string;
+  next_analysis_url: string | null;
+  confirm_delete_url: string | null;
 };
 export type ScimError = {
-  message?: string;
-  documentation_url?: string;
-  detail?: string;
+  message?: string | null;
+  documentation_url?: string | null;
+  detail?: string | null;
   status?: number;
-  scimType?: string;
+  scimType?: string | null;
   schemas?: string[];
 };
 export type CodeScanningAnalysisSarifFile = string;
@@ -2312,14 +2315,14 @@ export type CodeScanningSarifsReceipt = {
 };
 export type CodeScanningSarifsStatus = {
   processing_status?: 'pending' | 'complete';
-  analyses_url?: string;
+  analyses_url?: string | null;
 };
 export type Collaborator = {
   login: string;
   id: number;
   node_id: string;
   avatar_url: string;
-  gravatar_id: string;
+  gravatar_id: string | null;
   url: string;
   html_url: string;
   followers_url: string;
@@ -2357,9 +2360,9 @@ export type CommitComment = {
   id: number;
   node_id: string;
   body: string;
-  path: string;
-  position: number;
-  line: number;
+  path: string | null;
+  position: number | null;
+  line: number | null;
   commit_id: string;
   user: any;
   created_at: Date;
@@ -2383,8 +2386,11 @@ export type Auto_merge = {
   merge_method: 'merge' | 'squash' | 'rebase';
   commit_title: string;
   commit_message: string;
-};
+} | null;
 export type PullRequestSimple = {
+  /**
+   * A small description
+   */
   url: string;
   id: number;
   node_id: string;
@@ -2402,7 +2408,7 @@ export type PullRequestSimple = {
   locked: boolean;
   title: string;
   user: any;
-  body: string;
+  body: string | null;
   labels: {
     id?: number;
     node_id?: string;
@@ -2413,16 +2419,16 @@ export type PullRequestSimple = {
     default?: boolean;
   }[];
   milestone: any;
-  active_lock_reason?: string;
+  active_lock_reason?: string | null;
   created_at: Date;
   updated_at: Date;
-  closed_at: Date;
-  merged_at: Date;
-  merge_commit_sha: string;
+  closed_at: Date | null;
+  merged_at: Date | null;
+  merge_commit_sha: string | null;
   assignee: any;
-  assignees?: SimpleUser[];
-  requested_reviewers?: SimpleUser[];
-  requested_teams?: TeamSimple[];
+  assignees?: SimpleUser[] | null;
+  requested_reviewers?: SimpleUser[] | null;
+  requested_teams?: TeamSimple[] | null;
   head: {
     label: string;
     ref: string;
@@ -2452,14 +2458,14 @@ export type PullRequestSimple = {
   draft?: boolean;
 };
 export type SimpleCommitStatus = {
-  description: string;
+  description: string | null;
   id: number;
   node_id: string;
   state: string;
   context: string;
   target_url: string;
-  required?: boolean;
-  avatar_url: string;
+  required?: boolean | null;
+  avatar_url: string | null;
   url: string;
   created_at: Date;
   updated_at: Date;
@@ -2475,7 +2481,7 @@ export type CombinedCommitStatus = {
 };
 export type Status = {
   url: string;
-  avatar_url: string;
+  avatar_url: string | null;
   id: number;
   node_id: string;
   state: string;
@@ -2492,8 +2498,8 @@ export type CommunityHealthFile = {
 };
 export type CommunityProfile = {
   health_percentage: number;
-  description: string;
-  documentation: string;
+  description: string | null;
+  documentation: string | null;
   files: {
     code_of_conduct: any;
     license: any;
@@ -2502,7 +2508,7 @@ export type CommunityProfile = {
     issue_template: any;
     pull_request_template: any;
   };
-  updated_at: Date;
+  updated_at: Date | null;
   content_reports_enabled?: boolean;
 };
 export type DiffEntry = {
@@ -2540,9 +2546,9 @@ export type ContentTree = {
   path: string;
   sha: string;
   url: string;
-  git_url: string;
-  html_url: string;
-  download_url: string;
+  git_url: string | null;
+  html_url: string | null;
+  download_url: string | null;
   entries?: {
     type: string;
     size: number;
@@ -2551,18 +2557,18 @@ export type ContentTree = {
     content?: string;
     sha: string;
     url: string;
-    git_url: string;
-    html_url: string;
-    download_url: string;
+    git_url: string | null;
+    html_url: string | null;
+    download_url: string | null;
     _links: {
-      git: string;
-      html: string;
+      git: string | null;
+      html: string | null;
       self: string;
     };
   }[];
   _links: {
-    git: string;
-    html: string;
+    git: string | null;
+    html: string | null;
     self: string;
   };
 };
@@ -2574,12 +2580,12 @@ export type ContentDirectory = {
   content?: string;
   sha: string;
   url: string;
-  git_url: string;
-  html_url: string;
-  download_url: string;
+  git_url: string | null;
+  html_url: string | null;
+  download_url: string | null;
   _links: {
-    git: string;
-    html: string;
+    git: string | null;
+    html: string | null;
     self: string;
   };
 }[];
@@ -2592,12 +2598,12 @@ export type ContentFile = {
   content: string;
   sha: string;
   url: string;
-  git_url: string;
-  html_url: string;
-  download_url: string;
+  git_url: string | null;
+  html_url: string | null;
+  download_url: string | null;
   _links: {
-    git: string;
-    html: string;
+    git: string | null;
+    html: string | null;
     self: string;
   };
   target?: string;
@@ -2611,12 +2617,12 @@ export type ContentSymlink = {
   path: string;
   sha: string;
   url: string;
-  git_url: string;
-  html_url: string;
-  download_url: string;
+  git_url: string | null;
+  html_url: string | null;
+  download_url: string | null;
   _links: {
-    git: string;
-    html: string;
+    git: string | null;
+    html: string | null;
     self: string;
   };
 };
@@ -2628,12 +2634,12 @@ export type ContentSubmodule = {
   path: string;
   sha: string;
   url: string;
-  git_url: string;
-  html_url: string;
-  download_url: string;
+  git_url: string | null;
+  html_url: string | null;
+  download_url: string | null;
   _links: {
-    git: string;
-    html: string;
+    git: string | null;
+    html: string | null;
     self: string;
   };
 };
@@ -2653,7 +2659,7 @@ export type FileCommit = {
       git?: string;
       html?: string;
     };
-  };
+  } | null;
   commit: {
     sha?: string;
     node_id?: string;
@@ -2682,8 +2688,8 @@ export type FileCommit = {
     verification?: {
       verified?: boolean;
       reason?: string;
-      signature?: string;
-      payload?: string;
+      signature?: string | null;
+      payload?: string | null;
     };
   };
 };
@@ -2692,7 +2698,7 @@ export type Contributor = {
   id?: number;
   node_id?: string;
   avatar_url?: string;
-  gravatar_id?: string;
+  gravatar_id?: string | null;
   url?: string;
   html_url?: string;
   followers_url?: string;
@@ -2738,7 +2744,7 @@ export type WaitTimer = number;
 export type Deployment_branch_policy = {
   protected_branches: boolean;
   custom_branch_policies: boolean;
-};
+} | null;
 export type Environment = {
   id: number;
   node_id: string;
@@ -2780,7 +2786,7 @@ export type Blob = {
   encoding: string;
   url: string;
   sha: string;
-  size: number;
+  size: number | null;
   node_id: string;
   highlighted_content?: string;
 };
@@ -2811,8 +2817,8 @@ export type GitCommit = {
   verification: {
     verified: boolean;
     reason: string;
-    signature: string;
-    payload: string;
+    signature: string | null;
+    payload: string | null;
   };
   html_url: string;
 };
@@ -2858,9 +2864,9 @@ export type GitTree = {
   }[];
 };
 export type HookResponse = {
-  code: number;
-  status: string;
-  message: string;
+  code: number | null;
+  status: string | null;
+  message: string | null;
 };
 export type Hook = {
   type: string;
@@ -2888,7 +2894,7 @@ export type Hook = {
   last_response: HookResponse;
 };
 export type Import = {
-  vcs: string;
+  vcs: string | null;
   use_lfs?: string;
   vcs_url: string;
   svc_root?: string;
@@ -2910,12 +2916,12 @@ export type Import = {
     | 'detection_found_multiple'
     | 'detection_found_nothing'
     | 'detection_needs_auth';
-  status_text?: string;
-  failed_step?: string;
-  error_message?: string;
-  import_percent?: number;
-  commit_count?: number;
-  push_percent?: number;
+  status_text?: string | null;
+  failed_step?: string | null;
+  error_message?: string | null;
+  import_percent?: number | null;
+  commit_count?: number | null;
+  push_percent?: number | null;
   has_large_files?: boolean;
   large_files_size?: number;
   large_files_count?: number;
@@ -2925,7 +2931,7 @@ export type Import = {
     human_name?: string;
   }[];
   message?: string;
-  authors_count?: number;
+  authors_count?: number | null;
   url: string;
   html_url: string;
   authors_url: string;
@@ -2948,14 +2954,14 @@ export type PorterLargeFile = {
   size: number;
 };
 export type IssueEventLabel = {
-  name: string;
-  color: string;
+  name: string | null;
+  color: string | null;
 };
 export type IssueEventDismissedReview = {
   state: string;
   review_id: number;
-  dismissal_message: string;
-  dismissal_commit_id?: string;
+  dismissal_message: string | null;
+  dismissal_commit_id?: string | null;
 };
 export type IssueEventMilestone = {
   title: string;
@@ -2978,8 +2984,8 @@ export type IssueEvent = {
   url: string;
   actor: any;
   event: string;
-  commit_id: string;
-  commit_url: string;
+  commit_id: string | null;
+  commit_url: string | null;
   created_at: Date;
   issue?: IssueSimple;
   label?: IssueEventLabel;
@@ -2993,7 +2999,7 @@ export type IssueEvent = {
   project_card?: IssueEventProjectCard;
   rename?: IssueEventRename;
   author_association?: Author_association;
-  lock_reason?: string;
+  lock_reason?: string | null;
 };
 export type IssueEventForIssue = {
   id?: number;
@@ -3001,8 +3007,8 @@ export type IssueEventForIssue = {
   url?: string;
   actor?: SimpleUser;
   event?: string;
-  commit_id?: string;
-  commit_url?: string;
+  commit_id?: string | null;
+  commit_url?: string | null;
   created_at?: string;
   sha?: string;
   html_url?: string;
@@ -3036,15 +3042,15 @@ export type LicenseContent = {
   sha: string;
   size: number;
   url: string;
-  html_url: string;
-  git_url: string;
-  download_url: string;
+  html_url: string | null;
+  git_url: string | null;
+  download_url: string | null;
   type: string;
   content: string;
   encoding: string;
   _links: {
-    git: string;
-    html: string;
+    git: string | null;
+    html: string | null;
     self: string;
   };
   license: any;
@@ -3055,8 +3061,8 @@ export type PagesSourceHash = {
 };
 export type Page = {
   url: string;
-  status: 'built' | 'building' | 'errored';
-  cname: string;
+  status: ('built' | 'building' | 'errored') | null;
+  cname: string | null;
   custom_404: boolean;
   html_url?: string;
   source?: PagesSourceHash;
@@ -3066,7 +3072,7 @@ export type PageBuild = {
   url: string;
   status: string;
   error: {
-    message: string;
+    message: string | null;
   };
   pusher: any;
   commit: string;
@@ -3096,27 +3102,27 @@ export type PullRequest = {
   locked: boolean;
   title: string;
   user: any;
-  body: string;
+  body: string | null;
   labels: {
     id?: number;
     node_id?: string;
     url?: string;
     name?: string;
-    description?: string;
+    description?: string | null;
     color?: string;
     default?: boolean;
   }[];
   milestone: any;
-  active_lock_reason?: string;
+  active_lock_reason?: string | null;
   created_at: Date;
   updated_at: Date;
-  closed_at: Date;
-  merged_at: Date;
-  merge_commit_sha: string;
+  closed_at: Date | null;
+  merged_at: Date | null;
+  merge_commit_sha: string | null;
   assignee: any;
-  assignees?: SimpleUser[];
-  requested_reviewers?: SimpleUser[];
-  requested_teams?: TeamSimple[];
+  assignees?: SimpleUser[] | null;
+  requested_reviewers?: SimpleUser[] | null;
+  requested_teams?: TeamSimple[] | null;
   head: {
     label: string;
     ref: string;
@@ -3132,7 +3138,7 @@ export type PullRequest = {
       contents_url: string;
       contributors_url: string;
       deployments_url: string;
-      description: string;
+      description: string | null;
       downloads_url: string;
       events_url: string;
       fork: boolean;
@@ -3161,7 +3167,7 @@ export type PullRequest = {
         followers_url: string;
         following_url: string;
         gists_url: string;
-        gravatar_id: string;
+        gravatar_id: string | null;
         html_url: string;
         id: number;
         node_id: string;
@@ -3196,12 +3202,12 @@ export type PullRequest = {
       has_projects: boolean;
       has_wiki: boolean;
       has_pages: boolean;
-      homepage: string;
-      language: string;
+      homepage: string | null;
+      language: string | null;
       master_branch?: string;
       archived: boolean;
       disabled: boolean;
-      mirror_url: string;
+      mirror_url: string | null;
       open_issues: number;
       open_issues_count: number;
       permissions?: {
@@ -3216,10 +3222,10 @@ export type PullRequest = {
       license: {
         key: string;
         name: string;
-        url: string;
-        spdx_id: string;
+        url: string | null;
+        spdx_id: string | null;
         node_id: string;
-      };
+      } | null;
       pushed_at: Date;
       size: number;
       ssh_url: string;
@@ -3238,7 +3244,7 @@ export type PullRequest = {
       followers_url: string;
       following_url: string;
       gists_url: string;
-      gravatar_id: string;
+      gravatar_id: string | null;
       html_url: string;
       id: number;
       node_id: string;
@@ -3268,7 +3274,7 @@ export type PullRequest = {
       contents_url: string;
       contributors_url: string;
       deployments_url: string;
-      description: string;
+      description: string | null;
       downloads_url: string;
       events_url: string;
       fork: boolean;
@@ -3297,7 +3303,7 @@ export type PullRequest = {
         followers_url: string;
         following_url: string;
         gists_url: string;
-        gravatar_id: string;
+        gravatar_id: string | null;
         html_url: string;
         id: number;
         node_id: string;
@@ -3332,12 +3338,12 @@ export type PullRequest = {
       has_projects: boolean;
       has_wiki: boolean;
       has_pages: boolean;
-      homepage: string;
-      language: string;
+      homepage: string | null;
+      language: string | null;
       master_branch?: string;
       archived: boolean;
       disabled: boolean;
-      mirror_url: string;
+      mirror_url: string | null;
       open_issues: number;
       open_issues_count: number;
       permissions?: {
@@ -3368,7 +3374,7 @@ export type PullRequest = {
       followers_url: string;
       following_url: string;
       gists_url: string;
-      gravatar_id: string;
+      gravatar_id: string | null;
       html_url: string;
       id: number;
       node_id: string;
@@ -3397,8 +3403,8 @@ export type PullRequest = {
   auto_merge: Auto_merge;
   draft?: boolean;
   merged: boolean;
-  mergeable: boolean;
-  rebaseable?: boolean;
+  mergeable: boolean | null;
+  rebaseable?: boolean | null;
   mergeable_state: string;
   merged_by: any;
   comments: number;
@@ -3411,7 +3417,7 @@ export type PullRequest = {
 };
 export type PullRequestReviewComment = {
   url: string;
-  pull_request_review_id: number;
+  pull_request_review_id: number | null;
   id: number;
   node_id: string;
   diff_hunk: string;
@@ -3439,9 +3445,9 @@ export type PullRequestReviewComment = {
       href: string;
     };
   };
-  start_line?: number;
-  original_start_line?: number;
-  start_side?: 'LEFT' | 'RIGHT';
+  start_line?: number | null;
+  original_start_line?: number | null;
+  start_side?: ('LEFT' | 'RIGHT') | null;
   line?: number;
   original_line?: number;
   side?: 'LEFT' | 'RIGHT';
@@ -3482,12 +3488,12 @@ export type PullRequestReview = {
 };
 export type ReviewComment = {
   url: string;
-  pull_request_review_id: number;
+  pull_request_review_id: number | null;
   id: number;
   node_id: string;
   diff_hunk: string;
   path: string;
-  position: number;
+  position: number | null;
   original_position: number;
   commit_id: string;
   original_commit_id: string;
@@ -3507,11 +3513,11 @@ export type ReviewComment = {
   body_text?: string;
   body_html?: string;
   side?: 'LEFT' | 'RIGHT';
-  start_side?: 'LEFT' | 'RIGHT';
+  start_side?: ('LEFT' | 'RIGHT') | null;
   line?: number;
   original_line?: number;
-  start_line?: number;
-  original_start_line?: number;
+  start_line?: number | null;
+  original_start_line?: number | null;
 };
 export type ReleaseAsset = {
   url: string;
@@ -3519,7 +3525,7 @@ export type ReleaseAsset = {
   id: number;
   node_id: string;
   name: string;
-  label: string;
+  label: string | null;
   state: 'uploaded' | 'open';
   content_type: string;
   size: number;
@@ -3533,25 +3539,25 @@ export type Release = {
   html_url: string;
   assets_url: string;
   upload_url: string;
-  tarball_url: string;
-  zipball_url: string;
+  tarball_url: string | null;
+  zipball_url: string | null;
   id: number;
   node_id: string;
   tag_name: string;
   target_commitish: string;
-  name: string;
-  body?: string;
+  name: string | null;
+  body?: string | null;
   draft: boolean;
   prerelease: boolean;
   created_at: Date;
-  published_at: Date;
+  published_at: Date | null;
   author: SimpleUser;
   assets: ReleaseAsset[];
   body_html?: string;
   body_text?: string;
 };
 export type SecretScanningAlertState = 'open' | 'resolved';
-export type SecretScanningAlertResolution = string;
+export type SecretScanningAlertResolution = string | null;
 export type SecretScanningAlert = {
   number?: AlertNumber;
   created_at?: AlertCreatedAt;
@@ -3559,7 +3565,7 @@ export type SecretScanningAlert = {
   html_url?: AlertHtmlUrl;
   state?: SecretScanningAlertState;
   resolution?: SecretScanningAlertResolution;
-  resolved_at?: Date;
+  resolved_at?: Date | null;
   resolved_by?: SimpleUser;
   secret_type?: string;
   secret?: string;
@@ -3591,7 +3597,7 @@ export type ParticipationStats = {
 export type RepositorySubscription = {
   subscribed: boolean;
   ignored: boolean;
-  reason: string;
+  reason: string | null;
   created_at: Date;
   url: string;
   repository_url: string;
@@ -3643,7 +3649,7 @@ export type ScimGroupListEnterprise = {
   Resources: {
     schemas: string[];
     id: string;
-    externalId?: string;
+    externalId?: string | null;
     displayName?: string;
     members?: {
       value?: string;
@@ -3661,7 +3667,7 @@ export type ScimGroupListEnterprise = {
 export type ScimEnterpriseGroup = {
   schemas: string[];
   id: string;
-  externalId?: string;
+  externalId?: string | null;
   displayName?: string;
   members?: {
     value?: string;
@@ -3734,13 +3740,13 @@ export type ScimEnterpriseUser = {
 export type ScimUser = {
   schemas: string[];
   id: string;
-  externalId: string;
-  userName: string;
-  displayName?: string;
+  externalId: string | null;
+  userName: string | null;
+  displayName?: string | null;
   name: {
-    givenName: string;
-    familyName: string;
-    formatted?: string;
+    givenName: string | null;
+    familyName: string | null;
+    formatted?: string | null;
   };
   emails: {
     value: string;
@@ -3770,7 +3776,7 @@ export type ScimUserList = {
 };
 export type SearchResultTextMatches = {
   object_url?: string;
-  object_type?: string;
+  object_type?: string | null;
   property?: string;
   fragment?: string;
   matches?: {
@@ -3788,7 +3794,7 @@ export type CodeSearchResultItem = {
   repository: MinimalRepository;
   score: number;
   file_size?: number;
-  language?: string;
+  language?: string | null;
   last_modified_at?: Date;
   line_numbers?: string[];
   text_matches?: SearchResultTextMatches;
@@ -3838,8 +3844,8 @@ export type IssueSearchResultItem = {
   number: number;
   title: string;
   locked: boolean;
-  active_lock_reason?: string;
-  assignees?: SimpleUser[];
+  active_lock_reason?: string | null;
+  assignees?: SimpleUser[] | null;
   user: any;
   labels: {
     id?: number;
@@ -3848,7 +3854,7 @@ export type IssueSearchResultItem = {
     name?: string;
     color?: string;
     default?: boolean;
-    description?: string;
+    description?: string | null;
   }[];
   state: string;
   assignee: any;
@@ -3856,14 +3862,14 @@ export type IssueSearchResultItem = {
   comments: number;
   created_at: Date;
   updated_at: Date;
-  closed_at: Date;
+  closed_at: Date | null;
   text_matches?: SearchResultTextMatches;
   pull_request?: {
-    merged_at?: Date;
-    diff_url: string;
-    html_url: string;
-    patch_url: string;
-    url: string;
+    merged_at?: Date | null;
+    diff_url: string | null;
+    html_url: string | null;
+    patch_url: string | null;
+    url: string | null;
   };
   body?: string;
   score: number;
@@ -3882,7 +3888,7 @@ export type LabelSearchResultItem = {
   name: string;
   color: string;
   default: boolean;
-  description: string;
+  description: string | null;
   score: number;
   text_matches?: SearchResultTextMatches;
 };
@@ -3894,17 +3900,17 @@ export type RepoSearchResultItem = {
   owner: any;
   private: boolean;
   html_url: string;
-  description: string;
+  description: string | null;
   fork: boolean;
   url: string;
   created_at: Date;
   updated_at: Date;
   pushed_at: Date;
-  homepage: string;
+  homepage: string | null;
   size: number;
   stargazers_count: number;
   watchers_count: number;
-  language: string;
+  language: string | null;
   forks_count: number;
   open_issues_count: number;
   master_branch?: string;
@@ -3954,7 +3960,7 @@ export type RepoSearchResultItem = {
   open_issues: number;
   watchers: number;
   topics?: string[];
-  mirror_url: string;
+  mirror_url: string | null;
   has_issues: boolean;
   has_projects: boolean;
   has_pages: boolean;
@@ -3977,42 +3983,46 @@ export type RepoSearchResultItem = {
 };
 export type TopicSearchResultItem = {
   name: string;
-  display_name: string;
-  short_description: string;
-  description: string;
-  created_by: string;
-  released: string;
+  display_name: string | null;
+  short_description: string | null;
+  description: string | null;
+  created_by: string | null;
+  released: string | null;
   created_at: Date;
   updated_at: Date;
   featured: boolean;
   curated: boolean;
   score: number;
-  repository_count?: number;
-  logo_url?: string;
+  repository_count?: number | null;
+  logo_url?: string | null;
   text_matches?: SearchResultTextMatches;
-  related?: {
-    topic_relation?: {
-      id?: number;
-      name?: string;
-      topic_id?: number;
-      relation_type?: string;
-    };
-  }[];
-  aliases?: {
-    topic_relation?: {
-      id?: number;
-      name?: string;
-      topic_id?: number;
-      relation_type?: string;
-    };
-  }[];
+  related?:
+    | {
+        topic_relation?: {
+          id?: number;
+          name?: string;
+          topic_id?: number;
+          relation_type?: string;
+        };
+      }[]
+    | null;
+  aliases?:
+    | {
+        topic_relation?: {
+          id?: number;
+          name?: string;
+          topic_id?: number;
+          relation_type?: string;
+        };
+      }[]
+    | null;
 };
 export type UserSearchResultItem = {
   login: string;
   id: number;
   node_id: string;
   avatar_url: string;
-  gravatar_id: string;
+  gravatar_id: string | null;
   url: string;
   html_url: string;
   followers_url: string;
@@ -4032,23 +4042,23 @@ export type UserSearchResultItem = {
   following?: number;
   created_at?: Date;
   updated_at?: Date;
-  name?: string;
-  bio?: string;
-  email?: string;
-  location?: string;
+  name?: string | null;
+  bio?: string | null;
+  email?: string | null;
+  location?: string | null;
   site_admin: boolean;
-  hireable?: boolean;
+  hireable?: boolean | null;
   text_matches?: SearchResultTextMatches;
-  blog?: string;
-  company?: string;
-  suspended_at?: Date;
+  blog?: string | null;
+  company?: string | null;
+  suspended_at?: Date | null;
 };
 export type PrivateUser = {
   login: string;
   id: number;
   node_id: string;
   avatar_url: string;
-  gravatar_id: string;
+  gravatar_id: string | null;
   url: string;
   html_url: string;
   followers_url: string;
@@ -4062,14 +4072,14 @@ export type PrivateUser = {
   received_events_url: string;
   type: string;
   site_admin: boolean;
-  name: string;
-  company: string;
-  blog: string;
-  location: string;
-  email: string;
-  hireable: boolean;
-  bio: string;
-  twitter_username?: string;
+  name: string | null;
+  company: string | null;
+  blog: string | null;
+  location: string | null;
+  email: string | null;
+  hireable: boolean | null;
+  bio: string | null;
+  twitter_username?: string | null;
   public_repos: number;
   public_gists: number;
   followers: number;
@@ -4088,7 +4098,7 @@ export type PrivateUser = {
     space: number;
     private_repos: number;
   };
-  suspended_at?: Date;
+  suspended_at?: Date | null;
   business_plus?: boolean;
   ldap_dn?: string;
 };
@@ -4097,7 +4107,7 @@ export type PublicUser = {
   id: number;
   node_id: string;
   avatar_url: string;
-  gravatar_id: string;
+  gravatar_id: string | null;
   url: string;
   html_url: string;
   followers_url: string;
@@ -4111,14 +4121,14 @@ export type PublicUser = {
   received_events_url: string;
   type: string;
   site_admin: boolean;
-  name: string;
-  company: string;
-  blog: string;
-  location: string;
-  email: string;
-  hireable: boolean;
-  bio: string;
-  twitter_username?: string;
+  name: string | null;
+  company: string | null;
+  blog: string | null;
+  location: string | null;
+  email: string | null;
+  hireable: boolean | null;
+  bio: string | null;
+  twitter_username?: string | null;
   public_repos: number;
   public_gists: number;
   followers: number;
@@ -4131,7 +4141,7 @@ export type PublicUser = {
     space: number;
     private_repos: number;
   };
-  suspended_at?: Date;
+  suspended_at?: Date | null;
   private_gists?: number;
   total_private_repos?: number;
   owned_private_repos?: number;
@@ -4142,11 +4152,11 @@ export type Email = {
   email: string;
   primary: boolean;
   verified: boolean;
-  visibility: string;
+  visibility: string | null;
 };
 export type GpgKey = {
   id: number;
-  primary_key_id: number;
+  primary_key_id: number | null;
   key_id: string;
   public_key: string;
   emails: {
@@ -4165,16 +4175,16 @@ export type GpgKey = {
     can_encrypt_storage?: boolean;
     can_certify?: boolean;
     created_at?: string;
-    expires_at?: string;
-    raw_key?: string;
+    expires_at?: string | null;
+    raw_key?: string | null;
   }[];
   can_sign: boolean;
   can_encrypt_comms: boolean;
   can_encrypt_storage: boolean;
   can_certify: boolean;
   created_at: Date;
-  expires_at: Date;
-  raw_key: string;
+  expires_at: Date | null;
+  raw_key: string | null;
 };
 export type Key = {
   key_id: string;
@@ -4192,16 +4202,16 @@ export type MarketplaceAccount = {
   type: string;
   node_id?: string;
   login: string;
-  email?: string;
-  organization_billing_email?: string;
+  email?: string | null;
+  organization_billing_email?: string | null;
 };
 export type UserMarketplacePurchase = {
   billing_cycle: string;
-  next_billing_date: Date;
-  unit_count: number;
+  next_billing_date: Date | null;
+  unit_count: number | null;
   on_free_trial: boolean;
-  free_trial_ends_on: Date;
-  updated_at: Date;
+  free_trial_ends_on: Date | null;
+  updated_at: Date | null;
   account: MarketplaceAccount;
   plan: MarketplaceListingPlan;
 };
@@ -4268,7 +4278,7 @@ export class GithubClient {
       r.applyTemplating('/', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -4288,7 +4298,7 @@ export class GithubClient {
       r.applyTemplating('/app', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -4306,7 +4316,7 @@ export class GithubClient {
       r.applyTemplating('/app-manifests/{code}/conversions', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -4344,7 +4354,7 @@ export class GithubClient {
       r.applyTemplating('/app/hook/config', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -4370,7 +4380,7 @@ export class GithubClient {
       r.applyTemplating('/app/hook/config', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -4394,7 +4404,7 @@ export class GithubClient {
       r.applyTemplating('/app/installations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -4430,7 +4440,7 @@ export class GithubClient {
       r.applyTemplating('/app/installations/{installation_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -4473,7 +4483,7 @@ export class GithubClient {
       r.applyTemplating('/app/installations/{installation_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -4512,7 +4522,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -4586,7 +4596,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -4618,7 +4628,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -4649,7 +4659,7 @@ export class GithubClient {
       r.applyTemplating('/applications/grants', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -4719,7 +4729,7 @@ export class GithubClient {
       r.applyTemplating('/applications/grants/{grant_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -4766,7 +4776,7 @@ export class GithubClient {
       r.applyTemplating('/applications/grants/{grant_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -4818,7 +4828,7 @@ export class GithubClient {
       r.applyTemplating('/applications/{client_id}/grant', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -4852,7 +4862,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -4877,7 +4887,7 @@ export class GithubClient {
       r.applyTemplating('/applications/{client_id}/token', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -4921,7 +4931,7 @@ export class GithubClient {
       r.applyTemplating('/applications/{client_id}/token', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -4956,7 +4966,7 @@ export class GithubClient {
       r.applyTemplating('/applications/{client_id}/token', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -4996,7 +5006,7 @@ export class GithubClient {
       r.applyTemplating('/applications/{client_id}/token/scoped', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -5057,7 +5067,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5092,7 +5102,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5116,7 +5126,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -5134,7 +5144,7 @@ export class GithubClient {
       r.applyTemplating('/apps/{app_slug}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5188,7 +5198,7 @@ export class GithubClient {
       r.applyTemplating('/authorizations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -5254,7 +5264,7 @@ export class GithubClient {
   async oauthAuthorizationsCreateAuthorization(
     params: {},
     body: {
-      scopes?: string[];
+      scopes?: string[] | null;
       note?: string;
       note_url?: string;
       client_id?: string;
@@ -5266,7 +5276,7 @@ export class GithubClient {
       r.applyTemplating('/authorizations', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -5331,7 +5341,7 @@ export class GithubClient {
     },
     body: {
       client_secret: string;
-      scopes?: string[];
+      scopes?: string[] | null;
       note?: string;
       note_url?: string;
       fingerprint?: string;
@@ -5341,7 +5351,7 @@ export class GithubClient {
       r.applyTemplating('/authorizations/clients/{client_id}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -5407,7 +5417,7 @@ export class GithubClient {
     },
     body: {
       client_secret: string;
-      scopes?: string[];
+      scopes?: string[] | null;
       note?: string;
       note_url?: string;
     },
@@ -5419,7 +5429,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -5458,7 +5468,7 @@ export class GithubClient {
       r.applyTemplating('/authorizations/{authorization_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5503,7 +5513,7 @@ export class GithubClient {
       authorization_id: number;
     },
     body: {
-      scopes?: string[];
+      scopes?: string[] | null;
       add_scopes?: string[];
       remove_scopes?: string[];
       note?: string;
@@ -5515,7 +5525,7 @@ export class GithubClient {
       r.applyTemplating('/authorizations/{authorization_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -5545,7 +5555,7 @@ export class GithubClient {
       r.applyTemplating('/authorizations/{authorization_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -5592,7 +5602,7 @@ export class GithubClient {
       r.applyTemplating('/codes_of_conduct', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5637,7 +5647,7 @@ export class GithubClient {
       r.applyTemplating('/codes_of_conduct/{key}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5698,7 +5708,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -5780,7 +5790,7 @@ export class GithubClient {
       r.applyTemplating('/emojis', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5814,7 +5824,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -5845,7 +5855,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -5874,7 +5884,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -5911,7 +5921,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -5936,7 +5946,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -5960,7 +5970,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -5983,7 +5993,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6009,7 +6019,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -6038,7 +6048,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -6078,7 +6088,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -6103,7 +6113,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6133,7 +6143,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -6158,7 +6168,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -6187,7 +6197,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -6225,7 +6235,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -6251,7 +6261,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -6276,7 +6286,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -6305,7 +6315,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -6343,7 +6353,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -6369,7 +6379,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -6394,7 +6404,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -6419,7 +6429,7 @@ export class GithubClient {
       r.applyTemplating('/enterprises/{enterprise}/actions/runners', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -6451,7 +6461,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6476,7 +6486,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -6499,7 +6509,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -6523,7 +6533,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6547,7 +6557,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -6574,7 +6584,7 @@ export class GithubClient {
       r.applyTemplating('/enterprises/{enterprise}/audit-log', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.phrase !== undefined)
       requestContext.setQueryParam(
         'phrase',
@@ -6625,7 +6635,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6648,7 +6658,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6671,7 +6681,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6692,7 +6702,7 @@ export class GithubClient {
       r.applyTemplating('/events', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -6752,7 +6762,7 @@ export class GithubClient {
       r.applyTemplating('/feeds', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -6774,7 +6784,7 @@ export class GithubClient {
       r.applyTemplating('/gists', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     if (params.per_page !== undefined)
@@ -6832,7 +6842,7 @@ export class GithubClient {
       r.applyTemplating('/gists', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -6891,7 +6901,7 @@ export class GithubClient {
       r.applyTemplating('/gists/public', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     if (params.per_page !== undefined)
@@ -6951,7 +6961,7 @@ export class GithubClient {
       r.applyTemplating('/gists/starred', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     if (params.per_page !== undefined)
@@ -7007,7 +7017,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -7029,7 +7039,7 @@ export class GithubClient {
         block?: {
           reason?: string;
           created_at?: string;
-          html_url?: string;
+          html_url?: string | null;
         };
         message?: string;
         documentation_url?: string;
@@ -7066,16 +7076,16 @@ export class GithubClient {
       files?: {
         [key: string]: {
           content?: string;
-          filename?: string;
-        };
+          filename?: string | null;
+        } | null;
       };
-    },
+    } | null,
   ): Promise<GistSimple> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -7112,7 +7122,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -7161,7 +7171,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/comments', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -7222,7 +7232,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/comments', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -7271,7 +7281,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/comments/{comment_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -7293,7 +7303,7 @@ export class GithubClient {
         block?: {
           reason?: string;
           created_at?: string;
-          html_url?: string;
+          html_url?: string | null;
         };
         message?: string;
         documentation_url?: string;
@@ -7334,7 +7344,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/comments/{comment_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -7365,7 +7375,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/comments/{comment_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -7414,7 +7424,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/commits', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -7472,7 +7482,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/forks', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -7526,7 +7536,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/forks', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -7580,7 +7590,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/star', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -7627,7 +7637,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/star', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -7672,7 +7682,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/star', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -7720,7 +7730,7 @@ export class GithubClient {
       r.applyTemplating('/gists/{gist_id}/{sha}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -7765,7 +7775,7 @@ export class GithubClient {
       r.applyTemplating('/gitignore/templates', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -7794,7 +7804,7 @@ export class GithubClient {
       r.applyTemplating('/gitignore/templates/{name}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -7828,7 +7838,7 @@ export class GithubClient {
       r.applyTemplating('/installation/repositories', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -7882,7 +7892,7 @@ export class GithubClient {
       r.applyTemplating('/installation/token', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -7919,7 +7929,7 @@ export class GithubClient {
       r.applyTemplating('/issues', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.filter !== undefined)
       requestContext.setQueryParam(
         'filter',
@@ -8009,7 +8019,7 @@ export class GithubClient {
       r.applyTemplating('/licenses', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.featured !== undefined)
       requestContext.setQueryParam(
         'featured',
@@ -8050,7 +8060,7 @@ export class GithubClient {
       r.applyTemplating('/licenses/{license}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -8102,7 +8112,7 @@ export class GithubClient {
       r.applyTemplating('/markdown', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -8130,7 +8140,7 @@ export class GithubClient {
       r.applyTemplating('/markdown/raw', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -8160,7 +8170,7 @@ export class GithubClient {
       r.applyTemplating('/marketplace_listing/accounts/{account_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -8199,7 +8209,7 @@ export class GithubClient {
       r.applyTemplating('/marketplace_listing/plans', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -8253,7 +8263,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.direction !== undefined)
@@ -8319,7 +8329,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -8358,7 +8368,7 @@ export class GithubClient {
       r.applyTemplating('/marketplace_listing/stubbed/plans', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -8403,7 +8413,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.direction !== undefined)
@@ -8446,7 +8456,7 @@ export class GithubClient {
       r.applyTemplating('/meta', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -8478,7 +8488,7 @@ export class GithubClient {
       r.applyTemplating('/networks/{owner}/{repo}/events', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -8548,7 +8558,7 @@ export class GithubClient {
       r.applyTemplating('/notifications', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.all !== undefined)
       requestContext.setQueryParam('all', r.serializeParameter(params.all));
     if (params.participating !== undefined)
@@ -8633,7 +8643,7 @@ export class GithubClient {
       r.applyTemplating('/notifications', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
@@ -8690,7 +8700,7 @@ export class GithubClient {
       r.applyTemplating('/notifications/threads/{thread_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -8735,7 +8745,7 @@ export class GithubClient {
       r.applyTemplating('/notifications/threads/{thread_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('205', response.httpStatusCode))
       return r.applyTransforms(
@@ -8776,7 +8786,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -8831,7 +8841,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -8882,7 +8892,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -8927,7 +8937,7 @@ export class GithubClient {
       r.applyTemplating('/octocat', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.s !== undefined)
       requestContext.setQueryParam('s', r.serializeParameter(params.s));
     const response = await this.http.send(requestContext);
@@ -8950,7 +8960,7 @@ export class GithubClient {
       r.applyTemplating('/organizations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     if (params.per_page !== undefined)
@@ -8986,7 +8996,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9038,7 +9048,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -9093,7 +9103,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/permissions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9121,7 +9131,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/permissions', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -9147,7 +9157,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/permissions/repositories', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -9181,7 +9191,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/permissions/repositories', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -9206,7 +9216,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9230,7 +9240,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9253,7 +9263,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9279,7 +9289,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -9305,7 +9315,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/runner-groups', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -9342,7 +9352,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/runner-groups', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -9367,7 +9377,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9397,7 +9407,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -9422,7 +9432,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9451,7 +9461,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.page !== undefined)
       requestContext.setQueryParam('page', r.serializeParameter(params.page));
     if (params.per_page !== undefined)
@@ -9489,7 +9499,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -9515,7 +9525,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9540,7 +9550,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9569,7 +9579,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -9607,7 +9617,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -9633,7 +9643,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9658,7 +9668,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9683,7 +9693,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/runners', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -9712,7 +9722,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/runners/downloads', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9737,7 +9747,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -9757,7 +9767,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/runners/remove-token', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -9778,7 +9788,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/runners/{runner_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9799,7 +9809,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/runners/{runner_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9824,7 +9834,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/secrets', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -9853,7 +9863,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/secrets/public-key', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9874,7 +9884,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/secrets/{secret_name}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -9905,7 +9915,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/secrets/{secret_name}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -9936,7 +9946,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/actions/secrets/{secret_name}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -9965,7 +9975,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.page !== undefined)
       requestContext.setQueryParam('page', r.serializeParameter(params.page));
     if (params.per_page !== undefined)
@@ -10003,7 +10013,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -10029,7 +10039,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10063,7 +10073,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10099,7 +10109,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/audit-log', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.phrase !== undefined)
       requestContext.setQueryParam(
         'phrase',
@@ -10145,7 +10155,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/blocks', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -10182,7 +10192,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/blocks/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10209,7 +10219,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/blocks/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10239,7 +10249,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/blocks/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10259,7 +10269,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/credential-authorizations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -10285,7 +10295,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10316,7 +10326,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/events', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -10347,7 +10357,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/failed_invitations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -10387,7 +10397,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -10440,7 +10450,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -10480,7 +10490,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks/{hook_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -10523,7 +10533,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks/{hook_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -10563,7 +10573,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks/{hook_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10593,7 +10603,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks/{hook_id}/config', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -10622,7 +10632,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks/{hook_id}/config', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -10644,7 +10654,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/hooks/{hook_id}/pings', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10671,7 +10681,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/installation', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -10696,7 +10706,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/installations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -10725,7 +10735,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/interaction-limits', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -10750,7 +10760,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/interaction-limits', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -10782,7 +10792,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/interaction-limits', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10804,7 +10814,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/invitations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -10850,7 +10860,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/invitations', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -10890,7 +10900,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/invitations/{invitation_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -10934,7 +10944,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -10986,7 +10996,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/issues', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.filter !== undefined)
       requestContext.setQueryParam(
         'filter',
@@ -11049,7 +11059,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/members', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.filter !== undefined)
       requestContext.setQueryParam(
         'filter',
@@ -11104,7 +11114,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/members/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -11143,7 +11153,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/members/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -11173,7 +11183,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/memberships/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -11217,7 +11227,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/memberships/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -11257,7 +11267,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/memberships/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -11298,7 +11308,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/migrations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -11340,7 +11350,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/migrations', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -11381,7 +11391,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/migrations/{migration_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.exclude !== undefined)
       requestContext.setQueryParam(
         'exclude',
@@ -11419,7 +11429,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('302', response.httpStatusCode))
       throw new r.ApiException<any>(
@@ -11455,7 +11465,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -11489,7 +11499,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -11524,7 +11534,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -11565,7 +11575,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/outside_collaborators', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.filter !== undefined)
       requestContext.setQueryParam(
         'filter',
@@ -11600,7 +11610,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/outside_collaborators/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
       return r.applyTransforms(
@@ -11653,7 +11663,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/outside_collaborators/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -11698,7 +11708,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -11729,7 +11739,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -11788,7 +11798,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.token !== undefined)
       requestContext.setQueryParam('token', r.serializeParameter(params.token));
     const response = await this.http.send(requestContext);
@@ -11851,7 +11861,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.page !== undefined)
       requestContext.setQueryParam('page', r.serializeParameter(params.page));
     if (params.per_page !== undefined)
@@ -11921,7 +11931,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -11953,7 +11963,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12012,7 +12022,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12062,7 +12072,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/projects', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.state !== undefined)
       requestContext.setQueryParam('state', r.serializeParameter(params.state));
     if (params.per_page !== undefined)
@@ -12108,7 +12118,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/projects', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -12176,7 +12186,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/public_members', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -12206,7 +12216,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/public_members/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12236,7 +12246,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/public_members/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12266,7 +12276,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/public_members/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12298,7 +12308,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/repos', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.type !== undefined)
       requestContext.setQueryParam('type', r.serializeParameter(params.type));
     if (params.sort !== undefined)
@@ -12357,7 +12367,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/repos', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -12396,7 +12406,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/settings/billing/actions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -12416,7 +12426,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/settings/billing/packages', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -12436,7 +12446,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/settings/billing/shared-storage', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -12458,7 +12468,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/team-sync/groups', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -12487,7 +12497,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -12536,7 +12546,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -12576,7 +12586,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -12608,14 +12618,14 @@ export class GithubClient {
       description?: string;
       privacy?: 'secret' | 'closed';
       permission?: 'pull' | 'push' | 'admin';
-      parent_team_id?: number;
+      parent_team_id?: number | null;
     },
   ): Promise<TeamFull> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/orgs/{org}/teams/{team_slug}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -12637,7 +12647,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12662,7 +12672,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}/discussions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.direction !== undefined)
       requestContext.setQueryParam(
         'direction',
@@ -12709,7 +12719,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}/discussions', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -12735,7 +12745,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -12766,7 +12776,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -12792,7 +12802,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12820,7 +12830,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.direction !== undefined)
       requestContext.setQueryParam(
         'direction',
@@ -12864,7 +12874,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -12891,7 +12901,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -12922,7 +12932,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -12949,7 +12959,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -12986,7 +12996,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -13039,7 +13049,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -13067,7 +13077,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -13103,7 +13113,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -13155,7 +13165,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -13182,7 +13192,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -13205,7 +13215,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}/invitations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -13238,7 +13248,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}/members', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.role !== undefined)
       requestContext.setQueryParam('role', r.serializeParameter(params.role));
     if (params.per_page !== undefined)
@@ -13274,7 +13284,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -13313,7 +13323,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -13366,7 +13376,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -13398,7 +13408,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}/projects', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -13432,7 +13442,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -13462,7 +13472,7 @@ export class GithubClient {
     },
     body: {
       permission?: 'read' | 'write' | 'admin';
-    },
+    } | null,
   ): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
@@ -13471,7 +13481,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -13511,7 +13521,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -13534,7 +13544,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}/repos', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -13569,7 +13579,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -13618,7 +13628,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -13645,7 +13655,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -13669,7 +13679,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -13702,7 +13712,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -13726,7 +13736,7 @@ export class GithubClient {
       r.applyTemplating('/orgs/{org}/teams/{team_slug}/teams', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -13753,7 +13763,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/cards/{card_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -13807,7 +13817,7 @@ export class GithubClient {
       card_id: number;
     },
     body: {
-      note?: string;
+      note?: string | null;
       archived?: boolean;
     },
   ): Promise<ProjectCard> {
@@ -13815,7 +13825,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/cards/{card_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -13879,7 +13889,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/cards/{card_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -13947,7 +13957,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/cards/{card_id}/moves', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -14036,7 +14046,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/{column_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -14097,7 +14107,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/{column_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -14143,7 +14153,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/{column_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -14193,7 +14203,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/{column_id}/cards', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.archived_state !== undefined)
       requestContext.setQueryParam(
         'archived_state',
@@ -14253,7 +14263,7 @@ export class GithubClient {
     },
     body:
       | {
-          note: string;
+          note: string | null;
         }
       | {
           content_id: number;
@@ -14264,7 +14274,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/{column_id}/cards', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -14347,7 +14357,7 @@ export class GithubClient {
       r.applyTemplating('/projects/columns/{column_id}/moves', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -14404,7 +14414,7 @@ export class GithubClient {
       r.applyTemplating('/projects/{project_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -14450,7 +14460,7 @@ export class GithubClient {
     },
     body: {
       name?: string;
-      body?: string;
+      body?: string | null;
       state?: string;
       organization_permission?: 'read' | 'write' | 'admin' | 'none';
       private?: boolean;
@@ -14460,7 +14470,7 @@ export class GithubClient {
       r.applyTemplating('/projects/{project_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -14539,7 +14549,7 @@ export class GithubClient {
       r.applyTemplating('/projects/{project_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -14613,7 +14623,7 @@ export class GithubClient {
       r.applyTemplating('/projects/{project_id}/collaborators', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.affiliation !== undefined)
       requestContext.setQueryParam(
         'affiliation',
@@ -14715,7 +14725,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -14799,7 +14809,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -14882,7 +14892,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -14965,7 +14975,7 @@ export class GithubClient {
       r.applyTemplating('/projects/{project_id}/columns', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -15026,7 +15036,7 @@ export class GithubClient {
       r.applyTemplating('/projects/{project_id}/columns', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -15081,7 +15091,7 @@ export class GithubClient {
       r.applyTemplating('/rate_limit', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15117,7 +15127,7 @@ export class GithubClient {
       r.applyTemplating('/reactions/{reaction_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -15188,7 +15198,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15255,7 +15265,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -15301,7 +15311,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -15350,7 +15360,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/artifacts', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -15384,7 +15394,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15409,7 +15419,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -15435,7 +15445,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('302', response.httpStatusCode))
       throw new r.ApiException<any>(
@@ -15460,7 +15470,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/jobs/{job_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
       return r.applyTransforms(
@@ -15485,7 +15495,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('302', response.httpStatusCode))
       throw new r.ApiException<any>(
@@ -15509,7 +15519,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/permissions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15538,7 +15548,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/permissions', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -15563,7 +15573,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15590,7 +15600,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -15617,7 +15627,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/runners', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -15650,7 +15660,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15676,7 +15686,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -15700,7 +15710,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -15725,7 +15735,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15750,7 +15760,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -15793,7 +15803,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/runs', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.actor !== undefined)
       requestContext.setQueryParam('actor', r.serializeParameter(params.actor));
     if (params.branch !== undefined)
@@ -15838,7 +15848,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/runs/{run_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15860,7 +15870,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/runs/{run_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -15885,7 +15895,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -15917,7 +15927,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -15951,7 +15961,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
       return r.applyTransforms(
@@ -15982,7 +15992,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.filter !== undefined)
       requestContext.setQueryParam(
         'filter',
@@ -16021,7 +16031,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('302', response.httpStatusCode))
       throw new r.ApiException<any>(
@@ -16049,7 +16059,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16074,7 +16084,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16108,7 +16118,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -16136,7 +16146,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -16161,7 +16171,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16187,7 +16197,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/secrets', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -16220,7 +16230,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16245,7 +16255,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16276,7 +16286,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -16311,7 +16321,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16337,7 +16347,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/actions/workflows', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -16371,7 +16381,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16396,7 +16406,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16429,7 +16439,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -16455,7 +16465,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16502,7 +16512,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.actor !== undefined)
       requestContext.setQueryParam('actor', r.serializeParameter(params.actor));
     if (params.branch !== undefined)
@@ -16550,7 +16560,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16573,7 +16583,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/assignees', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -16613,7 +16623,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/assignees/{assignee}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16646,7 +16656,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16670,7 +16680,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16694,7 +16704,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/branches', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.protected !== undefined)
       requestContext.setQueryParam(
         'protected',
@@ -16739,7 +16749,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/branches/{branch}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16787,7 +16797,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16819,8 +16829,8 @@ export class GithubClient {
       required_status_checks: {
         strict: boolean;
         contexts: string[];
-      };
-      enforce_admins: boolean;
+      } | null;
+      enforce_admins: boolean | null;
       required_pull_request_reviews: {
         dismissal_restrictions?: {
           users?: string[];
@@ -16829,14 +16839,14 @@ export class GithubClient {
         dismiss_stale_reviews?: boolean;
         require_code_owner_reviews?: boolean;
         required_approving_review_count?: number;
-      };
+      } | null;
       restrictions: {
         users: string[];
         teams: string[];
         apps?: string[];
-      };
+      } | null;
       required_linear_history?: boolean;
-      allow_force_pushes?: boolean;
+      allow_force_pushes?: boolean | null;
       allow_deletions?: boolean;
     },
   ): Promise<ProtectedBranch> {
@@ -16847,7 +16857,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -16914,7 +16924,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -16948,7 +16958,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -16975,7 +16985,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17002,7 +17012,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -17036,7 +17046,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17072,7 +17082,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17109,7 +17119,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -17143,7 +17153,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17179,7 +17189,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17215,7 +17225,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -17249,7 +17259,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17289,7 +17299,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17333,7 +17343,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -17358,7 +17368,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17397,7 +17407,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17455,7 +17465,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17504,7 +17514,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17548,7 +17558,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17582,7 +17592,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -17607,7 +17617,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17648,7 +17658,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17690,7 +17700,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17732,7 +17742,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17769,7 +17779,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17810,7 +17820,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17852,7 +17862,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17894,7 +17904,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -17931,7 +17941,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -17972,7 +17982,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -18014,7 +18024,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -18056,7 +18066,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -18098,7 +18108,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -18193,7 +18203,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/check-runs', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -18219,7 +18229,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -18289,7 +18299,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -18317,7 +18327,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -18352,7 +18362,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/check-suites', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -18385,7 +18395,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -18411,7 +18421,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -18444,7 +18454,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.check_name !== undefined)
       requestContext.setQueryParam(
         'check_name',
@@ -18493,7 +18503,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -18520,7 +18530,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/code-scanning/alerts', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.tool_name !== undefined)
       requestContext.setQueryParam(
         'tool_name',
@@ -18601,7 +18611,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -18665,7 +18675,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -18727,7 +18737,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.page !== undefined)
       requestContext.setQueryParam('page', r.serializeParameter(params.page));
     if (params.per_page !== undefined)
@@ -18798,7 +18808,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/code-scanning/analyses', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.tool_name !== undefined)
       requestContext.setQueryParam(
         'tool_name',
@@ -18882,7 +18892,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -18932,7 +18942,7 @@ export class GithubClient {
     owner: string;
     repo: string;
     analysis_id: number;
-    confirm_delete?: string;
+    confirm_delete?: string | null;
   }): Promise<CodeScanningAnalysisDeletion> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
@@ -18941,7 +18951,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.confirm_delete !== undefined)
       requestContext.setQueryParam(
         'confirm_delete',
@@ -19021,7 +19031,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/code-scanning/sarifs', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
@@ -19100,7 +19110,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -19159,7 +19169,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/collaborators', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.affiliation !== undefined)
       requestContext.setQueryParam(
         'affiliation',
@@ -19207,7 +19217,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -19247,7 +19257,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -19300,7 +19310,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -19325,7 +19335,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -19359,7 +19369,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/comments', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -19390,7 +19400,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/comments/{comment_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -19426,7 +19436,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/comments/{comment_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -19458,7 +19468,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/comments/{comment_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -19503,7 +19513,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -19578,7 +19588,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -19637,7 +19647,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -19667,7 +19677,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/commits', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sha !== undefined)
       requestContext.setQueryParam('sha', r.serializeParameter(params.sha));
     if (params.path !== undefined)
@@ -19757,7 +19767,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -19809,7 +19819,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -19851,7 +19861,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -19897,7 +19907,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -19944,7 +19954,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/commits/{ref}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.page !== undefined)
       requestContext.setQueryParam('page', r.serializeParameter(params.page));
     if (params.per_page !== undefined)
@@ -20012,7 +20022,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.check_name !== undefined)
       requestContext.setQueryParam(
         'check_name',
@@ -20073,7 +20083,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.app_id !== undefined)
       requestContext.setQueryParam(
         'app_id',
@@ -20116,7 +20126,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/commits/{ref}/status', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -20156,7 +20166,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/commits/{ref}/statuses', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -20198,7 +20208,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -20219,7 +20229,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/community/profile', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -20245,7 +20255,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -20288,7 +20298,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/contents/{path}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.ref !== undefined)
       requestContext.setQueryParam('ref', r.serializeParameter(params.ref));
     const response = await this.http.send(requestContext);
@@ -20359,7 +20369,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/contents/{path}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -20433,7 +20443,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/contents/{path}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -20500,7 +20510,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/contributors', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.anon !== undefined)
       requestContext.setQueryParam('anon', r.serializeParameter(params.anon));
     if (params.per_page !== undefined)
@@ -20557,7 +20567,7 @@ export class GithubClient {
     sha?: string;
     ref?: string;
     task?: string;
-    environment?: string;
+    environment?: string | null;
     per_page?: number;
     page?: number;
   }): Promise<Deployment[]> {
@@ -20565,7 +20575,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/deployments', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sha !== undefined)
       requestContext.setQueryParam('sha', r.serializeParameter(params.sha));
     if (params.ref !== undefined)
@@ -20614,7 +20624,7 @@ export class GithubClient {
           }
         | string;
       environment?: string;
-      description?: string;
+      description?: string | null;
       transient_environment?: boolean;
       production_environment?: boolean;
       created_at?: string;
@@ -20624,7 +20634,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/deployments', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -20686,7 +20696,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -20720,7 +20730,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -20765,7 +20775,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -20826,7 +20836,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -20862,7 +20872,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -20914,7 +20924,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/dispatches', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -20948,7 +20958,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/environments', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -20975,7 +20985,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -20996,12 +21006,14 @@ export class GithubClient {
     },
     body: {
       wait_timer?: WaitTimer;
-      reviewers?: {
-        type?: DeploymentReviewerType;
-        id?: number;
-      }[];
+      reviewers?:
+        | {
+            type?: DeploymentReviewerType;
+            id?: number;
+          }[]
+        | null;
       deployment_branch_policy?: Deployment_branch_policy;
-    },
+    } | null,
   ): Promise<Environment> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
@@ -21010,7 +21022,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -21045,7 +21057,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -21068,7 +21080,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/events', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -21103,7 +21115,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/forks', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.per_page !== undefined)
@@ -21152,13 +21164,13 @@ export class GithubClient {
     },
     body: {
       organization?: string;
-    },
+    } | null,
   ): Promise<Repository> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/repos/{owner}/{repo}/forks', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.org !== undefined)
       requestContext.setQueryParam('org', r.serializeParameter(params.org));
     if (params.organization !== undefined)
@@ -21229,7 +21241,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/blobs', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -21288,7 +21300,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/blobs/{file_sha}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -21354,7 +21366,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/commits', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -21398,7 +21410,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -21434,7 +21446,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -21465,7 +21477,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/ref/{ref}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -21502,7 +21514,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/refs', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -21540,7 +21552,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/refs/{ref}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -21572,7 +21584,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/refs/{ref}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -21615,7 +21627,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/tags', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -21647,7 +21659,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/tags/{tag_sha}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -21679,7 +21691,7 @@ export class GithubClient {
         path?: string;
         mode?: '100644' | '100755' | '040000' | '160000' | '120000';
         type?: 'blob' | 'tree' | 'commit';
-        sha?: string;
+        sha?: string | null;
         content?: string;
       }[];
       base_tree?: string;
@@ -21689,7 +21701,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/trees', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -21740,7 +21752,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/git/trees/{tree_sha}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.recursive !== undefined)
       requestContext.setQueryParam(
         'recursive',
@@ -21786,7 +21798,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -21840,7 +21852,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -21890,7 +21902,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks/{hook_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -21937,7 +21949,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks/{hook_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -21978,7 +21990,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks/{hook_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -22009,7 +22021,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks/{hook_id}/config', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -22039,7 +22051,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks/{hook_id}/config', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -22062,7 +22074,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks/{hook_id}/pings', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -22093,7 +22105,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/hooks/{hook_id}/tests', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -22123,7 +22135,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/import', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -22162,7 +22174,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/import', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -22210,7 +22222,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/import', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -22232,7 +22244,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/import', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -22254,7 +22266,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/import/authors', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     const response = await this.http.send(requestContext);
@@ -22299,7 +22311,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -22339,7 +22351,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/import/large_files', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -22367,7 +22379,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/import/lfs', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -22398,7 +22410,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/installation', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -22437,7 +22449,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/interaction-limits', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -22463,7 +22475,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/interaction-limits', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -22496,7 +22508,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/interaction-limits', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -22528,7 +22540,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/invitations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -22567,7 +22579,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -22593,7 +22605,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -22625,7 +22637,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/issues', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.milestone !== undefined)
       requestContext.setQueryParam(
         'milestone',
@@ -22718,15 +22730,15 @@ export class GithubClient {
     body: {
       title: string | number;
       body?: string;
-      assignee?: string;
-      milestone?: string | number;
+      assignee?: string | null;
+      milestone?: (string | number) | null;
       labels?: (
         | string
         | {
             id?: number;
             name?: string;
-            description?: string;
-            color?: string;
+            description?: string | null;
+            color?: string | null;
           }
       )[];
       assignees?: string[];
@@ -22736,7 +22748,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/issues', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -22814,7 +22826,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/issues/comments', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.direction !== undefined)
@@ -22875,7 +22887,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -22914,7 +22926,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -22949,7 +22961,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -22985,7 +22997,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -23060,7 +23072,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -23119,7 +23131,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -23142,7 +23154,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/issues/events', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -23185,7 +23197,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -23234,7 +23246,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/issues/{issue_number}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -23290,18 +23302,18 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
-      title?: string | number;
-      body?: string;
-      assignee?: string;
+      title?: (string | number) | null;
+      body?: string | null;
+      assignee?: string | null;
       state?: 'open' | 'closed';
-      milestone?: string | number;
+      milestone?: (string | number) | null;
       labels?: (
         | string
         | {
             id?: number;
             name?: string;
-            description?: string;
-            color?: string;
+            description?: string | null;
+            color?: string | null;
           }
       )[];
       assignees?: string[];
@@ -23311,7 +23323,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/issues/{issue_number}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -23402,7 +23414,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -23433,7 +23445,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -23462,7 +23474,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     if (params.per_page !== undefined)
@@ -23521,7 +23533,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -23585,7 +23597,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -23630,7 +23642,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -23678,7 +23690,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -23729,7 +23741,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -23775,7 +23787,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -23810,7 +23822,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -23851,7 +23863,7 @@ export class GithubClient {
     },
     body: {
       lock_reason?: 'off-topic' | 'too heated' | 'resolved' | 'spam';
-    },
+    } | null,
   ): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
@@ -23860,7 +23872,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -23922,7 +23934,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -23976,7 +23988,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -24060,7 +24072,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -24110,7 +24122,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -24137,7 +24149,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -24201,7 +24213,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/keys', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -24238,7 +24250,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/keys', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -24270,7 +24282,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/keys/{key_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -24301,7 +24313,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/keys/{key_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -24324,7 +24336,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/labels', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -24370,7 +24382,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/labels', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -24411,7 +24423,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/labels/{name}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -24449,7 +24461,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/labels/{name}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -24472,7 +24484,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/labels/{name}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -24493,7 +24505,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/languages', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -24514,7 +24526,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/license', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -24542,7 +24554,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/merges', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -24615,7 +24627,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/milestones', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.state !== undefined)
       requestContext.setQueryParam('state', r.serializeParameter(params.state));
     if (params.sort !== undefined)
@@ -24671,7 +24683,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/milestones', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -24715,7 +24727,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -24757,7 +24769,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -24783,7 +24795,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -24819,7 +24831,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -24855,7 +24867,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/notifications', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.all !== undefined)
       requestContext.setQueryParam('all', r.serializeParameter(params.all));
     if (params.participating !== undefined)
@@ -24904,7 +24916,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/notifications', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
@@ -24923,7 +24935,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pages', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -24961,7 +24973,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pages', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -25013,7 +25025,7 @@ export class GithubClient {
       repo: string;
     },
     body: {
-      cname?: string;
+      cname?: string | null;
       public?: boolean;
       source:
         | ('gh-pages' | 'master' | 'master /docs')
@@ -25027,7 +25039,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pages', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -25067,7 +25079,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pages', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -25122,7 +25134,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pages/builds', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -25152,7 +25164,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pages/builds', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
       return r.applyTransforms(
@@ -25173,7 +25185,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pages/builds/latest', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -25198,7 +25210,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -25222,7 +25234,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/projects', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.state !== undefined)
       requestContext.setQueryParam('state', r.serializeParameter(params.state));
     if (params.per_page !== undefined)
@@ -25305,7 +25317,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/projects', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -25379,7 +25391,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pulls', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.state !== undefined)
       requestContext.setQueryParam('state', r.serializeParameter(params.state));
     if (params.head !== undefined)
@@ -25451,7 +25463,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pulls', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -25496,7 +25508,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pulls/comments', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.direction !== undefined)
@@ -25539,7 +25551,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -25580,7 +25592,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -25608,7 +25620,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -25653,7 +25665,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -25728,7 +25740,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -25787,7 +25799,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -25809,7 +25821,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pulls/{pull_number}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -25867,7 +25879,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/pulls/{pull_number}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -25916,7 +25928,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.direction !== undefined)
@@ -25972,7 +25984,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -26024,7 +26036,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -26063,7 +26075,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -26099,7 +26111,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -26151,7 +26163,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -26184,7 +26196,7 @@ export class GithubClient {
       commit_message?: string;
       sha?: string;
       merge_method?: 'merge' | 'squash' | 'rebase';
-    },
+    } | null,
   ): Promise<PullRequestMergeResult> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
@@ -26193,7 +26205,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -26276,7 +26288,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -26316,7 +26328,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -26366,7 +26378,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -26403,7 +26415,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -26453,7 +26465,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -26498,7 +26510,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -26538,7 +26550,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -26574,7 +26586,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -26620,7 +26632,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -26670,7 +26682,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -26721,7 +26733,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -26770,7 +26782,7 @@ export class GithubClient {
     },
     body: {
       expected_head_sha?: string;
-    },
+    } | null,
   ): Promise<{
     message?: string;
     url?: string;
@@ -26782,7 +26794,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
@@ -26839,7 +26851,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/readme', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.ref !== undefined)
       requestContext.setQueryParam('ref', r.serializeParameter(params.ref));
     const response = await this.http.send(requestContext);
@@ -26882,7 +26894,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/readme/{dir}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.ref !== undefined)
       requestContext.setQueryParam('ref', r.serializeParameter(params.ref));
     const response = await this.http.send(requestContext);
@@ -26925,7 +26937,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/releases', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -26974,7 +26986,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/releases', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -27009,7 +27021,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27073,7 +27085,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -27099,7 +27111,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -27120,7 +27132,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/releases/latest', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27142,7 +27154,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/releases/tags/{tag}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27173,7 +27185,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/releases/{release_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27214,7 +27226,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/releases/{release_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -27237,7 +27249,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/releases/{release_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -27264,7 +27276,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -27303,7 +27315,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.name !== undefined)
       requestContext.setQueryParam('name', r.serializeParameter(params.name));
     if (params.label !== undefined)
@@ -27332,7 +27344,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/secret-scanning/alerts', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.state !== undefined)
       requestContext.setQueryParam('state', r.serializeParameter(params.state));
     if (params.page !== undefined)
@@ -27392,7 +27404,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27447,7 +27459,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -27504,7 +27516,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/stargazers', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -27543,7 +27555,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/stats/code_frequency', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27566,7 +27578,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/stats/commit_activity', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27589,7 +27601,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/stats/contributors', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27612,7 +27624,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/stats/participation', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27642,7 +27654,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/stats/punch_card', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27674,7 +27686,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/statuses/{sha}', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -27698,7 +27710,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/subscribers', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -27728,7 +27740,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/subscription', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -27773,7 +27785,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/subscription', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -27795,7 +27807,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/subscription', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -27818,7 +27830,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/tags', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -27849,7 +27861,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/tarball/{ref}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('302', response.httpStatusCode))
       throw new r.ApiException<any>(
@@ -27875,7 +27887,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/teams', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -27907,7 +27919,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/topics', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.page !== undefined)
       requestContext.setQueryParam('page', r.serializeParameter(params.page));
     if (params.per_page !== undefined)
@@ -27963,7 +27975,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/topics', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -28018,7 +28030,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/traffic/clones', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per !== undefined)
       requestContext.setQueryParam('per', r.serializeParameter(params.per));
     const response = await this.http.send(requestContext);
@@ -28050,7 +28062,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/traffic/popular/paths', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -28085,7 +28097,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -28118,7 +28130,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/traffic/views', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per !== undefined)
       requestContext.setQueryParam('per', r.serializeParameter(params.per));
     const response = await this.http.send(requestContext);
@@ -28156,7 +28168,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/transfer', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('202', response.httpStatusCode))
@@ -28178,7 +28190,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/vulnerability-alerts', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -28208,7 +28220,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/vulnerability-alerts', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -28229,7 +28241,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/vulnerability-alerts', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -28251,7 +28263,7 @@ export class GithubClient {
       r.applyTemplating('/repos/{owner}/{repo}/zipball/{ref}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('302', response.httpStatusCode))
       throw new r.ApiException<any>(
@@ -28287,7 +28299,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -28308,7 +28320,7 @@ export class GithubClient {
       r.applyTemplating('/repositories', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     const response = await this.http.send(requestContext);
@@ -28359,7 +28371,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -28392,7 +28404,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -28417,7 +28429,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -28448,7 +28460,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -28483,7 +28495,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -28507,7 +28519,7 @@ export class GithubClient {
       r.applyTemplating('/scim/v2/enterprises/{enterprise}/Groups', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.startIndex !== undefined)
       requestContext.setQueryParam(
         'startIndex',
@@ -28555,7 +28567,7 @@ export class GithubClient {
       r.applyTemplating('/scim/v2/enterprises/{enterprise}/Groups', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -28581,7 +28593,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.excludedAttributes !== undefined)
       requestContext.setQueryParam(
         'excludedAttributes',
@@ -28619,7 +28631,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -28654,7 +28666,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -28679,7 +28691,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -28702,7 +28714,7 @@ export class GithubClient {
       r.applyTemplating('/scim/v2/enterprises/{enterprise}/Users', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.startIndex !== undefined)
       requestContext.setQueryParam(
         'startIndex',
@@ -28752,7 +28764,7 @@ export class GithubClient {
       r.applyTemplating('/scim/v2/enterprises/{enterprise}/Users', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -28777,7 +28789,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -28819,7 +28831,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -28850,7 +28862,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -28875,7 +28887,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -28898,7 +28910,7 @@ export class GithubClient {
       r.applyTemplating('/scim/v2/organizations/{org}/Users', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.startIndex !== undefined)
       requestContext.setQueryParam(
         'startIndex',
@@ -28986,7 +28998,7 @@ export class GithubClient {
       r.applyTemplating('/scim/v2/organizations/{org}/Users', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -29065,7 +29077,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -29136,7 +29148,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -29189,11 +29201,11 @@ export class GithubClient {
         path?: string;
         value?:
           | {
-              active?: boolean;
-              userName?: string;
-              externalId?: string;
-              givenName?: string;
-              familyName?: string;
+              active?: boolean | null;
+              userName?: string | null;
+              externalId?: string | null;
+              givenName?: string | null;
+              familyName?: string | null;
             }
           | {
               value?: string;
@@ -29210,7 +29222,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -29280,7 +29292,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -29335,7 +29347,7 @@ export class GithubClient {
       r.applyTemplating('/search/code', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.q !== undefined)
       requestContext.setQueryParam('q', r.serializeParameter(params.q));
     if (params.sort !== undefined)
@@ -29420,7 +29432,7 @@ export class GithubClient {
       r.applyTemplating('/search/commits', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.q !== undefined)
       requestContext.setQueryParam('q', r.serializeParameter(params.q));
     if (params.sort !== undefined)
@@ -29497,7 +29509,7 @@ export class GithubClient {
       r.applyTemplating('/search/issues', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.q !== undefined)
       requestContext.setQueryParam('q', r.serializeParameter(params.q));
     if (params.sort !== undefined)
@@ -29581,7 +29593,7 @@ export class GithubClient {
       r.applyTemplating('/search/labels', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.repository_id !== undefined)
       requestContext.setQueryParam(
         'repository_id',
@@ -29658,7 +29670,7 @@ export class GithubClient {
       r.applyTemplating('/search/repositories', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.q !== undefined)
       requestContext.setQueryParam('q', r.serializeParameter(params.q));
     if (params.sort !== undefined)
@@ -29730,7 +29742,7 @@ export class GithubClient {
       r.applyTemplating('/search/topics', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.q !== undefined)
       requestContext.setQueryParam('q', r.serializeParameter(params.q));
     const response = await this.http.send(requestContext);
@@ -29785,7 +29797,7 @@ export class GithubClient {
       r.applyTemplating('/search/users', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.q !== undefined)
       requestContext.setQueryParam('q', r.serializeParameter(params.q));
     if (params.sort !== undefined)
@@ -29851,7 +29863,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -29882,14 +29894,14 @@ export class GithubClient {
       description?: string;
       privacy?: 'secret' | 'closed';
       permission?: 'pull' | 'push' | 'admin';
-      parent_team_id?: number;
+      parent_team_id?: number | null;
     },
   ): Promise<TeamFull> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/teams/{team_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -29935,7 +29947,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -29976,7 +29988,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/discussions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.direction !== undefined)
       requestContext.setQueryParam(
         'direction',
@@ -30017,7 +30029,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/discussions', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -30042,7 +30054,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -30072,7 +30084,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -30097,7 +30109,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -30124,7 +30136,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.direction !== undefined)
       requestContext.setQueryParam(
         'direction',
@@ -30167,7 +30179,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -30193,7 +30205,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -30223,7 +30235,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -30249,7 +30261,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -30285,7 +30297,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -30337,7 +30349,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -30373,7 +30385,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.content !== undefined)
       requestContext.setQueryParam(
         'content',
@@ -30424,7 +30436,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -30447,7 +30459,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/invitations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -30479,7 +30491,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/members', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.role !== undefined)
       requestContext.setQueryParam('role', r.serializeParameter(params.role));
     if (params.per_page !== undefined)
@@ -30520,7 +30532,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/members/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -30550,7 +30562,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/members/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -30608,7 +30620,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/members/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -30638,7 +30650,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/memberships/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -30673,7 +30685,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/memberships/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -30732,7 +30744,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/memberships/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -30763,7 +30775,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/projects', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -30816,7 +30828,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/projects/{project_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -30865,7 +30877,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/projects/{project_id}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -30933,7 +30945,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/projects/{project_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -30987,7 +30999,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/repos', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -31027,7 +31039,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/repos/{owner}/{repo}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -31072,7 +31084,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/repos/{owner}/{repo}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -31113,7 +31125,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/repos/{owner}/{repo}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -31133,7 +31145,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/team-sync/group-mappings', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -31184,7 +31196,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/team-sync/group-mappings', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -31225,7 +31237,7 @@ export class GithubClient {
       r.applyTemplating('/teams/{team_id}/teams', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -31279,7 +31291,7 @@ export class GithubClient {
       r.applyTemplating('/user', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -31327,7 +31339,7 @@ export class GithubClient {
       name?: string;
       email?: string;
       blog?: string;
-      twitter_username?: string;
+      twitter_username?: string | null;
       company?: string;
       location?: string;
       hireable?: boolean;
@@ -31338,7 +31350,7 @@ export class GithubClient {
       r.applyTemplating('/user', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -31402,7 +31414,7 @@ export class GithubClient {
       r.applyTemplating('/user/blocks', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -31472,7 +31484,7 @@ export class GithubClient {
       r.applyTemplating('/user/blocks/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -31526,7 +31538,7 @@ export class GithubClient {
       r.applyTemplating('/user/blocks/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -31589,7 +31601,7 @@ export class GithubClient {
       r.applyTemplating('/user/blocks/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -31649,7 +31661,7 @@ export class GithubClient {
       r.applyTemplating('/user/email/visibility', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -31718,7 +31730,7 @@ export class GithubClient {
       r.applyTemplating('/user/emails', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -31789,7 +31801,7 @@ export class GithubClient {
       r.applyTemplating('/user/emails', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -31863,7 +31875,7 @@ export class GithubClient {
       r.applyTemplating('/user/emails', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
@@ -31930,7 +31942,7 @@ export class GithubClient {
       r.applyTemplating('/user/followers', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -31987,7 +31999,7 @@ export class GithubClient {
       r.applyTemplating('/user/following', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -32043,7 +32055,7 @@ export class GithubClient {
       r.applyTemplating('/user/following/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -32097,7 +32109,7 @@ export class GithubClient {
       r.applyTemplating('/user/following/{username}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -32151,7 +32163,7 @@ export class GithubClient {
       r.applyTemplating('/user/following/{username}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -32208,7 +32220,7 @@ export class GithubClient {
       r.applyTemplating('/user/gpg_keys', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -32276,7 +32288,7 @@ export class GithubClient {
       r.applyTemplating('/user/gpg_keys', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -32342,7 +32354,7 @@ export class GithubClient {
       r.applyTemplating('/user/gpg_keys/{gpg_key_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -32398,7 +32410,7 @@ export class GithubClient {
       r.applyTemplating('/user/gpg_keys/{gpg_key_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -32467,7 +32479,7 @@ export class GithubClient {
       r.applyTemplating('/user/installations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -32546,7 +32558,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -32606,7 +32618,7 @@ export class GithubClient {
       ),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -32657,7 +32669,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -32702,7 +32714,7 @@ export class GithubClient {
       r.applyTemplating('/user/interaction-limits', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -32725,7 +32737,7 @@ export class GithubClient {
       r.applyTemplating('/user/interaction-limits', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -32755,7 +32767,7 @@ export class GithubClient {
       r.applyTemplating('/user/interaction-limits', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -32788,7 +32800,7 @@ export class GithubClient {
       r.applyTemplating('/user/issues', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.filter !== undefined)
       requestContext.setQueryParam(
         'filter',
@@ -32857,7 +32869,7 @@ export class GithubClient {
       r.applyTemplating('/user/keys', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -32926,7 +32938,7 @@ export class GithubClient {
       r.applyTemplating('/user/keys', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -32992,7 +33004,7 @@ export class GithubClient {
       r.applyTemplating('/user/keys/{key_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -33048,7 +33060,7 @@ export class GithubClient {
       r.applyTemplating('/user/keys/{key_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -33105,7 +33117,7 @@ export class GithubClient {
       r.applyTemplating('/user/marketplace_purchases', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -33162,7 +33174,7 @@ export class GithubClient {
       r.applyTemplating('/user/marketplace_purchases/stubbed', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -33211,7 +33223,7 @@ export class GithubClient {
       r.applyTemplating('/user/memberships/orgs', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.state !== undefined)
       requestContext.setQueryParam('state', r.serializeParameter(params.state));
     if (params.per_page !== undefined)
@@ -33278,7 +33290,7 @@ export class GithubClient {
       r.applyTemplating('/user/memberships/orgs/{org}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -33321,7 +33333,7 @@ export class GithubClient {
       r.applyTemplating('/user/memberships/orgs/{org}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
@@ -33370,7 +33382,7 @@ export class GithubClient {
       r.applyTemplating('/user/migrations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -33432,7 +33444,7 @@ export class GithubClient {
       r.applyTemplating('/user/migrations', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -33490,7 +33502,7 @@ export class GithubClient {
       r.applyTemplating('/user/migrations/{migration_id}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.exclude !== undefined)
       requestContext.setQueryParam(
         'exclude',
@@ -33551,7 +33563,7 @@ export class GithubClient {
       r.applyTemplating('/user/migrations/{migration_id}/archive', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('302', response.httpStatusCode))
       throw new r.ApiException<any>(
@@ -33601,7 +33613,7 @@ export class GithubClient {
       r.applyTemplating('/user/migrations/{migration_id}/archive', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -33661,7 +33673,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -33719,7 +33731,7 @@ export class GithubClient {
       r.applyTemplating('/user/migrations/{migration_id}/repositories', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -33758,7 +33770,7 @@ export class GithubClient {
       r.applyTemplating('/user/orgs', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -33821,7 +33833,7 @@ export class GithubClient {
       r.applyTemplating('/user/packages/{package_type}/{package_name}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -33848,7 +33860,7 @@ export class GithubClient {
       r.applyTemplating('/user/packages/{package_type}/{package_name}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -33906,7 +33918,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.token !== undefined)
       requestContext.setQueryParam('token', r.serializeParameter(params.token));
     const response = await this.http.send(requestContext);
@@ -33968,7 +33980,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.page !== undefined)
       requestContext.setQueryParam('page', r.serializeParameter(params.page));
     if (params.per_page !== undefined)
@@ -34037,7 +34049,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -34068,7 +34080,7 @@ export class GithubClient {
       ),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -34126,7 +34138,7 @@ export class GithubClient {
       ),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -34170,14 +34182,14 @@ export class GithubClient {
     params: {},
     body: {
       name: string;
-      body?: string;
+      body?: string | null;
     },
   ): Promise<Project> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/projects', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -34249,7 +34261,7 @@ export class GithubClient {
       r.applyTemplating('/user/public_emails', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -34322,7 +34334,7 @@ export class GithubClient {
       r.applyTemplating('/user/repos', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.visibility !== undefined)
       requestContext.setQueryParam(
         'visibility',
@@ -34432,7 +34444,7 @@ export class GithubClient {
       r.applyTemplating('/user/repos', params),
       r.HttpMethod.POST,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('201', response.httpStatusCode))
@@ -34508,7 +34520,7 @@ export class GithubClient {
       r.applyTemplating('/user/repository_invitations', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -34571,7 +34583,7 @@ export class GithubClient {
       r.applyTemplating('/user/repository_invitations/{invitation_id}', params),
       r.HttpMethod.PATCH,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -34627,7 +34639,7 @@ export class GithubClient {
       r.applyTemplating('/user/repository_invitations/{invitation_id}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -34686,7 +34698,7 @@ export class GithubClient {
       r.applyTemplating('/user/starred', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.direction !== undefined)
@@ -34750,7 +34762,7 @@ export class GithubClient {
       r.applyTemplating('/user/starred/{owner}/{repo}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -34807,7 +34819,7 @@ export class GithubClient {
       r.applyTemplating('/user/starred/{owner}/{repo}', params),
       r.HttpMethod.PUT,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -34864,7 +34876,7 @@ export class GithubClient {
       r.applyTemplating('/user/starred/{owner}/{repo}', params),
       r.HttpMethod.DELETE,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -34921,7 +34933,7 @@ export class GithubClient {
       r.applyTemplating('/user/subscriptions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -34978,7 +34990,7 @@ export class GithubClient {
       r.applyTemplating('/user/teams', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35035,7 +35047,7 @@ export class GithubClient {
       r.applyTemplating('/users', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     if (params.per_page !== undefined)
@@ -35073,7 +35085,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35106,7 +35118,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/events', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35138,7 +35150,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/events/orgs/{org}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35169,7 +35181,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/events/public', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35200,7 +35212,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/followers', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35231,7 +35243,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/following', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35261,7 +35273,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/following/{target_user}', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('204', response.httpStatusCode))
       return r.applyTransforms(
@@ -35293,7 +35305,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/gists', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.since !== undefined)
       requestContext.setQueryParam('since', r.serializeParameter(params.since));
     if (params.per_page !== undefined)
@@ -35335,7 +35347,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/gpg_keys', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35366,7 +35378,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/hovercard', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.subject_type !== undefined)
       requestContext.setQueryParam(
         'subject_type',
@@ -35414,7 +35426,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/installation', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35436,7 +35448,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/keys', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35467,7 +35479,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/orgs', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35507,7 +35519,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35538,7 +35550,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35599,7 +35611,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35622,7 +35634,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/projects', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.state !== undefined)
       requestContext.setQueryParam('state', r.serializeParameter(params.state));
     if (params.per_page !== undefined)
@@ -35678,7 +35690,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/received_events', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35709,7 +35721,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/received_events/public', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35743,7 +35755,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/repos', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.type !== undefined)
       requestContext.setQueryParam('type', r.serializeParameter(params.type));
     if (params.sort !== undefined)
@@ -35781,7 +35793,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/settings/billing/actions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35801,7 +35813,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/settings/billing/packages', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35824,7 +35836,7 @@ export class GithubClient {
       ),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
@@ -35848,7 +35860,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/starred', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.sort !== undefined)
       requestContext.setQueryParam('sort', r.serializeParameter(params.sort));
     if (params.direction !== undefined)
@@ -35886,7 +35898,7 @@ export class GithubClient {
       r.applyTemplating('/users/{username}/subscriptions', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     if (params.per_page !== undefined)
       requestContext.setQueryParam(
         'per_page',
@@ -35913,7 +35925,7 @@ export class GithubClient {
       r.applyTemplating('/zen', params),
       r.HttpMethod.GET,
     );
-    requestContext.setHeaderParam('Accept', 'application/json, */*;q=0.8');
+    requestContext.setHeaderParam('Content-Type', 'application/json');
     const response = await this.http.send(requestContext);
     if (r.isCodeInRange('200', response.httpStatusCode))
       return r.applyTransforms(
