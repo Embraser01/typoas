@@ -59,7 +59,6 @@ export function createTypeFromSchema(
         break;
       case 'string':
         switch (schema.format) {
-          case 'date':
           case 'date-time':
             node = factory.createTypeReferenceNode(
               factory.createIdentifier('Date'),
