@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`jsdoc on fields should add a simple jsdoc comment to a node 1`] = `
+"/**
+ * Test
+ */
+export type MyType = any;"
+`;
