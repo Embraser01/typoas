@@ -1,5 +1,6 @@
 /.idea/
-/packages/*/lib/*
+/packages/example-petstore/lib/*
+/packages/typoas-generator/lib/*
 
 .yarn/*
 !.yarn/cache
