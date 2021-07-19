@@ -1,36 +1,166 @@
 import * as r from '@typoas/runtime';
+/**
+ * Simple User
+ * Simple User
+ *
+ */
 export type SimpleUser = {
+  /**
+   * @example "octocat"
+   *
+   */
   login: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDQ6VXNlcjE="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   *
+   */
   avatar_url: string;
+  /**
+   * @example "41d064eb2195891e12d0413f63227ea7"
+   *
+   */
   gravatar_id: string | null;
+  /**
+   * @example "https://api.github.com/users/octocat"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/octocat"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/followers"
+   *
+   */
   followers_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/following{/other_user}"
+   *
+   */
   following_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/gists{/gist_id}"
+   *
+   */
   gists_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+   *
+   */
   starred_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/subscriptions"
+   *
+   */
   subscriptions_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/orgs"
+   *
+   */
   organizations_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/repos"
+   *
+   */
   repos_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/events{/privacy}"
+   *
+   */
   events_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/received_events"
+   *
+   */
   received_events_url: string;
+  /**
+   * @example "User"
+   *
+   */
   type: string;
   site_admin: boolean;
+  /**
+   * @example "\"2020-07-09T00:17:55Z\""
+   *
+   */
   starred_at?: string;
 } | null;
+/**
+ * GitHub app
+ * GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub.
+ *
+ */
 export type Integration = {
+  /**
+   * Unique identifier of the GitHub app
+   * @example 37
+   *
+   */
   id: number;
+  /**
+   * The slug name of the GitHub app
+   * @example "probot-owners"
+   *
+   */
   slug?: string;
+  /**
+   * @example "MDExOkludGVncmF0aW9uMQ=="
+   *
+   */
   node_id: string;
-  owner: any;
+  owner: any | null;
+  /**
+   * The name of the GitHub app
+   * @example "Probot Owners"
+   *
+   */
   name: string;
+  /**
+   * @example "The description of the app."
+   *
+   */
   description: string | null;
+  /**
+   * @example "https://example.com"
+   *
+   */
   external_url: string;
+  /**
+   * @example "https://github.com/apps/super-ci"
+   *
+   */
   html_url: string;
+  /**
+   * @example "2017-07-08T16:18:44-04:00"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2017-07-08T16:18:44-04:00"
+   *
+   */
   updated_at: Date;
+  /**
+   * The set of permissions for the GitHub app
+   * @example
+   * {
+   *   "issues": "read",
+   *   "deployments": "write"
+   * }
+   *
+   */
   permissions: {
     issues?: string;
     checks?: string;
@@ -40,56 +170,211 @@ export type Integration = {
   } & {
     [key: string]: string;
   };
+  /**
+   * The list of events for the GitHub app
+   * @example
+   * [
+   *   "label",
+   *   "deployment"
+   * ]
+   *
+   */
   events: string[];
+  /**
+   * The number of installations associated with the GitHub app
+   * @example 5
+   *
+   */
   installations_count?: number;
+  /**
+   * @example "\"Iv1.25b5d1e65ffc4022\""
+   *
+   */
   client_id?: string;
+  /**
+   * @example "\"1d4b2097ac622ba702d19de498f005747a8b21d3\""
+   *
+   */
   client_secret?: string;
+  /**
+   * @example "\"6fba8f2fc8a7e8f2cca5577eddd82ca7586b3b6b\""
+   *
+   */
   webhook_secret?: string;
+  /**
+   * @example "\"-----BEGIN RSA PRIVATE KEY-----\\nMIIEogIBAAKCAQEArYxrNYD/iT5CZVpRJu4rBKmmze3PVmT/gCo2ATUvDvZTPTey\\nxcGJ3vvrJXazKk06pN05TN29o98jrYz4cengG3YGsXPNEpKsIrEl8NhbnxapEnM9\\nJCMRe0P5JcPsfZlX6hmiT7136GRWiGOUba2X9+HKh8QJVLG5rM007TBER9/z9mWm\\nrJuNh+m5l320oBQY/Qq3A7wzdEfZw8qm/mIN0FCeoXH1L6B8xXWaAYBwhTEh6SSn\\nZHlO1Xu1JWDmAvBCi0RO5aRSKM8q9QEkvvHP4yweAtK3N8+aAbZ7ovaDhyGz8r6r\\nzhU1b8Uo0Z2ysf503WqzQgIajr7Fry7/kUwpgQIDAQABAoIBADwJp80Ko1xHPZDy\\nfcCKBDfIuPvkmSW6KumbsLMaQv1aGdHDwwTGv3t0ixSay8CGlxMRtRDyZPib6SvQ\\n6OH/lpfpbMdW2ErkksgtoIKBVrDilfrcAvrNZu7NxRNbhCSvN8q0s4ICecjbbVQh\\nnueSdlA6vGXbW58BHMq68uRbHkP+k+mM9U0mDJ1HMch67wlg5GbayVRt63H7R2+r\\nVxcna7B80J/lCEjIYZznawgiTvp3MSanTglqAYi+m1EcSsP14bJIB9vgaxS79kTu\\noiSo93leJbBvuGo8QEiUqTwMw4tDksmkLsoqNKQ1q9P7LZ9DGcujtPy4EZsamSJT\\ny8OJt0ECgYEA2lxOxJsQk2kI325JgKFjo92mQeUObIvPfSNWUIZQDTjniOI6Gv63\\nGLWVFrZcvQBWjMEQraJA9xjPbblV8PtfO87MiJGLWCHFxmPz2dzoedN+2Coxom8m\\nV95CLz8QUShuao6u/RYcvUaZEoYs5bHcTmy5sBK80JyEmafJPtCQVxMCgYEAy3ar\\nZr3yv4xRPEPMat4rseswmuMooSaK3SKub19WFI5IAtB/e7qR1Rj9JhOGcZz+OQrl\\nT78O2OFYlgOIkJPvRMrPpK5V9lslc7tz1FSh3BZMRGq5jSyD7ETSOQ0c8T2O/s7v\\nbeEPbVbDe4mwvM24XByH0GnWveVxaDl51ABD65sCgYB3ZAspUkOA5egVCh8kNpnd\\nSd6SnuQBE3ySRlT2WEnCwP9Ph6oPgn+oAfiPX4xbRqkL8q/k0BdHQ4h+zNwhk7+h\\nWtPYRAP1Xxnc/F+jGjb+DVaIaKGU18MWPg7f+FI6nampl3Q0KvfxwX0GdNhtio8T\\nTj1E+SnFwh56SRQuxSh2gwKBgHKjlIO5NtNSflsUYFM+hyQiPiqnHzddfhSG+/3o\\nm5nNaSmczJesUYreH5San7/YEy2UxAugvP7aSY2MxB+iGsiJ9WD2kZzTUlDZJ7RV\\nUzWsoqBR+eZfVJ2FUWWvy8TpSG6trh4dFxImNtKejCR1TREpSiTV3Zb1dmahK9GV\\nrK9NAoGAbBxRLoC01xfxCTgt5BDiBcFVh4fp5yYKwavJPLzHSpuDOrrI9jDn1oKN\\nonq5sDU1i391zfQvdrbX4Ova48BN+B7p63FocP/MK5tyyBoT8zQEk2+vWDOw7H/Z\\nu5dTCPxTIsoIwUw1I+7yIxqJzLPFgR2gVBwY1ra/8iAqCj+zeBw=\\n-----END RSA PRIVATE KEY-----\\n\""
+   *
+   */
   pem?: string;
 } & {
   [key: string]: any;
 };
+/**
+ * Basic Error
+ * Basic Error
+ *
+ */
 export type BasicError = {
   message?: string;
   documentation_url?: string;
 };
+/**
+ * Validation Error Simple
+ * Validation Error Simple
+ *
+ */
 export type ValidationErrorSimple = {
   message: string;
   documentation_url: string;
   errors?: string[];
 };
+/**
+ * The URL to which the payloads will be delivered.
+ * @example "https://example.com/webhook"
+ *
+ */
 export type WebhookConfigUrl = string;
+/**
+ * The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
+ * @example "\"json\""
+ *
+ */
 export type WebhookConfigContentType = string;
+/**
+ * If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://docs.github.com/webhooks/event-payloads/#delivery-headers).
+ * @example "\"********\""
+ *
+ */
 export type WebhookConfigSecret = string;
+/**
+ * Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**
+ * @example "\"0\""
+ *
+ */
 export type WebhookConfigInsecureSsl = string;
+/**
+ * Webhook Configuration
+ * Configuration object of the webhook
+ *
+ */
 export type WebhookConfig = {
   url?: WebhookConfigUrl;
   content_type?: WebhookConfigContentType;
   secret?: WebhookConfigSecret;
   insecure_ssl?: WebhookConfigInsecureSsl;
 };
+/**
+ * Enterprise
+ * An enterprise account
+ *
+ */
 export type Enterprise = {
+  /**
+   * A short description of the enterprise.
+   *
+   */
   description?: string | null;
+  /**
+   * @example "https://github.com/enterprises/octo-business"
+   *
+   */
   html_url: string;
+  /**
+   * The enterprise's website URL.
+   *
+   */
   website_url?: string | null;
+  /**
+   * Unique identifier of the enterprise
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+   *
+   */
   node_id: string;
+  /**
+   * The name of the enterprise.
+   * @example "Octo Business"
+   *
+   */
   name: string;
+  /**
+   * The slug url identifier for the enterprise.
+   * @example "octo-business"
+   *
+   */
   slug: string;
+  /**
+   * @example "2019-01-26T19:01:12Z"
+   *
+   */
   created_at: Date | null;
+  /**
+   * @example "2019-01-26T19:14:43Z"
+   *
+   */
   updated_at: Date | null;
   avatar_url: string;
 };
+/**
+ * Installation
+ * Installation
+ *
+ */
 export type Installation = {
+  /**
+   * The ID of the installation.
+   * @example 1
+   *
+   */
   id: number;
   account: (SimpleUser | Enterprise) | null;
+  /**
+   * Describe whether all repositories have been selected or there's a selection involved
+   *
+   */
   repository_selection: 'all' | 'selected';
+  /**
+   * @example "https://api.github.com/installations/1/access_tokens"
+   *
+   */
   access_tokens_url: string;
+  /**
+   * @example "https://api.github.com/installation/repositories"
+   *
+   */
   repositories_url: string;
+  /**
+   * @example "https://github.com/organizations/github/settings/installations/1"
+   *
+   */
   html_url: string;
+  /**
+   * @example 1
+   *
+   */
   app_id: number;
+  /**
+   * The ID of the user or organization this token is being scoped to.
+   *
+   */
   target_id: number;
+  /**
+   * @example "Organization"
+   *
+   */
   target_type: string;
+  /**
+   * @example
+   * {
+   *   "issues": "read",
+   *   "deployments": "write"
+   * }
+   *
+   */
   permissions: {
     deployments?: string;
     checks?: string;
@@ -97,66 +382,278 @@ export type Installation = {
     contents?: string;
     pull_requests?: string;
     statuses?: string;
+    /**
+     * @example "\"read\""
+     *
+     */
     issues?: string;
+    /**
+     * @example "\"read\""
+     *
+     */
     organization_administration?: string;
   };
   events: string[];
   created_at: Date;
   updated_at: Date;
+  /**
+   * @example "config.yaml"
+   *
+   */
   single_file_name: string | null;
+  /**
+   * @example true
+   *
+   */
   has_multiple_single_files?: boolean;
+  /**
+   * @example
+   * [
+   *   "config.yml",
+   *   ".github/issue_TEMPLATE.md"
+   * ]
+   *
+   */
   single_file_paths?: string[];
+  /**
+   * @example "github-actions"
+   *
+   */
   app_slug: string;
-  suspended_by?: any;
+  suspended_by?: any | null;
   suspended_at?: Date | null;
+  /**
+   * @example "\"test_13f1e99741e3e004@d7e1eb0bc0a1ba12.com\""
+   *
+   */
   contact_email?: string | null;
 };
+/**
+ * App Permissions
+ * The permissions granted to the user-to-server access token.
+ * @example
+ * {
+ *   "contents": "read",
+ *   "issues": "read",
+ *   "deployments": "write",
+ *   "single_file": "read"
+ * }
+ *
+ */
 export type AppPermissions = {
+  /**
+   * The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts. Can be one of: `read` or `write`.
+   *
+   */
   actions?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation. Can be one of: `read` or `write`.
+   *
+   */
   administration?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for checks on code. Can be one of: `read` or `write`.
+   *
+   */
   checks?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for notification of content references and creation content attachments. Can be one of: `read` or `write`.
+   *
+   */
   content_references?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges. Can be one of: `read` or `write`.
+   *
+   */
   contents?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for deployments and deployment statuses. Can be one of: `read` or `write`.
+   *
+   */
   deployments?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for managing repository environments. Can be one of: `read` or `write`.
+   *
+   */
   environments?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones. Can be one of: `read` or `write`.
+   *
+   */
   issues?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata. Can be one of: `read` or `write`.
+   *
+   */
   metadata?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for packages published to GitHub Packages. Can be one of: `read` or `write`.
+   *
+   */
   packages?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to retrieve Pages statuses, configuration, and builds, as well as create new builds. Can be one of: `read` or `write`.
+   *
+   */
   pages?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges. Can be one of: `read` or `write`.
+   *
+   */
   pull_requests?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage the post-receive hooks for a repository. Can be one of: `read` or `write`.
+   *
+   */
   repository_hooks?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage repository projects, columns, and cards. Can be one of: `read`, `write`, or `admin`.
+   *
+   */
   repository_projects?: 'read' | 'write' | 'admin';
+  /**
+   * The level of permission to grant the access token to view and manage secret scanning alerts. Can be one of: `read` or `write`.
+   *
+   */
   secret_scanning_alerts?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage repository secrets. Can be one of: `read` or `write`.
+   *
+   */
   secrets?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to view and manage security events like code scanning alerts. Can be one of: `read` or `write`.
+   *
+   */
   security_events?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage just a single file. Can be one of: `read` or `write`.
+   *
+   */
   single_file?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for commit statuses. Can be one of: `read` or `write`.
+   *
+   */
   statuses?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to retrieve Dependabot alerts. Can be one of: `read`.
+   *
+   */
   vulnerability_alerts?: 'read';
+  /**
+   * The level of permission to grant the access token to update GitHub Actions workflow files. Can be one of: `write`.
+   *
+   */
   workflows?: 'write';
+  /**
+   * The level of permission to grant the access token for organization teams and members. Can be one of: `read` or `write`.
+   *
+   */
   members?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage access to an organization. Can be one of: `read` or `write`.
+   *
+   */
   organization_administration?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage the post-receive hooks for an organization. Can be one of: `read` or `write`.
+   *
+   */
   organization_hooks?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for viewing an organization's plan. Can be one of: `read`.
+   *
+   */
   organization_plan?: 'read';
+  /**
+   * The level of permission to grant the access token to manage organization projects, columns, and cards. Can be one of: `read`, `write`, or `admin`.
+   *
+   */
   organization_projects?: 'read' | 'write' | 'admin';
+  /**
+   * The level of permission to grant the access token to manage organization secrets. Can be one of: `read` or `write`.
+   *
+   */
   organization_secrets?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to view and manage GitHub Actions self-hosted runners available to an organization. Can be one of: `read` or `write`.
+   *
+   */
   organization_self_hosted_runners?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to view and manage users blocked by the organization. Can be one of: `read` or `write`.
+   *
+   */
   organization_user_blocking?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage team discussions and related comments. Can be one of: `read` or `write`.
+   *
+   */
   team_discussions?: 'read' | 'write';
 };
+/**
+ * License Simple
+ * License Simple
+ *
+ */
 export type LicenseSimple = {
+  /**
+   * @example "mit"
+   *
+   */
   key: string;
+  /**
+   * @example "MIT License"
+   *
+   */
   name: string;
+  /**
+   * @example "https://api.github.com/licenses/mit"
+   *
+   */
   url: string | null;
+  /**
+   * @example "MIT"
+   *
+   */
   spdx_id: string | null;
+  /**
+   * @example "MDc6TGljZW5zZW1pdA=="
+   *
+   */
   node_id: string;
   html_url?: string;
 };
+/**
+ * Repository
+ * A git repository
+ *
+ */
 export type Repository = {
+  /**
+   * Unique identifier of the repository
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+   *
+   */
   node_id: string;
+  /**
+   * The name of the repository.
+   * @example "Team Environment"
+   *
+   */
   name: string;
+  /**
+   * @example "octocat/Hello-World"
+   *
+   */
   full_name: string;
-  license: any;
+  license: any | null;
   forks: number;
   permissions?: {
     admin: boolean;
@@ -165,74 +662,339 @@ export type Repository = {
     push: boolean;
     maintain?: boolean;
   };
-  owner: any;
+  owner: any | null;
+  /**
+   * Whether the repository is private or public.
+   *
+   */
   private: boolean;
+  /**
+   * @example "https://github.com/octocat/Hello-World"
+   *
+   */
   html_url: string;
+  /**
+   * @example "This your first repo!"
+   *
+   */
   description: string | null;
   fork: boolean;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World"
+   *
+   */
   url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+   *
+   */
   archive_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+   *
+   */
   assignees_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+   *
+   */
   blobs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+   *
+   */
   branches_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+   *
+   */
   collaborators_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+   *
+   */
   commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+   *
+   */
   compare_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+   *
+   */
   contents_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
+   *
+   */
   contributors_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
+   *
+   */
   deployments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
+   *
+   */
   downloads_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/events"
+   *
+   */
   events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
+   *
+   */
   forks_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+   *
+   */
   git_commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+   *
+   */
   git_refs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+   *
+   */
   git_tags_url: string;
+  /**
+   * @example "git:github.com/octocat/Hello-World.git"
+   *
+   */
   git_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+   *
+   */
   issue_comment_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+   *
+   */
   issue_events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+   *
+   */
   issues_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+   *
+   */
   keys_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+   *
+   */
   labels_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
+   *
+   */
   languages_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
+   *
+   */
   merges_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+   *
+   */
   milestones_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+   *
+   */
   notifications_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+   *
+   */
   pulls_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+   *
+   */
   releases_url: string;
+  /**
+   * @example "git@github.com:octocat/Hello-World.git"
+   *
+   */
   ssh_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
+   *
+   */
   stargazers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+   *
+   */
   statuses_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
+   *
+   */
   subscribers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
+   *
+   */
   subscription_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
+   *
+   */
   tags_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
+   *
+   */
   teams_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
+   *
+   */
   trees_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World.git"
+   *
+   */
   clone_url: string;
+  /**
+   * @example "git:git.example.com/octocat/Hello-World"
+   *
+   */
   mirror_url: string | null;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
+   *
+   */
   hooks_url: string;
+  /**
+   * @example "https://svn.github.com/octocat/Hello-World"
+   *
+   */
   svn_url: string;
+  /**
+   * @example "https://github.com"
+   *
+   */
   homepage: string | null;
   language: string | null;
+  /**
+   * @example 9
+   *
+   */
   forks_count: number;
+  /**
+   * @example 80
+   *
+   */
   stargazers_count: number;
+  /**
+   * @example 80
+   *
+   */
   watchers_count: number;
+  /**
+   * @example 108
+   *
+   */
   size: number;
+  /**
+   * The default branch of the repository.
+   * @example "master"
+   *
+   */
   default_branch: string;
   open_issues_count: number;
+  /**
+   * Whether this repository acts as a template that can be used to generate new repositories.
+   * @example true
+   *
+   */
   is_template?: boolean;
   topics?: string[];
+  /**
+   * Whether issues are enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_issues: boolean;
+  /**
+   * Whether projects are enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_projects: boolean;
+  /**
+   * Whether the wiki is enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_wiki: boolean;
   has_pages: boolean;
+  /**
+   * Whether downloads are enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_downloads: boolean;
+  /**
+   * Whether the repository is archived.
+   *
+   */
   archived: boolean;
+  /**
+   * Returns whether or not this repository disabled.
+   *
+   */
   disabled: boolean;
+  /**
+   * The repository visibility: public, private, or internal.
+   * @defaultValue "public"
+   *
+   */
   visibility?: string;
+  /**
+   * @example "2011-01-26T19:06:43Z"
+   *
+   */
   pushed_at: Date | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   created_at: Date | null;
+  /**
+   * @example "2011-01-26T19:14:43Z"
+   *
+   */
   updated_at: Date | null;
+  /**
+   * Whether to allow rebase merges for pull requests.
+   * @example true
+   * @defaultValue true
+   *
+   */
   allow_rebase_merge?: boolean;
   template_repository?: {
     id?: number;
@@ -340,31 +1102,85 @@ export type Repository = {
     network_count?: number;
   } | null;
   temp_clone_token?: string;
+  /**
+   * Whether to allow squash merges for pull requests.
+   * @example true
+   * @defaultValue true
+   *
+   */
   allow_squash_merge?: boolean;
+  /**
+   * Whether to delete head branches when pull requests are merged
+   *
+   */
   delete_branch_on_merge?: boolean;
+  /**
+   * Whether to allow merge commits for pull requests.
+   * @example true
+   * @defaultValue true
+   *
+   */
   allow_merge_commit?: boolean;
   subscribers_count?: number;
   network_count?: number;
   open_issues: number;
   watchers: number;
   master_branch?: string;
+  /**
+   * @example "\"2020-07-09T00:17:42Z\""
+   *
+   */
   starred_at?: string;
 };
+/**
+ * Installation Token
+ * Authentication token for a GitHub App installed on a user or org.
+ *
+ */
 export type InstallationToken = {
   token: string;
   expires_at: string;
   permissions?: {
     issues?: string;
     contents?: string;
+    /**
+     * @example "read"
+     *
+     */
     metadata?: string;
+    /**
+     * @example "read"
+     *
+     */
     single_file?: string;
   };
   repository_selection?: 'all' | 'selected';
   repositories?: Repository[];
+  /**
+   * @example "README.md"
+   *
+   */
   single_file?: string;
+  /**
+   * @example true
+   *
+   */
   has_multiple_single_files?: boolean;
+  /**
+   * @example
+   * [
+   *   "config.yml",
+   *   ".github/issue_TEMPLATE.md"
+   * ]
+   *
+   */
   single_file_paths?: string[];
 };
+/**
+ * Validation Error
+ * Validation Error
+ *
+ */
 export type ValidationError = {
   message: string;
   documentation_url: string;
@@ -377,31 +1193,96 @@ export type ValidationError = {
     value?: (string | null) | (number | null) | (string[] | null);
   }[];
 };
+/**
+ * Application Grant
+ * The authorization associated with an OAuth Access.
+ *
+ */
 export type ApplicationGrant = {
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "https://api.github.com/applications/grants/1"
+   *
+   */
   url: string;
   app: {
     client_id: string;
     name: string;
     url: string;
   };
+  /**
+   * @example "2011-09-06T17:26:27Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-09-06T20:39:23Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example
+   * [
+   *   "public_repo"
+   * ]
+   *
+   */
   scopes: string[];
-  user?: any;
+  user?: any | null;
 };
+/**
+ * Scoped Installation
+ *
+ */
 export type ScopedInstallation = {
   permissions: AppPermissions;
+  /**
+   * Describe whether all repositories have been selected or there's a selection involved
+   *
+   */
   repository_selection: 'all' | 'selected';
+  /**
+   * @example "config.yaml"
+   *
+   */
   single_file_name: string | null;
+  /**
+   * @example true
+   *
+   */
   has_multiple_single_files?: boolean;
+  /**
+   * @example
+   * [
+   *   "config.yml",
+   *   ".github/issue_TEMPLATE.md"
+   * ]
+   *
+   */
   single_file_paths?: string[];
+  /**
+   * @example "https://api.github.com/users/octocat/repos"
+   *
+   */
   repositories_url: string;
   account: SimpleUser;
 };
+/**
+ * Authorization
+ * The authorization for an OAuth app, GitHub App, or a Personal Access Token.
+ *
+ */
 export type Authorization = {
   id: number;
   url: string;
+  /**
+   * A list of scopes that this authorization is in.
+   *
+   */
   scopes: string[] | null;
   token: string;
   token_last_eight: string | null;
@@ -416,48 +1297,175 @@ export type Authorization = {
   updated_at: Date;
   created_at: Date;
   fingerprint: string | null;
-  user?: any;
-  installation?: any;
+  user?: any | null;
+  installation?: any | null;
 };
+/**
+ * Code Of Conduct
+ * Code Of Conduct
+ *
+ */
 export type CodeOfConduct = {
+  /**
+   * @example "contributor_covenant"
+   *
+   */
   key: string;
+  /**
+   * @example "Contributor Covenant"
+   *
+   */
   name: string;
+  /**
+   * @example "https://api.github.com/codes_of_conduct/contributor_covenant"
+   *
+   */
   url: string;
+  /**
+   * @example "# Contributor Covenant Code of Conduct\n\n## Our Pledge\n\nIn the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.\n\n## Our Standards\n\nExamples of behavior that contributes to creating a positive environment include:\n\n* Using welcoming and inclusive language\n* Being respectful of differing viewpoints and experiences\n* Gracefully accepting constructive criticism\n* Focusing on what is best for the community\n* Showing empathy towards other community members\n\nExamples of unacceptable behavior by participants include:\n\n* The use of sexualized language or imagery and unwelcome sexual attention or advances\n* Trolling, insulting/derogatory comments, and personal or political attacks\n* Public or private harassment\n* Publishing others' private information, such as a physical or electronic address, without explicit permission\n* Other conduct which could reasonably be considered inappropriate in a professional setting\n\n## Our Responsibilities\n\nProject maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response\n                  to any instances of unacceptable behavior.\n\nProject maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.\n\n## Scope\n\nThis Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address,\n                  posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.\n\n## Enforcement\n\nInstances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [EMAIL]. The project team will review and investigate all complaints, and will respond in a way that it deems appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.\n\nProject maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.\n\n## Attribution\n\nThis Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [http://contributor-covenant.org/version/1/4][version]\n\n[homepage]: http://contributor-covenant.org\n[version]: http://contributor-covenant.org/version/1/4/\n"
+   *
+   */
   body?: string;
   html_url: string | null;
 };
+/**
+ * ContentReferenceAttachment
+ * Content Reference attachments allow you to provide context around URLs posted in comments
+ *
+ */
 export type ContentReferenceAttachment = {
+  /**
+   * The ID of the attachment
+   * @example 21
+   *
+   */
   id: number;
+  /**
+   * The title of the attachment
+   * @example "Title of the attachment"
+   *
+   */
   title: string;
+  /**
+   * The body of the attachment
+   * @example "Body of the attachment"
+   *
+   */
   body: string;
+  /**
+   * The node_id of the content attachment
+   * @example "MDE3OkNvbnRlbnRBdHRhY2htZW50MjE="
+   *
+   */
   node_id?: string;
 };
+/**
+ * The policy that controls the organizations in the enterprise that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`.
+ *
+ */
 export type EnabledOrganizations = 'all' | 'none' | 'selected';
+/**
+ * The permissions policy that controls the actions that are allowed to run. Can be one of: `all`, `local_only`, or `selected`.
+ *
+ */
 export type AllowedActions = 'all' | 'local_only' | 'selected';
+/**
+ * The API URL to use to get or set the actions that are allowed to run, when `allowed_actions` is set to `selected`.
+ *
+ */
 export type SelectedActionsUrl = string;
 export type ActionsEnterprisePermissions = {
   enabled_organizations: EnabledOrganizations;
+  /**
+   * The API URL to use to get or set the selected organizations that are allowed to run GitHub Actions, when `enabled_organizations` is set to `selected`.
+   *
+   */
   selected_organizations_url?: string;
   allowed_actions: AllowedActions;
   selected_actions_url?: SelectedActionsUrl;
 };
+/**
+ * Organization Simple
+ * Organization Simple
+ *
+ */
 export type OrganizationSimple = {
+  /**
+   * @example "github"
+   *
+   */
   login: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDEyOk9yZ2FuaXphdGlvbjE="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://api.github.com/orgs/github"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/repos"
+   *
+   */
   repos_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/events"
+   *
+   */
   events_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/hooks"
+   *
+   */
   hooks_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/issues"
+   *
+   */
   issues_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/members{/member}"
+   *
+   */
   members_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/public_members{/member}"
+   *
+   */
   public_members_url: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   *
+   */
   avatar_url: string;
+  /**
+   * @example "A great organization"
+   *
+   */
   description: string | null;
 };
 export type SelectedActions = {
+  /**
+   * Whether GitHub-owned actions are allowed. For example, this includes the actions in the `actions` organization.
+   *
+   */
   github_owned_allowed: boolean;
+  /**
+   * Whether actions in GitHub Marketplace from verified creators are allowed. Set to `true` to allow all GitHub Marketplace actions by verified creators.
+   *
+   */
   verified_allowed: boolean;
+  /**
+   * Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`."
+   *
+   */
   patterns_allowed: string[];
 };
 export type RunnerGroupsEnterprise = {
@@ -469,43 +1477,140 @@ export type RunnerGroupsEnterprise = {
   runners_url: string;
   allows_public_repositories: boolean;
 };
+/**
+ * Self hosted runners
+ * A self hosted runner
+ *
+ */
 export type Runner = {
+  /**
+   * The id of the runner.
+   * @example 5
+   *
+   */
   id: number;
+  /**
+   * The name of the runner.
+   * @example "iMac"
+   *
+   */
   name: string;
+  /**
+   * The Operating System of the runner.
+   * @example "macos"
+   *
+   */
   os: string;
+  /**
+   * The status of the runner.
+   * @example "online"
+   *
+   */
   status: string;
   busy: boolean;
   labels: {
+    /**
+     * Unique identifier of the label.
+     *
+     */
     id?: number;
+    /**
+     * Name of the label.
+     *
+     */
     name?: string;
+    /**
+     * The type of label. Read-only labels are applied automatically when the runner is configured.
+     *
+     */
     type?: 'read-only' | 'custom';
   }[];
 };
+/**
+ * Runner Application
+ * Runner Application
+ *
+ */
 export type RunnerApplication = {
   os: string;
   architecture: string;
   download_url: string;
   filename: string;
 };
+/**
+ * Authentication Token
+ * Authentication Token
+ *
+ */
 export type AuthenticationToken = {
+  /**
+   * The token used for authentication
+   * @example "v1.1f699f1069f60xxx"
+   *
+   */
   token: string;
+  /**
+   * The time this token expires
+   * @example "2016-07-11T22:14:10Z"
+   *
+   */
   expires_at: Date;
+  /**
+   * @example
+   * {
+   *   "issues": "read",
+   *   "deployments": "write"
+   * }
+   *
+   */
   permissions?: any;
+  /**
+   * The repositories this token has access to
+   *
+   */
   repositories?: Repository[];
+  /**
+   * @example "config.yaml"
+   *
+   */
   single_file?: string | null;
+  /**
+   * Describe whether all repositories have been selected or there's a selection involved
+   *
+   */
   repository_selection?: 'all' | 'selected';
 };
 export type AuditLogEvent = {
+  /**
+   * The time the audit log event occurred, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
+   *
+   */
   '@timestamp'?: number;
+  /**
+   * The name of the action that was performed, for example `user.login` or `repo.create`.
+   *
+   */
   action?: string;
   active?: boolean;
   active_was?: boolean;
+  /**
+   * The actor who performed the action.
+   *
+   */
   actor?: string;
+  /**
+   * The username of the account being blocked.
+   *
+   */
   blocked_user?: string;
   business?: string;
   config?: any[];
   config_was?: any[];
   content_type?: string;
+  /**
+   * The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
+   *
+   */
   created_at?: number;
   deploy_key_fingerprint?: string;
   emoji?: string;
@@ -522,36 +1627,113 @@ export type AuditLogEvent = {
   org?: string;
   previous_visibility?: string;
   read_only?: boolean;
+  /**
+   * The name of the repository.
+   *
+   */
   repo?: string;
+  /**
+   * The name of the repository.
+   *
+   */
   repository?: string;
   repository_public?: boolean;
   target_login?: string;
   team?: string;
+  /**
+   * The type of protocol (for example, HTTP or SSH) used to transfer Git data.
+   *
+   */
   transport_protocol?: number;
+  /**
+   * A human readable name for the protocol (for example, HTTP or SSH) used to transfer Git data.
+   *
+   */
   transport_protocol_name?: string;
+  /**
+   * The user that was affected by the action performed (if available).
+   *
+   */
   user?: string;
+  /**
+   * The repository visibility, for example `public` or `private`.
+   *
+   */
   visibility?: string;
 };
 export type ActionsBillingUsage = {
+  /**
+   * The sum of the free and paid GitHub Actions minutes used.
+   *
+   */
   total_minutes_used: number;
+  /**
+   * The total paid GitHub Actions minutes used.
+   *
+   */
   total_paid_minutes_used: number;
+  /**
+   * The amount of free GitHub Actions minutes available.
+   *
+   */
   included_minutes: number;
   minutes_used_breakdown: {
+    /**
+     * Total minutes used on Ubuntu runner machines.
+     *
+     */
     UBUNTU?: number;
+    /**
+     * Total minutes used on macOS runner machines.
+     *
+     */
     MACOS?: number;
+    /**
+     * Total minutes used on Windows runner machines.
+     *
+     */
     WINDOWS?: number;
   };
 };
 export type PackagesBillingUsage = {
+  /**
+   * Sum of the free and paid storage space (GB) for GitHuub Packages.
+   *
+   */
   total_gigabytes_bandwidth_used: number;
+  /**
+   * Total paid storage space (GB) for GitHuub Packages.
+   *
+   */
   total_paid_gigabytes_bandwidth_used: number;
+  /**
+   * Free storage space (GB) for GitHub Packages.
+   *
+   */
   included_gigabytes_bandwidth: number;
 };
 export type CombinedBillingUsage = {
+  /**
+   * Numbers of days left in billing cycle.
+   *
+   */
   days_left_in_billing_cycle: number;
+  /**
+   * Estimated storage space (GB) used in billing cycle.
+   *
+   */
   estimated_paid_storage_for_month: number;
+  /**
+   * Estimated sum of free and paid storage space (GB) used in billing cycle.
+   *
+   */
   estimated_storage_for_month: number;
 };
+/**
+ * Actor
+ * Actor
+ *
+ */
 export type Actor = {
   id: number;
   login: string;
@@ -560,33 +1742,144 @@ export type Actor = {
   url: string;
   avatar_url: string;
 };
+/**
+ * Label
+ * Color-coded labels help you categorize and filter your issues (just like labels in Gmail).
+ *
+ */
 export type Label = {
+  /**
+   * @example 208045946
+   *
+   */
   id: number;
+  /**
+   * @example "MDU6TGFiZWwyMDgwNDU5NDY="
+   *
+   */
   node_id: string;
+  /**
+   * URL for the label
+   * @example "https://api.github.com/repositories/42/labels/bug"
+   *
+   */
   url: string;
+  /**
+   * The name of the label.
+   * @example "bug"
+   *
+   */
   name: string;
+  /**
+   * @example "Something isn't working"
+   *
+   */
   description: string | null;
+  /**
+   * 6-character hex code, without the leading #, identifying the color
+   * @example "FFFFFF"
+   *
+   */
   color: string;
+  /**
+   * @example true
+   *
+   */
   default: boolean;
 };
+/**
+ * Milestone
+ * A collection of related issues and pull requests.
+ *
+ */
 export type Milestone = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/milestones/1"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/milestones/v1.0"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/milestones/1/labels"
+   *
+   */
   labels_url: string;
+  /**
+   * @example 1002604
+   *
+   */
   id: number;
+  /**
+   * @example "MDk6TWlsZXN0b25lMTAwMjYwNA=="
+   *
+   */
   node_id: string;
+  /**
+   * The number of the milestone.
+   * @example 42
+   *
+   */
   number: number;
+  /**
+   * The state of the milestone.
+   * @example "open"
+   * @defaultValue "open"
+   *
+   */
   state: 'open' | 'closed';
+  /**
+   * The title of the milestone.
+   * @example "v1.0"
+   *
+   */
   title: string;
+  /**
+   * @example "Tracking milestone for version 1.0"
+   *
+   */
   description: string | null;
-  creator: any;
+  creator: any | null;
+  /**
+   * @example 4
+   *
+   */
   open_issues: number;
+  /**
+   * @example 8
+   *
+   */
   closed_issues: number;
+  /**
+   * @example "2011-04-10T20:09:31Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2014-03-03T18:58:10Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "2013-02-12T13:22:01Z"
+   *
+   */
   closed_at: Date | null;
+  /**
+   * @example "2012-10-09T23:39:01Z"
+   *
+   */
   due_on: Date | null;
 };
+/**
+ * author_association
+ * How the author is associated with the repository.
+ * @example "OWNER"
+ *
+ */
 export type Author_association =
   | 'COLLABORATOR'
   | 'CONTRIBUTOR'
@@ -596,25 +1889,86 @@ export type Author_association =
   | 'MEMBER'
   | 'NONE'
   | 'OWNER';
+/**
+ * Issue Simple
+ * Issue Simple
+ *
+ */
 export type IssueSimple = {
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDU6SXNzdWUx"
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World"
+   *
+   */
   repository_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347/labels{/name}"
+   *
+   */
   labels_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347/events"
+   *
+   */
   events_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/issues/1347"
+   *
+   */
   html_url: string;
+  /**
+   * @example 1347
+   *
+   */
   number: number;
+  /**
+   * @example "open"
+   *
+   */
   state: string;
+  /**
+   * @example "Found a bug"
+   *
+   */
   title: string;
+  /**
+   * @example "I'm having a problem with this."
+   *
+   */
   body?: string;
-  user: any;
+  user: any | null;
   labels: Label[];
-  assignee: any;
+  assignee: any | null;
   assignees?: SimpleUser[] | null;
-  milestone: any;
+  milestone: any | null;
+  /**
+   * @example true
+   *
+   */
   locked: boolean;
+  /**
+   * @example "too heated"
+   *
+   */
   active_lock_reason?: string | null;
   comments: number;
   pull_request?: {
@@ -625,15 +1979,27 @@ export type IssueSimple = {
     url: string | null;
   };
   closed_at: Date | null;
+  /**
+   * @example "2011-04-22T13:33:48Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-04-22T13:33:48Z"
+   *
+   */
   updated_at: Date;
   author_association: Author_association;
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
   repository?: Repository;
-  performed_via_github_app?: any;
+  performed_via_github_app?: any | null;
 };
+/**
+ * Reaction Rollup
+ *
+ */
 export type ReactionRollup = {
   url: string;
   total_count: number;
@@ -646,22 +2012,55 @@ export type ReactionRollup = {
   eyes: number;
   rocket: number;
 };
+/**
+ * Issue Comment
+ * Comments provide a way for people to collaborate on an issue.
+ *
+ */
 export type IssueComment = {
+  /**
+   * Unique identifier of the issue comment
+   * @example 42
+   *
+   */
   id: number;
   node_id: string;
+  /**
+   * URL for the issue comment
+   * @example "https://api.github.com/repositories/42/issues/comments/1"
+   *
+   */
   url: string;
+  /**
+   * Contents of the issue comment
+   * @example "What version of Safari were you using when you observed this bug?"
+   *
+   */
   body?: string;
   body_text?: string;
   body_html?: string;
   html_url: string;
-  user: any;
+  user: any | null;
+  /**
+   * @example "2011-04-14T16:00:49Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-04-14T16:00:49Z"
+   *
+   */
   updated_at: Date;
   issue_url: string;
   author_association: Author_association;
-  performed_via_github_app?: any;
+  performed_via_github_app?: any | null;
   reactions?: ReactionRollup;
 };
+/**
+ * Event
+ * Event
+ *
+ */
 export type Event = {
   id: string;
   type: string | null;
@@ -688,18 +2087,63 @@ export type Event = {
   public: boolean;
   created_at: Date | null;
 };
+/**
+ * Link With Type
+ * Hypermedia Link with Type
+ *
+ */
 export type LinkWithType = {
   href: string;
   type: string;
 };
+/**
+ * Feed
+ * Feed
+ *
+ */
 export type Feed = {
+  /**
+   * @example "https://github.com/timeline"
+   *
+   */
   timeline_url: string;
+  /**
+   * @example "https://github.com/{user}"
+   *
+   */
   user_url: string;
+  /**
+   * @example "https://github.com/octocat"
+   *
+   */
   current_user_public_url?: string;
+  /**
+   * @example "https://github.com/octocat.private?token=abc123"
+   *
+   */
   current_user_url?: string;
+  /**
+   * @example "https://github.com/octocat.private.actor?token=abc123"
+   *
+   */
   current_user_actor_url?: string;
+  /**
+   * @example "https://github.com/octocat-org"
+   *
+   */
   current_user_organization_url?: string;
+  /**
+   * @example
+   * [
+   *   "https://github.com/organizations/github/octocat.private.atom?token=abc123"
+   * ]
+   *
+   */
   current_user_organization_urls?: string[];
+  /**
+   * @example "https://github.com/security-advisories"
+   *
+   */
   security_advisories_url?: string;
   _links: {
     timeline: LinkWithType;
@@ -712,6 +2156,11 @@ export type Feed = {
     current_user_organizations?: LinkWithType[];
   };
 };
+/**
+ * Base Gist
+ * Base Gist
+ *
+ */
 export type BaseGist = {
   url: string;
   forks_url: string;
@@ -735,13 +2184,18 @@ export type BaseGist = {
   updated_at: Date;
   description: string | null;
   comments: number;
-  user: any;
+  user: any | null;
   comments_url: string;
-  owner?: any;
+  owner?: any | null;
   truncated?: boolean;
   forks?: any[];
   history?: any[];
 };
+/**
+ * Gist Simple
+ * Gist Simple
+ *
+ */
 export type GistSimple = {
   url?: string;
   forks_url?: string;
@@ -772,45 +2226,144 @@ export type GistSimple = {
   owner?: SimpleUser;
   truncated?: boolean;
 };
+/**
+ * Gist Comment
+ * A comment made to a gist.
+ *
+ */
 export type GistComment = {
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDExOkdpc3RDb21tZW50MQ=="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://api.github.com/gists/a6db0bec360bb87e9418/comments/1"
+   *
+   */
   url: string;
+  /**
+   * The comment text.
+   * @example "Body of the attachment"
+   *
+   */
   body: string;
-  user: any;
+  user: any | null;
+  /**
+   * @example "2011-04-18T23:23:56Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-04-18T23:23:56Z"
+   *
+   */
   updated_at: Date;
   author_association: Author_association;
 };
+/**
+ * Gist Commit
+ * Gist Commit
+ *
+ */
 export type GistCommit = {
+  /**
+   * @example "https://api.github.com/gists/aa5a315d61ae9438b18d/57a7f021a713b1c5a6a199b54cc514735d2d462f"
+   *
+   */
   url: string;
+  /**
+   * @example "57a7f021a713b1c5a6a199b54cc514735d2d462f"
+   *
+   */
   version: string;
-  user: any;
+  user: any | null;
   change_status: {
     total?: number;
     additions?: number;
     deletions?: number;
   };
+  /**
+   * @example "2010-04-14T02:15:15Z"
+   *
+   */
   committed_at: Date;
 };
+/**
+ * Gitignore Template
+ * Gitignore Template
+ *
+ */
 export type GitignoreTemplate = {
+  /**
+   * @example "C"
+   *
+   */
   name: string;
+  /**
+   * @example "# Object files\n*.o\n\n# Libraries\n*.lib\n*.a\n\n# Shared objects (inc. Windows DLLs)\n*.dll\n*.so\n*.so.*\n*.dylib\n\n# Executables\n*.exe\n*.out\n*.app\n"
+   *
+   */
   source: string;
 };
+/**
+ * Issue
+ * Issues are a great way to keep track of tasks, enhancements, and bugs for your projects.
+ *
+ */
 export type Issue = {
   id: number;
   node_id: string;
+  /**
+   * URL for the issue
+   * @example "https://api.github.com/repositories/42/issues/1"
+   *
+   */
   url: string;
   repository_url: string;
   labels_url: string;
   comments_url: string;
   events_url: string;
   html_url: string;
+  /**
+   * Number uniquely identifying the issue within its repository
+   * @example 42
+   *
+   */
   number: number;
+  /**
+   * State of the issue; either 'open' or 'closed'
+   * @example "open"
+   *
+   */
   state: string;
+  /**
+   * Title of the issue
+   * @example "Widget creation fails in Safari on OS X 10.8"
+   *
+   */
   title: string;
+  /**
+   * Contents of the issue
+   * @example "It looks like the new widget form is broken on Safari. When I try and create the widget, Safari crashes. This is reproducible on 10.8, but not 10.9. Maybe a browser bug?"
+   *
+   */
   body?: string;
-  user: any;
+  user: any | null;
+  /**
+   * Labels to associate with this issue; pass one or more label names to replace the set of labels on this issue; send an empty array to clear all labels from the issue; note that the labels are silently dropped for users without push access to the repository
+   * @example
+   * [
+   *   "bug",
+   *   "registration"
+   * ]
+   *
+   */
   labels: (
     | string
     | {
@@ -823,9 +2376,9 @@ export type Issue = {
         default?: boolean;
       }
   )[];
-  assignee: any;
+  assignee: any | null;
   assignees?: SimpleUser[] | null;
-  milestone: any;
+  milestone: any | null;
   locked: boolean;
   active_lock_reason?: string | null;
   comments: number;
@@ -839,45 +2392,177 @@ export type Issue = {
   closed_at: Date | null;
   created_at: Date;
   updated_at: Date;
-  closed_by?: any;
+  closed_by?: any | null;
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
   repository?: Repository;
-  performed_via_github_app?: any;
+  performed_via_github_app?: any | null;
   author_association: Author_association;
   reactions?: ReactionRollup;
 };
+/**
+ * License
+ * License
+ *
+ */
 export type License = {
+  /**
+   * @example "mit"
+   *
+   */
   key: string;
+  /**
+   * @example "MIT License"
+   *
+   */
   name: string;
+  /**
+   * @example "MIT"
+   *
+   */
   spdx_id: string | null;
+  /**
+   * @example "https://api.github.com/licenses/mit"
+   *
+   */
   url: string | null;
+  /**
+   * @example "MDc6TGljZW5zZW1pdA=="
+   *
+   */
   node_id: string;
+  /**
+   * @example "http://choosealicense.com/licenses/mit/"
+   *
+   */
   html_url: string;
+  /**
+   * @example "A permissive license that is short and to the point. It lets people do anything with your code with proper attribution and without warranty."
+   *
+   */
   description: string;
+  /**
+   * @example "Create a text file (typically named LICENSE or LICENSE.txt) in the root of your source code and copy the text of the license into the file. Replace [year] with the current year and [fullname] with the name (or names) of the copyright holders."
+   *
+   */
   implementation: string;
+  /**
+   * @example
+   * [
+   *   "commercial-use",
+   *   "modifications",
+   *   "distribution",
+   *   "sublicense",
+   *   "private-use"
+   * ]
+   *
+   */
   permissions: string[];
+  /**
+   * @example
+   * [
+   *   "include-copyright"
+   * ]
+   *
+   */
   conditions: string[];
+  /**
+   * @example
+   * [
+   *   "no-liability"
+   * ]
+   *
+   */
   limitations: string[];
+  /**
+   * @example "\n\nThe MIT License (MIT)\n\nCopyright (c) [year] [fullname]\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+   *
+   */
   body: string;
+  /**
+   * @example true
+   *
+   */
   featured: boolean;
 };
+/**
+ * Marketplace Listing Plan
+ * Marketplace Listing Plan
+ *
+ */
 export type MarketplaceListingPlan = {
+  /**
+   * @example "https://api.github.com/marketplace_listing/plans/1313"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/marketplace_listing/plans/1313/accounts"
+   *
+   */
   accounts_url: string;
+  /**
+   * @example 1313
+   *
+   */
   id: number;
+  /**
+   * @example 3
+   *
+   */
   number: number;
+  /**
+   * @example "Pro"
+   *
+   */
   name: string;
+  /**
+   * @example "A professional-grade CI solution"
+   *
+   */
   description: string;
+  /**
+   * @example 1099
+   *
+   */
   monthly_price_in_cents: number;
+  /**
+   * @example 11870
+   *
+   */
   yearly_price_in_cents: number;
+  /**
+   * @example "flat-rate"
+   *
+   */
   price_model: string;
+  /**
+   * @example true
+   *
+   */
   has_free_trial: boolean;
   unit_name: string | null;
+  /**
+   * @example "published"
+   *
+   */
   state: string;
+  /**
+   * @example
+   * [
+   *   "Up to 25 private repositories",
+   *   "11 concurrent builds"
+   * ]
+   *
+   */
   bullets: string[];
 };
+/**
+ * Marketplace Purchase
+ * Marketplace Purchase
+ *
+ */
 export type MarketplacePurchase = {
   url: string;
   type: string;
@@ -902,70 +2587,308 @@ export type MarketplacePurchase = {
     plan?: MarketplaceListingPlan;
   };
 };
+/**
+ * Api Overview
+ * Api Overview
+ *
+ */
 export type ApiOverview = {
+  /**
+   * @example true
+   *
+   */
   verifiable_password_authentication: boolean;
   ssh_key_fingerprints?: {
     SHA256_RSA?: string;
     SHA256_DSA?: string;
   };
+  /**
+   * @example
+   * [
+   *   "127.0.0.1/32"
+   * ]
+   *
+   */
   hooks?: string[];
+  /**
+   * @example
+   * [
+   *   "127.0.0.1/32"
+   * ]
+   *
+   */
   web?: string[];
+  /**
+   * @example
+   * [
+   *   "127.0.0.1/32"
+   * ]
+   *
+   */
   api?: string[];
+  /**
+   * @example
+   * [
+   *   "127.0.0.1/32"
+   * ]
+   *
+   */
   git?: string[];
+  /**
+   * @example
+   * [
+   *   "192.30.252.153/32",
+   *   "192.30.252.154/32"
+   * ]
+   *
+   */
   pages?: string[];
+  /**
+   * @example
+   * [
+   *   "54.158.161.132",
+   *   "54.226.70.38"
+   * ]
+   *
+   */
   importer?: string[];
+  /**
+   * @example
+   * [
+   *   "13.64.0.0/16",
+   *   "13.65.0.0/16"
+   * ]
+   *
+   */
   actions?: string[];
 };
+/**
+ * Minimal Repository
+ * Minimal Repository
+ *
+ */
 export type MinimalRepository = {
+  /**
+   * @example 1296269
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+   *
+   */
   node_id: string;
+  /**
+   * @example "Hello-World"
+   *
+   */
   name: string;
+  /**
+   * @example "octocat/Hello-World"
+   *
+   */
   full_name: string;
   owner: any | null;
   private: boolean;
+  /**
+   * @example "https://github.com/octocat/Hello-World"
+   *
+   */
   html_url: string;
+  /**
+   * @example "This your first repo!"
+   *
+   */
   description: string | null;
   fork: boolean;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World"
+   *
+   */
   url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+   *
+   */
   archive_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+   *
+   */
   assignees_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+   *
+   */
   blobs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+   *
+   */
   branches_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+   *
+   */
   collaborators_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+   *
+   */
   commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+   *
+   */
   compare_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+   *
+   */
   contents_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
+   *
+   */
   contributors_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
+   *
+   */
   deployments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
+   *
+   */
   downloads_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/events"
+   *
+   */
   events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
+   *
+   */
   forks_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+   *
+   */
   git_commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+   *
+   */
   git_refs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+   *
+   */
   git_tags_url: string;
   git_url?: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+   *
+   */
   issue_comment_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+   *
+   */
   issue_events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+   *
+   */
   issues_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+   *
+   */
   keys_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+   *
+   */
   labels_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
+   *
+   */
   languages_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
+   *
+   */
   merges_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+   *
+   */
   milestones_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+   *
+   */
   notifications_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+   *
+   */
   pulls_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+   *
+   */
   releases_url: string;
   ssh_url?: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
+   *
+   */
   stargazers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+   *
+   */
   statuses_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
+   *
+   */
   subscribers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
+   *
+   */
   subscription_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
+   *
+   */
   tags_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
+   *
+   */
   teams_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
+   *
+   */
   trees_url: string;
   clone_url?: string;
   mirror_url?: string | null;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
+   *
+   */
   hooks_url: string;
   svn_url?: string;
   homepage?: string | null;
@@ -986,8 +2909,20 @@ export type MinimalRepository = {
   archived?: boolean;
   disabled?: boolean;
   visibility?: string;
+  /**
+   * @example "2011-01-26T19:06:43Z"
+   *
+   */
   pushed_at?: Date | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   created_at?: Date | null;
+  /**
+   * @example "2011-01-26T19:14:43Z"
+   *
+   */
   updated_at?: Date | null;
   permissions?: {
     admin?: boolean;
@@ -1010,6 +2945,11 @@ export type MinimalRepository = {
   open_issues?: number;
   watchers?: number;
 };
+/**
+ * Thread
+ * Thread
+ *
+ */
 export type Thread = {
   id: string;
   repository: MinimalRepository;
@@ -1024,51 +2964,217 @@ export type Thread = {
   updated_at: string;
   last_read_at: string | null;
   url: string;
+  /**
+   * @example "https://api.github.com/notifications/threads/2/subscription"
+   *
+   */
   subscription_url: string;
 };
+/**
+ * Thread Subscription
+ * Thread Subscription
+ *
+ */
 export type ThreadSubscription = {
+  /**
+   * @example true
+   *
+   */
   subscribed: boolean;
   ignored: boolean;
   reason: string | null;
+  /**
+   * @example "2012-10-06T21:34:12Z"
+   *
+   */
   created_at: Date | null;
+  /**
+   * @example "https://api.github.com/notifications/threads/1/subscription"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/notifications/threads/1"
+   *
+   */
   thread_url?: string;
+  /**
+   * @example "https://api.github.com/repos/1"
+   *
+   */
   repository_url?: string;
 };
+/**
+ * Organization Full
+ * Organization Full
+ *
+ */
 export type OrganizationFull = {
+  /**
+   * @example "github"
+   *
+   */
   login: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDEyOk9yZ2FuaXphdGlvbjE="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://api.github.com/orgs/github"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/repos"
+   *
+   */
   repos_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/events"
+   *
+   */
   events_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/hooks"
+   *
+   */
   hooks_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/issues"
+   *
+   */
   issues_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/members{/member}"
+   *
+   */
   members_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/public_members{/member}"
+   *
+   */
   public_members_url: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   *
+   */
   avatar_url: string;
+  /**
+   * @example "A great organization"
+   *
+   */
   description: string | null;
+  /**
+   * @example "github"
+   *
+   */
   name?: string;
+  /**
+   * @example "GitHub"
+   *
+   */
   company?: string;
+  /**
+   * @example "https://github.com/blog"
+   *
+   */
   blog?: string;
+  /**
+   * @example "San Francisco"
+   *
+   */
   location?: string;
+  /**
+   * @example "octocat@github.com"
+   *
+   */
   email?: string;
+  /**
+   * @example "github"
+   *
+   */
   twitter_username?: string | null;
+  /**
+   * @example true
+   *
+   */
   is_verified?: boolean;
+  /**
+   * @example true
+   *
+   */
   has_organization_projects: boolean;
+  /**
+   * @example true
+   *
+   */
   has_repository_projects: boolean;
+  /**
+   * @example 2
+   *
+   */
   public_repos: number;
+  /**
+   * @example 1
+   *
+   */
   public_gists: number;
+  /**
+   * @example 20
+   *
+   */
   followers: number;
   following: number;
+  /**
+   * @example "https://github.com/octocat"
+   *
+   */
   html_url: string;
+  /**
+   * @example "2008-01-14T04:33:35Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "Organization"
+   *
+   */
   type: string;
+  /**
+   * @example 100
+   *
+   */
   total_private_repos?: number;
+  /**
+   * @example 100
+   *
+   */
   owned_private_repos?: number;
+  /**
+   * @example 81
+   *
+   */
   private_gists?: number | null;
+  /**
+   * @example 10000
+   *
+   */
   disk_usage?: number | null;
+  /**
+   * @example 8
+   *
+   */
   collaborators?: number | null;
+  /**
+   * @example "org@example.com"
+   *
+   */
   billing_email?: string | null;
   plan?: {
     name: string;
@@ -1078,18 +3184,54 @@ export type OrganizationFull = {
     seats?: number;
   };
   default_repository_permission?: string | null;
+  /**
+   * @example true
+   *
+   */
   members_can_create_repositories?: boolean | null;
+  /**
+   * @example true
+   *
+   */
   two_factor_requirement_enabled?: boolean | null;
+  /**
+   * @example "all"
+   *
+   */
   members_allowed_repository_creation_type?: string;
+  /**
+   * @example true
+   *
+   */
   members_can_create_public_repositories?: boolean;
+  /**
+   * @example true
+   *
+   */
   members_can_create_private_repositories?: boolean;
+  /**
+   * @example true
+   *
+   */
   members_can_create_internal_repositories?: boolean;
+  /**
+   * @example true
+   *
+   */
   members_can_create_pages?: boolean;
   updated_at: Date;
 };
+/**
+ * The policy that controls the repositories in the organization that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`.
+ *
+ */
 export type EnabledRepositories = 'all' | 'none' | 'selected';
 export type ActionsOrganizationPermissions = {
   enabled_repositories: EnabledRepositories;
+  /**
+   * The API URL to use to get or set the selected repositories that are allowed to run GitHub Actions, when `enabled_repositories` is set to `selected`.
+   *
+   */
   selected_repositories_url?: string;
   allowed_actions: AllowedActions;
   selected_actions_url?: SelectedActionsUrl;
@@ -1099,40 +3241,161 @@ export type RunnerGroupsOrg = {
   name: string;
   visibility: string;
   default: boolean;
+  /**
+   * Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`
+   *
+   */
   selected_repositories_url?: string;
   runners_url: string;
   inherited: boolean;
   inherited_allows_public_repositories?: boolean;
   allows_public_repositories: boolean;
 };
+/**
+ * Actions Secret for an Organization
+ * Secrets for GitHub Actions for an organization.
+ *
+ */
 export type OrganizationActionsSecret = {
+  /**
+   * The name of the secret.
+   * @example "SECRET_TOKEN"
+   *
+   */
   name: string;
   created_at: Date;
   updated_at: Date;
+  /**
+   * Visibility of a secret
+   *
+   */
   visibility: 'all' | 'private' | 'selected';
+  /**
+   * @example "https://api.github.com/organizations/org/secrets/my_secret/repositories"
+   *
+   */
   selected_repositories_url?: string;
 };
+/**
+ * ActionsPublicKey
+ * The public key used for setting Actions Secrets.
+ *
+ */
 export type ActionsPublicKey = {
+  /**
+   * The identifier for the key.
+   * @example "1234567"
+   *
+   */
   key_id: string;
+  /**
+   * The Base64 encoded public key.
+   * @example "hBT5WZEj8ZoOv6TYJsfWq7MxTEQopZO5/IT3ZCVQPzs="
+   *
+   */
   key: string;
+  /**
+   * @example 2
+   *
+   */
   id?: number;
+  /**
+   * @example "https://api.github.com/user/keys/2"
+   *
+   */
   url?: string;
+  /**
+   * @example "ssh-rsa AAAAB3NzaC1yc2EAAA"
+   *
+   */
   title?: string;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   created_at?: string;
 };
+/**
+ * Credential Authorization
+ * Credential Authorization
+ *
+ */
 export type CredentialAuthorization = {
+  /**
+   * User login that owns the underlying credential.
+   * @example "monalisa"
+   *
+   */
   login: string;
+  /**
+   * Unique identifier for the credential.
+   * @example 1
+   *
+   */
   credential_id: number;
+  /**
+   * Human-readable description of the credential type.
+   * @example "SSH Key"
+   *
+   */
   credential_type: string;
+  /**
+   * Last eight characters of the credential. Only included in responses with credential_type of personal access token.
+   * @example "12345678"
+   *
+   */
   token_last_eight?: string;
+  /**
+   * Date when the credential was authorized for use.
+   * @example "2011-01-26T19:06:43Z"
+   *
+   */
   credential_authorized_at: Date;
+  /**
+   * List of oauth scopes the token has been granted.
+   * @example
+   * [
+   *   "user",
+   *   "repo"
+   * ]
+   *
+   */
   scopes?: string[];
+  /**
+   * Unique string to distinguish the credential. Only included in responses with credential_type of SSH Key.
+   * @example "jklmnop12345678"
+   *
+   */
   fingerprint?: string;
+  /**
+   * Date when the credential was last accessed. May be null if it was never accessed
+   * @example "2011-01-26T19:06:43Z"
+   *
+   */
   credential_accessed_at?: Date | null;
+  /**
+   * @example 12345678
+   *
+   */
   authorized_credential_id?: number | null;
+  /**
+   * The title given to the ssh key. This will only be present when the credential is an ssh key.
+   * @example "my ssh key"
+   *
+   */
   authorized_credential_title?: string | null;
+  /**
+   * The note given to the token. This will only be present when the credential is a token.
+   * @example "my token"
+   *
+   */
   authorized_credential_note?: string | null;
 };
+/**
+ * Organization Invitation
+ * Organization Invitation
+ *
+ */
 export type OrganizationInvitation = {
   id: number;
   login: string | null;
@@ -1144,59 +3407,217 @@ export type OrganizationInvitation = {
   inviter: SimpleUser;
   team_count: number;
   invitation_team_url: string;
+  /**
+   * @example "\"MDIyOk9yZ2FuaXphdGlvbkludml0YXRpb24x\""
+   *
+   */
   node_id: string;
+  /**
+   * @example "\"https://api.github.com/organizations/16/invitations/1/teams\""
+   *
+   */
   invitation_teams_url?: string;
 };
+/**
+ * Org Hook
+ * Org Hook
+ *
+ */
 export type OrgHook = {
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "https://api.github.com/orgs/octocat/hooks/1"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/orgs/octocat/hooks/1/pings"
+   *
+   */
   ping_url: string;
+  /**
+   * @example "web"
+   *
+   */
   name: string;
+  /**
+   * @example
+   * [
+   *   "push",
+   *   "pull_request"
+   * ]
+   *
+   */
   events: string[];
+  /**
+   * @example true
+   *
+   */
   active: boolean;
   config: {
+    /**
+     * @example "\"http://example.com/2\""
+     *
+     */
     url?: string;
+    /**
+     * @example "\"0\""
+     *
+     */
     insecure_ssl?: string;
+    /**
+     * @example "\"form\""
+     *
+     */
     content_type?: string;
+    /**
+     * @example "\"********\""
+     *
+     */
     secret?: string;
   };
+  /**
+   * @example "2011-09-06T20:39:23Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "2011-09-06T17:26:27Z"
+   *
+   */
   created_at: Date;
   type: string;
 };
+/**
+ * The type of GitHub user that can comment, open issues, or create pull requests while the interaction limit is in effect. Can be one of: `existing_users`, `contributors_only`, `collaborators_only`.
+ * @example "collaborators_only"
+ *
+ */
 export type InteractionGroup =
   | 'existing_users'
   | 'contributors_only'
   | 'collaborators_only';
+/**
+ * Interaction Limits
+ * Interaction limit settings.
+ *
+ */
 export type InteractionLimitResponse = {
   limit: InteractionGroup;
+  /**
+   * @example "repository"
+   *
+   */
   origin: string;
+  /**
+   * @example "2018-08-17T04:18:39Z"
+   *
+   */
   expires_at: Date;
 };
+/**
+ * The duration of the interaction restriction. Can be one of: `one_day`, `three_days`, `one_week`, `one_month`, `six_months`. Default: `one_day`.
+ * @example "one_month"
+ *
+ */
 export type InteractionExpiry =
   | 'one_day'
   | 'three_days'
   | 'one_week'
   | 'one_month'
   | 'six_months';
+/**
+ * Interaction Restrictions
+ * Limit interactions to a specific type of user for a specified duration
+ *
+ */
 export type InteractionLimit = {
   limit: InteractionGroup;
   expiry?: InteractionExpiry;
 };
+/**
+ * Team Simple
+ * Groups of organization members that gives permissions on specified repositories.
+ *
+ */
 export type TeamSimple = {
+  /**
+   * Unique identifier of the team
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDQ6VGVhbTE="
+   *
+   */
   node_id: string;
+  /**
+   * URL for the team
+   * @example "https://api.github.com/organizations/1/team/1"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/members{/member}"
+   *
+   */
   members_url: string;
+  /**
+   * Name of the team
+   * @example "Justice League"
+   *
+   */
   name: string;
+  /**
+   * Description of the team
+   * @example "A great team."
+   *
+   */
   description: string | null;
+  /**
+   * Permission that the team will have for its repositories
+   * @example "admin"
+   *
+   */
   permission: string;
+  /**
+   * The level of privacy this team should have
+   * @example "closed"
+   *
+   */
   privacy?: string;
+  /**
+   * @example "https://github.com/orgs/rails/teams/core"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/repos"
+   *
+   */
   repositories_url: string;
+  /**
+   * @example "justice-league"
+   *
+   */
   slug: string;
+  /**
+   * Distinguished Name (DN) that team maps to within LDAP environment
+   * @example "uid=example,ou=users,dc=github,dc=com"
+   *
+   */
   ldap_dn?: string;
 } | null;
+/**
+ * Team
+ * Groups of organization members that gives permissions on specified repositories.
+ *
+ */
 export type Team = {
   id: number;
   node_id: string;
@@ -1206,62 +3627,207 @@ export type Team = {
   privacy?: string;
   permission: string;
   url: string;
+  /**
+   * @example "https://github.com/orgs/rails/teams/core"
+   *
+   */
   html_url: string;
   members_url: string;
   repositories_url: string;
-  parent?: any;
+  parent?: any | null;
 };
+/**
+ * Org Membership
+ * Org Membership
+ *
+ */
 export type OrgMembership = {
+  /**
+   * @example "https://api.github.com/orgs/octocat/memberships/defunkt"
+   *
+   */
   url: string;
+  /**
+   * @example "active"
+   *
+   */
   state: string;
+  /**
+   * @example "admin"
+   *
+   */
   role: string;
+  /**
+   * @example "https://api.github.com/orgs/octocat"
+   *
+   */
   organization_url: string;
   organization: OrganizationSimple;
-  user: any;
+  user: any | null;
   permissions?: {
     can_create_repository: boolean;
   };
 };
+/**
+ * Migration
+ * A migration.
+ *
+ */
 export type Migration = {
+  /**
+   * @example 79
+   *
+   */
   id: number;
-  owner: any;
+  owner: any | null;
+  /**
+   * @example "0b989ba4-242f-11e5-81e1-c7b6966d2516"
+   *
+   */
   guid: string;
+  /**
+   * @example "pending"
+   *
+   */
   state: string;
+  /**
+   * @example true
+   *
+   */
   lock_repositories: boolean;
   exclude_attachments: boolean;
   repositories: Repository[];
+  /**
+   * @example "https://api.github.com/orgs/octo-org/migrations/79"
+   *
+   */
   url: string;
+  /**
+   * @example "2015-07-06T15:33:38-07:00"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2015-07-06T15:33:38-07:00"
+   *
+   */
   updated_at: Date;
   node_id: string;
   archive_url?: string;
   exclude?: any[];
 };
+/**
+ * Package
+ * A software package
+ *
+ */
 export type Package = {
+  /**
+   * Unique identifier of the package.
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * The name of the package.
+   * @example "super-linter"
+   *
+   */
   name: string;
+  /**
+   * @example "docker"
+   *
+   */
   package_type: 'npm' | 'maven' | 'rubygems' | 'docker' | 'nuget' | 'container';
+  /**
+   * @example "https://api.github.com/orgs/github/packages/container/super-linter"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/orgs/github/packages/container/package/super-linter"
+   *
+   */
   html_url: string;
+  /**
+   * The number of versions of the package.
+   * @example 1
+   *
+   */
   version_count: number;
+  /**
+   * @example "private"
+   *
+   */
   visibility: 'private' | 'public';
-  owner?: any;
-  repository?: any;
+  owner?: any | null;
+  repository?: any | null;
   created_at: Date;
   updated_at: Date;
 };
+/**
+ * Package Version
+ * A version of a software package
+ *
+ */
 export type PackageVersion = {
+  /**
+   * Unique identifier of the package version.
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * The name of the package version.
+   * @example "latest"
+   *
+   */
   name: string;
+  /**
+   * @example "https://api.github.com/orgs/github/packages/container/super-linter/versions/786068"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/orgs/github/packages/container/package/super-linter"
+   *
+   */
   package_html_url: string;
+  /**
+   * @example "https://github.com/orgs/github/packages/container/super-linter/786068"
+   *
+   */
   html_url?: string;
+  /**
+   * @example "MIT"
+   *
+   */
   license?: string;
   description?: string;
+  /**
+   * @example "2011-04-10T20:09:31Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2014-03-03T18:58:10Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "2014-03-03T18:58:10Z"
+   *
+   */
   deleted_at?: Date;
+  /**
+   * Package Version Metadata
+   *
+   */
   metadata?: {
+    /**
+     * @example "docker"
+     *
+     */
     package_type:
       | 'npm'
       | 'maven'
@@ -1269,99 +3835,426 @@ export type PackageVersion = {
       | 'docker'
       | 'nuget'
       | 'container';
+    /**
+     * Container Metadata
+     *
+     */
     container?: {
       tags: any[];
     };
+    /**
+     * Docker Metadata
+     *
+     */
     docker?: {
       tag?: any[];
     };
   };
 };
+/**
+ * Project
+ * Projects are a way to organize columns and cards of work.
+ *
+ */
 export type Project = {
+  /**
+   * @example "https://api.github.com/repos/api-playground/projects-test"
+   *
+   */
   owner_url: string;
+  /**
+   * @example "https://api.github.com/projects/1002604"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/api-playground/projects-test/projects/12"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/projects/1002604/columns"
+   *
+   */
   columns_url: string;
+  /**
+   * @example 1002604
+   *
+   */
   id: number;
+  /**
+   * @example "MDc6UHJvamVjdDEwMDI2MDQ="
+   *
+   */
   node_id: string;
+  /**
+   * Name of the project
+   * @example "Week One Sprint"
+   *
+   */
   name: string;
+  /**
+   * Body of the project
+   * @example "This project represents the sprint of the first week in January"
+   *
+   */
   body: string | null;
+  /**
+   * @example 1
+   *
+   */
   number: number;
+  /**
+   * State of the project; either 'open' or 'closed'
+   * @example "open"
+   *
+   */
   state: string;
-  creator: any;
+  creator: any | null;
+  /**
+   * @example "2011-04-10T20:09:31Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2014-03-03T18:58:10Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * The baseline permission that all organization members have on this project. Only present if owner is an organization.
+   *
+   */
   organization_permission?: 'read' | 'write' | 'admin' | 'none';
+  /**
+   * Whether or not this project can be seen by everyone. Only present if owner is an organization.
+   *
+   */
   private?: boolean;
 };
+/**
+ * GroupMapping
+ * External Groups to be mapped to a team for membership
+ *
+ */
 export type GroupMapping = {
+  /**
+   * Array of groups to be mapped to this team
+   * @example
+   * [
+   *   {
+   *     "group_id": "111a1a11-aaa1-1aaa-11a1-a1a1a1a1a1aa",
+   *     "group_name": "saml-azuread-test",
+   *     "group_description": "A group of Developers working on AzureAD SAML SSO"
+   *   },
+   *   {
+   *     "group_id": "2bb2bb2b-bb22-22bb-2bb2-bb2bbb2bb2b2",
+   *     "group_name": "saml-azuread-test2",
+   *     "group_description": "Another group of Developers working on AzureAD SAML SSO"
+   *   }
+   * ]
+   *
+   */
   groups?: {
+    /**
+     * The ID of the group
+     * @example "111a1a11-aaa1-1aaa-11a1-a1a1a1a1a1aa"
+     *
+     */
     group_id: string;
+    /**
+     * The name of the group
+     * @example "saml-azuread-test"
+     *
+     */
     group_name: string;
+    /**
+     * a description of the group
+     * @example "A group of Developers working on AzureAD SAML SSO"
+     *
+     */
     group_description: string;
+    /**
+     * synchronization status for this group mapping
+     * @example "unsynced"
+     *
+     */
     status?: string;
+    /**
+     * the time of the last sync for this group-mapping
+     * @example "2019-06-03 22:27:15:000 -700"
+     *
+     */
     synced_at?: string;
   }[];
 };
+/**
+ * Full Team
+ * Groups of organization members that gives permissions on specified repositories.
+ *
+ */
 export type TeamFull = {
+  /**
+   * Unique identifier of the team
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDQ6VGVhbTE="
+   *
+   */
   node_id: string;
+  /**
+   * URL for the team
+   * @example "https://api.github.com/organizations/1/team/1"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/orgs/rails/teams/core"
+   *
+   */
   html_url: string;
+  /**
+   * Name of the team
+   * @example "Developers"
+   *
+   */
   name: string;
+  /**
+   * @example "justice-league"
+   *
+   */
   slug: string;
+  /**
+   * @example "A great team."
+   *
+   */
   description: string | null;
+  /**
+   * The level of privacy this team should have
+   * @example "closed"
+   *
+   */
   privacy?: 'closed' | 'secret';
+  /**
+   * Permission that the team will have for its repositories
+   * @example "push"
+   *
+   */
   permission: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/members{/member}"
+   *
+   */
   members_url: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/repos"
+   *
+   */
   repositories_url: string;
-  parent?: any;
+  parent?: any | null;
+  /**
+   * @example 3
+   *
+   */
   members_count: number;
+  /**
+   * @example 10
+   *
+   */
   repos_count: number;
+  /**
+   * @example "2017-07-14T16:53:42Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2017-08-17T12:37:15Z"
+   *
+   */
   updated_at: Date;
   organization: OrganizationFull;
+  /**
+   * Distinguished Name (DN) that team maps to within LDAP environment
+   * @example "uid=example,ou=users,dc=github,dc=com"
+   *
+   */
   ldap_dn?: string;
 };
+/**
+ * Team Discussion
+ * A team discussion is a persistent record of a free-form conversation within a team.
+ *
+ */
 export type TeamDiscussion = {
-  author: any;
+  author: any | null;
+  /**
+   * The main text of the discussion.
+   * @example "Please suggest improvements to our workflow in comments."
+   *
+   */
   body: string;
+  /**
+   * @example "<p>Hi! This is an area for us to collaborate as a team</p>"
+   *
+   */
   body_html: string;
+  /**
+   * The current version of the body content. If provided, this update operation will be rejected if the given version does not match the latest version on the server.
+   * @example "0307116bbf7ced493b8d8a346c650b71"
+   *
+   */
   body_version: string;
   comments_count: number;
+  /**
+   * @example "https://api.github.com/organizations/1/team/2343027/discussions/1/comments"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "2018-01-25T18:56:31Z"
+   *
+   */
   created_at: Date;
   last_edited_at: Date | null;
+  /**
+   * @example "https://github.com/orgs/github/teams/justice-league/discussions/1"
+   *
+   */
   html_url: string;
+  /**
+   * @example "MDE0OlRlYW1EaXNjdXNzaW9uMQ=="
+   *
+   */
   node_id: string;
+  /**
+   * The unique sequence number of a team discussion.
+   * @example 42
+   *
+   */
   number: number;
+  /**
+   * Whether or not this discussion should be pinned for easy retrieval.
+   * @example true
+   *
+   */
   pinned: boolean;
+  /**
+   * Whether or not this discussion should be restricted to team members and organization administrators.
+   * @example true
+   *
+   */
   private: boolean;
+  /**
+   * @example "https://api.github.com/organizations/1/team/2343027"
+   *
+   */
   team_url: string;
+  /**
+   * The title of the discussion.
+   * @example "How can we improve our workflow?"
+   *
+   */
   title: string;
+  /**
+   * @example "2018-01-25T18:56:31Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "https://api.github.com/organizations/1/team/2343027/discussions/1"
+   *
+   */
   url: string;
   reactions?: ReactionRollup;
 };
+/**
+ * Team Discussion Comment
+ * A reply to a discussion within a team.
+ *
+ */
 export type TeamDiscussionComment = {
-  author: any;
+  author: any | null;
+  /**
+   * The main text of the comment.
+   * @example "I agree with this suggestion."
+   *
+   */
   body: string;
+  /**
+   * @example "<p>Do you like apples?</p>"
+   *
+   */
   body_html: string;
+  /**
+   * The current version of the body content. If provided, this update operation will be rejected if the given version does not match the latest version on the server.
+   * @example "0307116bbf7ced493b8d8a346c650b71"
+   *
+   */
   body_version: string;
+  /**
+   * @example "2018-01-15T23:53:58Z"
+   *
+   */
   created_at: Date;
   last_edited_at: Date | null;
+  /**
+   * @example "https://api.github.com/organizations/1/team/2403582/discussions/1"
+   *
+   */
   discussion_url: string;
+  /**
+   * @example "https://github.com/orgs/github/teams/justice-league/discussions/1/comments/1"
+   *
+   */
   html_url: string;
+  /**
+   * @example "MDIxOlRlYW1EaXNjdXNzaW9uQ29tbWVudDE="
+   *
+   */
   node_id: string;
+  /**
+   * The unique sequence number of a team discussion comment.
+   * @example 42
+   *
+   */
   number: number;
+  /**
+   * @example "2018-01-15T23:53:58Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "https://api.github.com/organizations/1/team/2403582/discussions/1/comments/1"
+   *
+   */
   url: string;
   reactions?: ReactionRollup;
 };
+/**
+ * Reaction
+ * Reactions to conversations provide a way to help people express their feelings more simply and effectively.
+ *
+ */
 export type Reaction = {
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDg6UmVhY3Rpb24x"
+   *
+   */
   node_id: string;
-  user: any;
+  user: any | null;
+  /**
+   * The reaction to use
+   * @example "heart"
+   *
+   */
   content:
     | '+1'
     | '-1'
@@ -1371,13 +4264,33 @@ export type Reaction = {
     | 'hooray'
     | 'rocket'
     | 'eyes';
+  /**
+   * @example "2016-05-20T20:09:31Z"
+   *
+   */
   created_at: Date;
 };
+/**
+ * Team Membership
+ * Team Membership
+ *
+ */
 export type TeamMembership = {
   url: string;
+  /**
+   * The role of the user in the team.
+   * @example "member"
+   * @defaultValue "member"
+   *
+   */
   role: 'member' | 'maintainer';
   state: string;
 };
+/**
+ * Team Project
+ * A team's access to a project.
+ *
+ */
 export type TeamProject = {
   owner_url: string;
   url: string;
@@ -1392,7 +4305,15 @@ export type TeamProject = {
   creator: SimpleUser;
   created_at: string;
   updated_at: string;
+  /**
+   * The organization permission for this project. Only present when owner is an organization.
+   *
+   */
   organization_permission?: string;
+  /**
+   * Whether the project is private or not. Only present when owner is an organization.
+   *
+   */
   private?: boolean;
   permissions: {
     read: boolean;
@@ -1400,12 +4321,35 @@ export type TeamProject = {
     admin: boolean;
   };
 };
+/**
+ * Team Repository
+ * A team's access to a repository.
+ *
+ */
 export type TeamRepository = {
+  /**
+   * Unique identifier of the repository
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+   *
+   */
   node_id: string;
+  /**
+   * The name of the repository.
+   * @example "Team Environment"
+   *
+   */
   name: string;
+  /**
+   * @example "octocat/Hello-World"
+   *
+   */
   full_name: string;
-  license: any;
+  license: any | null;
   forks: number;
   permissions?: {
     admin: boolean;
@@ -1414,79 +4358,360 @@ export type TeamRepository = {
     push: boolean;
     maintain?: boolean;
   };
-  owner: any;
+  owner: any | null;
+  /**
+   * Whether the repository is private or public.
+   *
+   */
   private: boolean;
+  /**
+   * @example "https://github.com/octocat/Hello-World"
+   *
+   */
   html_url: string;
+  /**
+   * @example "This your first repo!"
+   *
+   */
   description: string | null;
   fork: boolean;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World"
+   *
+   */
   url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+   *
+   */
   archive_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+   *
+   */
   assignees_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+   *
+   */
   blobs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+   *
+   */
   branches_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+   *
+   */
   collaborators_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+   *
+   */
   commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+   *
+   */
   compare_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+   *
+   */
   contents_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
+   *
+   */
   contributors_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
+   *
+   */
   deployments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
+   *
+   */
   downloads_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/events"
+   *
+   */
   events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
+   *
+   */
   forks_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+   *
+   */
   git_commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+   *
+   */
   git_refs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+   *
+   */
   git_tags_url: string;
+  /**
+   * @example "git:github.com/octocat/Hello-World.git"
+   *
+   */
   git_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+   *
+   */
   issue_comment_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+   *
+   */
   issue_events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+   *
+   */
   issues_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+   *
+   */
   keys_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+   *
+   */
   labels_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
+   *
+   */
   languages_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
+   *
+   */
   merges_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+   *
+   */
   milestones_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+   *
+   */
   notifications_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+   *
+   */
   pulls_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+   *
+   */
   releases_url: string;
+  /**
+   * @example "git@github.com:octocat/Hello-World.git"
+   *
+   */
   ssh_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
+   *
+   */
   stargazers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+   *
+   */
   statuses_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
+   *
+   */
   subscribers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
+   *
+   */
   subscription_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
+   *
+   */
   tags_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
+   *
+   */
   teams_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
+   *
+   */
   trees_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World.git"
+   *
+   */
   clone_url: string;
+  /**
+   * @example "git:git.example.com/octocat/Hello-World"
+   *
+   */
   mirror_url: string | null;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
+   *
+   */
   hooks_url: string;
+  /**
+   * @example "https://svn.github.com/octocat/Hello-World"
+   *
+   */
   svn_url: string;
+  /**
+   * @example "https://github.com"
+   *
+   */
   homepage: string | null;
   language: string | null;
+  /**
+   * @example 9
+   *
+   */
   forks_count: number;
+  /**
+   * @example 80
+   *
+   */
   stargazers_count: number;
+  /**
+   * @example 80
+   *
+   */
   watchers_count: number;
+  /**
+   * @example 108
+   *
+   */
   size: number;
+  /**
+   * The default branch of the repository.
+   * @example "master"
+   *
+   */
   default_branch: string;
   open_issues_count: number;
+  /**
+   * Whether this repository acts as a template that can be used to generate new repositories.
+   * @example true
+   *
+   */
   is_template?: boolean;
   topics?: string[];
+  /**
+   * Whether issues are enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_issues: boolean;
+  /**
+   * Whether projects are enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_projects: boolean;
+  /**
+   * Whether the wiki is enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_wiki: boolean;
   has_pages: boolean;
+  /**
+   * Whether downloads are enabled.
+   * @example true
+   * @defaultValue true
+   *
+   */
   has_downloads: boolean;
+  /**
+   * Whether the repository is archived.
+   *
+   */
   archived: boolean;
+  /**
+   * Returns whether or not this repository disabled.
+   *
+   */
   disabled: boolean;
+  /**
+   * The repository visibility: public, private, or internal.
+   * @defaultValue "public"
+   *
+   */
   visibility?: string;
+  /**
+   * @example "2011-01-26T19:06:43Z"
+   *
+   */
   pushed_at: Date | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   created_at: Date | null;
+  /**
+   * @example "2011-01-26T19:14:43Z"
+   *
+   */
   updated_at: Date | null;
+  /**
+   * Whether to allow rebase merges for pull requests.
+   * @example true
+   * @defaultValue true
+   *
+   */
   allow_rebase_merge?: boolean;
   template_repository?: any | null;
   temp_clone_token?: string;
+  /**
+   * Whether to allow squash merges for pull requests.
+   * @example true
+   * @defaultValue true
+   *
+   */
   allow_squash_merge?: boolean;
+  /**
+   * Whether to delete head branches when pull requests are merged
+   *
+   */
   delete_branch_on_merge?: boolean;
+  /**
+   * Whether to allow merge commits for pull requests.
+   * @example true
+   * @defaultValue true
+   *
+   */
   allow_merge_commit?: boolean;
   subscribers_count?: number;
   network_count?: number;
@@ -1494,38 +4719,137 @@ export type TeamRepository = {
   watchers: number;
   master_branch?: string;
 };
+/**
+ * Project Card
+ * Project cards represent a scope of work.
+ *
+ */
 export type ProjectCard = {
+  /**
+   * @example "https://api.github.com/projects/columns/cards/1478"
+   *
+   */
   url: string;
+  /**
+   * The project card's ID
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDExOlByb2plY3RDYXJkMTQ3OA=="
+   *
+   */
   node_id: string;
+  /**
+   * @example "Add payload for delete Project column"
+   *
+   */
   note: string | null;
-  creator: any;
+  creator: any | null;
+  /**
+   * @example "2016-09-05T14:21:06Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2016-09-05T14:20:22Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * Whether or not the card is archived
+   *
+   */
   archived?: boolean;
+  /**
+   * @example "https://api.github.com/projects/columns/367"
+   *
+   */
   column_url: string;
+  /**
+   * @example "https://api.github.com/repos/api-playground/projects-test/issues/3"
+   *
+   */
   content_url?: string;
+  /**
+   * @example "https://api.github.com/projects/120"
+   *
+   */
   project_url: string;
 };
+/**
+ * Project Column
+ * Project columns contain cards of work.
+ *
+ */
 export type ProjectColumn = {
+  /**
+   * @example "https://api.github.com/projects/columns/367"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/projects/120"
+   *
+   */
   project_url: string;
+  /**
+   * @example "https://api.github.com/projects/columns/367/cards"
+   *
+   */
   cards_url: string;
+  /**
+   * The unique identifier of the project column
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDEzOlByb2plY3RDb2x1bW4zNjc="
+   *
+   */
   node_id: string;
+  /**
+   * Name of the project column
+   * @example "Remaining tasks"
+   *
+   */
   name: string;
+  /**
+   * @example "2016-09-05T14:18:44Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2016-09-05T14:22:28Z"
+   *
+   */
   updated_at: Date;
 };
+/**
+ * Repository Collaborator Permission
+ * Repository Collaborator Permission
+ *
+ */
 export type RepositoryCollaboratorPermission = {
   permission: string;
-  user: any;
+  user: any | null;
 };
+/**
+ * Rate Limit
+ *
+ */
 export type RateLimit = {
   limit: number;
   remaining: number;
   reset: number;
 };
+/**
+ * Rate Limit Overview
+ * Rate Limit Overview
+ *
+ */
 export type RateLimitOverview = {
   resources: {
     core: RateLimit;
@@ -1537,150 +4861,605 @@ export type RateLimitOverview = {
   };
   rate: RateLimit;
 };
+/**
+ * Code Of Conduct Simple
+ * Code of Conduct Simple
+ *
+ */
 export type CodeOfConductSimple = {
+  /**
+   * @example "https://api.github.com/repos/github/docs/community/code_of_conduct"
+   *
+   */
   url: string;
+  /**
+   * @example "citizen_code_of_conduct"
+   *
+   */
   key: string;
+  /**
+   * @example "Citizen Code of Conduct"
+   *
+   */
   name: string;
+  /**
+   * @example "https://github.com/github/docs/blob/main/CODE_OF_CONDUCT.md"
+   *
+   */
   html_url: string | null;
 };
+/**
+ * Full Repository
+ * Full Repository
+ *
+ */
 export type FullRepository = {
+  /**
+   * @example 1296269
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+   *
+   */
   node_id: string;
+  /**
+   * @example "Hello-World"
+   *
+   */
   name: string;
+  /**
+   * @example "octocat/Hello-World"
+   *
+   */
   full_name: string;
-  owner: any;
+  owner: any | null;
   private: boolean;
+  /**
+   * @example "https://github.com/octocat/Hello-World"
+   *
+   */
   html_url: string;
+  /**
+   * @example "This your first repo!"
+   *
+   */
   description: string | null;
   fork: boolean;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World"
+   *
+   */
   url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+   *
+   */
   archive_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+   *
+   */
   assignees_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+   *
+   */
   blobs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+   *
+   */
   branches_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+   *
+   */
   collaborators_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+   *
+   */
   commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+   *
+   */
   compare_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+   *
+   */
   contents_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
+   *
+   */
   contributors_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
+   *
+   */
   deployments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
+   *
+   */
   downloads_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/events"
+   *
+   */
   events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
+   *
+   */
   forks_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+   *
+   */
   git_commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+   *
+   */
   git_refs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+   *
+   */
   git_tags_url: string;
+  /**
+   * @example "git:github.com/octocat/Hello-World.git"
+   *
+   */
   git_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+   *
+   */
   issue_comment_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+   *
+   */
   issue_events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+   *
+   */
   issues_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+   *
+   */
   keys_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+   *
+   */
   labels_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
+   *
+   */
   languages_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
+   *
+   */
   merges_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+   *
+   */
   milestones_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+   *
+   */
   notifications_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+   *
+   */
   pulls_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+   *
+   */
   releases_url: string;
+  /**
+   * @example "git@github.com:octocat/Hello-World.git"
+   *
+   */
   ssh_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
+   *
+   */
   stargazers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+   *
+   */
   statuses_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
+   *
+   */
   subscribers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
+   *
+   */
   subscription_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
+   *
+   */
   tags_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
+   *
+   */
   teams_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
+   *
+   */
   trees_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World.git"
+   *
+   */
   clone_url: string;
+  /**
+   * @example "git:git.example.com/octocat/Hello-World"
+   *
+   */
   mirror_url: string | null;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
+   *
+   */
   hooks_url: string;
+  /**
+   * @example "https://svn.github.com/octocat/Hello-World"
+   *
+   */
   svn_url: string;
+  /**
+   * @example "https://github.com"
+   *
+   */
   homepage: string | null;
   language: string | null;
+  /**
+   * @example 9
+   *
+   */
   forks_count: number;
+  /**
+   * @example 80
+   *
+   */
   stargazers_count: number;
+  /**
+   * @example 80
+   *
+   */
   watchers_count: number;
+  /**
+   * @example 108
+   *
+   */
   size: number;
+  /**
+   * @example "master"
+   *
+   */
   default_branch: string;
   open_issues_count: number;
+  /**
+   * @example true
+   *
+   */
   is_template?: boolean;
+  /**
+   * @example
+   * [
+   *   "octocat",
+   *   "atom",
+   *   "electron",
+   *   "API"
+   * ]
+   *
+   */
   topics?: string[];
+  /**
+   * @example true
+   *
+   */
   has_issues: boolean;
+  /**
+   * @example true
+   *
+   */
   has_projects: boolean;
+  /**
+   * @example true
+   *
+   */
   has_wiki: boolean;
   has_pages: boolean;
+  /**
+   * @example true
+   *
+   */
   has_downloads: boolean;
   archived: boolean;
+  /**
+   * Returns whether or not this repository disabled.
+   *
+   */
   disabled: boolean;
+  /**
+   * The repository visibility: public, private, or internal.
+   * @example "public"
+   *
+   */
   visibility?: string;
+  /**
+   * @example "2011-01-26T19:06:43Z"
+   *
+   */
   pushed_at: Date;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-01-26T19:14:43Z"
+   *
+   */
   updated_at: Date;
   permissions?: {
     admin: boolean;
     pull: boolean;
     push: boolean;
   };
+  /**
+   * @example true
+   *
+   */
   allow_rebase_merge?: boolean;
   template_repository?: any | null;
   temp_clone_token?: string | null;
+  /**
+   * @example true
+   *
+   */
   allow_squash_merge?: boolean;
   delete_branch_on_merge?: boolean;
+  /**
+   * @example true
+   *
+   */
   allow_merge_commit?: boolean;
+  /**
+   * @example 42
+   *
+   */
   subscribers_count: number;
   network_count: number;
-  license: any;
-  organization?: any;
+  license: any | null;
+  organization?: any | null;
   parent?: Repository;
   source?: Repository;
   forks: number;
   master_branch?: string;
   open_issues: number;
   watchers: number;
+  /**
+   * Whether anonymous git access is allowed.
+   * @defaultValue true
+   *
+   */
   anonymous_access_enabled?: boolean;
   code_of_conduct?: CodeOfConductSimple;
 };
+/**
+ * Artifact
+ * An artifact
+ *
+ */
 export type Artifact = {
+  /**
+   * @example 5
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOkNoZWNrU3VpdGU1"
+   *
+   */
   node_id: string;
+  /**
+   * The name of the artifact.
+   * @example "AdventureWorks.Framework"
+   *
+   */
   name: string;
+  /**
+   * The size in bytes of the artifact.
+   * @example 12345
+   *
+   */
   size_in_bytes: number;
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/actions/artifacts/5"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/actions/artifacts/5/zip"
+   *
+   */
   archive_download_url: string;
+  /**
+   * Whether or not the artifact has expired.
+   *
+   */
   expired: boolean;
   created_at: Date | null;
   expires_at: Date;
   updated_at: Date | null;
 };
+/**
+ * Job
+ * Information of a job execution in a workflow run
+ *
+ */
 export type Job = {
+  /**
+   * The id of the job.
+   * @example 21
+   *
+   */
   id: number;
+  /**
+   * The id of the associated workflow run.
+   * @example 5
+   *
+   */
   run_id: number;
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/actions/runs/5"
+   *
+   */
   run_url: string;
+  /**
+   * @example "MDg6Q2hlY2tSdW40"
+   *
+   */
   node_id: string;
+  /**
+   * The SHA of the commit that is being run.
+   * @example "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d"
+   *
+   */
   head_sha: string;
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/actions/jobs/21"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/github/hello-world/runs/4"
+   *
+   */
   html_url: string | null;
+  /**
+   * The phase of the lifecycle that the job is currently in.
+   * @example "queued"
+   *
+   */
   status: 'queued' | 'in_progress' | 'completed';
+  /**
+   * The outcome of the job.
+   * @example "success"
+   *
+   */
   conclusion: string | null;
+  /**
+   * The time that the job started, in ISO 8601 format.
+   * @example "2019-08-08T08:00:00-07:00"
+   *
+   */
   started_at: Date;
+  /**
+   * The time that the job finished, in ISO 8601 format.
+   * @example "2019-08-08T08:00:00-07:00"
+   *
+   */
   completed_at: Date | null;
+  /**
+   * The name of the job.
+   * @example "test-coverage"
+   *
+   */
   name: string;
+  /**
+   * Steps in this job.
+   *
+   */
   steps?: {
+    /**
+     * The phase of the lifecycle that the job is currently in.
+     * @example "queued"
+     *
+     */
     status: 'queued' | 'in_progress' | 'completed';
+    /**
+     * The outcome of the job.
+     * @example "success"
+     *
+     */
     conclusion: string | null;
+    /**
+     * The name of the job.
+     * @example "test-coverage"
+     *
+     */
     name: string;
+    /**
+     * @example 1
+     *
+     */
     number: number;
+    /**
+     * The time that the step started, in ISO 8601 format.
+     * @example "2019-08-08T08:00:00-07:00"
+     *
+     */
     started_at?: Date | null;
+    /**
+     * The time that the job finished, in ISO 8601 format.
+     * @example "2019-08-08T08:00:00-07:00"
+     *
+     */
     completed_at?: Date | null;
   }[];
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/check-runs/4"
+   *
+   */
   check_run_url: string;
 };
+/**
+ * Whether GitHub Actions is enabled on the repository.
+ *
+ */
 export type ActionsEnabled = boolean;
 export type ActionsRepositoryPermissions = {
   enabled: ActionsEnabled;
   allowed_actions: AllowedActions;
   selected_actions_url?: SelectedActionsUrl;
 };
+/**
+ * Pull Request Minimal
+ *
+ */
 export type PullRequestMinimal = {
   id: number;
   number: number;
@@ -1704,6 +5483,11 @@ export type PullRequestMinimal = {
     };
   };
 };
+/**
+ * Simple Commit
+ * Simple Commit
+ *
+ */
 export type SimpleCommit = {
   id: string;
   tree_id: string;
@@ -1718,85 +5502,361 @@ export type SimpleCommit = {
     email: string;
   } | null;
 };
+/**
+ * Workflow Run
+ * An invocation of a workflow
+ *
+ */
 export type WorkflowRun = {
+  /**
+   * The ID of the workflow run.
+   * @example 5
+   *
+   */
   id: number;
+  /**
+   * The name of the workflow run.
+   * @example "Build"
+   *
+   */
   name?: string;
+  /**
+   * @example "MDEwOkNoZWNrU3VpdGU1"
+   *
+   */
   node_id: string;
+  /**
+   * @example "master"
+   *
+   */
   head_branch: string | null;
+  /**
+   * The SHA of the head commit that points to the version of the worflow being run.
+   * @example "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d"
+   *
+   */
   head_sha: string;
+  /**
+   * The auto incrementing run number for the workflow run.
+   * @example 106
+   *
+   */
   run_number: number;
+  /**
+   * @example "push"
+   *
+   */
   event: string;
+  /**
+   * @example "completed"
+   *
+   */
   status: string | null;
+  /**
+   * @example "neutral"
+   *
+   */
   conclusion: string | null;
+  /**
+   * The ID of the parent workflow.
+   * @example 5
+   *
+   */
   workflow_id: number;
+  /**
+   * The URL to the workflow run.
+   * @example "https://api.github.com/repos/github/hello-world/actions/runs/5"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/github/hello-world/suites/4"
+   *
+   */
   html_url: string;
   pull_requests: PullRequestMinimal[] | null;
   created_at: Date;
   updated_at: Date;
+  /**
+   * The URL to the jobs for the workflow run.
+   * @example "https://api.github.com/repos/github/hello-world/actions/runs/5/jobs"
+   *
+   */
   jobs_url: string;
+  /**
+   * The URL to download the logs for the workflow run.
+   * @example "https://api.github.com/repos/github/hello-world/actions/runs/5/logs"
+   *
+   */
   logs_url: string;
+  /**
+   * The URL to the associated check suite.
+   * @example "https://api.github.com/repos/github/hello-world/check-suites/12"
+   *
+   */
   check_suite_url: string;
+  /**
+   * The URL to the artifacts for the workflow run.
+   * @example "https://api.github.com/repos/github/hello-world/actions/runs/5/rerun/artifacts"
+   *
+   */
   artifacts_url: string;
+  /**
+   * The URL to cancel the workflow run.
+   * @example "https://api.github.com/repos/github/hello-world/actions/runs/5/cancel"
+   *
+   */
   cancel_url: string;
+  /**
+   * The URL to rerun the workflow run.
+   * @example "https://api.github.com/repos/github/hello-world/actions/runs/5/rerun"
+   *
+   */
   rerun_url: string;
+  /**
+   * The URL to the workflow.
+   * @example "https://api.github.com/repos/github/hello-world/actions/workflows/main.yaml"
+   *
+   */
   workflow_url: string;
   head_commit: SimpleCommit;
   repository: MinimalRepository;
   head_repository: MinimalRepository;
+  /**
+   * @example 5
+   *
+   */
   head_repository_id?: number;
 };
+/**
+ * Environment Approval
+ * An entry in the reviews log for environment deployments
+ *
+ */
 export type EnvironmentApprovals = {
+  /**
+   * The list of environments that were approved or rejected
+   *
+   */
   environments: {
+    /**
+     * The id of the environment.
+     * @example 56780428
+     *
+     */
     id?: number;
+    /**
+     * @example "MDExOkVudmlyb25tZW50NTY3ODA0Mjg="
+     *
+     */
     node_id?: string;
+    /**
+     * The name of the environment.
+     * @example "staging"
+     *
+     */
     name?: string;
+    /**
+     * @example "https://api.github.com/repos/github/hello-world/environments/staging"
+     *
+     */
     url?: string;
+    /**
+     * @example "https://github.com/github/hello-world/deployments/activity_log?environments_filter=staging"
+     *
+     */
     html_url?: string;
+    /**
+     * The time that the environment was created, in ISO 8601 format.
+     * @example "2020-11-23T22:00:40Z"
+     *
+     */
     created_at?: Date;
+    /**
+     * The time that the environment was last updated, in ISO 8601 format.
+     * @example "2020-11-23T22:00:40Z"
+     *
+     */
     updated_at?: Date;
   }[];
+  /**
+   * Whether deployment to the environment(s) was approved or rejected
+   * @example "approved"
+   *
+   */
   state: 'approved' | 'rejected';
   user: SimpleUser;
+  /**
+   * The comment submitted with the deployment review
+   * @example "Ship it!"
+   *
+   */
   comment: string;
 };
+/**
+ * The type of reviewer. Must be one of: `User` or `Team`
+ * @example "User"
+ *
+ */
 export type DeploymentReviewerType = 'User' | 'Team';
+/**
+ * Pending Deployment
+ * Details of a deployment that is waiting for protection rules to pass
+ *
+ */
 export type PendingDeployment = {
   environment: {
+    /**
+     * The id of the environment.
+     * @example 56780428
+     *
+     */
     id?: number;
+    /**
+     * @example "MDExOkVudmlyb25tZW50NTY3ODA0Mjg="
+     *
+     */
     node_id?: string;
+    /**
+     * The name of the environment.
+     * @example "staging"
+     *
+     */
     name?: string;
+    /**
+     * @example "https://api.github.com/repos/github/hello-world/environments/staging"
+     *
+     */
     url?: string;
+    /**
+     * @example "https://github.com/github/hello-world/deployments/activity_log?environments_filter=staging"
+     *
+     */
     html_url?: string;
   };
+  /**
+   * The set duration of the wait timer
+   * @example 30
+   *
+   */
   wait_timer: number;
+  /**
+   * The time that the wait timer began.
+   * @example "2020-11-23T22:00:40Z"
+   *
+   */
   wait_timer_started_at: Date | null;
+  /**
+   * Whether the currently authenticated user can approve the deployment
+   * @example true
+   *
+   */
   current_user_can_approve: boolean;
+  /**
+   * The people or teams that may approve jobs that reference the environment. You can list up to six users or teams as reviewers. The reviewers must have at least read access to the repository. Only one of the required reviewers needs to approve the job for it to proceed.
+   *
+   */
   reviewers: {
     type?: DeploymentReviewerType;
     reviewer?: SimpleUser | TeamSimple;
   }[];
 };
+/**
+ * Deployment
+ * A request for a specific ref(branch,sha,tag) to be deployed
+ *
+ */
 export type Deployment = {
+  /**
+   * @example "https://api.github.com/repos/octocat/example/deployments/1"
+   *
+   */
   url: string;
+  /**
+   * Unique identifier of the deployment
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOkRlcGxveW1lbnQx"
+   *
+   */
   node_id: string;
+  /**
+   * @example "a84d88e7554fc1fa21bcbc4efae3c782a70d2b9d"
+   *
+   */
   sha: string;
+  /**
+   * The ref to deploy. This can be a branch, tag, or sha.
+   * @example "topic-branch"
+   *
+   */
   ref: string;
+  /**
+   * Parameter to specify a task to execute
+   * @example "deploy"
+   *
+   */
   task: string;
   payload: any;
+  /**
+   * @example "staging"
+   *
+   */
   original_environment?: string;
+  /**
+   * Name for the target deployment environment.
+   * @example "production"
+   *
+   */
   environment: string;
+  /**
+   * @example "Deploy request from hubot"
+   *
+   */
   description: string | null;
-  creator: any;
+  creator: any | null;
+  /**
+   * @example "2012-07-20T01:19:13Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2012-07-20T01:19:13Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "https://api.github.com/repos/octocat/example/deployments/1/statuses"
+   *
+   */
   statuses_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/example"
+   *
+   */
   repository_url: string;
+  /**
+   * Specifies if the given environment is will no longer exist at some point in the future. Default: false.
+   * @example true
+   *
+   */
   transient_environment?: boolean;
+  /**
+   * Specifies if the given environment is one that end-users directly interact with. Default: false.
+   * @example true
+   *
+   */
   production_environment?: boolean;
-  performed_via_github_app?: any;
+  performed_via_github_app?: any | null;
 };
+/**
+ * Workflow Run Usage
+ * Workflow Run Usage
+ *
+ */
 export type WorkflowRunUsage = {
   billable: {
     UBUNTU?: {
@@ -1814,24 +5874,88 @@ export type WorkflowRunUsage = {
   };
   run_duration_ms: number;
 };
+/**
+ * Actions Secret
+ * Set secrets for GitHub Actions.
+ *
+ */
 export type ActionsSecret = {
+  /**
+   * The name of the secret.
+   * @example "SECRET_TOKEN"
+   *
+   */
   name: string;
   created_at: Date;
   updated_at: Date;
 };
+/**
+ * Workflow
+ * A GitHub Actions workflow
+ *
+ */
 export type Workflow = {
+  /**
+   * @example 5
+   *
+   */
   id: number;
+  /**
+   * @example "MDg6V29ya2Zsb3cxMg=="
+   *
+   */
   node_id: string;
+  /**
+   * @example "CI"
+   *
+   */
   name: string;
+  /**
+   * @example "ruby.yaml"
+   *
+   */
   path: string;
+  /**
+   * @example "active"
+   *
+   */
   state: 'active' | 'deleted';
+  /**
+   * @example "2019-12-06T14:20:20.000Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2019-12-06T14:20:20.000Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "https://api.github.com/repos/actions/setup-ruby/workflows/5"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/actions/setup-ruby/blob/master/.github/workflows/ruby.yaml"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://github.com/actions/setup-ruby/workflows/CI/badge.svg"
+   *
+   */
   badge_url: string;
+  /**
+   * @example "2019-12-06T14:20:20.000Z"
+   *
+   */
   deleted_at?: Date;
 };
+/**
+ * Workflow Usage
+ * Workflow Usage
+ *
+ */
 export type WorkflowUsage = {
   billable: {
     UBUNTU?: {
@@ -1845,23 +5969,82 @@ export type WorkflowUsage = {
     };
   };
 };
+/**
+ * Protected Branch Admin Enforced
+ * Protected Branch Admin Enforced
+ *
+ */
 export type ProtectedBranchAdminEnforced = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/enforce_admins"
+   *
+   */
   url: string;
+  /**
+   * @example true
+   *
+   */
   enabled: boolean;
 };
+/**
+ * Protected Branch Pull Request Review
+ * Protected Branch Pull Request Review
+ *
+ */
 export type ProtectedBranchPullRequestReview = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/dismissal_restrictions"
+   *
+   */
   url?: string;
   dismissal_restrictions?: {
+    /**
+     * The list of users with review dismissal access.
+     *
+     */
     users?: SimpleUser[];
+    /**
+     * The list of teams with review dismissal access.
+     *
+     */
     teams?: Team[];
+    /**
+     * @example "\"https://api.github.com/repos/the-org/an-org-repo/branches/master/protection/dismissal_restrictions\""
+     *
+     */
     url?: string;
+    /**
+     * @example "\"https://api.github.com/repos/the-org/an-org-repo/branches/master/protection/dismissal_restrictions/users\""
+     *
+     */
     users_url?: string;
+    /**
+     * @example "\"https://api.github.com/repos/the-org/an-org-repo/branches/master/protection/dismissal_restrictions/teams\""
+     *
+     */
     teams_url?: string;
   };
+  /**
+   * @example true
+   *
+   */
   dismiss_stale_reviews: boolean;
+  /**
+   * @example true
+   *
+   */
   require_code_owner_reviews: boolean;
+  /**
+   * @example 2
+   *
+   */
   required_approving_review_count?: number;
 };
+/**
+ * Branch Restriction Policy
+ * Branch Restriction Policy
+ *
+ */
 export type BranchRestrictionPolicy = {
   url: string;
   users_url: string;
@@ -1918,15 +6101,55 @@ export type BranchRestrictionPolicy = {
       public_members_url?: string;
       avatar_url?: string;
       description?: string;
+      /**
+       * @example "\"\""
+       *
+       */
       gravatar_id?: string;
+      /**
+       * @example "\"https://github.com/testorg-ea8ec76d71c3af4b\""
+       *
+       */
       html_url?: string;
+      /**
+       * @example "\"https://api.github.com/users/testorg-ea8ec76d71c3af4b/followers\""
+       *
+       */
       followers_url?: string;
+      /**
+       * @example "\"https://api.github.com/users/testorg-ea8ec76d71c3af4b/following{/other_user}\""
+       *
+       */
       following_url?: string;
+      /**
+       * @example "\"https://api.github.com/users/testorg-ea8ec76d71c3af4b/gists{/gist_id}\""
+       *
+       */
       gists_url?: string;
+      /**
+       * @example "\"https://api.github.com/users/testorg-ea8ec76d71c3af4b/starred{/owner}{/repo}\""
+       *
+       */
       starred_url?: string;
+      /**
+       * @example "\"https://api.github.com/users/testorg-ea8ec76d71c3af4b/subscriptions\""
+       *
+       */
       subscriptions_url?: string;
+      /**
+       * @example "\"https://api.github.com/users/testorg-ea8ec76d71c3af4b/orgs\""
+       *
+       */
       organizations_url?: string;
+      /**
+       * @example "\"https://api.github.com/users/testorg-ea8ec76d71c3af4b/received_events\""
+       *
+       */
       received_events_url?: string;
+      /**
+       * @example "\"Organization\""
+       *
+       */
       type?: string;
     };
     name?: string;
@@ -1944,6 +6167,11 @@ export type BranchRestrictionPolicy = {
     events?: string[];
   }[];
 };
+/**
+ * Branch Protection
+ * Branch Protection
+ *
+ */
 export type BranchProtection = {
   url?: string;
   required_status_checks: {
@@ -1965,9 +6193,22 @@ export type BranchProtection = {
     enabled?: boolean;
   };
   enabled: boolean;
+  /**
+   * @example "\"branch/with/protection\""
+   *
+   */
   name?: string;
+  /**
+   * @example "\"https://api.github.com/repos/owner-79e94e2d36b3fd06a32bb213/AAA_Public_Repo/branches/branch/with/protection/protection\""
+   *
+   */
   protection_url?: string;
 };
+/**
+ * Short Branch
+ * Short Branch
+ *
+ */
 export type ShortBranch = {
   name: string;
   commit: {
@@ -1978,40 +6219,114 @@ export type ShortBranch = {
   protection?: BranchProtection;
   protection_url?: string;
 };
+/**
+ * Git User
+ * Metaproperties for Git author/committer information.
+ *
+ */
 export type GitUser = {
+  /**
+   * @example "\"Chris Wanstrath\""
+   *
+   */
   name?: string;
+  /**
+   * @example "\"chris@ozmm.org\""
+   *
+   */
   email?: string;
+  /**
+   * @example "\"2007-10-29T02:42:39.000-07:00\""
+   *
+   */
   date?: string;
 };
+/**
+ * Verification
+ *
+ */
 export type Verification = {
   verified: boolean;
   reason: string;
   payload: string | null;
   signature: string | null;
 };
+/**
+ * Commit
+ * Commit
+ *
+ */
 export type Commit = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/commits/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   url: string;
+  /**
+   * @example "6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   sha: string;
+  /**
+   * @example "MDY6Q29tbWl0NmRjYjA5YjViNTc4NzVmMzM0ZjYxYWViZWQ2OTVlMmU0MTkzZGI1ZQ=="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/commit/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/commits/6dcb09b5b57875f334f61aebed695e2e4193db5e/comments"
+   *
+   */
   comments_url: string;
   commit: {
+    /**
+     * @example "https://api.github.com/repos/octocat/Hello-World/commits/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+     *
+     */
     url: string;
-    author: any;
-    committer: any;
+    author: any | null;
+    committer: any | null;
+    /**
+     * @example "Fix all the bugs"
+     *
+     */
     message: string;
     comment_count: number;
     tree: {
+      /**
+       * @example "827efc6d56897b048c772eb4087f854f46256132"
+       *
+       */
       sha: string;
+      /**
+       * @example "https://api.github.com/repos/octocat/Hello-World/tree/827efc6d56897b048c772eb4087f854f46256132"
+       *
+       */
       url: string;
     };
     verification?: Verification;
   };
-  author: any;
-  committer: any;
+  author: any | null;
+  committer: any | null;
   parents: {
+    /**
+     * @example "7638417db6d59f3c431d3e1f261cc637155684cd"
+     *
+     */
     sha: string;
+    /**
+     * @example "https://api.github.com/repos/octocat/Hello-World/commits/7638417db6d59f3c431d3e1f261cc637155684cd"
+     *
+     */
     url: string;
+    /**
+     * @example "https://github.com/octocat/Hello-World/commit/7638417db6d59f3c431d3e1f261cc637155684cd"
+     *
+     */
     html_url?: string;
   }[];
   stats?: {
@@ -2028,11 +6343,28 @@ export type Commit = {
     raw_url?: string;
     blob_url?: string;
     patch?: string;
+    /**
+     * @example "\"1e8e60ce9733d5283f7836fa602b6365a66b2567\""
+     *
+     */
     sha?: string;
+    /**
+     * @example "\"https://api.github.com/repos/owner-3d68404b07d25daeb2d4a6bf/AAA_Public_Repo/contents/geometry.js?ref=c3956841a7cb7e8ba4a6fd923568d86958f01573\""
+     *
+     */
     contents_url?: string;
+    /**
+     * @example "\"subdir/before_name.txt\""
+     *
+     */
     previous_filename?: string;
   }[];
 };
+/**
+ * Branch With Protection
+ * Branch With Protection
+ *
+ */
 export type BranchWithProtection = {
   name: string;
   commit: Commit;
@@ -2043,15 +6375,52 @@ export type BranchWithProtection = {
   protected: boolean;
   protection: BranchProtection;
   protection_url: string;
+  /**
+   * @example "\"mas*\""
+   *
+   */
   pattern?: string;
+  /**
+   * @example 1
+   *
+   */
   required_approving_review_count?: number;
 };
+/**
+ * Status Check Policy
+ * Status Check Policy
+ *
+ */
 export type StatusCheckPolicy = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/required_status_checks"
+   *
+   */
   url: string;
+  /**
+   * @example true
+   *
+   */
   strict: boolean;
+  /**
+   * @example
+   * [
+   *   "continuous-integration/travis-ci"
+   * ]
+   *
+   */
   contexts: string[];
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/required_status_checks/contexts"
+   *
+   */
   contexts_url: string;
 };
+/**
+ * Protected Branch
+ * Branch protections protect branches
+ *
+ */
 export type ProtectedBranch = {
   url: string;
   required_status_checks?: StatusCheckPolicy;
@@ -2069,7 +6438,15 @@ export type ProtectedBranch = {
     };
   };
   required_signatures?: {
+    /**
+     * @example "https://api.github.com/repos/octocat/Hello-World/branches/master/protection/required_signatures"
+     *
+     */
     url: string;
+    /**
+     * @example true
+     *
+     */
     enabled: boolean;
   };
   enforce_admins?: {
@@ -2087,31 +6464,137 @@ export type ProtectedBranch = {
   };
   restrictions?: BranchRestrictionPolicy;
 };
+/**
+ * Deployment
+ * A deployment created as the result of an Actions check run from a workflow that references an environment
+ *
+ */
 export type DeploymentSimple = {
+  /**
+   * @example "https://api.github.com/repos/octocat/example/deployments/1"
+   *
+   */
   url: string;
+  /**
+   * Unique identifier of the deployment
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOkRlcGxveW1lbnQx"
+   *
+   */
   node_id: string;
+  /**
+   * Parameter to specify a task to execute
+   * @example "deploy"
+   *
+   */
   task: string;
+  /**
+   * @example "staging"
+   *
+   */
   original_environment?: string;
+  /**
+   * Name for the target deployment environment.
+   * @example "production"
+   *
+   */
   environment: string;
+  /**
+   * @example "Deploy request from hubot"
+   *
+   */
   description: string | null;
+  /**
+   * @example "2012-07-20T01:19:13Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2012-07-20T01:19:13Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "https://api.github.com/repos/octocat/example/deployments/1/statuses"
+   *
+   */
   statuses_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/example"
+   *
+   */
   repository_url: string;
+  /**
+   * Specifies if the given environment is will no longer exist at some point in the future. Default: false.
+   * @example true
+   *
+   */
   transient_environment?: boolean;
+  /**
+   * Specifies if the given environment is one that end-users directly interact with. Default: false.
+   * @example true
+   *
+   */
   production_environment?: boolean;
-  performed_via_github_app?: any;
+  performed_via_github_app?: any | null;
 };
+/**
+ * CheckRun
+ * A check performed on the code of a given code change
+ *
+ */
 export type CheckRun = {
+  /**
+   * The id of the check.
+   * @example 21
+   *
+   */
   id: number;
+  /**
+   * The SHA of the commit that is being checked.
+   * @example "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d"
+   *
+   */
   head_sha: string;
+  /**
+   * @example "MDg6Q2hlY2tSdW40"
+   *
+   */
   node_id: string;
+  /**
+   * @example "42"
+   *
+   */
   external_id: string | null;
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/check-runs/4"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/github/hello-world/runs/4"
+   *
+   */
   html_url: string | null;
+  /**
+   * @example "https://example.com"
+   *
+   */
   details_url: string | null;
+  /**
+   * The phase of the lifecycle that the check is currently in.
+   * @example "queued"
+   *
+   */
   status: 'queued' | 'in_progress' | 'completed';
+  /**
+   * @example "neutral"
+   *
+   */
   conclusion:
     | (
         | 'success'
@@ -2123,7 +6606,15 @@ export type CheckRun = {
         | 'action_required'
       )
     | null;
+  /**
+   * @example "2018-05-04T01:14:52Z"
+   *
+   */
   started_at: Date | null;
+  /**
+   * @example "2018-05-04T01:14:52Z"
+   *
+   */
   completed_at: Date | null;
   output: {
     title: string | null;
@@ -2132,32 +6623,108 @@ export type CheckRun = {
     annotations_count: number;
     annotations_url: string;
   };
+  /**
+   * The name of the check.
+   * @example "test-coverage"
+   *
+   */
   name: string;
   check_suite: {
     id: number;
   } | null;
-  app: any;
+  app: any | null;
   pull_requests: any;
   deployment?: DeploymentSimple;
 };
+/**
+ * Check Annotation
+ * Check Annotation
+ *
+ */
 export type CheckAnnotation = {
+  /**
+   * @example "README.md"
+   *
+   */
   path: string;
+  /**
+   * @example 2
+   *
+   */
   start_line: number;
+  /**
+   * @example 2
+   *
+   */
   end_line: number;
+  /**
+   * @example 5
+   *
+   */
   start_column: number | null;
+  /**
+   * @example 10
+   *
+   */
   end_column: number | null;
+  /**
+   * @example "warning"
+   *
+   */
   annotation_level: string | null;
+  /**
+   * @example "Spell Checker"
+   *
+   */
   title: string | null;
+  /**
+   * @example "Check your spelling for 'banaas'."
+   *
+   */
   message: string | null;
+  /**
+   * @example "Do you mean 'bananas' or 'banana'?"
+   *
+   */
   raw_details: string | null;
   blob_href: string;
 };
+/**
+ * CheckSuite
+ * A suite of checks performed on the code of a given code change
+ *
+ */
 export type CheckSuite = {
+  /**
+   * @example 5
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOkNoZWNrU3VpdGU1"
+   *
+   */
   node_id: string;
+  /**
+   * @example "master"
+   *
+   */
   head_branch: string | null;
+  /**
+   * The SHA of the head commit that is being checked.
+   * @example "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d"
+   *
+   */
   head_sha: string;
+  /**
+   * @example "completed"
+   *
+   */
   status: ('queued' | 'in_progress' | 'completed') | null;
+  /**
+   * @example "neutral"
+   *
+   */
   conclusion:
     | (
         | 'success'
@@ -2169,11 +6736,23 @@ export type CheckSuite = {
         | 'action_required'
       )
     | null;
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/check-suites/5"
+   *
+   */
   url: string | null;
+  /**
+   * @example "146e867f55c26428e5f9fade55a9bbf5e95a7912"
+   *
+   */
   before: string | null;
+  /**
+   * @example "d6fde92930d4715a2b49857d24b940956b26d2d3"
+   *
+   */
   after: string | null;
   pull_requests: PullRequestMinimal[] | null;
-  app: any;
+  app: any | null;
   repository: MinimalRepository;
   created_at: Date | null;
   updated_at: Date | null;
@@ -2181,6 +6760,11 @@ export type CheckSuite = {
   latest_check_runs_count: number;
   check_runs_url: string;
 };
+/**
+ * Check Suite Preference
+ * Check suite configuration preferences for a repository.
+ *
+ */
 export type CheckSuitePreference = {
   preferences: {
     auto_trigger_checks?: {
@@ -2190,31 +6774,108 @@ export type CheckSuitePreference = {
   };
   repository: Repository;
 };
+/**
+ * The name of the tool used to generate the code scanning analysis.
+ *
+ */
 export type CodeScanningAnalysisToolName = string;
+/**
+ * The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data.
+ *
+ */
 export type CodeScanningAnalysisToolGuid = string | null;
+/**
+ * The full Git reference, formatted as `refs/heads/<branch name>`,
+ * `refs/pull/<number>/merge`, or `refs/pull/<number>/head`.
+ *
+ */
 export type CodeScanningRef = string;
+/**
+ * State of a code scanning alert.
+ *
+ */
 export type CodeScanningAlertState = 'open' | 'closed' | 'dismissed' | 'fixed';
+/**
+ * The security alert number.
+ *
+ */
 export type AlertNumber = number;
+/**
+ * The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ *
+ */
 export type AlertCreatedAt = Date;
+/**
+ * The REST API URL of the alert resource.
+ *
+ */
 export type AlertUrl = string;
+/**
+ * The GitHub URL of the alert resource.
+ *
+ */
 export type AlertHtmlUrl = string;
+/**
+ * The REST API URL for fetching the list of instances for an alert.
+ *
+ */
 export type AlertInstancesUrl = string;
+/**
+ * The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ *
+ */
 export type CodeScanningAlertDismissedAt = Date | null;
-export type CodeScanningAlertDismissedReason = string | null;
+/**
+ * **Required when the state is dismissed.** The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`.
+ *
+ */
+export type CodeScanningAlertDismissedReason = (any | any) | null;
 export type CodeScanningAlertRuleSummary = {
+  /**
+   * A unique identifier for the rule used to detect the alert.
+   *
+   */
   id?: string | null;
+  /**
+   * The name of the rule used to detect the alert.
+   *
+   */
   name?: string;
+  /**
+   * The severity of the alert.
+   *
+   */
   severity?: ('none' | 'note' | 'warning' | 'error') | null;
+  /**
+   * A short description of the rule used to detect the alert.
+   *
+   */
   description?: string;
 };
+/**
+ * The version of the tool used to generate the code scanning analysis.
+ *
+ */
 export type CodeScanningAnalysisToolVersion = string | null;
 export type CodeScanningAnalysisTool = {
   name?: CodeScanningAnalysisToolName;
   version?: CodeScanningAnalysisToolVersion;
   guid?: CodeScanningAnalysisToolGuid;
 };
+/**
+ * Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name.
+ *
+ */
 export type CodeScanningAnalysisAnalysisKey = string;
+/**
+ * Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed.
+ *
+ */
 export type CodeScanningAlertEnvironment = string;
+/**
+ * Describe a region within a file for the alert.
+ *
+ */
 export type CodeScanningAlertLocation = {
   path?: string;
   start_line?: number;
@@ -2222,6 +6883,10 @@ export type CodeScanningAlertLocation = {
   start_column?: number;
   end_column?: number;
 };
+/**
+ * A classification of the file. For example to identify it as generated.
+ *
+ */
 export type CodeScanningAlertClassification =
   | ('source' | 'generated' | 'test' | 'library')
   | null;
@@ -2236,6 +6901,11 @@ export type CodeScanningAlertInstance = {
   };
   location?: CodeScanningAlertLocation;
   html_url?: string;
+  /**
+   * Classifications that have been applied to the file that triggered the alert.
+   * For example identifying it as documentation, or a generated file.
+   *
+   */
   classifications?: CodeScanningAlertClassification[];
 };
 export type CodeScanningAlertItems = {
@@ -2253,12 +6923,40 @@ export type CodeScanningAlertItems = {
   most_recent_instance: CodeScanningAlertInstance;
 };
 export type CodeScanningAlertRule = {
+  /**
+   * A unique identifier for the rule used to detect the alert.
+   *
+   */
   id?: string | null;
+  /**
+   * The name of the rule used to detect the alert.
+   *
+   */
   name?: string;
+  /**
+   * The severity of the alert.
+   *
+   */
   severity?: ('none' | 'note' | 'warning' | 'error') | null;
+  /**
+   * A short description of the rule used to detect the alert.
+   *
+   */
   description?: string;
+  /**
+   * description of the rule used to detect the alert.
+   *
+   */
   full_description?: string;
+  /**
+   * A set of tags applicable for the rule.
+   *
+   */
   tags?: string[];
+  /**
+   * Detailed documentation for the rule as GitHub Flavored Markdown.
+   *
+   */
   help?: string;
 };
 export type CodeScanningAlert = {
@@ -2275,31 +6973,90 @@ export type CodeScanningAlert = {
   tool: CodeScanningAnalysisTool;
   most_recent_instance: CodeScanningAlertInstance;
 };
+/**
+ * Sets the state of the code scanning alert. Can be one of `open` or `dismissed`. You must provide `dismissed_reason` when you set the state to `dismissed`.
+ *
+ */
 export type CodeScanningAlertSetState = 'open' | 'dismissed';
+/**
+ * An identifier for the upload.
+ * @example "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53"
+ *
+ */
 export type CodeScanningAnalysisSarifId = string;
+/**
+ * The SHA of the commit to which the analysis you are uploading relates.
+ *
+ */
 export type CodeScanningAnalysisCommitSha = string;
+/**
+ * Identifies the variable values associated with the environment in which this analysis was performed.
+ *
+ */
 export type CodeScanningAnalysisEnvironment = string;
+/**
+ * The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ *
+ */
 export type CodeScanningAnalysisCreatedAt = Date;
+/**
+ * The REST API URL of the analysis resource.
+ *
+ */
 export type CodeScanningAnalysisUrl = string;
 export type CodeScanningAnalysis = {
   ref: CodeScanningRef;
   commit_sha: CodeScanningAnalysisCommitSha;
   analysis_key: CodeScanningAnalysisAnalysisKey;
   environment: CodeScanningAnalysisEnvironment;
+  /**
+   * @example "error reading field xyz"
+   *
+   */
   error: string;
   created_at: CodeScanningAnalysisCreatedAt;
+  /**
+   * The total number of results in the analysis.
+   *
+   */
   results_count: number;
+  /**
+   * The total number of rules used in the analysis.
+   *
+   */
   rules_count: number;
+  /**
+   * Unique identifier for this analysis.
+   *
+   */
   id: number;
   url: CodeScanningAnalysisUrl;
   sarif_id: CodeScanningAnalysisSarifId;
   tool: CodeScanningAnalysisTool;
   deletable: boolean;
 };
+/**
+ * Analysis deletion
+ * Successful deletion of a code scanning analysis
+ *
+ */
 export type CodeScanningAnalysisDeletion = {
+  /**
+   * Next deletable analysis in chain, without last analysis deletion confirmation
+   *
+   */
   next_analysis_url: string | null;
+  /**
+   * Next deletable analysis in chain, with last analysis deletion confirmation
+   *
+   */
   confirm_delete_url: string | null;
 };
+/**
+ * Scim Error
+ * Scim Error
+ *
+ */
 export type ScimError = {
   message?: string | null;
   documentation_url?: string | null;
@@ -2308,32 +7065,121 @@ export type ScimError = {
   scimType?: string | null;
   schemas?: string[];
 };
+/**
+ * A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see "[SARIF support for code scanning](https://docs.github.com/github/finding-security-vulnerabilities-and-errors-in-your-code/sarif-support-for-code-scanning)."
+ *
+ */
 export type CodeScanningAnalysisSarifFile = string;
 export type CodeScanningSarifsReceipt = {
   id?: CodeScanningAnalysisSarifId;
+  /**
+   * The REST API URL for checking the status of the upload.
+   *
+   */
   url?: string;
 };
 export type CodeScanningSarifsStatus = {
+  /**
+   * `pending` files have not yet been processed, while `complete` means all results in the SARIF have been stored.
+   *
+   */
   processing_status?: 'pending' | 'complete';
+  /**
+   * The REST API URL for getting the analyses associated with the upload.
+   *
+   */
   analyses_url?: string | null;
 };
+/**
+ * Collaborator
+ * Collaborator
+ *
+ */
 export type Collaborator = {
+  /**
+   * @example "octocat"
+   *
+   */
   login: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDQ6VXNlcjE="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   *
+   */
   avatar_url: string;
+  /**
+   * @example "41d064eb2195891e12d0413f63227ea7"
+   *
+   */
   gravatar_id: string | null;
+  /**
+   * @example "https://api.github.com/users/octocat"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/octocat"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/followers"
+   *
+   */
   followers_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/following{/other_user}"
+   *
+   */
   following_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/gists{/gist_id}"
+   *
+   */
   gists_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+   *
+   */
   starred_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/subscriptions"
+   *
+   */
   subscriptions_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/orgs"
+   *
+   */
   organizations_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/repos"
+   *
+   */
   repos_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/events{/privacy}"
+   *
+   */
   events_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/received_events"
+   *
+   */
   received_events_url: string;
+  /**
+   * @example "User"
+   *
+   */
   type: string;
   site_admin: boolean;
   permissions?: {
@@ -2342,18 +7188,55 @@ export type Collaborator = {
     admin: boolean;
   };
 };
+/**
+ * Repository Invitation
+ * Repository invitations let you manage who you collaborate with.
+ *
+ */
 export type RepositoryInvitation = {
+  /**
+   * Unique identifier of the repository invitation.
+   * @example 42
+   *
+   */
   id: number;
   repository: MinimalRepository;
-  invitee: any;
-  inviter: any;
+  invitee: any | null;
+  inviter: any | null;
+  /**
+   * The permission associated with the invitation.
+   * @example "read"
+   *
+   */
   permissions: 'read' | 'write' | 'admin';
+  /**
+   * @example "2016-06-13T14:52:50-05:00"
+   *
+   */
   created_at: Date;
+  /**
+   * Whether or not the invitation has expired
+   *
+   */
   expired?: boolean;
+  /**
+   * URL for the repository invitation
+   * @example "https://api.github.com/user/repository-invitations/1"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/invitations"
+   *
+   */
   html_url: string;
   node_id: string;
 };
+/**
+ * Commit Comment
+ * Commit Comment
+ *
+ */
 export type CommitComment = {
   html_url: string;
   url: string;
@@ -2364,12 +7247,17 @@ export type CommitComment = {
   position: number | null;
   line: number | null;
   commit_id: string;
-  user: any;
+  user: any | null;
   created_at: Date;
   updated_at: Date;
   author_association: Author_association;
   reactions?: ReactionRollup;
 };
+/**
+ * Branch Short
+ * Branch Short
+ *
+ */
 export type BranchShort = {
   name: string;
   commit: {
@@ -2378,36 +7266,128 @@ export type BranchShort = {
   };
   protected: boolean;
 };
+/**
+ * Link
+ * Hypermedia Link
+ *
+ */
 export type Link = {
   href: string;
 };
+/**
+ * Auto merge
+ * The status of auto merging a pull request.
+ *
+ */
 export type Auto_merge = {
   enabled_by: SimpleUser;
+  /**
+   * The merge method to use.
+   *
+   */
   merge_method: 'merge' | 'squash' | 'rebase';
+  /**
+   * Title for the merge commit message.
+   *
+   */
   commit_title: string;
+  /**
+   * Commit message for the merge commit.
+   *
+   */
   commit_message: string;
 } | null;
+/**
+ * Pull Request Simple
+ * Pull Request Simple
+ *
+ */
 export type PullRequestSimple = {
   /**
-   * A small description
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
+   *
    */
   url: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDExOlB1bGxSZXF1ZXN0MQ=="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/1347"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/1347.diff"
+   *
+   */
   diff_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/1347.patch"
+   *
+   */
   patch_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+   *
+   */
   issue_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits"
+   *
+   */
   commits_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments"
+   *
+   */
   review_comments_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}"
+   *
+   */
   review_comment_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   statuses_url: string;
+  /**
+   * @example 1347
+   *
+   */
   number: number;
+  /**
+   * @example "open"
+   *
+   */
   state: string;
+  /**
+   * @example true
+   *
+   */
   locked: boolean;
+  /**
+   * @example "new-feature"
+   *
+   */
   title: string;
-  user: any;
+  user: any | null;
+  /**
+   * @example "Please pull these awesome changes"
+   *
+   */
   body: string | null;
   labels: {
     id?: number;
@@ -2418,14 +7398,38 @@ export type PullRequestSimple = {
     color?: string;
     default?: boolean;
   }[];
-  milestone: any;
+  milestone: any | null;
+  /**
+   * @example "too heated"
+   *
+   */
   active_lock_reason?: string | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   closed_at: Date | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   merged_at: Date | null;
+  /**
+   * @example "e5bd3914e2e596debea16f433f57875b5b90bcd6"
+   *
+   */
   merge_commit_sha: string | null;
-  assignee: any;
+  assignee: any | null;
   assignees?: SimpleUser[] | null;
   requested_reviewers?: SimpleUser[] | null;
   requested_teams?: TeamSimple[] | null;
@@ -2434,14 +7438,14 @@ export type PullRequestSimple = {
     ref: string;
     repo: Repository;
     sha: string;
-    user: any;
+    user: any | null;
   };
   base: {
     label: string;
     ref: string;
     repo: Repository;
     sha: string;
-    user: any;
+    user: any | null;
   };
   _links: {
     comments: Link;
@@ -2455,8 +7459,16 @@ export type PullRequestSimple = {
   };
   author_association: Author_association;
   auto_merge: Auto_merge;
+  /**
+   * Indicates whether or not the pull request is a draft.
+   *
+   */
   draft?: boolean;
 };
+/**
+ * Simple Commit Status
+ *
+ */
 export type SimpleCommitStatus = {
   description: string | null;
   id: number;
@@ -2470,6 +7482,11 @@ export type SimpleCommitStatus = {
   created_at: Date;
   updated_at: Date;
 };
+/**
+ * Combined Commit Status
+ * Combined Commit Status
+ *
+ */
 export type CombinedCommitStatus = {
   state: string;
   statuses: SimpleCommitStatus[];
@@ -2479,6 +7496,11 @@ export type CombinedCommitStatus = {
   commit_url: string;
   url: string;
 };
+/**
+ * Status
+ * The status of a commit.
+ *
+ */
 export type Status = {
   url: string;
   avatar_url: string | null;
@@ -2492,53 +7514,177 @@ export type Status = {
   updated_at: string;
   creator: SimpleUser;
 };
+/**
+ * Community Health File
+ *
+ */
 export type CommunityHealthFile = {
   url: string;
   html_url: string;
 };
+/**
+ * Community Profile
+ * Community Profile
+ *
+ */
 export type CommunityProfile = {
+  /**
+   * @example 100
+   *
+   */
   health_percentage: number;
+  /**
+   * @example "My first repository on GitHub!"
+   *
+   */
   description: string | null;
+  /**
+   * @example "example.com"
+   *
+   */
   documentation: string | null;
   files: {
-    code_of_conduct: any;
-    license: any;
-    contributing: any;
-    readme: any;
-    issue_template: any;
-    pull_request_template: any;
+    code_of_conduct: any | null;
+    license: any | null;
+    contributing: any | null;
+    readme: any | null;
+    issue_template: any | null;
+    pull_request_template: any | null;
   };
+  /**
+   * @example "2017-02-28T19:09:29Z"
+   *
+   */
   updated_at: Date | null;
+  /**
+   * @example true
+   *
+   */
   content_reports_enabled?: boolean;
 };
+/**
+ * Diff Entry
+ * Diff Entry
+ *
+ */
 export type DiffEntry = {
+  /**
+   * @example "bbcd538c8e72b8c175046e27cc8f907076331401"
+   *
+   */
   sha: string;
+  /**
+   * @example "file1.txt"
+   *
+   */
   filename: string;
+  /**
+   * @example "added"
+   *
+   */
   status: string;
+  /**
+   * @example 103
+   *
+   */
   additions: number;
+  /**
+   * @example 21
+   *
+   */
   deletions: number;
+  /**
+   * @example 124
+   *
+   */
   changes: number;
+  /**
+   * @example "https://github.com/octocat/Hello-World/blob/6dcb09b5b57875f334f61aebed695e2e4193db5e/file1.txt"
+   *
+   */
   blob_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/raw/6dcb09b5b57875f334f61aebed695e2e4193db5e/file1.txt"
+   *
+   */
   raw_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/contents/file1.txt?ref=6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   contents_url: string;
+  /**
+   * @example "@@ -132,7 +132,7 @@ module Test @@ -1000,7 +1000,7 @@ module Test"
+   *
+   */
   patch?: string;
+  /**
+   * @example "file.txt"
+   *
+   */
   previous_filename?: string;
 };
+/**
+ * Commit Comparison
+ * Commit Comparison
+ *
+ */
 export type CommitComparison = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/compare/master...topic"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/compare/master...topic"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/compare/octocat:bbcd538c8e72b8c175046e27cc8f907076331401...octocat:0328041d1152db8ae77652d1618a02e57f745f17"
+   *
+   */
   permalink_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/compare/master...topic.diff"
+   *
+   */
   diff_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/compare/master...topic.patch"
+   *
+   */
   patch_url: string;
   base_commit: Commit;
   merge_base_commit: Commit;
+  /**
+   * @example "ahead"
+   *
+   */
   status: 'diverged' | 'ahead' | 'behind' | 'identical';
+  /**
+   * @example 4
+   *
+   */
   ahead_by: number;
+  /**
+   * @example 5
+   *
+   */
   behind_by: number;
+  /**
+   * @example 6
+   *
+   */
   total_commits: number;
   commits: Commit[];
   files: DiffEntry[];
 };
+/**
+ * Content Tree
+ * Content Tree
+ *
+ */
 export type ContentTree = {
   type: string;
   size: number;
@@ -2572,6 +7718,11 @@ export type ContentTree = {
     self: string;
   };
 };
+/**
+ * Content Directory
+ * A list of directory items
+ *
+ */
 export type ContentDirectory = {
   type: string;
   size: number;
@@ -2589,6 +7740,11 @@ export type ContentDirectory = {
     self: string;
   };
 }[];
+/**
+ * Content File
+ * Content File
+ *
+ */
 export type ContentFile = {
   type: string;
   encoding: string;
@@ -2606,9 +7762,22 @@ export type ContentFile = {
     html: string | null;
     self: string;
   };
+  /**
+   * @example "\"actual/actual.md\""
+   *
+   */
   target?: string;
+  /**
+   * @example "\"git://example.com/defunkt/dotjs.git\""
+   *
+   */
   submodule_git_url?: string;
 };
+/**
+ * Symlink Content
+ * An object describing a symlink
+ *
+ */
 export type ContentSymlink = {
   type: string;
   target: string;
@@ -2626,6 +7795,11 @@ export type ContentSymlink = {
     self: string;
   };
 };
+/**
+ * Symlink Content
+ * An object describing a symlink
+ *
+ */
 export type ContentSubmodule = {
   type: string;
   submodule_git_url: string;
@@ -2643,6 +7817,11 @@ export type ContentSubmodule = {
     self: string;
   };
 };
+/**
+ * File Commit
+ * File Commit
+ *
+ */
 export type FileCommit = {
   content: {
     name?: string;
@@ -2693,6 +7872,11 @@ export type FileCommit = {
     };
   };
 };
+/**
+ * Contributor
+ * Contributor
+ *
+ */
 export type Contributor = {
   login?: string;
   id?: number;
@@ -2716,10 +7900,32 @@ export type Contributor = {
   email?: string;
   name?: string;
 };
+/**
+ * Deployment Status
+ * The status of a deployment.
+ *
+ */
 export type DeploymentStatus = {
+  /**
+   * @example "https://api.github.com/repos/octocat/example/deployments/42/statuses/1"
+   *
+   */
   url: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDE2OkRlcGxveW1lbnRTdGF0dXMx"
+   *
+   */
   node_id: string;
+  /**
+   * The state of the status.
+   * @example "success"
+   *
+   */
   state:
     | 'error'
     | 'failure'
@@ -2728,59 +7934,204 @@ export type DeploymentStatus = {
     | 'success'
     | 'queued'
     | 'in_progress';
-  creator: any;
+  creator: any | null;
+  /**
+   * A short description of the status.
+   * @example "Deployment finished successfully."
+   *
+   */
   description: string;
+  /**
+   * The environment of the deployment that the status is for.
+   * @example "production"
+   *
+   */
   environment?: string;
+  /**
+   * Deprecated: the URL to associate with this status.
+   * @example "https://example.com/deployment/42/output"
+   *
+   */
   target_url: string;
+  /**
+   * @example "2012-07-20T01:19:13Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2012-07-20T01:19:13Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "https://api.github.com/repos/octocat/example/deployments/42"
+   *
+   */
   deployment_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/example"
+   *
+   */
   repository_url: string;
+  /**
+   * The URL for accessing your environment.
+   * @example "https://staging.example.com/"
+   *
+   */
   environment_url?: string;
+  /**
+   * The URL to associate with this status.
+   * @example "https://example.com/deployment/42/output"
+   *
+   */
   log_url?: string;
-  performed_via_github_app?: any;
+  performed_via_github_app?: any | null;
 };
+/**
+ * The amount of time to delay a job after the job is initially triggered. The time (in minutes) must be an integer between 0 and 43,200 (30 days).
+ * @example 30
+ *
+ */
 export type WaitTimer = number;
+/**
+ * The type of deployment branch policy for this environment. To allow all branches to deploy, set to `null`.
+ *
+ */
 export type Deployment_branch_policy = {
+  /**
+   * Whether only branches with branch protection rules can deploy to this environment. If `protected_branches` is `true`, `custom_branch_policies` must be `false`; if `protected_branches` is `false`, `custom_branch_policies` must be `true`.
+   *
+   */
   protected_branches: boolean;
+  /**
+   * Whether only branches that match the specified name patterns can deploy to this environment.  If `custom_branch_policies` is `true`, `protected_branches` must be `false`; if `custom_branch_policies` is `false`, `protected_branches` must be `true`.
+   *
+   */
   custom_branch_policies: boolean;
 } | null;
+/**
+ * Environment
+ * Details of a deployment environment
+ *
+ */
 export type Environment = {
+  /**
+   * The id of the environment.
+   * @example 56780428
+   *
+   */
   id: number;
+  /**
+   * @example "MDExOkVudmlyb25tZW50NTY3ODA0Mjg="
+   *
+   */
   node_id: string;
+  /**
+   * The name of the environment.
+   * @example "staging"
+   *
+   */
   name: string;
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/environments/staging"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/github/hello-world/deployments/activity_log?environments_filter=staging"
+   *
+   */
   html_url: string;
+  /**
+   * The time that the environment was created, in ISO 8601 format.
+   * @example "2020-11-23T22:00:40Z"
+   *
+   */
   created_at: Date;
+  /**
+   * The time that the environment was last updated, in ISO 8601 format.
+   * @example "2020-11-23T22:00:40Z"
+   *
+   */
   updated_at: Date;
   protection_rules?: (
     | {
+        /**
+         * @example 3515
+         *
+         */
         id: number;
+        /**
+         * @example "MDQ6R2F0ZTM1MTU="
+         *
+         */
         node_id: string;
+        /**
+         * @example "wait_timer"
+         *
+         */
         type: string;
         wait_timer?: WaitTimer;
       }
     | {
+        /**
+         * @example 3755
+         *
+         */
         id: number;
+        /**
+         * @example "MDQ6R2F0ZTM3NTU="
+         *
+         */
         node_id: string;
+        /**
+         * @example "required_reviewers"
+         *
+         */
         type: string;
+        /**
+         * The people or teams that may approve jobs that reference the environment. You can list up to six users or teams as reviewers. The reviewers must have at least read access to the repository. Only one of the required reviewers needs to approve the job for it to proceed.
+         *
+         */
         reviewers?: {
           type?: DeploymentReviewerType;
           reviewer?: SimpleUser | TeamSimple;
         }[];
       }
     | {
+        /**
+         * @example 3515
+         *
+         */
         id: number;
+        /**
+         * @example "MDQ6R2F0ZTM1MTU="
+         *
+         */
         node_id: string;
+        /**
+         * @example "branch_policy"
+         *
+         */
         type: string;
       }
   )[];
   deployment_branch_policy?: Deployment_branch_policy;
 };
+/**
+ * Short Blob
+ * Short Blob
+ *
+ */
 export type ShortBlob = {
   url: string;
   sha: string;
 };
+/**
+ * Blob
+ * Blob
+ *
+ */
 export type Blob = {
   content: string;
   encoding: string;
@@ -2790,26 +8141,89 @@ export type Blob = {
   node_id: string;
   highlighted_content?: string;
 };
+/**
+ * Git Commit
+ * Low-level Git commit operations within a repository
+ *
+ */
 export type GitCommit = {
+  /**
+   * SHA for the commit
+   * @example "7638417db6d59f3c431d3e1f261cc637155684cd"
+   *
+   */
   sha: string;
   node_id: string;
   url: string;
+  /**
+   * Identifying information for the git-user
+   *
+   */
   author: {
+    /**
+     * Timestamp of the commit
+     * @example "2014-08-09T08:02:04+12:00"
+     *
+     */
     date: Date;
+    /**
+     * Git email address of the user
+     * @example "monalisa.octocat@example.com"
+     *
+     */
     email: string;
+    /**
+     * Name of the git user
+     * @example "Monalisa Octocat"
+     *
+     */
     name: string;
   };
+  /**
+   * Identifying information for the git-user
+   *
+   */
   committer: {
+    /**
+     * Timestamp of the commit
+     * @example "2014-08-09T08:02:04+12:00"
+     *
+     */
     date: Date;
+    /**
+     * Git email address of the user
+     * @example "monalisa.octocat@example.com"
+     *
+     */
     email: string;
+    /**
+     * Name of the git user
+     * @example "Monalisa Octocat"
+     *
+     */
     name: string;
   };
+  /**
+   * Message describing the purpose of the commit
+   * @example "Fix #42"
+   *
+   */
   message: string;
   tree: {
+    /**
+     * SHA for the commit
+     * @example "7638417db6d59f3c431d3e1f261cc637155684cd"
+     *
+     */
     sha: string;
     url: string;
   };
   parents: {
+    /**
+     * SHA for the commit
+     * @example "7638417db6d59f3c431d3e1f261cc637155684cd"
+     *
+     */
     sha: string;
     url: string;
     html_url: string;
@@ -2822,21 +8236,59 @@ export type GitCommit = {
   };
   html_url: string;
 };
+/**
+ * Git Reference
+ * Git references within a repository
+ *
+ */
 export type GitRef = {
   ref: string;
   node_id: string;
   url: string;
   object: {
     type: string;
+    /**
+     * SHA for the reference
+     * @example "7638417db6d59f3c431d3e1f261cc637155684cd"
+     *
+     */
     sha: string;
     url: string;
   };
 };
+/**
+ * Git Tag
+ * Metadata for a Git tag
+ *
+ */
 export type GitTag = {
+  /**
+   * @example "MDM6VGFnOTQwYmQzMzYyNDhlZmFlMGY5ZWU1YmM3YjJkNWM5ODU4ODdiMTZhYw=="
+   *
+   */
   node_id: string;
+  /**
+   * Name of the tag
+   * @example "v0.0.1"
+   *
+   */
   tag: string;
+  /**
+   * @example "940bd336248efae0f9ee5bc7b2d5c985887b16ac"
+   *
+   */
   sha: string;
+  /**
+   * URL for the tag
+   * @example "https://api.github.com/repositories/42/git/tags/940bd336248efae0f9ee5bc7b2d5c985887b16ac"
+   *
+   */
   url: string;
+  /**
+   * Message describing the purpose of the tag
+   * @example "Initial public release"
+   *
+   */
   message: string;
   tagger: {
     date: string;
@@ -2850,52 +8302,210 @@ export type GitTag = {
   };
   verification?: Verification;
 };
+/**
+ * Git Tree
+ * The hierarchy between files in a Git repository.
+ *
+ */
 export type GitTree = {
   sha: string;
   url: string;
   truncated: boolean;
+  /**
+   * Objects specifying a tree structure
+   * @example
+   * [
+   *   {
+   *     "path": "file.rb",
+   *     "mode": "100644",
+   *     "type": "blob",
+   *     "size": 30,
+   *     "sha": "44b4fc6d56897b048c772eb4087f854f46256132",
+   *     "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/44b4fc6d56897b048c772eb4087f854f46256132",
+   *     "properties": {
+   *       "path": {
+   *         "type": "string"
+   *       },
+   *       "mode": {
+   *         "type": "string"
+   *       },
+   *       "type": {
+   *         "type": "string"
+   *       },
+   *       "size": {
+   *         "type": "integer"
+   *       },
+   *       "sha": {
+   *         "type": "string"
+   *       },
+   *       "url": {
+   *         "type": "string"
+   *       }
+   *     },
+   *     "required": [
+   *       "path",
+   *       "mode",
+   *       "type",
+   *       "sha",
+   *       "url",
+   *       "size"
+   *     ]
+   *   }
+   * ]
+   *
+   */
   tree: {
+    /**
+     * @example "test/file.rb"
+     *
+     */
     path?: string;
+    /**
+     * @example "040000"
+     *
+     */
     mode?: string;
+    /**
+     * @example "tree"
+     *
+     */
     type?: string;
+    /**
+     * @example "23f6827669e43831def8a7ad935069c8bd418261"
+     *
+     */
     sha?: string;
+    /**
+     * @example 12
+     *
+     */
     size?: number;
+    /**
+     * @example "https://api.github.com/repos/owner-482f3203ecf01f67e9deb18e/BBB_Private_Repo/git/blobs/23f6827669e43831def8a7ad935069c8bd418261"
+     *
+     */
     url?: string;
   }[];
 };
+/**
+ * Hook Response
+ *
+ */
 export type HookResponse = {
   code: number | null;
   status: string | null;
   message: string | null;
 };
+/**
+ * Webhook
+ * Webhooks for repositories.
+ *
+ */
 export type Hook = {
   type: string;
+  /**
+   * Unique identifier of the webhook.
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * The name of a valid service, use 'web' for a webhook.
+   * @example "web"
+   *
+   */
   name: string;
+  /**
+   * Determines whether the hook is actually triggered on pushes.
+   * @example true
+   *
+   */
   active: boolean;
+  /**
+   * Determines what events the hook is triggered for. Default: ['push'].
+   * @example
+   * [
+   *   "push",
+   *   "pull_request"
+   * ]
+   *
+   */
   events: string[];
   config: {
+    /**
+     * @example "\"foo@bar.com\""
+     *
+     */
     email?: string;
+    /**
+     * @example "\"foo\""
+     *
+     */
     password?: string;
+    /**
+     * @example "\"roomer\""
+     *
+     */
     room?: string;
+    /**
+     * @example "\"foo\""
+     *
+     */
     subdomain?: string;
     url?: WebhookConfigUrl;
     insecure_ssl?: WebhookConfigInsecureSsl;
     content_type?: WebhookConfigContentType;
+    /**
+     * @example "\"sha256\""
+     *
+     */
     digest?: string;
     secret?: WebhookConfigSecret;
+    /**
+     * @example "\"abc\""
+     *
+     */
     token?: string;
   };
+  /**
+   * @example "2011-09-06T20:39:23Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "2011-09-06T17:26:27Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/hooks/1"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/hooks/1/test"
+   *
+   */
   test_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/hooks/1/pings"
+   *
+   */
   ping_url: string;
   last_response: HookResponse;
 };
+/**
+ * Import
+ * A repository import from an external source.
+ *
+ */
 export type Import = {
   vcs: string | null;
   use_lfs?: string;
+  /**
+   * The URL of the originating repository.
+   *
+   */
   vcs_url: string;
   svc_root?: string;
   tfvc_project?: string;
@@ -2938,6 +8548,11 @@ export type Import = {
   repository_url: string;
   svn_root?: string;
 };
+/**
+ * Porter Author
+ * Porter Author
+ *
+ */
 export type PorterAuthor = {
   id: number;
   remote_id: string;
@@ -2947,25 +8562,49 @@ export type PorterAuthor = {
   url: string;
   import_url: string;
 };
+/**
+ * Porter Large File
+ * Porter Large File
+ *
+ */
 export type PorterLargeFile = {
   ref_name: string;
   path: string;
   oid: string;
   size: number;
 };
+/**
+ * Issue Event Label
+ * Issue Event Label
+ *
+ */
 export type IssueEventLabel = {
   name: string | null;
   color: string | null;
 };
+/**
+ * Issue Event Dismissed Review
+ *
+ */
 export type IssueEventDismissedReview = {
   state: string;
   review_id: number;
   dismissal_message: string | null;
   dismissal_commit_id?: string | null;
 };
+/**
+ * Issue Event Milestone
+ * Issue Event Milestone
+ *
+ */
 export type IssueEventMilestone = {
   title: string;
 };
+/**
+ * Issue Event Project Card
+ * Issue Event Project Card
+ *
+ */
 export type IssueEventProjectCard = {
   url: string;
   id: number;
@@ -2974,25 +8613,63 @@ export type IssueEventProjectCard = {
   column_name: string;
   previous_column_name?: string;
 };
+/**
+ * Issue Event Rename
+ * Issue Event Rename
+ *
+ */
 export type IssueEventRename = {
   from: string;
   to: string;
 };
+/**
+ * Issue Event
+ * Issue Event
+ *
+ */
 export type IssueEvent = {
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDEwOklzc3VlRXZlbnQx"
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/events/1"
+   *
+   */
   url: string;
-  actor: any;
+  actor: any | null;
+  /**
+   * @example "closed"
+   *
+   */
   event: string;
+  /**
+   * @example "6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   commit_id: string | null;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/commits/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   commit_url: string | null;
+  /**
+   * @example "2011-04-14T16:00:49Z"
+   *
+   */
   created_at: Date;
   issue?: IssueSimple;
   label?: IssueEventLabel;
-  assignee?: any;
-  assigner?: any;
-  review_requester?: any;
-  requested_reviewer?: any;
+  assignee?: any | null;
+  assigner?: any | null;
+  review_requester?: any | null;
+  requested_reviewer?: any | null;
   requested_team?: Team;
   dismissed_review?: IssueEventDismissedReview;
   milestone?: IssueEventMilestone;
@@ -3001,6 +8678,11 @@ export type IssueEvent = {
   author_association?: Author_association;
   lock_reason?: string | null;
 };
+/**
+ * Issue Event for Issue
+ * Issue Event for Issue
+ *
+ */
 export type IssueEventForIssue = {
   id?: number;
   node_id?: string;
@@ -3010,20 +8692,73 @@ export type IssueEventForIssue = {
   commit_id?: string | null;
   commit_url?: string | null;
   created_at?: string;
+  /**
+   * @example "\"480d4f47447129f015cb327536c522ca683939a1\""
+   *
+   */
   sha?: string;
+  /**
+   * @example "\"https://github.com/owner-3906e11a33a3d55ba449d63f/BBB_Private_Repo/commit/480d4f47447129f015cb327536c522ca683939a1\""
+   *
+   */
   html_url?: string;
+  /**
+   * @example "\"add a bunch of files\""
+   *
+   */
   message?: string;
+  /**
+   * @example "\"https://api.github.com/repos/owner-3906e11a33a3d55ba449d63f/AAA_Public_Repo/issues/1\""
+   *
+   */
   issue_url?: string;
+  /**
+   * @example "\"2020-07-09T00:17:36Z\""
+   *
+   */
   updated_at?: string;
   author_association?: Author_association;
+  /**
+   * @example "\":+1:\""
+   *
+   */
   body?: string;
+  /**
+   * @example "\"off-topic\""
+   *
+   */
   lock_reason?: string;
+  /**
+   * @example "\"2020-07-09T00:17:51Z\""
+   *
+   */
   submitted_at?: string;
+  /**
+   * @example "\"commented\""
+   *
+   */
   state?: string;
+  /**
+   * @example "\"https://api.github.com/repos/owner-3906e11a33a3d55ba449d63f/AAA_Public_Repo/pulls/2\""
+   *
+   */
   pull_request_url?: string;
+  /**
+   * @example "\"<p>Accusantium fugiat cumque. Autem qui nostrum. Atque quae ullam.</p>\""
+   *
+   */
   body_html?: string;
+  /**
+   * @example "\"Accusantium fugiat cumque. Autem qui nostrum. Atque quae ullam.\""
+   *
+   */
   body_text?: string;
 };
+/**
+ * Deploy Key
+ * An SSH key granting access to a single repository.
+ *
+ */
 export type DeployKey = {
   id: number;
   key: string;
@@ -3033,9 +8768,19 @@ export type DeployKey = {
   created_at: string;
   read_only: boolean;
 };
+/**
+ * Language
+ * Language
+ *
+ */
 export type Language = {
   [key: string]: number;
 };
+/**
+ * License Content
+ * License Content
+ *
+ */
 export type LicenseContent = {
   name: string;
   path: string;
@@ -3053,55 +8798,187 @@ export type LicenseContent = {
     html: string | null;
     self: string;
   };
-  license: any;
+  license: any | null;
 };
+/**
+ * Pages Source Hash
+ *
+ */
 export type PagesSourceHash = {
   branch: string;
   path: string;
 };
+/**
+ * GitHub Pages
+ * The configuration for GitHub Pages for a repository.
+ *
+ */
 export type Page = {
+  /**
+   * The API address for accessing this Page resource.
+   * @example "https://api.github.com/repos/github/hello-world/pages"
+   *
+   */
   url: string;
+  /**
+   * The status of the most recent build of the Page.
+   * @example "built"
+   *
+   */
   status: ('built' | 'building' | 'errored') | null;
+  /**
+   * The Pages site's custom domain
+   * @example "example.com"
+   *
+   */
   cname: string | null;
+  /**
+   * Whether the Page has a custom 404 page.
+   *
+   */
   custom_404: boolean;
+  /**
+   * The web address the Page can be accessed from.
+   * @example "https://example.com"
+   *
+   */
   html_url?: string;
   source?: PagesSourceHash;
+  /**
+   * Whether the GitHub Pages site is publicly visible. If set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site.
+   * @example true
+   *
+   */
   public: boolean;
 };
+/**
+ * Page Build
+ * Page Build
+ *
+ */
 export type PageBuild = {
   url: string;
   status: string;
   error: {
     message: string | null;
   };
-  pusher: any;
+  pusher: any | null;
   commit: string;
   duration: number;
   created_at: Date;
   updated_at: Date;
 };
+/**
+ * Page Build Status
+ * Page Build Status
+ *
+ */
 export type PageBuildStatus = {
+  /**
+   * @example "https://api.github.com/repos/github/hello-world/pages/builds/latest"
+   *
+   */
   url: string;
+  /**
+   * @example "queued"
+   *
+   */
   status: string;
 };
+/**
+ * Pull Request
+ * Pull requests let you tell others about changes you've pushed to a repository on GitHub. Once a pull request is sent, interested parties can review the set of changes, discuss potential modifications, and even push follow-up commits if necessary.
+ *
+ */
 export type PullRequest = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
+   *
+   */
   url: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDExOlB1bGxSZXF1ZXN0MQ=="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/1347"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/1347.diff"
+   *
+   */
   diff_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/1347.patch"
+   *
+   */
   patch_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+   *
+   */
   issue_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits"
+   *
+   */
   commits_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments"
+   *
+   */
   review_comments_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}"
+   *
+   */
   review_comment_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+   *
+   */
   comments_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   statuses_url: string;
+  /**
+   * Number uniquely identifying the pull request within its repository.
+   * @example 42
+   *
+   */
   number: number;
+  /**
+   * State of this Pull Request. Either `open` or `closed`.
+   * @example "open"
+   *
+   */
   state: 'open' | 'closed';
+  /**
+   * @example true
+   *
+   */
   locked: boolean;
+  /**
+   * The title of the pull request.
+   * @example "Amazing new feature"
+   *
+   */
   title: string;
-  user: any;
+  user: any | null;
+  /**
+   * @example "Please pull these awesome changes"
+   *
+   */
   body: string | null;
   labels: {
     id?: number;
@@ -3112,14 +8989,38 @@ export type PullRequest = {
     color?: string;
     default?: boolean;
   }[];
-  milestone: any;
+  milestone: any | null;
+  /**
+   * @example "too heated"
+   *
+   */
   active_lock_reason?: string | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   closed_at: Date | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   *
+   */
   merged_at: Date | null;
+  /**
+   * @example "e5bd3914e2e596debea16f433f57875b5b90bcd6"
+   *
+   */
   merge_commit_sha: string | null;
-  assignee: any;
+  assignee: any | null;
   assignees?: SimpleUser[] | null;
   requested_reviewers?: SimpleUser[] | null;
   requested_teams?: TeamSimple[] | null;
@@ -3355,7 +9256,7 @@ export type PullRequest = {
       allow_merge_commit?: boolean;
       allow_squash_merge?: boolean;
       allow_rebase_merge?: boolean;
-      license: any;
+      license: any | null;
       pushed_at: Date;
       size: number;
       ssh_url: string;
@@ -3401,76 +9302,291 @@ export type PullRequest = {
   };
   author_association: Author_association;
   auto_merge: Auto_merge;
+  /**
+   * Indicates whether or not the pull request is a draft.
+   *
+   */
   draft?: boolean;
   merged: boolean;
+  /**
+   * @example true
+   *
+   */
   mergeable: boolean | null;
+  /**
+   * @example true
+   *
+   */
   rebaseable?: boolean | null;
+  /**
+   * @example "clean"
+   *
+   */
   mergeable_state: string;
-  merged_by: any;
+  merged_by: any | null;
+  /**
+   * @example 10
+   *
+   */
   comments: number;
   review_comments: number;
+  /**
+   * Indicates whether maintainers can modify the pull request.
+   * @example true
+   *
+   */
   maintainer_can_modify: boolean;
+  /**
+   * @example 3
+   *
+   */
   commits: number;
+  /**
+   * @example 100
+   *
+   */
   additions: number;
+  /**
+   * @example 3
+   *
+   */
   deletions: number;
+  /**
+   * @example 5
+   *
+   */
   changed_files: number;
 };
+/**
+ * Pull Request Review Comment
+ * Pull Request Review Comments are comments on a portion of the Pull Request's diff.
+ *
+ */
 export type PullRequestReviewComment = {
+  /**
+   * URL for the pull request review comment
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/comments/1"
+   *
+   */
   url: string;
+  /**
+   * The ID of the pull request review to which the comment belongs.
+   * @example 42
+   *
+   */
   pull_request_review_id: number | null;
+  /**
+   * The ID of the pull request review comment.
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * The node ID of the pull request review comment.
+   * @example "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDEw"
+   *
+   */
   node_id: string;
+  /**
+   * The diff of the line that the comment refers to.
+   * @example "@@ -16,33 +16,40 @@ public class Connection : IConnection..."
+   *
+   */
   diff_hunk: string;
+  /**
+   * The relative path of the file to which the comment applies.
+   * @example "config/database.yaml"
+   *
+   */
   path: string;
+  /**
+   * The line index in the diff to which the comment applies.
+   * @example 1
+   *
+   */
   position: number;
+  /**
+   * The index of the original line in the diff to which the comment applies.
+   * @example 4
+   *
+   */
   original_position: number;
+  /**
+   * The SHA of the commit to which the comment applies.
+   * @example "6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   commit_id: string;
+  /**
+   * The SHA of the original commit to which the comment applies.
+   * @example "9c48853fa3dc5c1c3d6f1f1cd1f2743e72652840"
+   *
+   */
   original_commit_id: string;
+  /**
+   * The comment ID to reply to.
+   * @example 8
+   *
+   */
   in_reply_to_id?: number;
   user: SimpleUser;
+  /**
+   * The text of the comment.
+   * @example "We should probably include a check for null values here."
+   *
+   */
   body: string;
+  /**
+   * @example "2011-04-14T16:00:49Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-04-14T16:00:49Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * HTML URL for the pull request review comment.
+   * @example "https://github.com/octocat/Hello-World/pull/1#discussion-diff-1"
+   *
+   */
   html_url: string;
+  /**
+   * URL for the pull request that the review comment belongs to.
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1"
+   *
+   */
   pull_request_url: string;
   author_association: Author_association;
   _links: {
     self: {
+      /**
+       * @example "https://api.github.com/repos/octocat/Hello-World/pulls/comments/1"
+       *
+       */
       href: string;
     };
     html: {
+      /**
+       * @example "https://github.com/octocat/Hello-World/pull/1#discussion-diff-1"
+       *
+       */
       href: string;
     };
     pull_request: {
+      /**
+       * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1"
+       *
+       */
       href: string;
     };
   };
+  /**
+   * The first line of the range for a multi-line comment.
+   * @example 2
+   *
+   */
   start_line?: number | null;
+  /**
+   * The first line of the range for a multi-line comment.
+   * @example 2
+   *
+   */
   original_start_line?: number | null;
+  /**
+   * The side of the first line of the range for a multi-line comment.
+   * @defaultValue "RIGHT"
+   *
+   */
   start_side?: ('LEFT' | 'RIGHT') | null;
+  /**
+   * The line of the blob to which the comment applies. The last line of the range for a multi-line comment
+   * @example 2
+   *
+   */
   line?: number;
+  /**
+   * The line of the blob to which the comment applies. The last line of the range for a multi-line comment
+   * @example 2
+   *
+   */
   original_line?: number;
+  /**
+   * The side of the diff to which the comment applies. The side of the last line of the range for a multi-line comment
+   * @defaultValue "RIGHT"
+   *
+   */
   side?: 'LEFT' | 'RIGHT';
   reactions?: ReactionRollup;
+  /**
+   * @example "\"<p>comment body</p>\""
+   *
+   */
   body_html?: string;
+  /**
+   * @example "\"comment body\""
+   *
+   */
   body_text?: string;
 };
+/**
+ * Pull Request Merge Result
+ * Pull Request Merge Result
+ *
+ */
 export type PullRequestMergeResult = {
   sha: string;
   merged: boolean;
   message: string;
 };
+/**
+ * Pull Request Review Request
+ * Pull Request Review Request
+ *
+ */
 export type PullRequestReviewRequest = {
   users: SimpleUser[];
   teams: TeamSimple[];
 };
+/**
+ * Pull Request Review
+ * Pull Request Reviews are reviews on pull requests.
+ *
+ */
 export type PullRequestReview = {
+  /**
+   * Unique identifier of the review
+   * @example 42
+   *
+   */
   id: number;
+  /**
+   * @example "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3ODA="
+   *
+   */
   node_id: string;
-  user: any;
+  user: any | null;
+  /**
+   * The text of the review.
+   * @example "This looks great."
+   *
+   */
   body: string;
+  /**
+   * @example "CHANGES_REQUESTED"
+   *
+   */
   state: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-80"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/12"
+   *
+   */
   pull_request_url: string;
   _links: {
     html: {
@@ -3481,28 +9597,102 @@ export type PullRequestReview = {
     };
   };
   submitted_at?: Date;
+  /**
+   * A commit SHA for the review.
+   * @example "54bb654c9e6025347f57900a4a5c2313a96b8035"
+   *
+   */
   commit_id: string;
   body_html?: string;
   body_text?: string;
   author_association: Author_association;
 };
+/**
+ * Legacy Review Comment
+ * Legacy Review Comment
+ *
+ */
 export type ReviewComment = {
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/comments/1"
+   *
+   */
   url: string;
+  /**
+   * @example 42
+   *
+   */
   pull_request_review_id: number | null;
+  /**
+   * @example 10
+   *
+   */
   id: number;
+  /**
+   * @example "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDEw"
+   *
+   */
   node_id: string;
+  /**
+   * @example "@@ -16,33 +16,40 @@ public class Connection : IConnection..."
+   *
+   */
   diff_hunk: string;
+  /**
+   * @example "file1.txt"
+   *
+   */
   path: string;
+  /**
+   * @example 1
+   *
+   */
   position: number | null;
+  /**
+   * @example 4
+   *
+   */
   original_position: number;
+  /**
+   * @example "6dcb09b5b57875f334f61aebed695e2e4193db5e"
+   *
+   */
   commit_id: string;
+  /**
+   * @example "9c48853fa3dc5c1c3d6f1f1cd1f2743e72652840"
+   *
+   */
   original_commit_id: string;
+  /**
+   * @example 8
+   *
+   */
   in_reply_to_id?: number;
-  user: any;
+  user: any | null;
+  /**
+   * @example "Great stuff"
+   *
+   */
   body: string;
+  /**
+   * @example "2011-04-14T16:00:49Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2011-04-14T16:00:49Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example "https://github.com/octocat/Hello-World/pull/1#discussion-diff-1"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/1"
+   *
+   */
   pull_request_url: string;
   author_association: Author_association;
   _links: {
@@ -3512,28 +9702,77 @@ export type ReviewComment = {
   };
   body_text?: string;
   body_html?: string;
+  /**
+   * The side of the first line of the range for a multi-line comment.
+   * @defaultValue "RIGHT"
+   *
+   */
   side?: 'LEFT' | 'RIGHT';
+  /**
+   * The side of the first line of the range for a multi-line comment.
+   * @defaultValue "RIGHT"
+   *
+   */
   start_side?: ('LEFT' | 'RIGHT') | null;
+  /**
+   * The line of the blob to which the comment applies. The last line of the range for a multi-line comment
+   * @example 2
+   *
+   */
   line?: number;
+  /**
+   * The original line of the blob to which the comment applies. The last line of the range for a multi-line comment
+   * @example 2
+   *
+   */
   original_line?: number;
+  /**
+   * The first line of the range for a multi-line comment.
+   * @example 2
+   *
+   */
   start_line?: number | null;
+  /**
+   * The original first line of the range for a multi-line comment.
+   * @example 2
+   *
+   */
   original_start_line?: number | null;
 };
+/**
+ * Release Asset
+ * Data related to a release.
+ *
+ */
 export type ReleaseAsset = {
   url: string;
   browser_download_url: string;
   id: number;
   node_id: string;
+  /**
+   * The file name of the asset.
+   * @example "Team Environment"
+   *
+   */
   name: string;
   label: string | null;
+  /**
+   * State of the release asset.
+   *
+   */
   state: 'uploaded' | 'open';
   content_type: string;
   size: number;
   download_count: number;
   created_at: Date;
   updated_at: Date;
-  uploader: any;
+  uploader: any | null;
 };
+/**
+ * Release
+ * A release.
+ *
+ */
 export type Release = {
   url: string;
   html_url: string;
@@ -3543,11 +9782,29 @@ export type Release = {
   zipball_url: string | null;
   id: number;
   node_id: string;
+  /**
+   * The name of the tag.
+   * @example "v1.0.0"
+   *
+   */
   tag_name: string;
+  /**
+   * Specifies the commitish value that determines where the Git tag is created from.
+   * @example "master"
+   *
+   */
   target_commitish: string;
   name: string | null;
   body?: string | null;
+  /**
+   * true to create a draft (unpublished) release, false to create a published one.
+   *
+   */
   draft: boolean;
+  /**
+   * Whether to identify the release as a prerelease or a full release.
+   *
+   */
   prerelease: boolean;
   created_at: Date;
   published_at: Date | null;
@@ -3556,8 +9813,16 @@ export type Release = {
   body_html?: string;
   body_text?: string;
 };
+/**
+ * Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
+ *
+ */
 export type SecretScanningAlertState = 'open' | 'resolved';
-export type SecretScanningAlertResolution = string | null;
+/**
+ * **Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`.
+ *
+ */
+export type SecretScanningAlertResolution = (any | any) | null;
 export type SecretScanningAlert = {
   number?: AlertNumber;
   created_at?: AlertCreatedAt;
@@ -3565,24 +9830,93 @@ export type SecretScanningAlert = {
   html_url?: AlertHtmlUrl;
   state?: SecretScanningAlertState;
   resolution?: SecretScanningAlertResolution;
+  /**
+   * The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   *
+   */
   resolved_at?: Date | null;
   resolved_by?: SimpleUser;
+  /**
+   * The type of secret that secret scanning detected.
+   *
+   */
   secret_type?: string;
+  /**
+   * The secret that was detected.
+   *
+   */
   secret?: string;
 };
+/**
+ * Stargazer
+ * Stargazer
+ *
+ */
 export type Stargazer = {
   starred_at: Date;
-  user: any;
+  user: any | null;
 };
+/**
+ * Code Frequency Stat
+ * Code Frequency Stat
+ *
+ */
 export type CodeFrequencyStat = number[];
+/**
+ * Commit Activity
+ * Commit Activity
+ *
+ */
 export type CommitActivity = {
+  /**
+   * @example
+   * [
+   *   0,
+   *   3,
+   *   26,
+   *   20,
+   *   39,
+   *   1,
+   *   0
+   * ]
+   *
+   */
   days: number[];
+  /**
+   * @example 89
+   *
+   */
   total: number;
+  /**
+   * @example 1336280400
+   *
+   */
   week: number;
 };
+/**
+ * Contributor Activity
+ * Contributor Activity
+ *
+ */
 export type ContributorActivity = {
-  author: any;
+  author: any | null;
+  /**
+   * @example 135
+   *
+   */
   total: number;
+  /**
+   * @example
+   * [
+   *   {
+   *     "w": "1367712000",
+   *     "a": 6898,
+   *     "d": 77,
+   *     "c": 10
+   *   }
+   * ]
+   *
+   */
   weeks: {
     w?: string;
     a?: number;
@@ -3590,54 +9924,174 @@ export type ContributorActivity = {
     c?: number;
   }[];
 };
+/**
+ * Participation Stats
+ *
+ */
 export type ParticipationStats = {
   all: number[];
   owner: number[];
 };
+/**
+ * Repository Invitation
+ * Repository invitations let you manage who you collaborate with.
+ *
+ */
 export type RepositorySubscription = {
+  /**
+   * Determines if notifications should be received from this repository.
+   * @example true
+   *
+   */
   subscribed: boolean;
+  /**
+   * Determines if all notifications should be blocked from this repository.
+   *
+   */
   ignored: boolean;
   reason: string | null;
+  /**
+   * @example "2012-10-06T21:34:12Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "https://api.github.com/repos/octocat/example/subscription"
+   *
+   */
   url: string;
+  /**
+   * @example "https://api.github.com/repos/octocat/example"
+   *
+   */
   repository_url: string;
 };
+/**
+ * Tag
+ * Tag
+ *
+ */
 export type Tag = {
+  /**
+   * @example "v0.1"
+   *
+   */
   name: string;
   commit: {
     sha: string;
     url: string;
   };
+  /**
+   * @example "https://github.com/octocat/Hello-World/zipball/v0.1"
+   *
+   */
   zipball_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World/tarball/v0.1"
+   *
+   */
   tarball_url: string;
   node_id: string;
 };
+/**
+ * Topic
+ * A topic aggregates entities that are related to a subject.
+ *
+ */
 export type Topic = {
   names: string[];
 };
+/**
+ * Traffic
+ *
+ */
 export type Traffic = {
   timestamp: Date;
   uniques: number;
   count: number;
 };
+/**
+ * Clone Traffic
+ * Clone Traffic
+ *
+ */
 export type CloneTraffic = {
+  /**
+   * @example 173
+   *
+   */
   count: number;
+  /**
+   * @example 128
+   *
+   */
   uniques: number;
   clones: Traffic[];
 };
+/**
+ * Content Traffic
+ * Content Traffic
+ *
+ */
 export type ContentTraffic = {
+  /**
+   * @example "/github/hubot"
+   *
+   */
   path: string;
+  /**
+   * @example "github/hubot: A customizable life embetterment robot."
+   *
+   */
   title: string;
+  /**
+   * @example 3542
+   *
+   */
   count: number;
+  /**
+   * @example 2225
+   *
+   */
   uniques: number;
 };
+/**
+ * Referrer Traffic
+ * Referrer Traffic
+ *
+ */
 export type ReferrerTraffic = {
+  /**
+   * @example "Google"
+   *
+   */
   referrer: string;
+  /**
+   * @example 4
+   *
+   */
   count: number;
+  /**
+   * @example 3
+   *
+   */
   uniques: number;
 };
+/**
+ * View Traffic
+ * View Traffic
+ *
+ */
 export type ViewTraffic = {
+  /**
+   * @example 14850
+   *
+   */
   count: number;
+  /**
+   * @example 3782
+   *
+   */
   uniques: number;
   views: Traffic[];
 };
@@ -3737,43 +10191,162 @@ export type ScimEnterpriseUser = {
     location?: string;
   };
 };
+/**
+ * SCIM /Users
+ * SCIM /Users provisioning endpoints
+ *
+ */
 export type ScimUser = {
+  /**
+   * SCIM schema used.
+   *
+   */
   schemas: string[];
+  /**
+   * Unique identifier of an external identity
+   * @example "1b78eada-9baa-11e6-9eb6-a431576d590e"
+   *
+   */
   id: string;
+  /**
+   * The ID of the User.
+   * @example "a7b0f98395"
+   *
+   */
   externalId: string | null;
+  /**
+   * Configured by the admin. Could be an email, login, or username
+   * @example "someone@example.com"
+   *
+   */
   userName: string | null;
+  /**
+   * The name of the user, suitable for display to end-users
+   * @example "Jon Doe"
+   *
+   */
   displayName?: string | null;
+  /**
+   * @example
+   * {
+   *   "givenName": "Jane",
+   *   "familyName": "User"
+   * }
+   *
+   */
   name: {
     givenName: string | null;
     familyName: string | null;
     formatted?: string | null;
   };
+  /**
+   * user emails
+   * @example
+   * [
+   *   {
+   *     "value": "someone@example.com",
+   *     "primary": true
+   *   },
+   *   {
+   *     "value": "another@example.com",
+   *     "primary": false
+   *   }
+   * ]
+   *
+   */
   emails: {
     value: string;
     primary?: boolean;
   }[];
+  /**
+   * The active status of the User.
+   * @example true
+   *
+   */
   active: boolean;
   meta: {
+    /**
+     * @example "User"
+     *
+     */
     resourceType?: string;
+    /**
+     * @example "2019-01-24T22:45:36.000Z"
+     *
+     */
     created?: Date;
+    /**
+     * @example "2019-01-24T22:45:36.000Z"
+     *
+     */
     lastModified?: Date;
+    /**
+     * @example "https://api.github.com/scim/v2/organizations/myorg-123abc55141bfd8f/Users/c42772b5-2029-11e9-8543-9264a97dec8d"
+     *
+     */
     location?: string;
   };
+  /**
+   * The ID of the organization.
+   *
+   */
   organization_id?: number;
+  /**
+   * Set of operations to be performed
+   * @example
+   * [
+   *   {
+   *     "op": "replace",
+   *     "value": {
+   *       "active": false
+   *     }
+   *   }
+   * ]
+   *
+   */
   operations?: {
     op: 'add' | 'remove' | 'replace';
     path?: string;
     value?: string | any | any[];
   }[];
+  /**
+   * associated groups
+   *
+   */
   groups?: any[];
 };
+/**
+ * SCIM User List
+ * SCIM User List
+ *
+ */
 export type ScimUserList = {
+  /**
+   * SCIM schema used.
+   *
+   */
   schemas: string[];
+  /**
+   * @example 3
+   *
+   */
   totalResults: number;
+  /**
+   * @example 10
+   *
+   */
   itemsPerPage: number;
+  /**
+   * @example 1
+   *
+   */
   startIndex: number;
   Resources: ScimUser[];
 };
+/**
+ * Search Result Text Matches
+ *
+ */
 export type SearchResultTextMatches = {
   object_url?: string;
   object_type?: string | null;
@@ -3784,6 +10357,11 @@ export type SearchResultTextMatches = {
     indices?: number[];
   }[];
 }[];
+/**
+ * Code Search Result Item
+ * Code Search Result Item
+ *
+ */
 export type CodeSearchResultItem = {
   name: string;
   path: string;
@@ -3796,9 +10374,22 @@ export type CodeSearchResultItem = {
   file_size?: number;
   language?: string | null;
   last_modified_at?: Date;
+  /**
+   * @example
+   * [
+   *   "73..77",
+   *   "77..78"
+   * ]
+   *
+   */
   line_numbers?: string[];
   text_matches?: SearchResultTextMatches;
 };
+/**
+ * Commit Search Result Item
+ * Commit Search Result Item
+ *
+ */
 export type CommitSearchResultItem = {
   url: string;
   sha: string;
@@ -3810,7 +10401,7 @@ export type CommitSearchResultItem = {
       email: string;
       date: Date;
     };
-    committer: any;
+    committer: any | null;
     comment_count: number;
     message: string;
     tree: {
@@ -3820,8 +10411,8 @@ export type CommitSearchResultItem = {
     url: string;
     verification?: Verification;
   };
-  author: any;
-  committer: any;
+  author: any | null;
+  committer: any | null;
   parents: {
     url?: string;
     html_url?: string;
@@ -3832,6 +10423,11 @@ export type CommitSearchResultItem = {
   node_id: string;
   text_matches?: SearchResultTextMatches;
 };
+/**
+ * Issue Search Result Item
+ * Issue Search Result Item
+ *
+ */
 export type IssueSearchResultItem = {
   url: string;
   repository_url: string;
@@ -3846,7 +10442,7 @@ export type IssueSearchResultItem = {
   locked: boolean;
   active_lock_reason?: string | null;
   assignees?: SimpleUser[] | null;
-  user: any;
+  user: any | null;
   labels: {
     id?: number;
     node_id?: string;
@@ -3857,8 +10453,8 @@ export type IssueSearchResultItem = {
     description?: string | null;
   }[];
   state: string;
-  assignee: any;
-  milestone: any;
+  assignee: any | null;
+  milestone: any | null;
   comments: number;
   created_at: Date;
   updated_at: Date;
@@ -3879,8 +10475,13 @@ export type IssueSearchResultItem = {
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
-  performed_via_github_app?: any;
+  performed_via_github_app?: any | null;
 };
+/**
+ * Label Search Result Item
+ * Label Search Result Item
+ *
+ */
 export type LabelSearchResultItem = {
   id: number;
   node_id: string;
@@ -3892,12 +10493,17 @@ export type LabelSearchResultItem = {
   score: number;
   text_matches?: SearchResultTextMatches;
 };
+/**
+ * Repo Search Result Item
+ * Repo Search Result Item
+ *
+ */
 export type RepoSearchResultItem = {
   id: number;
   node_id: string;
   name: string;
   full_name: string;
-  owner: any;
+  owner: any | null;
   private: boolean;
   html_url: string;
   description: string | null;
@@ -3967,8 +10573,12 @@ export type RepoSearchResultItem = {
   has_wiki: boolean;
   has_downloads: boolean;
   archived: boolean;
+  /**
+   * Returns whether or not this repository disabled.
+   *
+   */
   disabled: boolean;
-  license: any;
+  license: any | null;
   permissions?: {
     admin: boolean;
     pull: boolean;
@@ -3981,6 +10591,11 @@ export type RepoSearchResultItem = {
   allow_rebase_merge?: boolean;
   delete_branch_on_merge?: boolean;
 };
+/**
+ * Topic Search Result Item
+ * Topic Search Result Item
+ *
+ */
 export type TopicSearchResultItem = {
   name: string;
   display_name: string | null;
@@ -4017,6 +10632,11 @@ export type TopicSearchResultItem = {
       }[]
     | null;
 };
+/**
+ * User Search Result Item
+ * User Search Result Item
+ *
+ */
 export type UserSearchResultItem = {
   login: string;
   id: number;
@@ -4053,44 +10673,189 @@ export type UserSearchResultItem = {
   company?: string | null;
   suspended_at?: Date | null;
 };
+/**
+ * Private User
+ * Private User
+ *
+ */
 export type PrivateUser = {
+  /**
+   * @example "octocat"
+   *
+   */
   login: string;
+  /**
+   * @example 1
+   *
+   */
   id: number;
+  /**
+   * @example "MDQ6VXNlcjE="
+   *
+   */
   node_id: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   *
+   */
   avatar_url: string;
+  /**
+   * @example "41d064eb2195891e12d0413f63227ea7"
+   *
+   */
   gravatar_id: string | null;
+  /**
+   * @example "https://api.github.com/users/octocat"
+   *
+   */
   url: string;
+  /**
+   * @example "https://github.com/octocat"
+   *
+   */
   html_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/followers"
+   *
+   */
   followers_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/following{/other_user}"
+   *
+   */
   following_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/gists{/gist_id}"
+   *
+   */
   gists_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+   *
+   */
   starred_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/subscriptions"
+   *
+   */
   subscriptions_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/orgs"
+   *
+   */
   organizations_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/repos"
+   *
+   */
   repos_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/events{/privacy}"
+   *
+   */
   events_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/received_events"
+   *
+   */
   received_events_url: string;
+  /**
+   * @example "User"
+   *
+   */
   type: string;
   site_admin: boolean;
+  /**
+   * @example "monalisa octocat"
+   *
+   */
   name: string | null;
+  /**
+   * @example "GitHub"
+   *
+   */
   company: string | null;
+  /**
+   * @example "https://github.com/blog"
+   *
+   */
   blog: string | null;
+  /**
+   * @example "San Francisco"
+   *
+   */
   location: string | null;
+  /**
+   * @example "octocat@github.com"
+   *
+   */
   email: string | null;
   hireable: boolean | null;
+  /**
+   * @example "There once was..."
+   *
+   */
   bio: string | null;
+  /**
+   * @example "monalisa"
+   *
+   */
   twitter_username?: string | null;
+  /**
+   * @example 2
+   *
+   */
   public_repos: number;
+  /**
+   * @example 1
+   *
+   */
   public_gists: number;
+  /**
+   * @example 20
+   *
+   */
   followers: number;
   following: number;
+  /**
+   * @example "2008-01-14T04:33:35Z"
+   *
+   */
   created_at: Date;
+  /**
+   * @example "2008-01-14T04:33:35Z"
+   *
+   */
   updated_at: Date;
+  /**
+   * @example 81
+   *
+   */
   private_gists: number;
+  /**
+   * @example 100
+   *
+   */
   total_private_repos: number;
+  /**
+   * @example 100
+   *
+   */
   owned_private_repos: number;
+  /**
+   * @example 10000
+   *
+   */
   disk_usage: number;
+  /**
+   * @example 8
+   *
+   */
   collaborators: number;
+  /**
+   * @example true
+   *
+   */
   two_factor_authentication: boolean;
   plan?: {
     collaborators: number;
@@ -4102,6 +10867,11 @@ export type PrivateUser = {
   business_plus?: boolean;
   ldap_dn?: string;
 };
+/**
+ * Public User
+ * Public User
+ *
+ */
 export type PublicUser = {
   login: string;
   id: number;
@@ -4142,27 +10912,115 @@ export type PublicUser = {
     private_repos: number;
   };
   suspended_at?: Date | null;
+  /**
+   * @example 1
+   *
+   */
   private_gists?: number;
+  /**
+   * @example 2
+   *
+   */
   total_private_repos?: number;
+  /**
+   * @example 2
+   *
+   */
   owned_private_repos?: number;
+  /**
+   * @example 1
+   *
+   */
   disk_usage?: number;
+  /**
+   * @example 3
+   *
+   */
   collaborators?: number;
 };
+/**
+ * Email
+ * Email
+ *
+ */
 export type Email = {
+  /**
+   * @example "octocat@github.com"
+   *
+   */
   email: string;
+  /**
+   * @example true
+   *
+   */
   primary: boolean;
+  /**
+   * @example true
+   *
+   */
   verified: boolean;
+  /**
+   * @example "public"
+   *
+   */
   visibility: string | null;
 };
+/**
+ * GPG Key
+ * A unique encryption key
+ *
+ */
 export type GpgKey = {
+  /**
+   * @example 3
+   *
+   */
   id: number;
   primary_key_id: number | null;
+  /**
+   * @example "3262EFF25BA0D270"
+   *
+   */
   key_id: string;
+  /**
+   * @example "xsBNBFayYZ..."
+   *
+   */
   public_key: string;
+  /**
+   * @example
+   * [
+   *   {
+   *     "email": "mastahyeti@users.noreply.github.com",
+   *     "verified": true
+   *   }
+   * ]
+   *
+   */
   emails: {
     email?: string;
     verified?: boolean;
   }[];
+  /**
+   * @example
+   * [
+   *   {
+   *     "id": 4,
+   *     "primary_key_id": 3,
+   *     "key_id": "4A595D4C72EE49C7",
+   *     "public_key": "zsBNBFayYZ...",
+   *     "emails": [],
+   *     "subkeys": [],
+   *     "can_sign": false,
+   *     "can_encrypt_comms": true,
+   *     "can_encrypt_storage": true,
+   *     "can_certify": false,
+   *     "created_at": "2016-03-24T11:31:04-06:00",
+   *     "expires_at": null
+   *   }
+   * ]
+   *
+   */
   subkeys: {
     id?: number;
     primary_key_id?: number;
@@ -4178,14 +11036,31 @@ export type GpgKey = {
     expires_at?: string | null;
     raw_key?: string | null;
   }[];
+  /**
+   * @example true
+   *
+   */
   can_sign: boolean;
   can_encrypt_comms: boolean;
   can_encrypt_storage: boolean;
+  /**
+   * @example true
+   *
+   */
   can_certify: boolean;
+  /**
+   * @example "2016-03-24T11:31:04-06:00"
+   *
+   */
   created_at: Date;
   expires_at: Date | null;
   raw_key: string | null;
 };
+/**
+ * Key
+ * Key
+ *
+ */
 export type Key = {
   key_id: string;
   key: string;
@@ -4196,6 +11071,10 @@ export type Key = {
   verified: boolean;
   read_only: boolean;
 };
+/**
+ * Marketplace Account
+ *
+ */
 export type MarketplaceAccount = {
   url: string;
   id: number;
@@ -4205,26 +11084,66 @@ export type MarketplaceAccount = {
   email?: string | null;
   organization_billing_email?: string | null;
 };
+/**
+ * User Marketplace Purchase
+ * User Marketplace Purchase
+ *
+ */
 export type UserMarketplacePurchase = {
+  /**
+   * @example "monthly"
+   *
+   */
   billing_cycle: string;
+  /**
+   * @example "2017-11-11T00:00:00Z"
+   *
+   */
   next_billing_date: Date | null;
   unit_count: number | null;
+  /**
+   * @example true
+   *
+   */
   on_free_trial: boolean;
+  /**
+   * @example "2017-11-11T00:00:00Z"
+   *
+   */
   free_trial_ends_on: Date | null;
+  /**
+   * @example "2017-11-02T01:12:12Z"
+   *
+   */
   updated_at: Date | null;
   account: MarketplaceAccount;
   plan: MarketplaceListingPlan;
 };
+/**
+ * Starred Repository
+ * Starred Repository
+ *
+ */
 export type StarredRepository = {
   starred_at: Date;
   repo: Repository;
 };
+/**
+ * Hovercard
+ * Hovercard
+ *
+ */
 export type Hovercard = {
   contexts: {
     message: string;
     octicon: string;
   }[];
 };
+/**
+ * Key Simple
+ * Key Simple
+ *
+ */
 export type KeySimple = {
   id: number;
   key: string;
@@ -4239,6 +11158,12 @@ export class GithubClient {
       ),
     ),
   ) {}
+  /**
+   * GitHub API Root
+   * Get Hypermedia links to resources accessible in GitHub's REST API
+   * Tags: meta
+   *
+   */
   async metaRoot(params: {}): Promise<{
     current_user_url: string;
     current_user_authorizations_html_url: string;
@@ -4293,6 +11218,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the authenticated app
+   * Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-the-authenticated-app
+   * Tags: apps
+   *
+   */
   async appsGetAuthenticated(params: {}): Promise<Integration> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/app', params),
@@ -4311,6 +11245,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a GitHub App from a manifest
+   * Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#create-a-github-app-from-a-manifest
+   * Tags: apps
+   *
+   */
   async appsCreateFromManifest(params: { code: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/app-manifests/{code}/conversions', params),
@@ -4349,6 +11290,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a webhook configuration for an app
+   * Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-webhook-configuration-for-an-app
+   * Tags: apps
+   *
+   */
   async appsGetWebhookConfigForApp(params: {}): Promise<WebhookConfig> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/app/hook/config', params),
@@ -4367,6 +11317,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a webhook configuration for an app
+   * Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#update-a-webhook-configuration-for-an-app
+   * Tags: apps
+   *
+   */
   async appsUpdateWebhookConfigForApp(
     params: {},
     body: {
@@ -4394,6 +11353,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List installations for the authenticated app
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   *
+   * The permissions the installation has are included under the `permissions` key.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#list-installations-for-the-authenticated-app
+   * Tags: apps
+   *
+   */
   async appsListInstallations(params: {
     per_page?: number;
     page?: number;
@@ -4433,6 +11401,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an installation for the authenticated app
+   * Enables an authenticated GitHub App to find an installation's information using the installation id. The installation's account type (`target_type`) will be either an organization or a user account, depending which account the repository belongs to.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-an-installation-for-the-authenticated-app
+   * Tags: apps
+   *
+   */
   async appsGetInstallation(params: {
     installation_id: number;
   }): Promise<Installation> {
@@ -4476,6 +11453,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an installation for the authenticated app
+   * Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/rest/reference/apps/#suspend-an-app-installation)" endpoint.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#delete-an-installation-for-the-authenticated-app
+   * Tags: apps
+   *
+   */
   async appsDeleteInstallation(params: {
     installation_id: number;
   }): Promise<any> {
@@ -4505,12 +11491,33 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create an installation access token for an app
+   * Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token. By default the installation token has access to all repositories that the installation can access. To restrict the access to specific repositories, you can provide the `repository_ids` when creating the token. When you omit `repository_ids`, the response does not contain the `repositories` key.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#create-an-installation-access-token-for-an-app
+   * Tags: apps
+   *
+   */
   async appsCreateInstallationAccessToken(
     params: {
       installation_id: number;
     },
     body: {
+      /**
+       * List of repository names that the token should have access to
+       *
+       */
       repositories?: string[];
+      /**
+       * List of repository IDs that the token should have access to
+       * @example
+       * [
+       *   1
+       * ]
+       *
+       */
       repository_ids?: number[];
       permissions?: AppPermissions;
     },
@@ -4586,6 +11593,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Suspend an app installation
+   * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub API or webhook events is blocked for that account.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#suspend-an-app-installation
+   * Tags: apps
+   *
+   */
   async appsSuspendInstallation(params: {
     installation_id: number;
   }): Promise<any> {
@@ -4618,6 +11634,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unsuspend an app installation
+   * Removes a GitHub App installation suspension.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#unsuspend-an-app-installation
+   * Tags: apps
+   *
+   */
   async appsUnsuspendInstallation(params: {
     installation_id: number;
   }): Promise<any> {
@@ -4650,6 +11675,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List your grants
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   *
+   * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#list-your-grants
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsListGrants(params: {
     per_page?: number;
     page?: number;
@@ -4722,6 +11757,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a single grant
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-a-single-grant
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsGetGrant(params: {
     grant_id: number;
   }): Promise<ApplicationGrant> {
@@ -4769,6 +11812,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a grant
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   *
+   * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the application has no access to your account and is no longer listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#delete-a-grant
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsDeleteGrant(params: {
     grant_id: number;
   }): Promise<any> {
@@ -4816,11 +11869,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an app authorization
+   * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+   * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-app-authorization
+   * Tags: apps
+   *
+   */
   async appsDeleteAuthorization(
     params: {
       client_id: string;
     },
     body: {
+      /**
+       * The OAuth access token used to authenticate to the GitHub API.
+       *
+       */
       access_token?: string;
     },
   ): Promise<any> {
@@ -4851,6 +11916,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Revoke a grant for an application
+   * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   *
+   * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid token as `:access_token` and the grant for the token's owner will be deleted.
+   *
+   * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the Applications settings page under "Authorized OAuth Apps" on GitHub](https://github.com/settings/applications#authorized).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-a-grant-for-an-application
+   * Tags: apps
+   *
+   */
   async appsRevokeGrantForApplication(params: {
     client_id: string;
     access_token: string;
@@ -4875,11 +11952,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check a token
+   * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#check-a-token
+   * Tags: apps
+   *
+   */
   async appsCheckToken(
     params: {
       client_id: string;
     },
     body: {
+      /**
+       * The access_token of the OAuth application.
+       *
+       */
       access_token: string;
     },
   ): Promise<Authorization> {
@@ -4919,11 +12007,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Reset a token
+   * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#reset-a-token
+   * Tags: apps
+   *
+   */
   async appsResetToken(
     params: {
       client_id: string;
     },
     body: {
+      /**
+       * The access_token of the OAuth application.
+       *
+       */
       access_token: string;
     },
   ): Promise<Authorization> {
@@ -4954,11 +12053,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an app token
+   * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-app-token
+   * Tags: apps
+   *
+   */
   async appsDeleteToken(
     params: {
       client_id: string;
     },
     body: {
+      /**
+       * The OAuth access token used to authenticate to the GitHub API.
+       *
+       */
       access_token: string;
     },
   ): Promise<any> {
@@ -4989,15 +12099,49 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a scoped access token
+   * Exchanges a non-repository scoped user-to-server OAuth access token for a repository scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-scoped-access-token
+   * Tags: apps
+   *
+   */
   async appsScopeToken(
     params: {
       client_id: string;
     },
     body: {
+      /**
+       * **Required.** The OAuth access token used to authenticate to the GitHub API.
+       * @example "e72e16c7e42f292c6912e7710c838347ae178b4a"
+       *
+       */
       access_token: string;
+      /**
+       * The name of the user or organization to scope the user-to-server access token to. **Required** unless `target_id` is specified.
+       * @example "octocat"
+       *
+       */
       target?: string;
+      /**
+       * The ID of the user or organization to scope the user-to-server access token to. **Required** unless `target` is specified.
+       * @example 1
+       *
+       */
       target_id?: number;
+      /**
+       * The list of repository names to scope the user-to-server access token to. `repositories` may not be specified if `repository_ids` is specified.
+       *
+       */
       repositories?: string[];
+      /**
+       * The list of repository IDs to scope the user-to-server access token to. `repository_ids` may not be specified if `repositories` is specified.
+       * @example
+       * [
+       *   1
+       * ]
+       *
+       */
       repository_ids?: number[];
       permissions?: AppPermissions;
     },
@@ -5056,10 +12200,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check an authorization
+   * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   *
+   * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#check-an-authorization
+   * Tags: apps
+   *
+   */
   async appsCheckAuthorization(params: {
     client_id: string;
     access_token: string;
-  }): Promise<any> {
+  }): Promise<any | null> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
         '/applications/{client_id}/tokens/{access_token}',
@@ -5091,6 +12245,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Reset an authorization
+   * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   *
+   * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#reset-an-authorization
+   * Tags: apps
+   *
+   */
   async appsResetAuthorization(params: {
     client_id: string;
     access_token: string;
@@ -5115,6 +12279,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Revoke an authorization for an application
+   * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   *
+   * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-an-authorization-for-an-application
+   * Tags: apps
+   *
+   */
   async appsRevokeAuthorizationForApplication(params: {
     client_id: string;
     access_token: string;
@@ -5139,6 +12313,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an app
+   * **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
+   *
+   * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-an-app
+   * Tags: apps
+   *
+   */
   async appsGetBySlug(params: { app_slug: string }): Promise<Integration> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/apps/{app_slug}', params),
@@ -5189,6 +12372,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List your authorizations
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#list-your-authorizations
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsListAuthorizations(params: {
     per_page?: number;
     page?: number;
@@ -5261,14 +12452,62 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a new authorization
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   *
+   * **Warning:** Apps must use the [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
+   *
+   * Creates OAuth tokens using [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+   *
+   * To create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.
+   *
+   * You can also create tokens on GitHub from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://help.github.com/articles/creating-an-access-token-for-command-line-use).
+   *
+   * Organizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://help.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#create-a-new-authorization
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsCreateAuthorization(
     params: {},
     body: {
+      /**
+       * A list of scopes that this authorization is in.
+       * @example
+       * [
+       *   "public_repo",
+       *   "user"
+       * ]
+       *
+       */
       scopes?: string[] | null;
+      /**
+       * A note to remind you what the OAuth token is for.
+       * @example "Update all gems"
+       *
+       */
       note?: string;
+      /**
+       * A URL to remind you what app the OAuth token is for.
+       *
+       */
       note_url?: string;
+      /**
+       * The OAuth app client key for which to create the token.
+       *
+       */
       client_id?: string;
+      /**
+       * The OAuth app client secret for which to create the token.
+       *
+       */
       client_secret?: string;
+      /**
+       * A unique string to distinguish an authorization from others created for the same client ID and user.
+       *
+       */
       fingerprint?: string;
     },
   ): Promise<Authorization> {
@@ -5335,15 +12574,57 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get-or-create an authorization for a specific app
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   *
+   * **Warning:** Apps must use the [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
+   *
+   * Creates a new authorization for the specified OAuth application, only if an authorization for that application doesn't already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
+   *
+   * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+   *
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsGetOrCreateAuthorizationForApp(
     params: {
       client_id: string;
     },
     body: {
+      /**
+       * The OAuth app client secret for which to create the token.
+       *
+       */
       client_secret: string;
+      /**
+       * A list of scopes that this authorization is in.
+       * @example
+       * [
+       *   "public_repo",
+       *   "user"
+       * ]
+       *
+       */
       scopes?: string[] | null;
+      /**
+       * A note to remind you what the OAuth token is for.
+       * @example "Update all gems"
+       *
+       */
       note?: string;
+      /**
+       * A URL to remind you what app the OAuth token is for.
+       *
+       */
       note_url?: string;
+      /**
+       * A unique string to distinguish an authorization from others created for the same client ID and user.
+       *
+       */
       fingerprint?: string;
     },
   ): Promise<Authorization> {
@@ -5410,15 +12691,51 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get-or-create an authorization for a specific app and fingerprint
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   *
+   * **Warning:** Apps must use the [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
+   *
+   * This method will create a new authorization for the specified OAuth application, only if an authorization for that application and fingerprint do not already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. `fingerprint` is a unique string to distinguish an authorization from others created for the same client ID and user. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
+   *
+   * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app-and-fingerprint
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsGetOrCreateAuthorizationForAppAndFingerprint(
     params: {
       client_id: string;
       fingerprint: string;
     },
     body: {
+      /**
+       * The OAuth app client secret for which to create the token.
+       *
+       */
       client_secret: string;
+      /**
+       * A list of scopes that this authorization is in.
+       * @example
+       * [
+       *   "public_repo",
+       *   "user"
+       * ]
+       *
+       */
       scopes?: string[] | null;
+      /**
+       * A note to remind you what the OAuth token is for.
+       * @example "Update all gems"
+       *
+       */
       note?: string;
+      /**
+       * A URL to remind you what app the OAuth token is for.
+       *
+       */
       note_url?: string;
     },
   ): Promise<Authorization> {
@@ -5461,6 +12778,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a single authorization
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-a-single-authorization
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsGetAuthorization(params: {
     authorization_id: number;
   }): Promise<Authorization> {
@@ -5508,16 +12833,58 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an existing authorization
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   *
+   * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+   *
+   * You can only send one of these scope keys at a time.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#update-an-existing-authorization
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsUpdateAuthorization(
     params: {
       authorization_id: number;
     },
     body: {
+      /**
+       * A list of scopes that this authorization is in.
+       * @example
+       * [
+       *   "public_repo",
+       *   "user"
+       * ]
+       *
+       */
       scopes?: string[] | null;
+      /**
+       * A list of scopes to add to this authorization.
+       *
+       */
       add_scopes?: string[];
+      /**
+       * A list of scopes to remove from this authorization.
+       *
+       */
       remove_scopes?: string[];
+      /**
+       * A note to remind you what the OAuth token is for.
+       * @example "Update all gems"
+       *
+       */
       note?: string;
+      /**
+       * A URL to remind you what app the OAuth token is for.
+       *
+       */
       note_url?: string;
+      /**
+       * A unique string to distinguish an authorization from others created for the same client ID and user.
+       *
+       */
       fingerprint?: string;
     },
   ): Promise<Authorization> {
@@ -5548,6 +12915,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an authorization
+   * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#delete-an-authorization
+   * Tags: oauth-authorizations
+   *
+   */
   async oauthAuthorizationsDeleteAuthorization(params: {
     authorization_id: number;
   }): Promise<any> {
@@ -5595,6 +12970,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all codes of conduct
+   * Learn more at {@link https://docs.github.com/rest/reference/codes_of_conduct/#get-all-codes-of-conduct
+   * Tags: codes-of-conduct
+   *
+   */
   async codesOfConductGetAllCodesOfConduct(params: {}): Promise<
     CodeOfConduct[]
   > {
@@ -5640,6 +13021,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a code of conduct
+   * Learn more at {@link https://docs.github.com/rest/reference/codes_of_conduct/#get-a-code-of-conduct
+   * Tags: codes-of-conduct
+   *
+   */
   async codesOfConductGetConductCode(params: {
     key: string;
   }): Promise<CodeOfConduct> {
@@ -5692,12 +13079,33 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a content attachment
+   * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
+   *
+   * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/apps/using-content-attachments/)" for details about content attachments.
+   *
+   * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-content-attachment
+   * Tags: apps
+   *
+   */
   async appsCreateContentAttachment(
     params: {
       content_reference_id: number;
     },
     body: {
+      /**
+       * The title of the attachment
+       * @example "Title of the attachment"
+       *
+       */
       title: string;
+      /**
+       * The body of the attachment
+       * @example "Body of the attachment"
+       *
+       */
       body: string;
     },
   ): Promise<ContentReferenceAttachment> {
@@ -5783,6 +13191,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get emojis
+   * Lists all the emojis available to use on GitHub.
+   * Learn more at {@link https://docs.github.com/rest/reference/emojis/#get-emojis
+   * Tags: emojis
+   *
+   */
   async emojisGet(params: {}): Promise<{
     [key: string]: string;
   }> {
@@ -5814,6 +13229,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Actions permissions for an enterprise
+   * Gets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-github-actions-permissions-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminGetGithubActionsPermissionsEnterprise(params: {
     enterprise: string;
   }): Promise<ActionsEnterprisePermissions> {
@@ -5839,6 +13263,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set GitHub Actions permissions for an enterprise
+   * Sets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-github-actions-permissions-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminSetGithubActionsPermissionsEnterprise(
     params: {
       enterprise: string;
@@ -5869,6 +13302,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List selected organizations enabled for GitHub Actions in an enterprise
+   * Lists the organizations that are selected to have GitHub Actions enabled in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-selected-organizations-enabled-for-github-actions-in-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListSelectedOrganizationsEnabledGithubActionsEnterprise(params: {
     enterprise: string;
     per_page?: number;
@@ -5906,11 +13348,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set selected organizations enabled for GitHub Actions in an enterprise
+   * Replaces the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-selected-organizations-enabled-for-github-actions-in-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminSetSelectedOrganizationsEnabledGithubActionsEnterprise(
     params: {
       enterprise: string;
     },
     body: {
+      /**
+       * List of organization IDs to enable for GitHub Actions.
+       *
+       */
       selected_organization_ids: number[];
     },
   ): Promise<any> {
@@ -5935,6 +13390,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Enable a selected organization for GitHub Actions in an enterprise
+   * Adds an organization to the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#enable-a-selected-organization-for-github-actions-in-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminEnableSelectedOrganizationGithubActionsEnterprise(params: {
     enterprise: string;
     org_id: number;
@@ -5959,6 +13423,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Disable a selected organization for GitHub Actions in an enterprise
+   * Removes an organization from the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#disable-a-selected-organization-for-github-actions-in-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminDisableSelectedOrganizationGithubActionsEnterprise(params: {
     enterprise: string;
     org_id: number;
@@ -5983,6 +13456,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get allowed actions for an enterprise
+   * Gets the selected actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-allowed-actions-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminGetAllowedActionsEnterprise(params: {
     enterprise: string;
   }): Promise<SelectedActions> {
@@ -6006,6 +13488,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set allowed actions for an enterprise
+   * Sets the actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-allowed-actions-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminSetAllowedActionsEnterprise(
     params: {
       enterprise: string;
@@ -6033,6 +13524,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List self-hosted runner groups for an enterprise
+   * Lists all self-hosted runner groups for an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runner-groups-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListSelfHostedRunnerGroupsForEnterprise(params: {
     enterprise: string;
     per_page?: number;
@@ -6070,14 +13570,39 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a self-hosted runner group for an enterprise
+   * Creates a new self-hosted runner group for an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#create-self-hosted-runner-group-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise(
     params: {
       enterprise: string;
     },
     body: {
+      /**
+       * Name of the runner group.
+       *
+       */
       name: string;
+      /**
+       * Visibility of a runner group. You can select all organizations or select individual organization. Can be one of: `all` or `selected`
+       *
+       */
       visibility?: 'selected' | 'all';
+      /**
+       * List of organization IDs that can access the runner group.
+       *
+       */
       selected_organization_ids?: number[];
+      /**
+       * List of runner IDs to add to the runner group.
+       *
+       */
       runners?: number[];
     },
   ): Promise<RunnerGroupsEnterprise> {
@@ -6102,6 +13627,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a self-hosted runner group for an enterprise
+   * Gets a specific self-hosted runner group for an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-a-self-hosted-runner-group-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminGetSelfHostedRunnerGroupForEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6126,13 +13660,31 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a self-hosted runner group for an enterprise
+   * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-a-self-hosted-runner-group-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise(
     params: {
       enterprise: string;
       runner_group_id: number;
     },
     body: {
+      /**
+       * Name of the runner group.
+       *
+       */
       name?: string;
+      /**
+       * Visibility of a runner group. You can select all organizations or select individual organizations. Can be one of: `all` or `selected`
+       * @defaultValue "all"
+       *
+       */
       visibility?: 'selected' | 'all';
     },
   ): Promise<RunnerGroupsEnterprise> {
@@ -6157,6 +13709,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a self-hosted runner group from an enterprise
+   * Deletes a self-hosted runner group for an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-a-self-hosted-runner-group-from-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminDeleteSelfHostedRunnerGroupFromEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6181,6 +13742,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization access to a self-hosted runner group in an enterprise
+   * Lists the organizations with access to a self-hosted runner group.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-organization-access-to-a-self-hosted-runner-group-in-a-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6219,12 +13789,25 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set organization access for a self-hosted runner group in an enterprise
+   * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-organization-access-to-a-self-hosted-runner-group-in-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterprise(
     params: {
       enterprise: string;
       runner_group_id: number;
     },
     body: {
+      /**
+       * List of organization IDs that can access the runner group.
+       *
+       */
       selected_organization_ids: number[];
     },
   ): Promise<any> {
@@ -6249,6 +13832,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add organization access to a self-hosted runner group in an enterprise
+   * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#add-organization-access-to-a-self-hosted-runner-group-in-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminAddOrgAccessToSelfHostedRunnerGroupInEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6274,6 +13866,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove organization access to a self-hosted runner group in an enterprise
+   * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#remove-organization-access-to-a-self-hosted-runner-group-in-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminRemoveOrgAccessToSelfHostedRunnerGroupInEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6299,6 +13900,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List self-hosted runners in a group for an enterprise
+   * Lists the self-hosted runners that are in a specific enterprise group.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runners-in-a-group-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListSelfHostedRunnersInGroupForEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6337,12 +13947,25 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set self-hosted runners in a group for an enterprise
+   * Replaces the list of self-hosted runners that are part of an enterprise runner group.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-self-hosted-runners-in-a-group-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise(
     params: {
       enterprise: string;
       runner_group_id: number;
     },
     body: {
+      /**
+       * List of runner IDs to add to the runner group.
+       *
+       */
       runners: number[];
     },
   ): Promise<any> {
@@ -6367,6 +13990,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add a self-hosted runner to a group for an enterprise
+   * Adds a self-hosted runner to a runner group configured in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise`
+   * scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#add-a-self-hosted-runner-to-a-group-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminAddSelfHostedRunnerToGroupForEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6392,6 +14025,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a self-hosted runner from a group for an enterprise
+   * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#remove-a-self-hosted-runner-from-a-group-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminRemoveSelfHostedRunnerFromGroupForEnterprise(params: {
     enterprise: string;
     runner_group_id: number;
@@ -6417,6 +14059,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List self-hosted runners for an enterprise
+   * Lists all self-hosted runners configured for an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runners-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListSelfHostedRunnersForEnterprise(params: {
     enterprise: string;
     per_page?: number;
@@ -6451,6 +14102,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List runner applications for an enterprise
+   * Lists binaries for the runner application that you can download and run.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-runner-applications-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListRunnerApplicationsForEnterprise(params: {
     enterprise: string;
   }): Promise<RunnerApplication[]> {
@@ -6476,6 +14136,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a registration token for an enterprise
+   * Returns a token that you can pass to the `config` script. The token expires after one hour.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   *
+   * #### Example using registration token
+   *
+   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+   *
+   * ```
+   * ./config.sh --url https://github.com/enterprises/octo-enterprise --token TOKEN
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#create-a-registration-token-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminCreateRegistrationTokenForEnterprise(params: {
     enterprise: string;
   }): Promise<AuthenticationToken> {
@@ -6499,6 +14176,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a remove token for an enterprise
+   * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   *
+   * #### Example using remove token
+   *
+   * To remove your self-hosted runner from an enterprise, replace `TOKEN` with the remove token provided by this
+   * endpoint.
+   *
+   * ```
+   * ./config.sh remove --token TOKEN
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#create-a-remove-token-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminCreateRemoveTokenForEnterprise(params: {
     enterprise: string;
   }): Promise<AuthenticationToken> {
@@ -6522,6 +14217,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a self-hosted runner for an enterprise
+   * Gets a specific self-hosted runner configured in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-a-self-hosted-runner-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminGetSelfHostedRunnerForEnterprise(params: {
     enterprise: string;
     runner_id: number;
@@ -6546,6 +14250,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a self-hosted runner from an enterprise
+   * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-self-hosted-runner-from-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminDeleteSelfHostedRunnerFromEnterprise(params: {
     enterprise: string;
     runner_id: number;
@@ -6570,6 +14283,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the audit log for an enterprise
+   * **Note:** The audit log REST API is currently in beta and is subject to change.
+   *
+   * Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-the-audit-log-for-an-enterprise
+   * Tags: audit-log
+   *
+   */
   async auditLogGetAuditLog(params: {
     enterprise: string;
     phrase?: string;
@@ -6625,6 +14347,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Actions billing for an enterprise
+   * Gets the summary of the free and paid GitHub Actions minutes used.
+   *
+   * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   *
+   * The authenticated user must be an enterprise admin.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-github-actions-billing-for-an-enterprise
+   * Tags: billing
+   *
+   */
   async billingGetGithubActionsBillingGhe(params: {
     enterprise: string;
   }): Promise<ActionsBillingUsage> {
@@ -6648,6 +14381,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Packages billing for an enterprise
+   * Gets the free and paid storage used for GitHub Packages in gigabytes.
+   *
+   * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+   *
+   * The authenticated user must be an enterprise admin.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-github-packages-billing-for-an-enterprise
+   * Tags: billing
+   *
+   */
   async billingGetGithubPackagesBillingGhe(params: {
     enterprise: string;
   }): Promise<PackagesBillingUsage> {
@@ -6671,6 +14415,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get shared storage billing for an enterprise
+   * Gets the estimated paid and estimated total storage used for GitHub Actions and Github Packages.
+   *
+   * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+   *
+   * The authenticated user must be an enterprise admin.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-shared-storage-billing-for-an-enterprise
+   * Tags: billing
+   *
+   */
   async billingGetSharedStorageBillingGhe(params: {
     enterprise: string;
   }): Promise<CombinedBillingUsage> {
@@ -6694,6 +14449,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public events
+   * We delay the public events feed by five minutes, which means the most recent event returned by the public events API actually occurred at least five minutes ago.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events
+   * Tags: activity
+   *
+   */
   async activityListPublicEvents(params: {
     per_page?: number;
     page?: number;
@@ -6757,6 +14519,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get feeds
+   * GitHub provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
+   *
+   * *   **Timeline**: The GitHub global public timeline
+   * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia)
+   * *   **Current user public**: The public timeline for the authenticated user
+   * *   **Current user**: The private timeline for the authenticated user
+   * *   **Current user actor**: The private timeline for activity created by the authenticated user
+   * *   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
+   * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub.
+   *
+   * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#get-feeds
+   * Tags: activity
+   *
+   */
   async activityGetFeeds(params: {}): Promise<Feed> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/feeds', params),
@@ -6775,6 +14554,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List gists for the authenticated user
+   * Lists the authenticated user's gists or if called anonymously, this endpoint returns all public gists:
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#list-gists-for-the-authenticated-user
+   * Tags: gists
+   *
+   */
   async gistsList(params: {
     since?: string;
     per_page?: number;
@@ -6826,12 +14612,40 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a gist
+   * Allows you to add a new gist with one or more files.
+   *
+   * **Note:** Don't name your files "gistfile" with a numerical suffix. This is the format of the automatic naming scheme that Gist uses internally.
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#create-a-gist
+   * Tags: gists
+   *
+   */
   async gistsCreate(
     params: {},
     body: {
+      /**
+       * Description of the gist
+       * @example "Example Ruby script"
+       *
+       */
       description?: string;
+      /**
+       * Names and content for the files that make up the gist
+       * @example
+       * {
+       *   "hello.rb": {
+       *     "content": "puts \"Hello, World!\""
+       *   }
+       * }
+       *
+       */
       files: {
         [key: string]: {
+          /**
+           * Content of the file
+           *
+           */
           content: string;
         };
       };
@@ -6892,6 +14706,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public gists
+   * List public gists sorted by most recently updated to least recently updated.
+   *
+   * Note: With [pagination](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#list-public-gists
+   * Tags: gists
+   *
+   */
   async gistsListPublic(params: {
     since?: string;
     per_page?: number;
@@ -6952,6 +14775,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List starred gists
+   * List the authenticated user's starred gists:
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#list-starred-gists
+   * Tags: gists
+   *
+   */
   async gistsListStarred(params: {
     since?: string;
     per_page?: number;
@@ -7012,6 +14842,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a gist
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#get-a-gist
+   * Tags: gists
+   *
+   */
   async gistsGet(params: { gist_id: string }): Promise<GistSimple> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}', params),
@@ -7067,19 +14903,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a gist
+   * Allows you to update or delete a gist file and rename gist files. Files from the previous version of the gist that aren't explicitly changed during an edit are unchanged.
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#update-a-gist
+   * Tags: gists
+   *
+   */
   async gistsUpdate(
     params: {
       gist_id: string;
     },
-    body: {
-      description?: string;
-      files?: {
-        [key: string]: {
-          content?: string;
-          filename?: string | null;
-        } | null;
-      };
-    } | null,
+    body: (any | any) | null,
   ): Promise<GistSimple> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}', params),
@@ -7117,6 +14952,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a gist
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#delete-a-gist
+   * Tags: gists
+   *
+   */
   async gistsDelete(params: { gist_id: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}', params),
@@ -7162,6 +15003,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List gist comments
+   * Learn more at {@link https://docs.github.com/rest/reference/gists#list-gist-comments
+   * Tags: gists
+   *
+   */
   async gistsListComments(params: {
     gist_id: string;
     per_page?: number;
@@ -7220,11 +15067,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a gist comment
+   * Learn more at {@link https://docs.github.com/rest/reference/gists#create-a-gist-comment
+   * Tags: gists
+   *
+   */
   async gistsCreateComment(
     params: {
       gist_id: string;
     },
     body: {
+      /**
+       * The comment text.
+       * @example "Body of the attachment"
+       *
+       */
       body: string;
     },
   ): Promise<GistComment> {
@@ -7273,6 +15131,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a gist comment
+   * Learn more at {@link https://docs.github.com/rest/reference/gists#get-a-gist-comment
+   * Tags: gists
+   *
+   */
   async gistsGetComment(params: {
     gist_id: string;
     comment_id: number;
@@ -7331,12 +15195,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a gist comment
+   * Learn more at {@link https://docs.github.com/rest/reference/gists#update-a-gist-comment
+   * Tags: gists
+   *
+   */
   async gistsUpdateComment(
     params: {
       gist_id: string;
       comment_id: number;
     },
     body: {
+      /**
+       * The comment text.
+       * @example "Body of the attachment"
+       *
+       */
       body: string;
     },
   ): Promise<GistComment> {
@@ -7367,6 +15242,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a gist comment
+   * Learn more at {@link https://docs.github.com/rest/reference/gists#delete-a-gist-comment
+   * Tags: gists
+   *
+   */
   async gistsDeleteComment(params: {
     gist_id: string;
     comment_id: number;
@@ -7415,6 +15296,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List gist commits
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#list-gist-commits
+   * Tags: gists
+   *
+   */
   async gistsListCommits(params: {
     gist_id: string;
     per_page?: number;
@@ -7473,6 +15360,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List gist forks
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#list-gist-forks
+   * Tags: gists
+   *
+   */
   async gistsListForks(params: {
     gist_id: string;
     per_page?: number;
@@ -7531,6 +15424,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Fork a gist
+   * **Note**: This was previously `/gists/:gist_id/fork`.
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#fork-a-gist
+   * Tags: gists
+   *
+   */
   async gistsFork(params: { gist_id: string }): Promise<BaseGist> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}/forks', params),
@@ -7585,6 +15485,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a gist is starred
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#check-if-a-gist-is-starred
+   * Tags: gists
+   *
+   */
   async gistsCheckIsStarred(params: { gist_id: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}/star', params),
@@ -7632,6 +15538,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Star a gist
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#star-a-gist
+   * Tags: gists
+   *
+   */
   async gistsStar(params: { gist_id: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}/star', params),
@@ -7677,6 +15590,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unstar a gist
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#unstar-a-gist
+   * Tags: gists
+   *
+   */
   async gistsUnstar(params: { gist_id: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gists/{gist_id}/star', params),
@@ -7722,6 +15641,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a gist revision
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#get-a-gist-revision
+   * Tags: gists
+   *
+   */
   async gistsGetRevision(params: {
     gist_id: string;
     sha: string;
@@ -7770,6 +15695,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all gitignore templates
+   * List all templates available to pass as an option when [creating a repository](https://docs.github.com/rest/reference/repos#create-a-repository-for-the-authenticated-user).
+   * Learn more at {@link https://docs.github.com/rest/reference/gitignore/#get-all-gitignore-templates
+   * Tags: gitignore
+   *
+   */
   async gitignoreGetAllTemplates(params: {}): Promise<string[]> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/gitignore/templates', params),
@@ -7797,6 +15729,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a gitignore template
+   * The API also allows fetching the source of a single template.
+   * Use the raw [media type](https://docs.github.com/rest/overview/media-types/) to get the raw contents.
+   * Learn more at {@link https://docs.github.com/rest/reference/gitignore/#get-a-gitignore-template
+   * Tags: gitignore
+   *
+   */
   async gitignoreGetTemplate(params: {
     name: string;
   }): Promise<GitignoreTemplate> {
@@ -7826,12 +15766,25 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories accessible to the app installation
+   * List repositories that an app installation can access.
+   *
+   * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-repositories-accessible-to-the-app-installation
+   * Tags: apps
+   *
+   */
   async appsListReposAccessibleToInstallation(params: {
     per_page?: number;
     page?: number;
   }): Promise<{
     total_count: number;
     repositories: Repository[];
+    /**
+     * @example "selected"
+     *
+     */
     repository_selection?: string;
   }> {
     const requestContext = this.server.makeRequestContext(
@@ -7887,6 +15840,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Revoke an installation access token
+   * Revokes the installation token you're using to authenticate as an installation and access this endpoint.
+   *
+   * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
+   *
+   * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-an-installation-access-token
+   * Tags: apps
+   *
+   */
   async appsRevokeInstallationAccessToken(params: {}): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/installation/token', params),
@@ -7905,6 +15869,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List issues assigned to the authenticated user
+   * List issues assigned to the authenticated user across all visible repositories including owned repositories, member
+   * repositories, and organization repositories. You can use the `filter` query parameter to fetch issues that are not
+   * necessarily assigned to you.
+   *
+   *
+   * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
+   * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
+   * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+   * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#list-issues-assigned-to-the-authenticated-user
+   * Tags: issues
+   *
+   */
   async issuesList(params: {
     filter?:
       | 'assigned'
@@ -8010,6 +15989,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all commonly used licenses
+   * Learn more at {@link https://docs.github.com/rest/reference/licenses/#get-all-commonly-used-licenses
+   * Tags: licenses
+   *
+   */
   async licensesGetAllCommonlyUsed(params: {
     featured?: boolean;
     per_page?: number;
@@ -8055,6 +16040,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a license
+   * Learn more at {@link https://docs.github.com/rest/reference/licenses/#get-a-license
+   * Tags: licenses
+   *
+   */
   async licensesGet(params: { license: string }): Promise<License> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/licenses/{license}', params),
@@ -8100,11 +16091,31 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Render a Markdown document
+   * Learn more at {@link https://docs.github.com/rest/reference/markdown/#render-a-markdown-document
+   * Tags: markdown
+   *
+   */
   async markdownRender(
     params: {},
     body: {
+      /**
+       * The Markdown text to render in HTML.
+       *
+       */
       text: string;
+      /**
+       * The rendering mode.
+       * @example "markdown"
+       * @defaultValue "markdown"
+       *
+       */
       mode?: 'markdown' | 'gfm';
+      /**
+       * The repository context to use when creating references in `gfm` mode.
+       *
+       */
       context?: string;
     },
   ): Promise<any> {
@@ -8135,6 +16146,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Render a Markdown document in raw mode
+   * You must send Markdown as plain text (using a `Content-Type` header of `text/plain` or `text/x-markdown`) to this endpoint, rather than using JSON format. In raw mode, [GitHub Flavored Markdown](https://github.github.com/gfm/) is not supported and Markdown will be rendered in plain format like a README.md file. Markdown content must be 400 KB or less.
+   * Learn more at {@link https://docs.github.com/rest/reference/markdown/#render-a-markdown-document-in-raw-mode
+   * Tags: markdown
+   *
+   */
   async markdownRenderRaw(params: {}, body: any): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/markdown/raw', params),
@@ -8163,6 +16181,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a subscription plan for an account
+   * Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+   *
+   * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-subscription-plan-for-an-account
+   * Tags: apps
+   *
+   */
   async appsGetSubscriptionPlanForAccount(params: {
     account_id: number;
   }): Promise<MarketplacePurchase> {
@@ -8201,6 +16228,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List plans
+   * Lists all plans that are part of your GitHub Marketplace listing.
+   *
+   * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-plans
+   * Tags: apps
+   *
+   */
   async appsListPlans(params: {
     per_page?: number;
     page?: number;
@@ -8249,6 +16285,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List accounts for a plan
+   * Returns user and organization accounts associated with the specified plan, including free plans. For per-seat pricing, you see the list of accounts that have purchased the plan, including the number of seats purchased. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+   *
+   * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-accounts-for-a-plan
+   * Tags: apps
+   *
+   */
   async appsListAccountsForPlan(params: {
     plan_id: number;
     sort?: 'created' | 'updated';
@@ -8319,6 +16364,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a subscription plan for an account (stubbed)
+   * Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+   *
+   * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-subscription-plan-for-an-account-stubbed
+   * Tags: apps
+   *
+   */
   async appsGetSubscriptionPlanForAccountStubbed(params: {
     account_id: number;
   }): Promise<MarketplacePurchase> {
@@ -8360,6 +16414,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List plans (stubbed)
+   * Lists all plans that are part of your GitHub Marketplace listing.
+   *
+   * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-plans-stubbed
+   * Tags: apps
+   *
+   */
   async appsListPlansStubbed(params: {
     per_page?: number;
     page?: number;
@@ -8399,6 +16462,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List accounts for a plan (stubbed)
+   * Returns repository and organization accounts associated with the specified plan, including free plans. For per-seat pricing, you see the list of accounts that have purchased the plan, including the number of seats purchased. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+   *
+   * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-accounts-for-a-plan-stubbed
+   * Tags: apps
+   *
+   */
   async appsListAccountsForPlanStubbed(params: {
     plan_id: number;
     sort?: 'created' | 'updated';
@@ -8451,6 +16523,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub meta information
+   * Returns meta information about GitHub, including a list of GitHub's IP addresses. For more information, see "[About GitHub's IP addresses](https://help.github.com/articles/about-github-s-ip-addresses/)."
+   *
+   * **Note:** The IP addresses shown in the documentation's response are only example values. You must always query the API directly to get the latest list of IP addresses.
+   * Learn more at {@link https://docs.github.com/rest/reference/meta/#get-github-meta-information
+   * Tags: meta
+   *
+   */
   async metaGet(params: {}): Promise<ApiOverview> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/meta', params),
@@ -8478,6 +16559,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public events for a network of repositories
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events-for-a-network-of-repositories
+   * Tags: activity
+   *
+   */
   async activityListPublicEventsForRepoNetwork(params: {
     owner: string;
     repo: string;
@@ -8546,6 +16633,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List notifications for the authenticated user
+   * List all notifications for the current user, sorted by most recently updated.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-notifications-for-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityListNotificationsForAuthenticatedUser(params: {
     all?: boolean;
     participating?: boolean;
@@ -8630,10 +16724,25 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Mark notifications as read
+   * Marks all notifications as "read" removes it from the [default view on GitHub](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-notifications-as-read
+   * Tags: activity
+   *
+   */
   async activityMarkNotificationsAsRead(
     params: {},
     body: {
+      /**
+       * Describes the last point that notifications were checked.
+       *
+       */
       last_read_at?: Date;
+      /**
+       * Whether the notification has been read.
+       *
+       */
       read?: boolean;
     },
   ): Promise<{
@@ -8695,6 +16804,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a thread
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#get-a-thread
+   * Tags: activity
+   *
+   */
   async activityGetThread(params: { thread_id: number }): Promise<Thread> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/notifications/threads/{thread_id}', params),
@@ -8740,6 +16855,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Mark a thread as read
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-a-thread-as-read
+   * Tags: activity
+   *
+   */
   async activityMarkThreadAsRead(params: { thread_id: number }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/notifications/threads/{thread_id}', params),
@@ -8776,6 +16897,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a thread subscription for the authenticated user
+   * This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/rest/reference/activity#get-a-repository-subscription).
+   *
+   * Note that subscriptions are only generated if a user is participating in a conversation--for example, they've replied to the thread, were **@mentioned**, or manually subscribe to a thread.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#get-a-thread-subscription-for-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityGetThreadSubscriptionForAuthenticatedUser(params: {
     thread_id: number;
   }): Promise<ThreadSubscription> {
@@ -8826,11 +16956,26 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set a thread subscription
+   * If you are watching a repository, you receive notifications for all threads by default. Use this endpoint to ignore future notifications for threads until you comment on the thread or get an **@mention**.
+   *
+   * You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously ignored.
+   *
+   * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/rest/reference/activity#delete-a-thread-subscription) endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#set-a-thread-subscription
+   * Tags: activity
+   *
+   */
   async activitySetThreadSubscription(
     params: {
       thread_id: number;
     },
     body: {
+      /**
+       * Whether to block all notifications from a thread.
+       *
+       */
       ignored?: boolean;
     },
   ): Promise<ThreadSubscription> {
@@ -8882,6 +17027,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a thread subscription
+   * Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#delete-a-thread-subscription
+   * Tags: activity
+   *
+   */
   async activityDeleteThreadSubscription(params: {
     thread_id: number;
   }): Promise<any> {
@@ -8932,6 +17084,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get Octocat
+   * Get the octocat as ASCII art
+   * Tags: meta
+   *
+   */
   async metaGetOctocat(params: { s?: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/octocat', params),
@@ -8952,6 +17110,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organizations
+   * Lists all organizations, in the order that they were created on GitHub.
+   *
+   * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#list-organizations
+   * Tags: orgs
+   *
+   */
   async orgsList(params: {
     since?: number;
     per_page?: number;
@@ -8991,6 +17158,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an organization
+   * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://help.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
+   *
+   * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub plan. See "[Authenticating with GitHub Apps](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub plan information' below."
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#get-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsGet(params: { org: string }): Promise<OrganizationFull> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/orgs/{org}', params),
@@ -9018,29 +17194,146 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an organization
+   * **Parameter Deprecation Notice:** GitHub will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
+   *
+   * Enables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#update-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsUpdate(
     params: {
       org: string;
     },
     body: {
+      /**
+       * Billing email address. This address is not publicized.
+       *
+       */
       billing_email?: string;
+      /**
+       * The company name.
+       *
+       */
       company?: string;
+      /**
+       * The publicly visible email address.
+       *
+       */
       email?: string;
+      /**
+       * The Twitter username of the company.
+       *
+       */
       twitter_username?: string;
+      /**
+       * The location.
+       *
+       */
       location?: string;
+      /**
+       * The shorthand name of the company.
+       *
+       */
       name?: string;
+      /**
+       * The description of the company.
+       *
+       */
       description?: string;
+      /**
+       * Toggles whether an organization can use organization projects.
+       *
+       */
       has_organization_projects?: boolean;
+      /**
+       * Toggles whether repositories that belong to the organization can use repository projects.
+       *
+       */
       has_repository_projects?: boolean;
+      /**
+       * Default permission level members have for organization repositories:
+       * \* `read` - can pull, but not push to or administer this repository.
+       * \* `write` - can pull and push, but not administer this repository.
+       * \* `admin` - can pull, push, and administer this repository.
+       * \* `none` - no permissions granted by default.
+       * @defaultValue "read"
+       *
+       */
       default_repository_permission?: 'read' | 'write' | 'admin' | 'none';
+      /**
+       * Toggles the ability of non-admin organization members to create repositories. Can be one of:
+       * \* `true` - all organization members can create repositories.
+       * \* `false` - only organization owners can create repositories.
+       * Default: `true`
+       * **Note:** A parameter can override this parameter. See `members_allowed_repository_creation_type` in this table for details. **Note:** A parameter can override this parameter. See `members_allowed_repository_creation_type` in this table for details.
+       * @defaultValue true
+       *
+       */
       members_can_create_repositories?: boolean;
+      /**
+       * Toggles whether organization members can create internal repositories, which are visible to all enterprise members. You can only allow members to create internal repositories if your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. Can be one of:
+       * \* `true` - all organization members can create internal repositories.
+       * \* `false` - only organization owners can create internal repositories.
+       * Default: `true`. For more information, see "[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)" in the GitHub Help documentation.
+       *
+       */
       members_can_create_internal_repositories?: boolean;
+      /**
+       * Toggles whether organization members can create private repositories, which are visible to organization members with permission. Can be one of:
+       * \* `true` - all organization members can create private repositories.
+       * \* `false` - only organization owners can create private repositories.
+       * Default: `true`. For more information, see "[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)" in the GitHub Help documentation.
+       *
+       */
       members_can_create_private_repositories?: boolean;
+      /**
+       * Toggles whether organization members can create public repositories, which are visible to anyone. Can be one of:
+       * \* `true` - all organization members can create public repositories.
+       * \* `false` - only organization owners can create public repositories.
+       * Default: `true`. For more information, see "[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)" in the GitHub Help documentation.
+       *
+       */
       members_can_create_public_repositories?: boolean;
+      /**
+       * Specifies which types of repositories non-admin organization members can create. Can be one of:
+       * \* `all` - all organization members can create public and private repositories.
+       * \* `private` - members can create private repositories. This option is only available to repositories that are part of an organization on GitHub Enterprise Cloud.
+       * \* `none` - only admin members can create repositories.
+       * **Note:** This parameter is deprecated and will be removed in the future. Its return value ignores internal repositories. Using this parameter overrides values set in `members_can_create_repositories`. See the parameter deprecation notice in the operation description for details.
+       *
+       */
       members_allowed_repository_creation_type?: 'all' | 'private' | 'none';
+      /**
+       * Toggles whether organization members can create GitHub Pages sites. Can be one of:
+       * \* `true` - all organization members can create GitHub Pages sites.
+       * \* `false` - no organization members can create GitHub Pages sites. Existing published sites will not be impacted.
+       * @defaultValue true
+       *
+       */
       members_can_create_pages?: boolean;
+      /**
+       * Toggles whether organization members can create public GitHub Pages sites. Can be one of:
+       * \* `true` - all organization members can create public GitHub Pages sites.
+       * \* `false` - no organization members can create public GitHub Pages sites. Existing published sites will not be impacted.
+       * @defaultValue true
+       *
+       */
       members_can_create_public_pages?: boolean;
+      /**
+       * Toggles whether organization members can create private GitHub Pages sites. Can be one of:
+       * \* `true` - all organization members can create private GitHub Pages sites.
+       * \* `false` - no organization members can create private GitHub Pages sites. Existing published sites will not be impacted.
+       * @defaultValue true
+       *
+       */
       members_can_create_private_pages?: boolean;
+      /**
+       * @example "\"http://github.blog\""
+       *
+       */
       blog?: string;
     },
   ): Promise<OrganizationFull> {
@@ -9096,6 +17389,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Actions permissions for an organization
+   * Gets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-github-actions-permissions-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsGetGithubActionsPermissionsOrganization(params: {
     org: string;
   }): Promise<ActionsOrganizationPermissions> {
@@ -9118,6 +17420,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set GitHub Actions permissions for an organization
+   * Sets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
+   *
+   * If the organization belongs to an enterprise that has set restrictive permissions at the enterprise level, such as `allowed_actions` to `selected` actions, then you cannot override them for the organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-github-actions-permissions-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsSetGithubActionsPermissionsOrganization(
     params: {
       org: string;
@@ -9145,6 +17458,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List selected repositories enabled for GitHub Actions in an organization
+   * Lists the selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-selected-repositories-enabled-for-github-actions-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsListSelectedRepositoriesEnabledGithubActionsOrganization(params: {
     org: string;
     per_page?: number;
@@ -9179,11 +17501,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set selected repositories enabled for GitHub Actions in an organization
+   * Replaces the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-selected-repositories-enabled-for-github-actions-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsSetSelectedRepositoriesEnabledGithubActionsOrganization(
     params: {
       org: string;
     },
     body: {
+      /**
+       * List of repository IDs to enable for GitHub Actions.
+       *
+       */
       selected_repository_ids: number[];
     },
   ): Promise<any> {
@@ -9205,6 +17540,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Enable a selected repository for GitHub Actions in an organization
+   * Adds a repository to the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#enable-a-selected-repository-for-github-actions-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsEnableSelectedRepositoryGithubActionsOrganization(params: {
     org: string;
     repository_id: number;
@@ -9229,6 +17573,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Disable a selected repository for GitHub Actions in an organization
+   * Removes a repository from the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#disable-a-selected-repository-for-github-actions-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsDisableSelectedRepositoryGithubActionsOrganization(params: {
     org: string;
     repository_id: number;
@@ -9253,6 +17606,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get allowed actions for an organization
+   * Gets the selected actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization).""
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-allowed-actions-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsGetAllowedActionsOrganization(params: {
     org: string;
   }): Promise<SelectedActions> {
@@ -9276,6 +17638,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set allowed actions for an organization
+   * Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * If the organization belongs to an enterprise that has `selected` actions set at the enterprise level, then you cannot override any of the enterprise's allowed actions settings.
+   *
+   * To use the `patterns_allowed` setting for private repositories, the organization must belong to an enterprise. If the organization does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories in the organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-allowed-actions-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsSetAllowedActionsOrganization(
     params: {
       org: string;
@@ -9303,6 +17678,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List self-hosted runner groups for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runner-groups-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsListSelfHostedRunnerGroupsForOrg(params: {
     org: string;
     per_page?: number;
@@ -9337,14 +17723,42 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a self-hosted runner group for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Creates a new self-hosted runner group for an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-self-hosted-runner-group-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsCreateSelfHostedRunnerGroupForOrg(
     params: {
       org: string;
     },
     body: {
+      /**
+       * Name of the runner group.
+       *
+       */
       name: string;
+      /**
+       * Visibility of a runner group. You can select all repositories, select individual repositories, or limit access to private repositories. Can be one of: `all`, `selected`, or `private`.
+       * @defaultValue "all"
+       *
+       */
       visibility?: 'selected' | 'all' | 'private';
+      /**
+       * List of repository IDs that can access the runner group.
+       *
+       */
       selected_repository_ids?: number[];
+      /**
+       * List of runner IDs to add to the runner group.
+       *
+       */
       runners?: number[];
     },
   ): Promise<RunnerGroupsOrg> {
@@ -9366,6 +17780,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a self-hosted runner group for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Gets a specific self-hosted runner group for an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-group-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsGetSelfHostedRunnerGroupForOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9390,13 +17815,32 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a self-hosted runner group for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Updates the `name` and `visibility` of a self-hosted runner group in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#update-a-self-hosted-runner-group-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsUpdateSelfHostedRunnerGroupForOrg(
     params: {
       org: string;
       runner_group_id: number;
     },
     body: {
+      /**
+       * Name of the runner group.
+       *
+       */
       name?: string;
+      /**
+       * Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories. Can be one of: `all`, `selected`, or `private`.
+       *
+       */
       visibility?: 'selected' | 'all' | 'private';
     },
   ): Promise<RunnerGroupsOrg> {
@@ -9421,6 +17865,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a self-hosted runner group from an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Deletes a self-hosted runner group for an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-group-from-an-organization
+   * Tags: actions
+   *
+   */
   async actionsDeleteSelfHostedRunnerGroupFromOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9445,6 +17900,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository access to a self-hosted runner group in an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Lists the repositories with access to a self-hosted runner group configured in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-access-to-a-self-hosted-runner-group-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsListRepoAccessToSelfHostedRunnerGroupInOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9483,12 +17949,27 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set repository access for a self-hosted runner group in an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-repository-access-to-a-self-hosted-runner-group-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsSetRepoAccessToSelfHostedRunnerGroupInOrg(
     params: {
       org: string;
       runner_group_id: number;
     },
     body: {
+      /**
+       * List of repository IDs that can access the runner group.
+       *
+       */
       selected_repository_ids: number[];
     },
   ): Promise<any> {
@@ -9513,6 +17994,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add repository access to a self-hosted runner group in an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   *
+   * Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org`
+   * scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#add-repository-acess-to-a-self-hosted-runner-group-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsAddRepoAccessToSelfHostedRunnerGroupInOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9538,6 +18032,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove repository access to a self-hosted runner group in an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   *
+   * Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-repository-access-to-a-self-hosted-runner-group-in-an-organization
+   * Tags: actions
+   *
+   */
   async actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9563,6 +18069,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List self-hosted runners in a group for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Lists self-hosted runners that are in a specific organization group.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsListSelfHostedRunnersInGroupForOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9601,12 +18118,27 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set self-hosted runners in a group for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   * Replaces the list of self-hosted runners that are part of an organization runner group.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsSetSelfHostedRunnersInGroupForOrg(
     params: {
       org: string;
       runner_group_id: number;
     },
     body: {
+      /**
+       * List of runner IDs to add to the runner group.
+       *
+       */
       runners: number[];
     },
   ): Promise<any> {
@@ -9631,6 +18163,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add a self-hosted runner to a group for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   *
+   * Adds a self-hosted runner to a runner group configured in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org`
+   * scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#add-a-self-hosted-runner-to-a-group-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsAddSelfHostedRunnerToGroupForOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9656,6 +18201,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a self-hosted runner from a group for an organization
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
+   *
+   * Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-a-self-hosted-runner-from-a-group-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsRemoveSelfHostedRunnerFromGroupForOrg(params: {
     org: string;
     runner_group_id: number;
@@ -9681,6 +18238,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List self-hosted runners for an organization
+   * Lists all self-hosted runners configured in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsListSelfHostedRunnersForOrg(params: {
     org: string;
     per_page?: number;
@@ -9715,6 +18281,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List runner applications for an organization
+   * Lists binaries for the runner application that you can download and run.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-runner-applications-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsListRunnerApplicationsForOrg(params: {
     org: string;
   }): Promise<RunnerApplication[]> {
@@ -9737,6 +18312,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a registration token for an organization
+   * Returns a token that you can pass to the `config` script. The token expires after one hour.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   *
+   * #### Example using registration token
+   *
+   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+   *
+   * ```
+   * ./config.sh --url https://github.com/octo-org --token TOKEN
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-registration-token-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsCreateRegistrationTokenForOrg(params: {
     org: string;
   }): Promise<AuthenticationToken> {
@@ -9760,6 +18352,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a remove token for an organization
+   * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   *
+   * #### Example using remove token
+   *
+   * To remove your self-hosted runner from an organization, replace `TOKEN` with the remove token provided by this
+   * endpoint.
+   *
+   * ```
+   * ./config.sh remove --token TOKEN
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-remove-token-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsCreateRemoveTokenForOrg(params: {
     org: string;
   }): Promise<AuthenticationToken> {
@@ -9780,6 +18390,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a self-hosted runner for an organization
+   * Gets a specific self-hosted runner configured in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-for-an-organization
+   * Tags: actions
+   *
+   */
   async actionsGetSelfHostedRunnerForOrg(params: {
     org: string;
     runner_id: number;
@@ -9801,6 +18420,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a self-hosted runner from an organization
+   * Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-from-an-organization
+   * Tags: actions
+   *
+   */
   async actionsDeleteSelfHostedRunnerFromOrg(params: {
     org: string;
     runner_id: number;
@@ -9822,6 +18450,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization secrets
+   * Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-organization-secrets
+   * Tags: actions
+   *
+   */
   async actionsListOrgSecrets(params: {
     org: string;
     per_page?: number;
@@ -9856,6 +18491,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an organization public key
+   * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-organization-public-key
+   * Tags: actions
+   *
+   */
   async actionsGetOrgPublicKey(params: {
     org: string;
   }): Promise<ActionsPublicKey> {
@@ -9876,6 +18518,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an organization secret
+   * Gets a single organization secret without revealing its encrypted value. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-organization-secret
+   * Tags: actions
+   *
+   */
   async actionsGetOrgSecret(params: {
     org: string;
     secret_name: string;
@@ -9899,15 +18548,115 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create or update an organization secret
+   * Creates or updates an organization secret with an encrypted value. Encrypt your secret using
+   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
+   * token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to
+   * use this endpoint.
+   *
+   * #### Example encrypting a secret using Node.js
+   *
+   * Encrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.
+   *
+   * ```
+   * const sodium = require('tweetsodium');
+   *
+   * const key = "base64-encoded-public-key";
+   * const value = "plain-text-secret";
+   *
+   * // Convert the message and key to Uint8Array's (Buffer implements that interface)
+   * const messageBytes = Buffer.from(value);
+   * const keyBytes = Buffer.from(key, 'base64');
+   *
+   * // Encrypt using LibSodium.
+   * const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+   *
+   * // Base64 the encrypted secret
+   * const encrypted = Buffer.from(encryptedBytes).toString('base64');
+   *
+   * console.log(encrypted);
+   * ```
+   *
+   *
+   * #### Example encrypting a secret using Python
+   *
+   * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
+   *
+   * ```
+   * from base64 import b64encode
+   * from nacl import encoding, public
+   *
+   * def encrypt(public_key: str, secret_value: str) -> str:
+   *   """Encrypt a Unicode string using the public key."""
+   *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+   *   sealed_box = public.SealedBox(public_key)
+   *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+   *   return b64encode(encrypted).decode("utf-8")
+   * ```
+   *
+   * #### Example encrypting a secret using C#
+   *
+   * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
+   *
+   * ```
+   * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
+   * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
+   *
+   * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
+   *
+   * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
+   * ```
+   *
+   * #### Example encrypting a secret using Ruby
+   *
+   * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
+   *
+   * ```ruby
+   * require "rbnacl"
+   * require "base64"
+   *
+   * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
+   * public_key = RbNaCl::PublicKey.new(key)
+   *
+   * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
+   * encrypted_secret = box.encrypt("my_secret")
+   *
+   * # Print the base64 encoded secret
+   * puts Base64.strict_encode64(encrypted_secret)
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret
+   * Tags: actions
+   *
+   */
   async actionsCreateOrUpdateOrgSecret(
     params: {
       org: string;
       secret_name: string;
     },
     body: {
+      /**
+       * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/rest/reference/actions#get-an-organization-public-key) endpoint.
+       *
+       */
       encrypted_value?: string;
+      /**
+       * ID of the key you used to encrypt the secret.
+       *
+       */
       key_id?: string;
+      /**
+       * Configures the access that repositories have to the organization secret. Can be one of:
+       * \- `all` - All repositories in an organization can access the secret.
+       * \- `private` - Private repositories in an organization can access the secret.
+       * \- `selected` - Only specific repositories can access the secret.
+       *
+       */
       visibility?: 'all' | 'private' | 'selected';
+      /**
+       * An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/rest/reference/actions#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/rest/reference/actions#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints.
+       *
+       */
       selected_repository_ids?: string[];
     },
   ): Promise<any> {
@@ -9938,6 +18687,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an organization secret
+   * Deletes a secret in an organization using the secret name. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-organization-secret
+   * Tags: actions
+   *
+   */
   async actionsDeleteOrgSecret(params: {
     org: string;
     secret_name: string;
@@ -9959,6 +18715,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List selected repositories for an organization secret
+   * Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-selected-repositories-for-an-organization-secret
+   * Tags: actions
+   *
+   */
   async actionsListSelectedReposForOrgSecret(params: {
     org: string;
     secret_name: string;
@@ -9997,12 +18760,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set selected repositories for an organization secret
+   * Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-selected-repositories-for-an-organization-secret
+   * Tags: actions
+   *
+   */
   async actionsSetSelectedReposForOrgSecret(
     params: {
       org: string;
       secret_name: string;
     },
     body: {
+      /**
+       * An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/rest/reference/actions#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints.
+       *
+       */
       selected_repository_ids?: number[];
     },
   ): Promise<any> {
@@ -10027,6 +18801,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add selected repository to an organization secret
+   * Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#add-selected-repository-to-an-organization-secret
+   * Tags: actions
+   *
+   */
   async actionsAddSelectedRepoToOrgSecret(params: {
     org: string;
     secret_name: string;
@@ -10061,6 +18842,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove selected repository from an organization secret
+   * Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-selected-repository-from-an-organization-secret
+   * Tags: actions
+   *
+   */
   async actionsRemoveSelectedRepoFromOrgSecret(params: {
     org: string;
     secret_name: string;
@@ -10095,6 +18883,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the audit log for an organization
+   * **Note:** The audit log REST API is currently in beta and is subject to change.
+   *
+   * Gets the audit log for an organization. For more information, see "[Reviewing the audit log for your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization)."
+   *
+   * To use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-the-audit-log-for-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsGetAuditLog(params: {
     org: string;
     phrase?: string;
@@ -10150,6 +18949,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List users blocked by an organization
+   * List the users blocked by an organization.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-users-blocked-by-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsListBlockedUsers(params: { org: string }): Promise<SimpleUser[]> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/orgs/{org}/blocks', params),
@@ -10184,6 +18990,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a user is blocked by an organization
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#check-if-a-user-is-blocked-by-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsCheckBlockedUser(params: {
     org: string;
     username: string;
@@ -10214,6 +19026,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Block a user from an organization
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#block-a-user-from-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsBlockUser(params: { org: string; username: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/orgs/{org}/blocks/{username}', params),
@@ -10241,6 +19059,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unblock a user from an organization
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#unblock-a-user-from-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsUnblockUser(params: {
     org: string;
     username: string;
@@ -10262,6 +19086,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List SAML SSO authorizations for an organization
+   * Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products).
+   *
+   * An authenticated organization owner with the `read:org` scope can list all credential authorizations for an organization that uses SAML single sign-on (SSO). The credentials are either personal access tokens or SSH keys that organization members have authorized for the organization. For more information, see [About authentication with SAML single sign-on](https://help.github.com/en/articles/about-authentication-with-saml-single-sign-on).
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#list-saml-sso-authorizations-for-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsListSamlSsoAuthorizations(params: {
     org: string;
   }): Promise<CredentialAuthorization[]> {
@@ -10284,6 +19117,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a SAML SSO authorization for an organization
+   * Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products).
+   *
+   * An authenticated organization owner with the `admin:org` scope can remove a credential authorization for an organization that uses SAML SSO. Once you remove someone's credential authorization, they will need to create a new personal access token or SSH key and authorize it for the organization they want to access.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#remove-a-saml-sso-authorization-for-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsRemoveSamlSsoAuthorization(params: {
     org: string;
     credential_id: number;
@@ -10317,6 +19159,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public organization events
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-organization-events
+   * Tags: activity
+   *
+   */
   async activityListPublicOrgEvents(params: {
     org: string;
     per_page?: number;
@@ -10348,6 +19196,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List failed organization invitations
+   * The return hash contains `failed_at` and `failed_reason` fields which represent the time at which the invitation failed and the reason for the failure.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-failed-organization-invitations
+   * Tags: orgs
+   *
+   */
   async orgsListFailedInvitations(params: {
     org: string;
     per_page?: number;
@@ -10388,6 +19243,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization webhooks
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-webhooks
+   * Tags: orgs
+   *
+   */
   async orgsListWebhooks(params: {
     org: string;
     per_page?: number;
@@ -10428,21 +19289,57 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create an organization webhook
+   * Here's how you can create a hook that posts payloads in JSON format:
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#create-an-organization-webhook
+   * Tags: orgs
+   *
+   */
   async orgsCreateWebhook(
     params: {
       org: string;
     },
     body: {
+      /**
+       * Must be passed as "web".
+       *
+       */
       name: string;
+      /**
+       * Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/rest/reference/orgs#create-hook-config-params).
+       *
+       */
       config: {
         url: WebhookConfigUrl;
         content_type?: WebhookConfigContentType;
         secret?: WebhookConfigSecret;
         insecure_ssl?: WebhookConfigInsecureSsl;
+        /**
+         * @example "\"kdaigle\""
+         *
+         */
         username?: string;
+        /**
+         * @example "\"password\""
+         *
+         */
         password?: string;
       };
+      /**
+       * Determines what [events](https://docs.github.com/webhooks/event-payloads) the hook is triggered for.
+       * @defaultValue
+       * [
+       *   "push"
+       * ]
+       *
+       */
       events?: string[];
+      /**
+       * Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications.
+       * @defaultValue true
+       *
+       */
       active?: boolean;
     },
   ): Promise<OrgHook> {
@@ -10482,6 +19379,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an organization webhook
+   * Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook configuration for an organization](/rest/reference/orgs#get-a-webhook-configuration-for-an-organization)."
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-an-organization-webhook
+   * Tags: orgs
+   *
+   */
   async orgsGetWebhook(params: {
     org: string;
     hook_id: number;
@@ -10512,20 +19416,48 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an organization webhook
+   * Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/reference/orgs#update-a-webhook-configuration-for-an-organization)."
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-an-organization-webhook
+   * Tags: orgs
+   *
+   */
   async orgsUpdateWebhook(
     params: {
       org: string;
       hook_id: number;
     },
     body: {
+      /**
+       * Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/rest/reference/orgs#update-hook-config-params).
+       *
+       */
       config?: {
         url: WebhookConfigUrl;
         content_type?: WebhookConfigContentType;
         secret?: WebhookConfigSecret;
         insecure_ssl?: WebhookConfigInsecureSsl;
       };
+      /**
+       * Determines what [events](https://docs.github.com/webhooks/event-payloads) the hook is triggered for.
+       * @defaultValue
+       * [
+       *   "push"
+       * ]
+       *
+       */
       events?: string[];
+      /**
+       * Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications.
+       * @defaultValue true
+       *
+       */
       active?: boolean;
+      /**
+       * @example "\"web\""
+       *
+       */
       name?: string;
     },
   ): Promise<OrgHook> {
@@ -10565,6 +19497,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an organization webhook
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#delete-an-organization-webhook
+   * Tags: orgs
+   *
+   */
   async orgsDeleteWebhook(params: {
     org: string;
     hook_id: number;
@@ -10595,6 +19533,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a webhook configuration for an organization
+   * Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
+   *
+   * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-a-webhook-configuration-for-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsGetWebhookConfigForOrg(params: {
     org: string;
     hook_id: number;
@@ -10616,6 +19563,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a webhook configuration for an organization
+   * Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)."
+   *
+   * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-a-webhook-configuration-for-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsUpdateWebhookConfigForOrg(
     params: {
       org: string;
@@ -10646,6 +19602,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Ping an organization webhook
+   * This will trigger a [ping event](https://docs.github.com/webhooks/#ping-event) to be sent to the hook.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#ping-an-organization-webhook
+   * Tags: orgs
+   *
+   */
   async orgsPingWebhook(params: {
     org: string;
     hook_id: number;
@@ -10676,6 +19639,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an organization installation for the authenticated app
+   * Enables an authenticated GitHub App to find the organization's installation information.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-an-organization-installation-for-the-authenticated-app
+   * Tags: apps
+   *
+   */
   async appsGetOrgInstallation(params: { org: string }): Promise<Installation> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/orgs/{org}/installation', params),
@@ -10694,6 +19666,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List app installations for an organization
+   * Lists all GitHub Apps in an organization. The installation count includes all GitHub Apps installed on repositories in the organization. You must be an organization owner with `admin:read` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#list-app-installations-for-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsListAppInstallations(params: {
     org: string;
     per_page?: number;
@@ -10728,6 +19707,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get interaction restrictions for an organization
+   * Shows which type of GitHub user can interact with this organization and when the restriction expires. If there is no restrictions, you will see an empty response.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-an-organization
+   * Tags: interactions
+   *
+   */
   async interactionsGetRestrictionsForOrg(params: {
     org: string;
   }): Promise<InteractionLimitResponse> {
@@ -10750,6 +19736,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set interaction restrictions for an organization
+   * Temporarily restricts interactions to a certain type of GitHub user in any public repository in the given organization. You must be an organization owner to set these restrictions. Setting the interaction limit at the organization level will overwrite any interaction limits that are set for individual repositories owned by the organization.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-an-organization
+   * Tags: interactions
+   *
+   */
   async interactionsSetRestrictionsForOrg(
     params: {
       org: string;
@@ -10785,6 +19778,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove interaction restrictions for an organization
+   * Removes all interaction restrictions from public repositories in the given organization. You must be an organization owner to remove restrictions.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-for-an-organization
+   * Tags: interactions
+   *
+   */
   async interactionsRemoveRestrictionsForOrg(params: {
     org: string;
   }): Promise<any> {
@@ -10805,6 +19805,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List pending organization invitations
+   * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-pending-organization-invitations
+   * Tags: orgs
+   *
+   */
   async orgsListPendingInvitations(params: {
     org: string;
     per_page?: number;
@@ -10845,14 +19852,43 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create an organization invitation
+   * Invite people to an organization by using their GitHub user ID or their email address. In order to create invitations in an organization, the authenticated user must be an organization owner.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#create-an-organization-invitation
+   * Tags: orgs
+   *
+   */
   async orgsCreateInvitation(
     params: {
       org: string;
     },
     body: {
+      /**
+       * **Required unless you provide `email`**. GitHub user ID for the person you are inviting.
+       *
+       */
       invitee_id?: number;
+      /**
+       * **Required unless you provide `invitee_id`**. Email address of the person you are inviting, which can be an existing GitHub user.
+       *
+       */
       email?: string;
+      /**
+       * Specify role for new member. Can be one of:
+       * \* `admin` - Organization owners with full administrative rights to the organization and complete access to all repositories and teams.
+       * \* `direct_member` - Non-owner organization members with ability to see other members and join teams by invitation.
+       * \* `billing_manager` - Non-owner organization members with ability to manage the billing settings of your organization.
+       * @defaultValue "direct_member"
+       *
+       */
       role?: 'admin' | 'direct_member' | 'billing_manager';
+      /**
+       * Specify IDs for the teams you want to invite new members to.
+       *
+       */
       team_ids?: number[];
     },
   ): Promise<OrganizationInvitation> {
@@ -10892,6 +19928,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Cancel an organization invitation
+   * Cancel an organization invitation. In order to cancel an organization invitation, the authenticated user must be an organization owner.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#cancel-an-organization-invitation
+   * Tags: orgs
+   *
+   */
   async orgsCancelInvitation(params: {
     org: string;
     invitation_id: number;
@@ -10931,6 +19976,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization invitation teams
+   * List all teams associated with an invitation. In order to see invitations in an organization, the authenticated user must be an organization owner.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-invitation-teams
+   * Tags: orgs
+   *
+   */
   async orgsListInvitationTeams(params: {
     org: string;
     invitation_id: number;
@@ -10975,6 +20027,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization issues assigned to the authenticated user
+   * List issues in an organization assigned to the authenticated user.
+   *
+   * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
+   * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
+   * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+   * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#list-organization-issues-assigned-to-the-authenticated-user
+   * Tags: issues
+   *
+   */
   async issuesListForOrg(params: {
     org: string;
     filter?:
@@ -11048,6 +20112,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization members
+   * List all users who are members of an organization. If the authenticated user is also a member of this organization then both concealed and public members will be returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-members
+   * Tags: orgs
+   *
+   */
   async orgsListMembers(params: {
     org: string;
     filter?: '2fa_disabled' | 'all';
@@ -11106,6 +20177,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check organization membership for a user
+   * Check if a user is, publicly or privately, a member of the organization.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#check-organization-membership-for-a-user
+   * Tags: orgs
+   *
+   */
   async orgsCheckMembershipForUser(params: {
     org: string;
     username: string;
@@ -11145,6 +20223,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove an organization member
+   * Removing a user from this list will remove them from all teams and they will no longer have any access to the organization's repositories.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-an-organization-member
+   * Tags: orgs
+   *
+   */
   async orgsRemoveMember(params: {
     org: string;
     username: string;
@@ -11175,6 +20260,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get organization membership for a user
+   * In order to get a user's membership with an organization, the authenticated user must be an organization member.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-organization-membership-for-a-user
+   * Tags: orgs
+   *
+   */
   async orgsGetMembershipForUser(params: {
     org: string;
     username: string;
@@ -11214,12 +20306,34 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set organization membership for a user
+   * Only authenticated organization owners can add a member to the organization or update the member's role.
+   *
+   * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
+   *
+   * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
+   *
+   * **Rate limits**
+   *
+   * To prevent abuse, the authenticated user is limited to 50 organization invitations per 24 hour period. If the organization is more than one month old or on a paid plan, the limit is 500 invitations per 24 hour period.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#set-organization-membership-for-a-user
+   * Tags: orgs
+   *
+   */
   async orgsSetMembershipForUser(
     params: {
       org: string;
       username: string;
     },
     body: {
+      /**
+       * The role to give the user in the organization. Can be one of:
+       * \* `admin` - The user will become an owner of the organization.
+       * \* `member` - The user will become a non-owner member of the organization.
+       * @defaultValue "member"
+       *
+       */
       role?: 'admin' | 'member';
     },
   ): Promise<OrgMembership> {
@@ -11259,6 +20373,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove organization membership for a user
+   * In order to remove a user's membership with an organization, the authenticated user must be an organization owner.
+   *
+   * If the specified user is an active member of the organization, this will remove them from the organization. If the specified user has been invited to the organization, this will cancel their invitation. The specified user will receive an email notification in both cases.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-organization-membership-for-a-user
+   * Tags: orgs
+   *
+   */
   async orgsRemoveMembershipForUser(params: {
     org: string;
     username: string;
@@ -11298,6 +20421,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization migrations
+   * Lists the most recent migrations.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-organization-migrations
+   * Tags: migrations
+   *
+   */
   async migrationsListForOrg(params: {
     org: string;
     per_page?: number;
@@ -11335,13 +20465,32 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Start an organization migration
+   * Initiates the generation of a migration archive.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#start-an-organization-migration
+   * Tags: migrations
+   *
+   */
   async migrationsStartForOrg(
     params: {
       org: string;
     },
     body: {
+      /**
+       * A list of arrays indicating which repositories should be migrated.
+       *
+       */
       repositories: string[];
+      /**
+       * Indicates whether repositories should be locked (to prevent manipulation) while migrating data.
+       *
+       */
       lock_repositories?: boolean;
+      /**
+       * Indicates whether attachments should be excluded from the migration (to reduce migration archive file size).
+       *
+       */
       exclude_attachments?: boolean;
       exclude?: string[];
     },
@@ -11382,6 +20531,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an organization migration status
+   * Fetches the status of a migration.
+   *
+   * The `state` of a migration can be one of the following values:
+   *
+   * *   `pending`, which means the migration hasn't started yet.
+   * *   `exporting`, which means the migration is in progress.
+   * *   `exported`, which means the migration finished successfully.
+   * *   `failed`, which means the migration failed.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-an-organization-migration-status
+   * Tags: migrations
+   *
+   */
   async migrationsGetStatusForOrg(params: {
     org: string;
     migration_id: number;
@@ -11418,6 +20581,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Download an organization migration archive
+   * Fetches the URL to a migration archive.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#download-an-organization-migration-archive
+   * Tags: migrations
+   *
+   */
   async migrationsDownloadArchiveForOrg(params: {
     org: string;
     migration_id: number;
@@ -11454,6 +20624,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an organization migration archive
+   * Deletes a previous migration archive. Migration archives are automatically deleted after seven days.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#delete-an-organization-migration-archive
+   * Tags: migrations
+   *
+   */
   async migrationsDeleteArchiveForOrg(params: {
     org: string;
     migration_id: number;
@@ -11487,6 +20664,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unlock an organization repository
+   * Unlocks a repository that was locked for migration. You should unlock each migrated repository and [delete them](https://docs.github.com/rest/reference/repos#delete-a-repository) when the migration is complete and you no longer need the source data.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#unlock-an-organization-repository
+   * Tags: migrations
+   *
+   */
   async migrationsUnlockRepoForOrg(params: {
     org: string;
     migration_id: number;
@@ -11521,6 +20705,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories in an organization migration
+   * List all the repositories for this organization migration.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-repositories-in-an-organization-migration
+   * Tags: migrations
+   *
+   */
   async migrationsListReposForOrg(params: {
     org: string;
     migration_id: number;
@@ -11565,6 +20756,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List outside collaborators for an organization
+   * List all users who are outside collaborators of an organization.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-outside-collaborators-for-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsListOutsideCollaborators(params: {
     org: string;
     filter?: '2fa_disabled' | 'all';
@@ -11602,6 +20800,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Convert an organization member to outside collaborator
+   * When an organization member is converted to an outside collaborator, they'll only have access to the repositories that their current team membership allows. The user will no longer be a member of the organization. For more information, see "[Converting an organization member to an outside collaborator](https://help.github.com/articles/converting-an-organization-member-to-an-outside-collaborator/)".
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#convert-an-organization-member-to-outside-collaborator
+   * Tags: orgs
+   *
+   */
   async orgsConvertMemberToOutsideCollaborator(params: {
     org: string;
     username: string;
@@ -11655,6 +20860,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove outside collaborator from an organization
+   * Removing a user from this list will remove them from all the organization's repositories.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-outside-collaborator-from-an-organization
+   * Tags: orgs
+   *
+   */
   async orgsRemoveOutsideCollaborator(params: {
     org: string;
     username: string;
@@ -11690,6 +20902,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a package for an organization
+   * Gets a specific package in an organization.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-an-organization
+   * Tags: packages
+   *
+   */
   async packagesGetPackageForOrganization(params: {
     package_type:
       | 'npm'
@@ -11721,6 +20943,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a package for an organization
+   * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-for-an-organization
+   * Tags: packages
+   *
+   */
   async packagesDeletePackageForOrg(params: {
     package_type:
       | 'npm'
@@ -11779,6 +21012,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Restore a package for an organization
+   * Restores an entire package in an organization.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-for-an-organization
+   * Tags: packages
+   *
+   */
   async packagesRestorePackageForOrg(params: {
     package_type:
       | 'npm'
@@ -11840,6 +21088,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all package versions for a package owned by an organization
+   * Returns all package versions for a package owned by an organization.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesGetAllPackageVersionsForPackageOwnedByOrg(params: {
     package_type:
       | 'npm'
@@ -11912,6 +21170,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a package version for an organization
+   * Gets a specific package version in an organization.
+   *
+   * You must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-an-organization
+   * Tags: packages
+   *
+   */
   async packagesGetPackageVersionForOrganization(params: {
     package_type:
       | 'npm'
@@ -11944,6 +21212,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete package version for an organization
+   * Deletes a specific package version in an organization. If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-version-for-an-organization
+   * Tags: packages
+   *
+   */
   async packagesDeletePackageVersionForOrg(params: {
     package_type:
       | 'npm'
@@ -12003,6 +21282,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Restore package version for an organization
+   * Restores a specific package version in an organization.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-version-for-an-organization
+   * Tags: packages
+   *
+   */
   async packagesRestorePackageVersionForOrg(params: {
     package_type:
       | 'npm'
@@ -12062,6 +21356,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization projects
+   * Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#list-organization-projects
+   * Tags: projects
+   *
+   */
   async projectsListForOrg(params: {
     org: string;
     state?: 'open' | 'closed' | 'all';
@@ -12105,12 +21406,27 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create an organization project
+   * Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#create-an-organization-project
+   * Tags: projects
+   *
+   */
   async projectsCreateForOrg(
     params: {
       org: string;
     },
     body: {
+      /**
+       * The name of the project.
+       *
+       */
       name: string;
+      /**
+       * The description of the project.
+       *
+       */
       body?: string;
     },
   ): Promise<Project> {
@@ -12177,6 +21493,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public organization members
+   * Members of an organization can choose to have their membership publicized or not.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-public-organization-members
+   * Tags: orgs
+   *
+   */
   async orgsListPublicMembers(params: {
     org: string;
     per_page?: number;
@@ -12208,6 +21531,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check public organization membership for a user
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#check-public-organization-membership-for-a-user
+   * Tags: orgs
+   *
+   */
   async orgsCheckPublicMembershipForUser(params: {
     org: string;
     username: string;
@@ -12238,6 +21567,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set public organization membership for the authenticated user
+   * The user can publicize their own membership. (A user cannot publicize the membership for another user.)
+   *
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#set-public-organization-membership-for-the-authenticated-user
+   * Tags: orgs
+   *
+   */
   async orgsSetPublicMembershipForAuthenticatedUser(params: {
     org: string;
     username: string;
@@ -12268,6 +21606,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove public organization membership for the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-public-organization-membership-for-the-authenticated-user
+   * Tags: orgs
+   *
+   */
   async orgsRemovePublicMembershipForAuthenticatedUser(params: {
     org: string;
     username: string;
@@ -12289,6 +21633,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization repositories
+   * Lists repositories for the specified organization.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-organization-repositories
+   * Tags: repos
+   *
+   */
   async reposListForOrg(params: {
     org: string;
     type?:
@@ -12339,27 +21690,116 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create an organization repository
+   * Creates a new repository in the specified organization. The authenticated user must be a member of the organization.
+   *
+   * **OAuth scope requirements**
+   *
+   * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+   *
+   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+   * *   `repo` scope to create a private repository
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#create-an-organization-repository
+   * Tags: repos
+   *
+   */
   async reposCreateInOrg(
     params: {
       org: string;
     },
     body: {
+      /**
+       * The name of the repository.
+       *
+       */
       name: string;
+      /**
+       * A short description of the repository.
+       *
+       */
       description?: string;
+      /**
+       * A URL with more information about the repository.
+       *
+       */
       homepage?: string;
+      /**
+       * Whether the repository is private.
+       *
+       */
       private?: boolean;
+      /**
+       * Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see "[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)" in the GitHub Help documentation.
+       * The `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.
+       *
+       */
       visibility?: 'public' | 'private' | 'visibility' | 'internal';
+      /**
+       * Either `true` to enable issues for this repository or `false` to disable them.
+       * @defaultValue true
+       *
+       */
       has_issues?: boolean;
+      /**
+       * Either `true` to enable projects for this repository or `false` to disable them. **Note:** If you're creating a repository in an organization that has disabled repository projects, the default is `false`, and if you pass `true`, the API returns an error.
+       * @defaultValue true
+       *
+       */
       has_projects?: boolean;
+      /**
+       * Either `true` to enable the wiki for this repository or `false` to disable it.
+       * @defaultValue true
+       *
+       */
       has_wiki?: boolean;
+      /**
+       * Either `true` to make this repo available as a template repository or `false` to prevent it.
+       *
+       */
       is_template?: boolean;
+      /**
+       * The id of the team that will be granted access to this repository. This is only valid when creating a repository in an organization.
+       *
+       */
       team_id?: number;
+      /**
+       * Pass `true` to create an initial commit with empty README.
+       *
+       */
       auto_init?: boolean;
+      /**
+       * Desired language or platform [.gitignore template](https://github.com/github/gitignore) to apply. Use the name of the template without the extension. For example, "Haskell".
+       *
+       */
       gitignore_template?: string;
+      /**
+       * Choose an [open source license template](https://choosealicense.com/) that best suits your needs, and then use the [license keyword](https://help.github.com/articles/licensing-a-repository/#searching-github-by-license-type) as the `license_template` string. For example, "mit" or "mpl-2.0".
+       *
+       */
       license_template?: string;
+      /**
+       * Either `true` to allow squash-merging pull requests, or `false` to prevent squash-merging.
+       * @defaultValue true
+       *
+       */
       allow_squash_merge?: boolean;
+      /**
+       * Either `true` to allow merging pull requests with a merge commit, or `false` to prevent merging pull requests with merge commits.
+       * @defaultValue true
+       *
+       */
       allow_merge_commit?: boolean;
+      /**
+       * Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.
+       * @defaultValue true
+       *
+       */
       allow_rebase_merge?: boolean;
+      /**
+       * Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.
+       *
+       */
       delete_branch_on_merge?: boolean;
     },
   ): Promise<Repository> {
@@ -12399,6 +21839,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Actions billing for an organization
+   * Gets the summary of the free and paid GitHub Actions minutes used.
+   *
+   * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   *
+   * Access tokens must have the `repo` or `admin:org` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-github-actions-billing-for-an-organization
+   * Tags: billing
+   *
+   */
   async billingGetGithubActionsBillingOrg(params: {
     org: string;
   }): Promise<ActionsBillingUsage> {
@@ -12419,6 +21870,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Packages billing for an organization
+   * Gets the free and paid storage usued for GitHub Packages in gigabytes.
+   *
+   * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+   *
+   * Access tokens must have the `repo` or `admin:org` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-github-packages-billing-for-an-organization
+   * Tags: billing
+   *
+   */
   async billingGetGithubPackagesBillingOrg(params: {
     org: string;
   }): Promise<PackagesBillingUsage> {
@@ -12439,6 +21901,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get shared storage billing for an organization
+   * Gets the estimated paid and estimated total storage used for GitHub Actions and Github Packages.
+   *
+   * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+   *
+   * Access tokens must have the `repo` or `admin:org` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-shared-storage-billing-for-an-organization
+   * Tags: billing
+   *
+   */
   async billingGetSharedStorageBillingOrg(params: {
     org: string;
   }): Promise<CombinedBillingUsage> {
@@ -12459,6 +21932,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List IdP groups for an organization
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * List IdP groups available in an organization. You can limit your page results using the `per_page` parameter. GitHub generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see "[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89)."
+   *
+   * The `per_page` parameter provides pagination for a list of IdP groups the authenticated user can access in an organization. For example, if the user `octocat` wants to see two groups per page in `octo-org` via cURL, it would look like this:
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-an-organization
+   * Tags: teams
+   *
+   */
   async teamsListIdpGroupsForOrg(params: {
     org: string;
     per_page?: number;
@@ -12488,6 +21972,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List teams
+   * Lists all teams in an organization that are visible to the authenticated user.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-teams
+   * Tags: teams
+   *
+   */
   async teamsList(params: {
     org: string;
     per_page?: number;
@@ -12528,17 +22019,65 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a team
+   * To create a team, the authenticated user must be a member or owner of `{org}`. By default, organization members can create teams. Organization owners can limit team creation to organization owners. For more information, see "[Setting team creation permissions](https://help.github.com/en/articles/setting-team-creation-permissions-in-your-organization)."
+   *
+   * When you create a new team, you automatically become a team maintainer without explicitly adding yourself to the optional array of `maintainers`. For more information, see "[About teams](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/about-teams)".
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#create-a-team
+   * Tags: teams
+   *
+   */
   async teamsCreate(
     params: {
       org: string;
     },
     body: {
+      /**
+       * The name of the team.
+       *
+       */
       name: string;
+      /**
+       * The description of the team.
+       *
+       */
       description?: string;
+      /**
+       * List GitHub IDs for organization members who will become team maintainers.
+       *
+       */
       maintainers?: string[];
+      /**
+       * The full name (e.g., "organization-name/repository-name") of repositories to add the team to.
+       *
+       */
       repo_names?: string[];
+      /**
+       * The level of privacy this team should have. The options are:
+       * **For a non-nested team:**
+       * \* `secret` - only visible to organization owners and members of this team.
+       * \* `closed` - visible to all members of this organization.
+       * Default: `secret`
+       * **For a parent or child team:**
+       * \* `closed` - visible to all members of this organization.
+       * Default for child team: `closed`
+       *
+       */
       privacy?: 'secret' | 'closed';
+      /**
+       * **Deprecated**. The permission that new repositories will be added to the team with when none is specified. Can be one of:
+       * \* `pull` - team members can pull, but not push to or administer newly-added repositories.
+       * \* `push` - team members can pull and push, but not administer newly-added repositories.
+       * \* `admin` - team members can pull, push and administer newly-added repositories.
+       * @defaultValue "pull"
+       *
+       */
       permission?: 'pull' | 'push' | 'admin';
+      /**
+       * The ID of a team to set as the parent team.
+       *
+       */
       parent_team_id?: number;
     },
   ): Promise<TeamFull> {
@@ -12578,6 +22117,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a team by name
+   * Gets a team using the team's `slug`. GitHub generates the `slug` from the team `name`.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#get-a-team-by-name
+   * Tags: teams
+   *
+   */
   async teamsGetByName(params: {
     org: string;
     team_slug: string;
@@ -12608,16 +22156,54 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a team
+   * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#update-a-team
+   * Tags: teams
+   *
+   */
   async teamsUpdateInOrg(
     params: {
       org: string;
       team_slug: string;
     },
     body: {
+      /**
+       * The name of the team.
+       *
+       */
       name?: string;
+      /**
+       * The description of the team.
+       *
+       */
       description?: string;
+      /**
+       * The level of privacy this team should have. Editing teams without specifying this parameter leaves `privacy` intact. When a team is nested, the `privacy` for parent teams cannot be `secret`. The options are:
+       * **For a non-nested team:**
+       * \* `secret` - only visible to organization owners and members of this team.
+       * \* `closed` - visible to all members of this organization.
+       * **For a parent or child team:**
+       * \* `closed` - visible to all members of this organization.
+       *
+       */
       privacy?: 'secret' | 'closed';
+      /**
+       * **Deprecated**. The permission that new repositories will be added to the team with when none is specified. Can be one of:
+       * \* `pull` - team members can pull, but not push to or administer newly-added repositories.
+       * \* `push` - team members can pull and push, but not administer newly-added repositories.
+       * \* `admin` - team members can pull, push and administer newly-added repositories.
+       * @defaultValue "pull"
+       *
+       */
       permission?: 'pull' | 'push' | 'admin';
+      /**
+       * The ID of a team to set as the parent team.
+       *
+       */
       parent_team_id?: number | null;
     },
   ): Promise<TeamFull> {
@@ -12639,6 +22225,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a team
+   * To delete a team, the authenticated user must be an organization owner or team maintainer.
+   *
+   * If you are an organization owner, deleting a parent team will delete all of its child teams as well.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#delete-a-team
+   * Tags: teams
+   *
+   */
   async teamsDeleteInOrg(params: {
     org: string;
     team_slug: string;
@@ -12660,6 +22257,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List discussions
+   * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussions
+   * Tags: teams
+   *
+   */
   async teamsListDiscussionsInOrg(params: {
     org: string;
     team_slug: string;
@@ -12704,14 +22310,37 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a discussion
+   * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion
+   * Tags: teams
+   *
+   */
   async teamsCreateDiscussionInOrg(
     params: {
       org: string;
       team_slug: string;
     },
     body: {
+      /**
+       * The discussion post's title.
+       *
+       */
       title: string;
+      /**
+       * The discussion post's body text.
+       *
+       */
       body: string;
+      /**
+       * Private posts are only visible to team members, organization owners, and team maintainers. Public posts are visible to all members of the organization. Set to `true` to create a private post.
+       *
+       */
       private?: boolean;
     },
   ): Promise<TeamDiscussion> {
@@ -12733,6 +22362,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a discussion
+   * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion
+   * Tags: teams
+   *
+   */
   async teamsGetDiscussionInOrg(params: {
     org: string;
     team_slug: string;
@@ -12758,6 +22396,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a discussion
+   * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion
+   * Tags: teams
+   *
+   */
   async teamsUpdateDiscussionInOrg(
     params: {
       org: string;
@@ -12765,7 +22412,15 @@ export class GithubClient {
       discussion_number: number;
     },
     body: {
+      /**
+       * The discussion post's title.
+       *
+       */
       title?: string;
+      /**
+       * The discussion post's body text.
+       *
+       */
       body?: string;
     },
   ): Promise<TeamDiscussion> {
@@ -12790,6 +22445,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a discussion
+   * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion
+   * Tags: teams
+   *
+   */
   async teamsDeleteDiscussionInOrg(params: {
     org: string;
     team_slug: string;
@@ -12815,6 +22479,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List discussion comments
+   * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussion-comments
+   * Tags: teams
+   *
+   */
   async teamsListDiscussionCommentsInOrg(params: {
     org: string;
     team_slug: string;
@@ -12857,6 +22530,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a discussion comment
+   * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-comment
+   * Tags: teams
+   *
+   */
   async teamsCreateDiscussionCommentInOrg(
     params: {
       org: string;
@@ -12864,6 +22548,10 @@ export class GithubClient {
       discussion_number: number;
     },
     body: {
+      /**
+       * The discussion comment's body text.
+       *
+       */
       body: string;
     },
   ): Promise<TeamDiscussionComment> {
@@ -12888,6 +22576,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a discussion comment
+   * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-comment
+   * Tags: teams
+   *
+   */
   async teamsGetDiscussionCommentInOrg(params: {
     org: string;
     team_slug: string;
@@ -12914,6 +22611,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a discussion comment
+   * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-comment
+   * Tags: teams
+   *
+   */
   async teamsUpdateDiscussionCommentInOrg(
     params: {
       org: string;
@@ -12922,6 +22628,10 @@ export class GithubClient {
       comment_number: number;
     },
     body: {
+      /**
+       * The discussion comment's body text.
+       *
+       */
       body: string;
     },
   ): Promise<TeamDiscussionComment> {
@@ -12946,6 +22656,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a discussion comment
+   * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-comment
+   * Tags: teams
+   *
+   */
   async teamsDeleteDiscussionCommentInOrg(params: {
     org: string;
     team_slug: string;
@@ -12972,6 +22691,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for a team discussion comment
+   * List the reactions to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion-comment
+   * Tags: reactions
+   *
+   */
   async reactionsListForTeamDiscussionCommentInOrg(params: {
     org: string;
     team_slug: string;
@@ -13023,6 +22751,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for a team discussion comment
+   * Create a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with a `Status: 200 OK` means that you already added the reaction type to this team discussion comment.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion-comment
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForTeamDiscussionCommentInOrg(
     params: {
       org: string;
@@ -13031,6 +22768,10 @@ export class GithubClient {
       comment_number: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the team discussion comment.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -13063,6 +22804,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete team discussion comment reaction
+   * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
+   *
+   * Delete a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-team-discussion-comment-reaction
+   * Tags: reactions
+   *
+   */
   async reactionsDeleteForTeamDiscussionComment(params: {
     org: string;
     team_slug: string;
@@ -13090,6 +22840,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for a team discussion
+   * List the reactions to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion
+   * Tags: reactions
+   *
+   */
   async reactionsListForTeamDiscussionInOrg(params: {
     org: string;
     team_slug: string;
@@ -13140,6 +22899,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for a team discussion
+   * Create a reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with a `Status: 200 OK` means that you already added the reaction type to this team discussion.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForTeamDiscussionInOrg(
     params: {
       org: string;
@@ -13147,6 +22915,10 @@ export class GithubClient {
       discussion_number: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the team discussion.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -13179,6 +22951,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete team discussion reaction
+   * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
+   *
+   * Delete a reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-team-discussion-reaction
+   * Tags: reactions
+   *
+   */
   async reactionsDeleteForTeamDiscussion(params: {
     org: string;
     team_slug: string;
@@ -13205,6 +22986,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List pending team invitations
+   * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/invitations`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-pending-team-invitations
+   * Tags: teams
+   *
+   */
   async teamsListPendingInvitationsInOrg(params: {
     org: string;
     team_slug: string;
@@ -13237,6 +23027,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List team members
+   * Team members will include the members of child teams.
+   *
+   * To list members in a team, the team must be visible to the authenticated user.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-members
+   * Tags: teams
+   *
+   */
   async teamsListMembersInOrg(params: {
     org: string;
     team_slug: string;
@@ -13272,6 +23071,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get team membership for a user
+   * Team members will include the members of child teams.
+   *
+   * To get a user's membership with a team, the team must be visible to the authenticated user.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/memberships/{username}`.
+   *
+   * **Note:** The `role` for organization owners returns as `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user
+   * Tags: teams
+   *
+   */
   async teamsGetMembershipForUserInOrg(params: {
     org: string;
     team_slug: string;
@@ -13306,6 +23118,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add or update team membership for a user
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Adds an organization member to a team. An authenticated organization owner or team maintainer can add organization members to a team.
+   *
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   *
+   * An organization owner can add someone who is not part of the team's organization to a team. When an organization owner adds someone to a team who is not an organization member, this endpoint will send an invitation to the person via email. This newly-created membership will be in the "pending" state until the person accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team.
+   *
+   * If the user is already a member of the team, this endpoint will update the role of the team member's role. To update the membership of a team member, the authenticated user must be an organization owner or a team maintainer.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/memberships/{username}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user
+   * Tags: teams
+   *
+   */
   async teamsAddOrUpdateMembershipForUserInOrg(
     params: {
       org: string;
@@ -13313,6 +23142,13 @@ export class GithubClient {
       username: string;
     },
     body: {
+      /**
+       * The role that this user should have in the team. Can be one of:
+       * \* `member` - a normal member of the team.
+       * \* `maintainer` - a team maintainer. Able to add/remove other team members, promote other team members to team maintainer, and edit the team's name and description.
+       * @defaultValue "member"
+       *
+       */
       role?: 'member' | 'maintainer';
     },
   ): Promise<TeamMembership> {
@@ -13364,6 +23200,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove team membership for a user
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
+   *
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/memberships/{username}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user
+   * Tags: teams
+   *
+   */
   async teamsRemoveMembershipForUserInOrg(params: {
     org: string;
     team_slug: string;
@@ -13398,6 +23247,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List team projects
+   * Lists the organization projects for a team.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/projects`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-projects
+   * Tags: teams
+   *
+   */
   async teamsListProjectsInOrg(params: {
     org: string;
     team_slug: string;
@@ -13430,6 +23288,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check team permissions for a project
+   * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-project
+   * Tags: teams
+   *
+   */
   async teamsCheckPermissionsForProjectInOrg(params: {
     org: string;
     team_slug: string;
@@ -13464,6 +23331,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add or update team project permissions
+   * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-project-permissions
+   * Tags: teams
+   *
+   */
   async teamsAddOrUpdateProjectPermissionsInOrg(
     params: {
       org: string;
@@ -13471,6 +23347,14 @@ export class GithubClient {
       project_id: number;
     },
     body: {
+      /**
+       * The permission to grant to the team for this project. Can be one of:
+       * \* `read` - team members can read, but not write to or administer this project.
+       * \* `write` - team members can read and write, but not administer this project.
+       * \* `admin` - team members can read, write and administer this project.
+       * Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+       *
+       */
       permission?: 'read' | 'write' | 'admin';
     } | null,
   ): Promise<any> {
@@ -13509,6 +23393,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a project from a team
+   * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. This endpoint removes the project from the team, but does not delete the project.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-project-from-a-team
+   * Tags: teams
+   *
+   */
   async teamsRemoveProjectInOrg(params: {
     org: string;
     team_slug: string;
@@ -13534,6 +23427,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List team repositories
+   * Lists a team's repositories visible to the authenticated user.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-repositories
+   * Tags: teams
+   *
+   */
   async teamsListReposInOrg(params: {
     org: string;
     team_slug: string;
@@ -13566,6 +23468,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check team permissions for a repository
+   * Checks whether a team has `admin`, `push`, `maintain`, `triage`, or `pull` permission for a repository. Repositories inherited through a parent team will also be checked.
+   *
+   * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept header.
+   *
+   * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-repository
+   * Tags: teams
+   *
+   */
   async teamsCheckPermissionsForRepoInOrg(params: {
     org: string;
     team_slug: string;
@@ -13610,6 +23525,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add or update team repository permissions
+   * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
+   *
+   * For more information about the permission levels, see "[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-repository-permissions
+   * Tags: teams
+   *
+   */
   async teamsAddOrUpdateRepoPermissionsInOrg(
     params: {
       org: string;
@@ -13618,6 +23544,17 @@ export class GithubClient {
       repo: string;
     },
     body: {
+      /**
+       * The permission to grant the team on this repository. Can be one of:
+       * \* `pull` - team members can pull, but not push to or administer this repository.
+       * \* `push` - team members can pull and push, but not administer this repository.
+       * \* `admin` - team members can pull, push and administer this repository.
+       * \* `maintain` - team members can manage the repository without access to sensitive or destructive actions. Recommended for project managers. Only applies to repositories owned by organizations.
+       * \* `triage` - team members can proactively manage issues and pull requests without write access. Recommended for contributors who triage a repository. Only applies to repositories owned by organizations.
+       *
+       * If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
+       *
+       */
       permission?: 'pull' | 'push' | 'admin' | 'maintain' | 'triage';
     },
   ): Promise<any> {
@@ -13642,6 +23579,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a repository from a team
+   * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. This does not delete the repository, it just removes it from the team.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-repository-from-a-team
+   * Tags: teams
+   *
+   */
   async teamsRemoveRepoInOrg(params: {
     org: string;
     team_slug: string;
@@ -13668,6 +23614,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List IdP groups for a team
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * List IdP groups connected to a team on GitHub.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team
+   * Tags: teams
+   *
+   */
   async teamsListIdpGroupsInOrg(params: {
     org: string;
     team_slug: string;
@@ -13692,15 +23649,42 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create or update IdP group connections
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Creates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections
+   * Tags: teams
+   *
+   */
   async teamsCreateOrUpdateIdpGroupConnectionsInOrg(
     params: {
       org: string;
       team_slug: string;
     },
     body: {
+      /**
+       * The IdP groups you want to connect to a GitHub team. When updating, the new `groups` object will replace the original one. You must include any existing groups that you don't want to remove.
+       *
+       */
       groups: {
+        /**
+         * ID of the IdP group.
+         *
+         */
         group_id: string;
+        /**
+         * Name of the IdP group.
+         *
+         */
         group_name: string;
+        /**
+         * Description of the IdP group.
+         *
+         */
         group_description: string;
       }[];
     },
@@ -13726,6 +23710,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List child teams
+   * Lists the child teams of the team specified by `{team_slug}`.
+   *
+   * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/teams`.
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-child-teams
+   * Tags: teams
+   *
+   */
   async teamsListChildInOrg(params: {
     org: string;
     team_slug: string;
@@ -13758,6 +23751,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a project card
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#get-a-project-card
+   * Tags: projects
+   *
+   */
   async projectsGetCard(params: { card_id: number }): Promise<ProjectCard> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/projects/columns/cards/{card_id}', params),
@@ -13812,12 +23811,27 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an existing project card
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#update-a-project-card
+   * Tags: projects
+   *
+   */
   async projectsUpdateCard(
     params: {
       card_id: number;
     },
     body: {
+      /**
+       * The project card's note
+       * @example "Update all gems"
+       *
+       */
       note?: string | null;
+      /**
+       * Whether or not the card is archived
+       *
+       */
       archived?: boolean;
     },
   ): Promise<ProjectCard> {
@@ -13884,6 +23898,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a project card
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#delete-a-project-card
+   * Tags: projects
+   *
+   */
   async projectsDeleteCard(params: { card_id: number }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/projects/columns/cards/{card_id}', params),
@@ -13944,12 +23964,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Move a project card
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#move-a-project-card
+   * Tags: projects
+   *
+   */
   async projectsMoveCard(
     params: {
       card_id: number;
     },
     body: {
+      /**
+       * The position of the card in a column
+       * @example "bottom"
+       *
+       */
       position: string;
+      /**
+       * The unique identifier of the column the card should be moved to
+       * @example 42
+       *
+       */
       column_id?: number;
     },
   ): Promise<any> {
@@ -14039,6 +24075,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a project column
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#get-a-project-column
+   * Tags: projects
+   *
+   */
   async projectsGetColumn(params: {
     column_id: number;
   }): Promise<ProjectColumn> {
@@ -14095,11 +24137,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an existing project column
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#update-a-project-column
+   * Tags: projects
+   *
+   */
   async projectsUpdateColumn(
     params: {
       column_id: number;
     },
     body: {
+      /**
+       * Name of the project column
+       * @example "Remaining tasks"
+       *
+       */
       name: string;
     },
   ): Promise<ProjectColumn> {
@@ -14148,6 +24201,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a project column
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#delete-a-project-column
+   * Tags: projects
+   *
+   */
   async projectsDeleteColumn(params: { column_id: number }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/projects/columns/{column_id}', params),
@@ -14193,6 +24252,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List project cards
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#list-project-cards
+   * Tags: projects
+   *
+   */
   async projectsListCards(params: {
     column_id: number;
     archived_state?: 'all' | 'archived' | 'not_archived';
@@ -14257,16 +24322,40 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a project card
+   * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key.
+   *
+   * Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#create-a-project-card
+   * Tags: projects
+   *
+   */
   async projectsCreateCard(
     params: {
       column_id: number;
     },
     body:
       | {
+          /**
+           * The project card's note
+           * @example "Update all gems"
+           *
+           */
           note: string | null;
         }
       | {
+          /**
+           * The unique identifier of the content associated with the card
+           * @example 42
+           *
+           */
           content_id: number;
+          /**
+           * The piece of content associated with the card
+           * @example "PullRequest"
+           *
+           */
           content_type: string;
         },
   ): Promise<ProjectCard> {
@@ -14345,11 +24434,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Move a project column
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#move-a-project-column
+   * Tags: projects
+   *
+   */
   async projectsMoveColumn(
     params: {
       column_id: number;
     },
     body: {
+      /**
+       * The position of the column in a project
+       * @example "last"
+       *
+       */
       position: string;
     },
   ): Promise<any> {
@@ -14409,6 +24509,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a project
+   * Gets a project by its `id`. Returns a `404 Not Found` status if projects are disabled. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#get-a-project
+   * Tags: projects
+   *
+   */
   async projectsGet(params: { project_id: number }): Promise<Project> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/projects/{project_id}', params),
@@ -14454,15 +24561,45 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a project
+   * Updates a project board's information. Returns a `404 Not Found` status if projects are disabled. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#update-a-project
+   * Tags: projects
+   *
+   */
   async projectsUpdate(
     params: {
       project_id: number;
     },
     body: {
+      /**
+       * Name of the project
+       * @example "Week One Sprint"
+       *
+       */
       name?: string;
+      /**
+       * Body of the project
+       * @example "This project represents the sprint of the first week in January"
+       *
+       */
       body?: string | null;
+      /**
+       * State of the project; either 'open' or 'closed'
+       * @example "open"
+       *
+       */
       state?: string;
+      /**
+       * The baseline permission that all organization members have on this project
+       *
+       */
       organization_permission?: 'read' | 'write' | 'admin' | 'none';
+      /**
+       * Whether or not this project can be seen by everyone.
+       *
+       */
       private?: boolean;
     },
   ): Promise<Project> {
@@ -14544,6 +24681,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a project
+   * Deletes a project board. Returns a `404 Not Found` status if projects are disabled.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#delete-a-project
+   * Tags: projects
+   *
+   */
   async projectsDelete(params: { project_id: number }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/projects/{project_id}', params),
@@ -14613,6 +24757,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List project collaborators
+   * Lists the collaborators for an organization project. For a project, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners. You must be an organization owner or a project `admin` to list collaborators.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#list-project-collaborators
+   * Tags: projects
+   *
+   */
   async projectsListCollaborators(params: {
     project_id: number;
     affiliation?: 'outside' | 'direct' | 'all';
@@ -14709,12 +24860,25 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add project collaborator
+   * Adds a collaborator to an organization project and sets their permission level. You must be an organization owner or a project `admin` to add a collaborator.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#add-project-collaborator
+   * Tags: projects
+   *
+   */
   async projectsAddCollaborator(
     params: {
       project_id: number;
       username: string;
     },
     body: {
+      /**
+       * The permission to grant the collaborator.
+       * @example "write"
+       * @defaultValue "write"
+       *
+       */
       permission?: 'read' | 'write' | 'admin';
     },
   ): Promise<any> {
@@ -14798,6 +24962,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove user as a collaborator
+   * Removes a collaborator from an organization project. You must be an organization owner or a project `admin` to remove a collaborator.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#remove-project-collaborator
+   * Tags: projects
+   *
+   */
   async projectsRemoveCollaborator(params: {
     project_id: number;
     username: string;
@@ -14881,6 +25052,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get project permission for a user
+   * Returns the collaborator's permission level for an organization project. Possible values for the `permission` key: `admin`, `write`, `read`, `none`. You must be an organization owner or a project `admin` to review a user's permission level.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#get-project-permission-for-a-user
+   * Tags: projects
+   *
+   */
   async projectsGetPermissionForUser(params: {
     project_id: number;
     username: string;
@@ -14966,6 +25144,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List project columns
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#list-project-columns
+   * Tags: projects
+   *
+   */
   async projectsListColumns(params: {
     project_id: number;
     per_page?: number;
@@ -15024,11 +25208,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a project column
+   * Learn more at {@link https://docs.github.com/rest/reference/projects#create-a-project-column
+   * Tags: projects
+   *
+   */
   async projectsCreateColumn(
     params: {
       project_id: number;
     },
     body: {
+      /**
+       * Name of the project column
+       * @example "Remaining tasks"
+       *
+       */
       name: string;
     },
   ): Promise<ProjectColumn> {
@@ -15086,6 +25281,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get rate limit status for the authenticated user
+   * **Note:** Accessing this endpoint does not count against your REST API rate limit.
+   *
+   * **Note:** The `rate` object is deprecated. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.
+   * Learn more at {@link https://docs.github.com/rest/reference/rate_limit/#get-rate-limit-status-for-the-authenticated-user
+   * Tags: rate-limit
+   *
+   */
   async rateLimitGet(params: {}): Promise<RateLimitOverview> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/rate_limit', params),
@@ -15122,6 +25326,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a reaction (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Reactions API. We recommend migrating your existing code to use the new delete reactions endpoints. For more information, see this [blog post](https://developer.github.com/changes/2020-02-26-new-delete-reactions-endpoints/).
+   *
+   * OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), when deleting a [team discussion](https://docs.github.com/rest/reference/teams#discussions) or [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy
+   * Tags: reactions
+   *
+   */
   async reactionsDeleteLegacy(params: { reaction_id: number }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/reactions/{reaction_id}', params),
@@ -15190,6 +25404,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository
+   * When you pass the `scarlet-witch-preview` media type, requests to get a repository will also return the repository's code of conduct if it can be detected from the repository's code of conduct file.
+   *
+   * The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#get-a-repository
+   * Tags: repos
+   *
+   */
   async reposGet(params: {
     owner: string;
     repo: string;
@@ -15238,26 +25461,100 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a repository
+   * **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/rest/reference/repos#replace-all-repository-topics) endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#update-a-repository
+   * Tags: repos
+   *
+   */
   async reposUpdate(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The name of the repository.
+       *
+       */
       name?: string;
+      /**
+       * A short description of the repository.
+       *
+       */
       description?: string;
+      /**
+       * A URL with more information about the repository.
+       *
+       */
       homepage?: string;
+      /**
+       * Either `true` to make the repository private or `false` to make it public. Default: `false`.
+       * **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://help.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://help.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.
+       *
+       */
       private?: boolean;
+      /**
+       * Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. The `visibility` parameter overrides the `private` parameter when you use both along with the `nebula-preview` preview header.
+       *
+       */
       visibility?: 'public' | 'private' | 'visibility' | 'internal';
+      /**
+       * Either `true` to enable issues for this repository or `false` to disable them.
+       * @defaultValue true
+       *
+       */
       has_issues?: boolean;
+      /**
+       * Either `true` to enable projects for this repository or `false` to disable them. **Note:** If you're creating a repository in an organization that has disabled repository projects, the default is `false`, and if you pass `true`, the API returns an error.
+       * @defaultValue true
+       *
+       */
       has_projects?: boolean;
+      /**
+       * Either `true` to enable the wiki for this repository or `false` to disable it.
+       * @defaultValue true
+       *
+       */
       has_wiki?: boolean;
+      /**
+       * Either `true` to make this repo available as a template repository or `false` to prevent it.
+       *
+       */
       is_template?: boolean;
+      /**
+       * Updates the default branch for this repository.
+       *
+       */
       default_branch?: string;
+      /**
+       * Either `true` to allow squash-merging pull requests, or `false` to prevent squash-merging.
+       * @defaultValue true
+       *
+       */
       allow_squash_merge?: boolean;
+      /**
+       * Either `true` to allow merging pull requests with a merge commit, or `false` to prevent merging pull requests with merge commits.
+       * @defaultValue true
+       *
+       */
       allow_merge_commit?: boolean;
+      /**
+       * Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.
+       * @defaultValue true
+       *
+       */
       allow_rebase_merge?: boolean;
+      /**
+       * Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.
+       *
+       */
       delete_branch_on_merge?: boolean;
+      /**
+       * `true` to archive this repository. **Note**: You cannot unarchive repositories through the API.
+       *
+       */
       archived?: boolean;
     },
   ): Promise<FullRepository> {
@@ -15306,6 +25603,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a repository
+   * Deleting a repository requires admin access. If OAuth is used, the `delete_repo` scope is required.
+   *
+   * If an organization owner has configured the organization to prevent members from deleting organization-owned
+   * repositories, you will get a `403 Forbidden` response.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#delete-a-repository
+   * Tags: repos
+   *
+   */
   async reposDelete(params: { owner: string; repo: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/repos/{owner}/{repo}', params),
@@ -15347,6 +25654,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List artifacts for a repository
+   * Lists all artifacts for a repository. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-artifacts-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsListArtifactsForRepo(params: {
     owner: string;
     repo: string;
@@ -15382,6 +25696,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an artifact
+   * Gets a specific artifact for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-artifact
+   * Tags: actions
+   *
+   */
   async actionsGetArtifact(params: {
     owner: string;
     repo: string;
@@ -15407,6 +25728,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an artifact
+   * Deletes an artifact for a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-artifact
+   * Tags: actions
+   *
+   */
   async actionsDeleteArtifact(params: {
     owner: string;
     repo: string;
@@ -15432,6 +25760,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Download an artifact
+   * Gets a redirect URL to download an archive for a repository. This URL expires after 1 minute. Look for `Location:` in
+   * the response header to find the URL for the download. The `:archive_format` must be `zip`. Anyone with read access to
+   * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#download-an-artifact
+   * Tags: actions
+   *
+   */
   async actionsDownloadArtifact(params: {
     owner: string;
     repo: string;
@@ -15461,6 +25799,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a job for a workflow run
+   * Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-job-for-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsGetJobForWorkflowRun(params: {
     owner: string;
     repo: string;
@@ -15483,6 +25828,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Download job logs for a workflow run
+   * Gets a redirect URL to download a plain text file of logs for a workflow job. This link expires after 1 minute. Look
+   * for `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can
+   * use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must
+   * have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#download-job-logs-for-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsDownloadJobLogsForWorkflowRun(params: {
     owner: string;
     repo: string;
@@ -15511,6 +25866,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Actions permissions for a repository
+   * Gets the GitHub Actions permissions policy for a repository, including whether GitHub Actions is enabled and the actions allowed to run in the repository.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this
+   * endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-github-actions-permissions-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsGetGithubActionsPermissionsRepository(params: {
     owner: string;
     repo: string;
@@ -15534,6 +25899,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set GitHub Actions permissions for a repository
+   * Sets the GitHub Actions permissions policy for enabling GitHub Actions and allowed actions in the repository.
+   *
+   * If the repository belongs to an organization or enterprise that has set restrictive permissions at the organization or enterprise levels, such as `allowed_actions` to `selected` actions, then you cannot override them for the repository.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-github-actions-permissions-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsSetGithubActionsPermissionsRepository(
     params: {
       owner: string;
@@ -15562,6 +25938,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get allowed actions for a repository
+   * Gets the settings for selected actions that are allowed in a repository. To use this endpoint, the repository policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-allowed-actions-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsGetAllowedActionsRepository(params: {
     owner: string;
     repo: string;
@@ -15586,6 +25971,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set allowed actions for a repository
+   * Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+   *
+   * If the repository belongs to an organization or enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the allowed actions settings.
+   *
+   * To use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#set-allowed-actions-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsSetAllowedActionsRepository(
     params: {
       owner: string;
@@ -15614,6 +26012,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List self-hosted runners for a repository
+   * Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsListSelfHostedRunnersForRepo(params: {
     owner: string;
     repo: string;
@@ -15649,6 +26054,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List runner applications for a repository
+   * Lists binaries for the runner application that you can download and run.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-runner-applications-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsListRunnerApplicationsForRepo(params: {
     owner: string;
     repo: string;
@@ -15675,6 +26089,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a registration token for a repository
+   * Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate
+   * using an access token with the `repo` scope to use this endpoint.
+   *
+   * #### Example using registration token
+   *
+   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+   *
+   * ```
+   * ./config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-registration-token-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsCreateRegistrationTokenForRepo(params: {
     owner: string;
     repo: string;
@@ -15699,6 +26129,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a remove token for a repository
+   * Returns a token that you can pass to remove a self-hosted runner from a repository. The token expires after one hour.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   *
+   * #### Example using remove token
+   *
+   * To remove your self-hosted runner from a repository, replace TOKEN with the remove token provided by this endpoint.
+   *
+   * ```
+   * ./config.sh remove --token TOKEN
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-remove-token-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsCreateRemoveTokenForRepo(params: {
     owner: string;
     repo: string;
@@ -15723,6 +26169,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a self-hosted runner for a repository
+   * Gets a specific self-hosted runner configured in a repository.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this
+   * endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsGetSelfHostedRunnerForRepo(params: {
     owner: string;
     repo: string;
@@ -15748,6 +26204,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a self-hosted runner from a repository
+   * Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+   *
+   * You must authenticate using an access token with the `repo`
+   * scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository
+   * Tags: actions
+   *
+   */
   async actionsDeleteSelfHostedRunnerFromRepo(params: {
     owner: string;
     repo: string;
@@ -15773,6 +26239,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List workflow runs for a repository
+   * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-runs-for-a-repository
+   * Tags: actions
+   *
+   */
   async actionsListWorkflowRunsForRepo(params: {
     owner: string;
     repo: string;
@@ -15839,6 +26314,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a workflow run
+   * Gets a specific workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsGetWorkflowRun(params: {
     owner: string;
     repo: string;
@@ -15861,6 +26343,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a workflow run
+   * Delete a specific workflow run. Anyone with write access to the repository can use this endpoint. If the repository is
+   * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:write` permission to use
+   * this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsDeleteWorkflowRun(params: {
     owner: string;
     repo: string;
@@ -15883,6 +26374,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the review history for a workflow run
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-the-review-history-for-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsGetReviewsForRun(params: {
     owner: string;
     repo: string;
@@ -15910,6 +26408,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List workflow run artifacts
+   * Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-run-artifacts
+   * Tags: actions
+   *
+   */
   async actionsListWorkflowRunArtifacts(params: {
     owner: string;
     repo: string;
@@ -15949,6 +26454,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Cancel a workflow run
+   * Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#cancel-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsCancelWorkflowRun(params: {
     owner: string;
     repo: string;
@@ -15974,6 +26486,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List jobs for a workflow run
+   * Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-jobs-for-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsListJobsForWorkflowRun(params: {
     owner: string;
     repo: string;
@@ -16019,6 +26538,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Download workflow run logs
+   * Gets a redirect URL to download an archive of log files for a workflow run. This link expires after 1 minute. Look for
+   * `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can use
+   * this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have
+   * the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#download-workflow-run-logs
+   * Tags: actions
+   *
+   */
   async actionsDownloadWorkflowRunLogs(params: {
     owner: string;
     repo: string;
@@ -16047,6 +26576,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete workflow run logs
+   * Deletes all logs for a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-workflow-run-logs
+   * Tags: actions
+   *
+   */
   async actionsDeleteWorkflowRunLogs(params: {
     owner: string;
     repo: string;
@@ -16072,6 +26608,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get pending deployments for a workflow run
+   * Get all deployment environments for a workflow run that are waiting for protection rules to pass.
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-pending-deployments-for-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsGetPendingDeploymentsForRun(params: {
     owner: string;
     repo: string;
@@ -16099,6 +26644,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Review pending deployments for a workflow run
+   * Approve or reject pending deployments that are waiting on approval by a required reviewer.
+   *
+   * Anyone with read access to the repository contents and deployments can use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#review-pending-deployments-for-a-workflow-run
+   * Tags: actions
+   *
+   */
   async actionsReviewPendingDeploymentsForRun(
     params: {
       owner: string;
@@ -16106,8 +26660,27 @@ export class GithubClient {
       run_id: number;
     },
     body: {
+      /**
+       * The list of environment ids to approve or reject
+       * @example
+       * [
+       *   161171787,
+       *   161171795
+       * ]
+       *
+       */
       environment_ids: number[];
+      /**
+       * Whether to approve or reject deployment to the specified environments. Must be one of: `approved` or `rejected`
+       * @example "approved"
+       *
+       */
       state: 'approved' | 'rejected';
+      /**
+       * A comment to accompany the deployment review
+       * @example "Ship it!"
+       *
+       */
       comment: string;
     },
   ): Promise<Deployment[]> {
@@ -16134,6 +26707,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Re-run a workflow
+   * Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#re-run-a-workflow
+   * Tags: actions
+   *
+   */
   async actionsReRunWorkflow(params: {
     owner: string;
     repo: string;
@@ -16159,6 +26739,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get workflow run usage
+   * Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-workflow-run-usage
+   * Tags: actions
+   *
+   */
   async actionsGetWorkflowRunUsage(params: {
     owner: string;
     repo: string;
@@ -16184,6 +26773,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository secrets
+   * Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-secrets
+   * Tags: actions
+   *
+   */
   async actionsListRepoSecrets(params: {
     owner: string;
     repo: string;
@@ -16219,6 +26815,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository public key
+   * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-repository-public-key
+   * Tags: actions
+   *
+   */
   async actionsGetRepoPublicKey(params: {
     owner: string;
     repo: string;
@@ -16243,6 +26846,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository secret
+   * Gets a single repository secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-repository-secret
+   * Tags: actions
+   *
+   */
   async actionsGetRepoSecret(params: {
     owner: string;
     repo: string;
@@ -16268,6 +26878,87 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create or update a repository secret
+   * Creates or updates a repository secret with an encrypted value. Encrypt your secret using
+   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
+   * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
+   * this endpoint.
+   *
+   * #### Example encrypting a secret using Node.js
+   *
+   * Encrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.
+   *
+   * ```
+   * const sodium = require('tweetsodium');
+   *
+   * const key = "base64-encoded-public-key";
+   * const value = "plain-text-secret";
+   *
+   * // Convert the message and key to Uint8Array's (Buffer implements that interface)
+   * const messageBytes = Buffer.from(value);
+   * const keyBytes = Buffer.from(key, 'base64');
+   *
+   * // Encrypt using LibSodium.
+   * const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+   *
+   * // Base64 the encrypted secret
+   * const encrypted = Buffer.from(encryptedBytes).toString('base64');
+   *
+   * console.log(encrypted);
+   * ```
+   *
+   *
+   * #### Example encrypting a secret using Python
+   *
+   * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
+   *
+   * ```
+   * from base64 import b64encode
+   * from nacl import encoding, public
+   *
+   * def encrypt(public_key: str, secret_value: str) -> str:
+   *   """Encrypt a Unicode string using the public key."""
+   *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+   *   sealed_box = public.SealedBox(public_key)
+   *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+   *   return b64encode(encrypted).decode("utf-8")
+   * ```
+   *
+   * #### Example encrypting a secret using C#
+   *
+   * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
+   *
+   * ```
+   * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
+   * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
+   *
+   * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
+   *
+   * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
+   * ```
+   *
+   * #### Example encrypting a secret using Ruby
+   *
+   * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
+   *
+   * ```ruby
+   * require "rbnacl"
+   * require "base64"
+   *
+   * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
+   * public_key = RbNaCl::PublicKey.new(key)
+   *
+   * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
+   * encrypted_secret = box.encrypt("my_secret")
+   *
+   * # Print the base64 encoded secret
+   * puts Base64.strict_encode64(encrypted_secret)
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-or-update-a-repository-secret
+   * Tags: actions
+   *
+   */
   async actionsCreateOrUpdateRepoSecret(
     params: {
       owner: string;
@@ -16275,7 +26966,15 @@ export class GithubClient {
       secret_name: string;
     },
     body: {
+      /**
+       * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/rest/reference/actions#get-a-repository-public-key) endpoint.
+       *
+       */
       encrypted_value?: string;
+      /**
+       * ID of the key you used to encrypt the secret.
+       *
+       */
       key_id?: string;
     },
   ): Promise<any> {
@@ -16309,6 +27008,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a repository secret
+   * Deletes a secret in a repository using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-repository-secret
+   * Tags: actions
+   *
+   */
   async actionsDeleteRepoSecret(params: {
     owner: string;
     repo: string;
@@ -16334,6 +27040,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository workflows
+   * Lists the workflows in a repository. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-workflows
+   * Tags: actions
+   *
+   */
   async actionsListRepoWorkflows(params: {
     owner: string;
     repo: string;
@@ -16369,6 +27082,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a workflow
+   * Gets a specific workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-workflow
+   * Tags: actions
+   *
+   */
   async actionsGetWorkflow(params: {
     owner: string;
     repo: string;
@@ -16394,6 +27114,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Disable a workflow
+   * Disables a workflow and sets the `state` of the workflow to `disabled_manually`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#disable-a-workflow
+   * Tags: actions
+   *
+   */
   async actionsDisableWorkflow(params: {
     owner: string;
     repo: string;
@@ -16419,6 +27148,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a workflow dispatch event
+   * You can use this endpoint to manually trigger a GitHub Actions workflow run. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+   *
+   * You must configure your GitHub Actions workflow to run when the [`workflow_dispatch` webhook](/developers/webhooks-and-events/webhook-events-and-payloads#workflow_dispatch) event occurs. The `inputs` are configured in the workflow file. For more information about how to configure the `workflow_dispatch` event in the workflow file, see "[Events that trigger workflows](/actions/reference/events-that-trigger-workflows#workflow_dispatch)."
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)."
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-workflow-dispatch-event
+   * Tags: actions
+   *
+   */
   async actionsCreateWorkflowDispatch(
     params: {
       owner: string;
@@ -16426,7 +27166,15 @@ export class GithubClient {
       workflow_id: number | string;
     },
     body: {
+      /**
+       * The git reference for the workflow. The reference can be a branch or tag name.
+       *
+       */
       ref: string;
+      /**
+       * Input keys and values configured in the workflow file. The maximum number of properties is 10. Any default properties configured in the workflow file will be used when `inputs` are omitted.
+       *
+       */
       inputs?: {
         [key: string]: string;
       };
@@ -16453,6 +27201,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Enable a workflow
+   * Enables a workflow and sets the `state` of the workflow to `active`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#enable-a-workflow
+   * Tags: actions
+   *
+   */
   async actionsEnableWorkflow(params: {
     owner: string;
     repo: string;
@@ -16478,6 +27235,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List workflow runs
+   * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-runs
+   * Tags: actions
+   *
+   */
   async actionsListWorkflowRuns(params: {
     owner: string;
     repo: string;
@@ -16548,6 +27314,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get workflow usage
+   * Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   *
+   * You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-workflow-usage
+   * Tags: actions
+   *
+   */
   async actionsGetWorkflowUsage(params: {
     owner: string;
     repo: string;
@@ -16573,6 +27348,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List assignees
+   * Lists the [available assignees](https://help.github.com/articles/assigning-issues-and-pull-requests-to-other-github-users/) for issues in a repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-assignees
+   * Tags: issues
+   *
+   */
   async issuesListAssignees(params: {
     owner: string;
     repo: string;
@@ -16614,6 +27396,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a user can be assigned
+   * Checks if a user has permission to be assigned to an issue in this repository.
+   *
+   * If the `assignee` can be assigned to issues in the repository, a `204` header with no content is returned.
+   *
+   * Otherwise a `404` status code is returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#check-if-a-user-can-be-assigned
+   * Tags: issues
+   *
+   */
   async issuesCheckUserCanBeAssigned(params: {
     owner: string;
     repo: string;
@@ -16645,6 +27438,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Enable automated security fixes
+   * Enables automated security fixes for a repository. The authenticated user must have admin access to the repository. For more information, see "[Configuring automated security fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)".
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#enable-automated-security-fixes
+   * Tags: repos
+   *
+   */
   async reposEnableAutomatedSecurityFixes(params: {
     owner: string;
     repo: string;
@@ -16669,6 +27469,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Disable automated security fixes
+   * Disables automated security fixes for a repository. The authenticated user must have admin access to the repository. For more information, see "[Configuring automated security fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)".
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#disable-automated-security-fixes
+   * Tags: repos
+   *
+   */
   async reposDisableAutomatedSecurityFixes(params: {
     owner: string;
     repo: string;
@@ -16693,6 +27500,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List branches
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-branches
+   * Tags: repos
+   *
+   */
   async reposListBranches(params: {
     owner: string;
     repo: string;
@@ -16740,6 +27553,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a branch
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-branch
+   * Tags: repos
+   *
+   */
   async reposGetBranch(params: {
     owner: string;
     repo: string;
@@ -16785,6 +27604,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get branch protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-branch-protection
+   * Tags: repos
+   *
+   */
   async reposGetBranchProtection(params: {
     owner: string;
     repo: string;
@@ -16819,6 +27645,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update branch protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Protecting a branch requires admin or owner permissions to the repository.
+   *
+   * **Note**: Passing new arrays of `users` and `teams` replaces their previous values.
+   *
+   * **Note**: The list of users, apps, and teams in total is limited to 100 items.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-branch-protection
+   * Tags: repos
+   *
+   */
   async reposUpdateBranchProtection(
     params: {
       owner: string;
@@ -16826,27 +27665,99 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * Require status checks to pass before merging. Set to `null` to disable.
+       *
+       */
       required_status_checks: {
+        /**
+         * Require branches to be up to date before merging.
+         *
+         */
         strict: boolean;
+        /**
+         * The list of status checks to require in order to merge into this branch
+         *
+         */
         contexts: string[];
       } | null;
+      /**
+       * Enforce all configured restrictions for administrators. Set to `true` to enforce required status checks for repository administrators. Set to `null` to disable.
+       *
+       */
       enforce_admins: boolean | null;
+      /**
+       * Require at least one approving review on a pull request, before merging. Set to `null` to disable.
+       *
+       */
       required_pull_request_reviews: {
+        /**
+         * Specify which users and teams can dismiss pull request reviews. Pass an empty `dismissal_restrictions` object to disable. User and team `dismissal_restrictions` are only available for organization-owned repositories. Omit this parameter for personal repositories.
+         *
+         */
         dismissal_restrictions?: {
+          /**
+           * The list of user `login`s with dismissal access
+           *
+           */
           users?: string[];
+          /**
+           * The list of team `slug`s with dismissal access
+           *
+           */
           teams?: string[];
         };
+        /**
+         * Set to `true` if you want to automatically dismiss approving reviews when someone pushes a new commit.
+         *
+         */
         dismiss_stale_reviews?: boolean;
+        /**
+         * Blocks merging pull requests until [code owners](https://help.github.com/articles/about-code-owners/) review them.
+         *
+         */
         require_code_owner_reviews?: boolean;
+        /**
+         * Specify the number of reviewers required to approve pull requests. Use a number between 1 and 6.
+         *
+         */
         required_approving_review_count?: number;
       } | null;
+      /**
+       * Restrict who can push to the protected branch. User, app, and team `restrictions` are only available for organization-owned repositories. Set to `null` to disable.
+       *
+       */
       restrictions: {
+        /**
+         * The list of user `login`s with push access
+         *
+         */
         users: string[];
+        /**
+         * The list of team `slug`s with push access
+         *
+         */
         teams: string[];
+        /**
+         * The list of app `slug`s with push access
+         *
+         */
         apps?: string[];
       } | null;
+      /**
+       * Enforces a linear commit Git history, which prevents anyone from pushing merge commits to a branch. Set to `true` to enforce a linear commit history. Set to `false` to disable a linear commit Git history. Your repository must allow squash merging or rebase merging before you can enable a linear commit history. Default: `false`. For more information, see "[Requiring a linear commit history](https://help.github.com/github/administering-a-repository/requiring-a-linear-commit-history)" in the GitHub Help documentation.
+       *
+       */
       required_linear_history?: boolean;
+      /**
+       * Permits force pushes to the protected branch by anyone with write access to the repository. Set to `true` to allow force pushes. Set to `false` or `null` to block force pushes. Default: `false`. For more information, see "[Enabling force pushes to a protected branch](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)" in the GitHub Help documentation."
+       *
+       */
       allow_force_pushes?: boolean | null;
+      /**
+       * Allows deletion of the protected branch by anyone with write access to the repository. Set to `false` to prevent deletion of the protected branch. Default: `false`. For more information, see "[Enabling force pushes to a protected branch](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)" in the GitHub Help documentation.
+       *
+       */
       allow_deletions?: boolean;
     },
   ): Promise<ProtectedBranch> {
@@ -16912,6 +27823,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete branch protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-branch-protection
+   * Tags: repos
+   *
+   */
   async reposDeleteBranchProtection(params: {
     owner: string;
     repo: string;
@@ -16946,6 +27864,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get admin branch protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-admin-branch-protection
+   * Tags: repos
+   *
+   */
   async reposGetAdminBranchProtection(params: {
     owner: string;
     repo: string;
@@ -16973,6 +27898,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set admin branch protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Adding admin enforcement requires admin or owner permissions to the repository and branch protection to be enabled.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#set-admin-branch-protection
+   * Tags: repos
+   *
+   */
   async reposSetAdminBranchProtection(params: {
     owner: string;
     repo: string;
@@ -17000,6 +27934,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete admin branch protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Removing admin enforcement requires admin or owner permissions to the repository and branch protection to be enabled.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-admin-branch-protection
+   * Tags: repos
+   *
+   */
   async reposDeleteAdminBranchProtection(params: {
     owner: string;
     repo: string;
@@ -17034,6 +27977,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get pull request review protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-pull-request-review-protection
+   * Tags: repos
+   *
+   */
   async reposGetPullRequestReviewProtection(params: {
     owner: string;
     repo: string;
@@ -17059,6 +28009,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update pull request review protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Updating pull request review enforcement requires admin or owner permissions to the repository and branch protection to be enabled.
+   *
+   * **Note**: Passing new arrays of `users` and `teams` replaces their previous values.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-pull-request-review-protection
+   * Tags: repos
+   *
+   */
   async reposUpdatePullRequestReviewProtection(
     params: {
       owner: string;
@@ -17066,12 +28027,36 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * Specify which users and teams can dismiss pull request reviews. Pass an empty `dismissal_restrictions` object to disable. User and team `dismissal_restrictions` are only available for organization-owned repositories. Omit this parameter for personal repositories.
+       *
+       */
       dismissal_restrictions?: {
+        /**
+         * The list of user `login`s with dismissal access
+         *
+         */
         users?: string[];
+        /**
+         * The list of team `slug`s with dismissal access
+         *
+         */
         teams?: string[];
       };
+      /**
+       * Set to `true` if you want to automatically dismiss approving reviews when someone pushes a new commit.
+       *
+       */
       dismiss_stale_reviews?: boolean;
+      /**
+       * Blocks merging pull requests until [code owners](https://help.github.com/articles/about-code-owners/) have reviewed.
+       *
+       */
       require_code_owner_reviews?: boolean;
+      /**
+       * Specifies the number of reviewers required to approve pull requests. Use a number between 1 and 6.
+       *
+       */
       required_approving_review_count?: number;
     },
   ): Promise<ProtectedBranchPullRequestReview> {
@@ -17107,6 +28092,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete pull request review protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-pull-request-review-protection
+   * Tags: repos
+   *
+   */
   async reposDeletePullRequestReviewProtection(params: {
     owner: string;
     repo: string;
@@ -17141,6 +28133,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get commit signature protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * When authenticated with admin or owner permissions to the repository, you can use this endpoint to check whether a branch requires signed commits. An enabled status of `true` indicates you must sign commits on this branch. For more information, see [Signing commits with GPG](https://help.github.com/articles/signing-commits-with-gpg) in GitHub Help.
+   *
+   * **Note**: You must enable branch protection to require signed commits.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-commit-signature-protection
+   * Tags: repos
+   *
+   */
   async reposGetCommitSignatureProtection(params: {
     owner: string;
     repo: string;
@@ -17177,6 +28180,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create commit signature protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * When authenticated with admin or owner permissions to the repository, you can use this endpoint to require signed commits on a branch. You must enable branch protection to require signed commits.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-commit-signature-protection
+   * Tags: repos
+   *
+   */
   async reposCreateCommitSignatureProtection(params: {
     owner: string;
     repo: string;
@@ -17213,6 +28225,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete commit signature protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * When authenticated with admin or owner permissions to the repository, you can use this endpoint to disable required signed commits on a branch. You must enable branch protection to require signed commits.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-commit-signature-protection
+   * Tags: repos
+   *
+   */
   async reposDeleteCommitSignatureProtection(params: {
     owner: string;
     repo: string;
@@ -17247,6 +28268,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get status checks protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-status-checks-protection
+   * Tags: repos
+   *
+   */
   async reposGetStatusChecksProtection(params: {
     owner: string;
     repo: string;
@@ -17281,6 +28309,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update status check protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Updating required status checks requires admin or owner permissions to the repository and branch protection to be enabled.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-status-check-potection
+   * Tags: repos
+   *
+   */
   async reposUpdateStatusCheckProtection(
     params: {
       owner: string;
@@ -17288,7 +28325,15 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * Require branches to be up to date before merging.
+       *
+       */
       strict?: boolean;
+      /**
+       * The list of status checks to require in order to merge into this branch
+       *
+       */
       contexts?: string[];
     },
   ): Promise<StatusCheckPolicy> {
@@ -17331,6 +28376,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove status check protection
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-status-check-protection
+   * Tags: repos
+   *
+   */
   async reposRemoveStatusCheckProtection(params: {
     owner: string;
     repo: string;
@@ -17356,6 +28408,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all status check contexts
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-status-check-contexts
+   * Tags: repos
+   *
+   */
   async reposGetAllStatusCheckContexts(params: {
     owner: string;
     repo: string;
@@ -17390,6 +28449,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add status check contexts
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#add-status-check-contexts
+   * Tags: repos
+   *
+   */
   async reposAddStatusCheckContexts(
     params: {
       owner: string;
@@ -17397,6 +28463,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * contexts parameter
+       *
+       */
       contexts: string[];
     },
   ): Promise<string[]> {
@@ -17448,6 +28518,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set status check contexts
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#set-status-check-contexts
+   * Tags: repos
+   *
+   */
   async reposSetStatusCheckContexts(
     params: {
       owner: string;
@@ -17455,6 +28532,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * contexts parameter
+       *
+       */
       contexts: string[];
     },
   ): Promise<string[]> {
@@ -17497,6 +28578,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove status check contexts
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-status-check-contexts
+   * Tags: repos
+   *
+   */
   async reposRemoveStatusCheckContexts(
     params: {
       owner: string;
@@ -17504,6 +28592,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * contexts parameter
+       *
+       */
       contexts: string[];
     },
   ): Promise<string[]> {
@@ -17546,6 +28638,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Lists who has access to this protected branch.
+   *
+   * **Note**: Users, apps, and teams `restrictions` are only available for organization-owned repositories.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposGetAccessRestrictions(params: {
     owner: string;
     repo: string;
@@ -17580,6 +28683,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Disables the ability to restrict who can push to this branch.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposDeleteAccessRestrictions(params: {
     owner: string;
     repo: string;
@@ -17605,6 +28717,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get apps with access to the protected branch
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Lists the GitHub Apps that have push access to this branch. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-apps-with-access-to-the-protected-branch
+   * Tags: repos
+   *
+   */
   async reposGetAppsWithAccessToProtectedBranch(params: {
     owner: string;
     repo: string;
@@ -17641,6 +28762,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add app access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Grants the specified apps push access for this branch. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+   *
+   * | Type    | Description                                                                                                                                                |
+   * | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#add-app-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposAddAppAccessRestrictions(
     params: {
       owner: string;
@@ -17648,6 +28782,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * apps parameter
+       *
+       */
       apps: string[];
     },
   ): Promise<Integration[]> {
@@ -17683,6 +28821,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set app access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Replaces the list of apps that have push access to this branch. This removes all apps that previously had push access and grants push access to the new list of apps. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+   *
+   * | Type    | Description                                                                                                                                                |
+   * | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#set-app-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposSetAppAccessRestrictions(
     params: {
       owner: string;
@@ -17690,6 +28841,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * apps parameter
+       *
+       */
       apps: string[];
     },
   ): Promise<Integration[]> {
@@ -17725,6 +28880,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove app access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Removes the ability of an app to push to this branch. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+   *
+   * | Type    | Description                                                                                                                                                |
+   * | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-app-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposRemoveAppAccessRestrictions(
     params: {
       owner: string;
@@ -17732,6 +28900,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * apps parameter
+       *
+       */
       apps: string[];
     },
   ): Promise<Integration[]> {
@@ -17767,6 +28939,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get teams with access to the protected branch
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Lists the teams who have push access to this branch. The list includes child teams.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-teams-with-access-to-the-protected-branch
+   * Tags: repos
+   *
+   */
   async reposGetTeamsWithAccessToProtectedBranch(params: {
     owner: string;
     repo: string;
@@ -17803,6 +28984,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add team access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Grants the specified teams push access for this branch. You can also give push access to child teams.
+   *
+   * | Type    | Description                                                                                                                                |
+   * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+   * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#add-team-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposAddTeamAccessRestrictions(
     params: {
       owner: string;
@@ -17810,6 +29004,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * teams parameter
+       *
+       */
       teams: string[];
     },
   ): Promise<Team[]> {
@@ -17845,6 +29043,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set team access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Replaces the list of teams that have push access to this branch. This removes all teams that previously had push access and grants push access to the new list of teams. Team restrictions include child teams.
+   *
+   * | Type    | Description                                                                                                                                |
+   * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+   * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#set-team-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposSetTeamAccessRestrictions(
     params: {
       owner: string;
@@ -17852,6 +29063,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * teams parameter
+       *
+       */
       teams: string[];
     },
   ): Promise<Team[]> {
@@ -17887,6 +29102,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove team access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Removes the ability of a team to push to this branch. You can also remove push access for child teams.
+   *
+   * | Type    | Description                                                                                                                                         |
+   * | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+   * | `array` | Teams that should no longer have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-team-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposRemoveTeamAccessRestrictions(
     params: {
       owner: string;
@@ -17894,6 +29122,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * teams parameter
+       *
+       */
       teams: string[];
     },
   ): Promise<Team[]> {
@@ -17929,6 +29161,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get users with access to the protected branch
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Lists the people who have push access to this branch.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-users-with-access-to-the-protected-branch
+   * Tags: repos
+   *
+   */
   async reposGetUsersWithAccessToProtectedBranch(params: {
     owner: string;
     repo: string;
@@ -17965,6 +29206,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add user access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Grants the specified people push access for this branch.
+   *
+   * | Type    | Description                                                                                                                   |
+   * | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+   * | `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#add-user-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposAddUserAccessRestrictions(
     params: {
       owner: string;
@@ -17972,6 +29226,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * users parameter
+       *
+       */
       users: string[];
     },
   ): Promise<SimpleUser[]> {
@@ -18007,6 +29265,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set user access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Replaces the list of people that have push access to this branch. This removes all people that previously had push access and grants push access to the new list of people.
+   *
+   * | Type    | Description                                                                                                                   |
+   * | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+   * | `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#set-user-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposSetUserAccessRestrictions(
     params: {
       owner: string;
@@ -18014,6 +29285,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * users parameter
+       *
+       */
       users: string[];
     },
   ): Promise<SimpleUser[]> {
@@ -18049,6 +29324,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove user access restrictions
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Removes the ability of a user to push to this branch.
+   *
+   * | Type    | Description                                                                                                                                   |
+   * | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+   * | `array` | Usernames of the people who should no longer have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-user-access-restrictions
+   * Tags: repos
+   *
+   */
   async reposRemoveUserAccessRestrictions(
     params: {
       owner: string;
@@ -18056,6 +29344,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * users parameter
+       *
+       */
       users: string[];
     },
   ): Promise<SimpleUser[]> {
@@ -18091,6 +29383,27 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Rename a branch
+   * Renames a branch in a repository.
+   *
+   * **Note:** Although the API responds immediately, the branch rename process might take some extra time to complete in the background. You won't be able to push to the old branch name while the rename process is in progress. For more information, see "[Renaming a branch](https://docs.github.com/github/administering-a-repository/renaming-a-branch)".
+   *
+   * The permissions required to use this endpoint depends on whether you are renaming the default branch.
+   *
+   * To rename a non-default branch:
+   *
+   * * Users must have push access.
+   * * GitHub Apps must have the `contents:write` repository permission.
+   *
+   * To rename the default branch:
+   *
+   * * Users must have admin or owner permissions.
+   * * GitHub Apps must have the `administration:write` repository permission.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#rename-a-branch
+   * Tags: repos
+   *
+   */
   async reposRenameBranch(
     params: {
       owner: string;
@@ -18098,6 +29411,10 @@ export class GithubClient {
       branch: string;
     },
     body: {
+      /**
+       * The new name of the branch.
+       *
+       */
       new_name: string;
     },
   ): Promise<BranchWithProtection> {
@@ -18149,55 +29466,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a check run
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+   *
+   * Creates a new check run for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to create check runs.
+   *
+   * In a check suite, GitHub limits the number of check runs with the same name to 1000. Once these check runs exceed 1000, GitHub will start to automatically delete older check runs.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#create-a-check-run
+   * Tags: checks
+   *
+   */
   async checksCreate(
     params: {
       owner: string;
       repo: string;
     },
-    body: {
-      name: string;
-      head_sha: string;
-      details_url?: string;
-      external_id?: string;
-      status?: 'queued' | 'in_progress' | 'completed';
-      started_at?: string;
-      conclusion?:
-        | 'action_required'
-        | 'cancelled'
-        | 'failure'
-        | 'neutral'
-        | 'success'
-        | 'skipped'
-        | 'stale'
-        | 'timed_out';
-      completed_at?: string;
-      output?: {
-        title: string;
-        summary: string;
-        text?: string;
-        annotations?: {
-          path: string;
-          start_line: number;
-          end_line: number;
-          start_column?: number;
-          end_column?: number;
-          annotation_level: 'notice' | 'warning' | 'failure';
-          message: string;
-          title?: string;
-          raw_details?: string;
-        }[];
-        images?: {
-          alt: string;
-          image_url: string;
-          caption?: string;
-        }[];
-      };
-      actions?: {
-        label: string;
-        description: string;
-        identifier: string;
-      }[];
-    },
+    body: any | any,
   ): Promise<CheckRun> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/repos/{owner}/{repo}/check-runs', params),
@@ -18217,6 +29502,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a check run
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+   *
+   * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#get-a-check-run
+   * Tags: checks
+   *
+   */
   async checksGet(params: {
     owner: string;
     repo: string;
@@ -18242,55 +29536,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a check run
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+   *
+   * Updates a check run for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to edit check runs.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#update-a-check-run
+   * Tags: checks
+   *
+   */
   async checksUpdate(
     params: {
       owner: string;
       repo: string;
       check_run_id: number;
     },
-    body: {
-      name?: string;
-      details_url?: string;
-      external_id?: string;
-      started_at?: string;
-      status?: 'queued' | 'in_progress' | 'completed';
-      conclusion?:
-        | 'action_required'
-        | 'cancelled'
-        | 'failure'
-        | 'neutral'
-        | 'success'
-        | 'skipped'
-        | 'stale'
-        | 'timed_out';
-      completed_at?: string;
-      output?: {
-        title?: string;
-        summary: string;
-        text?: string;
-        annotations?: {
-          path: string;
-          start_line: number;
-          end_line: number;
-          start_column?: number;
-          end_column?: number;
-          annotation_level: 'notice' | 'warning' | 'failure';
-          message: string;
-          title?: string;
-          raw_details?: string;
-        }[];
-        images?: {
-          alt: string;
-          image_url: string;
-          caption?: string;
-        }[];
-      };
-      actions?: {
-        label: string;
-        description: string;
-        identifier: string;
-      }[];
-    },
+    body: any | any,
   ): Promise<CheckRun> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
@@ -18313,6 +29574,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List check run annotations
+   * Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth Apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-run-annotations
+   * Tags: checks
+   *
+   */
   async checksListAnnotations(params: {
     owner: string;
     repo: string;
@@ -18349,12 +29617,25 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a check suite
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+   *
+   * By default, check suites are automatically created when you create a [check run](https://docs.github.com/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#create-a-check-suite
+   * Tags: checks
+   *
+   */
   async checksCreateSuite(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The sha of the head commit.
+       *
+       */
       head_sha: string;
     },
   ): Promise<CheckSuite> {
@@ -18376,14 +29657,34 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update repository preferences for check suites
+   * Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#update-repository-preferences-for-check-suites
+   * Tags: checks
+   *
+   */
   async checksSetSuitesPreferences(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * Enables or disables automatic creation of CheckSuite events upon pushes to the repository. Enabled by default. See the [`auto_trigger_checks` object](https://docs.github.com/rest/reference/checks#auto_trigger_checks-object) description for details.
+       *
+       */
       auto_trigger_checks?: {
+        /**
+         * The `id` of the GitHub App.
+         *
+         */
         app_id: number;
+        /**
+         * Set to `true` to enable automatic creation of CheckSuite events upon pushes to the repository, or `false` to disable them.
+         * @defaultValue true
+         *
+         */
         setting: boolean;
       }[];
     },
@@ -18409,6 +29710,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a check suite
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+   *
+   * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#get-a-check-suite
+   * Tags: checks
+   *
+   */
   async checksGetSuite(params: {
     owner: string;
     repo: string;
@@ -18434,6 +29744,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List check runs in a check suite
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+   *
+   * Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-runs-in-a-check-suite
+   * Tags: checks
+   *
+   */
   async checksListForSuite(params: {
     owner: string;
     repo: string;
@@ -18491,6 +29810,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Rerequest a check suite
+   * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
+   *
+   * To rerequest a check suite, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#rerequest-a-check-suite
+   * Tags: checks
+   *
+   */
   async checksRerequestSuite(params: {
     owner: string;
     repo: string;
@@ -18516,6 +29844,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List code scanning alerts for a repository
+   * Lists all open code scanning alerts for the default branch (usually `main`
+   * or `master`). You must use an access token with the `security_events` scope to use
+   * this endpoint. GitHub Apps must have the `security_events` read permission to use
+   * this endpoint.
+   *
+   * The response includes a `most_recent_instance` object.
+   * This provides details of the most recent instance of this alert
+   * for the default branch or for the specified Git reference
+   * (if you used `ref` in the request).
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository
+   * Tags: code-scanning
+   *
+   */
   async codeScanningListAlertsForRepo(params: {
     owner: string;
     repo: string;
@@ -18599,6 +29942,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a code scanning alert
+   * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
+   *
+   * **Deprecation notice**:
+   * The instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#get-a-code-scanning-alert
+   * Tags: code-scanning
+   *
+   */
   async codeScanningGetAlert(params: {
     owner: string;
     repo: string;
@@ -18657,6 +30010,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a code scanning alert
+   * Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#update-a-code-scanning-alert
+   * Tags: code-scanning
+   *
+   */
   async codeScanningUpdateAlert(
     params: {
       owner: string;
@@ -18722,6 +30082,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List instances of a code scanning alert
+   * Lists all instances of the specified code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-instances-of-a-code-scanning-alert
+   * Tags: code-scanning
+   *
+   */
   async codeScanningListAlertsInstances(params: {
     owner: string;
     repo: string;
@@ -18794,6 +30161,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List code scanning analyses for a repository
+   * Lists the details of all code scanning analyses for a repository,
+   * starting with the most recent.
+   * The response is paginated and you can use the `page` and `per_page` parameters
+   * to list the analyses you're interested in.
+   * By default 30 analyses are listed per page.
+   *
+   * The `rules_count` field in the response give the number of rules
+   * that were run in the analysis.
+   * For very old analyses this data is not available,
+   * and `0` is returned in this field.
+   *
+   * You must use an access token with the `security_events` scope to use this endpoint.
+   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   *
+   * **Deprecation notice**:
+   * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository
+   * Tags: code-scanning
+   *
+   */
   async codeScanningListRecentAnalyses(params: {
     owner: string;
     repo: string;
@@ -18880,6 +30269,34 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a code scanning analysis for a repository
+   * Gets a specified code scanning analysis for a repository.
+   * You must use an access token with the `security_events` scope to use this endpoint.
+   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   *
+   * The default JSON response contains fields that describe the analysis.
+   * This includes the Git reference and commit SHA to which the analysis relates,
+   * the datetime of the analysis, the name of the code scanning tool,
+   * and the number of alerts.
+   *
+   * The `rules_count` field in the default response give the number of rules
+   * that were run in the analysis.
+   * For very old analyses this data is not available,
+   * and `0` is returned in this field.
+   *
+   * If you use the Accept header `application/sarif+json`,
+   * the response contains the analysis data that was uploaded.
+   * This is formatted as
+   * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+   * For an example response, see "[Custom media type for code scanning](#custom-media-type-for-code-scanning)."
+   *
+   * **Deprecation notice**:
+   * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository
+   * Tags: code-scanning
+   *
+   */
   async codeScanningGetAnalysis(params: {
     owner: string;
     repo: string;
@@ -18938,6 +30355,76 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a code scanning analysis from a repository
+   * Deletes a specified code scanning analysis from a repository. For
+   * private repositories, you must use an access token with the `repo` scope. For public repositories,
+   * you must use an access token with `public_repo` and `repo:security_events` scopes.
+   * GitHub Apps must have the `security_events` write permission to use this endpoint.
+   *
+   * You can delete one analysis at a time.
+   * To delete a series of analyses, start with the most recent analysis and work backwards.
+   * Conceptually, the process is similar to the undo function in a text editor.
+   *
+   * When you list the analyses for a repository,
+   * one or more will be identified as deletable in the response:
+   *
+   * ```
+   * "deletable": true
+   * ```
+   *
+   * An analysis is deletable when it's the most recent in a set of analyses.
+   * Typically, a repository will have multiple sets of analyses
+   * for each enabled code scanning tool,
+   * where a set is determined by a unique combination of analysis values:
+   *
+   * * `ref`
+   * * `tool`
+   * * `analysis_key`
+   * * `environment`
+   *
+   * If you attempt to delete an analysis that is not the most recent in a set,
+   * you'll get a 400 response with the message:
+   *
+   * ```
+   * Analysis specified is not deletable.
+   * ```
+   *
+   * The response from a successful `DELETE` operation provides you with
+   * two alternative URLs for deleting the next analysis in the set
+   * (see the example default response below).
+   * Use the `next_analysis_url` URL if you want to avoid accidentally deleting the final analysis
+   * in the set. This is a useful option if you want to preserve at least one analysis
+   * for the specified tool in your repository.
+   * Use the `confirm_delete_url` URL if you are content to remove all analyses for a tool.
+   * When you delete the last analysis in a set the value of `next_analysis_url` and `confirm_delete_url`
+   * in the 200 response is `null`.
+   *
+   * As an example of the deletion process,
+   * let's imagine that you added a workflow that configured a particular code scanning tool
+   * to analyze the code in a repository. This tool has added 15 analyses:
+   * 10 on the default branch, and another 5 on a topic branch.
+   * You therefore have two separate sets of analyses for this tool.
+   * You've now decided that you want to remove all of the analyses for the tool.
+   * To do this you must make 15 separate deletion requests.
+   * To start, you must find the deletable analysis for one of the sets,
+   * step through deleting the analyses in that set,
+   * and then repeat the process for the second set.
+   * The procedure therefore consists of a nested loop:
+   *
+   * **Outer loop**:
+   * * List the analyses for the repository, filtered by tool.
+   * * Parse this list to find a deletable analysis. If found:
+   *
+   *   **Inner loop**:
+   *   * Delete the identified analysis.
+   *   * Parse the response for the value of `next_analysis_url` and, if found, use this in the next iteration.
+   *
+   * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `next_analysis_url` value. Alternatively, you could use the `confirm_delete_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#delete-a-code-scanning-analysis-from-a-repository
+   * Tags: code-scanning
+   *
+   */
   async codeScanningDeleteAnalysis(params: {
     owner: string;
     repo: string;
@@ -19013,6 +30500,29 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Upload an analysis as SARIF data
+   * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
+   *
+   * There are two places where you can upload code scanning results.
+   *  - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull requests](/github/finding-security-vulnerabilities-and-errors-in-your-code/triaging-code-scanning-alerts-in-pull-requests)."
+   *  - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see "[Managing code scanning alerts for your repository](/github/finding-security-vulnerabilities-and-errors-in-your-code/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
+   *
+   * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
+   *
+   * ```
+   * gzip -c analysis-data.sarif | base64
+   * ```
+   *
+   * SARIF upload supports a maximum of 1000 results per analysis run. Any results over this limit are ignored. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
+   *
+   * The `202 Accepted`, response includes an `id` value.
+   * You can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.
+   * For more information, see "[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#upload-an-analysis-as-sarif-data
+   * Tags: code-scanning
+   *
+   */
   async codeScanningUploadSarif(
     params: {
       owner: string;
@@ -19022,8 +30532,22 @@ export class GithubClient {
       commit_sha: CodeScanningAnalysisCommitSha;
       ref: CodeScanningRef;
       sarif: CodeScanningAnalysisSarifFile;
+      /**
+       * The base directory used in the analysis, as it appears in the SARIF file.
+       * This property is used to convert file paths from absolute to relative, so that alerts can be mapped to their correct location in the repository.
+       * @example "file:///github/workspace/"
+       *
+       */
       checkout_uri?: string;
-      started_at?: Date;
+      /**
+       * The time that the analysis run began. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+       *
+       */
+      started_at?: string;
+      /**
+       * The name of the tool used to generate the code scanning analysis. If this parameter is not used, the tool name defaults to "API". If the uploaded SARIF contains a tool GUID, this will be available for filtering using the `tool_guid` parameter of operations such as `GET /repos/{owner}/{repo}/code-scanning/alerts`.
+       *
+       */
       tool_name?: string;
     },
   ): Promise<CodeScanningSarifsReceipt> {
@@ -19098,6 +30622,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get information about a SARIF upload
+   * Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#get-information-about-a-sarif-upload
+   * Tags: code-scanning
+   *
+   */
   async codeScanningGetSarif(params: {
     owner: string;
     repo: string;
@@ -19158,6 +30689,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository collaborators
+   * For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners.
+   *
+   * Team members will include the members of child teams.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-collaborators
+   * Tags: repos
+   *
+   */
   async reposListCollaborators(params: {
     owner: string;
     repo: string;
@@ -19205,6 +30745,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a user is a repository collaborator
+   * For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners.
+   *
+   * Team members will include the members of child teams.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#check-if-a-user-is-a-repository-collaborator
+   * Tags: repos
+   *
+   */
   async reposCheckCollaborator(params: {
     owner: string;
     repo: string;
@@ -19239,6 +30788,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add a repository collaborator
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   *
+   * For more information the permission levels, see "[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
+   *
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   *
+   * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/rest/reference/repos#invitations).
+   *
+   * **Rate limits**
+   *
+   * To prevent abuse, you are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#add-a-repository-collaborator
+   * Tags: repos
+   *
+   */
   async reposAddCollaborator(
     params: {
       owner: string;
@@ -19246,7 +30812,21 @@ export class GithubClient {
       username: string;
     },
     body: {
+      /**
+       * The permission to grant the collaborator. **Only valid on organization-owned repositories.** Can be one of:
+       * \* `pull` - can pull, but not push to or administer this repository.
+       * \* `push` - can pull and push, but not administer this repository.
+       * \* `admin` - can pull, push and administer this repository.
+       * \* `maintain` - Recommended for project managers who need to manage the repository without access to sensitive or destructive actions.
+       * \* `triage` - Recommended for contributors who need to proactively manage issues and pull requests without write access.
+       * @defaultValue "push"
+       *
+       */
       permission?: 'pull' | 'push' | 'admin' | 'maintain' | 'triage';
+      /**
+       * @example "\"push\""
+       *
+       */
       permissions?: string;
     },
   ): Promise<RepositoryInvitation> {
@@ -19298,6 +30878,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a repository collaborator
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-a-repository-collaborator
+   * Tags: repos
+   *
+   */
   async reposRemoveCollaborator(params: {
     owner: string;
     repo: string;
@@ -19323,6 +30909,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get repository permissions for a user
+   * Checks the repository permission of a collaborator. The possible repository permissions are `admin`, `write`, `read`, and `none`.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-permissions-for-a-user
+   * Tags: repos
+   *
+   */
   async reposGetCollaboratorPermissionLevel(params: {
     owner: string;
     repo: string;
@@ -19359,6 +30952,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List commit comments for a repository
+   * Commit Comments use [these custom media types](https://docs.github.com/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/rest/overview/media-types/).
+   *
+   * Comments are ordered by ascending ID.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-comments-for-a-repository
+   * Tags: repos
+   *
+   */
   async reposListCommitCommentsForRepo(params: {
     owner: string;
     repo: string;
@@ -19391,6 +30993,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a commit comment
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-commit-comment
+   * Tags: repos
+   *
+   */
   async reposGetCommitComment(params: {
     owner: string;
     repo: string;
@@ -19422,6 +31030,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a commit comment
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-commit-comment
+   * Tags: repos
+   *
+   */
   async reposUpdateCommitComment(
     params: {
       owner: string;
@@ -19429,6 +31043,10 @@ export class GithubClient {
       comment_id: number;
     },
     body: {
+      /**
+       * The contents of the comment
+       *
+       */
       body: string;
     },
   ): Promise<CommitComment> {
@@ -19459,6 +31077,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a commit comment
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-commit-comment
+   * Tags: repos
+   *
+   */
   async reposDeleteCommitComment(params: {
     owner: string;
     repo: string;
@@ -19490,6 +31114,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for a commit comment
+   * List the reactions to a [commit comment](https://docs.github.com/rest/reference/repos#comments).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-commit-comment
+   * Tags: reactions
+   *
+   */
   async reactionsListForCommitComment(params: {
     owner: string;
     repo: string;
@@ -19563,6 +31194,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for a commit comment
+   * Create a reaction to a [commit comment](https://docs.github.com/rest/reference/repos#comments). A response with a `Status: 200 OK` means that you already added the reaction type to this commit comment.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-commit-comment
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForCommitComment(
     params: {
       owner: string;
@@ -19570,6 +31208,10 @@ export class GithubClient {
       comment_id: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the commit comment.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -19634,6 +31276,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a commit comment reaction
+   * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
+   *
+   * Delete a reaction to a [commit comment](https://docs.github.com/rest/reference/repos#comments).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-a-commit-comment-reaction
+   * Tags: reactions
+   *
+   */
   async reactionsDeleteForCommitComment(params: {
     owner: string;
     repo: string;
@@ -19660,6 +31311,40 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List commits
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commits
+   * Tags: repos
+   *
+   */
   async reposListCommits(params: {
     owner: string;
     repo: string;
@@ -19755,6 +31440,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List branches for HEAD commit
+   * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Returns all branches where the given commit SHA is the HEAD, or latest commit for the branch.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-branches-for-head-commit
+   * Tags: repos
+   *
+   */
   async reposListBranchesForHeadCommit(params: {
     owner: string;
     repo: string;
@@ -19805,6 +31499,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List commit comments
+   * Use the `:commit_sha` to specify the commit that will have its comments listed.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-comments
+   * Tags: repos
+   *
+   */
   async reposListCommentsForCommit(params: {
     owner: string;
     repo: string;
@@ -19841,6 +31542,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a commit comment
+   * Create a comment for a commit using its `:commit_sha`.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-commit-comment
+   * Tags: repos
+   *
+   */
   async reposCreateCommitComment(
     params: {
       owner: string;
@@ -19848,9 +31558,25 @@ export class GithubClient {
       commit_sha: string;
     },
     body: {
+      /**
+       * The contents of the comment.
+       *
+       */
       body: string;
+      /**
+       * Relative path of the file to comment on.
+       *
+       */
       path?: string;
+      /**
+       * Line index in the diff to comment on.
+       *
+       */
       position?: number;
+      /**
+       * **Deprecated**. Use **position** parameter instead. Line number in the file to comment on.
+       *
+       */
       line?: number;
     },
   ): Promise<CommitComment> {
@@ -19893,6 +31619,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List pull requests associated with a commit
+   * Lists all pull requests containing the provided commit SHA, which can be from any point in the commit history. The results will include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests) endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-pull-requests-associated-with-a-commit
+   * Tags: repos
+   *
+   */
   async reposListPullRequestsAssociatedWithCommit(params: {
     owner: string;
     repo: string;
@@ -19943,6 +31676,48 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a commit
+   * Returns the contents of a single commit reference. You must have `read` access for the repository to use this endpoint.
+   *
+   * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the only changes are to the file listing.
+   *
+   * You can pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
+   *
+   * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+   *
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-commit
+   * Tags: repos
+   *
+   */
   async reposGetCommit(params: {
     owner: string;
     repo: string;
@@ -20001,6 +31776,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List check runs for a Git reference
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+   *
+   * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-runs-for-a-git-reference
+   * Tags: checks
+   *
+   */
   async checksListForRef(params: {
     owner: string;
     repo: string;
@@ -20064,6 +31848,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List check suites for a Git reference
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+   *
+   * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-suites-for-a-git-reference
+   * Tags: checks
+   *
+   */
   async checksListSuitesForRef(params: {
     owner: string;
     repo: string;
@@ -20115,6 +31908,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the combined status for a specific reference
+   * Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.
+   *
+   * The most recent status for each context is returned, up to 100. This field [paginates](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination) if there are over 100 contexts.
+   *
+   * Additionally, a combined `state` is returned. The `state` is one of:
+   *
+   * *   **failure** if any of the contexts report as `error` or `failure`
+   * *   **pending** if there are no statuses or a context is `pending`
+   * *   **success** if the latest status for all contexts is `success`
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-combined-status-for-a-specific-reference
+   * Tags: repos
+   *
+   */
   async reposGetCombinedStatusForRef(params: {
     owner: string;
     repo: string;
@@ -20155,6 +31963,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List commit statuses for a reference
+   * Users with pull access in a repository can view commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name. Statuses are returned in reverse chronological order. The first status in the list will be the latest one.
+   *
+   * This resource is also available via a legacy route: `GET /repos/:owner/:repo/statuses/:ref`.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-statuses-for-a-reference
+   * Tags: repos
+   *
+   */
   async reposListCommitStatusesForRef(params: {
     owner: string;
     repo: string;
@@ -20197,6 +32014,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the code of conduct for a repository
+   * Returns the contents of the repository's code of conduct file, if one is detected.
+   *
+   * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
+   * Learn more at {@link https://docs.github.com/rest/reference/codes_of_conduct/#get-the-code-of-conduct-for-a-repository
+   * Tags: codes-of-conduct
+   *
+   */
   async codesOfConductGetForRepo(params: {
     owner: string;
     repo: string;
@@ -20221,6 +32047,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get community profile metrics
+   * This endpoint will return all community profile metrics, including an
+   * overall health score, repository description, the presence of documentation, detected
+   * code of conduct, detected license, and the presence of ISSUE\_TEMPLATE, PULL\_REQUEST\_TEMPLATE,
+   * README, and CONTRIBUTING files.
+   *
+   * The `health_percentage` score is defined as a percentage of how many of
+   * these four documents are present: README, CONTRIBUTING, LICENSE, and
+   * CODE_OF_CONDUCT. For example, if all four documents are present, then
+   * the `health_percentage` is `100`. If only one is present, then the
+   * `health_percentage` is `25`.
+   *
+   * `content_reports_enabled` is only returned for organization-owned repositories.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-community-profile-metrics
+   * Tags: repos
+   *
+   */
   async reposGetCommunityProfileMetrics(params: {
     owner: string;
     repo: string;
@@ -20242,6 +32086,53 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Compare two commits
+   * Both `:base` and `:head` must be branch names in `:repo`. To compare branches across other repositories in the same network as `:repo`, use the format `<USERNAME>:branch`.
+   *
+   * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   *
+   * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
+   *
+   * **Working with large comparisons**
+   *
+   * The response will include a comparison of up to 250 commits. If you are working with a larger commit range, you can use the [List commits](https://docs.github.com/rest/reference/repos#list-commits) to enumerate all commits in the range.
+   *
+   * For comparisons with extremely large diffs, you may receive an error response indicating that the diff took too long
+   * to generate. You can typically resolve this error by using a smaller commit range.
+   *
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#compare-two-commits
+   * Tags: repos
+   *
+   */
   async reposCompareCommits(params: {
     owner: string;
     repo: string;
@@ -20286,6 +32177,44 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get repository content
+   * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
+   * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
+   *
+   * Files and symlinks support [a custom media type](https://docs.github.com/rest/reference/repos#custom-media-types) for
+   * retrieving the raw content or rendered HTML (when supported). All content types support [a custom media
+   * type](https://docs.github.com/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
+   * object format.
+   *
+   * **Note**:
+   * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/rest/reference/git#trees).
+   * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
+   * API](https://docs.github.com/rest/reference/git#get-a-tree).
+   * *   This API supports files up to 1 megabyte in size.
+   *
+   * #### If the content is a directory
+   * The response will be an array of objects, one object for each item in the directory.
+   * When listing the contents of a directory, submodules have their "type" specified as "file". Logically, the value
+   * _should_ be "submodule". This behavior exists in API v3 [for backwards compatibility purposes](https://git.io/v1YCW).
+   * In the next major version of the API, the type will be returned as "submodule".
+   *
+   * #### If the content is a symlink
+   * If the requested `:path` points to a symlink, and the symlink's target is a normal file in the repository, then the
+   * API responds with the content of the file (in the format shown in the example. Otherwise, the API responds with an object
+   * describing the symlink itself.
+   *
+   * #### If the content is a submodule
+   * The `submodule_git_url` identifies the location of the submodule repository, and the `sha` identifies a specific
+   * commit within the submodule repository. Git uses the given URL when cloning the submodule repository, and checks out
+   * the submodule at that specific commit.
+   *
+   * If the submodule repository is not hosted on github.com, the Git URLs (`git_url` and `_links["git"]`) and the
+   * github.com URLs (`html_url` and `_links["html"]`) will have null values.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-content
+   * Tags: repos
+   *
+   */
   async reposGetContent(params: {
     owner: string;
     repo: string;
@@ -20342,6 +32271,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create or update file contents
+   * Creates a new file or replaces an existing file in a repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-or-update-file-contents
+   * Tags: repos
+   *
+   */
   async reposCreateOrUpdateFileContents(
     params: {
       owner: string;
@@ -20349,18 +32285,66 @@ export class GithubClient {
       path: string;
     },
     body: {
+      /**
+       * The commit message.
+       *
+       */
       message: string;
+      /**
+       * The new file content, using Base64 encoding.
+       *
+       */
       content: string;
+      /**
+       * **Required if you are updating a file**. The blob SHA of the file being replaced.
+       *
+       */
       sha?: string;
+      /**
+       * The branch name. Default: the repository’s default branch (usually `master`)
+       *
+       */
       branch?: string;
+      /**
+       * The person that committed the file. Default: the authenticated user.
+       *
+       */
       committer?: {
+        /**
+         * The name of the author or committer of the commit. You'll receive a `422` status code if `name` is omitted.
+         *
+         */
         name: string;
+        /**
+         * The email of the author or committer of the commit. You'll receive a `422` status code if `email` is omitted.
+         *
+         */
         email: string;
+        /**
+         * @example "\"2013-01-05T13:13:22+05:00\""
+         *
+         */
         date?: string;
       };
+      /**
+       * The author of the file. Default: The `committer` or the authenticated user if you omit `committer`.
+       *
+       */
       author?: {
+        /**
+         * The name of the author or committer of the commit. You'll receive a `422` status code if `name` is omitted.
+         *
+         */
         name: string;
+        /**
+         * The email of the author or committer of the commit. You'll receive a `422` status code if `email` is omitted.
+         *
+         */
         email: string;
+        /**
+         * @example "\"2013-01-15T17:13:22+05:00\""
+         *
+         */
         date?: string;
       };
     },
@@ -20419,6 +32403,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a file
+   * Deletes a file in a repository.
+   *
+   * You can provide an additional `committer` parameter, which is an object containing information about the committer. Or, you can provide an `author` parameter, which is an object containing information about the author.
+   *
+   * The `author` section is optional and is filled in with the `committer` information if omitted. If the `committer` information is omitted, the authenticated user's information is used.
+   *
+   * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-file
+   * Tags: repos
+   *
+   */
   async reposDeleteFile(
     params: {
       owner: string;
@@ -20426,15 +32423,51 @@ export class GithubClient {
       path: string;
     },
     body: {
+      /**
+       * The commit message.
+       *
+       */
       message: string;
+      /**
+       * The blob SHA of the file being replaced.
+       *
+       */
       sha: string;
+      /**
+       * The branch name. Default: the repository’s default branch (usually `master`)
+       *
+       */
       branch?: string;
+      /**
+       * object containing information about the committer.
+       *
+       */
       committer?: {
+        /**
+         * The name of the author (or committer) of the commit
+         *
+         */
         name?: string;
+        /**
+         * The email of the author (or committer) of the commit
+         *
+         */
         email?: string;
       };
+      /**
+       * object containing information about the author.
+       *
+       */
       author?: {
+        /**
+         * The name of the author (or committer) of the commit
+         *
+         */
         name?: string;
+        /**
+         * The email of the author (or committer) of the commit
+         *
+         */
         email?: string;
       };
     },
@@ -20499,6 +32532,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository contributors
+   * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order. This endpoint may return information that is a few hours old because the GitHub REST API v3 caches contributor data to improve performance.
+   *
+   * GitHub identifies contributors by author email address. This endpoint groups contribution counts by GitHub user, which includes all associated email addresses. To improve performance, only the first 500 author email addresses in the repository link to GitHub users. The rest will appear as anonymous contributors without associated GitHub user information.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-repository-contributors
+   * Tags: repos
+   *
+   */
   async reposListContributors(params: {
     owner: string;
     repo: string;
@@ -20561,6 +32603,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List deployments
+   * Simple filtering of deployments is available via query parameters:
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-deployments
+   * Tags: repos
+   *
+   */
   async reposListDeployments(params: {
     owner: string;
     repo: string;
@@ -20608,25 +32657,117 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a deployment
+   * Deployments offer a few configurable parameters with certain defaults.
+   *
+   * The `ref` parameter can be any named branch, tag, or SHA. At GitHub we often deploy branches and verify them
+   * before we merge a pull request.
+   *
+   * The `environment` parameter allows deployments to be issued to different runtime environments. Teams often have
+   * multiple environments for verifying their applications, such as `production`, `staging`, and `qa`. This parameter
+   * makes it easier to track which environments have requested deployments. The default environment is `production`.
+   *
+   * The `auto_merge` parameter is used to ensure that the requested ref is not behind the repository's default branch. If
+   * the ref _is_ behind the default branch for the repository, we will attempt to merge it for you. If the merge succeeds,
+   * the API will return a successful merge commit. If merge conflicts prevent the merge from succeeding, the API will
+   * return a failure response.
+   *
+   * By default, [commit statuses](https://docs.github.com/rest/reference/repos#statuses) for every submitted context must be in a `success`
+   * state. The `required_contexts` parameter allows you to specify a subset of contexts that must be `success`, or to
+   * specify contexts that have not yet been submitted. You are not required to use commit statuses to deploy. If you do
+   * not require any contexts or create any commit statuses, the deployment will always succeed.
+   *
+   * The `payload` parameter is available for any extra information that a deployment system might need. It is a JSON text
+   * field that will be passed on when a deployment event is dispatched.
+   *
+   * The `task` parameter is used by the deployment system to allow different execution paths. In the web world this might
+   * be `deploy:migrations` to run schema changes on the system. In the compiled world this could be a flag to compile an
+   * application with debugging enabled.
+   *
+   * Users with `repo` or `repo_deployment` scopes can create a deployment for a given ref.
+   *
+   * #### Merged branch response
+   * You will see this response when GitHub automatically merges the base branch into the topic branch instead of creating
+   * a deployment. This auto-merge happens when:
+   * *   Auto-merge option is enabled in the repository
+   * *   Topic branch does not include the latest changes on the base branch, which is `master` in the response example
+   * *   There are no merge conflicts
+   *
+   * If there are no new commits in the base branch, a new request to create a deployment should give a successful
+   * response.
+   *
+   * #### Merge conflict response
+   * This error happens when the `auto_merge` option is enabled and when the default branch (in this case `master`), can't
+   * be merged into the branch that's being deployed (in this case `topic-branch`), due to merge conflicts.
+   *
+   * #### Failed commit status checks
+   * This error happens when the `required_contexts` parameter indicates that one or more contexts need to have a `success`
+   * status for the commit to be deployed, but one or more of the required contexts do not have a state of `success`.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deployment
+   * Tags: repos
+   *
+   */
   async reposCreateDeployment(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The ref to deploy. This can be a branch, tag, or SHA.
+       *
+       */
       ref: string;
+      /**
+       * Specifies a task to execute (e.g., `deploy` or `deploy:migrations`).
+       * @defaultValue "deploy"
+       *
+       */
       task?: string;
+      /**
+       * Attempts to automatically merge the default branch into the requested ref, if it's behind the default branch.
+       * @defaultValue true
+       *
+       */
       auto_merge?: boolean;
+      /**
+       * The [status](https://docs.github.com/rest/reference/repos#statuses) contexts to verify against commit status checks. If you omit this parameter, GitHub verifies all unique contexts before creating a deployment. To bypass checking entirely, pass an empty array. Defaults to all unique contexts.
+       *
+       */
       required_contexts?: string[];
       payload?:
         | {
             [key: string]: any;
           }
         | string;
+      /**
+       * Name for the target deployment environment (e.g., `production`, `staging`, `qa`).
+       * @defaultValue "production"
+       *
+       */
       environment?: string;
+      /**
+       * Short description of the deployment.
+       *
+       */
       description?: string | null;
+      /**
+       * Specifies if the given environment is specific to the deployment and will no longer exist at some point in the future. Default: `false`
+       * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type. **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.
+       *
+       */
       transient_environment?: boolean;
+      /**
+       * Specifies if the given environment is one that end-users directly interact with. Default: `true` when `environment` is `production` and `false` otherwise.
+       * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.
+       *
+       */
       production_environment?: boolean;
+      /**
+       * @example "\"1776-07-04T00:00:00.000-07:52\""
+       *
+       */
       created_at?: string;
     },
   ): Promise<Deployment> {
@@ -20659,6 +32800,10 @@ export class GithubClient {
     if (r.isCodeInRange('409', response.httpStatusCode))
       throw new r.ApiException<{
         message?: string;
+        /**
+         * @example "\"https://docs.github.com/rest/reference/repos#create-a-deployment\""
+         *
+         */
         documentation_url?: string;
       }>(
         response.httpStatusCode,
@@ -20684,6 +32829,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a deployment
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-deployment
+   * Tags: repos
+   *
+   */
   async reposGetDeployment(params: {
     owner: string;
     repo: string;
@@ -20718,6 +32869,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a deployment
+   * To ensure there can always be an active deployment, you can only delete an _inactive_ deployment. Anyone with `repo` or `repo_deployment` scopes can delete an inactive deployment.
+   *
+   * To set a deployment as inactive, you must:
+   *
+   * *   Create a new deployment that is active so that the system has a record of the current state, then delete the previously active deployment.
+   * *   Mark the active deployment as inactive by adding any non-successful deployment status.
+   *
+   * For more information, see "[Create a deployment](https://docs.github.com/rest/reference/repos/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/rest/reference/repos#create-a-deployment-status)."
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-deployment
+   * Tags: repos
+   *
+   */
   async reposDeleteDeployment(params: {
     owner: string;
     repo: string;
@@ -20761,6 +32926,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List deployment statuses
+   * Users with pull access can view deployment statuses for a deployment:
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-deployment-statuses
+   * Tags: repos
+   *
+   */
   async reposListDeploymentStatuses(params: {
     owner: string;
     repo: string;
@@ -20806,6 +32978,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a deployment status
+   * Users with `push` access can create deployment statuses for a given deployment.
+   *
+   * GitHub Apps require `read & write` access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth Apps require the `repo_deployment` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deployment-status
+   * Tags: repos
+   *
+   */
   async reposCreateDeploymentStatus(
     params: {
       owner: string;
@@ -20813,6 +32994,10 @@ export class GithubClient {
       deployment_id: number;
     },
     body: {
+      /**
+       * The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type. To use the `in_progress` and `queued` states, you must provide the [`application/vnd.github.flash-preview+json`](https://docs.github.com/rest/overview/api-previews#deployment-statuses) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub.
+       *
+       */
       state:
         | 'error'
         | 'failure'
@@ -20821,11 +33006,39 @@ export class GithubClient {
         | 'queued'
         | 'pending'
         | 'success';
+      /**
+       * The target URL to associate with this status. This URL should contain output to keep the user updated while the task is running or serve as historical information for what happened in the deployment. **Note:** It's recommended to use the `log_url` parameter, which replaces `target_url`.
+       *
+       */
       target_url?: string;
+      /**
+       * The full URL of the deployment's output. This parameter replaces `target_url`. We will continue to accept `target_url` to support legacy uses, but we recommend replacing `target_url` with `log_url`. Setting `log_url` will automatically set `target_url` to the same value. Default: `""`
+       * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type. **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.
+       *
+       */
       log_url?: string;
+      /**
+       * A short description of the status. The maximum description length is 140 characters.
+       *
+       */
       description?: string;
+      /**
+       * Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. **Note:** This parameter requires you to use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/rest/overview/api-previews#deployment-statuses) custom media type.
+       *
+       */
       environment?: 'production' | 'staging' | 'qa';
+      /**
+       * Sets the URL for accessing your environment. Default: `""`
+       * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type. **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.
+       *
+       */
       environment_url?: string;
+      /**
+       * Adds a new `inactive` status to all prior non-transient, non-production environment deployments with the same repository and `environment` name as the created status's deployment. An `inactive` status is only added to deployments that had a `success` state. Default: `true`
+       * **Note:** To add an `inactive` status to `production` environments, you must use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/rest/overview/api-previews#deployment-statuses) custom media type.
+       * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.
+       *
+       */
       auto_inactive?: boolean;
     },
   ): Promise<DeploymentStatus> {
@@ -20859,6 +33072,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a deployment status
+   * Users with pull access can view a deployment status for a deployment:
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-deployment-status
+   * Tags: repos
+   *
+   */
   async reposGetDeploymentStatus(params: {
     owner: string;
     repo: string;
@@ -20908,13 +33128,37 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a repository dispatch event
+   * You can use this endpoint to trigger a webhook event called `repository_dispatch` when you want activity that happens outside of GitHub to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions workflow or GitHub App to run when the `repository_dispatch` event occurs. For an example `repository_dispatch` webhook payload, see "[RepositoryDispatchEvent](https://docs.github.com/webhooks/event-payloads/#repository_dispatch)."
+   *
+   * The `client_payload` parameter is available for any extra information that your workflow might need. This parameter is a JSON payload that will be passed on when the webhook event is dispatched. For example, the `client_payload` can include a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test to debug your workflow.
+   *
+   * This endpoint requires write access to the repository by providing either:
+   *
+   *   - Personal access tokens with `repo` scope. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help documentation.
+   *   - GitHub Apps with both `metadata:read` and `contents:read&write` permissions.
+   *
+   * This input example shows how you can use the `client_payload` as a test to debug your workflow.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#create-a-repository-dispatch-event
+   * Tags: repos
+   *
+   */
   async reposCreateDispatchEvent(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * A custom webhook event name.
+       *
+       */
       event_type: string;
+      /**
+       * JSON payload with extra information about the webhook event that your action or worklow may use.
+       *
+       */
       client_payload?: {
         [key: string]: any;
       };
@@ -20947,10 +33191,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all environments
+   * Get all environments for a repository.
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-environments
+   * Tags: repos
+   *
+   */
   async reposGetAllEnvironments(params: {
     owner: string;
     repo: string;
   }): Promise<{
+    /**
+     * The number of environments in this repository
+     * @example 5
+     *
+     */
     total_count?: number;
     environments?: Environment[];
   }> {
@@ -20973,6 +33231,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an environment
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-an-environment
+   * Tags: repos
+   *
+   */
   async reposGetEnvironment(params: {
     owner: string;
     repo: string;
@@ -20998,6 +33263,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create or update an environment
+   * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
+   *
+   * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
+   *
+   * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
+   *
+   * You must authenticate using an access token with the repo scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-or-update-an-environment
+   * Tags: repos
+   *
+   */
   async reposCreateOrUpdateEnvironment(
     params: {
       owner: string;
@@ -21006,9 +33284,18 @@ export class GithubClient {
     },
     body: {
       wait_timer?: WaitTimer;
+      /**
+       * The people or teams that may review jobs that reference the environment. You can list up to six users or teams as reviewers. The reviewers must have at least read access to the repository. Only one of the required reviewers needs to approve the job for it to proceed.
+       *
+       */
       reviewers?:
         | {
             type?: DeploymentReviewerType;
+            /**
+             * The id of the user or team who can review the deployment
+             * @example 4532992
+             *
+             */
             id?: number;
           }[]
         | null;
@@ -21045,6 +33332,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an environment
+   * You must authenticate using an access token with the repo scope to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-an-environment
+   * Tags: repos
+   *
+   */
   async reposDeleteAnEnvironment(params: {
     owner: string;
     repo: string;
@@ -21070,6 +33364,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository events
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repository-events
+   * Tags: activity
+   *
+   */
   async activityListRepoEvents(params: {
     owner: string;
     repo: string;
@@ -21102,6 +33402,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List forks
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-forks
+   * Tags: repos
+   *
+   */
   async reposListForks(params: {
     owner: string;
     repo: string;
@@ -21155,6 +33461,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a fork
+   * Create a fork for the authenticated user.
+   *
+   * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Support](https://support.github.com/contact) or [GitHub Premium Support](https://premium.githubsupport.com).
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-fork
+   * Tags: repos
+   *
+   */
   async reposCreateFork(
     params: {
       owner: string;
@@ -21163,6 +33478,10 @@ export class GithubClient {
       organization?: string;
     },
     body: {
+      /**
+       * Optional parameter to specify the organization name if forking into an organization.
+       *
+       */
       organization?: string;
     } | null,
   ): Promise<Repository> {
@@ -21227,13 +33546,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a blob
+   * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-blob
+   * Tags: git
+   *
+   */
   async gitCreateBlob(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The new blob's content.
+       *
+       */
       content: string;
+      /**
+       * The encoding used for `content`. Currently, `"utf-8"` and `"base64"` are supported.
+       * @defaultValue "utf-8"
+       *
+       */
       encoding?: string;
     },
   ): Promise<ShortBlob> {
@@ -21291,6 +33625,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a blob
+   * The `content` in the response will always be Base64 encoded.
+   *
+   * _Note_: This API supports blobs up to 100 megabytes in size.
+   * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-blob
+   * Tags: git
+   *
+   */
   async gitGetBlob(params: {
     owner: string;
     repo: string;
@@ -21340,25 +33683,109 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a commit
+   * Creates a new Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
+   *
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-commit
+   * Tags: git
+   *
+   */
   async gitCreateCommit(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The commit message
+       *
+       */
       message: string;
+      /**
+       * The SHA of the tree object this commit points to
+       *
+       */
       tree: string;
+      /**
+       * The SHAs of the commits that were the parents of this commit. If omitted or empty, the commit will be written as a root commit. For a single parent, an array of one SHA should be provided; for a merge commit, an array of more than one should be provided.
+       *
+       */
       parents?: string[];
+      /**
+       * Information about the author of the commit. By default, the `author` will be the authenticated user and the current date. See the `author` and `committer` object below for details.
+       *
+       */
       author?: {
+        /**
+         * The name of the author (or committer) of the commit
+         *
+         */
         name?: string;
+        /**
+         * The email of the author (or committer) of the commit
+         *
+         */
         email?: string;
+        /**
+         * Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+         *
+         */
         date?: string;
       };
+      /**
+       * Information about the person who is making the commit. By default, `committer` will use the information set in `author`. See the `author` and `committer` object below for details.
+       *
+       */
       committer?: {
+        /**
+         * The name of the author (or committer) of the commit
+         *
+         */
         name?: string;
+        /**
+         * The email of the author (or committer) of the commit
+         *
+         */
         email?: string;
+        /**
+         * Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+         *
+         */
         date?: string;
       };
+      /**
+       * The [PGP signature](https://en.wikipedia.org/wiki/Pretty_Good_Privacy) of the commit. GitHub adds the signature to the `gpgsig` header of the created commit. For a commit signature to be verifiable by Git or GitHub, it must be an ASCII-armored detached PGP signature over the string commit as it would be written to the object database. To pass a `signature` parameter, you need to first manually create a valid PGP signature, which can be complicated. You may find it easier to [use the command line](https://git-scm.com/book/id/v2/Git-Tools-Signing-Your-Work) to create signed commits.
+       *
+       */
       signature?: string;
     },
   ): Promise<GitCommit> {
@@ -21398,6 +33825,42 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a commit
+   * Gets a Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
+   *
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-commit
+   * Tags: git
+   *
+   */
   async gitGetCommit(params: {
     owner: string;
     repo: string;
@@ -21432,6 +33895,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List matching references
+   * Returns an array of references from your Git database that match the supplied name. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't exist in the repository, but existing refs start with `:ref`, they will be returned as an array.
+   *
+   * When you use this endpoint without providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
+   *
+   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   *
+   * If you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`.
+   * Learn more at {@link https://docs.github.com/rest/reference/git#list-matching-references
+   * Tags: git
+   *
+   */
   async gitListMatchingRefs(params: {
     owner: string;
     repo: string;
@@ -21468,6 +33944,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a reference
+   * Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
+   *
+   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-reference
+   * Tags: git
+   *
+   */
   async gitGetRef(params: {
     owner: string;
     repo: string;
@@ -21499,14 +33984,33 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a reference
+   * Creates a reference for your repository. You are unable to create new references for empty repositories, even if the commit SHA-1 hash used exists. Empty repositories are repositories without branches.
+   * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-reference
+   * Tags: git
+   *
+   */
   async gitCreateRef(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The name of the fully qualified reference (ie: `refs/heads/master`). If it doesn't start with 'refs' and have at least two slashes, it will be rejected.
+       *
+       */
       ref: string;
+      /**
+       * The SHA1 value for this reference.
+       *
+       */
       sha: string;
+      /**
+       * @example "\"refs/heads/newbranch\""
+       *
+       */
       key?: string;
     },
   ): Promise<GitRef> {
@@ -21537,6 +34041,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a reference
+   * Learn more at {@link https://docs.github.com/rest/reference/git#update-a-reference
+   * Tags: git
+   *
+   */
   async gitUpdateRef(
     params: {
       owner: string;
@@ -21544,7 +34054,15 @@ export class GithubClient {
       ref: string;
     },
     body: {
+      /**
+       * The SHA1 value to set this reference to
+       *
+       */
       sha: string;
+      /**
+       * Indicates whether to force the update or to make sure the update is a fast-forward update. Leaving this out or setting it to `false` will make sure you're not overwriting work.
+       *
+       */
       force?: boolean;
     },
   ): Promise<GitRef> {
@@ -21575,6 +34093,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a reference
+   * Learn more at {@link https://docs.github.com/rest/reference/git#delete-a-reference
+   * Tags: git
+   *
+   */
   async gitDeleteRef(params: {
     owner: string;
     repo: string;
@@ -21606,19 +34130,87 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a tag object
+   * Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
+   *
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-tag-object
+   * Tags: git
+   *
+   */
   async gitCreateTag(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The tag's name. This is typically a version (e.g., "v0.0.1").
+       *
+       */
       tag: string;
+      /**
+       * The tag message.
+       *
+       */
       message: string;
+      /**
+       * The SHA of the git object this is tagging.
+       *
+       */
       object: string;
+      /**
+       * The type of the object we're tagging. Normally this is a `commit` but it can also be a `tree` or a `blob`.
+       *
+       */
       type: 'commit' | 'tree' | 'blob';
+      /**
+       * An object with information about the individual creating the tag.
+       *
+       */
       tagger?: {
+        /**
+         * The name of the author of the tag
+         *
+         */
         name?: string;
+        /**
+         * The email of the author of the tag
+         *
+         */
         email?: string;
+        /**
+         * When this object was tagged. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+         *
+         */
         date?: string;
       };
     },
@@ -21650,6 +34242,40 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a tag
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-tag
+   * Tags: git
+   *
+   */
   async gitGetTag(params: {
     owner: string;
     repo: string;
@@ -21681,19 +34307,62 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a tree
+   * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
+   *
+   * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/rest/reference/git#update-a-reference)."
+   * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-tree
+   * Tags: git
+   *
+   */
   async gitCreateTree(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * Objects (of `path`, `mode`, `type`, and `sha`) specifying a tree structure.
+       *
+       */
       tree: {
+        /**
+         * The file referenced in the tree.
+         *
+         */
         path?: string;
+        /**
+         * The file mode; one of `100644` for file (blob), `100755` for executable (blob), `040000` for subdirectory (tree), `160000` for submodule (commit), or `120000` for a blob that specifies the path of a symlink.
+         *
+         */
         mode?: '100644' | '100755' | '040000' | '160000' | '120000';
+        /**
+         * Either `blob`, `tree`, or `commit`.
+         *
+         */
         type?: 'blob' | 'tree' | 'commit';
+        /**
+         * The SHA1 checksum ID of the object in the tree. Also called `tree.sha`. If the value is `null` then the file will be deleted.
+         *
+         * **Note:** Use either `tree.sha` or `content` to specify the contents of the entry. Using both `tree.sha` and `content` will return an error.
+         *
+         */
         sha?: string | null;
+        /**
+         * The content you want this file to have. GitHub will write this blob out and use that SHA for this entry. Use either this, or `tree.sha`.
+         *
+         * **Note:** Use either `tree.sha` or `content` to specify the contents of the entry. Using both `tree.sha` and `content` will return an error.
+         *
+         */
         content?: string;
       }[];
+      /**
+       * The SHA1 of an existing Git tree object which will be used as the base for the new tree. If provided, a new Git tree object will be created from entries in the Git tree object pointed to by `base_tree` and entries defined in the `tree` parameter. Entries defined in the `tree` parameter will overwrite items from `base_tree` with the same `path`. If you're creating new changes on a branch, then normally you'd set `base_tree` to the SHA1 of the Git tree object of the current latest commit on the branch you're working on.
+       * If not provided, GitHub will create a new Git tree object from only the entries defined in the `tree` parameter. If you create a new commit pointing to such a tree, then all files which were a part of the parent commit's tree and were not defined in the `tree` parameter will be listed as deleted by the new commit.
+       *
+       *
+       */
       base_tree?: string;
     },
   ): Promise<GitTree> {
@@ -21742,6 +34411,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a tree
+   * Returns a single tree using the SHA1 value for that tree.
+   *
+   * If `truncated` is `true` in the response then the number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of fetching trees, and fetch one sub-tree at a time.
+   * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-tree
+   * Tags: git
+   *
+   */
   async gitGetTree(params: {
     owner: string;
     repo: string;
@@ -21788,6 +34466,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository webhooks
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-webhooks
+   * Tags: repos
+   *
+   */
   async reposListWebhooks(params: {
     owner: string;
     repo: string;
@@ -21829,22 +34513,59 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a repository webhook
+   * Repositories can have multiple webhooks installed. Each webhook should have a unique `config`. Multiple webhooks can
+   * share the same `config` as long as those webhooks do not have any `events` that overlap.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-webhook
+   * Tags: repos
+   *
+   */
   async reposCreateWebhook(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * Use `web` to create a webhook. Default: `web`. This parameter only accepts the value `web`.
+       *
+       */
       name?: string;
+      /**
+       * Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/rest/reference/repos#create-hook-config-params).
+       *
+       */
       config: {
         url: WebhookConfigUrl;
         content_type?: WebhookConfigContentType;
         secret?: WebhookConfigSecret;
         insecure_ssl?: WebhookConfigInsecureSsl;
+        /**
+         * @example "\"abc\""
+         *
+         */
         token?: string;
+        /**
+         * @example "\"sha256\""
+         *
+         */
         digest?: string;
       };
+      /**
+       * Determines what [events](https://docs.github.com/webhooks/event-payloads) the hook is triggered for.
+       * @defaultValue
+       * [
+       *   "push"
+       * ]
+       *
+       */
       events?: string[];
+      /**
+       * Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications.
+       * @defaultValue true
+       *
+       */
       active?: boolean;
     },
   ): Promise<Hook> {
@@ -21893,6 +34614,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository webhook
+   * Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/reference/repos#get-a-webhook-configuration-for-a-repository)."
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-webhook
+   * Tags: repos
+   *
+   */
   async reposGetWebhook(params: {
     owner: string;
     repo: string;
@@ -21924,6 +34652,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a repository webhook
+   * Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/reference/repos#update-a-webhook-configuration-for-a-repository)."
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-repository-webhook
+   * Tags: repos
+   *
+   */
   async reposUpdateWebhook(
     params: {
       owner: string;
@@ -21931,17 +34666,50 @@ export class GithubClient {
       hook_id: number;
     },
     body: {
+      /**
+       * Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/rest/reference/repos#create-hook-config-params).
+       *
+       */
       config?: {
         url: WebhookConfigUrl;
         content_type?: WebhookConfigContentType;
         secret?: WebhookConfigSecret;
         insecure_ssl?: WebhookConfigInsecureSsl;
+        /**
+         * @example "\"bar@example.com\""
+         *
+         */
         address?: string;
+        /**
+         * @example "\"The Serious Room\""
+         *
+         */
         room?: string;
       };
+      /**
+       * Determines what [events](https://docs.github.com/webhooks/event-payloads) the hook is triggered for. This replaces the entire array of events.
+       * @defaultValue
+       * [
+       *   "push"
+       * ]
+       *
+       */
       events?: string[];
+      /**
+       * Determines a list of events to be added to the list of events that the Hook triggers for.
+       *
+       */
       add_events?: string[];
+      /**
+       * Determines a list of events to be removed from the list of events that the Hook triggers for.
+       *
+       */
       remove_events?: string[];
+      /**
+       * Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications.
+       * @defaultValue true
+       *
+       */
       active?: boolean;
     },
   ): Promise<Hook> {
@@ -21981,6 +34749,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a repository webhook
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-repository-webhook
+   * Tags: repos
+   *
+   */
   async reposDeleteWebhook(params: {
     owner: string;
     repo: string;
@@ -22012,6 +34786,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a webhook configuration for a repository
+   * Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
+   *
+   * Access tokens must have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-webhook-configuration-for-a-repository
+   * Tags: repos
+   *
+   */
   async reposGetWebhookConfigForRepo(params: {
     owner: string;
     repo: string;
@@ -22034,6 +34817,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a webhook configuration for a repository
+   * Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
+   *
+   * Access tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write` permission.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-webhook-configuration-for-a-repository
+   * Tags: repos
+   *
+   */
   async reposUpdateWebhookConfigForRepo(
     params: {
       owner: string;
@@ -22065,6 +34857,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Ping a repository webhook
+   * This will trigger a [ping event](https://docs.github.com/webhooks/#ping-event) to be sent to the hook.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#ping-a-repository-webhook
+   * Tags: repos
+   *
+   */
   async reposPingWebhook(params: {
     owner: string;
     repo: string;
@@ -22096,6 +34895,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Test the push repository webhook
+   * This will trigger the hook with the latest push to the current repository if the hook is subscribed to `push` events. If the hook is not subscribed to `push` events, the server will respond with 204 but no test POST will be generated.
+   *
+   * **Note**: Previously `/repos/:owner/:repo/hooks/:hook_id/test`
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#test-the-push-repository-webhook
+   * Tags: repos
+   *
+   */
   async reposTestPushWebhook(params: {
     owner: string;
     repo: string;
@@ -22127,6 +34935,46 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an import status
+   * View the progress of an import.
+   *
+   * **Import status**
+   *
+   * This section includes details about the possible values of the `status` field of the Import Progress response.
+   *
+   * An import that does not have errors will progress through these steps:
+   *
+   * *   `detecting` - the "detection" step of the import is in progress because the request did not include a `vcs` parameter. The import is identifying the type of source control present at the URL.
+   * *   `importing` - the "raw" step of the import is in progress. This is where commit data is fetched from the original repository. The import progress response will include `commit_count` (the total number of raw commits that will be imported) and `percent` (0 - 100, the current progress through the import).
+   * *   `mapping` - the "rewrite" step of the import is in progress. This is where SVN branches are converted to Git branches, and where author updates are applied. The import progress response does not include progress information.
+   * *   `pushing` - the "push" step of the import is in progress. This is where the importer updates the repository on GitHub. The import progress response will include `push_percent`, which is the percent value reported by `git push` when it is "Writing objects".
+   * *   `complete` - the import is complete, and the repository is ready on GitHub.
+   *
+   * If there are problems, you will see one of these in the `status` field:
+   *
+   * *   `auth_failed` - the import requires authentication in order to connect to the original repository. To update authentication for the import, please see the [Update an import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
+   * *   `error` - the import encountered an error. The import progress response will include the `failed_step` and an error message. Contact [GitHub Support](https://support.github.com/contact) or [GitHub Premium Support](https://premium.githubsupport.com) for more information.
+   * *   `detection_needs_auth` - the importer requires authentication for the originating repository to continue detection. To update authentication for the import, please see the [Update an import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
+   * *   `detection_found_nothing` - the importer didn't recognize any source control at the URL. To resolve, [Cancel the import](https://docs.github.com/rest/reference/migrations#cancel-an-import) and [retry](https://docs.github.com/rest/reference/migrations#start-an-import) with the correct URL.
+   * *   `detection_found_multiple` - the importer found several projects or repositories at the provided URL. When this is the case, the Import Progress response will also include a `project_choices` field with the possible project choices as values. To update project choice, please see the [Update an import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
+   *
+   * **The project_choices field**
+   *
+   * When multiple projects are found at the provided URL, the response hash will include a `project_choices` field, the value of which is an array of hashes each representing a project choice. The exact key/value pairs of the project hashes will differ depending on the version control type.
+   *
+   * **Git LFS related fields**
+   *
+   * This section includes details about Git LFS related fields that may be present in the Import Progress response.
+   *
+   * *   `use_lfs` - describes whether the import has been opted in or out of using Git LFS. The value can be `opt_in`, `opt_out`, or `undecided` if no action has been taken.
+   * *   `has_large_files` - the boolean value describing whether files larger than 100MB were found during the `importing` step.
+   * *   `large_files_size` - the total size in gigabytes of files larger than 100MB found in the originating repository.
+   * *   `large_files_count` - the total number of files larger than 100MB found in the originating repository. To see a list of these files, make a "Get Large Files" request.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-an-import-status
+   * Tags: migrations
+   *
+   */
   async migrationsGetImportStatus(params: {
     owner: string;
     repo: string;
@@ -22157,16 +35005,43 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Start an import
+   * Start a source import to a GitHub repository using GitHub Importer.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#start-an-import
+   * Tags: migrations
+   *
+   */
   async migrationsStartImport(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The URL of the originating repository.
+       *
+       */
       vcs_url: string;
+      /**
+       * The originating VCS type. Can be one of `subversion`, `git`, `mercurial`, or `tfvc`. Please be aware that without this parameter, the import job will take additional time to detect the VCS type before beginning the import. This detection step will be reflected in the response.
+       *
+       */
       vcs?: 'subversion' | 'git' | 'mercurial' | 'tfvc';
+      /**
+       * If authentication is required, the username to provide to `vcs_url`.
+       *
+       */
       vcs_username?: string;
+      /**
+       * If authentication is required, the password to provide to `vcs_url`.
+       *
+       */
       vcs_password?: string;
+      /**
+       * For a tfvc import, the name of the project that is being imported.
+       *
+       */
       tfvc_project?: string;
     },
   ): Promise<Import> {
@@ -22206,15 +35081,39 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an import
+   * An import can be updated with credentials or a project choice by passing in the appropriate parameters in this API
+   * request. If no parameters are provided, the import will be restarted.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#update-an-import
+   * Tags: migrations
+   *
+   */
   async migrationsUpdateImport(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The username to provide to the originating repository.
+       *
+       */
       vcs_username?: string;
+      /**
+       * The password to provide to the originating repository.
+       *
+       */
       vcs_password?: string;
+      /**
+       * @example "\"git\""
+       *
+       */
       vcs?: string;
+      /**
+       * @example "\"project1\""
+       *
+       */
       tfvc_project?: string;
     },
   ): Promise<Import> {
@@ -22236,6 +35135,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Cancel an import
+   * Stop an import for a repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#cancel-an-import
+   * Tags: migrations
+   *
+   */
   async migrationsCancelImport(params: {
     owner: string;
     repo: string;
@@ -22257,6 +35163,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get commit authors
+   * Each type of source control system represents authors in a different way. For example, a Git commit author has a display name and an email address, but a Subversion commit author just has a username. The GitHub Importer will make the author information valid, but the author might not be correct. For example, it will change the bare Subversion username `hubot` into something like `hubot <hubot@12341234-abab-fefe-8787-fedcba987654>`.
+   *
+   * This endpoint and the [Map a commit author](https://docs.github.com/rest/reference/migrations#map-a-commit-author) endpoint allow you to provide correct Git author information.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-commit-authors
+   * Tags: migrations
+   *
+   */
   async migrationsGetCommitAuthors(params: {
     owner: string;
     repo: string;
@@ -22292,6 +35207,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Map a commit author
+   * Update an author's identity for the import. Your application can continue updating authors any time before you push new commits to the repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#map-a-commit-author
+   * Tags: migrations
+   *
+   */
   async migrationsMapCommitAuthor(
     params: {
       owner: string;
@@ -22299,8 +35221,20 @@ export class GithubClient {
       author_id: number;
     },
     body: {
+      /**
+       * The new Git author email.
+       *
+       */
       email?: string;
+      /**
+       * The new Git author name.
+       *
+       */
       name?: string;
+      /**
+       * @example "\"can't touch this\""
+       *
+       */
       remote_id?: string;
     },
   ): Promise<PorterAuthor> {
@@ -22343,6 +35277,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get large files
+   * List files larger than 100MB found during the import
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-large-files
+   * Tags: migrations
+   *
+   */
   async migrationsGetLargeFiles(params: {
     owner: string;
     repo: string;
@@ -22366,12 +35307,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update Git LFS preference
+   * You can import repositories from Subversion, Mercurial, and TFS that include files larger than 100MB. This ability is powered by [Git LFS](https://git-lfs.github.com). You can learn more about our LFS feature and working with large files [on our help site](https://help.github.com/articles/versioning-large-files/).
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#update-git-lfs-preference
+   * Tags: migrations
+   *
+   */
   async migrationsSetLfsPreference(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * Can be one of `opt_in` (large files will be stored using Git LFS) or `opt_out` (large files will be removed during the import).
+       *
+       */
       use_lfs: 'opt_in' | 'opt_out';
     },
   ): Promise<Import> {
@@ -22402,6 +35354,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository installation for the authenticated app
+   * Enables an authenticated GitHub App to find the repository's installation information. The installation's account type will be either an organization or a user account, depending which account the repository belongs to.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-a-repository-installation-for-the-authenticated-app
+   * Tags: apps
+   *
+   */
   async appsGetRepoInstallation(params: {
     owner: string;
     repo: string;
@@ -22441,6 +35402,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get interaction restrictions for a repository
+   * Shows which type of GitHub user can interact with this repository and when the restriction expires. If there are no restrictions, you will see an empty response.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-a-repository
+   * Tags: interactions
+   *
+   */
   async interactionsGetRestrictionsForRepo(params: {
     owner: string;
     repo: string;
@@ -22464,6 +35432,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set interaction restrictions for a repository
+   * Temporarily restricts interactions to a certain type of GitHub user within the given repository. You must have owner or admin access to set these restrictions. If an interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-a-repository
+   * Tags: interactions
+   *
+   */
   async interactionsSetRestrictionsForRepo(
     params: {
       owner: string;
@@ -22500,6 +35475,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove interaction restrictions for a repository
+   * Removes all interaction restrictions from the given repository. You must have owner or admin access to remove restrictions. If the interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-for-a-repository
+   * Tags: interactions
+   *
+   */
   async interactionsRemoveRestrictionsForRepo(params: {
     owner: string;
     repo: string;
@@ -22530,6 +35512,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository invitations
+   * When authenticating as a user with admin rights to a repository, this endpoint will list all currently open repository invitations.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-invitations
+   * Tags: repos
+   *
+   */
   async reposListInvitations(params: {
     owner: string;
     repo: string;
@@ -22562,6 +35551,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a repository invitation
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-repository-invitation
+   * Tags: repos
+   *
+   */
   async reposUpdateInvitation(
     params: {
       owner: string;
@@ -22569,6 +35564,10 @@ export class GithubClient {
       invitation_id: number;
     },
     body: {
+      /**
+       * The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, and `admin`.
+       *
+       */
       permissions?: 'read' | 'write' | 'maintain' | 'triage' | 'admin';
     },
   ): Promise<RepositoryInvitation> {
@@ -22593,6 +35592,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a repository invitation
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-repository-invitation
+   * Tags: repos
+   *
+   */
   async reposDeleteInvitation(params: {
     owner: string;
     repo: string;
@@ -22618,6 +35623,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository issues
+   * List issues in a repository.
+   *
+   * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
+   * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
+   * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+   * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#list-repository-issues
+   * Tags: issues
+   *
+   */
   async issuesListForRepo(params: {
     owner: string;
     repo: string;
@@ -22722,16 +35739,41 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create an issue
+   * Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://help.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#create-an-issue
+   * Tags: issues
+   *
+   */
   async issuesCreate(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The title of the issue.
+       *
+       */
       title: string | number;
+      /**
+       * The contents of the issue.
+       *
+       */
       body?: string;
+      /**
+       * Login for the user that this issue should be assigned to. _NOTE: Only users with push access can set the assignee for new issues. The assignee is silently dropped otherwise. **This field is deprecated.**_
+       *
+       */
       assignee?: string | null;
       milestone?: (string | number) | null;
+      /**
+       * Labels to associate with this issue. _NOTE: Only users with push access can set labels for new issues. Labels are silently dropped otherwise._
+       *
+       */
       labels?: (
         | string
         | {
@@ -22741,6 +35783,10 @@ export class GithubClient {
             color?: string | null;
           }
       )[];
+      /**
+       * Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._
+       *
+       */
       assignees?: string[];
     },
   ): Promise<Issue> {
@@ -22813,6 +35859,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List issue comments for a repository
+   * By default, Issue Comments are ordered by ascending ID.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-comments-for-a-repository
+   * Tags: issues
+   *
+   */
   async issuesListCommentsForRepo(params: {
     owner: string;
     repo: string;
@@ -22875,6 +35928,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an issue comment
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#get-an-issue-comment
+   * Tags: issues
+   *
+   */
   async issuesGetComment(params: {
     owner: string;
     repo: string;
@@ -22909,6 +35968,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an issue comment
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#update-an-issue-comment
+   * Tags: issues
+   *
+   */
   async issuesUpdateComment(
     params: {
       owner: string;
@@ -22916,6 +35981,10 @@ export class GithubClient {
       comment_id: number;
     },
     body: {
+      /**
+       * The contents of the comment.
+       *
+       */
       body: string;
     },
   ): Promise<IssueComment> {
@@ -22949,6 +36018,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an issue comment
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#delete-an-issue-comment
+   * Tags: issues
+   *
+   */
   async issuesDeleteComment(params: {
     owner: string;
     repo: string;
@@ -22974,6 +36049,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for an issue comment
+   * List the reactions to an [issue comment](https://docs.github.com/rest/reference/issues#comments).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-an-issue-comment
+   * Tags: reactions
+   *
+   */
   async reactionsListForIssueComment(params: {
     owner: string;
     repo: string;
@@ -23047,6 +36129,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for an issue comment
+   * Create a reaction to an [issue comment](https://docs.github.com/rest/reference/issues#comments). A response with a `Status: 200 OK` means that you already added the reaction type to this issue comment.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-an-issue-comment
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForIssueComment(
     params: {
       owner: string;
@@ -23054,6 +36143,10 @@ export class GithubClient {
       comment_id: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the issue comment.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -23118,6 +36211,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an issue comment reaction
+   * **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
+   *
+   * Delete a reaction to an [issue comment](https://docs.github.com/rest/reference/issues#comments).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-an-issue-comment-reaction
+   * Tags: reactions
+   *
+   */
   async reactionsDeleteForIssueComment(params: {
     owner: string;
     repo: string;
@@ -23144,6 +36246,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List issue events for a repository
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-events-for-a-repository
+   * Tags: issues
+   *
+   */
   async issuesListEventsForRepo(params: {
     owner: string;
     repo: string;
@@ -23185,6 +36293,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an issue event
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#get-an-issue-event
+   * Tags: issues
+   *
+   */
   async issuesGetEvent(params: {
     owner: string;
     repo: string;
@@ -23237,6 +36351,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an issue
+   * The API returns a [`301 Moved Permanently` status](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
+   * [transferred](https://help.github.com/articles/transferring-an-issue-to-another-repository/) to another repository. If
+   * the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API
+   * returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read
+   * access, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe
+   * to the [`issues`](https://docs.github.com/webhooks/event-payloads/#issues) webhook.
+   *
+   * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
+   * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
+   * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+   * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#get-an-issue
+   * Tags: issues
+   *
+   */
   async issuesGet(params: {
     owner: string;
     repo: string;
@@ -23295,6 +36426,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an issue
+   * Issue owners and users with push access can edit an issue.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#update-an-issue
+   * Tags: issues
+   *
+   */
   async issuesUpdate(
     params: {
       owner: string;
@@ -23302,11 +36440,31 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * The title of the issue.
+       *
+       */
       title?: (string | number) | null;
+      /**
+       * The contents of the issue.
+       *
+       */
       body?: string | null;
+      /**
+       * Login for the user that this issue should be assigned to. **This field is deprecated.**
+       *
+       */
       assignee?: string | null;
+      /**
+       * State of the issue. Either `open` or `closed`.
+       *
+       */
       state?: 'open' | 'closed';
       milestone?: (string | number) | null;
+      /**
+       * Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._
+       *
+       */
       labels?: (
         | string
         | {
@@ -23316,6 +36474,10 @@ export class GithubClient {
             color?: string | null;
           }
       )[];
+      /**
+       * Logins for Users to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this Issue. Send an empty array (`[]`) to clear all assignees from the Issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._
+       *
+       */
       assignees?: string[];
     },
   ): Promise<Issue> {
@@ -23397,6 +36559,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add assignees to an issue
+   * Adds up to 10 assignees to an issue. Users already assigned to an issue are not replaced.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#add-assignees-to-an-issue
+   * Tags: issues
+   *
+   */
   async issuesAddAssignees(
     params: {
       owner: string;
@@ -23404,6 +36573,10 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * Usernames of people to assign this issue to. _NOTE: Only users with push access can add assignees to an issue. Assignees are silently ignored otherwise._
+       *
+       */
       assignees?: string[];
     },
   ): Promise<IssueSimple> {
@@ -23428,6 +36601,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove assignees from an issue
+   * Removes one or more assignees from an issue.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#remove-assignees-from-an-issue
+   * Tags: issues
+   *
+   */
   async issuesRemoveAssignees(
     params: {
       owner: string;
@@ -23435,6 +36615,10 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * Usernames of assignees to remove from an issue. _NOTE: Only users with push access can remove assignees from an issue. Assignees are silently ignored otherwise._
+       *
+       */
       assignees?: string[];
     },
   ): Promise<IssueSimple> {
@@ -23459,6 +36643,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List issue comments
+   * Issue Comments are ordered by ascending ID.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-comments
+   * Tags: issues
+   *
+   */
   async issuesListComments(params: {
     owner: string;
     repo: string;
@@ -23516,6 +36707,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create an issue comment
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#create-an-issue-comment
+   * Tags: issues
+   *
+   */
   async issuesCreateComment(
     params: {
       owner: string;
@@ -23523,6 +36721,10 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * The contents of the comment.
+       *
+       */
       body: string;
     },
   ): Promise<IssueComment> {
@@ -23583,6 +36785,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List issue events
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-events
+   * Tags: issues
+   *
+   */
   async issuesListEvents(params: {
     owner: string;
     repo: string;
@@ -23628,6 +36836,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List labels for an issue
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-labels-for-an-issue
+   * Tags: issues
+   *
+   */
   async issuesListLabelsOnIssue(params: {
     owner: string;
     repo: string;
@@ -23673,6 +36887,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add labels to an issue
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#add-labels-to-an-issue
+   * Tags: issues
+   *
+   */
   async issuesAddLabels(
     params: {
       owner: string;
@@ -23680,6 +36900,10 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * The name of the label to add to the issue. Must contain at least one label. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.
+       *
+       */
       labels: string[];
     },
   ): Promise<Label[]> {
@@ -23724,6 +36948,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set labels for an issue
+   * Removes any previous labels and sets the new labels for an issue.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#set-labels-for-an-issue
+   * Tags: issues
+   *
+   */
   async issuesSetLabels(
     params: {
       owner: string;
@@ -23731,6 +36962,10 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.
+       *
+       */
       labels?: string[];
     },
   ): Promise<Label[]> {
@@ -23775,6 +37010,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove all labels from an issue
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#remove-all-labels-from-an-issue
+   * Tags: issues
+   *
+   */
   async issuesRemoveAllLabels(params: {
     owner: string;
     repo: string;
@@ -23809,6 +37050,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a label from an issue
+   * Removes the specified label from the issue, and returns the remaining labels on the issue. This endpoint returns a `404 Not Found` status if the label does not exist.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#remove-a-label-from-an-issue
+   * Tags: issues
+   *
+   */
   async issuesRemoveLabel(params: {
     owner: string;
     repo: string;
@@ -23855,6 +37103,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Lock an issue
+   * Users with push access can lock an issue or pull request's conversation.
+   *
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#lock-an-issue
+   * Tags: issues
+   *
+   */
   async issuesLock(
     params: {
       owner: string;
@@ -23862,6 +37119,14 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * The reason for locking the issue or pull request conversation. Lock will fail if you don't use one of these reasons:
+       * \* `off-topic`
+       * \* `too heated`
+       * \* `resolved`
+       * \* `spam`
+       *
+       */
       lock_reason?: 'off-topic' | 'too heated' | 'resolved' | 'spam';
     } | null,
   ): Promise<any> {
@@ -23922,6 +37187,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unlock an issue
+   * Users with push access can unlock an issue's conversation.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#unlock-an-issue
+   * Tags: issues
+   *
+   */
   async issuesUnlock(params: {
     owner: string;
     repo: string;
@@ -23965,6 +37237,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for an issue
+   * List the reactions to an [issue](https://docs.github.com/rest/reference/issues).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-an-issue
+   * Tags: reactions
+   *
+   */
   async reactionsListForIssue(params: {
     owner: string;
     repo: string;
@@ -24047,6 +37326,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for an issue
+   * Create a reaction to an [issue](https://docs.github.com/rest/reference/issues/). A response with a `Status: 200 OK` means that you already added the reaction type to this issue.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-an-issue
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForIssue(
     params: {
       owner: string;
@@ -24054,6 +37340,10 @@ export class GithubClient {
       issue_number: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the issue.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -24109,6 +37399,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an issue reaction
+   * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
+   *
+   * Delete a reaction to an [issue](https://docs.github.com/rest/reference/issues/).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-an-issue-reaction
+   * Tags: reactions
+   *
+   */
   async reactionsDeleteForIssue(params: {
     owner: string;
     repo: string;
@@ -24135,6 +37434,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List timeline events for an issue
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-timeline-events-for-an-issue
+   * Tags: issues
+   *
+   */
   async issuesListEventsForTimeline(params: {
     owner: string;
     repo: string;
@@ -24203,6 +37508,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List deploy keys
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-deploy-keys
+   * Tags: repos
+   *
+   */
   async reposListDeployKeys(params: {
     owner: string;
     repo: string;
@@ -24235,14 +37546,35 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a deploy key
+   * You can create a read-only deploy key.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deploy-key
+   * Tags: repos
+   *
+   */
   async reposCreateDeployKey(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * A name for the key.
+       *
+       */
       title?: string;
+      /**
+       * The contents of the key.
+       *
+       */
       key: string;
+      /**
+       * If `true`, the key will only be able to read repository contents. Otherwise, the key will be able to read and write.
+       *
+       * Deploy keys with write access can perform the same actions as an organization member with admin access, or a collaborator on a personal repository. For more information, see "[Repository permission levels for an organization](https://help.github.com/articles/repository-permission-levels-for-an-organization/)" and "[Permission levels for a user account repository](https://help.github.com/articles/permission-levels-for-a-user-account-repository/)."
+       *
+       */
       read_only?: boolean;
     },
   ): Promise<DeployKey> {
@@ -24273,6 +37605,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a deploy key
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-deploy-key
+   * Tags: repos
+   *
+   */
   async reposGetDeployKey(params: {
     owner: string;
     repo: string;
@@ -24304,6 +37642,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a deploy key
+   * Deploy keys are immutable. If you need to update a key, remove the key and create a new one instead.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-deploy-key
+   * Tags: repos
+   *
+   */
   async reposDeleteDeployKey(params: {
     owner: string;
     repo: string;
@@ -24326,6 +37671,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List labels for a repository
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-labels-for-a-repository
+   * Tags: issues
+   *
+   */
   async issuesListLabelsForRepo(params: {
     owner: string;
     repo: string;
@@ -24367,14 +37718,32 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a label
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#create-a-label
+   * Tags: issues
+   *
+   */
   async issuesCreateLabel(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see [emoji-cheat-sheet.com](http://emoji-cheat-sheet.com/).
+       *
+       */
       name: string;
+      /**
+       * The [hexadecimal color code](http://www.color-hex.com/) for the label, without the leading `#`.
+       *
+       */
       color?: string;
+      /**
+       * A short description of the label.
+       *
+       */
       description?: string;
     },
   ): Promise<Label> {
@@ -24414,6 +37783,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a label
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#get-a-label
+   * Tags: issues
+   *
+   */
   async issuesGetLabel(params: {
     owner: string;
     repo: string;
@@ -24445,6 +37820,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a label
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#update-a-label
+   * Tags: issues
+   *
+   */
   async issuesUpdateLabel(
     params: {
       owner: string;
@@ -24452,8 +37833,20 @@ export class GithubClient {
       name: string;
     },
     body: {
+      /**
+       * The new name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see [emoji-cheat-sheet.com](http://emoji-cheat-sheet.com/).
+       *
+       */
       new_name?: string;
+      /**
+       * The [hexadecimal color code](http://www.color-hex.com/) for the label, without the leading `#`.
+       *
+       */
       color?: string;
+      /**
+       * A short description of the label.
+       *
+       */
       description?: string;
     },
   ): Promise<Label> {
@@ -24475,6 +37868,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a label
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#delete-a-label
+   * Tags: issues
+   *
+   */
   async issuesDeleteLabel(params: {
     owner: string;
     repo: string;
@@ -24497,6 +37896,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository languages
+   * Lists languages for the specified repository. The value shown for each language is the number of bytes of code written in that language.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-repository-languages
+   * Tags: repos
+   *
+   */
   async reposListLanguages(params: {
     owner: string;
     repo: string;
@@ -24518,6 +37924,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the license for a repository
+   * This method returns the contents of the repository's license file, if one is detected.
+   *
+   * Similar to [Get repository content](https://docs.github.com/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+   * Learn more at {@link https://docs.github.com/rest/reference/licenses/#get-the-license-for-a-repository
+   * Tags: licenses
+   *
+   */
   async licensesGetForRepo(params: {
     owner: string;
     repo: string;
@@ -24539,14 +37954,32 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Merge a branch
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#merge-a-branch
+   * Tags: repos
+   *
+   */
   async reposMerge(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The name of the base branch that the head will be merged into.
+       *
+       */
       base: string;
+      /**
+       * The head to merge. This can be a branch name or a commit SHA1.
+       *
+       */
       head: string;
+      /**
+       * Commit message to use for the merge commit. If omitted, a default message will be used.
+       *
+       */
       commit_message?: string;
     },
   ): Promise<Commit> {
@@ -24575,6 +38008,10 @@ export class GithubClient {
     if (r.isCodeInRange('404', response.httpStatusCode))
       throw new r.ApiException<{
         message?: string;
+        /**
+         * @example "\"https://docs.github.com/rest/reference/repos#perform-a-merge\""
+         *
+         */
         documentation_url?: string;
       }>(
         response.httpStatusCode,
@@ -24589,6 +38026,10 @@ export class GithubClient {
     if (r.isCodeInRange('409', response.httpStatusCode))
       throw new r.ApiException<{
         message?: string;
+        /**
+         * @example "\"https://docs.github.com/rest/reference/repos#perform-a-merge\""
+         *
+         */
         documentation_url?: string;
       }>(
         response.httpStatusCode,
@@ -24614,6 +38055,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List milestones
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-milestones
+   * Tags: issues
+   *
+   */
   async issuesListMilestones(params: {
     owner: string;
     repo: string;
@@ -24667,15 +38114,38 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a milestone
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#create-a-milestone
+   * Tags: issues
+   *
+   */
   async issuesCreateMilestone(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The title of the milestone.
+       *
+       */
       title: string;
+      /**
+       * The state of the milestone. Either `open` or `closed`.
+       * @defaultValue "open"
+       *
+       */
       state?: 'open' | 'closed';
+      /**
+       * A description of the milestone.
+       *
+       */
       description?: string;
+      /**
+       * The milestone due date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+       *
+       */
       due_on?: string;
     },
   ): Promise<Milestone> {
@@ -24715,6 +38185,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a milestone
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#get-a-milestone
+   * Tags: issues
+   *
+   */
   async issuesGetMilestone(params: {
     owner: string;
     repo: string;
@@ -24749,6 +38225,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a milestone
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#update-a-milestone
+   * Tags: issues
+   *
+   */
   async issuesUpdateMilestone(
     params: {
       owner: string;
@@ -24756,9 +38238,26 @@ export class GithubClient {
       milestone_number: number;
     },
     body: {
+      /**
+       * The title of the milestone.
+       *
+       */
       title?: string;
+      /**
+       * The state of the milestone. Either `open` or `closed`.
+       * @defaultValue "open"
+       *
+       */
       state?: 'open' | 'closed';
+      /**
+       * A description of the milestone.
+       *
+       */
       description?: string;
+      /**
+       * The milestone due date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+       *
+       */
       due_on?: string;
     },
   ): Promise<Milestone> {
@@ -24783,6 +38282,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a milestone
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#delete-a-milestone
+   * Tags: issues
+   *
+   */
   async issuesDeleteMilestone(params: {
     owner: string;
     repo: string;
@@ -24817,6 +38322,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List labels for issues in a milestone
+   * Learn more at {@link https://docs.github.com/rest/reference/issues#list-labels-for-issues-in-a-milestone
+   * Tags: issues
+   *
+   */
   async issuesListLabelsForMilestone(params: {
     owner: string;
     repo: string;
@@ -24853,6 +38364,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository notifications for the authenticated user
+   * List all notifications for the current user.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repository-notifications-for-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityListRepoNotificationsForAuthenticatedUser(params: {
     owner: string;
     repo: string;
@@ -24903,12 +38421,23 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Mark repository notifications as read
+   * Marks all notifications in a repository as "read" removes them from the [default view on GitHub](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-repository-notifications-as-read
+   * Tags: activity
+   *
+   */
   async activityMarkRepoNotificationsAsRead(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * Describes the last point that notifications were checked. Anything updated since this time will not be marked as read. If you omit this parameter, all notifications are marked as read. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. Default: The current timestamp.
+       *
+       */
       last_read_at?: string;
     },
   ): Promise<any> {
@@ -24930,6 +38459,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a GitHub Pages site
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-github-pages-site
+   * Tags: repos
+   *
+   */
   async reposGetPages(params: { owner: string; repo: string }): Promise<Page> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/repos/{owner}/{repo}/pages', params),
@@ -24957,14 +38492,34 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a GitHub Pages site
+   * Configures a GitHub Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)."
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-github-pages-site
+   * Tags: repos
+   *
+   */
   async reposCreatePagesSite(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The source branch and directory used to publish your Pages site.
+       *
+       */
       source: {
+        /**
+         * The repository branch used to publish your site's source files.
+         *
+         */
         branch: string;
+        /**
+         * The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`. Default: `/`
+         * @defaultValue "/"
+         *
+         */
         path?: '/' | '/docs';
       };
     },
@@ -25019,18 +38574,41 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update information about a GitHub Pages site
+   * Updates information for a GitHub Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-information-about-a-github-pages-site
+   * Tags: repos
+   *
+   */
   async reposUpdateInformationAboutPagesSite(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * Specify a custom domain for the repository. Sending a `null` value will remove the custom domain. For more about custom domains, see "[Using a custom domain with GitHub Pages](https://help.github.com/articles/using-a-custom-domain-with-github-pages/)."
+       *
+       */
       cname?: string | null;
+      /**
+       * Configures access controls for the GitHub Pages site. If public is set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. This includes anyone in your Enterprise if the repository is set to `internal` visibility. This feature is only available to repositories in an organization on an Enterprise plan.
+       *
+       */
       public?: boolean;
       source:
         | ('gh-pages' | 'master' | 'master /docs')
         | {
+            /**
+             * The repository branch used to publish your site's source files.
+             *
+             */
             branch: string;
+            /**
+             * The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`.
+             *
+             */
             path: '/' | '/docs';
           };
     },
@@ -25071,6 +38649,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a GitHub Pages site
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-github-pages-site
+   * Tags: repos
+   *
+   */
   async reposDeletePagesSite(params: {
     owner: string;
     repo: string;
@@ -25124,6 +38708,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List GitHub Pages builds
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-github-pages-builds
+   * Tags: repos
+   *
+   */
   async reposListPagesBuilds(params: {
     owner: string;
     repo: string;
@@ -25156,6 +38746,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Request a GitHub Pages build
+   * You can request that your site be built from the latest revision on the default branch. This has the same effect as pushing a commit to your default branch, but does not require an additional commit. Manually triggering page builds can be helpful when diagnosing build warnings and failures.
+   *
+   * Build requests are limited to one concurrent build per repository and one concurrent build per requester. If you request a build while another is still in progress, the second request will be queued until the first completes.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#request-a-github-pages-build
+   * Tags: repos
+   *
+   */
   async reposRequestPagesBuild(params: {
     owner: string;
     repo: string;
@@ -25177,6 +38776,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get latest Pages build
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-latest-pages-build
+   * Tags: repos
+   *
+   */
   async reposGetLatestPagesBuild(params: {
     owner: string;
     repo: string;
@@ -25198,6 +38803,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Pages build
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-github-pages-build
+   * Tags: repos
+   *
+   */
   async reposGetPagesBuild(params: {
     owner: string;
     repo: string;
@@ -25223,6 +38834,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository projects
+   * Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#list-repository-projects
+   * Tags: projects
+   *
+   */
   async projectsListForRepo(params: {
     owner: string;
     repo: string;
@@ -25303,13 +38921,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a repository project
+   * Creates a repository project board. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#create-a-repository-project
+   * Tags: projects
+   *
+   */
   async projectsCreateForRepo(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The name of the project.
+       *
+       */
       name: string;
+      /**
+       * The description of the project.
+       *
+       */
       body?: string;
     },
   ): Promise<Project> {
@@ -25376,6 +39009,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List pull requests
+   * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#list-pull-requests
+   * Tags: pulls
+   *
+   */
   async pullsList(params: {
     owner: string;
     repo: string;
@@ -25444,18 +39084,59 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a pull request
+   * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+   *
+   * You can create a new pull request.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#create-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsCreate(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The title of the new pull request.
+       *
+       */
       title?: string;
+      /**
+       * The name of the branch where your changes are implemented. For cross-repository pull requests in the same network, namespace `head` with a user like this: `username:branch`.
+       *
+       */
       head: string;
+      /**
+       * The name of the branch you want the changes pulled into. This should be an existing branch on the current repository. You cannot submit a pull request to one repository that requests a merge to a base of another repository.
+       *
+       */
       base: string;
+      /**
+       * The contents of the pull request.
+       *
+       */
       body?: string;
+      /**
+       * Indicates whether [maintainers can modify](https://help.github.com/articles/allowing-changes-to-a-pull-request-branch-created-from-a-fork/) the pull request.
+       *
+       */
       maintainer_can_modify?: boolean;
+      /**
+       * Indicates whether the pull request is a draft. See "[Draft Pull Requests](https://help.github.com/en/articles/about-pull-requests#draft-pull-requests)" in the GitHub Help documentation to learn more.
+       *
+       */
       draft?: boolean;
+      /**
+       * @example 1
+       *
+       */
       issue?: number;
     },
   ): Promise<PullRequest> {
@@ -25495,6 +39176,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List review comments in a repository
+   * Lists review comments for all pull requests in a repository. By default, review comments are in ascending order by ID.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-review-comments-in-a-repository
+   * Tags: pulls
+   *
+   */
   async pullsListReviewCommentsForRepo(params: {
     owner: string;
     repo: string;
@@ -25539,6 +39227,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a review comment for a pull request
+   * Provides details for a review comment.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#get-a-review-comment-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsGetReviewComment(params: {
     owner: string;
     repo: string;
@@ -25575,6 +39270,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a review comment for a pull request
+   * Enables you to edit a review comment.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#update-a-review-comment-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsUpdateReviewComment(
     params: {
       owner: string;
@@ -25582,6 +39284,10 @@ export class GithubClient {
       comment_id: number;
     },
     body: {
+      /**
+       * The text of the reply to the review comment.
+       *
+       */
       body: string;
     },
   ): Promise<PullRequestReviewComment> {
@@ -25608,6 +39314,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a review comment for a pull request
+   * Deletes a review comment.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#delete-a-review-comment-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsDeleteReviewComment(params: {
     owner: string;
     repo: string;
@@ -25642,6 +39355,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for a pull request review comment
+   * List the reactions to a [pull request review comment](https://docs.github.com/rest/reference/pulls#review-comments).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-pull-request-review-comment
+   * Tags: reactions
+   *
+   */
   async reactionsListForPullRequestReviewComment(params: {
     owner: string;
     repo: string;
@@ -25715,6 +39435,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for a pull request review comment
+   * Create a reaction to a [pull request review comment](https://docs.github.com/rest/reference/pulls#comments). A response with a `Status: 200 OK` means that you already added the reaction type to this pull request review comment.
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-pull-request-review-comment
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForPullRequestReviewComment(
     params: {
       owner: string;
@@ -25722,6 +39449,10 @@ export class GithubClient {
       comment_id: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the pull request review comment.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -25786,6 +39517,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a pull request comment reaction
+   * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
+   *
+   * Delete a reaction to a [pull request review comment](https://docs.github.com/rest/reference/pulls#review-comments).
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-a-pull-request-comment-reaction
+   * Tags: reactions
+   *
+   */
   async reactionsDeleteForPullRequestComment(params: {
     owner: string;
     repo: string;
@@ -25812,6 +39552,27 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a pull request
+   * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Lists details of a pull request by providing its number.
+   *
+   * When you get, [create](https://docs.github.com/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/rest/reference/pulls#update-a-pull-request) a pull request, GitHub creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   *
+   * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
+   *
+   * The value of the `merge_commit_sha` attribute changes depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how you merged the pull request:
+   *
+   * *   If merged as a [merge commit](https://help.github.com/articles/about-merge-methods-on-github/), `merge_commit_sha` represents the SHA of the merge commit.
+   * *   If merged via a [squash](https://help.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits), `merge_commit_sha` represents the SHA of the squashed commit on the base branch.
+   * *   If [rebased](https://help.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.
+   *
+   * Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#get-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsGet(params: {
     owner: string;
     repo: string;
@@ -25861,6 +39622,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a pull request
+   * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#update-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsUpdate(
     params: {
       owner: string;
@@ -25868,10 +39638,30 @@ export class GithubClient {
       pull_number: number;
     },
     body: {
+      /**
+       * The title of the pull request.
+       *
+       */
       title?: string;
+      /**
+       * The contents of the pull request.
+       *
+       */
       body?: string;
+      /**
+       * State of this Pull Request. Either `open` or `closed`.
+       *
+       */
       state?: 'open' | 'closed';
+      /**
+       * The name of the branch you want your changes pulled into. This should be an existing branch on the current repository. You cannot update the base branch on a pull request to point to another repository.
+       *
+       */
       base?: string;
+      /**
+       * Indicates whether [maintainers can modify](https://help.github.com/articles/allowing-changes-to-a-pull-request-branch-created-from-a-fork/) the pull request.
+       *
+       */
       maintainer_can_modify?: boolean;
     },
   ): Promise<PullRequest> {
@@ -25911,6 +39701,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List review comments on a pull request
+   * Lists all review comments for a pull request. By default, review comments are in ascending order by ID.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-review-comments-on-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsListReviewComments(params: {
     owner: string;
     repo: string;
@@ -25959,6 +39756,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a review comment for a pull request
+   *
+   * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+   *
+   * You can still create a review comment using the `position` parameter. When you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required. For more information, see the [`comfort-fade` preview notice](https://docs.github.com/rest/reference/pulls#create-a-review-comment-for-a-pull-request-preview-notices).
+   *
+   * **Note:** The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-review-comment-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsCreateReviewComment(
     params: {
       owner: string;
@@ -25966,14 +39777,50 @@ export class GithubClient {
       pull_number: number;
     },
     body: {
+      /**
+       * The text of the review comment.
+       *
+       */
       body: string;
+      /**
+       * The SHA of the commit needing a comment. Not using the latest commit SHA may render your comment outdated if a subsequent commit modifies the line you specify as the `position`.
+       *
+       */
       commit_id?: string;
+      /**
+       * The relative path to the file that necessitates a comment.
+       *
+       */
       path?: string;
+      /**
+       * **Required without `comfort-fade` preview**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note above.
+       *
+       */
       position?: number;
+      /**
+       * **Required with `comfort-fade` preview**. In a split diff view, the side of the diff that the pull request's changes appear on. Can be `LEFT` or `RIGHT`. Use `LEFT` for deletions that appear in red. Use `RIGHT` for additions that appear in green or unchanged lines that appear in white and are shown for context. For a multi-line comment, side represents whether the last line of the comment range is a deletion or addition. For more information, see "[Diff view options](https://help.github.com/en/articles/about-comparing-branches-in-pull-requests#diff-view-options)" in the GitHub Help documentation.
+       *
+       */
       side?: 'LEFT' | 'RIGHT';
+      /**
+       * **Required with `comfort-fade` preview**. The line of the blob in the pull request diff that the comment applies to. For a multi-line comment, the last line of the range that your comment applies to.
+       *
+       */
       line?: number;
+      /**
+       * **Required when using multi-line comments**. To create multi-line comments, you must use the `comfort-fade` preview header. The `start_line` is the first line in the pull request diff that your multi-line comment applies to. To learn more about multi-line comments, see "[Commenting on a pull request](https://help.github.com/en/articles/commenting-on-a-pull-request#adding-line-comments-to-a-pull-request)" in the GitHub Help documentation.
+       *
+       */
       start_line?: number;
+      /**
+       * **Required when using multi-line comments**. To create multi-line comments, you must use the `comfort-fade` preview header. The `start_side` is the starting side of the diff that the comment applies to. Can be `LEFT` or `RIGHT`. To learn more about multi-line comments, see "[Commenting on a pull request](https://help.github.com/en/articles/commenting-on-a-pull-request#adding-line-comments-to-a-pull-request)" in the GitHub Help documentation. See `side` in this table for additional context.
+       *
+       */
       start_side?: 'LEFT' | 'RIGHT' | 'side';
+      /**
+       * @example 2
+       *
+       */
       in_reply_to?: number;
     },
   ): Promise<PullRequestReviewComment> {
@@ -26018,6 +39865,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a reply for a review comment
+   * Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-reply-for-a-review-comment
+   * Tags: pulls
+   *
+   */
   async pullsCreateReplyForReviewComment(
     params: {
       owner: string;
@@ -26026,6 +39882,10 @@ export class GithubClient {
       comment_id: number;
     },
     body: {
+      /**
+       * The text of the review comment.
+       *
+       */
       body: string;
     },
   ): Promise<PullRequestReviewComment> {
@@ -26061,6 +39921,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List commits on a pull request
+   * Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/rest/reference/repos#list-commits) endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#list-commits-on-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsListCommits(params: {
     owner: string;
     repo: string;
@@ -26097,6 +39964,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List pull requests files
+   * **Note:** Responses include a maximum of 3000 files. The paginated response returns 30 files per page by default.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#list-pull-requests-files
+   * Tags: pulls
+   *
+   */
   async pullsListFiles(params: {
     owner: string;
     repo: string;
@@ -26151,6 +40025,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a pull request has been merged
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#check-if-a-pull-request-has-been-merged
+   * Tags: pulls
+   *
+   */
   async pullsCheckIfMerged(params: {
     owner: string;
     repo: string;
@@ -26185,6 +40065,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Merge a pull request
+   * This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#merge-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsMerge(
     params: {
       owner: string;
@@ -26192,9 +40079,25 @@ export class GithubClient {
       pull_number: number;
     },
     body: {
+      /**
+       * Title for the automatic commit message.
+       *
+       */
       commit_title?: string;
+      /**
+       * Extra detail to append to automatic commit message.
+       *
+       */
       commit_message?: string;
+      /**
+       * SHA that pull request head must match to allow merge.
+       *
+       */
       sha?: string;
+      /**
+       * Merge method to use. Possible values are `merge`, `squash` or `rebase`. Default is `merge`.
+       *
+       */
       merge_method?: 'merge' | 'squash' | 'rebase';
     } | null,
   ): Promise<PullRequestMergeResult> {
@@ -26274,6 +40177,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List requested reviewers for a pull request
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-requested-reviewers-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsListRequestedReviewers(params: {
     owner: string;
     repo: string;
@@ -26310,16 +40219,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Request reviewers for a pull request
+   * This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#request-reviewers-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsRequestReviewers(
     params: {
       owner: string;
       repo: string;
       pull_number: number;
     },
-    body: {
-      reviewers?: string[];
-      team_reviewers?: string[];
-    },
+    body: any | any,
   ): Promise<PullRequestSimple> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating(
@@ -26360,6 +40273,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove requested reviewers from a pull request
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#remove-requested-reviewers-from-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsRemoveRequestedReviewers(
     params: {
       owner: string;
@@ -26367,7 +40286,15 @@ export class GithubClient {
       pull_number: number;
     },
     body: {
+      /**
+       * An array of user `login`s that will be removed.
+       *
+       */
       reviewers: string[];
+      /**
+       * An array of team `slug`s that will be removed.
+       *
+       */
       team_reviewers?: string[];
     },
   ): Promise<any> {
@@ -26401,6 +40328,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reviews for a pull request
+   * The list of reviews returns in chronological order.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-reviews-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsListReviews(params: {
     owner: string;
     repo: string;
@@ -26437,6 +40371,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a review for a pull request
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   *
+   * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
+   *
+   * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) endpoint.
+   *
+   * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-review-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsCreateReview(
     params: {
       owner: string;
@@ -26444,16 +40391,60 @@ export class GithubClient {
       pull_number: number;
     },
     body: {
+      /**
+       * The SHA of the commit that needs a review. Not using the latest commit SHA may render your review comment outdated if a subsequent commit modifies the line you specify as the `position`. Defaults to the most recent commit in the pull request when you do not specify a value.
+       *
+       */
       commit_id?: string;
+      /**
+       * **Required** when using `REQUEST_CHANGES` or `COMMENT` for the `event` parameter. The body text of the pull request review.
+       *
+       */
       body?: string;
+      /**
+       * The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/rest/reference/pulls#submit-a-review-for-a-pull-request) when you are ready.
+       *
+       */
       event?: 'APPROVE' | 'REQUEST_CHANGES' | 'COMMENT';
+      /**
+       * Use the following table to specify the location, destination, and contents of the draft review comment.
+       *
+       */
       comments?: {
+        /**
+         * The relative path to the file that necessitates a review comment.
+         *
+         */
         path: string;
+        /**
+         * The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note below.
+         *
+         */
         position?: number;
+        /**
+         * Text of the review comment.
+         *
+         */
         body: string;
+        /**
+         * @example 28
+         *
+         */
         line?: number;
+        /**
+         * @example "RIGHT"
+         *
+         */
         side?: string;
+        /**
+         * @example 26
+         *
+         */
         start_line?: number;
+        /**
+         * @example "LEFT"
+         *
+         */
         start_side?: string;
       }[];
     },
@@ -26497,6 +40488,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a review for a pull request
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#get-a-review-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsGetReview(params: {
     owner: string;
     repo: string;
@@ -26532,6 +40529,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a review for a pull request
+   * Update the review summary comment with new text.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#update-a-review-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsUpdateReview(
     params: {
       owner: string;
@@ -26540,6 +40544,10 @@ export class GithubClient {
       review_id: number;
     },
     body: {
+      /**
+       * The body text of the pull request review.
+       *
+       */
       body: string;
     },
   ): Promise<PullRequestReview> {
@@ -26573,6 +40581,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a pending review for a pull request
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#delete-a-pending-review-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsDeletePendingReview(params: {
     owner: string;
     repo: string;
@@ -26617,6 +40631,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List comments for a pull request review
+   * List comments for a specific pull request review.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-comments-for-a-pull-request-review
+   * Tags: pulls
+   *
+   */
   async pullsListCommentsForReview(params: {
     owner: string;
     repo: string;
@@ -26663,6 +40684,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Dismiss a review for a pull request
+   * **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#dismiss-a-review-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsDismissReview(
     params: {
       owner: string;
@@ -26671,7 +40699,15 @@ export class GithubClient {
       review_id: number;
     },
     body: {
+      /**
+       * The message for the pull request review dismissal
+       *
+       */
       message: string;
+      /**
+       * @example "\"APPROVE\""
+       *
+       */
       event?: string;
     },
   ): Promise<PullRequestReview> {
@@ -26714,6 +40750,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Submit a review for a pull request
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls#submit-a-review-for-a-pull-request
+   * Tags: pulls
+   *
+   */
   async pullsSubmitReview(
     params: {
       owner: string;
@@ -26722,7 +40764,15 @@ export class GithubClient {
       review_id: number;
     },
     body: {
+      /**
+       * The body text of the pull request review
+       *
+       */
       body?: string;
+      /**
+       * The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. When you leave this blank, the API returns _HTTP 422 (Unrecognizable entity)_ and sets the review action state to `PENDING`, which means you will need to re-submit the pull request review using a review action.
+       *
+       */
       event: 'APPROVE' | 'REQUEST_CHANGES' | 'COMMENT';
     },
   ): Promise<PullRequestReview> {
@@ -26774,6 +40824,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a pull request branch
+   * Updates the pull request branch with the latest upstream changes by merging HEAD from the base branch into the pull request branch.
+   * Learn more at {@link https://docs.github.com/rest/reference/pulls/#update-a-pull-request-branch
+   * Tags: pulls
+   *
+   */
   async pullsUpdateBranch(
     params: {
       owner: string;
@@ -26781,6 +40838,10 @@ export class GithubClient {
       pull_number: number;
     },
     body: {
+      /**
+       * The expected SHA of the pull request's HEAD ref. This is the most recent commit on the pull request's branch. If the expected SHA does not match the pull request's HEAD, you will receive a `422 Unprocessable Entity` status. You can use the "[List commits](https://docs.github.com/rest/reference/repos#list-commits)" endpoint to find the most recent commit SHA. Default: SHA of the pull request's current HEAD ref.
+       *
+       */
       expected_head_sha?: string;
     } | null,
   ): Promise<{
@@ -26842,6 +40903,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository README
+   * Gets the preferred README for a repository.
+   *
+   * READMEs support [custom media types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-readme
+   * Tags: repos
+   *
+   */
   async reposGetReadme(params: {
     owner: string;
     repo: string;
@@ -26884,6 +40954,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository README
+   * Gets the preferred README for a repository.
+   *
+   * READMEs support [custom media types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-readme
+   * Tags: repos
+   *
+   */
   async reposGetReadmeFromAltPath(params: {
     owner: string;
     repo: string;
@@ -26927,6 +41006,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List releases
+   * This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/rest/reference/repos#list-repository-tags).
+   *
+   * Information about published releases are available to everyone. Only users with push access will receive listings for draft releases.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-releases
+   * Tags: repos
+   *
+   */
   async reposListReleases(params: {
     owner: string;
     repo: string;
@@ -26968,17 +41056,50 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a release
+   * Users with push access to the repository can create a release.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-release
+   * Tags: repos
+   *
+   */
   async reposCreateRelease(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The name of the tag.
+       *
+       */
       tag_name: string;
+      /**
+       * Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`).
+       *
+       */
       target_commitish?: string;
+      /**
+       * The name of the release.
+       *
+       */
       name?: string;
+      /**
+       * Text describing the contents of the tag.
+       *
+       */
       body?: string;
+      /**
+       * `true` to create a draft (unpublished) release, `false` to create a published one.
+       *
+       */
       draft?: boolean;
+      /**
+       * `true` to identify the release as a prerelease. `false` to identify the release as a full release.
+       *
+       */
       prerelease?: boolean;
     },
   ): Promise<Release> {
@@ -27009,6 +41130,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a release asset
+   * To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release-asset
+   * Tags: repos
+   *
+   */
   async reposGetReleaseAsset(params: {
     owner: string;
     repo: string;
@@ -27066,6 +41194,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a release asset
+   * Users with push access to the repository can edit a release asset.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-release-asset
+   * Tags: repos
+   *
+   */
   async reposUpdateReleaseAsset(
     params: {
       owner: string;
@@ -27073,8 +41208,20 @@ export class GithubClient {
       asset_id: number;
     },
     body: {
+      /**
+       * The file name of the asset.
+       *
+       */
       name?: string;
+      /**
+       * An alternate short description of the asset. Used in place of the filename.
+       *
+       */
       label?: string;
+      /**
+       * @example "\"uploaded\""
+       *
+       */
       state?: string;
     },
   ): Promise<ReleaseAsset> {
@@ -27099,6 +41246,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a release asset
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-release-asset
+   * Tags: repos
+   *
+   */
   async reposDeleteReleaseAsset(params: {
     owner: string;
     repo: string;
@@ -27124,6 +41277,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the latest release
+   * View the latest published full release for the repository.
+   *
+   * The latest release is the most recent non-prerelease, non-draft release, sorted by the `created_at` attribute. The `created_at` attribute is the date of the commit used for the release, and not the date when the release was drafted or published.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-latest-release
+   * Tags: repos
+   *
+   */
   async reposGetLatestRelease(params: {
     owner: string;
     repo: string;
@@ -27145,6 +41307,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a release by tag name
+   * Get a published release with the specified tag.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release-by-tag-name
+   * Tags: repos
+   *
+   */
   async reposGetReleaseByTag(params: {
     owner: string;
     repo: string;
@@ -27176,6 +41345,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a release
+   * **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia).
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release
+   * Tags: repos
+   *
+   */
   async reposGetRelease(params: {
     owner: string;
     repo: string;
@@ -27207,6 +41383,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a release
+   * Users with push access to the repository can edit a release.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-release
+   * Tags: repos
+   *
+   */
   async reposUpdateRelease(
     params: {
       owner: string;
@@ -27214,11 +41397,35 @@ export class GithubClient {
       release_id: number;
     },
     body: {
+      /**
+       * The name of the tag.
+       *
+       */
       tag_name?: string;
+      /**
+       * Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`).
+       *
+       */
       target_commitish?: string;
+      /**
+       * The name of the release.
+       *
+       */
       name?: string;
+      /**
+       * Text describing the contents of the tag.
+       *
+       */
       body?: string;
+      /**
+       * `true` makes the release a draft, and `false` publishes the release.
+       *
+       */
       draft?: boolean;
+      /**
+       * `true` to identify the release as a prerelease, `false` to identify the release as a full release.
+       *
+       */
       prerelease?: boolean;
     },
   ): Promise<Release> {
@@ -27240,6 +41447,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a release
+   * Users with push access to the repository can delete a release.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-release
+   * Tags: repos
+   *
+   */
   async reposDeleteRelease(params: {
     owner: string;
     repo: string;
@@ -27262,6 +41476,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List release assets
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-release-assets
+   * Tags: repos
+   *
+   */
   async reposListReleaseAssets(params: {
     owner: string;
     repo: string;
@@ -27298,6 +41518,30 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Upload a release asset
+   * This endpoint makes use of [a Hypermedia relation](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
+   * the response of the [Create a release endpoint](https://docs.github.com/rest/reference/repos#create-a-release) to upload a release asset.
+   *
+   * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
+   *
+   * Most libraries will set the required `Content-Length` header automatically. Use the required `Content-Type` header to provide the media type of the asset. For a list of media types, see [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml). For example:
+   *
+   * `application/zip`
+   *
+   * GitHub expects the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the request body. Everything else about the endpoint is the same as the rest of the API. For example,
+   * you'll still need to pass your authentication to be able to upload an asset.
+   *
+   * When an upstream failure occurs, you will receive a `502 Bad Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
+   *
+   * **Notes:**
+   * *   GitHub renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/rest/reference/repos#list-assets-for-a-release)"
+   * endpoint lists the renamed filenames. For more information and help, contact [GitHub Support](https://support.github.com/contact).
+   * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#upload-a-release-asset
+   * Tags: repos
+   *
+   */
   async reposUploadReleaseAsset(
     params: {
       owner: string;
@@ -27333,6 +41577,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List secret scanning alerts for a repository
+   * Lists all secret scanning alerts for a private repository, from newest to oldest. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#list-secret-scanning-alerts-for-a-repository
+   * Tags: secret-scanning
+   *
+   */
   async secretScanningListAlertsForRepo(params: {
     owner: string;
     repo: string;
@@ -27392,6 +41645,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a secret scanning alert
+   * Gets a single secret scanning alert detected in a private repository. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#get-a-secret-scanning-alert
+   * Tags: secret-scanning
+   *
+   */
   async secretScanningGetAlert(params: {
     owner: string;
     repo: string;
@@ -27441,6 +41703,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a secret scanning alert
+   * Updates the status of a secret scanning alert in a private repository. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * GitHub Apps must have the `secret_scanning_alerts` write permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#update-a-secret-scanning-alert
+   * Tags: secret-scanning
+   *
+   */
   async secretScanningUpdateAlert(
     params: {
       owner: string;
@@ -27506,6 +41777,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List stargazers
+   * Lists the people that have starred the repository.
+   *
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-stargazers
+   * Tags: activity
+   *
+   */
   async activityListStargazersForRepo(params: {
     owner: string;
     repo: string;
@@ -27547,6 +41827,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the weekly commit activity
+   * Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-weekly-commit-activity
+   * Tags: repos
+   *
+   */
   async reposGetCodeFrequencyStats(params: {
     owner: string;
     repo: string;
@@ -27570,6 +41857,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the last year of commit activity
+   * Returns the last year of commit activity grouped by week. The `days` array is a group of commits per day, starting on `Sunday`.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-last-year-of-commit-activity
+   * Tags: repos
+   *
+   */
   async reposGetCommitActivityStats(params: {
     owner: string;
     repo: string;
@@ -27593,6 +41887,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all contributor commit activity
+   *
+   * Returns the `total` number of commits authored by the contributor. In addition, the response includes a Weekly Hash (`weeks` array) with the following information:
+   *
+   * *   `w` - Start of the week, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
+   * *   `a` - Number of additions
+   * *   `d` - Number of deletions
+   * *   `c` - Number of commits
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-contributor-commit-activity
+   * Tags: repos
+   *
+   */
   async reposGetContributorsStats(params: {
     owner: string;
     repo: string;
@@ -27616,6 +41923,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the weekly commit count
+   * Returns the total commit counts for the `owner` and total commit counts in `all`. `all` is everyone combined, including the `owner` in the last 52 weeks. If you'd like to get the commit counts for non-owners, you can subtract `owner` from `all`.
+   *
+   * The array order is oldest week (index 0) to most recent week.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-weekly-commit-count
+   * Tags: repos
+   *
+   */
   async reposGetParticipationStats(params: {
     owner: string;
     repo: string;
@@ -27646,6 +41962,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the hourly commit count for each day
+   * Each array contains the day number, hour number, and number of commits:
+   *
+   * *   `0-6`: Sunday - Saturday
+   * *   `0-23`: Hour of day
+   * *   Number of commits
+   *
+   * For example, `[2, 14, 25]` indicates that there were 25 total commits, during the 2:00pm hour on Tuesdays. All times are based on the time zone of individual commits.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-hourly-commit-count-for-each-day
+   * Tags: repos
+   *
+   */
   async reposGetPunchCardStats(params: {
     owner: string;
     repo: string;
@@ -27669,6 +41998,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a commit status
+   * Users with push access in a repository can create commit statuses for a given SHA.
+   *
+   * Note: there is a limit of 1000 statuses per `sha` and `context` within a repository. Attempts to create more than 1000 statuses will result in a validation error.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-commit-status
+   * Tags: repos
+   *
+   */
   async reposCreateCommitStatus(
     params: {
       owner: string;
@@ -27676,9 +42014,28 @@ export class GithubClient {
       sha: string;
     },
     body: {
+      /**
+       * The state of the status. Can be one of `error`, `failure`, `pending`, or `success`.
+       *
+       */
       state: 'error' | 'failure' | 'pending' | 'success';
+      /**
+       * The target URL to associate with this status. This URL will be linked from the GitHub UI to allow users to easily see the source of the status.
+       * For example, if your continuous integration system is posting build status, you would want to provide the deep link for the build output for this specific SHA:
+       * `http://ci.example.com/user/repo/build/sha`
+       *
+       */
       target_url?: string;
+      /**
+       * A short description of the status.
+       *
+       */
       description?: string;
+      /**
+       * A string label to differentiate this status from the status of other systems. This field is case-insensitive.
+       * @defaultValue "default"
+       *
+       */
       context?: string;
     },
   ): Promise<Status> {
@@ -27700,6 +42057,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List watchers
+   * Lists the people watching the specified repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-watchers
+   * Tags: activity
+   *
+   */
   async activityListWatchersForRepo(params: {
     owner: string;
     repo: string;
@@ -27732,6 +42096,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a repository subscription
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#get-a-repository-subscription
+   * Tags: activity
+   *
+   */
   async activityGetRepoSubscription(params: {
     owner: string;
     repo: string;
@@ -27771,13 +42141,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set a repository subscription
+   * If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/rest/reference/activity#delete-a-repository-subscription) completely.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#set-a-repository-subscription
+   * Tags: activity
+   *
+   */
   async activitySetRepoSubscription(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * Determines if notifications should be received from this repository.
+       *
+       */
       subscribed?: boolean;
+      /**
+       * Determines if all notifications should be blocked from this repository.
+       *
+       */
       ignored?: boolean;
     },
   ): Promise<RepositorySubscription> {
@@ -27799,6 +42184,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a repository subscription
+   * This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/rest/reference/activity#set-a-repository-subscription).
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#delete-a-repository-subscription
+   * Tags: activity
+   *
+   */
   async activityDeleteRepoSubscription(params: {
     owner: string;
     repo: string;
@@ -27820,6 +42212,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository tags
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-repository-tags
+   * Tags: repos
+   *
+   */
   async reposListTags(params: {
     owner: string;
     repo: string;
@@ -27852,6 +42250,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Download a repository archive (tar)
+   * Gets a redirect URL to download a tar archive for a repository. If you omit `:ref`, the repository’s default branch (usually
+   * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
+   * the `Location` header to make a second `GET` request.
+   * **Note**: For private repositories, these links are temporary and expire after five minutes.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#download-a-repository-archive
+   * Tags: repos
+   *
+   */
   async reposDownloadTarballArchive(params: {
     owner: string;
     repo: string;
@@ -27877,6 +42285,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository teams
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-repository-teams
+   * Tags: repos
+   *
+   */
   async reposListTeams(params: {
     owner: string;
     repo: string;
@@ -27909,6 +42323,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all repository topics
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#get-all-repository-topics
+   * Tags: repos
+   *
+   */
   async reposGetAllTopics(params: {
     owner: string;
     repo: string;
@@ -27962,12 +42382,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Replace all repository topics
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#replace-all-repository-topics
+   * Tags: repos
+   *
+   */
   async reposReplaceAllTopics(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * An array of topics to add to the repository. Pass one or more topics to _replace_ the set of existing topics. Send an empty array (`[]`) to clear all topics from the repository. **Note:** Topic `names` cannot contain uppercase letters.
+       *
+       */
       names: string[];
     },
   ): Promise<Topic> {
@@ -28021,6 +42451,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get repository clones
+   * Get the total number of clones and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC midnight of the beginning of the day or week. Week begins on Monday.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-clones
+   * Tags: repos
+   *
+   */
   async reposGetClones(params: {
     owner: string;
     repo: string;
@@ -28054,6 +42491,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get top referral paths
+   * Get the top 10 popular contents over the last 14 days.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-top-referral-paths
+   * Tags: repos
+   *
+   */
   async reposGetTopPaths(params: {
     owner: string;
     repo: string;
@@ -28086,6 +42530,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get top referral sources
+   * Get the top 10 referrers over the last 14 days.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-top-referral-sources
+   * Tags: repos
+   *
+   */
   async reposGetTopReferrers(params: {
     owner: string;
     repo: string;
@@ -28121,6 +42572,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get page views
+   * Get the total number of views and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC midnight of the beginning of the day or week. Week begins on Monday.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#get-page-views
+   * Tags: repos
+   *
+   */
   async reposGetViews(params: {
     owner: string;
     repo: string;
@@ -28154,13 +42612,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Transfer a repository
+   * A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://help.github.com/articles/about-repository-transfers/).
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#transfer-a-repository
+   * Tags: repos
+   *
+   */
   async reposTransfer(
     params: {
       owner: string;
       repo: string;
     },
     body: {
+      /**
+       * The username or organization name the repository will be transferred to.
+       *
+       */
       new_owner: string;
+      /**
+       * ID of the team or teams to add to the repository. Teams can only be added to organization-owned repositories.
+       *
+       */
       team_ids?: number[];
     },
   ): Promise<Repository> {
@@ -28182,6 +42655,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if vulnerability alerts are enabled for a repository
+   * Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#check-if-vulnerability-alerts-are-enabled-for-a-repository
+   * Tags: repos
+   *
+   */
   async reposCheckVulnerabilityAlerts(params: {
     owner: string;
     repo: string;
@@ -28212,6 +42692,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Enable vulnerability alerts
+   * Enables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#enable-vulnerability-alerts
+   * Tags: repos
+   *
+   */
   async reposEnableVulnerabilityAlerts(params: {
     owner: string;
     repo: string;
@@ -28233,6 +42720,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Disable vulnerability alerts
+   * Disables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#disable-vulnerability-alerts
+   * Tags: repos
+   *
+   */
   async reposDisableVulnerabilityAlerts(params: {
     owner: string;
     repo: string;
@@ -28254,6 +42748,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Download a repository archive (zip)
+   * Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually
+   * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
+   * the `Location` header to make a second `GET` request.
+   * **Note**: For private repositories, these links are temporary and expire after five minutes.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#download-a-repository-archive
+   * Tags: repos
+   *
+   */
   async reposDownloadZipballArchive(params: {
     owner: string;
     repo: string;
@@ -28279,16 +42783,50 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a repository using a template
+   * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+   *
+   * **OAuth scope requirements**
+   *
+   * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+   *
+   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+   * *   `repo` scope to create a private repository
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#create-a-repository-using-a-template
+   * Tags: repos
+   *
+   */
   async reposCreateUsingTemplate(
     params: {
       template_owner: string;
       template_repo: string;
     },
     body: {
+      /**
+       * The organization or person who will own the new repository. To create a new repository in an organization, the authenticated user must be a member of the specified organization.
+       *
+       */
       owner?: string;
+      /**
+       * The name of the new repository.
+       *
+       */
       name: string;
+      /**
+       * A short description of the new repository.
+       *
+       */
       description?: string;
+      /**
+       * Set to `true` to include the directory structure and files from all branches in the template repository, and not just the default branch. Default: `false`.
+       *
+       */
       include_all_branches?: boolean;
+      /**
+       * Either `true` to create a new private repository or `false` to create a new public one.
+       *
+       */
       private?: boolean;
     },
   ): Promise<Repository> {
@@ -28313,6 +42851,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public repositories
+   * Lists all public repositories in the order that they were created.
+   *
+   * Notes:
+   * - For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise.
+   * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-public-repositories
+   * Tags: repos
+   *
+   */
   async reposListPublic(params: {
     since?: number;
   }): Promise<MinimalRepository[]> {
@@ -28355,6 +42904,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List environment secrets
+   * Lists all secrets available in an environment without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#list-environment-secrets
+   * Tags: actions
+   *
+   */
   async actionsListEnvironmentSecrets(params: {
     repository_id: number;
     environment_name: string;
@@ -28393,6 +42949,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an environment public key
+   * Get the public key for an environment, which you need to encrypt environment secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-environment-public-key
+   * Tags: actions
+   *
+   */
   async actionsGetEnvironmentPublicKey(params: {
     repository_id: number;
     environment_name: string;
@@ -28417,6 +42980,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an environment secret
+   * Gets a single environment secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-environment-secret
+   * Tags: actions
+   *
+   */
   async actionsGetEnvironmentSecret(params: {
     repository_id: number;
     environment_name: string;
@@ -28442,6 +43012,87 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create or update an environment secret
+   * Creates or updates an environment secret with an encrypted value. Encrypt your secret using
+   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
+   * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
+   * this endpoint.
+   *
+   * #### Example encrypting a secret using Node.js
+   *
+   * Encrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.
+   *
+   * ```
+   * const sodium = require('tweetsodium');
+   *
+   * const key = "base64-encoded-public-key";
+   * const value = "plain-text-secret";
+   *
+   * // Convert the message and key to Uint8Array's (Buffer implements that interface)
+   * const messageBytes = Buffer.from(value);
+   * const keyBytes = Buffer.from(key, 'base64');
+   *
+   * // Encrypt using LibSodium.
+   * const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+   *
+   * // Base64 the encrypted secret
+   * const encrypted = Buffer.from(encryptedBytes).toString('base64');
+   *
+   * console.log(encrypted);
+   * ```
+   *
+   *
+   * #### Example encrypting a secret using Python
+   *
+   * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
+   *
+   * ```
+   * from base64 import b64encode
+   * from nacl import encoding, public
+   *
+   * def encrypt(public_key: str, secret_value: str) -> str:
+   *   """Encrypt a Unicode string using the public key."""
+   *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+   *   sealed_box = public.SealedBox(public_key)
+   *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+   *   return b64encode(encrypted).decode("utf-8")
+   * ```
+   *
+   * #### Example encrypting a secret using C#
+   *
+   * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
+   *
+   * ```
+   * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
+   * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
+   *
+   * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
+   *
+   * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
+   * ```
+   *
+   * #### Example encrypting a secret using Ruby
+   *
+   * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
+   *
+   * ```ruby
+   * require "rbnacl"
+   * require "base64"
+   *
+   * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
+   * public_key = RbNaCl::PublicKey.new(key)
+   *
+   * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
+   * encrypted_secret = box.encrypt("my_secret")
+   *
+   * # Print the base64 encoded secret
+   * puts Base64.strict_encode64(encrypted_secret)
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#create-or-update-an-environment-secret
+   * Tags: actions
+   *
+   */
   async actionsCreateOrUpdateEnvironmentSecret(
     params: {
       repository_id: number;
@@ -28449,7 +43100,15 @@ export class GithubClient {
       secret_name: string;
     },
     body: {
+      /**
+       * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an environment public key](https://docs.github.com/rest/reference/actions#get-an-environment-public-key) endpoint.
+       *
+       */
       encrypted_value?: string;
+      /**
+       * ID of the key you used to encrypt the secret.
+       *
+       */
       key_id?: string;
     },
   ): Promise<any> {
@@ -28483,6 +43142,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an environment secret
+   * Deletes a secret in an environment using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-environment-secret
+   * Tags: actions
+   *
+   */
   async actionsDeleteEnvironmentSecret(params: {
     repository_id: number;
     environment_name: string;
@@ -28508,6 +43174,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List provisioned SCIM groups for an enterprise
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-provisioned-scim-groups-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListProvisionedGroupsEnterprise(params: {
     enterprise: string;
     startIndex?: number;
@@ -28551,14 +43224,35 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Provision a SCIM enterprise group and invite users
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Provision an enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users to join the GitHub organization that the SCIM group corresponds to.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#provision-a-scim-enterprise-group-and-invite-users
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminProvisionAndInviteEnterpriseGroup(
     params: {
       enterprise: string;
     },
     body: {
+      /**
+       * The SCIM schema URIs.
+       *
+       */
       schemas: string[];
+      /**
+       * The name of the SCIM group. This must match the GitHub organization that the group maps to.
+       *
+       */
       displayName: string;
       members?: {
+        /**
+         * The SCIM user ID for a user.
+         *
+         */
         value: string;
       }[];
     },
@@ -28581,6 +43275,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get SCIM provisioning information for an enterprise group
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-scim-provisioning-information-for-an-enterprise-group
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminGetProvisioningInformationForEnterpriseGroup(params: {
     enterprise: string;
     scim_group_id: string;
@@ -28611,15 +43312,36 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set SCIM information for a provisioned enterprise group
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Replaces an existing provisioned group’s information. You must provide all the information required for the group as if you were provisioning it for the first time. Any existing group information that you don't provide will be removed, including group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-group
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminSetInformationForProvisionedEnterpriseGroup(
     params: {
       enterprise: string;
       scim_group_id: string;
     },
     body: {
+      /**
+       * The SCIM schema URIs.
+       *
+       */
       schemas: string[];
+      /**
+       * The name of the SCIM group. This must match the GitHub organization that the group maps to.
+       *
+       */
       displayName: string;
       members?: {
+        /**
+         * The SCIM user ID for a user.
+         *
+         */
         value: string;
       }[];
     },
@@ -28645,13 +43367,30 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an attribute for a SCIM enterprise group
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Allows you to change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-group
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminUpdateAttributeForEnterpriseGroup(
     params: {
       enterprise: string;
       scim_group_id: string;
     },
     body: {
+      /**
+       * The SCIM schema URIs.
+       *
+       */
       schemas: string[];
+      /**
+       * Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+       *
+       */
       Operations: {
         op: 'add' | 'Add' | 'remove' | 'Remove' | 'replace' | 'Replace';
         path?: string;
@@ -28680,6 +43419,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a SCIM group from an enterprise
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-a-scim-group-from-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminDeleteScimGroupFromEnterprise(params: {
     enterprise: string;
     scim_group_id: string;
@@ -28704,6 +43450,30 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List SCIM provisioned identities for an enterprise
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Retrieves a paginated list of all provisioned enterprise members, including pending invitations.
+   *
+   * When a user with a SAML-provisioned external identity leaves (or is removed from) an enterprise, the account's metadata is immediately removed. However, the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub. This can happen in certain cases where an external identity associated with an organization will not match an organization member:
+   *   - When a user with a SCIM-provisioned external identity is removed from an enterprise, the account's metadata is preserved to allow the user to re-join the organization in the future.
+   *   - When inviting a user to join an organization, you can expect to see their external identity in the results before they accept the invitation, or if the invitation is cancelled (or never accepted).
+   *   - When a user is invited over SCIM, an external identity is created that matches with the invitee's email address. However, this identity is only linked to a user account when the user accepts the invitation by going through SAML SSO.
+   *
+   * The returned list of external identities can include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single Sign-On (SSO) process but does not sign in to their GitHub account after completing SSO:
+   *
+   * 1. The user is granted access by the IdP and is not a member of the GitHub enterprise.
+   *
+   * 1. The user attempts to access the GitHub enterprise and initiates the SAML SSO process, and is not currently signed in to their GitHub account.
+   *
+   * 1. After successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in to their GitHub account:
+   *    - If the user signs in, their GitHub account is linked to this entry.
+   *    - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub enterprise, and the external identity `null` entry remains in place.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-scim-provisioned-identities-for-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminListProvisionedIdentitiesEnterprise(params: {
     enterprise: string;
     startIndex?: number;
@@ -28739,22 +43509,69 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Provision and invite a SCIM enterprise user
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Provision enterprise membership for a user, and send organization invitation emails to the email address.
+   *
+   * You can optionally include the groups a user will be invited to join. If you do not provide a list of `groups`, the user is provisioned for the enterprise, but no organization invitation emails will be sent.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#provision-and-invite-a-scim-enterprise-user
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminProvisionAndInviteEnterpriseUser(
     params: {
       enterprise: string;
     },
     body: {
+      /**
+       * The SCIM schema URIs.
+       *
+       */
       schemas: string[];
+      /**
+       * The username for the user.
+       *
+       */
       userName: string;
       name: {
+        /**
+         * The first name of the user.
+         *
+         */
         givenName: string;
+        /**
+         * The last name of the user.
+         *
+         */
         familyName: string;
       };
+      /**
+       * List of user emails.
+       *
+       */
       emails: {
+        /**
+         * The email address.
+         *
+         */
         value: string;
+        /**
+         * The type of email address.
+         *
+         */
         type: string;
+        /**
+         * Whether this email address is the primary address.
+         *
+         */
         primary: boolean;
       }[];
+      /**
+       * List of SCIM group IDs the user is a member of.
+       *
+       */
       groups?: {
         value?: string;
       }[];
@@ -28778,6 +43595,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get SCIM provisioning information for an enterprise user
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-scim-provisioning-information-for-an-enterprise-user
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminGetProvisioningInformationForEnterpriseUser(params: {
     enterprise: string;
     scim_user_id: string;
@@ -28802,23 +43626,72 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set SCIM information for a provisioned enterprise user
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Replaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](#update-an-attribute-for-an-enterprise-scim-user) endpoint instead.
+   *
+   * You must at least provide the required values for the user: `userName`, `name`, and `emails`.
+   *
+   * **Warning:** Setting `active: false` removes the user from the enterprise, deletes the external identity, and deletes the associated `{scim_user_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-user
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminSetInformationForProvisionedEnterpriseUser(
     params: {
       enterprise: string;
       scim_user_id: string;
     },
     body: {
+      /**
+       * The SCIM schema URIs.
+       *
+       */
       schemas: string[];
+      /**
+       * The username for the user.
+       *
+       */
       userName: string;
       name: {
+        /**
+         * The first name of the user.
+         *
+         */
         givenName: string;
+        /**
+         * The last name of the user.
+         *
+         */
         familyName: string;
       };
+      /**
+       * List of user emails.
+       *
+       */
       emails: {
+        /**
+         * The email address.
+         *
+         */
         value: string;
+        /**
+         * The type of email address.
+         *
+         */
         type: string;
+        /**
+         * Whether this email address is the primary address.
+         *
+         */
         primary: boolean;
       }[];
+      /**
+       * List of SCIM group IDs the user is a member of.
+       *
+       */
       groups?: {
         value?: string;
       }[];
@@ -28845,13 +43718,45 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an attribute for a SCIM enterprise user
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+   *
+   * **Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will not work.
+   *
+   * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it removes the user from the enterprise, deletes the external identity, and deletes the associated `:scim_user_id`.
+   *
+   * ```
+   * {
+   *   "Operations":[{
+   *     "op":"replace",
+   *     "value":{
+   *       "active":false
+   *     }
+   *   }]
+   * }
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-user
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminUpdateAttributeForEnterpriseUser(
     params: {
       enterprise: string;
       scim_user_id: string;
     },
     body: {
+      /**
+       * The SCIM schema URIs.
+       *
+       */
       schemas: string[];
+      /**
+       * Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+       *
+       */
       Operations: any[];
     },
   ): Promise<ScimEnterpriseUser> {
@@ -28876,6 +43781,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a SCIM user from an enterprise
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-a-scim-user-from-an-enterprise
+   * Tags: enterprise-admin
+   *
+   */
   async enterpriseAdminDeleteUserFromEnterprise(params: {
     enterprise: string;
     scim_user_id: string;
@@ -28900,6 +43812,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List SCIM provisioned identities
+   * Retrieves a paginated list of all provisioned organization members, including pending invitations. If you provide the `filter` parameter, the resources for all matching provisions members are returned.
+   *
+   * When a user with a SAML-provisioned external identity leaves (or is removed from) an organization, the account's metadata is immediately removed. However, the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub. This can happen in certain cases where an external identity associated with an organization will not match an organization member:
+   *   - When a user with a SCIM-provisioned external identity is removed from an organization, the account's metadata is preserved to allow the user to re-join the organization in the future.
+   *   - When inviting a user to join an organization, you can expect to see their external identity in the results before they accept the invitation, or if the invitation is cancelled (or never accepted).
+   *   - When a user is invited over SCIM, an external identity is created that matches with the invitee's email address. However, this identity is only linked to a user account when the user accepts the invitation by going through SAML SSO.
+   *
+   * The returned list of external identities can include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single Sign-On (SSO) process but does not sign in to their GitHub account after completing SSO:
+   *
+   * 1. The user is granted access by the IdP and is not a member of the GitHub organization.
+   *
+   * 1. The user attempts to access the GitHub organization and initiates the SAML SSO process, and is not currently signed in to their GitHub account.
+   *
+   * 1. After successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in to their GitHub account:
+   *    - If the user signs in, their GitHub account is linked to this entry.
+   *    - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub organization, and the external identity `null` entry remains in place.
+   * Learn more at {@link https://docs.github.com/rest/reference/scim/#list-scim-provisioned-identities
+   * Tags: scim
+   *
+   */
   async scimListProvisionedIdentities(params: {
     org: string;
     startIndex?: number;
@@ -28971,18 +43905,58 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Provision and invite a SCIM user
+   * Provision organization membership for a user, and send an activation email to the email address.
+   * Learn more at {@link https://docs.github.com/rest/reference/scim/#provision-and-invite-a-scim-user
+   * Tags: scim
+   *
+   */
   async scimProvisionAndInviteUser(
     params: {
       org: string;
     },
     body: {
+      /**
+       * Configured by the admin. Could be an email, login, or username
+       * @example "someone@example.com"
+       *
+       */
       userName: string;
+      /**
+       * The name of the user, suitable for display to end-users
+       * @example "Jon Doe"
+       *
+       */
       displayName?: string;
+      /**
+       * @example
+       * {
+       *   "givenName": "Jane",
+       *   "familyName": "User"
+       * }
+       *
+       */
       name: {
         givenName: string;
         familyName: string;
         formatted?: string;
       };
+      /**
+       * user emails
+       * @example
+       * [
+       *   {
+       *     "value": "someone@example.com",
+       *     "primary": true
+       *   },
+       *   {
+       *     "value": "another@example.com",
+       *     "primary": false
+       *   }
+       * ]
+       *
+       */
       emails: {
         value: string;
         primary?: boolean;
@@ -29066,6 +44040,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get SCIM provisioning information for a user
+   * Learn more at {@link https://docs.github.com/rest/reference/scim/#get-scim-provisioning-information-for-a-user
+   * Tags: scim
+   *
+   */
   async scimGetProvisioningInformationForUser(params: {
     org: string;
     scim_user_id: string;
@@ -29117,6 +44097,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a provisioned organization membership
+   * Replaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](https://docs.github.com/rest/reference/scim#update-an-attribute-for-a-scim-user) endpoint instead.
+   *
+   * You must at least provide the required values for the user: `userName`, `name`, and `emails`.
+   *
+   * **Warning:** Setting `active: false` removes the user from the organization, deletes the external identity, and deletes the associated `{scim_user_id}`.
+   * Learn more at {@link https://docs.github.com/rest/reference/scim/#set-scim-information-for-a-provisioned-user
+   * Tags: scim
+   *
+   */
   async scimSetInformationForProvisionedUser(
     params: {
       org: string;
@@ -29124,16 +44115,49 @@ export class GithubClient {
     },
     body: {
       schemas?: string[];
+      /**
+       * The name of the user, suitable for display to end-users
+       * @example "Jon Doe"
+       *
+       */
       displayName?: string;
       externalId?: string;
       groups?: string[];
       active?: boolean;
+      /**
+       * Configured by the admin. Could be an email, login, or username
+       * @example "someone@example.com"
+       *
+       */
       userName: string;
+      /**
+       * @example
+       * {
+       *   "givenName": "Jane",
+       *   "familyName": "User"
+       * }
+       *
+       */
       name: {
         givenName: string;
         familyName: string;
         formatted?: string;
       };
+      /**
+       * user emails
+       * @example
+       * [
+       *   {
+       *     "value": "someone@example.com",
+       *     "primary": true
+       *   },
+       *   {
+       *     "value": "another@example.com",
+       *     "primary": false
+       *   }
+       * ]
+       *
+       */
       emails: {
         type?: string;
         value: string;
@@ -29189,6 +44213,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an attribute for a SCIM user
+   * Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+   *
+   * **Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will not work.
+   *
+   * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it removes the user from the organization, deletes the external identity, and deletes the associated `:scim_user_id`.
+   *
+   * ```
+   * {
+   *   "Operations":[{
+   *     "op":"replace",
+   *     "value":{
+   *       "active":false
+   *     }
+   *   }]
+   * }
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/scim/#update-an-attribute-for-a-scim-user
+   * Tags: scim
+   *
+   */
   async scimUpdateAttributeForUser(
     params: {
       org: string;
@@ -29196,6 +44242,19 @@ export class GithubClient {
     },
     body: {
       schemas?: string[];
+      /**
+       * Set of operations to be performed
+       * @example
+       * [
+       *   {
+       *     "op": "replace",
+       *     "value": {
+       *       "active": false
+       *     }
+       *   }
+       * ]
+       *
+       */
       Operations: {
         op: 'add' | 'remove' | 'replace';
         path?: string;
@@ -29281,6 +44340,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a SCIM user from an organization
+   * Learn more at {@link https://docs.github.com/rest/reference/scim/#delete-a-scim-user-from-an-organization
+   * Tags: scim
+   *
+   */
   async scimDeleteUserFromOrg(params: {
     org: string;
     scim_user_id: string;
@@ -29332,6 +44397,30 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Search code
+   * Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+   *
+   * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   *
+   * For example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:
+   *
+   * `q=addClass+in:file+language:js+repo:jquery/jquery`
+   *
+   * This query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.
+   *
+   * #### Considerations for code search
+   *
+   * Due to the complexity of searching code, there are a few restrictions on how searches are performed:
+   *
+   * *   Only the _default branch_ is considered. In most cases, this will be the `master` branch.
+   * *   Only files smaller than 384 KB are searchable.
+   * *   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing
+   * language:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.
+   * Learn more at {@link https://docs.github.com/rest/reference/search/#search-code
+   * Tags: search
+   *
+   */
   async searchCode(params: {
     q: string;
     sort?: 'indexed';
@@ -29417,6 +44506,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Search commits
+   * Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+   *
+   * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
+   * metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   *
+   * For example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:
+   *
+   * `q=repo:octocat/Spoon-Knife+css`
+   * Learn more at {@link https://docs.github.com/rest/reference/search/#search-commits
+   * Tags: search
+   *
+   */
   async searchCommits(params: {
     q: string;
     sort?: 'author-date' | 'committer-date';
@@ -29483,6 +44586,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Search issues and pull requests
+   * Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+   *
+   * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
+   * search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   *
+   * For example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.
+   *
+   * `q=windows+label:bug+language:python+state:open&sort=created&order=asc`
+   *
+   * This query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.
+   *
+   * **Note:** For [user-to-server](https://docs.github.com/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only issues or pull requests](https://docs.github.com/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
+   * Learn more at {@link https://docs.github.com/rest/reference/search/#search-issues-and-pull-requests
+   * Tags: search
+   *
+   */
   async searchIssuesAndPullRequests(params: {
     q: string;
     sort?:
@@ -29579,6 +44700,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Search labels
+   * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+   *
+   * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   *
+   * For example, if you want to find labels in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like this:
+   *
+   * `q=bug+defect+enhancement&repository_id=64778136`
+   *
+   * The labels that best match the query appear first in the search results.
+   * Learn more at {@link https://docs.github.com/rest/reference/search/#search-labels
+   * Tags: search
+   *
+   */
   async searchLabels(params: {
     repository_id: number;
     q: string;
@@ -29655,6 +44791,25 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Search repositories
+   * Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+   *
+   * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   *
+   * For example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:
+   *
+   * `q=tetris+language:assembly&sort=stars&order=desc`
+   *
+   * This query searches for repositories with the word `tetris` in the name, the description, or the README. The results are limited to repositories where the primary language is assembly. The results are sorted by stars in descending order, so that the most popular repositories appear first in the search results.
+   *
+   * When you include the `mercy` preview header, you can also search for multiple topics by adding more `topic:` instances. For example, your query might look like this:
+   *
+   * `q=topic:ruby+topic:rails`
+   * Learn more at {@link https://docs.github.com/rest/reference/search/#search-repositories
+   * Tags: search
+   *
+   */
   async searchRepos(params: {
     q: string;
     sort?: 'stars' | 'forks' | 'help-wanted-issues' | 'updated';
@@ -29731,6 +44886,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Search topics
+   * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://help.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
+   *
+   * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   *
+   * For example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:
+   *
+   * `q=ruby+is:featured`
+   *
+   * This query searches for topics with the keyword `ruby` and limits the results to find only topics that are featured. The topics that are the best match for the query appear first in the search results.
+   * Learn more at {@link https://docs.github.com/rest/reference/search/#search-topics
+   * Tags: search
+   *
+   */
   async searchTopics(params: {
     q: string;
   }): Promise<{
@@ -29782,6 +44952,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Search users
+   * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+   *
+   * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   *
+   * For example, if you're looking for a list of popular users, you might try this query:
+   *
+   * `q=tom+repos:%3E42+followers:%3E1000`
+   *
+   * This query searches for users with the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.
+   * Learn more at {@link https://docs.github.com/rest/reference/search/#search-users
+   * Tags: search
+   *
+   */
   async searchUsers(params: {
     q: string;
     sort?: 'followers' | 'repositories' | 'joined';
@@ -29858,6 +45043,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a team (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/rest/reference/teams#get-a-team-by-name) endpoint.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#get-a-team-legacy
+   * Tags: teams
+   *
+   */
   async teamsGetLegacy(params: { team_id: number }): Promise<TeamFull> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/teams/{team_id}', params),
@@ -29885,15 +45078,56 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a team (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/rest/reference/teams#update-a-team) endpoint.
+   *
+   * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
+   *
+   * **Note:** With nested teams, the `privacy` for parent teams cannot be `secret`.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#update-a-team-legacy
+   * Tags: teams
+   *
+   */
   async teamsUpdateLegacy(
     params: {
       team_id: number;
     },
     body: {
+      /**
+       * The name of the team.
+       *
+       */
       name: string;
+      /**
+       * The description of the team.
+       *
+       */
       description?: string;
+      /**
+       * The level of privacy this team should have. Editing teams without specifying this parameter leaves `privacy` intact. The options are:
+       * **For a non-nested team:**
+       * \* `secret` - only visible to organization owners and members of this team.
+       * \* `closed` - visible to all members of this organization.
+       * **For a parent or child team:**
+       * \* `closed` - visible to all members of this organization.
+       *
+       */
       privacy?: 'secret' | 'closed';
+      /**
+       * **Deprecated**. The permission that new repositories will be added to the team with when none is specified. Can be one of:
+       * \* `pull` - team members can pull, but not push to or administer newly-added repositories.
+       * \* `push` - team members can pull and push, but not administer newly-added repositories.
+       * \* `admin` - team members can pull, push and administer newly-added repositories.
+       * @defaultValue "pull"
+       *
+       */
       permission?: 'pull' | 'push' | 'admin';
+      /**
+       * The ID of a team to set as the parent team.
+       *
+       */
       parent_team_id?: number | null;
     },
   ): Promise<TeamFull> {
@@ -29942,6 +45176,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a team (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/rest/reference/teams#delete-a-team) endpoint.
+   *
+   * To delete a team, the authenticated user must be an organization owner or team maintainer.
+   *
+   * If you are an organization owner, deleting a parent team will delete all of its child teams as well.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#delete-a-team-legacy
+   * Tags: teams
+   *
+   */
   async teamsDeleteLegacy(params: { team_id: number }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/teams/{team_id}', params),
@@ -29978,6 +45224,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List discussions (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/rest/reference/teams#list-discussions) endpoint.
+   *
+   * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussions-legacy
+   * Tags: teams
+   *
+   */
   async teamsListDiscussionsLegacy(params: {
     team_id: number;
     direction?: 'asc' | 'desc';
@@ -30015,13 +45271,37 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a discussion (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/rest/reference/teams#create-a-discussion) endpoint.
+   *
+   * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-legacy
+   * Tags: teams
+   *
+   */
   async teamsCreateDiscussionLegacy(
     params: {
       team_id: number;
     },
     body: {
+      /**
+       * The discussion post's title.
+       *
+       */
       title: string;
+      /**
+       * The discussion post's body text.
+       *
+       */
       body: string;
+      /**
+       * Private posts are only visible to team members, organization owners, and team maintainers. Public posts are visible to all members of the organization. Set to `true` to create a private post.
+       *
+       */
       private?: boolean;
     },
   ): Promise<TeamDiscussion> {
@@ -30043,6 +45323,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a discussion (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/rest/reference/teams#get-a-discussion) endpoint.
+   *
+   * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-legacy
+   * Tags: teams
+   *
+   */
   async teamsGetDiscussionLegacy(params: {
     team_id: number;
     discussion_number: number;
@@ -30067,13 +45357,31 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a discussion (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/rest/reference/teams#update-a-discussion) endpoint.
+   *
+   * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-legacy
+   * Tags: teams
+   *
+   */
   async teamsUpdateDiscussionLegacy(
     params: {
       team_id: number;
       discussion_number: number;
     },
     body: {
+      /**
+       * The discussion post's title.
+       *
+       */
       title?: string;
+      /**
+       * The discussion post's body text.
+       *
+       */
       body?: string;
     },
   ): Promise<TeamDiscussion> {
@@ -30098,6 +45406,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a discussion (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/rest/reference/teams#delete-a-discussion) endpoint.
+   *
+   * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-legacy
+   * Tags: teams
+   *
+   */
   async teamsDeleteDiscussionLegacy(params: {
     team_id: number;
     discussion_number: number;
@@ -30122,6 +45440,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List discussion comments (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/rest/reference/teams#list-discussion-comments) endpoint.
+   *
+   * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussion-comments-legacy
+   * Tags: teams
+   *
+   */
   async teamsListDiscussionCommentsLegacy(params: {
     team_id: number;
     discussion_number: number;
@@ -30163,12 +45491,28 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a discussion comment (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/rest/reference/teams#create-a-discussion-comment) endpoint.
+   *
+   * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-comment-legacy
+   * Tags: teams
+   *
+   */
   async teamsCreateDiscussionCommentLegacy(
     params: {
       team_id: number;
       discussion_number: number;
     },
     body: {
+      /**
+       * The discussion comment's body text.
+       *
+       */
       body: string;
     },
   ): Promise<TeamDiscussionComment> {
@@ -30193,6 +45537,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a discussion comment (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/rest/reference/teams#get-a-discussion-comment) endpoint.
+   *
+   * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-comment-legacy
+   * Tags: teams
+   *
+   */
   async teamsGetDiscussionCommentLegacy(params: {
     team_id: number;
     discussion_number: number;
@@ -30218,6 +45572,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update a discussion comment (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/rest/reference/teams#update-a-discussion-comment) endpoint.
+   *
+   * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-comment-legacy
+   * Tags: teams
+   *
+   */
   async teamsUpdateDiscussionCommentLegacy(
     params: {
       team_id: number;
@@ -30225,6 +45589,10 @@ export class GithubClient {
       comment_number: number;
     },
     body: {
+      /**
+       * The discussion comment's body text.
+       *
+       */
       body: string;
     },
   ): Promise<TeamDiscussionComment> {
@@ -30249,6 +45617,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a discussion comment (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/rest/reference/teams#delete-a-discussion-comment) endpoint.
+   *
+   * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-comment-legacy
+   * Tags: teams
+   *
+   */
   async teamsDeleteDiscussionCommentLegacy(params: {
     team_id: number;
     discussion_number: number;
@@ -30274,6 +45652,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for a team discussion comment (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
+   *
+   * List the reactions to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion-comment-legacy
+   * Tags: reactions
+   *
+   */
   async reactionsListForTeamDiscussionCommentLegacy(params: {
     team_id: number;
     discussion_number: number;
@@ -30324,6 +45712,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for a team discussion comment (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
+   *
+   * Create a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with a `Status: 200 OK` means that you already added the reaction type to this team discussion comment.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion-comment-legacy
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForTeamDiscussionCommentLegacy(
     params: {
       team_id: number;
@@ -30331,6 +45729,10 @@ export class GithubClient {
       comment_number: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the team discussion comment.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -30363,6 +45765,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List reactions for a team discussion (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
+   *
+   * List the reactions to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion-legacy
+   * Tags: reactions
+   *
+   */
   async reactionsListForTeamDiscussionLegacy(params: {
     team_id: number;
     discussion_number: number;
@@ -30412,12 +45824,26 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create reaction for a team discussion (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
+   *
+   * Create a reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with a `Status: 200 OK` means that you already added the reaction type to this team discussion.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion-legacy
+   * Tags: reactions
+   *
+   */
   async reactionsCreateForTeamDiscussionLegacy(
     params: {
       team_id: number;
       discussion_number: number;
     },
     body: {
+      /**
+       * The [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types) to add to the team discussion.
+       *
+       */
       content:
         | '+1'
         | '-1'
@@ -30450,6 +45876,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List pending team invitations (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List pending team invitations`](https://docs.github.com/rest/reference/teams#list-pending-team-invitations) endpoint.
+   *
+   * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-pending-team-invitations-legacy
+   * Tags: teams
+   *
+   */
   async teamsListPendingInvitationsLegacy(params: {
     team_id: number;
     per_page?: number;
@@ -30481,6 +45917,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List team members (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/rest/reference/teams#list-team-members) endpoint.
+   *
+   * Team members will include the members of child teams.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-members-legacy
+   * Tags: teams
+   *
+   */
   async teamsListMembersLegacy(params: {
     team_id: number;
     role?: 'member' | 'maintainer' | 'all';
@@ -30524,6 +45970,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get team member (Legacy)
+   * The "Get team member" endpoint (described below) is deprecated.
+   *
+   * We recommend using the [Get team membership for a user](https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
+   *
+   * To list members in a team, the team must be visible to the authenticated user.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-member-legacy
+   * Tags: teams
+   *
+   */
   async teamsGetMemberLegacy(params: {
     team_id: number;
     username: string;
@@ -30554,6 +46012,24 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add team member (Legacy)
+   * The "Add team member" endpoint (described below) is deprecated.
+   *
+   * We recommend using the [Add or update team membership for a user](https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
+   *
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * To add someone to a team, the authenticated user must be an organization owner or a team maintainer in the team they're changing. The person being added to the team must be a member of the team's organization.
+   *
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   *
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#add-team-member-legacy
+   * Tags: teams
+   *
+   */
   async teamsAddMemberLegacy(params: {
     team_id: number;
     username: string;
@@ -30596,6 +46072,10 @@ export class GithubClient {
           field?: string;
           resource?: string;
         }[];
+        /**
+         * @example "\"https://docs.github.com/rest\""
+         *
+         */
         documentation_url?: string;
       }>(
         response.httpStatusCode,
@@ -30612,6 +46092,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove team member (Legacy)
+   * The "Remove team member" endpoint (described below) is deprecated.
+   *
+   * We recommend using the [Remove team membership for a user](https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
+   *
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * To remove a team member, the authenticated user must have 'admin' permissions to the team or be an owner of the org that the team is associated with. Removing a team member does not delete the user, it just removes them from the team.
+   *
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-member-legacy
+   * Tags: teams
+   *
+   */
   async teamsRemoveMemberLegacy(params: {
     team_id: number;
     username: string;
@@ -30642,6 +46138,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get team membership for a user (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user) endpoint.
+   *
+   * Team members will include the members of child teams.
+   *
+   * To get a user's membership with a team, the team must be visible to the authenticated user.
+   *
+   * **Note:** The `role` for organization owners returns as `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user-legacy
+   * Tags: teams
+   *
+   */
   async teamsGetMembershipForUserLegacy(params: {
     team_id: number;
     username: string;
@@ -30672,12 +46182,37 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add or update team membership for a user (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
+   *
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * If the user is already a member of the team's organization, this endpoint will add the user to the team. To add a membership between an organization member and a team, the authenticated user must be an organization owner or a team maintainer.
+   *
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   *
+   * If the user is unaffiliated with the team's organization, this endpoint will send an invitation to the user via email. This newly-created membership will be in the "pending" state until the user accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team. To add a membership between an unaffiliated user and a team, the authenticated user must be an organization owner.
+   *
+   * If the user is already a member of the team, this endpoint will update the role of the team member's role. To update the membership of a team member, the authenticated user must be an organization owner or a team maintainer.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
+   * Tags: teams
+   *
+   */
   async teamsAddOrUpdateMembershipForUserLegacy(
     params: {
       team_id: number;
       username: string;
     },
     body: {
+      /**
+       * The role that this user should have in the team. Can be one of:
+       * \* `member` - a normal member of the team.
+       * \* `maintainer` - a team maintainer. Able to add/remove other team members, promote other team members to team maintainer, and edit the team's name and description.
+       * @defaultValue "member"
+       *
+       */
       role?: 'member' | 'maintainer';
     },
   ): Promise<TeamMembership> {
@@ -30720,6 +46255,10 @@ export class GithubClient {
           field?: string;
           resource?: string;
         }[];
+        /**
+         * @example "\"https://help.github.com/articles/github-and-trade-controls\""
+         *
+         */
         documentation_url?: string;
       }>(
         response.httpStatusCode,
@@ -30736,6 +46275,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove team membership for a user (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
+   *
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
+   *
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user-legacy
+   * Tags: teams
+   *
+   */
   async teamsRemoveMembershipForUserLegacy(params: {
     team_id: number;
     username: string;
@@ -30766,6 +46319,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List team projects (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/rest/reference/teams#list-team-projects) endpoint.
+   *
+   * Lists the organization projects for a team.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-projects-legacy
+   * Tags: teams
+   *
+   */
   async teamsListProjectsLegacy(params: {
     team_id: number;
     per_page?: number;
@@ -30820,6 +46383,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check team permissions for a project (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
+   *
+   * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-project-legacy
+   * Tags: teams
+   *
+   */
   async teamsCheckPermissionsForProjectLegacy(params: {
     team_id: number;
     project_id: number;
@@ -30864,12 +46437,30 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add or update team project permissions (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
+   *
+   * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-project-permissions-legacy
+   * Tags: teams
+   *
+   */
   async teamsAddOrUpdateProjectPermissionsLegacy(
     params: {
       team_id: number;
       project_id: number;
     },
     body: {
+      /**
+       * The permission to grant to the team for this project. Can be one of:
+       * \* `read` - team members can read, but not write to or administer this project.
+       * \* `write` - team members can read and write, but not administer this project.
+       * \* `admin` - team members can read, write and administer this project.
+       * Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+       *
+       */
       permission?: 'read' | 'write' | 'admin';
     },
   ): Promise<any> {
@@ -30937,6 +46528,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a project from a team (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/rest/reference/teams#remove-a-project-from-a-team) endpoint.
+   *
+   * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. **Note:** This endpoint removes the project from the team, but does not delete it.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-project-from-a-team-legacy
+   * Tags: teams
+   *
+   */
   async teamsRemoveProjectLegacy(params: {
     team_id: number;
     project_id: number;
@@ -30990,6 +46591,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List team repositories (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/rest/reference/teams#list-team-repositories) endpoint.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-repositories-legacy
+   * Tags: teams
+   *
+   */
   async teamsListReposLegacy(params: {
     team_id: number;
     per_page?: number;
@@ -31030,6 +46639,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check team permissions for a repository (Legacy)
+   * **Note**: Repositories inherited through a parent team will also be checked.
+   *
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
+   *
+   * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-repository-legacy
+   * Tags: teams
+   *
+   */
   async teamsCheckPermissionsForRepoLegacy(params: {
     team_id: number;
     owner: string;
@@ -31070,6 +46691,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add or update team repository permissions (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
+   *
+   * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
+   *
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-repository-permissions-legacy
+   * Tags: teams
+   *
+   */
   async teamsAddOrUpdateRepoPermissionsLegacy(
     params: {
       team_id: number;
@@ -31077,6 +46710,15 @@ export class GithubClient {
       repo: string;
     },
     body: {
+      /**
+       * The permission to grant the team on this repository. Can be one of:
+       * \* `pull` - team members can pull, but not push to or administer this repository.
+       * \* `push` - team members can pull and push, but not administer this repository.
+       * \* `admin` - team members can pull, push and administer this repository.
+       *
+       * If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
+       *
+       */
       permission?: 'pull' | 'push' | 'admin';
     },
   ): Promise<any> {
@@ -31116,6 +46758,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a repository from a team (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
+   *
+   * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. NOTE: This does not delete the repository, it just removes it from the team.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-repository-from-a-team-legacy
+   * Tags: teams
+   *
+   */
   async teamsRemoveRepoLegacy(params: {
     team_id: number;
     owner: string;
@@ -31138,6 +46790,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List IdP groups for a team (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List IdP groups for a team`](https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team) endpoint.
+   *
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * List IdP groups connected to a team on GitHub.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team-legacy
+   * Tags: teams
+   *
+   */
   async teamsListIdpGroupsForLegacy(params: {
     team_id: number;
   }): Promise<GroupMapping> {
@@ -31176,19 +46840,63 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create or update IdP group connections (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create or update IdP group connections`](https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections) endpoint.
+   *
+   * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   *
+   * Creates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections-legacy
+   * Tags: teams
+   *
+   */
   async teamsCreateOrUpdateIdpGroupConnectionsLegacy(
     params: {
       team_id: number;
     },
     body: {
+      /**
+       * The IdP groups you want to connect to a GitHub team. When updating, the new `groups` object will replace the original one. You must include any existing groups that you don't want to remove.
+       *
+       */
       groups: {
+        /**
+         * ID of the IdP group.
+         *
+         */
         group_id: string;
+        /**
+         * Name of the IdP group.
+         *
+         */
         group_name: string;
+        /**
+         * Description of the IdP group.
+         *
+         */
         group_description: string;
+        /**
+         * @example "\"caceab43fc9ffa20081c\""
+         *
+         */
         id?: string;
+        /**
+         * @example "\"external-team-6c13e7288ef7\""
+         *
+         */
         name?: string;
+        /**
+         * @example "\"moar cheese pleese\""
+         *
+         */
         description?: string;
       }[];
+      /**
+       * @example "\"I am not a timestamp\""
+       *
+       */
       synced_at?: string;
     },
   ): Promise<GroupMapping> {
@@ -31228,6 +46936,14 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List child teams (Legacy)
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/rest/reference/teams#list-child-teams) endpoint.
+   * @deprecated
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-child-teams-legacy
+   * Tags: teams
+   *
+   */
   async teamsListChildLegacy(params: {
     team_id: number;
     per_page?: number;
@@ -31286,6 +47002,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the authenticated user
+   * If the authenticated user is authenticated through basic authentication or OAuth with the `user` scope, then the response lists public and private profile information.
+   *
+   * If the authenticated user is authenticated through OAuth without the `user` scope, then the response lists only public profile information.
+   * Learn more at {@link https://docs.github.com/rest/reference/users/#get-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersGetAuthenticated(params: {}): Promise<PrivateUser | PublicUser> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user', params),
@@ -31333,16 +47058,61 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update the authenticated user
+   * **Note:** If your email is set to private and you send an `email` parameter as part of this request to update your profile, your privacy settings are still enforced: the email address will not be displayed on your public profile or via the API.
+   * Learn more at {@link https://docs.github.com/rest/reference/users/#update-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersUpdateAuthenticated(
     params: {},
     body: {
+      /**
+       * The new name of the user.
+       * @example "Omar Jahandar"
+       *
+       */
       name?: string;
+      /**
+       * The publicly visible email address of the user.
+       * @example "omar@example.com"
+       *
+       */
       email?: string;
+      /**
+       * The new blog URL of the user.
+       * @example "blog.example.com"
+       *
+       */
       blog?: string;
+      /**
+       * The new Twitter username of the user.
+       * @example "therealomarj"
+       *
+       */
       twitter_username?: string | null;
+      /**
+       * The new company of the user.
+       * @example "Acme corporation"
+       *
+       */
       company?: string;
+      /**
+       * The new location of the user.
+       * @example "Berlin, Germany"
+       *
+       */
       location?: string;
+      /**
+       * The new hiring availability of the user.
+       *
+       */
       hireable?: boolean;
+      /**
+       * The new short biography of the user.
+       *
+       */
       bio?: string;
     },
   ): Promise<PrivateUser> {
@@ -31409,6 +47179,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List users blocked by the authenticated user
+   * List the users you've blocked on your personal account.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-users-blocked-by-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersListBlockedByAuthenticated(params: {}): Promise<SimpleUser[]> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/blocks', params),
@@ -31479,6 +47256,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a user is blocked by the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/users#check-if-a-user-is-blocked-by-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersCheckBlocked(params: { username: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/blocks/{username}', params),
@@ -31533,6 +47316,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Block a user
+   * Learn more at {@link https://docs.github.com/rest/reference/users#block-a-user
+   * Tags: users
+   *
+   */
   async usersBlock(params: { username: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/blocks/{username}', params),
@@ -31596,6 +47385,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unblock a user
+   * Learn more at {@link https://docs.github.com/rest/reference/users#unblock-a-user
+   * Tags: users
+   *
+   */
   async usersUnblock(params: { username: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/blocks/{username}', params),
@@ -31650,10 +47445,26 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set primary email visibility for the authenticated user
+   * Sets the visibility for your primary email addresses.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersSetPrimaryEmailVisibilityForAuthenticated(
     params: {},
     body: {
+      /**
+       * An email address associated with the GitHub user account to manage.
+       * @example "org@example.com"
+       *
+       */
       email: string;
+      /**
+       * Denotes whether an email is publically visible.
+       *
+       */
       visibility: 'public' | 'private';
     },
   ): Promise<Email[]> {
@@ -31722,6 +47533,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List email addresses for the authenticated user
+   * Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with the `user:email` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-email-addresses-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersListEmailsForAuthenticated(params: {
     per_page?: number;
     page?: number;
@@ -31788,10 +47606,22 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add an email address for the authenticated user
+   * This endpoint is accessible with the `user` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#add-an-email-address-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersAddEmailForAuthenticated(
     params: {},
     body:
       | {
+          /**
+           * Adds one or more email addresses to your GitHub account. Must contain at least one email address. **Note:** Alternatively, you can pass a single email address or an `array` of emails addresses directly, but we recommend that you pass an object using the `emails` key.
+           * @example []
+           *
+           */
           emails: string[];
         }
       | string[]
@@ -31862,10 +47692,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete an email address for the authenticated user
+   * This endpoint is accessible with the `user` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#delete-an-email-address-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersDeleteEmailForAuthenticated(
     params: {},
     body:
       | {
+          /**
+           * Email addresses associated with the GitHub user account.
+           *
+           */
           emails: string[];
         }
       | string[]
@@ -31934,6 +47775,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List followers of the authenticated user
+   * Lists the people following the authenticated user.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-followers-of-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersListFollowersForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -31991,6 +47839,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List the people the authenticated user follows
+   * Lists the people who the authenticated user follows.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-the-people-the-authenticated-user-follows
+   * Tags: users
+   *
+   */
   async usersListFollowedByAuthenticated(params: {
     per_page?: number;
     page?: number;
@@ -32048,6 +47903,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a person is followed by the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/users#check-if-a-person-is-followed-by-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersCheckPersonIsFollowedByAuthenticated(params: {
     username: string;
   }): Promise<any> {
@@ -32104,6 +47965,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Follow a user
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   *
+   * Following a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#follow-a-user
+   * Tags: users
+   *
+   */
   async usersFollow(params: { username: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/following/{username}', params),
@@ -32158,6 +48028,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unfollow a user
+   * Unfollowing a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#unfollow-a-user
+   * Tags: users
+   *
+   */
   async usersUnfollow(params: { username: string }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/following/{username}', params),
@@ -32212,6 +48089,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List GPG keys for the authenticated user
+   * Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-gpg-keys-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersListGpgKeysForAuthenticated(params: {
     per_page?: number;
     page?: number;
@@ -32278,9 +48162,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a GPG key for the authenticated user
+   * Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#create-a-gpg-key-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersCreateGpgKeyForAuthenticated(
     params: {},
     body: {
+      /**
+       * A GPG key in ASCII-armored format.
+       *
+       */
       armored_public_key: string;
     },
   ): Promise<GpgKey> {
@@ -32347,6 +48242,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a GPG key for the authenticated user
+   * View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-gpg-key-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersGetGpgKeyForAuthenticated(params: {
     gpg_key_id: number;
   }): Promise<GpgKey> {
@@ -32403,6 +48305,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a GPG key for the authenticated user
+   * Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#delete-a-gpg-key-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersDeleteGpgKeyForAuthenticated(params: {
     gpg_key_id: number;
   }): Promise<any> {
@@ -32468,6 +48377,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List app installations accessible to the user access token
+   * Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
+   *
+   * You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+   *
+   * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+   *
+   * You can find the permissions for the installation under the `permissions` key.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-app-installations-accessible-to-the-user-access-token
+   * Tags: apps
+   *
+   */
   async appsListInstallationsForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -32542,6 +48464,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories accessible to the user access token
+   * List repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access for an installation.
+   *
+   * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+   *
+   * You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+   *
+   * The access the user has to each repository is included in the hash under the `permissions` key.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-repositories-accessible-to-the-user-access-token
+   * Tags: apps
+   *
+   */
   async appsListInstallationReposForAuthenticatedUser(params: {
     installation_id: number;
     per_page?: number;
@@ -32607,6 +48542,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Add a repository to an app installation
+   * Add a single repository to an installation. The authenticated user must have admin access to the repository.
+   *
+   * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#add-a-repository-to-an-app-installation
+   * Tags: apps
+   *
+   */
   async appsAddRepoToInstallation(params: {
     installation_id: number;
     repository_id: number;
@@ -32658,6 +48602,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove a repository from an app installation
+   * Remove a single repository from an installation. The authenticated user must have admin access to the repository.
+   *
+   * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#remove-a-repository-from-an-app-installation
+   * Tags: apps
+   *
+   */
   async appsRemoveRepoFromInstallation(params: {
     installation_id: number;
     repository_id: number;
@@ -32709,6 +48662,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get interaction restrictions for your public repositories
+   * Shows which type of GitHub user can interact with your public repositories and when the restriction expires. If there are no restrictions, you will see an empty response.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-your-public-repositories
+   * Tags: interactions
+   *
+   */
   async interactionsGetRestrictionsForAuthenticatedUser(params: {}): Promise<InteractionLimitResponse> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/interaction-limits', params),
@@ -32729,6 +48689,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Set interaction restrictions for your public repositories
+   * Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-your-public-repositories
+   * Tags: interactions
+   *
+   */
   async interactionsSetRestrictionsForAuthenticatedUser(
     params: {},
     body: InteractionLimit,
@@ -32762,6 +48729,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Remove interaction restrictions from your public repositories
+   * Removes any interaction restrictions from your public repositories.
+   * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-from-your-public-repositories
+   * Tags: interactions
+   *
+   */
   async interactionsRemoveRestrictionsForAuthenticatedUser(params: {}): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/interaction-limits', params),
@@ -32780,6 +48754,18 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List user account issues assigned to the authenticated user
+   * List issues across owned and member repositories assigned to the authenticated user.
+   *
+   * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
+   * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
+   * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+   * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/issues/#list-user-account-issues-assigned-to-the-authenticated-user
+   * Tags: issues
+   *
+   */
   async issuesListForAuthenticatedUser(params: {
     filter?:
       | 'assigned'
@@ -32861,6 +48847,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public SSH keys for the authenticated user
+   * Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-ssh-keys-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersListPublicSshKeysForAuthenticated(params: {
     per_page?: number;
     page?: number;
@@ -32927,10 +48920,26 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a public SSH key for the authenticated user
+   * Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersCreatePublicSshKeyForAuthenticated(
     params: {},
     body: {
+      /**
+       * A descriptive name for the new key.
+       * @example "Personal MacBook Air"
+       *
+       */
       title?: string;
+      /**
+       * The public SSH key to add to your GitHub account.
+       *
+       */
       key: string;
     },
   ): Promise<Key> {
@@ -32997,6 +49006,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a public SSH key for the authenticated user
+   * View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersGetPublicSshKeyForAuthenticated(params: {
     key_id: number;
   }): Promise<Key> {
@@ -33053,6 +49069,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a public SSH key for the authenticated user
+   * Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/users#delete-a-public-ssh-key-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersDeletePublicSshKeyForAuthenticated(params: {
     key_id: number;
   }): Promise<any> {
@@ -33109,6 +49132,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List subscriptions for the authenticated user
+   * Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user
+   * Tags: apps
+   *
+   */
   async appsListSubscriptionsForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -33166,6 +49196,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List subscriptions for the authenticated user (stubbed)
+   * Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user-stubbed
+   * Tags: apps
+   *
+   */
   async appsListSubscriptionsForAuthenticatedUserStubbed(params: {
     per_page?: number;
     page?: number;
@@ -33214,6 +49251,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization memberships for the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-memberships-for-the-authenticated-user
+   * Tags: orgs
+   *
+   */
   async orgsListMembershipsForAuthenticatedUser(params: {
     state?: 'active' | 'pending';
     per_page?: number;
@@ -33283,6 +49326,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get an organization membership for the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-an-organization-membership-for-the-authenticated-user
+   * Tags: orgs
+   *
+   */
   async orgsGetMembershipForAuthenticatedUser(params: {
     org: string;
   }): Promise<OrgMembership> {
@@ -33321,11 +49370,21 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Update an organization membership for the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user
+   * Tags: orgs
+   *
+   */
   async orgsUpdateMembershipForAuthenticatedUser(
     params: {
       org: string;
     },
     body: {
+      /**
+       * The state that the membership should be in. Only `"active"` will be accepted.
+       *
+       */
       state: 'active';
     },
   ): Promise<OrgMembership> {
@@ -33374,6 +49433,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List user migrations
+   * Lists all migrations a user has started.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-user-migrations
+   * Tags: migrations
+   *
+   */
   async migrationsListForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -33431,11 +49497,36 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Start a user migration
+   * Initiates the generation of a user migration archive.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#start-a-user-migration
+   * Tags: migrations
+   *
+   */
   async migrationsStartForAuthenticatedUser(
     params: {},
     body: {
+      /**
+       * Lock the repositories being migrated at the start of the migration
+       * @example true
+       *
+       */
       lock_repositories?: boolean;
+      /**
+       * Do not include attachments in the migration
+       * @example true
+       *
+       */
       exclude_attachments?: boolean;
+      /**
+       * Exclude attributes from the API response to improve performance
+       * @example
+       * [
+       *   "repositories"
+       * ]
+       *
+       */
       exclude?: 'repositories'[];
       repositories: string[];
     },
@@ -33494,6 +49585,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a user migration status
+   * Fetches a single user migration. The response includes the `state` of the migration, which can be one of the following values:
+   *
+   * *   `pending` - the migration hasn't started yet.
+   * *   `exporting` - the migration is in progress.
+   * *   `exported` - the migration finished successfully.
+   * *   `failed` - the migration failed.
+   *
+   * Once the migration has been `exported` you can [download the migration archive](https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive).
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-a-user-migration-status
+   * Tags: migrations
+   *
+   */
   async migrationsGetStatusForAuthenticatedUser(params: {
     migration_id: number;
     exclude?: string[];
@@ -33556,6 +49661,33 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Download a user migration archive
+   * Fetches the URL to download the migration archive as a `tar.gz` file. Depending on the resources your repository uses, the migration archive can contain JSON files with data for these objects:
+   *
+   * *   attachments
+   * *   bases
+   * *   commit\_comments
+   * *   issue\_comments
+   * *   issue\_events
+   * *   issues
+   * *   milestones
+   * *   organizations
+   * *   projects
+   * *   protected\_branches
+   * *   pull\_request\_reviews
+   * *   pull\_requests
+   * *   releases
+   * *   repositories
+   * *   review\_comments
+   * *   schema
+   * *   users
+   *
+   * The archive will also contain an `attachments` directory that includes all attachment files uploaded to GitHub.com and a `repositories` directory that contains the repository's Git data.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive
+   * Tags: migrations
+   *
+   */
   async migrationsGetArchiveForAuthenticatedUser(params: {
     migration_id: number;
   }): Promise<any> {
@@ -33606,6 +49738,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a user migration archive
+   * Deletes a previous migration archive. Downloadable migration archives are automatically deleted after seven days. Migration metadata, which is returned in the [List user migrations](https://docs.github.com/rest/reference/migrations#list-user-migrations) and [Get a user migration status](https://docs.github.com/rest/reference/migrations#get-a-user-migration-status) endpoints, will continue to be available even after an archive is deleted.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#delete-a-user-migration-archive
+   * Tags: migrations
+   *
+   */
   async migrationsDeleteArchiveForAuthenticatedUser(params: {
     migration_id: number;
   }): Promise<any> {
@@ -33662,6 +49801,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unlock a user repository
+   * Unlocks a repository. You can lock repositories when you [start a user migration](https://docs.github.com/rest/reference/migrations#start-a-user-migration). Once the migration is complete you can unlock each repository to begin using it again or [delete the repository](https://docs.github.com/rest/reference/repos#delete-a-repository) if you no longer need the source data. Returns a status of `404 Not Found` if the repository is not locked.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#unlock-a-user-repository
+   * Tags: migrations
+   *
+   */
   async migrationsUnlockRepoForAuthenticatedUser(params: {
     migration_id: number;
     repo_name: string;
@@ -33722,6 +49868,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories for a user migration
+   * Lists all the repositories for this user migration.
+   * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-repositories-for-a-user-migration
+   * Tags: migrations
+   *
+   */
   async migrationsListReposForUser(params: {
     migration_id: number;
     per_page?: number;
@@ -33762,6 +49915,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organizations for the authenticated user
+   * List organizations for the authenticated user.
+   *
+   * **OAuth scope requirements**
+   *
+   * This only lists organizations that your authorization allows you to operate on in some way (e.g., you can list teams with `read:org` scope, you can publicize your organization membership with `user` scope, etc.). Therefore, this API requires at least `user` or `read:org` scope. OAuth requests with insufficient scope receive a `403 Forbidden` response.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#list-organizations-for-the-authenticated-user
+   * Tags: orgs
+   *
+   */
   async orgsListForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -33819,6 +49983,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a package for the authenticated user
+   * Gets a specific package for a package owned by the authenticated user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesGetPackageForAuthenticatedUser(params: {
     package_type:
       | 'npm'
@@ -33846,6 +50020,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a package for the authenticated user
+   * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-for-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesDeletePackageForAuthenticatedUser(params: {
     package_type:
       | 'npm'
@@ -33900,6 +50084,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Restore a package for the authenticated user
+   * Restores a package owned by the authenticated user.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-for-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesRestorePackageForAuthenticatedUser(params: {
     package_type:
       | 'npm'
@@ -33960,6 +50157,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all package versions for a package owned by the authenticated user
+   * Returns all package versions for a package owned by the authenticated user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUser(params: {
     package_type:
       | 'npm'
@@ -34031,6 +50238,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a package version for the authenticated user
+   * Gets a specific package version for a package owned by the authenticated user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesGetPackageVersionForAuthenticatedUser(params: {
     package_type:
       | 'npm'
@@ -34062,6 +50279,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Delete a package version for the authenticated user
+   * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-version-for-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesDeletePackageVersionForAuthenticatedUser(params: {
     package_type:
       | 'npm'
@@ -34120,6 +50347,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Restore a package version for the authenticated user
+   * Restores a package version owned by the authenticated user.
+   *
+   * You can restore a deleted package version under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-version-for-the-authenticated-user
+   * Tags: packages
+   *
+   */
   async packagesRestorePackageVersionForAuthenticatedUser(params: {
     package_type:
       | 'npm'
@@ -34178,10 +50418,26 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a user project
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#create-a-user-project
+   * Tags: projects
+   *
+   */
   async projectsCreateForAuthenticatedUser(
     params: {},
     body: {
+      /**
+       * Name of the project
+       * @example "Week One Sprint"
+       *
+       */
       name: string;
+      /**
+       * Body of the project
+       * @example "This project represents the sprint of the first week in January"
+       *
+       */
       body?: string | null;
     },
   ): Promise<Project> {
@@ -34253,6 +50509,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public email addresses for the authenticated user
+   * Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-email-addresses-for-the-authenticated-user
+   * Tags: users
+   *
+   */
   async usersListPublicEmailsForAuthenticated(params: {
     per_page?: number;
     page?: number;
@@ -34319,6 +50582,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories for the authenticated user
+   * Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
+   *
+   * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-repositories-for-the-authenticated-user
+   * Tags: repos
+   *
+   */
   async reposListForAuthenticatedUser(params: {
     visibility?: 'all' | 'public' | 'private';
     affiliation?: string;
@@ -34418,25 +50690,125 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Create a repository for the authenticated user
+   * Creates a new repository for the authenticated user.
+   *
+   * **OAuth scope requirements**
+   *
+   * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+   *
+   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+   * *   `repo` scope to create a private repository.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#create-a-repository-for-the-authenticated-user
+   * Tags: repos
+   *
+   */
   async reposCreateForAuthenticatedUser(
     params: {},
     body: {
+      /**
+       * The name of the repository.
+       * @example "Team Environment"
+       *
+       */
       name: string;
+      /**
+       * A short description of the repository.
+       *
+       */
       description?: string;
+      /**
+       * A URL with more information about the repository.
+       *
+       */
       homepage?: string;
+      /**
+       * Whether the repository is private.
+       *
+       */
       private?: boolean;
+      /**
+       * Whether issues are enabled.
+       * @example true
+       * @defaultValue true
+       *
+       */
       has_issues?: boolean;
+      /**
+       * Whether projects are enabled.
+       * @example true
+       * @defaultValue true
+       *
+       */
       has_projects?: boolean;
+      /**
+       * Whether the wiki is enabled.
+       * @example true
+       * @defaultValue true
+       *
+       */
       has_wiki?: boolean;
+      /**
+       * The id of the team that will be granted access to this repository. This is only valid when creating a repository in an organization.
+       *
+       */
       team_id?: number;
+      /**
+       * Whether the repository is initialized with a minimal README.
+       *
+       */
       auto_init?: boolean;
+      /**
+       * The desired language or platform to apply to the .gitignore.
+       * @example "Haskell"
+       *
+       */
       gitignore_template?: string;
+      /**
+       * The license keyword of the open source license for this repository.
+       * @example "mit"
+       *
+       */
       license_template?: string;
+      /**
+       * Whether to allow squash merges for pull requests.
+       * @example true
+       * @defaultValue true
+       *
+       */
       allow_squash_merge?: boolean;
+      /**
+       * Whether to allow merge commits for pull requests.
+       * @example true
+       * @defaultValue true
+       *
+       */
       allow_merge_commit?: boolean;
+      /**
+       * Whether to allow rebase merges for pull requests.
+       * @example true
+       * @defaultValue true
+       *
+       */
       allow_rebase_merge?: boolean;
+      /**
+       * Whether to delete head branches when pull requests are merged
+       *
+       */
       delete_branch_on_merge?: boolean;
+      /**
+       * Whether downloads are enabled.
+       * @example true
+       * @defaultValue true
+       *
+       */
       has_downloads?: boolean;
+      /**
+       * Whether this repository acts as a template that can be used to generate new repositories.
+       * @example true
+       *
+       */
       is_template?: boolean;
     },
   ): Promise<Repository> {
@@ -34512,6 +50884,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repository invitations for the authenticated user
+   * When authenticating as a user, this endpoint will list all currently open repository invitations for that user.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-invitations-for-the-authenticated-user
+   * Tags: repos
+   *
+   */
   async reposListInvitationsForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -34578,6 +50957,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Accept a repository invitation
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#accept-a-repository-invitation
+   * Tags: repos
+   *
+   */
   async reposAcceptInvitation(params: { invitation_id: number }): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/user/repository_invitations/{invitation_id}', params),
@@ -34632,6 +51017,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Decline a repository invitation
+   * Learn more at {@link https://docs.github.com/rest/reference/repos#decline-a-repository-invitation
+   * Tags: repos
+   *
+   */
   async reposDeclineInvitation(params: {
     invitation_id: number;
   }): Promise<any> {
@@ -34688,6 +51079,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories starred by the authenticated user
+   * Lists repositories the authenticated user has starred.
+   *
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-starred-by-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityListReposStarredByAuthenticatedUser(params: {
     sort?: 'created' | 'updated';
     direction?: 'asc' | 'desc';
@@ -34754,6 +51154,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a repository is starred by the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#check-if-a-repository-is-starred-by-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityCheckRepoIsStarredByAuthenticatedUser(params: {
     owner: string;
     repo: string;
@@ -34811,6 +51217,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Star a repository for the authenticated user
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#star-a-repository-for-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityStarRepoForAuthenticatedUser(params: {
     owner: string;
     repo: string;
@@ -34868,6 +51281,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Unstar a repository for the authenticated user
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#unstar-a-repository-for-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityUnstarRepoForAuthenticatedUser(params: {
     owner: string;
     repo: string;
@@ -34925,6 +51344,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories watched by the authenticated user
+   * Lists repositories the authenticated user is watching.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-watched-by-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityListWatchedReposForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -34982,6 +51408,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List teams for the authenticated user
+   * List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/apps/building-oauth-apps/).
+   * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-teams-for-the-authenticated-user
+   * Tags: teams
+   *
+   */
   async teamsListForAuthenticatedUser(params: {
     per_page?: number;
     page?: number;
@@ -35039,6 +51472,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List users
+   * Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization accounts.
+   *
+   * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
+   * Learn more at {@link https://docs.github.com/rest/reference/users/#list-users
+   * Tags: users
+   *
+   */
   async usersList(params: {
     since?: number;
     per_page?: number;
@@ -35078,6 +51520,19 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a user
+   * Provides publicly available information about someone with a GitHub account.
+   *
+   * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub plan information' below"
+   *
+   * The `email` key in the following response is the publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub. For more information, see [Authentication](https://docs.github.com/rest/overview/resources-in-the-rest-api#authentication).
+   *
+   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/rest/reference/users#emails)".
+   * Learn more at {@link https://docs.github.com/rest/reference/users/#get-a-user
+   * Tags: users
+   *
+   */
   async usersGetByUsername(params: {
     username: string;
   }): Promise<PrivateUser | PublicUser> {
@@ -35109,6 +51564,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List events for the authenticated user
+   * If you are authenticated as the given user, you will see your private events. Otherwise, you'll only see public events.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-events-for-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityListEventsForAuthenticatedUser(params: {
     username: string;
     per_page?: number;
@@ -35140,6 +51602,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organization events for the authenticated user
+   * This is the user's organization dashboard. You must be authenticated as the user to view this.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-organization-events-for-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityListOrgEventsForAuthenticatedUser(params: {
     username: string;
     org: string;
@@ -35172,6 +51641,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public events for a user
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events-for-a-user
+   * Tags: activity
+   *
+   */
   async activityListPublicEventsForUser(params: {
     username: string;
     per_page?: number;
@@ -35203,6 +51678,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List followers of a user
+   * Lists the people following the specified user.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-followers-of-a-user
+   * Tags: users
+   *
+   */
   async usersListFollowersForUser(params: {
     username: string;
     per_page?: number;
@@ -35234,6 +51716,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List the people a user follows
+   * Lists the people who the specified user follows.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-the-people-a-user-follows
+   * Tags: users
+   *
+   */
   async usersListFollowingForUser(params: {
     username: string;
     per_page?: number;
@@ -35265,6 +51754,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Check if a user follows another user
+   * Learn more at {@link https://docs.github.com/rest/reference/users#check-if-a-user-follows-another-user
+   * Tags: users
+   *
+   */
   async usersCheckFollowingForUser(params: {
     username: string;
     target_user: string;
@@ -35295,6 +51790,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List gists for a user
+   * Lists public gists for the specified user:
+   * Learn more at {@link https://docs.github.com/rest/reference/gists/#list-gists-for-a-user
+   * Tags: gists
+   *
+   */
   async gistsListForUser(params: {
     username: string;
     since?: string;
@@ -35338,6 +51840,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List GPG keys for a user
+   * Lists the GPG keys for a user. This information is accessible by anyone.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-gpg-keys-for-a-user
+   * Tags: users
+   *
+   */
   async usersListGpgKeysForUser(params: {
     username: string;
     per_page?: number;
@@ -35369,6 +51878,20 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get contextual information for a user
+   * Provides hovercard information when authenticated through basic auth or OAuth with the `repo` scope. You can find out more about someone in relation to their pull requests, issues, repositories, and organizations.
+   *
+   * The `subject_type` and `subject_id` parameters provide context for the person's hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository via cURL, it would look like this:
+   *
+   * ```shell
+   *  curl -u username:token
+   *   https://api.github.com/users/octocat/hovercard?subject_type=repository&subject_id=1300192
+   * ```
+   * Learn more at {@link https://docs.github.com/rest/reference/users/#get-contextual-information-for-a-user
+   * Tags: users
+   *
+   */
   async usersGetContextForUser(params: {
     username: string;
     subject_type?: 'organization' | 'repository' | 'issue' | 'pull_request';
@@ -35419,6 +51942,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a user installation for the authenticated app
+   * Enables an authenticated GitHub App to find the user’s installation information.
+   *
+   * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-a-user-installation-for-the-authenticated-app
+   * Tags: apps
+   *
+   */
   async appsGetUserInstallation(params: {
     username: string;
   }): Promise<Installation> {
@@ -35439,6 +51971,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public keys for a user
+   * Lists the _verified_ public SSH keys for a user. This is accessible by anyone.
+   * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-keys-for-a-user
+   * Tags: users
+   *
+   */
   async usersListPublicKeysForUser(params: {
     username: string;
     per_page?: number;
@@ -35470,6 +52009,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List organizations for a user
+   * List [public organization memberships](https://help.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user.
+   *
+   * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
+   * Learn more at {@link https://docs.github.com/rest/reference/orgs/#list-organizations-for-a-user
+   * Tags: orgs
+   *
+   */
   async orgsListForUser(params: {
     username: string;
     per_page?: number;
@@ -35501,6 +52049,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a package for a user
+   * Gets a specific package metadata for a public package owned by a user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-a-user
+   * Tags: packages
+   *
+   */
   async packagesGetPackageForUser(params: {
     package_type:
       | 'npm'
@@ -35532,6 +52090,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get all package versions for a package owned by a user
+   * Returns all package versions for a public package owned by a specified user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-a-user
+   * Tags: packages
+   *
+   */
   async packagesGetAllPackageVersionsForPackageOwnedByUser(params: {
     package_type:
       | 'npm'
@@ -35592,6 +52160,16 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get a package version for a user
+   * Gets a specific package version for a public package owned by a specified user.
+   *
+   * At this time, to use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-a-user
+   * Tags: packages
+   *
+   */
   async packagesGetPackageVersionForUser(params: {
     package_type:
       | 'npm'
@@ -35624,6 +52202,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List user projects
+   * Learn more at {@link https://docs.github.com/rest/reference/projects/#list-user-projects
+   * Tags: projects
+   *
+   */
   async projectsListForUser(params: {
     username: string;
     state?: 'open' | 'closed' | 'all';
@@ -35681,6 +52265,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List events received by the authenticated user
+   * These are events that you've received by watching repos and following users. If you are authenticated as the given user, you will see private events. Otherwise, you'll only see public events.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-events-received-by-the-authenticated-user
+   * Tags: activity
+   *
+   */
   async activityListReceivedEventsForUser(params: {
     username: string;
     per_page?: number;
@@ -35712,6 +52303,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List public events received by a user
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events-received-by-a-user
+   * Tags: activity
+   *
+   */
   async activityListReceivedPublicEventsForUser(params: {
     username: string;
     per_page?: number;
@@ -35743,6 +52340,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories for a user
+   * Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user.
+   * Learn more at {@link https://docs.github.com/rest/reference/repos/#list-repositories-for-a-user
+   * Tags: repos
+   *
+   */
   async reposListForUser(params: {
     username: string;
     type?: 'all' | 'owner' | 'member';
@@ -35786,6 +52390,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Actions billing for a user
+   * Gets the summary of the free and paid GitHub Actions minutes used.
+   *
+   * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   *
+   * Access tokens must have the `user` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-github-actions-billing-for-a-user
+   * Tags: billing
+   *
+   */
   async billingGetGithubActionsBillingUser(params: {
     username: string;
   }): Promise<ActionsBillingUsage> {
@@ -35806,6 +52421,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get GitHub Packages billing for a user
+   * Gets the free and paid storage used for GitHub Packages in gigabytes.
+   *
+   * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+   *
+   * Access tokens must have the `user` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-github-packages-billing-for-a-user
+   * Tags: billing
+   *
+   */
   async billingGetGithubPackagesBillingUser(params: {
     username: string;
   }): Promise<PackagesBillingUsage> {
@@ -35826,6 +52452,17 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get shared storage billing for a user
+   * Gets the estimated paid and estimated total storage used for GitHub Actions and Github Packages.
+   *
+   * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+   *
+   * Access tokens must have the `user` scope.
+   * Learn more at {@link https://docs.github.com/rest/reference/billing/#get-shared-storage-billing-for-a-user
+   * Tags: billing
+   *
+   */
   async billingGetSharedStorageBillingUser(params: {
     username: string;
   }): Promise<CombinedBillingUsage> {
@@ -35849,6 +52486,15 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories starred by a user
+   * Lists repositories a user has starred.
+   *
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-starred-by-a-user
+   * Tags: activity
+   *
+   */
   async activityListReposStarredByUser(params: {
     username: string;
     sort?: 'created' | 'updated';
@@ -35889,6 +52535,13 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * List repositories watched by a user
+   * Lists repositories a user is watching.
+   * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-watched-by-a-user
+   * Tags: activity
+   *
+   */
   async activityListReposWatchedByUser(params: {
     username: string;
     per_page?: number;
@@ -35920,6 +52573,12 @@ export class GithubClient {
       'Unknown API Status Code!',
     );
   }
+  /**
+   * Get the Zen of GitHub
+   * Get a random sentence from the Zen of GitHub
+   * Tags: meta
+   *
+   */
   async metaGetZen(params: {}): Promise<any> {
     const requestContext = this.server.makeRequestContext(
       r.applyTemplating('/zen', params),

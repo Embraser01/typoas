@@ -11,6 +11,7 @@ Main features are:
 - References `$ref` handling (with cyclic refs)
 - Uses `fetch` api
 - Handle **API Key** and **HTTP Config** auth security schemes
+- JSDoc for schemas and operations
 - And more...
 
 The project is split into 3 parts:

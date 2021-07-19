@@ -1,6 +1,8 @@
 import { ReferenceObject, SchemaObject } from 'openapi3-ts';
 import { factory, TypeNode, SyntaxKind } from 'typescript';
 import { Context } from '../../context';
+import { addJSDocToNode } from '../comments/fields';
+import { getJSDocFromSchema } from '../comments/schema';
 import {
   hasUnsupportedIdentifierChar,
   sanitizeTypeIdentifier,
@@ -79,8 +81,8 @@ export function createTypeFromSchema(
         if (hasProperties) {
           node = factory.createTypeLiteralNode(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            Object.entries(schema.properties!).map(([key, val]) =>
-              factory.createPropertySignature(
+            Object.entries(schema.properties!).map(([key, val]) => {
+              const field = factory.createPropertySignature(
                 undefined,
                 hasUnsupportedIdentifierChar(key)
                   ? factory.createStringLiteral(key, true)
@@ -89,8 +91,13 @@ export function createTypeFromSchema(
                   ? undefined
                   : factory.createToken(SyntaxKind.QuestionToken),
                 createTypeFromSchema(val, ctx),
-              ),
-            ),
+              );
+
+              if (ctx.hasJSDoc() && !val.$ref) {
+                addJSDocToNode(field, getJSDocFromSchema(val));
+              }
+              return field;
+            }),
           );
         }
         if (schema.additionalProperties) {

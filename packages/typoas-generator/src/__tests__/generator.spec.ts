@@ -11,7 +11,7 @@ describe('create full specs', () => {
     const specs = JSON.parse(
       readFileSync(resolve(__dirname, '../../samples/petstore.json'), 'utf8'),
     ) as OpenAPIObject;
-    const context = new Context();
+    const context = new Context({ jsDoc: false });
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     context.initComponents(specs.components!);

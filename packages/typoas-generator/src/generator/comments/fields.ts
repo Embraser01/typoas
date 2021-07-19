@@ -9,17 +9,21 @@ import {
 } from 'typescript';
 
 const jsDocPrinter = createPrinter();
+const srcFile = factory.createSourceFile(
+  [],
+  factory.createToken(SyntaxKind.EndOfFileToken),
+  NodeFlags.Const,
+);
 
-export function addJSDocToNode(node: Node): void {
-  const jsDoc = factory.createJSDocComment('Test', []);
+export function addJSDocToNode(node: Node, text: string): void {
+  if (!text.trim()) {
+    return;
+  }
 
-  const src = factory.createSourceFile(
-    [],
-    factory.createToken(SyntaxKind.EndOfFileToken),
-    NodeFlags.Const,
-  );
+  const jsDoc = factory.createJSDocComment(text, []);
+
   const output = jsDocPrinter
-    .printNode(EmitHint.Unspecified, jsDoc, src)
+    .printNode(EmitHint.Unspecified, jsDoc, srcFile)
     .trim()
     .replace(/^\/\*|\*\/$/g, '');
 
