@@ -2,7 +2,9 @@ import { createClient } from './generator/api/client';
 import { Context, ContextOptions } from './context';
 import { OpenAPIObject, SchemasObject } from 'openapi3-ts';
 import {
+  createPrinter,
   factory,
+  NewLineKind,
   NodeFlags,
   SourceFile,
   Statement,
@@ -73,4 +75,10 @@ export function generateClient(
     factory.createToken(SyntaxKind.EndOfFileToken),
     NodeFlags.Const,
   );
+}
+
+export function getStringFromSourceFile(src: SourceFile): string {
+  const printer = createPrinter({ newLine: NewLineKind.LineFeed });
+
+  return printer.printFile(src);
 }
