@@ -1,27 +1,8 @@
 import { describe, expect, it } from '@jest/globals';
 import { ReferenceObject, SchemaObject } from 'openapi3-ts';
-import {
-  createPrinter,
-  EmitHint,
-  factory,
-  NewLineKind,
-  SyntaxKind,
-  NodeFlags,
-  TypeNode,
-} from 'typescript';
+import { getStringFromNode } from '../ts-node';
 import { createTypeFromSchema } from '../types';
 import { Context } from '../../../context';
-
-const getStringFromNode = (node: TypeNode): string => {
-  const printer = createPrinter({ newLine: NewLineKind.LineFeed });
-  const resultFile = factory.createSourceFile(
-    [],
-    factory.createToken(SyntaxKind.EndOfFileToken),
-    NodeFlags.Const,
-  );
-
-  return printer.printNode(EmitHint.Unspecified, node, resultFile);
-};
 
 describe('create type from schema', () => {
   it('should handle integer schema', () => {

@@ -57,6 +57,8 @@ export type ComponentRegistry<T extends ComponentType> = Map<
   ComponentContextFromName<T>
 >;
 
+export type ContextOptions = { jsDoc?: boolean };
+
 export class Context {
   schemas: ComponentRegistry<'schemas'> = new Map();
   responses: ComponentRegistry<'responses'> = new Map();
@@ -67,6 +69,8 @@ export class Context {
   securitySchemes: ComponentRegistry<'securitySchemes'> = new Map();
   links: ComponentRegistry<'links'> = new Map();
   callbacks: ComponentRegistry<'callbacks'> = new Map();
+
+  constructor(private opts: ContextOptions = {}) {}
 
   resolveReference<T extends ComponentType>(
     type: T,
@@ -114,7 +118,7 @@ export class Context {
     name: string,
     spec: ReferenceObject | any,
     map: ComponentRegistry<any>,
-  ) {
+  ): void {
     if (map.has(name)) return;
 
     if (spec.$ref) {
@@ -130,5 +134,9 @@ export class Context {
         this.addToMap(name, spec, this[type]),
       ),
     );
+  }
+
+  hasJSDoc(): boolean {
+    return this.opts.jsDoc !== false;
   }
 }

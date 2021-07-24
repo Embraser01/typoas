@@ -7,6 +7,8 @@ import {
   Statement,
   SyntaxKind,
 } from 'typescript';
+import { addJSDocToNode } from '../comments/fields';
+import { getJSDocFromOperation } from '../comments/operation';
 import { createOperation } from './operation';
 import {
   createJSONParseWrapper,
@@ -116,12 +118,16 @@ export function createClient(
     );
   }
   members.push(
-    ...Object.entries(
-      specs.paths,
-    ).flatMap(([p, item]: [string, PathItemObject]) =>
-      Object.entries(item).map(([method, op]) =>
-        createOperation(op, p, method, ctx),
-      ),
+    ...Object.entries(specs.paths).flatMap(
+      ([p, item]: [string, PathItemObject]) =>
+        Object.entries(item).map(([method, op]) => {
+          const opMethod = createOperation(op, p, method, ctx);
+
+          if (ctx.hasJSDoc()) {
+            addJSDocToNode(opMethod, getJSDocFromOperation(op));
+          }
+          return opMethod;
+        }),
     ),
   );
 
