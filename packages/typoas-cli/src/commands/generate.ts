@@ -12,7 +12,7 @@ export class GenerateCommand extends Command {
     examples: [
       [
         `Generate MyClient client`,
-        `$0 generate MyClient -i spec.json -o src/client.ts`,
+        `$0 generate -n MyClient -i spec.json -o src/client.ts`,
       ],
     ],
   };
@@ -27,13 +27,14 @@ export class GenerateCommand extends Command {
     description: 'Path where to write the generated TS file',
   });
 
-  name = Option.String({ required: true });
+  name = Option.String('-n,--name', { required: true });
 
   jsDoc = Option.Boolean('--js-doc', {
     description: 'Whether to add JS Doc to the generated code',
   });
 
   useEnum = Option.Boolean('--use-enum', {
+    hidden: true, // No implemented yet
     description: 'OpenAPI enums will be generated as Enums instead of Types',
   });
 
@@ -46,7 +47,7 @@ export class GenerateCommand extends Command {
     }
 
     const rawSpecs = await readFile(inputPath, { encoding: 'utf-8' });
-    // TODO Read YAML
+    // TODO Read YAML/HTTP
     const specs = JSON.parse(rawSpecs) as Parameters<typeof generateClient>[0];
 
     this.context.stdout.write(`Info: Generating spec '${specs.info.title}'\n`);

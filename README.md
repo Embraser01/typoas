@@ -17,7 +17,7 @@ Main features are:
 The project is split into 3 parts:
 
 - [`@typoas/generator`](./packages/typoas-generator) is used to generate the API specific code.
-- [`@typoas/cli`](./packages/typoas-cli) is a CLI entry point built on top of `@typoas/generator` (soon).
+- [`@typoas/cli`](./packages/typoas-cli) is a CLI entry point built on top of `@typoas/generator`.
 - [`@typoas/runtime`](./packages/typoas-runtime) is the package that will be used by the generated code.
 
 ## Installation
@@ -29,7 +29,11 @@ on `@typoas/runtime` that handles common things like serialization/authentificat
 
 ### Ues the generator from the CLI
 
-Typoas doesn't include a CLI yet but will soon.
+You can generate the TS client from the spec from the command line:
+```bash
+yarn dlx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
+npx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
+```
 
 ### Use the generator from the API
 
@@ -40,12 +44,7 @@ It uses `typescript` API to generate usable code:
 ```typescript
 import { readFileSync, writeFileSync } from 'fs';
 import { createPrinter, NewLineKind, SourceFile } from 'typescript';
-import { generateClient } from '@typoas/generator';
-
-const getStringFromSourceFile = (src: SourceFile): string => {
-  const printer = createPrinter({ newLine: NewLineKind.LineFeed });
-  return printer.printFile(src);
-};
+import { generateClient, getStringFromSourceFile } from '@typoas/generator';
 
 const specs = JSON.parse(readFileSync('path/to/github-openapi.json', 'utf8'));
 const src = generateClient(specs, 'GithubClient');
