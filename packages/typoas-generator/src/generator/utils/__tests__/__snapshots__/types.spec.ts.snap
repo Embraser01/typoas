@@ -61,6 +61,14 @@ exports[`create type from schema with complex object should handle additionalPro
 }"
 `;
 
+exports[`create type from schema with complex object should handle allOf 1`] = `
+"{
+    a?: string;
+} & {
+    b?: number;
+}"
+`;
+
 exports[`create type from schema with complex object should handle anyOf 1`] = `"string | string[]"`;
 
 exports[`create type from schema with complex object should handle nullable props 1`] = `"number | null"`;

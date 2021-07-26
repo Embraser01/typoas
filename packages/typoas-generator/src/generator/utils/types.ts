@@ -53,6 +53,10 @@ export function createTypeFromSchema(
     node = factory.createUnionTypeNode(
       schema.anyOf.map((s) => createTypeFromSchema(s, ctx)),
     );
+  } else if (schema.allOf && schema.allOf.length) {
+    node = factory.createIntersectionTypeNode(
+      schema.allOf.map((s) => createTypeFromSchema(s, ctx)),
+    );
   } else {
     switch (schema.type) {
       case 'integer':

@@ -168,6 +168,28 @@ describe('create type from schema', () => {
       expect(getStringFromNode(node)).toMatchSnapshot();
     });
 
+    it('should handle allOf', () => {
+      const schema: SchemaObject = {
+        allOf: [
+          {
+            type: 'object',
+            properties: {
+              a: { type: 'string' },
+            },
+          },
+          {
+            type: 'object',
+            properties: {
+              b: { type: 'integer' },
+            },
+          },
+        ],
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
     it('should handle nullable props', () => {
       const schema: SchemaObject = { type: 'integer', nullable: true };
 

@@ -31,7 +31,7 @@ export function getJSDocFromSchema(schema: SchemaObject): string {
   }
 
   if (schema.externalDocs) {
-    str += `Learn more at {@link ${schema.externalDocs.url}\n`;
+    str += `Learn more at {@link ${schema.externalDocs.url}}\n`;
   }
 
   return str;

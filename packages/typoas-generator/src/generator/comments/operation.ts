@@ -16,7 +16,7 @@ export function getJSDocFromOperation(op: OperationObject): string {
   }
 
   if (op.externalDocs) {
-    str += `Learn more at {@link ${op.externalDocs.url}\n`;
+    str += `Learn more at {@link ${op.externalDocs.url}}\n`;
   }
 
   if (op.tags?.length) {
