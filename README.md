@@ -7,7 +7,7 @@ on templates which allows better schemas definitions and other cool stuff.
 Main features are:
 
 - Fully typed
-- Support for `oneOf` and `anyOf` schemas.
+- Support for `allOf`, `oneOf` and `anyOf` schemas.
 - References `$ref` handling (with cyclic refs)
 - Uses `fetch` api
 - Handle **API Key** and **HTTP Config** auth security schemes
