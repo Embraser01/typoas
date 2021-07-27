@@ -71,5 +71,11 @@ export function applyTransforms(
       data = applyTransforms(data, s, resolver);
     }
   }
+
+  if (schema.allOf) {
+    for (const s of schema.allOf) {
+      data = applyTransforms(data, s, resolver);
+    }
+  }
   return data;
 }

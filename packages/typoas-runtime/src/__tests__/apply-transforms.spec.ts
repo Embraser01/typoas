@@ -131,4 +131,26 @@ describe('apply transforms', () => {
       ),
     ).toEqual([{ d: date }, date]);
   });
+
+  it('should handle allOf usage', () => {
+    const date = new Date();
+    expect(
+      applyTransforms(
+        { d: date.toISOString(), a: date.toISOString() },
+        {
+          allOf: [
+            {
+              type: 'object',
+              properties: { d: { type: 'string', format: 'date-time' } },
+            },
+            {
+              type: 'object',
+              properties: { a: { type: 'string', format: 'date-time' } },
+            },
+          ],
+        },
+        resolver,
+      ),
+    ).toEqual({ d: date, a: date });
+  });
 });
