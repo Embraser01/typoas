@@ -2,6 +2,7 @@ import { Context } from '../../context';
 import { getParameterName } from '../components/parameters';
 import { factory, Statement } from 'typescript';
 import { ParameterObject, ReferenceObject } from 'openapi3-ts';
+import { hasUnsupportedIdentifierChar } from '../utils/operation-name';
 import { createRuntimeRefProperty, ExportedRef } from '../utils/ref';
 
 export function createParameterStatements(
@@ -40,10 +41,15 @@ export function createParameterStatements(
   return [
     factory.createIfStatement(
       factory.createStrictInequality(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier('params'),
-          propName,
-        ),
+        hasUnsupportedIdentifierChar(propName)
+          ? factory.createElementAccessExpression(
+              factory.createIdentifier('params'),
+              factory.createStringLiteral(propName),
+            )
+          : factory.createPropertyAccessExpression(
+              factory.createIdentifier('params'),
+              propName,
+            ),
         factory.createIdentifier('undefined'),
       ),
       factory.createExpressionStatement(
@@ -59,10 +65,15 @@ export function createParameterStatements(
               createRuntimeRefProperty(ExportedRef.serializeParameter),
               undefined,
               [
-                factory.createPropertyAccessExpression(
-                  factory.createIdentifier('params'),
-                  propName,
-                ),
+                hasUnsupportedIdentifierChar(propName)
+                  ? factory.createElementAccessExpression(
+                      factory.createIdentifier('params'),
+                      factory.createStringLiteral(propName),
+                    )
+                  : factory.createPropertyAccessExpression(
+                      factory.createIdentifier('params'),
+                      propName,
+                    ),
               ],
             ),
           ],
