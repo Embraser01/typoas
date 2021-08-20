@@ -2,6 +2,8 @@
 
 exports[`create type from schema should handle array of strings 1`] = `"string[]"`;
 
+exports[`create type from schema should handle const string 1`] = `"'a'"`;
+
 exports[`create type from schema should handle dates 1`] = `"Date"`;
 
 exports[`create type from schema should handle integer schema 1`] = `"number"`;

@@ -53,6 +53,14 @@ describe('create type from schema', () => {
     expect(getStringFromNode(node)).toMatchSnapshot();
   });
 
+  it('should handle const string', () => {
+    const schema: SchemaObject = { type: 'string', const: 'a' };
+
+    const node = createTypeFromSchema(schema, new Context());
+
+    expect(getStringFromNode(node)).toMatchSnapshot();
+  });
+
   it('should handle primitive number enums', () => {
     const schema: SchemaObject = { type: 'number', enum: [1, 6] };
 

@@ -30,9 +30,17 @@ export function createTypeFromSchema(
   }
 
   const schema: SchemaObject = schemaOrRef;
-  if (schema.enum && schema.type && ENUM_SUPPORTED_TYPE.includes(schema.type)) {
+
+  let sEnum = null;
+  if (schema.enum) {
+    sEnum = schema.enum;
+  } else if (schema.const) {
+    sEnum = [schema.const];
+  }
+
+  if (sEnum && schema.type && ENUM_SUPPORTED_TYPE.includes(schema.type)) {
     node = factory.createUnionTypeNode(
-      schema.enum
+      sEnum
         .map((e) => {
           if (e === null) return factory.createNull();
           if (typeof e === 'boolean') {
