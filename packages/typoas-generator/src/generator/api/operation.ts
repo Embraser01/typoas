@@ -6,13 +6,14 @@ import {
 } from '../components/parameters';
 import { createSchemaTypeFromRequestBody } from '../components/request-bodies';
 import { createSchemaTypeFromResponse } from '../components/responses';
-import { OperationObject } from 'openapi3-ts';
+import { OperationObject, ParameterObject, ReferenceObject } from 'openapi3-ts';
 import {
   Block,
   ClassElement,
   factory,
   NodeFlags,
   ParameterDeclaration,
+  PropertySignature,
   Statement,
   SyntaxKind,
 } from 'typescript';
@@ -33,6 +34,7 @@ export function createOperation(
   path: string,
   method: string,
   ctx: Context,
+  baseParameters: (ParameterObject | ReferenceObject)[],
 ): ClassElement {
   // Create API class with:
   //   - All available security
@@ -49,6 +51,8 @@ export function createOperation(
   //   - Set request body
   //   - Parse responses by status code
   const resp = getSuccessResponse(operation);
+
+  const usedParams = new Set<string>();
   const parameters: ParameterDeclaration[] = [
     factory.createParameterDeclaration(
       undefined,
@@ -57,20 +61,26 @@ export function createOperation(
       'params',
       undefined,
       factory.createTypeLiteralNode(
-        (operation.parameters || []).map((p) => {
-          const name = getParameterName(p, ctx);
+        [...(operation.parameters || []), ...baseParameters]
+          .map((p) => {
+            const name = getParameterName(p, ctx);
+            if (usedParams.has(name)) {
+              return null;
+            }
+            usedParams.add(name);
 
-          return factory.createPropertySignature(
-            undefined,
-            hasUnsupportedIdentifierChar(name)
-              ? factory.createStringLiteral(name, true)
-              : factory.createIdentifier(name),
-            isParameterRequired(p, ctx)
-              ? undefined
-              : factory.createToken(SyntaxKind.QuestionToken),
-            createSchemaTypeFromParameters(p, ctx),
-          );
-        }),
+            return factory.createPropertySignature(
+              undefined,
+              hasUnsupportedIdentifierChar(name)
+                ? factory.createStringLiteral(name, true)
+                : factory.createIdentifier(name),
+              isParameterRequired(p, ctx)
+                ? undefined
+                : factory.createToken(SyntaxKind.QuestionToken),
+              createSchemaTypeFromParameters(p, ctx),
+            );
+          })
+          .filter((node): node is PropertySignature => node !== null),
       ),
     ),
   ];
@@ -101,7 +111,7 @@ export function createOperation(
         ? createSchemaTypeFromResponse(resp, ctx)
         : factory.createKeywordTypeNode(SyntaxKind.AnyKeyword),
     ]),
-    createOperationBodyFunction(operation, path, method, ctx),
+    createOperationBodyFunction(operation, path, method, ctx, baseParameters),
   );
 }
 
@@ -110,6 +120,7 @@ export function createOperationBodyFunction(
   path: string,
   method: string,
   ctx: Context,
+  baseParameters: (ParameterObject | ReferenceObject)[],
 ): Block {
   const statements: Statement[] = [];
 
@@ -172,8 +183,12 @@ export function createOperationBodyFunction(
   );
 
   // Assign parameters
-  if (Array.isArray(operation.parameters)) {
-    for (const p of operation.parameters) {
+  const params = [...(operation.parameters || []), ...baseParameters];
+  const usedParams = new Set<string>();
+  for (const p of params) {
+    const name = getParameterName(p, ctx);
+    if (!usedParams.has(name)) {
+      usedParams.add(name);
       statements.push(...createParameterStatements(p, ctx));
     }
   }

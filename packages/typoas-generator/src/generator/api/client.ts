@@ -19,6 +19,17 @@ import {
 import { AUTH_CONFIGURE_METHOD, AUTH_TYPE_NAME } from './security';
 import { createMapTypeFromSecurityScheme } from '../components/security-scheme';
 
+const HTTP_METHOD = new Set([
+  'get',
+  'post',
+  'options',
+  'head',
+  'trace',
+  'patch',
+  'put',
+  'delete',
+]);
+
 export function createClient(
   specs: OpenAPIObject,
   name: string,
@@ -119,15 +130,20 @@ export function createClient(
   }
   members.push(
     ...Object.entries(specs.paths).flatMap(
-      ([p, item]: [string, PathItemObject]) =>
-        Object.entries(item).map(([method, op]) => {
-          const opMethod = createOperation(op, p, method, ctx);
+      ([p, item]: [string, PathItemObject]) => {
+        const baseParams = item.parameters || [];
+        const ops = Object.entries(item).filter(([method]) =>
+          HTTP_METHOD.has(method),
+        );
 
+        return ops.map(([method, op]) => {
+          const opMethod = createOperation(op, p, method, ctx, baseParams);
           if (ctx.hasJSDoc()) {
             addJSDocToNode(opMethod, getJSDocFromOperation(op));
           }
           return opMethod;
-        }),
+        });
+      },
     ),
   );
 

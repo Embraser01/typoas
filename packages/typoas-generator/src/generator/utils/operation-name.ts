@@ -22,7 +22,7 @@ function pascalCase(str: string): string {
 }
 
 export function hasUnsupportedIdentifierChar(key: string): boolean {
-  return /[-/.+@]/.test(key);
+  return /[-/.+@\s]/.test(key);
 }
 
 export function sanitizeOperationIdName(op: string): string {
