@@ -45,6 +45,10 @@ export function generateClient(
 ): SourceFile {
   const ctx = new Context(opts);
 
+  if (!specs.openapi) {
+    throw new Error("This specification doesn't look like an OpenAPI spec");
+  }
+
   if (specs.components) {
     ctx.initComponents(specs.components);
   }

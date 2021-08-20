@@ -1,8 +1,8 @@
 import { Command, Option, Usage } from 'clipanion';
-import { existsSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import * as path from 'path';
 import { generateClient, getStringFromSourceFile } from '@typoas/generator';
+import { loadSpec } from '../utils/load-spec';
 
 export class GenerateCommand extends Command {
   static paths = [[`generate`], [`g`]];
@@ -14,12 +14,16 @@ export class GenerateCommand extends Command {
         `Generate MyClient client`,
         `$0 generate -n MyClient -i spec.json -o src/client.ts`,
       ],
+      [
+        `Generate MyClient client`,
+        `$0 generate -n MyClient -i https://petstore.swagger.io/v2/swagger.json -o src/client.ts`,
+      ],
     ],
   };
 
   input = Option.String('-i,--input', {
     required: true,
-    description: 'Path to the OpenAPI JSON specification',
+    description: 'Path or URL to the OpenAPI JSON specification',
   });
 
   output = Option.String('-o,--output', {
@@ -33,22 +37,8 @@ export class GenerateCommand extends Command {
     description: 'Whether to add JS Doc to the generated code',
   });
 
-  useEnum = Option.Boolean('--use-enum', {
-    hidden: true, // No implemented yet
-    description: 'OpenAPI enums will be generated as Enums instead of Types',
-  });
-
   async execute(): Promise<void> {
-    const inputPath = path.resolve(process.cwd(), this.input);
-    if (!existsSync(inputPath)) {
-      this.context.stdout.write(`Error: File ${inputPath} does not exist\n`);
-      process.exit(1);
-      return;
-    }
-
-    const rawSpecs = await readFile(inputPath, { encoding: 'utf-8' });
-    // TODO Read YAML/HTTP
-    const specs = JSON.parse(rawSpecs) as Parameters<typeof generateClient>[0];
+    const specs = await loadSpec(this.input);
 
     this.context.stdout.write(`Info: Generating spec '${specs.info.title}'\n`);
     const src = generateClient(specs, this.name, { jsDoc: this.jsDoc });

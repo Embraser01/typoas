@@ -77,7 +77,7 @@ export class Context {
     ref: string,
   ): ComponentContextFromName<T> | null {
     const [, schemaName] =
-      new RegExp(`^#/components/${type}/([a-zA-Z-_]+)`).exec(ref) || [];
+      new RegExp(`^#/components/${type}/([0-9a-zA-Z-_]+)`).exec(ref) || [];
 
     let map;
     switch (type) {
