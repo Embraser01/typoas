@@ -58,6 +58,14 @@ export function generateClient(
     ? createSchemaComponents(specs.components?.schemas, ctx)
     : [];
 
+  if (ctx.isOnlyTypes()) {
+    return factory.createSourceFile(
+      schemaStmts,
+      factory.createToken(SyntaxKind.EndOfFileToken),
+      NodeFlags.Const,
+    );
+  }
+
   return factory.createSourceFile(
     [
       factory.createImportDeclaration(

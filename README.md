@@ -30,11 +30,23 @@ on `@typoas/runtime` that handles common things like serialization/authentificat
 ### Ues the generator from the CLI
 
 You can generate the TS client from the spec from the command line:
-
 ```bash
 yarn dlx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
 npx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
 ```
+
+Here is a short list of supported command line options:
+
+```
+    -i, --input [path/url]         Path or URL to the OpenAPI JSON specification (yaml/json format)
+    -o, --output [path]            Path where to write the generated TS file
+    -n, --name                     Class name of the generated client
+    --js-doc                       Whether to add JS Doc to the generated code
+    --only-types                   Use it to only generate types in #components/schemas/
+    --version                      Output the version number
+    -h, --help                     Display help for command
+```
+
 
 ### Use the generator from the API
 

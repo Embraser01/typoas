@@ -23,7 +23,8 @@ export class GenerateCommand extends Command {
 
   input = Option.String('-i,--input', {
     required: true,
-    description: 'Path or URL to the OpenAPI JSON specification',
+    description:
+      'Path or URL to the OpenAPI JSON specification (yaml/json format)',
   });
 
   output = Option.String('-o,--output', {
@@ -31,17 +32,27 @@ export class GenerateCommand extends Command {
     description: 'Path where to write the generated TS file',
   });
 
-  name = Option.String('-n,--name', { required: true });
+  name = Option.String('-n,--name', {
+    required: true,
+    description: 'Class name of the generated client',
+  });
 
   jsDoc = Option.Boolean('--js-doc', {
     description: 'Whether to add JS Doc to the generated code',
+  });
+
+  onlyTypes = Option.Boolean('--only-types', {
+    description: 'Use it to only generate types in #components/schemas/',
   });
 
   async execute(): Promise<void> {
     const specs = await loadSpec(this.input);
 
     this.context.stdout.write(`Info: Generating spec '${specs.info.title}'\n`);
-    const src = generateClient(specs, this.name, { jsDoc: this.jsDoc });
+    const src = generateClient(specs, this.name, {
+      jsDoc: this.jsDoc,
+      onlyTypes: this.onlyTypes,
+    });
 
     const content = getStringFromSourceFile(src);
 

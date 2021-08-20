@@ -57,7 +57,7 @@ export type ComponentRegistry<T extends ComponentType> = Map<
   ComponentContextFromName<T>
 >;
 
-export type ContextOptions = { jsDoc?: boolean };
+export type ContextOptions = { jsDoc?: boolean; onlyTypes?: boolean };
 
 export class Context {
   schemas: ComponentRegistry<'schemas'> = new Map();
@@ -138,5 +138,9 @@ export class Context {
 
   hasJSDoc(): boolean {
     return this.opts.jsDoc !== false;
+  }
+
+  isOnlyTypes(): boolean {
+    return !!this.opts.onlyTypes;
   }
 }
