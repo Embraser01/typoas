@@ -30,6 +30,7 @@ on `@typoas/runtime` that handles common things like serialization/authentificat
 ### Ues the generator from the CLI
 
 You can generate the TS client from the spec from the command line:
+
 ```bash
 yarn dlx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
 npx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
@@ -46,7 +47,6 @@ Here is a short list of supported command line options:
     --version                      Output the version number
     -h, --help                     Display help for command
 ```
-
 
 ### Use the generator from the API
 
