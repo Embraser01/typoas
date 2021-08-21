@@ -25,7 +25,7 @@ The project is split into 3 parts:
 
 ## Installation
 
-It will generate a single TS file containing all the code specific to the underlying API. 
+It will generate a single TS file containing all the code specific to the underlying API.
 This file only has a single dependency on `@typoas/runtime`.
 **You need to manually** add `@typoas/runtime` to your `dependencies`.
 It handles common things like serialization/authentification
