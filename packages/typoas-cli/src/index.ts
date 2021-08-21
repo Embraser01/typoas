@@ -1,15 +1,18 @@
 import { Builtins, Cli } from 'clipanion';
-
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { GenerateCommand } from './commands/generate';
-
-const [, , ...args] = process.argv;
 
 const cli = new Cli({
   binaryLabel: `Typoas cli`,
   binaryName: `@typoas/cli`,
-  binaryVersion: `0.0.3`,
+  binaryVersion: JSON.parse(
+    readFileSync(join(__dirname, '../package.json'), 'utf8'),
+  ),
 });
 
 cli.register(GenerateCommand);
 cli.register(Builtins.HelpCommand);
-cli.runExit(args, Cli.defaultContext);
+cli.register(Builtins.VersionCommand);
+
+export default cli;

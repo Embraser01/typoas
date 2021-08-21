@@ -5,7 +5,8 @@
     "target": "ES2019",
     "declaration": true,
     "lib": ["ES2019"],
-    "outDir": "lib"
+    "outDir": "lib",
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "lib"]
 }

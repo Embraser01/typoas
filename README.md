@@ -51,6 +51,29 @@ Here is a short list of supported command line options:
     -h, --help                     Display help for command
 ```
 
+or you can use it in code:
+
+```ts
+import cli from '@typoas/cli';
+
+await cli.run(
+  [
+    'generate',
+    '-i',
+    'https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.yaml',
+    '-o',
+    `./src/github.ts`,
+    '-n',
+    `GithubClient`,
+  ],
+  {
+    stdin: process.stdin,
+    stdout: process.stdout,
+    stderr: process.stderr,
+  },
+);
+```
+
 ### Use the generator from the API
 
 > The API is still at an **alpha** stage, so it may break between minors.
@@ -99,7 +122,7 @@ client
 
 ## Examples
 
-You can find examples in the [`packages`](./packages) folder.
+You can find examples in the [`examples`](./examples) folder.
 
 ## Contributing
 

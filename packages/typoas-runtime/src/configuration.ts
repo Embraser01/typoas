@@ -12,7 +12,8 @@ export interface BaseServerConfiguration {
  *
  */
 export class ServerConfiguration<T extends Record<string, string>>
-  implements BaseServerConfiguration {
+  implements BaseServerConfiguration
+{
   public constructor(private url: string, private variableConfiguration: T) {}
 
   /**

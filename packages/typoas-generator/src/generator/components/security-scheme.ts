@@ -77,7 +77,7 @@ export function createRuntimeSecurityClassFromSecurityScheme(
       if (securityScheme.in) {
         args.push(
           factory.createPropertyAssignment(
-            'name',
+            'in',
             factory.createStringLiteral(securityScheme.in, true),
           ),
         );
