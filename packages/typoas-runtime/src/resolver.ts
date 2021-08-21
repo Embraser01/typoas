@@ -5,8 +5,7 @@ export class RefResolver implements SchemaRefResolver {
   constructor(private schemas: SchemasObject) {}
 
   resolveSchema(ref: string): SchemaObject | undefined {
-    const [, schemaName] =
-      /^#\/components\/schemas\/([a-zA-Z-_]+)/.exec(ref) || [];
+    const [, schemaName] = /^#\/components\/schemas\/([^/]+)/.exec(ref) || [];
 
     return this.schemas?.[schemaName];
   }
