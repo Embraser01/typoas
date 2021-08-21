@@ -25,8 +25,10 @@ The project is split into 3 parts:
 
 ## Installation
 
-It will generate a single TS file containing all the code specific to the underlying API. It has a single dependency
-on `@typoas/runtime` that handles common things like serialization/authentification.
+It will generate a single TS file containing all the code specific to the underlying API. 
+This file only has a single dependency on `@typoas/runtime`.
+**You need to manually** add `@typoas/runtime` to your `dependencies`.
+It handles common things like serialization/authentification
 
 ## Usage
 
@@ -45,7 +47,7 @@ Here is a short list of supported command line options:
     -i, --input [path/url]         Path or URL to the OpenAPI JSON specification (yaml/json format)
     -o, --output [path]            Path where to write the generated TS file
     -n, --name                     Class name of the generated client
-    --js-doc                       Whether to add JS Doc to the generated code
+    --js-doc, --no-js-doc          Whether to add JS Doc to the generated code (default: true)
     --only-types                   Use it to only generate types in #components/schemas/
     --version                      Output the version number
     -h, --help                     Display help for command
