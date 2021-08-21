@@ -10,9 +10,12 @@ Main features are:
 - Support for `allOf`, `oneOf` and `anyOf` schemas.
 - References `$ref` handling (with cyclic refs)
 - Uses `fetch` api
-- Handle **API Key** and **HTTP Config** auth security schemes
+- Handle **API Key**, **HTTP Config** and **OAuth2**<sup>1</sup> auth security schemes
 - JSDoc for schemas and operations
 - And more...
+
+> <sup>1</sup>: OAuth2 scheme does not handle flows to retrieve an `accessToken`.
+> You need to provide your own `accessToken` through the `provider.getConfig()` function.
 
 The project is split into 3 parts:
 

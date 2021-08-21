@@ -39,6 +39,7 @@ export function createConfigTypeFromSecurityScheme(
         createRuntimeRefType(ExportedRef.BearerAuthConfig),
       ]);
     case 'oauth2':
+      return createRuntimeRefType(ExportedRef.BaseFlowConfig);
     case 'openIdConnect':
       throw new Error(`Unsupported security scheme '${securityScheme.type}'`);
   }
@@ -123,6 +124,19 @@ export function createRuntimeSecurityClassFromSecurityScheme(
         ],
       );
     case 'oauth2':
+      return factory.createNewExpression(
+        createRuntimeRefProperty(ExportedRef.OAuth2SecurityAuthentication),
+        undefined,
+        [
+          // Arg
+          factory.createObjectLiteralExpression(args),
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier('config'),
+            name,
+          ),
+        ],
+      );
+
     case 'openIdConnect':
       throw new Error(`Unsupported security scheme '${securityScheme.type}'`);
   }

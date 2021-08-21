@@ -6,7 +6,12 @@ import {
 } from '../components/parameters';
 import { createSchemaTypeFromRequestBody } from '../components/request-bodies';
 import { createSchemaTypeFromResponse } from '../components/responses';
-import { OperationObject, ParameterObject, ReferenceObject } from 'openapi3-ts';
+import {
+  OperationObject,
+  ParameterObject,
+  ReferenceObject,
+  SecurityRequirementObject,
+} from 'openapi3-ts';
 import {
   Block,
   ClassElement,
@@ -29,12 +34,17 @@ import {
   sanitizeOperationIdName,
 } from '../utils/operation-name';
 
+export type GlobalParameters = {
+  baseParameters: (ParameterObject | ReferenceObject)[];
+  defaultSecurityRequirements?: SecurityRequirementObject[];
+};
+
 export function createOperation(
   operation: OperationObject,
   path: string,
   method: string,
   ctx: Context,
-  baseParameters: (ParameterObject | ReferenceObject)[],
+  { baseParameters, defaultSecurityRequirements }: GlobalParameters,
 ): ClassElement {
   // Create API class with:
   //   - All available security
@@ -111,7 +121,10 @@ export function createOperation(
         ? createSchemaTypeFromResponse(resp, ctx)
         : factory.createKeywordTypeNode(SyntaxKind.AnyKeyword),
     ]),
-    createOperationBodyFunction(operation, path, method, ctx, baseParameters),
+    createOperationBodyFunction(operation, path, method, ctx, {
+      baseParameters,
+      defaultSecurityRequirements,
+    }),
   );
 }
 
@@ -120,7 +133,7 @@ export function createOperationBodyFunction(
   path: string,
   method: string,
   ctx: Context,
-  baseParameters: (ParameterObject | ReferenceObject)[],
+  { baseParameters, defaultSecurityRequirements }: GlobalParameters,
 ): Block {
   const statements: Statement[] = [];
 
@@ -219,8 +232,13 @@ export function createOperationBodyFunction(
   }
 
   // Assign security schemes
-  if (operation.security && operation.security.length) {
-    for (const secObject of operation.security) {
+  const secRequirements = operation.security || defaultSecurityRequirements;
+  if (secRequirements?.length) {
+    const secSchemesKeys = new Set<string>(
+      secRequirements.flatMap((s) => Object.keys(s)),
+    );
+
+    for (const scheme of secSchemesKeys) {
       statements.push(
         factory.createExpressionStatement(
           factory.createAwaitExpression(
@@ -231,8 +249,7 @@ export function createOperationBodyFunction(
                     factory.createThis(),
                     'authMethods',
                   ),
-                  // TODO Handle OAuth2 flows and Multiple auths
-                  Object.keys(secObject)[0],
+                  scheme,
                 ),
                 'applySecurityAuthentication',
               ),

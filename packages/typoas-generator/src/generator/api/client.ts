@@ -131,13 +131,16 @@ export function createClient(
   members.push(
     ...Object.entries(specs.paths).flatMap(
       ([p, item]: [string, PathItemObject]) => {
-        const baseParams = item.parameters || [];
+        const baseParameters = item.parameters || [];
         const ops = Object.entries(item).filter(([method]) =>
           HTTP_METHOD.has(method),
         );
 
         return ops.map(([method, op]) => {
-          const opMethod = createOperation(op, p, method, ctx, baseParams);
+          const opMethod = createOperation(op, p, method, ctx, {
+            baseParameters,
+            defaultSecurityRequirements: specs.security,
+          });
           if (ctx.hasJSDoc()) {
             addJSDocToNode(opMethod, getJSDocFromOperation(op));
           }
