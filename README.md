@@ -9,7 +9,8 @@ Main features are:
 - Fully typed
 - Support for `allOf`, `oneOf` and `anyOf` schemas.
 - References `$ref` handling (with cyclic refs)
-- Uses `fetch` api
+- Uses `fetch` api (can be customized)
+- Automatically convert `format: 'date-time'` to JS `Date`
 - Handle **API Key**, **HTTP Config** and **OAuth2**<sup>1</sup> auth security schemes
 - JSDoc for schemas and operations
 - And more...
