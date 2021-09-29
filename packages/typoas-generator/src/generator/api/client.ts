@@ -15,6 +15,7 @@ import {
   createRuntimeRefProperty,
   createRuntimeRefType,
   ExportedRef,
+  filterSchema,
 } from '../utils/ref';
 import { AUTH_CONFIGURE_METHOD, AUTH_TYPE_NAME } from './security';
 import { createMapTypeFromSecurityScheme } from '../components/security-scheme';
@@ -101,7 +102,16 @@ export function createClient(
       factory.createNewExpression(
         createRuntimeRefProperty(ExportedRef.RefResolver),
         undefined,
-        [createJSONParseWrapper(specs.components?.schemas || {})],
+        [
+          createJSONParseWrapper(
+            Object.fromEntries(
+              Object.entries(specs.components?.schemas || {}).map(([k, v]) => [
+                k,
+                filterSchema(v),
+              ]),
+            ),
+          ),
+        ],
       ),
     ),
   );

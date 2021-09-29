@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import * as r from '@typoas/runtime';
 export type Order = {
   /**
@@ -172,7 +170,7 @@ export class PetstoreClient {
     private http: r.HttpLibrary = new r.IsomorphicFetchHttpLibrary(),
     private resolver: r.SchemaRefResolver = new r.RefResolver(
       JSON.parse(
-        '{"Order":{"type":"object","properties":{"id":{"type":"integer","format":"int64","example":10},"petId":{"type":"integer","format":"int64","example":198772},"quantity":{"type":"integer","format":"int32","example":7},"shipDate":{"type":"string","format":"date-time"},"status":{"type":"string","description":"Order Status","example":"approved","enum":["placed","approved","delivered"]},"complete":{"type":"boolean"}},"xml":{"name":"order"}},"Customer":{"type":"object","properties":{"id":{"type":"integer","format":"int64","example":100000},"username":{"type":"string","example":"fehguy"},"address":{"type":"array","xml":{"name":"addresses","wrapped":true},"items":{"$ref":"#/components/schemas/Address"}}},"xml":{"name":"customer"}},"Address":{"type":"object","properties":{"street":{"type":"string","example":"437 Lytton"},"city":{"type":"string","example":"Palo Alto"},"state":{"type":"string","example":"CA"},"zip":{"type":"string","example":"94301"}},"xml":{"name":"address"}},"Category":{"type":"object","properties":{"id":{"type":"integer","format":"int64","example":1},"name":{"type":"string","example":"Dogs"}},"xml":{"name":"category"}},"User":{"type":"object","properties":{"id":{"type":"integer","format":"int64","example":10},"username":{"type":"string","example":"theUser"},"firstName":{"type":"string","example":"John"},"lastName":{"type":"string","example":"James"},"email":{"type":"string","example":"john@email.com"},"password":{"type":"string","example":"12345"},"phone":{"type":"string","example":"12345"},"userStatus":{"type":"integer","description":"User Status","format":"int32","example":1}},"xml":{"name":"user"}},"Tag":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"}},"xml":{"name":"tag"}},"Pet":{"required":["name","photoUrls"],"type":"object","properties":{"id":{"type":"integer","format":"int64","example":10},"name":{"type":"string","example":"doggie"},"category":{"$ref":"#/components/schemas/Category"},"photoUrls":{"type":"array","xml":{"wrapped":true},"items":{"type":"string","xml":{"name":"photoUrl"}}},"tags":{"type":"array","xml":{"wrapped":true},"items":{"$ref":"#/components/schemas/Tag"}},"status":{"type":"string","description":"pet status in the store","enum":["available","pending","sold"]}},"xml":{"name":"pet"}},"ApiResponse":{"type":"object","properties":{"code":{"type":"integer","format":"int32"},"type":{"type":"string"},"message":{"type":"string"}},"xml":{"name":"##default"}}}',
+        '{"Order":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"petId":{"type":"integer","format":"int64"},"quantity":{"type":"integer","format":"int32"},"shipDate":{"type":"string","format":"date-time"},"status":{"type":"string"},"complete":{"type":"boolean"}}},"Customer":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"username":{"type":"string"},"address":{"type":"array","items":{"$ref":"#/components/schemas/Address"}}}},"Address":{"type":"object","properties":{"street":{"type":"string"},"city":{"type":"string"},"state":{"type":"string"},"zip":{"type":"string"}}},"Category":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"}}},"User":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"username":{"type":"string"},"firstName":{"type":"string"},"lastName":{"type":"string"},"email":{"type":"string"},"password":{"type":"string"},"phone":{"type":"string"},"userStatus":{"type":"integer","format":"int32"}}},"Tag":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"}}},"Pet":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"},"category":{"$ref":"#/components/schemas/Category"},"photoUrls":{"type":"array","items":{"type":"string","xml":{"name":"photoUrl"}}},"tags":{"type":"array","items":{"$ref":"#/components/schemas/Tag"}},"status":{"type":"string"}}},"ApiResponse":{"type":"object","properties":{"code":{"type":"integer","format":"int32"},"type":{"type":"string"},"message":{"type":"string"}}}}',
       ),
     ),
   ) {
@@ -194,43 +192,31 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/Pet"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    if (r.isCodeInRange('404', response.httpStatusCode))
+    if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    if (r.isCodeInRange('405', response.httpStatusCode))
+    if (r.isCodeInRange('405', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -249,25 +235,21 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/Pet"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('405', response.httpStatusCode))
+    if (r.isCodeInRange('405', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -292,27 +274,23 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse(
           '{"type":"array","items":{"$ref":"#/components/schemas/Pet"}}',
         ),
         this.resolver,
       );
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -332,27 +310,23 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse(
           '{"type":"array","items":{"$ref":"#/components/schemas/Pet"}}',
         ),
         this.resolver,
       );
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -371,34 +345,26 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/Pet"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    if (r.isCodeInRange('404', response.httpStatusCode))
+    if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -426,19 +392,15 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('405', response.httpStatusCode))
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('405', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -460,19 +422,15 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -501,16 +459,16 @@ export class PetstoreClient {
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,
     );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/ApiResponse"}'),
         this.resolver,
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -528,18 +486,18 @@ export class PetstoreClient {
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
     await this.authMethods.api_key.applySecurityAuthentication(requestContext);
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse(
           '{"type":"object","additionalProperties":{"type":"integer","format":"int32"}}',
         ),
         this.resolver,
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -555,25 +513,21 @@ export class PetstoreClient {
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/Order"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('405', response.httpStatusCode))
+    if (r.isCodeInRange('405', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -588,34 +542,26 @@ export class PetstoreClient {
       r.HttpMethod.GET,
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/Order"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    if (r.isCodeInRange('404', response.httpStatusCode))
+    if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -630,28 +576,20 @@ export class PetstoreClient {
       r.HttpMethod.DELETE,
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    if (r.isCodeInRange('404', response.httpStatusCode))
+    if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -667,16 +605,16 @@ export class PetstoreClient {
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('default', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('default', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/User"}'),
         this.resolver,
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -692,25 +630,21 @@ export class PetstoreClient {
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/User"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('default', response.httpStatusCode))
+    if (r.isCodeInRange('default', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -737,25 +671,21 @@ export class PetstoreClient {
         'password',
         r.serializeParameter(params.password),
       );
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"type":"string"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -769,16 +699,12 @@ export class PetstoreClient {
       r.HttpMethod.GET,
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('default', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
-        JSON.parse('{}'),
-        this.resolver,
-      );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('default', res.httpStatusCode))
+      return r.handleResponse(res, {}, this.resolver);
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -792,34 +718,26 @@ export class PetstoreClient {
       r.HttpMethod.GET,
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('200', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('200', res.httpStatusCode))
+      return r.handleResponse(
+        res,
         JSON.parse('{"$ref":"#/components/schemas/User"}'),
         this.resolver,
       );
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    if (r.isCodeInRange('404', response.httpStatusCode))
+    if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -840,16 +758,12 @@ export class PetstoreClient {
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
     requestContext.setBody(JSON.stringify(body));
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('default', response.httpStatusCode))
-      return r.applyTransforms(
-        await response.body.json(),
-        JSON.parse('{}'),
-        this.resolver,
-      );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('default', res.httpStatusCode))
+      return r.handleResponse(res, {}, this.resolver);
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -864,28 +778,20 @@ export class PetstoreClient {
       r.HttpMethod.DELETE,
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
-    const response = await this.http.send(requestContext);
-    if (r.isCodeInRange('400', response.httpStatusCode))
+    const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    if (r.isCodeInRange('404', response.httpStatusCode))
+    if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<any>(
-        response.httpStatusCode,
-        r.applyTransforms(
-          await response.body.json(),
-          JSON.parse('{}'),
-          this.resolver,
-        ),
+        res.httpStatusCode,
+        await r.handleResponse(res, {}, this.resolver),
       );
-    throw new r.ApiException<string>(
-      response.httpStatusCode,
-      'Unknown API Status Code!',
+    throw new r.ApiException(
+      res.httpStatusCode,
+      r.handleResponse(res, {}, this.resolver),
     );
   }
 }

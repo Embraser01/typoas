@@ -7,8 +7,9 @@
  * => ApiException(404, someErrorMessageObject)
  *
  */
-export class ApiException<T> extends Error {
+export class ApiException<T = unknown> extends Error {
   public constructor(public code: number, public body: T) {
     super('HTTP-Code: ' + code + '\nMessage: ' + JSON.stringify(body));
+    this.name = 'ApiException';
   }
 }

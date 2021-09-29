@@ -28,7 +28,11 @@ import {
   getSuccessResponse,
 } from './response-processor';
 import { createParameterStatements } from './request-preparation';
-import { createRuntimeRefProperty, ExportedRef } from '../utils/ref';
+import {
+  createJSONParseWrapper,
+  createRuntimeRefProperty,
+  ExportedRef,
+} from '../utils/ref';
 import {
   hasUnsupportedIdentifierChar,
   sanitizeOperationIdName,
@@ -269,7 +273,7 @@ export function createOperationBodyFunction(
       factory.createVariableDeclarationList(
         [
           factory.createVariableDeclaration(
-            'response',
+            'res',
             undefined,
             undefined,
             factory.createAwaitExpression(
@@ -313,13 +317,24 @@ export function createOperationBodyFunction(
     factory.createThrowStatement(
       factory.createNewExpression(
         createRuntimeRefProperty(ExportedRef.ApiException),
-        [factory.createKeywordTypeNode(SyntaxKind.StringKeyword)],
+        undefined,
         [
           factory.createPropertyAccessExpression(
-            factory.createIdentifier('response'),
+            factory.createIdentifier('res'),
             'httpStatusCode',
           ),
-          factory.createStringLiteral('Unknown API Status Code!', true),
+          factory.createCallExpression(
+            createRuntimeRefProperty(ExportedRef.handleResponse),
+            undefined,
+            [
+              factory.createIdentifier('res'),
+              createJSONParseWrapper({}),
+              factory.createPropertyAccessExpression(
+                factory.createThis(),
+                'resolver',
+              ),
+            ],
+          ),
         ],
       ),
     ),
