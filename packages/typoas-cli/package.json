@@ -1,6 +1,6 @@
 {
   "name": "@typoas/cli",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "start": "ts-node ./src/bin.ts"
   },
   "dependencies": {
-    "@typoas/generator": "workspace:*",
+    "@typoas/generator": "workspace:^",
     "clipanion": "^3.0.1",
     "js-yaml": "^4.1.0"
   },

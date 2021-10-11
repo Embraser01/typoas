@@ -61,7 +61,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint", "npm:7.32.0"],
             ["eslint-plugin-jest", "virtual:48fee137fa33c8f0de4fd5104a43dfda11883d6ea37de0971b7ca50c6f708eda94d2b98e394bfd82390d629d459defee914b35b8bfa8314da1dfab12afdece9b#npm:24.4.0"],
             ["prettier", "npm:2.3.2"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "linkType": "SOFT",
         }]
@@ -1452,7 +1452,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["regexpp", "npm:3.1.0"],
             ["semver", "npm:7.3.5"],
             ["tsutils", "virtual:2a6a63ee15f0a69de562e36a4e70e92048f9461fae963613ef7b91a744c86fa1d6d675a0b4b25b0cc791668b66c93e863f2303ed4e9ad0293b45b06c528b5844#npm:3.21.0"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -1510,7 +1510,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/typescript-estree", "virtual:d507ea58c4708f02d99a6bdc692c47159452e7a0a1133630fdfba67a5ed409b3b0ce8c35499c84db481306ff49ddf3eef91a4166c4f63f8df1dc5c8fa581e09a#npm:4.29.2"],
             ["debug", "virtual:ee1bbcab87c0701d4ea83dd18afa59b10c6343191c17b3a8e7844ecdde3ca8e8977791131460b822baae289e9261b3b228709bc45987d850e69091b4d363edfa#npm:4.3.2"],
             ["eslint", "npm:7.32.0"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -1577,7 +1577,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-glob", "npm:4.0.1"],
             ["semver", "npm:7.3.5"],
             ["tsutils", "virtual:2a6a63ee15f0a69de562e36a4e70e92048f9461fae963613ef7b91a744c86fa1d6d675a0b4b25b0cc791668b66c93e863f2303ed4e9ad0293b45b06c528b5844#npm:3.21.0"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "packagePeers": [
             "typescript"
@@ -1607,7 +1607,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clipanion", "virtual:8ba6f45f834c024f5b31c5cafe8fca5333c03579b4255aded97917acea776523cf7661cf9835fac36471455bbfc5e3f56401515fe2b647ea50739c28c33ceb90#npm:3.0.1"],
             ["js-yaml", "npm:4.1.0"],
             ["ts-node", "virtual:8ba6f45f834c024f5b31c5cafe8fca5333c03579b4255aded97917acea776523cf7661cf9835fac36471455bbfc5e3f56401515fe2b647ea50739c28c33ceb90#npm:10.2.1"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "linkType": "SOFT",
         }]
@@ -1624,7 +1624,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-fetch", "npm:2.6.1"],
             ["prettier", "npm:2.3.2"],
             ["ts-node", "virtual:8ba6f45f834c024f5b31c5cafe8fca5333c03579b4255aded97917acea776523cf7661cf9835fac36471455bbfc5e3f56401515fe2b647ea50739c28c33ceb90#npm:10.2.1"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "linkType": "SOFT",
         }]
@@ -1641,7 +1641,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-environment-node", "npm:27.0.6"],
             ["openapi3-ts", "npm:2.0.1"],
             ["ts-jest", "virtual:9446e516ab1e967b6db5f66c3572caa1ade06cea155a1eb5261c1f7199776ddb67c883ce6adbb32eba835ebb07e501522df667db95070451b453657a2652fec4#npm:27.0.5"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "linkType": "SOFT",
         }]
@@ -1657,7 +1657,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint", "npm:7.32.0"],
             ["eslint-plugin-jest", "virtual:48fee137fa33c8f0de4fd5104a43dfda11883d6ea37de0971b7ca50c6f708eda94d2b98e394bfd82390d629d459defee914b35b8bfa8314da1dfab12afdece9b#npm:24.4.0"],
             ["prettier", "npm:2.3.2"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "linkType": "SOFT",
         }]
@@ -1674,7 +1674,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-environment-node", "npm:27.0.6"],
             ["openapi3-ts", "npm:2.0.1"],
             ["ts-jest", "virtual:9446e516ab1e967b6db5f66c3572caa1ade06cea155a1eb5261c1f7199776ddb67c883ce6adbb32eba835ebb07e501522df667db95070451b453657a2652fec4#npm:27.0.5"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"],
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"],
             ["url-parse", "npm:1.5.3"]
           ],
           "linkType": "SOFT",
@@ -3200,10 +3200,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["fsevents", [
-        ["patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=1cc4b2", {
-          "packageLocation": "./.yarn/unplugged/fsevents-patch-34a78773f2/node_modules/fsevents/",
+        ["patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7", {
+          "packageLocation": "./.yarn/unplugged/fsevents-patch-3340e2eb10/node_modules/fsevents/",
           "packageDependencies": [
-            ["fsevents", "patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=1cc4b2"],
+            ["fsevents", "patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"],
             ["node-gyp", "npm:7.1.2"]
           ],
           "linkType": "HARD",
@@ -3972,7 +3972,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.17.11"],
             ["anymatch", "npm:3.1.1"],
             ["fb-watchman", "npm:2.0.1"],
-            ["fsevents", "patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=1cc4b2"],
+            ["fsevents", "patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"],
             ["graceful-fs", "npm:4.2.6"],
             ["jest-regex-util", "npm:27.0.6"],
             ["jest-serializer", "npm:27.0.6"],
@@ -4107,7 +4107,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-pnp-resolver", "virtual:a2a7a17c7c516bd01f8cffcf1a332111f98b74d8804ae15464f582f4cee3ce5d1548c37e86ce0c9b0c018922d3ea98fd23b34a57360c342effff297713524b35#npm:1.2.2"],
             ["jest-util", "npm:27.0.6"],
             ["jest-validate", "npm:27.0.6"],
-            ["resolve", "patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=00b1ff"],
+            ["resolve", "patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=07638b"],
             ["slash", "npm:3.0.0"]
           ],
           "linkType": "HARD",
@@ -5235,10 +5235,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["resolve", [
-        ["patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=00b1ff", {
-          "packageLocation": "./.yarn/cache/resolve-patch-da1bf0dd3c-bed00be983.zip/node_modules/resolve/",
+        ["patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=07638b", {
+          "packageLocation": "./.yarn/cache/resolve-patch-b4a69197d3-a0dd7d16a8.zip/node_modules/resolve/",
           "packageDependencies": [
-            ["resolve", "patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=00b1ff"],
+            ["resolve", "patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=07638b"],
             ["is-core-module", "npm:2.2.0"],
             ["path-parse", "npm:1.0.6"]
           ],
@@ -5797,7 +5797,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.21"],
             ["make-error", "npm:1.3.6"],
             ["semver", "npm:7.3.5"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"],
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"],
             ["yargs-parser", "npm:20.2.9"]
           ],
           "packagePeers": [
@@ -5842,7 +5842,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["create-require", "npm:1.1.1"],
             ["diff", "npm:4.0.2"],
             ["make-error", "npm:1.3.6"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"],
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"],
             ["yn", "npm:3.1.1"]
           ],
           "packagePeers": [
@@ -5880,7 +5880,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tsutils", "virtual:2a6a63ee15f0a69de562e36a4e70e92048f9461fae963613ef7b91a744c86fa1d6d675a0b4b25b0cc791668b66c93e863f2303ed4e9ad0293b45b06c528b5844#npm:3.21.0"],
             ["@types/typescript", null],
             ["tslib", "npm:1.14.1"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "packagePeers": [
             "@types/typescript",
@@ -5985,10 +5985,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["typescript", [
-        ["patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7", {
-          "packageLocation": "./.yarn/cache/typescript-patch-bb3b548ba1-bc2c4fdf0f.zip/node_modules/typescript/",
+        ["patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8", {
+          "packageLocation": "./.yarn/cache/typescript-patch-e9a14bf896-61fc1a2ca5.zip/node_modules/typescript/",
           "packageDependencies": [
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=ddd1e8"]
           ],
           "linkType": "HARD",
         }]
@@ -10696,6 +10696,21 @@ var external_fs_ = __webpack_require__(747);
 var external_fs_default = /*#__PURE__*/__webpack_require__.n(external_fs_);
 ;// CONCATENATED MODULE: external "os"
 const external_os_namespaceObject = require("os");;
+;// CONCATENATED MODULE: ../yarnpkg-fslib/sources/constants.ts
+const constants_S_IFMT = 0o170000;
+const constants_S_IFDIR = 0o040000;
+const constants_S_IFREG = 0o100000;
+const constants_S_IFLNK = 0o120000;
+/**
+ * Unix timestamp for `1984-06-22T21:50:00.000Z`
+ *
+ * It needs to be after 1980-01-01 because that's what Zip supports, and it
+ * needs to have a slight offset to account for different timezones (because
+ * zip assumes that all times are local to whoever writes the file, which is
+ * really silly).
+ */
+
+const SAFE_TIME = 456789000;
 // EXTERNAL MODULE: external "path"
 var external_path_ = __webpack_require__(622);
 var external_path_default = /*#__PURE__*/__webpack_require__.n(external_path_);
@@ -10769,7 +10784,8 @@ const UNC_PORTABLE_PATH_REGEXP = /^\/unc\/(\.dot\/)?(.*)$/; // Path should look 
 
 function fromPortablePath(p) {
   if (process.platform !== `win32`) return p;
-  if (p.match(PORTABLE_PATH_REGEXP)) p = p.replace(PORTABLE_PATH_REGEXP, `$1`);else if (p.match(UNC_PORTABLE_PATH_REGEXP)) p = p.replace(UNC_PORTABLE_PATH_REGEXP, (match, p1, p2) => `\\\\${p1 ? `.\\` : ``}${p2}`);else return p;
+  let portablePathMatch, uncPortablePathMatch;
+  if (portablePathMatch = p.match(PORTABLE_PATH_REGEXP)) p = portablePathMatch[1];else if (uncPortablePathMatch = p.match(UNC_PORTABLE_PATH_REGEXP)) p = `\\\\${uncPortablePathMatch[1] ? `.\\` : ``}${uncPortablePathMatch[2]}`;else return p;
   return p.replace(/\//g, `\\`);
 } // Path should look like "N:/berry/scripts/plugin-pack.js"
 // And transform to "/N:/berry/scripts/plugin-pack.js"
@@ -10777,7 +10793,8 @@ function fromPortablePath(p) {
 
 function toPortablePath(p) {
   if (process.platform !== `win32`) return p;
-  if (p.match(WINDOWS_PATH_REGEXP)) p = p.replace(WINDOWS_PATH_REGEXP, `/$1`);else if (p.match(UNC_WINDOWS_PATH_REGEXP)) p = p.replace(UNC_WINDOWS_PATH_REGEXP, (match, p1, p2) => `/unc/${p1 ? `.dot/` : ``}${p2}`);
+  let windowsPathMatch, uncWindowsPathMatch;
+  if (windowsPathMatch = p.match(WINDOWS_PATH_REGEXP)) p = `/${windowsPathMatch[1]}`;else if (uncWindowsPathMatch = p.match(UNC_WINDOWS_PATH_REGEXP)) p = `/unc/${uncWindowsPathMatch[1] ? `.dot/` : ``}${uncWindowsPathMatch[2]}`;
   return p.replace(/\\/g, `/`);
 }
 
@@ -10790,9 +10807,9 @@ function toFilename(filename) {
 }
 ;// CONCATENATED MODULE: ../yarnpkg-fslib/sources/algorithms/copyPromise.ts
 
- // 1980-01-01, like Fedora
 
-const defaultTime = new Date(315532800 * 1000);
+
+const defaultTime = new Date(SAFE_TIME * 1000);
 var LinkStrategy;
 
 (function (LinkStrategy) {
@@ -10805,8 +10822,12 @@ async function copyPromise(destinationFs, destination, sourceFs, source, opts) {
   const normalizedSource = sourceFs.pathUtils.normalize(source);
   const prelayout = [];
   const postlayout = [];
-  await destinationFs.mkdirPromise(destinationFs.pathUtils.dirname(destination), {
-    recursive: true
+  const referenceTime = opts.stableTime ? {
+    mtime: defaultTime,
+    atime: defaultTime
+  } : await sourceFs.lstatPromise(normalizedSource);
+  await destinationFs.mkdirpPromise(destinationFs.pathUtils.dirname(destination), {
+    utimes: [referenceTime.atime, referenceTime.mtime]
   });
   const updateTime = typeof destinationFs.lutimesPromise === `function` ? destinationFs.lutimesPromise.bind(destinationFs) : destinationFs.utimesPromise.bind(destinationFs);
   await copyImpl(prelayout, postlayout, updateTime, destinationFs, normalizedDestination, sourceFs, normalizedSource, opts);
@@ -10889,9 +10910,17 @@ async function copyFolder(prelayout, postlayout, updateTime, destinationFs, dest
   let updated = false;
 
   if (destinationStat === null) {
-    prelayout.push(async () => destinationFs.mkdirPromise(destination, {
-      mode: sourceStat.mode
-    }));
+    prelayout.push(async () => {
+      try {
+        await destinationFs.mkdirPromise(destination, {
+          mode: sourceStat.mode
+        });
+      } catch (err) {
+        if (err.code !== `EEXIST`) {
+          throw err;
+        }
+      }
+    });
     updated = true;
   }
 
@@ -11217,13 +11246,15 @@ class FakeFS {
 
   async changeFilePromise(p, content, opts = {}) {
     if (Buffer.isBuffer(content)) {
-      return this.changeFileBufferPromise(p, content);
+      return this.changeFileBufferPromise(p, content, opts);
     } else {
       return this.changeFileTextPromise(p, content, opts);
     }
   }
 
-  async changeFileBufferPromise(p, content) {
+  async changeFileBufferPromise(p, content, {
+    mode
+  } = {}) {
     let current = Buffer.alloc(0);
 
     try {
@@ -11232,11 +11263,14 @@ class FakeFS {
     }
 
     if (Buffer.compare(current, content) === 0) return;
-    await this.writeFilePromise(p, content);
+    await this.writeFilePromise(p, content, {
+      mode
+    });
   }
 
   async changeFileTextPromise(p, content, {
-    automaticNewlines
+    automaticNewlines,
+    mode
   } = {}) {
     let current = ``;
 
@@ -11247,18 +11281,22 @@ class FakeFS {
 
     const normalizedContent = automaticNewlines ? normalizeLineEndings(current, content) : content;
     if (current === normalizedContent) return;
-    await this.writeFilePromise(p, normalizedContent);
+    await this.writeFilePromise(p, normalizedContent, {
+      mode
+    });
   }
 
   changeFileSync(p, content, opts = {}) {
     if (Buffer.isBuffer(content)) {
-      return this.changeFileBufferSync(p, content);
+      return this.changeFileBufferSync(p, content, opts);
     } else {
       return this.changeFileTextSync(p, content, opts);
     }
   }
 
-  changeFileBufferSync(p, content) {
+  changeFileBufferSync(p, content, {
+    mode
+  } = {}) {
     let current = Buffer.alloc(0);
 
     try {
@@ -11267,11 +11305,14 @@ class FakeFS {
     }
 
     if (Buffer.compare(current, content) === 0) return;
-    this.writeFileSync(p, content);
+    this.writeFileSync(p, content, {
+      mode
+    });
   }
 
   changeFileTextSync(p, content, {
-    automaticNewlines = false
+    automaticNewlines = false,
+    mode
   } = {}) {
     let current = ``;
 
@@ -11282,7 +11323,9 @@ class FakeFS {
 
     const normalizedContent = automaticNewlines ? normalizeLineEndings(current, content) : content;
     if (current === normalizedContent) return;
-    this.writeFileSync(p, normalizedContent);
+    this.writeFileSync(p, normalizedContent, {
+      mode
+    });
   }
 
   async movePromise(fromP, toP) {
@@ -11437,7 +11480,6 @@ class FakeFS {
   }
 
 }
-FakeFS.DEFAULT_TIME = 315532800;
 class BasePortableFakeFS extends FakeFS {
   constructor() {
     super(ppath);
@@ -12332,7 +12374,7 @@ class VirtualFS extends ProxiedFS {
     if (this.pathUtils.isAbsolute(p)) return VirtualFS.resolveVirtual(p);
     const resolvedRoot = VirtualFS.resolveVirtual(this.baseFs.resolve(PortablePath.dot));
     const resolvedP = VirtualFS.resolveVirtual(this.baseFs.resolve(p));
-    return ppath.relative(resolvedRoot, resolvedP);
+    return ppath.relative(resolvedRoot, resolvedP) || PortablePath.dot;
   }
 
   mapFromBase(p) {
@@ -12414,14 +12456,10 @@ function opendir(fakeFs, path, entries, opts) {
 }
 ;// CONCATENATED MODULE: external "events"
 const external_events_namespaceObject = require("events");;
-;// CONCATENATED MODULE: ../yarnpkg-fslib/sources/constants.ts
-const constants_S_IFMT = 0o170000;
-const constants_S_IFDIR = 0o040000;
-const constants_S_IFREG = 0o100000;
-const constants_S_IFLNK = 0o120000;
 ;// CONCATENATED MODULE: ../yarnpkg-fslib/sources/statUtils.ts
 
 
+const DEFAULT_MODE = constants_S_IFREG | 0o644;
 class DirEntry {
   constructor() {
     this.name = ``;
@@ -12473,7 +12511,7 @@ class StatEntry {
     this.birthtime = new Date(0);
     this.dev = 0;
     this.ino = 0;
-    this.mode = constants_S_IFREG | 0o644;
+    this.mode = DEFAULT_MODE;
     this.nlink = 1;
     this.rdev = 0;
     this.blocks = 1;
@@ -12528,7 +12566,7 @@ class BigIntStatsEntry {
     this.birthtime = new Date(0);
     this.dev = BigInt(0);
     this.ino = BigInt(0);
-    this.mode = BigInt(constants_S_IFREG | 0o644);
+    this.mode = BigInt(DEFAULT_MODE);
     this.nlink = BigInt(1);
     this.rdev = BigInt(0);
     this.blocks = BigInt(1);
@@ -12724,12 +12762,10 @@ class CustomStatWatcher extends external_events_namespaceObject.EventEmitter {
         bigint: this.bigint
       });
     } catch (error) {
-      if (error.code === `ENOENT`) {
-        const statInstance = this.bigint ? new BigIntStatsEntry() : new StatEntry();
-        return clearStats(statInstance);
-      } else {
-        throw error;
-      }
+      // From observation, all errors seem to be mostly ignored by Node.
+      // Checked with ENOENT, ENOTDIR, EPERM
+      const statInstance = this.bigint ? new BigIntStatsEntry() : new StatEntry();
+      return clearStats(statInstance);
     }
   }
   /**
@@ -12904,6 +12940,9 @@ function toUnixTimestamp(time) {
   throw new Error(`Invalid time`);
 }
 
+function makeEmptyArchive() {
+  return Buffer.from([0x50, 0x4B, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+}
 class ZipFS extends BasePortableFakeFS {
   constructor(source, opts) {
     super();
@@ -12924,10 +12963,7 @@ class ZipFS extends BasePortableFakeFS {
     this.libzip = opts.libzip;
     const pathOptions = opts;
     this.level = typeof pathOptions.level !== `undefined` ? pathOptions.level : DEFAULT_COMPRESSION_LEVEL;
-
-    if (source === null) {
-      source = Buffer.from([0x50, 0x4B, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-    }
+    source !== null && source !== void 0 ? source : source = makeEmptyArchive();
 
     if (typeof source === `string`) {
       const {
@@ -13092,15 +13128,22 @@ class ZipFS extends BasePortableFakeFS {
       return;
     }
 
-    const previousMod = this.baseFs.existsSync(this.path) ? this.baseFs.statSync(this.path).mode & 0o777 : null;
-    const rc = this.libzip.close(this.zip);
-    if (rc === -1) throw this.makeLibzipError(this.libzip.getError(this.zip)); // this.libzip overrides the chmod when writing the archive, which is a weird
-    // behavior I don't totally understand (plus the umask seems bogus in some
-    // weird cases - maybe related to emscripten?)
-    //
-    // See also https://github.com/nih-at/libzip/issues/77
+    const newMode = this.baseFs.existsSync(this.path) || this.stats.mode === DEFAULT_MODE ? undefined : this.stats.mode; // zip_close doesn't persist empty archives
 
-    if (previousMod === null) this.baseFs.chmodSync(this.path, this.stats.mode);else if (previousMod !== (this.baseFs.statSync(this.path).mode & 0o777)) this.baseFs.chmodSync(this.path, previousMod);
+    if (this.entries.size === 0) {
+      this.discardAndClose();
+      this.baseFs.writeFileSync(this.path, makeEmptyArchive(), {
+        mode: newMode
+      });
+    } else {
+      const rc = this.libzip.close(this.zip);
+      if (rc === -1) throw this.makeLibzipError(this.libzip.getError(this.zip));
+
+      if (typeof newMode !== `undefined`) {
+        this.baseFs.chmodSync(this.path, newMode);
+      }
+    }
+
     this.ready = false;
   }
 
@@ -13156,7 +13199,7 @@ class ZipFS extends BasePortableFakeFS {
     return this.readSync(fd, buffer, offset, length, position);
   }
 
-  readSync(fd, buffer, offset = 0, length = 0, position = -1) {
+  readSync(fd, buffer, offset = 0, length = buffer.byteLength, position = -1) {
     const entry = this.fds.get(fd);
     if (typeof entry === `undefined`) throw EBADF(`read`);
     let realPosition;
@@ -13763,9 +13806,18 @@ class ZipFS extends BasePortableFakeFS {
     return this.writeFileSync(p, content, opts);
   }
 
+  fdToPath(fd, reason) {
+    var _a;
+
+    const path = (_a = this.fds.get(fd)) === null || _a === void 0 ? void 0 : _a.p;
+    if (typeof path === `undefined`) throw EBADF(reason);
+    return path;
+  }
+
   async writeFilePromise(p, content, opts) {
     const {
       encoding,
+      mode,
       index,
       resolvedP
     } = this.prepareWriteFile(p, opts);
@@ -13774,37 +13826,51 @@ class ZipFS extends BasePortableFakeFS {
     }), Buffer.from(content)]);
     if (encoding !== null) content = content.toString(encoding);
     const newIndex = this.setFileSource(resolvedP, content);
+    if (newIndex !== index) this.registerEntry(resolvedP, newIndex);
 
-    if (newIndex !== index) {
-      this.registerEntry(resolvedP, newIndex);
+    if (mode !== null) {
+      await this.chmodPromise(resolvedP, mode);
     }
   }
 
   writeFileSync(p, content, opts) {
     const {
       encoding,
+      mode,
       index,
       resolvedP
     } = this.prepareWriteFile(p, opts);
     if (index !== undefined && typeof opts === `object` && opts.flag && opts.flag.includes(`a`)) content = Buffer.concat([this.getFileSource(index), Buffer.from(content)]);
     if (encoding !== null) content = content.toString(encoding);
     const newIndex = this.setFileSource(resolvedP, content);
+    if (newIndex !== index) this.registerEntry(resolvedP, newIndex);
 
-    if (newIndex !== index) {
-      this.registerEntry(resolvedP, newIndex);
+    if (mode !== null) {
+      this.chmodSync(resolvedP, mode);
     }
   }
 
   prepareWriteFile(p, opts) {
-    if (typeof p !== `string`) throw EBADF(`read`);
+    if (typeof p === `number`) p = this.fdToPath(p, `read`);
     if (this.readOnly) throw EROFS(`open '${p}'`);
     const resolvedP = this.resolveFilename(`open '${p}'`, p);
     if (this.listings.has(resolvedP)) throw EISDIR(`open '${p}'`);
-    let encoding = null;
-    if (typeof opts === `string`) encoding = opts;else if (typeof opts === `object` && opts.encoding) encoding = opts.encoding;
+    let encoding = null,
+        mode = null;
+
+    if (typeof opts === `string`) {
+      encoding = opts;
+    } else if (typeof opts === `object`) {
+      ({
+        encoding = null,
+        mode = null
+      } = opts);
+    }
+
     const index = this.entries.get(resolvedP);
     return {
       encoding,
+      mode,
       resolvedP,
       index
     };
@@ -13954,6 +14020,7 @@ class ZipFS extends BasePortableFakeFS {
   readFileBuffer(p, opts = {
     asyncDecompress: false
   }) {
+    if (typeof p === `number`) p = this.fdToPath(p, `read`);
     const resolvedP = this.resolveFilename(`open '${p}'`, p);
     if (!this.entries.has(resolvedP) && !this.listings.has(resolvedP)) throw ENOENT(`open '${p}'`); // Ensures that the last component is a directory, if the user said so (even if it is we'll throw right after with EISDIR anyway)
 
@@ -14063,12 +14130,12 @@ class ZipFS extends BasePortableFakeFS {
   }
 
   watchFile(p, a, b) {
-    const resolvedP = this.resolveFilename(`open '${p}'`, p);
+    const resolvedP = ppath.resolve(PortablePath.root, p);
     return watchFile(this, resolvedP, a, b);
   }
 
   unwatchFile(p, cb) {
-    const resolvedP = this.resolveFilename(`open '${p}'`, p);
+    const resolvedP = ppath.resolve(PortablePath.root, p);
     return unwatchFile(this, resolvedP, cb);
   }
 
@@ -14082,24 +14149,23 @@ class ZipFS extends BasePortableFakeFS {
 
 
 const ZIP_FD = 0x80000000;
-const DOT_ZIP = `.zip`;
 /**
- * Extracts the archive part (ending in the first `.zip`) from a path.
+ * Extracts the archive part (ending in the first instance of `extension`) from a path.
  *
  * The indexOf-based implementation is ~3.7x faster than a RegExp-based implementation.
  */
 
-const getArchivePart = path => {
-  let idx = path.indexOf(DOT_ZIP);
+const getArchivePart = (path, extension) => {
+  let idx = path.indexOf(extension);
   if (idx <= 0) return null;
   let nextCharIdx = idx;
 
   while (idx >= 0) {
-    nextCharIdx = idx + DOT_ZIP.length;
+    nextCharIdx = idx + extension.length;
     if (path[nextCharIdx] === ppath.sep) break; // Disallow files named ".zip"
 
     if (path[idx - 1] === ppath.sep) return null;
-    idx = path.indexOf(DOT_ZIP, nextCharIdx);
+    idx = path.indexOf(extension, nextCharIdx);
   } // The path either has to end in ".zip" or contain an archive subpath (".zip/...")
 
 
@@ -14114,7 +14180,8 @@ class ZipOpenFS extends BasePortableFakeFS {
     maxOpenFiles = Infinity,
     readOnlyArchives = false,
     useCache = true,
-    maxAge = 5000
+    maxAge = 5000,
+    fileExtensions = null
   }) {
     super();
     this.fdMap = new Map();
@@ -14130,6 +14197,7 @@ class ZipOpenFS extends BasePortableFakeFS {
     this.maxOpenFiles = maxOpenFiles;
     this.readOnlyArchives = readOnlyArchives;
     this.maxAge = maxAge;
+    this.fileExtensions = fileExtensions;
   }
 
   static async openPromise(fn, opts) {
@@ -14537,7 +14605,7 @@ class ZipOpenFS extends BasePortableFakeFS {
     return this.makeCallSync(oldP, () => {
       return this.makeCallSync(newP, () => {
         return this.baseFs.renameSync(oldP, newP);
-      }, async () => {
+      }, () => {
         throw Object.assign(new Error(`EEXDEV: cross-device link not permitted`), {
           code: `EEXDEV`
         });
@@ -14969,7 +15037,21 @@ class ZipOpenFS extends BasePortableFakeFS {
     let filePath = ``;
 
     while (true) {
-      const archivePart = getArchivePart(p.substr(filePath.length));
+      const pathPartWithArchive = p.substr(filePath.length);
+      let archivePart;
+
+      if (!this.fileExtensions) {
+        archivePart = getArchivePart(pathPartWithArchive, `.zip`);
+      } else {
+        for (const ext of this.fileExtensions) {
+          archivePart = getArchivePart(pathPartWithArchive, ext);
+
+          if (archivePart) {
+            break;
+          }
+        }
+      }
+
       if (!archivePart) return null;
       filePath = this.pathUtils.join(filePath, archivePart);
 
@@ -14981,7 +15063,7 @@ class ZipOpenFS extends BasePortableFakeFS {
             this.notZip.add(filePath);
             continue;
           }
-        } catch (_a) {
+        } catch {
           return null;
         }
 
@@ -15324,7 +15406,7 @@ class URLFS extends ProxiedFS {
 ;// CONCATENATED MODULE: ../yarnpkg-fslib/sources/patchFs.ts
 
 
-const SYNC_IMPLEMENTATIONS = new Set([`accessSync`, `appendFileSync`, `createReadStream`, `chmodSync`, `chownSync`, `closeSync`, `copyFileSync`, `linkSync`, `lstatSync`, `fstatSync`, `lutimesSync`, `mkdirSync`, `openSync`, `opendirSync`, `readSync`, `readlinkSync`, `readFileSync`, `readdirSync`, `readlinkSync`, `realpathSync`, `renameSync`, `rmdirSync`, `statSync`, `symlinkSync`, `truncateSync`, `unlinkSync`, `unwatchFile`, `utimesSync`, `watch`, `watchFile`, `writeFileSync`, `writeSync`]);
+const SYNC_IMPLEMENTATIONS = new Set([`accessSync`, `appendFileSync`, `createReadStream`, `createWriteStream`, `chmodSync`, `chownSync`, `closeSync`, `copyFileSync`, `linkSync`, `lstatSync`, `fstatSync`, `lutimesSync`, `mkdirSync`, `openSync`, `opendirSync`, `readSync`, `readlinkSync`, `readFileSync`, `readdirSync`, `readlinkSync`, `realpathSync`, `renameSync`, `rmdirSync`, `statSync`, `symlinkSync`, `truncateSync`, `unlinkSync`, `unwatchFile`, `utimesSync`, `watch`, `watchFile`, `writeFileSync`, `writeSync`]);
 const ASYNC_IMPLEMENTATIONS = new Set([`accessPromise`, `appendFilePromise`, `chmodPromise`, `chownPromise`, `closePromise`, `copyFilePromise`, `linkPromise`, `fstatPromise`, `lstatPromise`, `lutimesPromise`, `mkdirPromise`, `openPromise`, `opendirPromise`, `readdirPromise`, `realpathPromise`, `readFilePromise`, `readdirPromise`, `readlinkPromise`, `renamePromise`, `rmdirPromise`, `statPromise`, `symlinkPromise`, `truncatePromise`, `unlinkPromise`, `utimesPromise`, `writeFilePromise`, `writeSync`]);
 const FILEHANDLE_IMPLEMENTATIONS = new Set([`appendFilePromise`, `chmodPromise`, `chownPromise`, `closePromise`, `readPromise`, `readFilePromise`, `statPromise`, `truncatePromise`, `utimesPromise`, `writePromise`, `writeFilePromise`]);
 function patchFs(patchedFs, fakeFs) {
@@ -16883,7 +16965,11 @@ function makeApi(runtimeState, opts) {
   } = {}) {
     const unqualifiedPath = resolveToUnqualified(request, issuer, {
       considerBuiltins
-    });
+    }); // If the request is the pnpapi, we can just return the unqualifiedPath
+    // without having to apply the exports resolution or the extension resolution
+    // (opts.pnpapiResolution is always a full path - makeManager enforces this by stat-ing it)
+
+    if (request === `pnpapi`) return unqualifiedPath;
     if (unqualifiedPath === null) return null;
 
     const isIssuerIgnored = () => issuer !== null ? isPathIgnored(issuer) : false;
@@ -17150,9 +17236,27 @@ const defaultFsLayer = new VirtualFS({
     readOnlyArchives: true
   })
 });
+
+class DynamicFS extends ProxiedFS {
+  constructor() {
+    super(ppath);
+    this.baseFs = defaultFsLayer;
+  }
+
+  mapToBase(p) {
+    return p;
+  }
+
+  mapFromBase(p) {
+    return p;
+  }
+
+}
+
+const dynamicFsLayer = new DynamicFS();
 let manager;
 const defaultApi = Object.assign(makeApi(defaultRuntimeState, {
-  fakeFs: defaultFsLayer,
+  fakeFs: dynamicFsLayer,
   pnpapiResolution: defaultPnpapiResolution
 }), {
   /**
@@ -17162,7 +17266,7 @@ const defaultApi = Object.assign(makeApi(defaultRuntimeState, {
    */
   makeApi: ({
     basePath = undefined,
-    fakeFs = defaultFsLayer,
+    fakeFs = dynamicFsLayer,
     pnpapiResolution = defaultPnpapiResolution,
     ...rest
   }) => {
@@ -17182,11 +17286,15 @@ const defaultApi = Object.assign(makeApi(defaultRuntimeState, {
     applyPatch(api || defaultApi, {
       fakeFs: defaultFsLayer,
       manager
-    });
+    }); // Now that the `fs` module is patched we can swap the `baseFs` to
+    // a NodeFS with a live `fs` binding to pick up changes to the `fs`
+    // module allowing users to patch it
+
+    dynamicFsLayer.baseFs = new NodeFS((external_fs_default()));
   }
 });
 manager = makeManager(defaultApi, {
-  fakeFs: defaultFsLayer
+  fakeFs: dynamicFsLayer
 }); // eslint-disable-next-line arca/no-default-export
 
 /* harmony default export */ const _entryPoint = (defaultApi);
