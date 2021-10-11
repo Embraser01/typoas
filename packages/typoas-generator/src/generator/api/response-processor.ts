@@ -1,11 +1,12 @@
 import { Context } from '../../context';
 import { createSchemaTypeFromResponse } from '../components/responses';
-import { factory, Statement } from 'typescript';
+import { Expression, factory, Statement } from 'typescript';
 import { OperationObject, ReferenceObject, ResponseObject } from 'openapi3-ts';
 import {
   createJSONParseWrapper,
   createRuntimeRefProperty,
   ExportedRef,
+  filterSchema,
 } from '../utils/ref';
 
 export const DEFAULT_RESPONSE: ResponseObject = {
@@ -27,6 +28,10 @@ export function getSuccessResponse(
   return operation.responses[successCode || 'default'];
 }
 
+export function isEmptyResponse(statusCode: string): boolean {
+  return statusCode === '204';
+}
+
 export function createResponseStatements(
   responseOrRef: ResponseObject | ReferenceObject,
   statusCode: string,
@@ -42,29 +47,24 @@ export function createResponseStatements(
     response = ref.spec;
   }
 
-  const bodyExpression = factory.createCallExpression(
-    createRuntimeRefProperty(ExportedRef.applyTransforms),
+  let bodyExpression: Expression = factory.createCallExpression(
+    createRuntimeRefProperty(ExportedRef.handleResponse),
     undefined,
     [
-      factory.createAwaitExpression(
-        factory.createCallExpression(
-          factory.createPropertyAccessExpression(
-            factory.createPropertyAccessExpression(
-              factory.createIdentifier('response'),
-              'body',
-            ),
-            'json',
-          ),
-          undefined,
-          [],
-        ),
-      ),
+      factory.createIdentifier('res'),
       createJSONParseWrapper(
-        response.content?.['application/json']?.schema || {},
+        filterSchema(response.content?.['application/json']?.schema || {}),
       ),
       factory.createPropertyAccessExpression(factory.createThis(), 'resolver'),
     ],
   );
+
+  if (isEmptyResponse(statusCode)) {
+    bodyExpression = factory.createNull();
+  } else if (!success) {
+    // If not a direct return and is a promise, wrap it
+    bodyExpression = factory.createAwaitExpression(bodyExpression);
+  }
 
   let thenStmt: Statement;
   if (success) {
@@ -76,7 +76,7 @@ export function createResponseStatements(
         [createSchemaTypeFromResponse(responseOrRef, ctx)],
         [
           factory.createPropertyAccessExpression(
-            factory.createIdentifier('response'),
+            factory.createIdentifier('res'),
             'httpStatusCode',
           ),
           bodyExpression,
@@ -92,7 +92,7 @@ export function createResponseStatements(
         [
           factory.createStringLiteral(statusCode, true),
           factory.createPropertyAccessExpression(
-            factory.createIdentifier('response'),
+            factory.createIdentifier('res'),
             'httpStatusCode',
           ),
         ],
