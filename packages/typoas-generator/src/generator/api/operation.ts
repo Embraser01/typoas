@@ -323,17 +323,19 @@ export function createOperationBodyFunction(
             factory.createIdentifier('res'),
             'httpStatusCode',
           ),
-          factory.createCallExpression(
-            createRuntimeRefProperty(ExportedRef.handleResponse),
-            undefined,
-            [
-              factory.createIdentifier('res'),
-              createJSONParseWrapper({}),
-              factory.createPropertyAccessExpression(
-                factory.createThis(),
-                'resolver',
-              ),
-            ],
+          factory.createAwaitExpression(
+            factory.createCallExpression(
+              createRuntimeRefProperty(ExportedRef.handleResponse),
+              undefined,
+              [
+                factory.createIdentifier('res'),
+                createJSONParseWrapper({}),
+                factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  'resolver',
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -21,7 +21,7 @@ exports[`create full specs should generate client 1`] = `
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('405', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async addPet(params: {}, body: Pet): Promise<Pet> {
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet', params), r.HttpMethod.POST);
@@ -33,7 +33,7 @@ exports[`create full specs should generate client 1`] = `
             return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver);
         if (r.isCodeInRange('405', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async findPetsByStatus(params: {
         status?: 'available' | 'pending' | 'sold';
@@ -48,7 +48,7 @@ exports[`create full specs should generate client 1`] = `
             return r.handleResponse(res, JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver);
         if (r.isCodeInRange('400', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async findPetsByTags(params: {
         tags?: string[];
@@ -63,7 +63,7 @@ exports[`create full specs should generate client 1`] = `
             return r.handleResponse(res, JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver);
         if (r.isCodeInRange('400', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async getPetById(params: {
         petId: number;
@@ -79,7 +79,7 @@ exports[`create full specs should generate client 1`] = `
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('404', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async updatePetWithForm(params: {
         petId: number;
@@ -96,7 +96,7 @@ exports[`create full specs should generate client 1`] = `
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('405', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async deletePet(params: {
         api_key?: string;
@@ -110,7 +110,7 @@ exports[`create full specs should generate client 1`] = `
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('400', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async uploadFile(params: {
         petId: number;
@@ -125,7 +125,7 @@ exports[`create full specs should generate client 1`] = `
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('200', res.httpStatusCode))
             return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/ApiResponse\\"}'), this.resolver);
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async getInventory(params: {}): Promise<{
         [key: string]: number;
@@ -136,7 +136,7 @@ exports[`create full specs should generate client 1`] = `
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('200', res.httpStatusCode))
             return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\",\\"additionalProperties\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"}}'), this.resolver);
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async placeOrder(params: {}, body: Order): Promise<Order> {
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order', params), r.HttpMethod.POST);
@@ -147,7 +147,7 @@ exports[`create full specs should generate client 1`] = `
             return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/Order\\"}'), this.resolver);
         if (r.isCodeInRange('405', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async getOrderById(params: {
         orderId: number;
@@ -161,7 +161,7 @@ exports[`create full specs should generate client 1`] = `
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('404', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async deleteOrder(params: {
         orderId: number;
@@ -173,7 +173,7 @@ exports[`create full specs should generate client 1`] = `
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('404', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async createUser(params: {}, body: User): Promise<User> {
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/user', params), r.HttpMethod.POST);
@@ -182,7 +182,7 @@ exports[`create full specs should generate client 1`] = `
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('default', res.httpStatusCode))
             return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async createUsersWithListInput(params: {}, body: User[]): Promise<User> {
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/createWithList', params), r.HttpMethod.POST);
@@ -193,7 +193,7 @@ exports[`create full specs should generate client 1`] = `
             return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
         if (r.isCodeInRange('default', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async loginUser(params: {
         username?: string;
@@ -210,7 +210,7 @@ exports[`create full specs should generate client 1`] = `
             return r.handleResponse(res, JSON.parse('{\\"type\\":\\"string\\"}'), this.resolver);
         if (r.isCodeInRange('400', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async logoutUser(params: {}): Promise<any> {
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/logout', params), r.HttpMethod.GET);
@@ -218,7 +218,7 @@ exports[`create full specs should generate client 1`] = `
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('default', res.httpStatusCode))
             return r.handleResponse(res, {}, this.resolver);
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async getUserByName(params: {
         username: string;
@@ -232,7 +232,7 @@ exports[`create full specs should generate client 1`] = `
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('404', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async updateUser(params: {
         username: string;
@@ -243,7 +243,7 @@ exports[`create full specs should generate client 1`] = `
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('default', res.httpStatusCode))
             return r.handleResponse(res, {}, this.resolver);
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
     async deleteUser(params: {
         username: string;
@@ -255,7 +255,7 @@ exports[`create full specs should generate client 1`] = `
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('404', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, r.handleResponse(res, {}, this.resolver));
+        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
     }
 }"
 `;
