@@ -12302,7 +12302,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12329,7 +12329,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12390,7 +12390,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12417,7 +12417,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12453,7 +12453,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12513,7 +12513,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12560,7 +12560,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12607,7 +12607,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12655,7 +12655,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12707,7 +12707,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12740,7 +12740,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12842,7 +12842,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12878,7 +12878,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12914,7 +12914,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -12992,7 +12992,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13043,7 +13043,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13091,7 +13091,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13133,7 +13133,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13164,7 +13164,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13219,7 +13219,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13265,7 +13265,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13306,7 +13306,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13407,7 +13407,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13450,7 +13450,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13484,7 +13484,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13513,7 +13513,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13572,7 +13572,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13648,7 +13648,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13766,7 +13766,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13879,7 +13879,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -13966,7 +13966,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14017,7 +14017,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14099,7 +14099,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14145,7 +14145,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14178,7 +14178,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14218,7 +14218,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14252,7 +14252,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14286,7 +14286,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14320,7 +14320,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14366,7 +14366,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14403,7 +14403,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14431,7 +14431,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14459,7 +14459,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14491,7 +14491,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14522,7 +14522,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14568,7 +14568,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14625,7 +14625,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14658,7 +14658,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14707,7 +14707,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14735,7 +14735,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14782,7 +14782,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14820,7 +14820,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14849,7 +14849,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14878,7 +14878,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14925,7 +14925,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14963,7 +14963,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -14993,7 +14993,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15022,7 +15022,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15065,7 +15065,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15099,7 +15099,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15139,7 +15139,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15180,7 +15180,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15213,7 +15213,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15241,7 +15241,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15303,7 +15303,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15337,7 +15337,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15371,7 +15371,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15405,7 +15405,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15471,7 +15471,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15506,7 +15506,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15560,7 +15560,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15650,7 +15650,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15715,7 +15715,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15778,7 +15778,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15835,7 +15835,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15884,7 +15884,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15926,7 +15926,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -15986,7 +15986,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16046,7 +16046,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16106,7 +16106,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16153,7 +16153,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16198,7 +16198,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16258,7 +16258,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16318,7 +16318,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16375,7 +16375,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16419,7 +16419,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16462,7 +16462,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16504,7 +16504,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16558,7 +16558,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16588,7 +16588,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16621,7 +16621,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16691,7 +16691,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16715,7 +16715,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16831,7 +16831,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16878,7 +16878,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16925,7 +16925,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16972,7 +16972,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -16999,7 +16999,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17046,7 +17046,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17103,7 +17103,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17182,7 +17182,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17228,7 +17228,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17276,7 +17276,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17337,7 +17337,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17369,7 +17369,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17439,7 +17439,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17526,7 +17526,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17598,7 +17598,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17645,7 +17645,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17679,7 +17679,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17734,7 +17734,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17801,7 +17801,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17849,7 +17849,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17872,7 +17872,7 @@ export class GithubClient {
       return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17916,7 +17916,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -17952,7 +17952,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18147,7 +18147,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18178,7 +18178,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18211,7 +18211,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18254,7 +18254,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18288,7 +18288,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18316,7 +18316,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18344,7 +18344,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18376,7 +18376,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18411,7 +18411,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18456,7 +18456,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18513,7 +18513,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18548,7 +18548,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18598,7 +18598,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18628,7 +18628,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18677,7 +18677,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18717,7 +18717,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18750,7 +18750,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18782,7 +18782,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18831,7 +18831,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18871,7 +18871,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18904,7 +18904,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18936,7 +18936,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -18979,7 +18979,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19010,7 +19010,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19050,7 +19050,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19088,7 +19088,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19118,7 +19118,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19143,7 +19143,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19184,7 +19184,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19211,7 +19211,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19241,7 +19241,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19373,7 +19373,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19396,7 +19396,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19441,7 +19441,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19477,7 +19477,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19509,7 +19509,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19541,7 +19541,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19605,7 +19605,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19646,7 +19646,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19677,7 +19677,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19705,7 +19705,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19727,7 +19727,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19758,7 +19758,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19795,7 +19795,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19832,7 +19832,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19879,7 +19879,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -19925,7 +19925,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20015,7 +20015,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20052,7 +20052,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20133,7 +20133,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20164,7 +20164,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20194,7 +20194,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20233,7 +20233,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20293,7 +20293,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20343,7 +20343,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20393,7 +20393,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20425,7 +20425,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20452,7 +20452,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20493,7 +20493,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20522,7 +20522,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20564,7 +20564,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20586,7 +20586,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20633,7 +20633,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20709,7 +20709,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20752,7 +20752,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20803,7 +20803,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20888,7 +20888,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20949,7 +20949,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -20982,7 +20982,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21014,7 +21014,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21060,7 +21060,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21127,7 +21127,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21170,7 +21170,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21214,7 +21214,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21280,7 +21280,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21330,7 +21330,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21369,7 +21369,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21404,7 +21404,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21440,7 +21440,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21491,7 +21491,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21535,7 +21535,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21581,7 +21581,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21618,7 +21618,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21659,7 +21659,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21723,7 +21723,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21794,7 +21794,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21876,7 +21876,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21918,7 +21918,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -21983,7 +21983,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22052,7 +22052,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22102,7 +22102,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22189,7 +22189,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22227,7 +22227,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22254,7 +22254,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22288,7 +22288,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22310,7 +22310,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22367,7 +22367,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22521,7 +22521,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22552,7 +22552,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22583,7 +22583,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22614,7 +22614,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22654,7 +22654,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22701,7 +22701,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22799,7 +22799,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22838,7 +22838,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22907,7 +22907,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22934,7 +22934,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -22987,7 +22987,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23039,7 +23039,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23073,7 +23073,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23122,7 +23122,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23151,7 +23151,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23202,7 +23202,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23248,7 +23248,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23283,7 +23283,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23328,7 +23328,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23358,7 +23358,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23418,7 +23418,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23480,7 +23480,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23511,7 +23511,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23570,7 +23570,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23631,7 +23631,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23661,7 +23661,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23702,7 +23702,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23746,7 +23746,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23792,7 +23792,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23857,7 +23857,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23895,7 +23895,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23936,7 +23936,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -23975,7 +23975,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24032,7 +24032,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24061,7 +24061,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24102,7 +24102,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24148,7 +24148,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24197,7 +24197,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24227,7 +24227,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24262,7 +24262,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24323,7 +24323,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24364,7 +24364,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24420,7 +24420,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24503,7 +24503,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24560,7 +24560,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24667,7 +24667,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24725,7 +24725,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24785,7 +24785,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24827,7 +24827,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24893,7 +24893,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -24998,7 +24998,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25069,7 +25069,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25117,7 +25117,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25229,7 +25229,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25296,7 +25296,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25395,7 +25395,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25488,7 +25488,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25569,7 +25569,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25657,7 +25657,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25717,7 +25717,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25786,7 +25786,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25827,7 +25827,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25896,7 +25896,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -25953,7 +25953,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26137,7 +26137,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26192,7 +26192,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26234,7 +26234,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26266,7 +26266,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26293,7 +26293,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26328,7 +26328,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26357,7 +26357,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26391,7 +26391,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26424,7 +26424,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26458,7 +26458,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26491,7 +26491,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26527,7 +26527,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26569,7 +26569,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26604,7 +26604,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26644,7 +26644,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26684,7 +26684,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26719,7 +26719,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26749,7 +26749,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26830,7 +26830,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26859,7 +26859,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26885,7 +26885,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26919,7 +26919,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -26971,7 +26971,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27017,7 +27017,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27051,7 +27051,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27103,7 +27103,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27137,7 +27137,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27164,7 +27164,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27200,7 +27200,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27263,7 +27263,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27297,7 +27297,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27331,7 +27331,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27373,7 +27373,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27404,7 +27404,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27436,7 +27436,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27561,7 +27561,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27588,7 +27588,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27630,7 +27630,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27662,7 +27662,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27691,7 +27691,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27739,7 +27739,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27768,7 +27768,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27853,7 +27853,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27887,7 +27887,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27935,7 +27935,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -27972,7 +27972,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28007,7 +28007,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28059,7 +28059,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28102,7 +28102,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28140,7 +28140,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28166,7 +28166,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28192,7 +28192,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28245,7 +28245,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28305,7 +28305,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28346,7 +28346,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28529,7 +28529,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28565,7 +28565,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28599,7 +28599,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28635,7 +28635,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28673,7 +28673,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28707,7 +28707,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28790,7 +28790,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28826,7 +28826,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28873,7 +28873,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28918,7 +28918,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28956,7 +28956,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -28997,7 +28997,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29064,7 +29064,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29091,7 +29091,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29132,7 +29132,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29203,7 +29203,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29265,7 +29265,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29327,7 +29327,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29372,7 +29372,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29401,7 +29401,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29446,7 +29446,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29507,7 +29507,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29568,7 +29568,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29629,7 +29629,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29674,7 +29674,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29735,7 +29735,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29796,7 +29796,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29857,7 +29857,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29902,7 +29902,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -29963,7 +29963,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30024,7 +30024,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30085,7 +30085,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30168,7 +30168,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30204,7 +30204,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30238,7 +30238,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30276,7 +30276,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30319,7 +30319,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30368,7 +30368,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30421,7 +30421,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30455,7 +30455,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30521,7 +30521,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30557,7 +30557,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30655,7 +30655,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30723,7 +30723,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30795,7 +30795,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30874,7 +30874,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -30982,7 +30982,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31067,7 +31067,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31212,7 +31212,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31326,7 +31326,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31389,7 +31389,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31445,7 +31445,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31479,7 +31479,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31562,7 +31562,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31588,7 +31588,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31631,7 +31631,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31672,7 +31672,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31709,7 +31709,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31756,7 +31756,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31788,7 +31788,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31868,7 +31868,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31950,7 +31950,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -31980,7 +31980,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32100,7 +32100,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32159,7 +32159,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32202,7 +32202,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32279,7 +32279,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32336,7 +32336,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32436,7 +32436,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32508,7 +32508,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32568,7 +32568,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32623,7 +32623,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32674,7 +32674,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32707,7 +32707,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32746,7 +32746,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32841,7 +32841,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -32951,7 +32951,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33041,7 +33041,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33173,7 +33173,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33302,7 +33302,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33366,7 +33366,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33420,7 +33420,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33574,7 +33574,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33614,7 +33614,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33666,7 +33666,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33718,7 +33718,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33812,7 +33812,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33868,7 +33868,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33926,7 +33926,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33966,7 +33966,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -33998,7 +33998,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34067,7 +34067,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34094,7 +34094,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34132,7 +34132,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34182,7 +34182,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34258,7 +34258,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34337,7 +34337,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34395,7 +34395,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34537,7 +34537,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34607,7 +34607,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34656,7 +34656,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34696,7 +34696,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34753,7 +34753,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34805,7 +34805,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34837,7 +34837,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -34949,7 +34949,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35014,7 +35014,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35118,7 +35118,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35173,7 +35173,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35220,7 +35220,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35321,7 +35321,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35359,7 +35359,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35456,7 +35456,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35488,7 +35488,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35519,7 +35519,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35559,7 +35559,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35623,7 +35623,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35674,7 +35674,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35725,7 +35725,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35758,7 +35758,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35793,7 +35793,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35863,7 +35863,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35939,7 +35939,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -35993,7 +35993,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36016,7 +36016,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36060,7 +36060,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36125,7 +36125,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36155,7 +36155,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36202,7 +36202,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36250,7 +36250,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36280,7 +36280,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36319,7 +36319,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36347,7 +36347,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36386,7 +36386,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36427,7 +36427,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36453,7 +36453,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36569,7 +36569,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36689,7 +36689,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36758,7 +36758,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36798,7 +36798,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36848,7 +36848,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36874,7 +36874,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -36954,7 +36954,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37036,7 +37036,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37066,7 +37066,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37113,7 +37113,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37171,7 +37171,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37242,7 +37242,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37375,7 +37375,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37417,7 +37417,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37459,7 +37459,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37523,7 +37523,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37601,7 +37601,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37652,7 +37652,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37703,7 +37703,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37775,7 +37775,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37848,7 +37848,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37883,7 +37883,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -37936,7 +37936,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38015,7 +38015,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38060,7 +38060,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38149,7 +38149,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38231,7 +38231,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38261,7 +38261,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38335,7 +38335,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38373,7 +38373,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38432,7 +38432,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38469,7 +38469,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38493,7 +38493,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38540,7 +38540,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38605,7 +38605,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38642,7 +38642,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38690,7 +38690,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38713,7 +38713,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38741,7 +38741,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38771,7 +38771,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38848,7 +38848,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38907,7 +38907,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -38978,7 +38978,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39018,7 +39018,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39075,7 +39075,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39110,7 +39110,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39152,7 +39152,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39209,7 +39209,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39257,7 +39257,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39290,7 +39290,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39372,7 +39372,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39417,7 +39417,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39471,7 +39471,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39509,7 +39509,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39539,7 +39539,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39566,7 +39566,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39597,7 +39597,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39657,7 +39657,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39744,7 +39744,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39832,7 +39832,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39903,7 +39903,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -39995,7 +39995,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40046,7 +40046,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40089,7 +40089,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40133,7 +40133,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40169,7 +40169,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40249,7 +40249,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40331,7 +40331,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40361,7 +40361,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40427,7 +40427,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40506,7 +40506,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40561,7 +40561,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40670,7 +40670,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40726,7 +40726,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40769,7 +40769,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40830,7 +40830,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40861,7 +40861,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -40973,7 +40973,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41015,7 +41015,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41065,7 +41065,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41120,7 +41120,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41163,7 +41163,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41280,7 +41280,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41321,7 +41321,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41373,7 +41373,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41423,7 +41423,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41476,7 +41476,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41542,7 +41542,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41616,7 +41616,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41695,7 +41695,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41746,7 +41746,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41798,7 +41798,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41848,7 +41848,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41936,7 +41936,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -41996,7 +41996,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42048,7 +42048,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42074,7 +42074,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42104,7 +42104,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42142,7 +42142,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42180,7 +42180,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42258,7 +42258,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42282,7 +42282,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42324,7 +42324,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42383,7 +42383,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42457,7 +42457,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42527,7 +42527,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42581,7 +42581,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42647,7 +42647,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42697,7 +42697,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42738,7 +42738,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42779,7 +42779,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42826,7 +42826,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42865,7 +42865,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42903,7 +42903,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -42962,7 +42962,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43001,7 +43001,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43042,7 +43042,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43085,7 +43085,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43108,7 +43108,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43146,7 +43146,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43177,7 +43177,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43215,7 +43215,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43274,7 +43274,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43343,7 +43343,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43383,7 +43383,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43422,7 +43422,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43464,7 +43464,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43504,7 +43504,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43547,7 +43547,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43575,7 +43575,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43598,7 +43598,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43621,7 +43621,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43652,7 +43652,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43720,7 +43720,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43769,7 +43769,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43814,7 +43814,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43845,7 +43845,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -43877,7 +43877,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44000,7 +44000,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44027,7 +44027,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44077,7 +44077,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44128,7 +44128,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44165,7 +44165,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44220,7 +44220,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44272,7 +44272,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44298,7 +44298,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44357,7 +44357,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44443,7 +44443,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44474,7 +44474,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44566,7 +44566,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44629,7 +44629,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44655,7 +44655,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44740,7 +44740,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44867,7 +44867,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -44916,7 +44916,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45024,7 +45024,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45143,7 +45143,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45191,7 +45191,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45296,7 +45296,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45372,7 +45372,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45482,7 +45482,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45578,7 +45578,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45669,7 +45669,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45740,7 +45740,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45827,7 +45827,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45862,7 +45862,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -45969,7 +45969,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46012,7 +46012,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46059,7 +46059,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46111,7 +46111,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46145,7 +46145,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46194,7 +46194,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46223,7 +46223,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46274,7 +46274,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46320,7 +46320,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46355,7 +46355,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46400,7 +46400,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46430,7 +46430,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46490,7 +46490,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46543,7 +46543,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46602,7 +46602,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46654,7 +46654,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46695,7 +46695,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46748,7 +46748,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46781,7 +46781,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46834,7 +46834,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46871,7 +46871,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46918,7 +46918,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -46989,7 +46989,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47024,7 +47024,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47088,7 +47088,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47138,7 +47138,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47224,7 +47224,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47282,7 +47282,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47330,7 +47330,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47371,7 +47371,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47433,7 +47433,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47460,7 +47460,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47510,7 +47510,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47606,7 +47606,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47672,7 +47672,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47724,7 +47724,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47841,7 +47841,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47914,7 +47914,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -47965,7 +47965,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48025,7 +48025,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48076,7 +48076,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48154,7 +48154,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48223,7 +48223,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48305,7 +48305,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48379,7 +48379,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48439,7 +48439,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48499,7 +48499,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48552,7 +48552,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48606,7 +48606,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48658,7 +48658,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48727,7 +48727,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48803,7 +48803,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48862,7 +48862,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -48925,7 +48925,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49008,7 +49008,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49082,7 +49082,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49133,7 +49133,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49184,7 +49184,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49215,7 +49215,7 @@ export class GithubClient {
       throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49255,7 +49255,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49275,7 +49275,7 @@ export class GithubClient {
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49364,7 +49364,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49433,7 +49433,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49515,7 +49515,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49574,7 +49574,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49628,7 +49628,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49688,7 +49688,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49739,7 +49739,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49810,7 +49810,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49854,7 +49854,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49917,7 +49917,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -49977,7 +49977,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50061,7 +50061,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50133,7 +50133,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50202,7 +50202,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50256,7 +50256,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50314,7 +50314,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50361,7 +50361,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50425,7 +50425,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50462,7 +50462,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50521,7 +50521,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50589,7 +50589,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50670,7 +50670,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50711,7 +50711,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50774,7 +50774,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50840,7 +50840,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50927,7 +50927,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -50996,7 +50996,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51100,7 +51100,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51295,7 +51295,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51364,7 +51364,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51415,7 +51415,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51468,7 +51468,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51539,7 +51539,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51593,7 +51593,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51648,7 +51648,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51702,7 +51702,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51762,7 +51762,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51822,7 +51822,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51866,7 +51866,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51919,7 +51919,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51957,7 +51957,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -51996,7 +51996,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52033,7 +52033,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52071,7 +52071,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52109,7 +52109,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52136,7 +52136,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52186,7 +52186,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52224,7 +52224,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52288,7 +52288,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52317,7 +52317,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52355,7 +52355,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52395,7 +52395,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52436,7 +52436,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52506,7 +52506,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52548,7 +52548,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52611,7 +52611,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52649,7 +52649,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52686,7 +52686,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52736,7 +52736,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52767,7 +52767,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52798,7 +52798,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52832,7 +52832,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52881,7 +52881,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52919,7 +52919,7 @@ export class GithubClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -52939,7 +52939,7 @@ export class GithubClient {
       return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
 }

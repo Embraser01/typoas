@@ -216,7 +216,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -249,7 +249,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -290,7 +290,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -326,7 +326,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -364,7 +364,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -400,7 +400,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -430,7 +430,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -468,7 +468,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -497,7 +497,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -527,7 +527,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -561,7 +561,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -589,7 +589,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -614,7 +614,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -644,7 +644,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -685,7 +685,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -704,7 +704,7 @@ export class PetstoreClient {
       return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -737,7 +737,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -763,7 +763,7 @@ export class PetstoreClient {
       return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
   /**
@@ -791,7 +791,7 @@ export class PetstoreClient {
       );
     throw new r.ApiException(
       res.httpStatusCode,
-      r.handleResponse(res, {}, this.resolver),
+      await r.handleResponse(res, {}, this.resolver),
     );
   }
 }

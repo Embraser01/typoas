@@ -11,7 +11,7 @@ export async function handleResponse<T>(
 ): Promise<T> {
   const mayBeJSONSchema =
     !res.headers[CONTENT_TYPE_HEADER] ||
-    res.headers[CONTENT_TYPE_HEADER] === 'application/json';
+    res.headers[CONTENT_TYPE_HEADER].includes('application/json');
 
   if (res.body && res.httpStatusCode !== 204 && mayBeJSONSchema) {
     const data = await res.body.json();
