@@ -393,6 +393,12 @@ export class PetstoreClient {
       requestContext,
     );
     const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('2XX', res.httpStatusCode))
+      return r.handleResponse(
+        res,
+        JSON.parse('{"type":"object"}'),
+        this.resolver,
+      );
     if (r.isCodeInRange('405', res.httpStatusCode))
       throw new r.ApiException<any>(
         res.httpStatusCode,
@@ -423,6 +429,12 @@ export class PetstoreClient {
       requestContext,
     );
     const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('2XX', res.httpStatusCode))
+      return r.handleResponse(
+        res,
+        JSON.parse('{"type":"object"}'),
+        this.resolver,
+      );
     if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
         res.httpStatusCode,
@@ -577,6 +589,12 @@ export class PetstoreClient {
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('2XX', res.httpStatusCode))
+      return r.handleResponse(
+        res,
+        JSON.parse('{"type":"object"}'),
+        this.resolver,
+      );
     if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
         res.httpStatusCode,
@@ -779,6 +797,12 @@ export class PetstoreClient {
     );
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
+    if (r.isCodeInRange('2XX', res.httpStatusCode))
+      return r.handleResponse(
+        res,
+        JSON.parse('{"type":"object"}'),
+        this.resolver,
+      );
     if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<any>(
         res.httpStatusCode,

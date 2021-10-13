@@ -12959,10 +12959,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -13019,10 +13016,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -13067,10 +13061,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -13615,10 +13606,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -13724,10 +13712,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -13846,10 +13831,7 @@ export class GithubClient {
         ),
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -13993,10 +13975,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -14121,10 +14100,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -14172,10 +14148,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -14203,10 +14176,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -14246,10 +14216,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -15441,10 +15408,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -15545,10 +15509,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -15617,10 +15578,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -15691,10 +15649,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -15754,10 +15709,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -15801,10 +15753,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<{
         block?: {
@@ -15902,10 +15851,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -15962,10 +15908,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16022,10 +15965,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16072,10 +16012,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<{
         block?: {
@@ -16174,10 +16111,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16234,10 +16168,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16294,10 +16225,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16342,10 +16270,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16393,10 +16318,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16438,10 +16360,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16480,10 +16399,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16582,10 +16498,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -16615,10 +16528,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -16667,10 +16577,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16807,10 +16714,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16872,10 +16776,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -16901,10 +16802,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -16966,10 +16864,7 @@ export class GithubClient {
     if (r.isCodeInRange('200', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -16993,10 +16888,7 @@ export class GithubClient {
     if (r.isCodeInRange('200', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -17363,10 +17255,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -17415,10 +17304,7 @@ export class GithubClient {
         ),
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17493,10 +17379,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17574,10 +17457,7 @@ export class GithubClient {
         await r.handleResponse(res, {}, this.resolver),
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17621,10 +17501,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17664,10 +17541,7 @@ export class GithubClient {
     if (r.isCodeInRange('205', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17710,10 +17584,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17777,10 +17648,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17825,10 +17693,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -17910,10 +17775,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -21354,10 +21216,7 @@ export class GithubClient {
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('302', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24387,10 +24246,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24461,10 +24317,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24521,10 +24374,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24604,10 +24454,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24692,10 +24539,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24761,10 +24605,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24803,10 +24644,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24869,10 +24707,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -24944,10 +24779,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25036,10 +24868,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25093,10 +24922,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25176,10 +25002,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25248,10 +25071,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25339,10 +25159,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25432,10 +25249,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25513,10 +25327,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25601,10 +25412,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25693,10 +25501,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25753,10 +25558,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25812,10 +25614,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -25849,10 +25648,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -26322,10 +26118,7 @@ export class GithubClient {
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('302', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -26385,10 +26178,7 @@ export class GithubClient {
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('302', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -27131,10 +26921,7 @@ export class GithubClient {
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('302', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -32895,10 +32682,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -37218,10 +37002,7 @@ export class GithubClient {
         ),
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -39888,10 +39669,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('422', res.httpStatusCode))
       throw new r.ApiException<ValidationError>(
         res.httpStatusCode,
@@ -40403,10 +40181,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -43171,10 +42946,7 @@ export class GithubClient {
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('302', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -43646,10 +43418,7 @@ export class GithubClient {
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('302', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      return r.handleResponse(res, {}, this.resolver);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),
@@ -43754,10 +43523,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('422', res.httpStatusCode))
       throw new r.ApiException<ValidationError>(
         res.httpStatusCode,
@@ -44707,10 +44473,7 @@ export class GithubClient {
     if (r.isCodeInRange('200', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<ScimError>(
         res.httpStatusCode,
@@ -44816,10 +44579,7 @@ export class GithubClient {
     if (r.isCodeInRange('201', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<ScimError>(
         res.httpStatusCode,
@@ -44892,10 +44652,7 @@ export class GithubClient {
     if (r.isCodeInRange('200', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<ScimError>(
         res.httpStatusCode,
@@ -45000,10 +44757,7 @@ export class GithubClient {
     if (r.isCodeInRange('200', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<ScimError>(
         res.httpStatusCode,
@@ -45101,10 +44855,7 @@ export class GithubClient {
     if (r.isCodeInRange('200', res.httpStatusCode))
       return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<ScimError>(
         res.httpStatusCode,
@@ -45167,10 +44918,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<ScimError>(
         res.httpStatusCode,
@@ -45257,10 +45005,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -45352,10 +45097,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('415', res.httpStatusCode))
       throw new r.ApiException<{
         message: string;
@@ -45443,10 +45185,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -45545,10 +45284,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -45639,10 +45375,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('422', res.httpStatusCode))
       throw new r.ApiException<ValidationError>(
         res.httpStatusCode,
@@ -45720,10 +45453,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('415', res.httpStatusCode))
       throw new r.ApiException<{
         message: string;
@@ -45797,10 +45527,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('422', res.httpStatusCode))
       throw new r.ApiException<ValidationError>(
         res.httpStatusCode,
@@ -47700,10 +47427,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -47799,10 +47523,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -47867,10 +47588,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -47932,10 +47650,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -47983,10 +47698,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48043,10 +47755,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48112,10 +47821,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48190,10 +47896,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48263,10 +47966,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48337,10 +48037,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48415,10 +48112,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48475,10 +48169,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48519,10 +48210,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48573,10 +48261,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48625,10 +48310,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48694,10 +48376,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48761,10 +48440,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48829,10 +48505,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48883,10 +48556,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -48970,10 +48640,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49058,10 +48725,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49109,10 +48773,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49160,10 +48821,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49349,10 +49007,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('404', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49400,10 +49055,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49473,10 +49125,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49541,10 +49190,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49595,10 +49241,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49664,10 +49307,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49724,10 +49364,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49777,10 +49414,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -49953,10 +49587,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50028,10 +49659,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50100,10 +49728,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50173,15 +49798,9 @@ export class GithubClient {
     requestContext.setHeaderParam('Content-Type', 'application/json');
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('302', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      return r.handleResponse(res, {}, this.resolver);
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50223,10 +49842,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50281,10 +49897,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50401,10 +50014,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50880,10 +50490,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -50963,10 +50570,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51067,10 +50671,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51244,10 +50845,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('400', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51331,10 +50929,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51382,10 +50977,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51435,10 +51027,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51515,10 +51104,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51560,10 +51146,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51615,10 +51198,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51669,10 +51249,7 @@ export class GithubClient {
     const res = await this.http.send(requestContext);
     if (r.isCodeInRange('204', res.httpStatusCode)) return null;
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51738,10 +51315,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('401', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51798,10 +51372,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     if (r.isCodeInRange('403', res.httpStatusCode))
       throw new r.ApiException<BasicError>(
         res.httpStatusCode,
@@ -51860,10 +51431,7 @@ export class GithubClient {
         this.resolver,
       );
     if (r.isCodeInRange('304', res.httpStatusCode))
-      throw new r.ApiException<any>(
-        res.httpStatusCode,
-        await r.handleResponse(res, {}, this.resolver),
-      );
+      throw new r.ApiException<any>(res.httpStatusCode, null);
     throw new r.ApiException(
       res.httpStatusCode,
       await r.handleResponse(res, {}, this.resolver),

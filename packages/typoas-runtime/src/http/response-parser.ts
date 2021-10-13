@@ -4,6 +4,8 @@ import { ReferenceObject, SchemaObject } from 'openapi3-ts';
 
 const CONTENT_TYPE_HEADER = 'content-type';
 
+const EMPTY_BODY_CODES = [204, 304];
+
 export async function handleResponse<T>(
   res: ResponseContext,
   schema: SchemaObject | ReferenceObject,
@@ -13,7 +15,11 @@ export async function handleResponse<T>(
     !res.headers[CONTENT_TYPE_HEADER] ||
     res.headers[CONTENT_TYPE_HEADER].includes('application/json');
 
-  if (res.body && res.httpStatusCode !== 204 && mayBeJSONSchema) {
+  if (
+    res.body &&
+    !EMPTY_BODY_CODES.includes(res.httpStatusCode) &&
+    mayBeJSONSchema
+  ) {
     const data = await res.body.json();
     return applyTransforms(data, schema, resolver);
   }

@@ -300,6 +300,12 @@ export function createOperationBodyFunction(
   const successResponse = getSuccessResponse(operation);
   const responses = Object.entries(operation.responses || {});
   if (responses.length) {
+    // If no success response is available, take every 2XX response as success.
+    if (!successResponse) {
+      statements.push(
+        ...createResponseStatements(DEFAULT_RESPONSE, '2XX', true, ctx),
+      );
+    }
     // TODO sort responses (default last)
     for (const [code, resp] of responses) {
       statements.push(

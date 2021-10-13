@@ -94,6 +94,8 @@ exports[`create full specs should generate client 1`] = `
             requestContext.setQueryParam('status', r.serializeParameter(params.status));
         await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const res = await this.http.send(requestContext);
+        if (r.isCodeInRange('2XX', res.httpStatusCode))
+            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
         if (r.isCodeInRange('405', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
@@ -108,6 +110,8 @@ exports[`create full specs should generate client 1`] = `
             requestContext.setHeaderParam('api_key', r.serializeParameter(params.api_key));
         await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const res = await this.http.send(requestContext);
+        if (r.isCodeInRange('2XX', res.httpStatusCode))
+            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
         if (r.isCodeInRange('400', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
@@ -169,6 +173,8 @@ exports[`create full specs should generate client 1`] = `
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order/{orderId}', params), r.HttpMethod.DELETE);
         requestContext.setHeaderParam('Content-Type', 'application/json');
         const res = await this.http.send(requestContext);
+        if (r.isCodeInRange('2XX', res.httpStatusCode))
+            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
         if (r.isCodeInRange('400', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('404', res.httpStatusCode))
@@ -251,6 +257,8 @@ exports[`create full specs should generate client 1`] = `
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/{username}', params), r.HttpMethod.DELETE);
         requestContext.setHeaderParam('Content-Type', 'application/json');
         const res = await this.http.send(requestContext);
+        if (r.isCodeInRange('2XX', res.httpStatusCode))
+            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
         if (r.isCodeInRange('400', res.httpStatusCode))
             throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
         if (r.isCodeInRange('404', res.httpStatusCode))

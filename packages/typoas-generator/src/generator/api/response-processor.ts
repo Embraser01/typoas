@@ -24,12 +24,12 @@ export function getSuccessResponse(
   }
   const successCode = Object.keys(operation.responses)
     .sort()
-    .find((k) => k.startsWith('2'));
+    .find((k) => k.startsWith('2') || k.startsWith('3'));
   return operation.responses[successCode || 'default'];
 }
 
 export function isEmptyResponse(statusCode: string): boolean {
-  return statusCode === '204';
+  return statusCode === '204' || statusCode === '304';
 }
 
 export function createResponseStatements(
