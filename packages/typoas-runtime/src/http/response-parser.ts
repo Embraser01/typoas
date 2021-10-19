@@ -12,7 +12,7 @@ export async function handleResponse<T>(
   resolver: SchemaRefResolver,
 ): Promise<T> {
   const mayBeJSONSchema =
-    res.headers[CONTENT_TYPE_HEADER].includes('application/json');
+    res.headers[CONTENT_TYPE_HEADER]?.includes('application/json');
 
   if (
     res.body &&
