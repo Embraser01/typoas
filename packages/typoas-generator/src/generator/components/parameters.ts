@@ -37,12 +37,19 @@ export function isParameterRequired(
   parameterOrRef: ParameterObject | ReferenceObject,
   ctx: Context,
 ): boolean {
+  let parameter = parameterOrRef as ParameterObject;
   if (parameterOrRef.$ref) {
     const ref = ctx.resolveReference('parameters', parameterOrRef.$ref);
     if (!ref) {
       throw new Error(`$ref '${parameterOrRef.$ref}' wasn't found`);
     }
-    return !!ref.spec.required;
+    parameter = ref.spec;
   }
-  return !!(parameterOrRef as ParameterObject).required;
+
+  // Cookies can be fully handled by the navigator, so we need to
+  // declare those as optional.
+  if (parameter.in === 'cookie') {
+    return false;
+  }
+  return !!parameter.required;
 }
