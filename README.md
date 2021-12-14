@@ -127,6 +127,22 @@ client
 
 You can find examples in the [`examples`](./examples) folder.
 
+## Notes
+
+Here is some notes on some known issues.
+
+### Parameters serialization
+
+_Typoas_ has partial support for serialization specified here: https://swagger.io/docs/specification/serialization/
+
+- It **does** support array serialization for **query**.
+- It **does NOT** support serialization for **path** parameters with `style` `label` or `matrix`.
+- It **does NOT** support serialization for **query** parameters with nested objects. It will be JSON.stringify
+- It **does NOT** support serialization for **headers** or **cookie** parameters.
+
+On query serialization, there can only be one style for a full operation. The first query param will set the style for
+the whole operation.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

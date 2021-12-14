@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as URLParse from 'url-parse';
+import * as queryString from 'query-string';
+import { ParsedQuery, ParsedUrl, StringifyOptions } from 'query-string';
 
 export * from './isomorphic-fetch';
 
@@ -28,30 +29,64 @@ export type HttpFile = Blob & { readonly name: string };
  */
 export type RequestBody = undefined | string | FormData;
 
+export type QueryStyles =
+  | 'form'
+  | 'spaceDelimited'
+  | 'pipeDelimited'
+  | 'deepObject';
+/**
+ * Options are following https://swagger.io/docs/specification/serialization/.
+ */
+export type SerializerOptions = {
+  explode?: boolean;
+  queryStyle?: QueryStyles;
+};
+
 /**
  * Represents an HTTP request context
  */
 export class RequestContext {
   private headers: { [key: string]: string } = {};
   private body: RequestBody = undefined;
-  private url: URLParse;
+  private url: ParsedUrl;
 
   /**
    * Creates the request context using a http method and request resource url
-   *
-   * @param url url of the requested resource
-   * @param httpMethod http method
    */
-  public constructor(url: string, private httpMethod: HttpMethod) {
-    this.url = new URLParse(url, true);
+  public constructor(
+    url: string,
+    private httpMethod: HttpMethod,
+    private opts: SerializerOptions = {},
+  ) {
+    this.url = queryString.parseUrl(url);
   }
 
-  /*
+  /**
    * Returns the url set in the constructor including the query string
-   *
    */
   public getUrl(): string {
-    return this.url.toString();
+    let arrayFormat: StringifyOptions['arrayFormat'] = 'none';
+    let arrayFormatSeparator: StringifyOptions['arrayFormatSeparator'];
+
+    if (this.opts.explode === false) {
+      arrayFormat = 'separator';
+      switch (this.opts.queryStyle) {
+        case 'spaceDelimited':
+          arrayFormatSeparator = ' ';
+          break;
+        case 'pipeDelimited':
+          arrayFormatSeparator = '|';
+          break;
+        case 'form':
+        default:
+          arrayFormatSeparator = ',';
+          break;
+      }
+    }
+    return queryString.stringifyUrl(this.url, {
+      arrayFormat,
+      arrayFormatSeparator,
+    });
   }
 
   /**
@@ -59,7 +94,7 @@ export class RequestContext {
    *
    */
   public setUrl(url: string): void {
-    this.url = new URLParse(url, true);
+    this.url = queryString.parseUrl(url);
   }
 
   /**
@@ -87,10 +122,26 @@ export class RequestContext {
     return this.body;
   }
 
-  public setQueryParam(name: string, value: string): void {
-    const queryObj = this.url.query;
-    queryObj[name] = value;
-    this.url.set('query', queryObj);
+  public setQueryParam(name: string, value: string | string[]): void {
+    const queryObj = this.url.query as ParsedQuery<unknown>;
+    const currentVal = queryObj[name];
+    if (currentVal === undefined) {
+      queryObj[name] = value;
+      return;
+    }
+    if (Array.isArray(value)) {
+      if (Array.isArray(currentVal)) {
+        currentVal.push(...value);
+      } else {
+        queryObj[name] = [currentVal, ...value];
+      }
+    } else {
+      if (Array.isArray(currentVal)) {
+        currentVal.push(value);
+      } else {
+        queryObj[name] = [currentVal, value];
+      }
+    }
   }
 
   /**

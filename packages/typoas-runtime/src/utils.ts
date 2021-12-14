@@ -29,14 +29,16 @@ export function isCodeInRange(codeRange: string, code: number): boolean {
   return true;
 }
 
-/**
- * Serialize a parameter from anything to string.
- */
-export function serializeParameter(data: unknown): string {
+function anyToString(data: unknown): string {
   if (typeof data === 'string') return data;
   if (data instanceof Date) return data.toISOString();
   if (typeof data === 'number') return data.toString();
   return JSON.stringify(data);
+}
+
+export function serializeParameter(data: unknown): string | string[] {
+  if (Array.isArray(data)) return data.map(anyToString);
+  return anyToString(data);
 }
 
 export function applyTemplating(
@@ -47,7 +49,7 @@ export function applyTemplating(
     (url, [key, v]) =>
       url.replace(
         new RegExp(`{${key}}`, 'g'),
-        encodeURIComponent(serializeParameter(v)),
+        encodeURIComponent(anyToString(v)),
       ),
     val,
   );
