@@ -26,15 +26,18 @@ export function createParameterStatements(
   }
 
   let fnName;
+  let serializer = ExportedRef.serializeParameter;
   switch (parameter.in) {
     case 'query':
       fnName = 'setQueryParam';
       break;
     case 'header':
       fnName = 'setHeaderParam';
+      serializer = ExportedRef.serializeHeader;
       break;
     case 'cookie':
       fnName = 'addCookie';
+      serializer = ExportedRef.serializeHeader;
       break;
   }
 
@@ -62,7 +65,7 @@ export function createParameterStatements(
           [
             factory.createStringLiteral(propName, true),
             factory.createCallExpression(
-              createRuntimeRefProperty(ExportedRef.serializeParameter),
+              createRuntimeRefProperty(serializer),
               undefined,
               [
                 hasUnsupportedIdentifierChar(propName)

@@ -66,7 +66,7 @@ export class RequestContext {
    */
   public getUrl(): string {
     let arrayFormat: StringifyOptions['arrayFormat'] = 'none';
-    let arrayFormatSeparator: StringifyOptions['arrayFormatSeparator'];
+    let arrayFormatSeparator: StringifyOptions['arrayFormatSeparator'] = ',';
 
     if (this.opts.explode === false) {
       arrayFormat = 'separator';

@@ -24,6 +24,7 @@ export enum ExportedRef {
   handleResponse = 'handleResponse',
   isCodeInRange = 'isCodeInRange',
   serializeParameter = 'serializeParameter',
+  serializeHeader = 'serializeHeader',
 }
 
 export function createRuntimeRefProperty(exportedRef: ExportedRef): Expression {

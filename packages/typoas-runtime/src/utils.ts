@@ -41,6 +41,10 @@ export function serializeParameter(data: unknown): string | string[] {
   return anyToString(data);
 }
 
+export function serializeHeader(data: unknown): string {
+  return anyToString(data);
+}
+
 export function applyTemplating(
   val: string,
   variables: Record<string, unknown>,
