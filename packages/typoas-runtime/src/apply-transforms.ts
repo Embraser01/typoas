@@ -35,13 +35,9 @@ export function applyTransforms(
       applyTransforms(d, schema.items!, resolver),
     );
   }
-  if (
-    schema.type === 'object' &&
-    schema.properties &&
-    typeof data === 'object'
-  ) {
+  if (schema.type === 'object' && typeof data === 'object') {
     for (const [key, val] of Object.entries(data as Record<string, any>)) {
-      if (schema.properties[key]) {
+      if (schema.properties?.[key]) {
         (data as Record<string, any>)[key] = applyTransforms(
           val,
           schema.properties[key],

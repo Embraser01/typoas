@@ -153,4 +153,18 @@ describe('apply transforms', () => {
       ),
     ).toEqual({ d: date, a: date });
   });
+
+  it('should handle case where additionalProperties is set but not properties', () => {
+    const date = new Date();
+    expect(
+      applyTransforms(
+        { d: date.toISOString(), a: date.toISOString() },
+        {
+          type: 'object',
+          additionalProperties: { type: 'string', format: 'date-time' },
+        },
+        resolver,
+      ),
+    ).toEqual({ d: date, a: date });
+  });
 });

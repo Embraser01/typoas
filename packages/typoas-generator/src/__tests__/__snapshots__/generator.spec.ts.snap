@@ -107,7 +107,7 @@ exports[`create full specs should generate client 1`] = `
         const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}', params), r.HttpMethod.DELETE);
         requestContext.setHeaderParam('Content-Type', 'application/json');
         if (params.api_key !== undefined)
-            requestContext.setHeaderParam('api_key', r.serializeParameter(params.api_key));
+            requestContext.setHeaderParam('api_key', r.serializeHeader(params.api_key));
         await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
         const res = await this.http.send(requestContext);
         if (r.isCodeInRange('2XX', res.httpStatusCode))
