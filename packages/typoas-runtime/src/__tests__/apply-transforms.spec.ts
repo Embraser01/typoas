@@ -160,6 +160,7 @@ describe('apply transforms', () => {
       applyTransforms(
         { d: date.toISOString(), a: date.toISOString() },
         {
+          type: 'object',
           additionalProperties: { type: 'string', format: 'date-time' },
         },
         resolver,
