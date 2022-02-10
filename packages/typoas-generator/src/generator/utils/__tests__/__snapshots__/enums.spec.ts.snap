@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`canConvertSchemaToEnum should handle string schema 1`] = `true`;
+
+exports[`canConvertSchemaToEnum should not handle non string schemas 1`] = `false`;
+
+exports[`canConvertSchemaToEnum should not handle string schema without enum 1`] = `false`;
+
+exports[`createEnumMembersFromSchema should handle string schema 1`] = `
+"export enum Test {
+    a = \\"a\\",
+    b = \\"b\\",
+    c = \\"c\\"
+}"
+`;

@@ -56,7 +56,11 @@ export type ComponentRegistry<T extends ComponentType> = Map<
   ComponentContextFromName<T>
 >;
 
-export type ContextOptions = { jsDoc?: boolean; onlyTypes?: boolean };
+export type ContextOptions = {
+  generateEnums?: boolean;
+  jsDoc?: boolean;
+  onlyTypes?: boolean;
+};
 
 export class Context {
   schemas: ComponentRegistry<'schemas'> = new Map();
@@ -133,6 +137,10 @@ export class Context {
         this.addToMap(name, spec, this[type]),
       ),
     );
+  }
+
+  generateEnums(): boolean {
+    return this.opts.generateEnums === true;
   }
 
   hasJSDoc(): boolean {

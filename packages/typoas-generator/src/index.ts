@@ -12,6 +12,7 @@ import {
 } from 'typescript';
 import { addJSDocToNode } from './generator/comments/fields';
 import { getJSDocFromSchema } from './generator/comments/schema';
+import { canConvertSchemaToEnum, createEnumMembersFromSchema } from './generator/utils/enums';
 import { IMPORT_RUNTIME } from './generator/utils/ref';
 import { createTypeFromSchema } from './generator/components/schemas';
 import { sanitizeTypeIdentifier } from './generator/utils/operation-name';
@@ -22,6 +23,21 @@ export function createSchemaComponents(
   ctx: Context,
 ): Statement[] {
   return Object.entries(schemas).map(([key, schema]) => {
+    if (ctx.generateEnums() && canConvertSchemaToEnum(schema)) {
+      const enumAlias = factory.createEnumDeclaration(
+          undefined,
+          [factory.createModifier(SyntaxKind.ExportKeyword)],
+          factory.createIdentifier(sanitizeTypeIdentifier(key)),
+          createEnumMembersFromSchema(schema),
+      );
+
+      if (ctx.hasJSDoc()) {
+        addJSDocToNode(enumAlias, getJSDocFromSchema(schema))
+      }
+
+      return enumAlias;
+    }
+
     const typeAlias = factory.createTypeAliasDeclaration(
       undefined,
       [factory.createModifier(SyntaxKind.ExportKeyword)],
