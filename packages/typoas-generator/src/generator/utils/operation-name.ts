@@ -11,7 +11,7 @@ function upperCase(str: string) {
  */
 function camelCase(str: string): string {
   return str
-    .replace(/[-./]/g, ' ') //convert all hyphens to spaces
+    .replace(/[-/.+@\s:]/g, ' ') //convert all unsupported char to spaces
     .replace(/\s[a-z]/g, upperCase) //convert first char of each word to UPPERCASE
     .replace(/\s+/g, '') //remove spaces
     .replace(/^[A-Z]/g, lowerCase); //convert first char to lowercase
@@ -21,8 +21,14 @@ function pascalCase(str: string): string {
   return camelCase(str).replace(/^[a-z]/, upperCase);
 }
 
+export function screamSnakeCase(str: string): string {
+  return camelCase(str)
+    .replace(/[A-Z]/g, (letter) => `_${letter}`)
+    .toUpperCase();
+}
+
 export function hasUnsupportedIdentifierChar(key: string): boolean {
-  return /[-/.+@\s]/.test(key);
+  return /[-/.+@\s:]/.test(key);
 }
 
 export function sanitizeOperationIdName(op: string): string {

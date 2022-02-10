@@ -423,7 +423,7 @@ export class PetstoreClient {
     if (params.api_key !== undefined)
       requestContext.setHeaderParam(
         'api_key',
-        r.serializeParameter(params.api_key),
+        r.serializeHeader(params.api_key),
       );
     await this.authMethods.petstore_auth.applySecurityAuthentication(
       requestContext,

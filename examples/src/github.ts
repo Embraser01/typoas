@@ -1490,12 +1490,20 @@ export type CodeOfConduct = {
  * The policy that controls the organizations in the enterprise that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`.
  *
  */
-export type EnabledOrganizations = 'all' | 'none' | 'selected';
+export enum EnabledOrganizations {
+  ALL = 'all',
+  NONE = 'none',
+  SELECTED = 'selected',
+}
 /**
  * The permissions policy that controls the actions that are allowed to run. Can be one of: `all`, `local_only`, or `selected`.
  *
  */
-export type AllowedActions = 'all' | 'local_only' | 'selected';
+export enum AllowedActions {
+  ALL = 'all',
+  LOCAL_ONLY = 'local_only',
+  SELECTED = 'selected',
+}
 /**
  * The API URL to use to get or set the actions that are allowed to run, when `allowed_actions` is set to `selected`.
  *
@@ -2030,15 +2038,16 @@ export type Milestone = {
  * @example "OWNER"
  *
  */
-export type Author_association =
-  | 'COLLABORATOR'
-  | 'CONTRIBUTOR'
-  | 'FIRST_TIMER'
-  | 'FIRST_TIME_CONTRIBUTOR'
-  | 'MANNEQUIN'
-  | 'MEMBER'
-  | 'NONE'
-  | 'OWNER';
+export enum Author_association {
+  C_O_L_L_A_B_O_R_A_T_O_R = 'COLLABORATOR',
+  C_O_N_T_R_I_B_U_T_O_R = 'CONTRIBUTOR',
+  F_I_R_S_T__T_I_M_E_R = 'FIRST_TIMER',
+  F_I_R_S_T__T_I_M_E__C_O_N_T_R_I_B_U_T_O_R = 'FIRST_TIME_CONTRIBUTOR',
+  M_A_N_N_E_Q_U_I_N = 'MANNEQUIN',
+  M_E_M_B_E_R = 'MEMBER',
+  N_O_N_E = 'NONE',
+  O_W_N_E_R = 'OWNER',
+}
 /**
  * Issue Simple
  * Issue Simple
@@ -3548,7 +3557,11 @@ export type OrganizationFull = {
  * The policy that controls the repositories in the organization that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`.
  *
  */
-export type EnabledRepositories = 'all' | 'none' | 'selected';
+export enum EnabledRepositories {
+  ALL = 'all',
+  NONE = 'none',
+  SELECTED = 'selected',
+}
 export type ActionsOrganizationPermissions = {
   enabled_repositories: EnabledRepositories;
   /**
@@ -3830,10 +3843,11 @@ export type OrgHook = {
  * @example "collaborators_only"
  *
  */
-export type InteractionGroup =
-  | 'existing_users'
-  | 'contributors_only'
-  | 'collaborators_only';
+export enum InteractionGroup {
+  EXISTING_USERS = 'existing_users',
+  CONTRIBUTORS_ONLY = 'contributors_only',
+  COLLABORATORS_ONLY = 'collaborators_only',
+}
 /**
  * Interaction Limits
  * Interaction limit settings.
@@ -3857,12 +3871,13 @@ export type InteractionLimitResponse = {
  * @example "one_month"
  *
  */
-export type InteractionExpiry =
-  | 'one_day'
-  | 'three_days'
-  | 'one_week'
-  | 'one_month'
-  | 'six_months';
+export enum InteractionExpiry {
+  ONE_DAY = 'one_day',
+  THREE_DAYS = 'three_days',
+  ONE_WEEK = 'one_week',
+  ONE_MONTH = 'one_month',
+  SIX_MONTHS = 'six_months',
+}
 /**
  * Interaction Restrictions
  * Limit interactions to a specific type of user for a specified duration
@@ -6073,7 +6088,10 @@ export type EnvironmentApprovals = {
  * @example "User"
  *
  */
-export type DeploymentReviewerType = 'User' | 'Team';
+export enum DeploymentReviewerType {
+  USER = 'User',
+  TEAM = 'Team',
+}
 /**
  * Pending Deployment
  * Details of a deployment that is waiting for protection rules to pass
@@ -7222,7 +7240,12 @@ export type CodeScanningRef = string;
  * State of a code scanning alert.
  *
  */
-export type CodeScanningAlertState = 'open' | 'closed' | 'dismissed' | 'fixed';
+export enum CodeScanningAlertState {
+  OPEN = 'open',
+  CLOSED = 'closed',
+  DISMISSED = 'dismissed',
+  FIXED = 'fixed',
+}
 /**
  * The security alert number.
  *
@@ -7417,7 +7440,10 @@ export type CodeScanningAlert = {
  * Sets the state of the code scanning alert. Can be one of `open` or `dismissed`. You must provide `dismissed_reason` when you set the state to `dismissed`.
  *
  */
-export type CodeScanningAlertSetState = 'open' | 'dismissed';
+export enum CodeScanningAlertSetState {
+  OPEN = 'open',
+  DISMISSED = 'dismissed',
+}
 /**
  * An identifier for the upload.
  * @example "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53"
@@ -10972,7 +10998,10 @@ export type Release = {
  * Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
  *
  */
-export type SecretScanningAlertState = 'open' | 'resolved';
+export enum SecretScanningAlertState {
+  OPEN = 'open',
+  RESOLVED = 'resolved',
+}
 /**
  * **Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`.
  *

@@ -12,7 +12,10 @@ import {
 } from 'typescript';
 import { addJSDocToNode } from './generator/comments/fields';
 import { getJSDocFromSchema } from './generator/comments/schema';
-import { canConvertSchemaToEnum, createEnumMembersFromSchema } from './generator/utils/enums';
+import {
+  canConvertSchemaToEnum,
+  createEnumMembersFromSchema,
+} from './generator/utils/enums';
 import { IMPORT_RUNTIME } from './generator/utils/ref';
 import { createTypeFromSchema } from './generator/components/schemas';
 import { sanitizeTypeIdentifier } from './generator/utils/operation-name';
@@ -23,34 +26,29 @@ export function createSchemaComponents(
   ctx: Context,
 ): Statement[] {
   return Object.entries(schemas).map(([key, schema]) => {
+    let node: Statement;
+
     if (ctx.generateEnums() && canConvertSchemaToEnum(schema)) {
-      const enumAlias = factory.createEnumDeclaration(
-          undefined,
-          [factory.createModifier(SyntaxKind.ExportKeyword)],
-          factory.createIdentifier(sanitizeTypeIdentifier(key)),
-          createEnumMembersFromSchema(schema),
+      node = factory.createEnumDeclaration(
+        undefined,
+        [factory.createModifier(SyntaxKind.ExportKeyword)],
+        factory.createIdentifier(sanitizeTypeIdentifier(key)),
+        createEnumMembersFromSchema(schema),
       );
-
-      if (ctx.hasJSDoc()) {
-        addJSDocToNode(enumAlias, getJSDocFromSchema(schema))
-      }
-
-      return enumAlias;
+    } else {
+      node = factory.createTypeAliasDeclaration(
+        undefined,
+        [factory.createModifier(SyntaxKind.ExportKeyword)],
+        factory.createIdentifier(sanitizeTypeIdentifier(key)),
+        undefined,
+        createTypeFromSchema(schema, ctx),
+      );
     }
-
-    const typeAlias = factory.createTypeAliasDeclaration(
-      undefined,
-      [factory.createModifier(SyntaxKind.ExportKeyword)],
-      factory.createIdentifier(sanitizeTypeIdentifier(key)),
-      undefined,
-      createTypeFromSchema(schema, ctx),
-    );
 
     if (ctx.hasJSDoc()) {
-      addJSDocToNode(typeAlias, getJSDocFromSchema(schema));
+      addJSDocToNode(node, getJSDocFromSchema(schema));
     }
-
-    return typeAlias;
+    return node;
   });
 }
 

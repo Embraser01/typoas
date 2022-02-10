@@ -45,6 +45,11 @@ export class GenerateCommand extends Command {
     description: 'Use it to only generate types in #components/schemas/',
   });
 
+  generateEnums = Option.Boolean('-e,--generate-enums', {
+    description:
+      'Generate enums instead of literal string types where possible',
+  });
+
   async execute(): Promise<void> {
     const specs = await loadSpec(this.input);
 
@@ -52,6 +57,7 @@ export class GenerateCommand extends Command {
     const src = generateClient(specs, this.name, {
       jsDoc: this.jsDoc,
       onlyTypes: this.onlyTypes,
+      generateEnums: this.generateEnums,
     });
 
     const content = getStringFromSourceFile(src);

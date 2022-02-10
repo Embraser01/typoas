@@ -1,28 +1,27 @@
-import { ReferenceObject, SchemaObject } from 'openapi3-ts';
-import { factory, TypeNode, SyntaxKind, EnumMember } from 'typescript';
-import { Context } from '../../context';
-import { addJSDocToNode } from '../comments/fields';
-import { getJSDocFromSchema } from '../comments/schema';
-import {
-  hasUnsupportedIdentifierChar,
-  sanitizeTypeIdentifier,
-} from './operation-name';
+import { SchemaObject } from 'openapi3-ts';
+import { factory, EnumMember } from 'typescript';
+import { screamSnakeCase } from './operation-name';
 
 export function canConvertSchemaToEnum(schema: SchemaObject): boolean {
-  return schema.type === 'string' && schema.enum !== undefined;
+  return (
+    schema.type === 'string' &&
+    schema.enum !== undefined &&
+    schema.enum.every((e) => ![null, '', undefined].includes(e)) &&
+    !schema.nullable
+  );
 }
 
 export function createEnumMembersFromSchema(
   schema: SchemaObject,
 ): EnumMember[] {
-  if (schema.type === 'string' && schema.enum !== undefined) {
-    return schema.enum.map((e) =>
-      factory.createEnumMember(
-        // TODO: convert the identifier to snakeCase
-        factory.createIdentifier(e),
-        factory.createStringLiteral(e),
-      ),
-    );
+  if (canConvertSchemaToEnum(schema)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return schema.enum!.map((e) => {
+      return factory.createEnumMember(
+        factory.createIdentifier(screamSnakeCase(e)),
+        factory.createStringLiteral(e, true),
+      );
+    });
   }
   throw new Error('Cannot create enum members from this schema');
 }

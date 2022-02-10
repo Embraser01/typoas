@@ -13,6 +13,7 @@ function makeArgs(name: string): string[] {
     `./src/${name}.ts`,
     '-n',
     `${capitalize(name)}Client`,
+    '-e',
   ];
 }
 

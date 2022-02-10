@@ -267,3 +267,29 @@ exports[`create full specs should generate client 1`] = `
     }
 }"
 `;
+
+exports[`create full specs should generate enums if possible 1`] = `
+"import * as r from '@typoas/runtime';
+export type Order = {
+    id?: number;
+    petId?: number;
+    shipDate?: Date;
+    status?: 'placed' | 'approved' | 'delivered';
+    complete?: boolean;
+};
+export enum PetStatus {
+    AVAILABLE = 'available',
+    PENDING = 'pending',
+    SOLD = 'sold'
+}
+export type Pet = {
+    id?: number;
+    name: string;
+    photoUrls: string[];
+    status?: PetStatus;
+};
+export class EnumSchemasClient {
+    constructor(private server: r.BaseServerConfiguration, private http: r.HttpLibrary = new r.IsomorphicFetchHttpLibrary, private resolver: r.SchemaRefResolver = new r.RefResolver(JSON.parse('{\\"Order\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"petId\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"shipDate\\":{\\"type\\":\\"string\\",\\"format\\":\\"date-time\\"},\\"status\\":{\\"type\\":\\"string\\"},\\"complete\\":{\\"type\\":\\"boolean\\"}}},\\"PetStatus\\":{\\"type\\":\\"string\\"},\\"Pet\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"name\\":{\\"type\\":\\"string\\"},\\"photoUrls\\":{\\"type\\":\\"array\\",\\"items\\":{\\"type\\":\\"string\\",\\"xml\\":{\\"name\\":\\"photoUrl\\"}}},\\"status\\":{\\"$ref\\":\\"#/components/schemas/PetStatus\\"}}}}'))) { }
+}
+"
+`;

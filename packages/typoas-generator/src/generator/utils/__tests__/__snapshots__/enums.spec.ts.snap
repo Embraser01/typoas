@@ -6,10 +6,17 @@ exports[`canConvertSchemaToEnum should not handle non string schemas 1`] = `fals
 
 exports[`canConvertSchemaToEnum should not handle string schema without enum 1`] = `false`;
 
+exports[`createEnumMembersFromSchema should handle enum with special chars in it 1`] = `
+"export enum Test {
+    MY_COMPLEX_ENUM = 'my:complex:enum',
+    AND_THIS_ONE = 'and:this/one'
+}"
+`;
+
 exports[`createEnumMembersFromSchema should handle string schema 1`] = `
 "export enum Test {
-    a = \\"a\\",
-    b = \\"b\\",
-    c = \\"c\\"
+    DOG_AND_CAT = 'dog-and-cat',
+    DOG = 'dog',
+    CAT_WITHOUT_DOG = 'catWithoutDog'
 }"
 `;
