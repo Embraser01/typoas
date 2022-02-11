@@ -1,6 +1,6 @@
 import { SchemaObject } from 'openapi3-ts';
 import { factory, EnumMember } from 'typescript';
-import { screamSnakeCase } from './operation-name';
+import { screamingSnakeCase } from './operation-name';
 
 export function canConvertSchemaToEnum(schema: SchemaObject): boolean {
   return (
@@ -18,7 +18,7 @@ export function createEnumMembersFromSchema(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return schema.enum!.map((e) => {
       return factory.createEnumMember(
-        factory.createIdentifier(screamSnakeCase(e)),
+        factory.createIdentifier(screamingSnakeCase(e)),
         factory.createStringLiteral(e, true),
       );
     });

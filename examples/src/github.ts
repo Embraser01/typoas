@@ -2038,15 +2038,15 @@ export type Milestone = {
  * @example "OWNER"
  *
  */
-export enum Author_association {
-  C_O_L_L_A_B_O_R_A_T_O_R = 'COLLABORATOR',
-  C_O_N_T_R_I_B_U_T_O_R = 'CONTRIBUTOR',
-  F_I_R_S_T__T_I_M_E_R = 'FIRST_TIMER',
-  F_I_R_S_T__T_I_M_E__C_O_N_T_R_I_B_U_T_O_R = 'FIRST_TIME_CONTRIBUTOR',
-  M_A_N_N_E_Q_U_I_N = 'MANNEQUIN',
-  M_E_M_B_E_R = 'MEMBER',
-  N_O_N_E = 'NONE',
-  O_W_N_E_R = 'OWNER',
+export enum AuthorAssociation {
+  COLLABORATOR = 'COLLABORATOR',
+  CONTRIBUTOR = 'CONTRIBUTOR',
+  FIRST_TIMER = 'FIRST_TIMER',
+  FIRST_TIME_CONTRIBUTOR = 'FIRST_TIME_CONTRIBUTOR',
+  MANNEQUIN = 'MANNEQUIN',
+  MEMBER = 'MEMBER',
+  NONE = 'NONE',
+  OWNER = 'OWNER',
 }
 /**
  * Issue Simple
@@ -2148,7 +2148,7 @@ export type IssueSimple = {
    *
    */
   updated_at: Date;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
@@ -2211,7 +2211,7 @@ export type IssueComment = {
    */
   updated_at: Date;
   issue_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   performed_via_github_app?: Integration | null;
   reactions?: ReactionRollup;
 };
@@ -2563,7 +2563,7 @@ export type GistComment = {
    *
    */
   updated_at: Date;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
 };
 /**
  * Gist Commit
@@ -2697,7 +2697,7 @@ export type Issue = {
   timeline_url?: string;
   repository?: Repository;
   performed_via_github_app?: Integration | null;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   reactions?: ReactionRollup;
 };
 /**
@@ -7718,7 +7718,7 @@ export type CommitComment = {
   user: SimpleUser | null;
   created_at: Date;
   updated_at: Date;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   reactions?: ReactionRollup;
 };
 /**
@@ -7747,7 +7747,7 @@ export type Link = {
  * The status of auto merging a pull request.
  *
  */
-export type Auto_merge = {
+export type AutoMerge = {
   enabled_by: SimpleUser;
   /**
    * The merge method to use.
@@ -7925,8 +7925,8 @@ export type PullRequestSimple = {
     review_comment: Link;
     self: Link;
   };
-  author_association: Author_association;
-  auto_merge: Auto_merge;
+  author_association: AuthorAssociation;
+  auto_merge: AutoMerge;
   /**
    * Indicates whether or not the pull request is a draft.
    *
@@ -8497,7 +8497,7 @@ export type WaitTimer = number;
  * The type of deployment branch policy for this environment. To allow all branches to deploy, set to `null`.
  *
  */
-export type Deployment_branch_policy = {
+export type DeploymentBranchPolicy = {
   /**
    * Whether only branches with branch protection rules can deploy to this environment. If `protected_branches` is `true`, `custom_branch_policies` must be `false`; if `protected_branches` is `false`, `custom_branch_policies` must be `true`.
    *
@@ -8616,7 +8616,7 @@ export type Environment = {
         type: string;
       }
   )[];
-  deployment_branch_policy?: Deployment_branch_policy;
+  deployment_branch_policy?: DeploymentBranchPolicy;
 };
 /**
  * Short Blob
@@ -9180,7 +9180,7 @@ export type IssueEvent = {
   milestone?: IssueEventMilestone;
   project_card?: IssueEventProjectCard;
   rename?: IssueEventRename;
-  author_association?: Author_association;
+  author_association?: AuthorAssociation;
   lock_reason?: string | null;
   performed_via_github_app?: Integration | null;
 };
@@ -9558,7 +9558,7 @@ export type TimelineCommentEvent = {
    */
   updated_at: Date;
   issue_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   performed_via_github_app?: Integration;
   reactions?: ReactionRollup;
 };
@@ -9730,7 +9730,7 @@ export type TimelineReviewedEvent = {
   commit_id: string;
   body_html?: string;
   body_text?: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
 };
 /**
  * Pull Request Review Comment
@@ -9833,7 +9833,7 @@ export type PullRequestReviewComment = {
    *
    */
   pull_request_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   _links: {
     self: {
       /**
@@ -10646,8 +10646,8 @@ export type PullRequest = {
     review_comment: Link;
     self: Link;
   };
-  author_association: Author_association;
-  auto_merge: Auto_merge;
+  author_association: AuthorAssociation;
+  auto_merge: AutoMerge;
   /**
    * Indicates whether or not the pull request is a draft.
    *
@@ -10778,7 +10778,7 @@ export type PullRequestReview = {
   commit_id: string;
   body_html?: string;
   body_text?: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
 };
 /**
  * Legacy Review Comment
@@ -10867,7 +10867,7 @@ export type ReviewComment = {
    *
    */
   pull_request_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   _links: {
     self: Link;
     html: Link;
@@ -11655,7 +11655,7 @@ export type IssueSearchResultItem = {
   };
   body?: string;
   score: number;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   draft?: boolean;
   repository?: Repository;
   body_html?: string;
@@ -33850,7 +33850,7 @@ export class GithubClient {
             id?: number;
           }[]
         | null;
-      deployment_branch_policy?: Deployment_branch_policy;
+      deployment_branch_policy?: DeploymentBranchPolicy;
     } | null,
   ): Promise<Environment> {
     const requestContext = this.server.makeRequestContext(
