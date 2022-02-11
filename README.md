@@ -48,6 +48,7 @@ Here is a short list of supported command line options:
     -i, --input [path/url]         Path or URL to the OpenAPI JSON specification (yaml/json format)
     -o, --output [path]            Path where to write the generated TS file
     -n, --name                     Class name of the generated client
+    -e,--generate-enums            Generate enums instead of literal string types where possible
     --js-doc, --no-js-doc          Whether to add JS Doc to the generated code (default: true)
     --only-types                   Use it to only generate types in #components/schemas/
     --version                      Output the version number
