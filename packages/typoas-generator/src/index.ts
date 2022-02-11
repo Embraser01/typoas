@@ -12,6 +12,10 @@ import {
 } from 'typescript';
 import { addJSDocToNode } from './generator/comments/fields';
 import { getJSDocFromSchema } from './generator/comments/schema';
+import {
+  canConvertSchemaToEnum,
+  createEnumMembersFromSchema,
+} from './generator/utils/enums';
 import { IMPORT_RUNTIME } from './generator/utils/ref';
 import { createTypeFromSchema } from './generator/components/schemas';
 import { sanitizeTypeIdentifier } from './generator/utils/operation-name';
@@ -22,19 +26,29 @@ export function createSchemaComponents(
   ctx: Context,
 ): Statement[] {
   return Object.entries(schemas).map(([key, schema]) => {
-    const typeAlias = factory.createTypeAliasDeclaration(
-      undefined,
-      [factory.createModifier(SyntaxKind.ExportKeyword)],
-      factory.createIdentifier(sanitizeTypeIdentifier(key)),
-      undefined,
-      createTypeFromSchema(schema, ctx),
-    );
+    let node: Statement;
 
-    if (ctx.hasJSDoc()) {
-      addJSDocToNode(typeAlias, getJSDocFromSchema(schema));
+    if (ctx.generateEnums() && canConvertSchemaToEnum(schema)) {
+      node = factory.createEnumDeclaration(
+        undefined,
+        [factory.createModifier(SyntaxKind.ExportKeyword)],
+        factory.createIdentifier(sanitizeTypeIdentifier(key)),
+        createEnumMembersFromSchema(schema),
+      );
+    } else {
+      node = factory.createTypeAliasDeclaration(
+        undefined,
+        [factory.createModifier(SyntaxKind.ExportKeyword)],
+        factory.createIdentifier(sanitizeTypeIdentifier(key)),
+        undefined,
+        createTypeFromSchema(schema, ctx),
+      );
     }
 
-    return typeAlias;
+    if (ctx.hasJSDoc()) {
+      addJSDocToNode(node, getJSDocFromSchema(schema));
+    }
+    return node;
   });
 }
 

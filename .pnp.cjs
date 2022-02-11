@@ -1401,6 +1401,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/lodash", [\
+        ["npm:4.14.178", {\
+          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.178-5433b9ed68-a69a04a60b.zip/node_modules/@types/lodash/",\
+          "packageDependencies": [\
+            ["@types/lodash", "npm:4.14.178"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/node", [\
         ["npm:14.17.11", {\
           "packageLocation": "./.yarn/cache/@types-node-npm-14.17.11-1749a5f307-94192a5f6f.zip/node_modules/@types/node/",\
@@ -1704,9 +1713,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typoas/generator", "workspace:packages/typoas-generator"],\
             ["@jest/globals", "npm:27.5.1"],\
             ["@types/jest", "npm:27.4.0"],\
+            ["@types/lodash", "npm:4.14.178"],\
             ["@types/node", "npm:14.17.11"],\
             ["jest", "virtual:9446e516ab1e967b6db5f66c3572caa1ade06cea155a1eb5261c1f7199776ddb67c883ce6adbb32eba835ebb07e501522df667db95070451b453657a2652fec4#npm:27.5.1"],\
             ["jest-environment-node", "npm:27.5.1"],\
+            ["lodash", "npm:4.17.21"],\
             ["openapi3-ts", "npm:2.0.1"],\
             ["ts-jest", "virtual:9446e516ab1e967b6db5f66c3572caa1ade06cea155a1eb5261c1f7199776ddb67c883ce6adbb32eba835ebb07e501522df667db95070451b453657a2652fec4#npm:27.1.3"],\
             ["typescript", "patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=142761"]\

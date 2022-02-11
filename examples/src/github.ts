@@ -1490,12 +1490,20 @@ export type CodeOfConduct = {
  * The policy that controls the organizations in the enterprise that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`.
  *
  */
-export type EnabledOrganizations = 'all' | 'none' | 'selected';
+export enum EnabledOrganizations {
+  ALL = 'all',
+  NONE = 'none',
+  SELECTED = 'selected',
+}
 /**
  * The permissions policy that controls the actions that are allowed to run. Can be one of: `all`, `local_only`, or `selected`.
  *
  */
-export type AllowedActions = 'all' | 'local_only' | 'selected';
+export enum AllowedActions {
+  ALL = 'all',
+  LOCAL_ONLY = 'local_only',
+  SELECTED = 'selected',
+}
 /**
  * The API URL to use to get or set the actions that are allowed to run, when `allowed_actions` is set to `selected`.
  *
@@ -2030,15 +2038,16 @@ export type Milestone = {
  * @example "OWNER"
  *
  */
-export type Author_association =
-  | 'COLLABORATOR'
-  | 'CONTRIBUTOR'
-  | 'FIRST_TIMER'
-  | 'FIRST_TIME_CONTRIBUTOR'
-  | 'MANNEQUIN'
-  | 'MEMBER'
-  | 'NONE'
-  | 'OWNER';
+export enum AuthorAssociation {
+  COLLABORATOR = 'COLLABORATOR',
+  CONTRIBUTOR = 'CONTRIBUTOR',
+  FIRST_TIMER = 'FIRST_TIMER',
+  FIRST_TIME_CONTRIBUTOR = 'FIRST_TIME_CONTRIBUTOR',
+  MANNEQUIN = 'MANNEQUIN',
+  MEMBER = 'MEMBER',
+  NONE = 'NONE',
+  OWNER = 'OWNER',
+}
 /**
  * Issue Simple
  * Issue Simple
@@ -2139,7 +2148,7 @@ export type IssueSimple = {
    *
    */
   updated_at: Date;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
@@ -2202,7 +2211,7 @@ export type IssueComment = {
    */
   updated_at: Date;
   issue_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   performed_via_github_app?: Integration | null;
   reactions?: ReactionRollup;
 };
@@ -2554,7 +2563,7 @@ export type GistComment = {
    *
    */
   updated_at: Date;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
 };
 /**
  * Gist Commit
@@ -2688,7 +2697,7 @@ export type Issue = {
   timeline_url?: string;
   repository?: Repository;
   performed_via_github_app?: Integration | null;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   reactions?: ReactionRollup;
 };
 /**
@@ -3548,7 +3557,11 @@ export type OrganizationFull = {
  * The policy that controls the repositories in the organization that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`.
  *
  */
-export type EnabledRepositories = 'all' | 'none' | 'selected';
+export enum EnabledRepositories {
+  ALL = 'all',
+  NONE = 'none',
+  SELECTED = 'selected',
+}
 export type ActionsOrganizationPermissions = {
   enabled_repositories: EnabledRepositories;
   /**
@@ -3830,10 +3843,11 @@ export type OrgHook = {
  * @example "collaborators_only"
  *
  */
-export type InteractionGroup =
-  | 'existing_users'
-  | 'contributors_only'
-  | 'collaborators_only';
+export enum InteractionGroup {
+  EXISTING_USERS = 'existing_users',
+  CONTRIBUTORS_ONLY = 'contributors_only',
+  COLLABORATORS_ONLY = 'collaborators_only',
+}
 /**
  * Interaction Limits
  * Interaction limit settings.
@@ -3857,12 +3871,13 @@ export type InteractionLimitResponse = {
  * @example "one_month"
  *
  */
-export type InteractionExpiry =
-  | 'one_day'
-  | 'three_days'
-  | 'one_week'
-  | 'one_month'
-  | 'six_months';
+export enum InteractionExpiry {
+  ONE_DAY = 'one_day',
+  THREE_DAYS = 'three_days',
+  ONE_WEEK = 'one_week',
+  ONE_MONTH = 'one_month',
+  SIX_MONTHS = 'six_months',
+}
 /**
  * Interaction Restrictions
  * Limit interactions to a specific type of user for a specified duration
@@ -6073,7 +6088,10 @@ export type EnvironmentApprovals = {
  * @example "User"
  *
  */
-export type DeploymentReviewerType = 'User' | 'Team';
+export enum DeploymentReviewerType {
+  USER = 'User',
+  TEAM = 'Team',
+}
 /**
  * Pending Deployment
  * Details of a deployment that is waiting for protection rules to pass
@@ -7222,7 +7240,12 @@ export type CodeScanningRef = string;
  * State of a code scanning alert.
  *
  */
-export type CodeScanningAlertState = 'open' | 'closed' | 'dismissed' | 'fixed';
+export enum CodeScanningAlertState {
+  OPEN = 'open',
+  CLOSED = 'closed',
+  DISMISSED = 'dismissed',
+  FIXED = 'fixed',
+}
 /**
  * The security alert number.
  *
@@ -7417,7 +7440,10 @@ export type CodeScanningAlert = {
  * Sets the state of the code scanning alert. Can be one of `open` or `dismissed`. You must provide `dismissed_reason` when you set the state to `dismissed`.
  *
  */
-export type CodeScanningAlertSetState = 'open' | 'dismissed';
+export enum CodeScanningAlertSetState {
+  OPEN = 'open',
+  DISMISSED = 'dismissed',
+}
 /**
  * An identifier for the upload.
  * @example "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53"
@@ -7692,7 +7718,7 @@ export type CommitComment = {
   user: SimpleUser | null;
   created_at: Date;
   updated_at: Date;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   reactions?: ReactionRollup;
 };
 /**
@@ -7721,7 +7747,7 @@ export type Link = {
  * The status of auto merging a pull request.
  *
  */
-export type Auto_merge = {
+export type AutoMerge = {
   enabled_by: SimpleUser;
   /**
    * The merge method to use.
@@ -7899,8 +7925,8 @@ export type PullRequestSimple = {
     review_comment: Link;
     self: Link;
   };
-  author_association: Author_association;
-  auto_merge: Auto_merge;
+  author_association: AuthorAssociation;
+  auto_merge: AutoMerge;
   /**
    * Indicates whether or not the pull request is a draft.
    *
@@ -8471,7 +8497,7 @@ export type WaitTimer = number;
  * The type of deployment branch policy for this environment. To allow all branches to deploy, set to `null`.
  *
  */
-export type Deployment_branch_policy = {
+export type DeploymentBranchPolicy = {
   /**
    * Whether only branches with branch protection rules can deploy to this environment. If `protected_branches` is `true`, `custom_branch_policies` must be `false`; if `protected_branches` is `false`, `custom_branch_policies` must be `true`.
    *
@@ -8590,7 +8616,7 @@ export type Environment = {
         type: string;
       }
   )[];
-  deployment_branch_policy?: Deployment_branch_policy;
+  deployment_branch_policy?: DeploymentBranchPolicy;
 };
 /**
  * Short Blob
@@ -9154,7 +9180,7 @@ export type IssueEvent = {
   milestone?: IssueEventMilestone;
   project_card?: IssueEventProjectCard;
   rename?: IssueEventRename;
-  author_association?: Author_association;
+  author_association?: AuthorAssociation;
   lock_reason?: string | null;
   performed_via_github_app?: Integration | null;
 };
@@ -9532,7 +9558,7 @@ export type TimelineCommentEvent = {
    */
   updated_at: Date;
   issue_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   performed_via_github_app?: Integration;
   reactions?: ReactionRollup;
 };
@@ -9704,7 +9730,7 @@ export type TimelineReviewedEvent = {
   commit_id: string;
   body_html?: string;
   body_text?: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
 };
 /**
  * Pull Request Review Comment
@@ -9807,7 +9833,7 @@ export type PullRequestReviewComment = {
    *
    */
   pull_request_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   _links: {
     self: {
       /**
@@ -10620,8 +10646,8 @@ export type PullRequest = {
     review_comment: Link;
     self: Link;
   };
-  author_association: Author_association;
-  auto_merge: Auto_merge;
+  author_association: AuthorAssociation;
+  auto_merge: AutoMerge;
   /**
    * Indicates whether or not the pull request is a draft.
    *
@@ -10752,7 +10778,7 @@ export type PullRequestReview = {
   commit_id: string;
   body_html?: string;
   body_text?: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
 };
 /**
  * Legacy Review Comment
@@ -10841,7 +10867,7 @@ export type ReviewComment = {
    *
    */
   pull_request_url: string;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   _links: {
     self: Link;
     html: Link;
@@ -10972,7 +10998,10 @@ export type Release = {
  * Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
  *
  */
-export type SecretScanningAlertState = 'open' | 'resolved';
+export enum SecretScanningAlertState {
+  OPEN = 'open',
+  RESOLVED = 'resolved',
+}
 /**
  * **Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`.
  *
@@ -11626,7 +11655,7 @@ export type IssueSearchResultItem = {
   };
   body?: string;
   score: number;
-  author_association: Author_association;
+  author_association: AuthorAssociation;
   draft?: boolean;
   repository?: Repository;
   body_html?: string;
@@ -33821,7 +33850,7 @@ export class GithubClient {
             id?: number;
           }[]
         | null;
-      deployment_branch_policy?: Deployment_branch_policy;
+      deployment_branch_policy?: DeploymentBranchPolicy;
     } | null,
   ): Promise<Environment> {
     const requestContext = this.server.makeRequestContext(

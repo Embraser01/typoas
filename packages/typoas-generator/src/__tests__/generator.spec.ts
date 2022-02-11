@@ -5,6 +5,7 @@ import { createClient } from '../generator/api/client';
 import { resolve } from 'path';
 import { OpenAPIObject } from 'openapi3-ts';
 import { getStringFromNode } from '../generator/utils/ts-node';
+import { generateClient } from '../index';
 
 describe('create full specs', () => {
   it('should generate client', () => {
@@ -17,6 +18,19 @@ describe('create full specs', () => {
     context.initComponents(specs.components!);
 
     const node = createClient(specs, 'PetStoreClient', context);
+
+    expect(getStringFromNode(node)).toMatchSnapshot();
+  });
+
+  it('should generate enums if possible', () => {
+    const specs = JSON.parse(
+      readFileSync(resolve(__dirname, './spec-with-enums.json'), 'utf8'),
+    ) as OpenAPIObject;
+
+    const node = generateClient(specs, 'EnumSchemasClient', {
+      jsDoc: false,
+      generateEnums: true,
+    });
 
     expect(getStringFromNode(node)).toMatchSnapshot();
   });

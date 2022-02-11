@@ -1,0 +1,47 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Spec with enums - OpenAPI 3.0",
+    "version": "1.0.5"
+  },
+  "servers": [{ "url": "/api/v3" }],
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64", "example": 10 },
+          "petId": { "type": "integer", "format": "int64", "example": 198772 },
+          "shipDate": { "type": "string", "format": "date-time" },
+          "status": {
+            "type": "string",
+            "description": "Order Status",
+            "example": "approved",
+            "enum": ["placed", "approved", "delivered"]
+          },
+          "complete": { "type": "boolean" }
+        }
+      },
+      "PetStatus": {
+        "type": "string",
+        "description": "pet status in the store",
+        "enum": ["available", "pending", "sold"]
+      },
+      "Pet": {
+        "required": ["name", "photoUrls"],
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64", "example": 10 },
+          "name": { "type": "string", "example": "doggie" },
+          "photoUrls": {
+            "type": "array",
+            "items": { "type": "string", "xml": { "name": "photoUrl" } }
+          },
+          "status": { "$ref": "#/components/schemas/PetStatus" }
+        },
+        "xml": { "name": "pet" }
+      }
+    }
+  }
+}

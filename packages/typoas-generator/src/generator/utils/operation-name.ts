@@ -1,34 +1,25 @@
-function lowerCase(str: string) {
-  return str.toLowerCase();
-}
-
-function upperCase(str: string) {
-  return str.toUpperCase();
-}
-
-/**
- * Convert string to camelCase text.
- */
-function camelCase(str: string): string {
-  return str
-    .replace(/[-./]/g, ' ') //convert all hyphens to spaces
-    .replace(/\s[a-z]/g, upperCase) //convert first char of each word to UPPERCASE
-    .replace(/\s+/g, '') //remove spaces
-    .replace(/^[A-Z]/g, lowerCase); //convert first char to lowercase
-}
+import { camelCase, snakeCase, upperFirst } from 'lodash';
 
 function pascalCase(str: string): string {
-  return camelCase(str).replace(/^[a-z]/, upperCase);
+  return upperFirst(camelCase(str));
+}
+
+function removeUnsupportedChars(str: string): string {
+  return str.replace(/[-/.+@\s:]/g, ' '); //convert all unsupported char to spaces
 }
 
 export function hasUnsupportedIdentifierChar(key: string): boolean {
-  return /[-/.+@\s]/.test(key);
+  return /[-/.+@\s:]/.test(key);
+}
+
+export function screamingSnakeCase(str: string): string {
+  return snakeCase(removeUnsupportedChars(str)).toUpperCase();
 }
 
 export function sanitizeOperationIdName(op: string): string {
-  return camelCase(op);
+  return camelCase(removeUnsupportedChars(op));
 }
 
 export function sanitizeTypeIdentifier(type: string): string {
-  return pascalCase(type);
+  return pascalCase(removeUnsupportedChars(type));
 }
