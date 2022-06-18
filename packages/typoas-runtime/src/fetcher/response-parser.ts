@@ -1,6 +1,6 @@
-import { ResponseContext } from './http';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts';
 import { applyTransforms, SchemaRefResolver } from '../apply-transforms';
-import { ReferenceObject, SchemaObject } from 'openapi3-ts';
+import type { ResponseContext } from './response-context';
 
 const CONTENT_TYPE_HEADER = 'content-type';
 

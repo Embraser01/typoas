@@ -67,7 +67,6 @@ export function generateClient(
     ctx.initComponents(specs.components);
   }
 
-  const clientClass = createClient(specs, name, ctx);
   const schemaStmts = specs.components?.schemas
     ? createSchemaComponents(specs.components?.schemas, ctx)
     : [];
@@ -80,6 +79,7 @@ export function generateClient(
     );
   }
 
+  const clientClass = createClient(specs, name, ctx);
   return factory.createSourceFile(
     [
       factory.createImportDeclaration(

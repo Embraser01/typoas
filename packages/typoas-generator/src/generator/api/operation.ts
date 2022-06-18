@@ -14,8 +14,8 @@ import {
 } from 'openapi3-ts';
 import {
   Block,
-  ClassElement,
   factory,
+  FunctionDeclaration,
   NodeFlags,
   ParameterDeclaration,
   PropertySignature,
@@ -27,10 +27,14 @@ import {
   DEFAULT_RESPONSE,
   getSuccessResponse,
 } from './response-processor';
-import { createParameterStatements } from './request-preparation';
+import {
+  createParameterStatements,
+  getQueryParams,
+} from './request-preparation';
 import {
   createJSONParseWrapper,
   createRuntimeRefProperty,
+  createRuntimeRefType,
   ExportedRef,
 } from '../utils/ref';
 import {
@@ -49,25 +53,38 @@ export function createOperation(
   method: string,
   ctx: Context,
   { baseParameters, defaultSecurityRequirements }: GlobalParameters,
-): ClassElement {
-  // Create API class with:
-  //   - All available security
-  //   - All available servers
-  //   - Raw data?
-  //
-  // For each service a function with:
-  //   - (params): (object parameters), (body if present), (options?)
+): FunctionDeclaration {
+  // For each operation a function with:
+  //   - (params): (ctx), (object parameters), (body if present), (options?)
   //   - (return): (response body)
-  //   - Get service name operation
-  //   - Set URL path & method
-  //   - Set security if needed
-  //   - Set parameters
-  //   - Set request body
-  //   - Parse responses by status code
+  //
+  //   - Create request with
+  //     - method
+  //     - path
+  //     - params
+  //     - body if needed
+  //     - headers if needed
+  //     - auth
+  //     - queryParams if needed
+  //
+  //   - Send request
+  //   - Handle response
+  //     - res
+  //     - handlers (per status code)
+  //       - success one
+  //       - transforms to compute
   const resp = getSuccessResponse(operation);
 
   const usedParams = new Set<string>();
   const parameters: ParameterDeclaration[] = [
+    factory.createParameterDeclaration(
+      undefined,
+      undefined,
+      undefined,
+      'ctx',
+      undefined,
+      createRuntimeRefType(ExportedRef.Context),
+    ),
     factory.createParameterDeclaration(
       undefined,
       undefined,
@@ -112,12 +129,11 @@ export function createOperation(
     );
   }
 
-  return factory.createMethodDeclaration(
+  return factory.createFunctionDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.AsyncKeyword)],
     undefined,
     sanitizeOperationIdName(operation.operationId || `${path}/${method}`),
-    undefined,
     undefined,
     parameters,
     factory.createTypeReferenceNode(factory.createIdentifier('Promise'), [
@@ -141,6 +157,14 @@ export function createOperationBodyFunction(
 ): Block {
   const statements: Statement[] = [];
 
+  const params = [...(operation.parameters || []), ...baseParameters];
+  const queryParams = getQueryParams(params, ctx);
+
+  const secRequirements = operation.security || defaultSecurityRequirements;
+  const securities = new Set<string>(
+    secRequirements?.flatMap((s) => Object.keys(s)),
+  );
+
   // Set URL and method (and applyTemplating)
   statements.push(
     factory.createVariableStatement(
@@ -148,32 +172,71 @@ export function createOperationBodyFunction(
       factory.createVariableDeclarationList(
         [
           factory.createVariableDeclaration(
-            'requestContext',
+            'req',
             undefined,
             undefined,
-            factory.createCallExpression(
-              factory.createPropertyAccessExpression(
+            factory.createAwaitExpression(
+              factory.createCallExpression(
                 factory.createPropertyAccessExpression(
-                  factory.createThis(),
-                  'server',
+                  factory.createIdentifier('ctx'),
+                  factory.createIdentifier('createRequest'),
                 ),
-                'makeRequestContext',
+                undefined,
+                [
+                  factory.createObjectLiteralExpression(
+                    [
+                      factory.createPropertyAssignment(
+                        factory.createIdentifier('path'),
+                        factory.createStringLiteral(path, true),
+                      ),
+                      factory.createShorthandPropertyAssignment(
+                        factory.createIdentifier('params'),
+                        undefined,
+                      ),
+                      factory.createPropertyAssignment(
+                        factory.createIdentifier('method'),
+                        factory.createPropertyAccessExpression(
+                          createRuntimeRefProperty(ExportedRef.HttpMethod),
+                          factory.createIdentifier(method.toUpperCase()),
+                        ),
+                      ),
+                      ...(operation.requestBody
+                        ? [
+                            factory.createShorthandPropertyAssignment(
+                              factory.createIdentifier('body'),
+                              undefined,
+                            ),
+                          ]
+                        : []),
+                      ...(queryParams.length
+                        ? [
+                            factory.createPropertyAssignment(
+                              factory.createIdentifier('queryParams'),
+                              factory.createArrayLiteralExpression(
+                                queryParams,
+                                true,
+                              ),
+                            ),
+                          ]
+                        : []),
+                      ...(operation.security?.length
+                        ? [
+                            factory.createPropertyAssignment(
+                              factory.createIdentifier('auth'),
+                              factory.createArrayLiteralExpression(
+                                [...securities.values()].map((s) =>
+                                  factory.createStringLiteral(s),
+                                ),
+                                false,
+                              ),
+                            ),
+                          ]
+                        : []),
+                    ],
+                    true,
+                  ),
+                ],
               ),
-              undefined,
-              [
-                factory.createCallExpression(
-                  createRuntimeRefProperty(ExportedRef.applyTemplating),
-                  undefined,
-                  [
-                    factory.createStringLiteral(path, true),
-                    factory.createIdentifier('params'),
-                  ],
-                ),
-                factory.createPropertyAccessExpression(
-                  createRuntimeRefProperty(ExportedRef.HttpMethod),
-                  method.toUpperCase(),
-                ),
-              ],
             ),
           ),
         ],
@@ -182,111 +245,24 @@ export function createOperationBodyFunction(
     ),
   );
 
-  // Assign content type
-  statements.push(
-    factory.createExpressionStatement(
-      factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier('requestContext'),
-          'setHeaderParam',
-        ),
-        undefined,
-        [
-          factory.createStringLiteral('Content-Type', true),
-          factory.createStringLiteral('application/json', true),
-        ],
-      ),
-    ),
-  );
-
-  // Assign parameters
-  const params = [...(operation.parameters || []), ...baseParameters];
-  const usedParams = new Set<string>();
-  for (const p of params) {
-    const name = getParameterName(p, ctx);
-    if (!usedParams.has(name)) {
-      usedParams.add(name);
-      statements.push(...createParameterStatements(p, ctx));
-    }
-  }
-
-  // Assign request body if needed
-  if (operation.requestBody) {
-    statements.push(
-      factory.createExpressionStatement(
-        factory.createCallExpression(
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier('requestContext'),
-            'setBody',
-          ),
-          undefined,
-          [
-            factory.createCallExpression(
-              factory.createPropertyAccessExpression(
-                factory.createIdentifier('JSON'),
-                'stringify',
-              ),
-              undefined,
-              [factory.createIdentifier('body')],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Assign security schemes
-  const secRequirements = operation.security || defaultSecurityRequirements;
-  if (secRequirements?.length) {
-    const secSchemesKeys = new Set<string>(
-      secRequirements.flatMap((s) => Object.keys(s)),
-    );
-
-    for (const scheme of secSchemesKeys) {
-      statements.push(
-        factory.createExpressionStatement(
-          factory.createAwaitExpression(
-            factory.createCallExpression(
-              factory.createPropertyAccessExpression(
-                factory.createPropertyAccessExpression(
-                  factory.createPropertyAccessExpression(
-                    factory.createThis(),
-                    'authMethods',
-                  ),
-                  scheme,
-                ),
-                'applySecurityAuthentication',
-              ),
-              undefined,
-              [factory.createIdentifier('requestContext')],
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  // const response = await this.http.send(requestContext);
+  // Send request
   statements.push(
     factory.createVariableStatement(
       undefined,
       factory.createVariableDeclarationList(
         [
           factory.createVariableDeclaration(
-            'res',
+            factory.createIdentifier('res'),
             undefined,
             undefined,
             factory.createAwaitExpression(
               factory.createCallExpression(
                 factory.createPropertyAccessExpression(
-                  factory.createPropertyAccessExpression(
-                    factory.createThis(),
-                    'http',
-                  ),
-                  'send',
+                  factory.createIdentifier('ctx'),
+                  factory.createIdentifier('sendRequest'),
                 ),
                 undefined,
-                [factory.createIdentifier('requestContext')],
+                [factory.createIdentifier('req')],
               ),
             ),
           ),

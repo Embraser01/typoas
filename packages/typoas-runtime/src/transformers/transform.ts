@@ -7,10 +7,10 @@ export enum TransformType {
 
 export type TransformField = TransformLevel[];
 export type TransformLevel =
-  | { type: TransformType.ACCESS; key: string }
-  | { type: TransformType.THIS }
-  | { type: TransformType.LOOP }
-  | { type: TransformType.SELECT; subTransforms: TransformField[] };
+  | [TransformType.ACCESS, string]
+  | [TransformType.THIS]
+  | [TransformType.LOOP]
+  | [TransformType.SELECT, TransformField[]];
 
 export type Transform<T, U> = (val: T) => U;
 
@@ -31,7 +31,7 @@ export function applyTransform<T, U>(
 ) {
   const transformLevel = transformField[index];
 
-  switch (transformLevel.type) {
+  switch (transformLevel[0]) {
     case TransformType.THIS: {
       if (!isPlainObject(parent) && !Array.isArray(parent)) {
         return;
@@ -49,14 +49,14 @@ export function applyTransform<T, U>(
       }
       applyTransform(
         parent[dataKey] as Record<string, unknown>,
-        transformLevel.key,
+        transformLevel[1],
         transformer,
         transformField,
         index + 1,
       );
       break;
     case TransformType.SELECT:
-      for (const subTransformField of transformLevel.subTransforms) {
+      for (const subTransformField of transformLevel[1]) {
         applyTransform(parent, dataKey, transformer, subTransformField, 0);
       }
       break;

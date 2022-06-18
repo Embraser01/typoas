@@ -1,12 +1,15 @@
-import { SchemaRefResolver } from './apply-transforms';
-import { SchemaObject, SchemasObject } from 'openapi3-ts';
+import type { TransformField } from './transformers';
 
-export class RefResolver implements SchemaRefResolver {
-  constructor(private schemas: SchemasObject) {}
+export interface TransformResolver {
+  getTransforms(type: string, ref: string): TransformField;
+}
 
-  resolveSchema(ref: string): SchemaObject | undefined {
-    const [, schemaName] = /^#\/components\/schemas\/([^/]+)/.exec(ref) || [];
+export class RefResolver implements TransformResolver {
+  constructor(
+    private transforms: Record<string, Record<string, TransformField>>,
+  ) {}
 
-    return this.schemas?.[schemaName];
+  getTransforms(type: string, ref: string): TransformField {
+    return this.transforms[ref][type] || [];
   }
 }

@@ -1,5 +1,9 @@
-import { HttpMethod } from '../http/http';
-import { Transform, TransformField } from './transform';
+import type { Fetcher, HttpMethod, SerializerOptions } from '../fetcher';
+import type { TransformField } from '../transformers';
+import type { SecurityAuthentication } from '../auth';
+import type { TransformResolver } from '../resolver';
+import type { Transform } from '../transformers';
+import type { BaseServerConfiguration } from '../configuration';
 
 export type CreateRequestParams = {
   /**
@@ -18,7 +22,7 @@ export type CreateRequestParams = {
   /**
    * Headers to be added to the request.
    */
-  headers: Record<string, string>;
+  headers?: Record<string, unknown>;
   /**
    * Body of the request.
    */
@@ -28,12 +32,21 @@ export type CreateRequestParams = {
    */
   queryParams?: string[];
   /**
-   * Name of the auth mode to be used.
+   * Name of the auth modes to be used.
    */
-  auth?: string;
+  auth?: string[];
+};
+
+export type ContextParams = {
+  resolver: TransformResolver;
+  serverConfiguration: BaseServerConfiguration;
+  fetcher?: Fetcher;
+  transformers?: Record<string, Transform<unknown, unknown>>;
+  serializerOptions?: SerializerOptions;
+  authMethods?: Record<string, SecurityAuthentication>;
 };
 
 export type ResponseHandler = {
   success?: boolean;
-  transform: TransformField;
+  transforms?: Record<string, TransformField>;
 };

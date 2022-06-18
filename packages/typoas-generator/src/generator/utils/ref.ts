@@ -5,6 +5,7 @@ export const IMPORT_RUNTIME = 'r';
 
 export enum ExportedRef {
   HttpMethod = 'HttpMethod',
+  Context = 'Context',
   BaseServerConfiguration = 'BaseServerConfiguration',
   HttpLibrary = 'HttpLibrary',
   RefResolver = 'RefResolver',

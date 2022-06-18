@@ -1,6 +1,15 @@
-import { HttpLibrary, RequestContext, ResponseContext } from './http';
+import { RequestContext } from './request-context';
+import { ResponseContext } from './response-context';
 
-export class IsomorphicFetchHttpLibrary implements HttpLibrary {
+export * from './types';
+
+export { RequestContext, ResponseContext };
+
+export interface Fetcher {
+  send(request: RequestContext): Promise<ResponseContext>;
+}
+
+export class IsomorphicFetchHttpLibrary implements Fetcher {
   public async send(request: RequestContext): Promise<ResponseContext> {
     const method = request.getHttpMethod().toString();
     const body = request.getBody();
