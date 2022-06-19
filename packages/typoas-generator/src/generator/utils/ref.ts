@@ -6,12 +6,9 @@ export const IMPORT_RUNTIME = 'r';
 export enum ExportedRef {
   HttpMethod = 'HttpMethod',
   Context = 'Context',
-  BaseServerConfiguration = 'BaseServerConfiguration',
-  HttpLibrary = 'HttpLibrary',
+  ContextParams = 'ContextParams',
+  ServerConfiguration = 'ServerConfiguration',
   RefResolver = 'RefResolver',
-  IsomorphicFetchHttpLibrary = 'IsomorphicFetchHttpLibrary',
-  SchemaRefResolver = 'SchemaRefResolver',
-  ApiException = 'ApiException',
   AuthProvider = 'AuthProvider',
   BasicAuthConfig = 'BasicAuthConfig',
   BearerAuthConfig = 'BearerAuthConfig',
@@ -20,12 +17,6 @@ export enum ExportedRef {
   ApiKeySecurityAuthentication = 'ApiKeySecurityAuthentication',
   HttpSecurityAuthentication = 'HttpSecurityAuthentication',
   OAuth2SecurityAuthentication = 'OAuth2SecurityAuthentication',
-  applyTemplating = 'applyTemplating',
-  applyTransforms = 'applyTransforms',
-  handleResponse = 'handleResponse',
-  isCodeInRange = 'isCodeInRange',
-  serializeParameter = 'serializeParameter',
-  serializeHeader = 'serializeHeader',
 }
 
 export function createRuntimeRefProperty(exportedRef: ExportedRef): Expression {

@@ -23,20 +23,20 @@ import {
   serializeParameter,
 } from '../utils';
 
-export class Context {
+export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
   fetcher: Fetcher;
   serializerOptions: SerializerOptions;
-  authMethods: Record<string, SecurityAuthentication>;
+  authMethods: Partial<AuthModes>;
   resolver: TransformResolver;
   transformers: Record<string, Transform<unknown, unknown>>;
   serverConfiguration: BaseServerConfiguration;
 
-  constructor(params: ContextParams) {
+  constructor(params: ContextParams<AuthModes>) {
     this.resolver = params.resolver;
     this.serverConfiguration = params.serverConfiguration;
     this.fetcher = params.fetcher || new IsomorphicFetchHttpLibrary();
     this.serializerOptions = params.serializerOptions || {};
-    this.authMethods = params.authMethods || {};
+    this.authMethods = params.authMethods;
     this.transformers = params.transformers || { date: DateTransformer };
   }
 
@@ -72,12 +72,9 @@ export class Context {
     }
     if (options.auth?.length) {
       for (const mode of options.auth) {
-        // TODO Log if auth mode is not found
-        if (this.authMethods[mode]) {
-          await this.authMethods[mode].applySecurityAuthentication(
-            requestContext,
-          );
-        }
+        await this.authMethods[mode]?.applySecurityAuthentication(
+          requestContext,
+        );
       }
     }
     return requestContext;
@@ -123,7 +120,8 @@ export class Context {
       }
     }
 
-    if (handler.success) {
+    // Do not throw on valid http status code.
+    if (res.httpStatusCode >= 200 && res.httpStatusCode < 400) {
       return body as T;
     }
     throw new ApiException(res.httpStatusCode, body);

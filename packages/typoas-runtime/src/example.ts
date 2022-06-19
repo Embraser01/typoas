@@ -2,8 +2,16 @@ import { Context } from './context';
 import { TransformType } from './transformers';
 import { HttpMethod } from './fetcher';
 import { wrapApi } from './wrap-api';
+import { ContextParams } from './context/types';
+import { ServerConfiguration } from './configuration';
+import { RefResolver } from './resolver';
+import { HttpSecurityAuthentication } from './auth';
 
 type Pet = { a: 6 };
+
+export type AuthMethods = {
+  jwt: HttpSecurityAuthentication;
+};
 
 async function findPetsByStatus(
   ctx: Context,
@@ -36,12 +44,11 @@ async function addPet(
 
   return ctx.handleResponse(res, {
     '200': {
-      success: true,
       transforms: {
         date: [[TransformType.SELECT, [ctx.resolve('date', 'Pet')]]],
       },
     },
-    '400': { success: false, transforms: {} },
+    '400': { transforms: {} },
   });
 }
 
@@ -50,9 +57,18 @@ const apis = {
   findPetsByStatus,
 };
 
-const context = new Context({});
+export function createContext(
+  params?: Partial<ContextParams<AuthMethods>>,
+): Context<AuthMethods> {
+  return new Context<AuthMethods>({
+    resolver: new RefResolver({}),
+    serverConfiguration: new ServerConfiguration('', {}),
+    authMethods: {},
+    ...params,
+  });
+}
 
-const client = wrapApi(context, apis);
+const client = wrapApi(createContext(), apis);
 
 client.findPetsByStatus({ status: 'available' }).then((pets) => pets.length);
 client.addPet({ status: 'sold' }, { a: 6 }).then((pet) => pet.a);

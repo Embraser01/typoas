@@ -1,4 +1,3 @@
-import { createClient } from './generator/api/client';
 import { Context, ContextOptions } from './context';
 import { OpenAPIObject, SchemasObject } from 'openapi3-ts';
 import {
@@ -19,7 +18,9 @@ import {
 import { IMPORT_RUNTIME } from './generator/utils/ref';
 import { createTypeFromSchema } from './generator/components/schemas';
 import { sanitizeTypeIdentifier } from './generator/utils/operation-name';
-import { createAuthMethodsFactory } from './generator/api/security';
+import { createAuthMethodsType } from './generator/api/security';
+import { createOperationList } from './generator/api/operation-list';
+import { createContextFactory } from './generator/api/context-factory';
 
 export function createSchemaComponents(
   schemas: SchemasObject,
@@ -79,7 +80,6 @@ export function generateClient(
     );
   }
 
-  const clientClass = createClient(specs, name, ctx);
   return factory.createSourceFile(
     [
       factory.createImportDeclaration(
@@ -95,8 +95,9 @@ export function generateClient(
         factory.createStringLiteral('@typoas/runtime', true),
       ),
       ...schemaStmts,
-      ...createAuthMethodsFactory(specs.components?.securitySchemes || {}, ctx),
-      clientClass,
+      createAuthMethodsType(specs.components?.securitySchemes || {}, ctx),
+      createContextFactory(specs, ctx),
+      ...createOperationList(specs, ctx),
     ],
     factory.createToken(SyntaxKind.EndOfFileToken),
     NodeFlags.Const,

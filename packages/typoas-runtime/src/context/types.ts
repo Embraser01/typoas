@@ -37,16 +37,17 @@ export type CreateRequestParams = {
   auth?: string[];
 };
 
-export type ContextParams = {
+export type ContextParams<
+  AuthModes extends Record<string, SecurityAuthentication>,
+> = {
   resolver: TransformResolver;
   serverConfiguration: BaseServerConfiguration;
+  authMethods: Partial<AuthModes>;
   fetcher?: Fetcher;
   transformers?: Record<string, Transform<unknown, unknown>>;
   serializerOptions?: SerializerOptions;
-  authMethods?: Record<string, SecurityAuthentication>;
 };
 
 export type ResponseHandler = {
-  success?: boolean;
   transforms?: Record<string, TransformField>;
 };
