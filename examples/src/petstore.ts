@@ -147,28 +147,6 @@ export function createContext(
       Order: {
         date: [[[r.TransformType.ACCESS, 'shipDate'], [r.TransformType.THIS]]],
       },
-      Customer: {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'address'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'Address'],
-          ],
-        ],
-      },
-      Pet: {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'category'],
-            [r.TransformType.REF, 'Category'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'tags'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'Tag'],
-          ],
-        ],
-      },
     }),
     serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
     authMethods: configureAuth(params?.authProviders),

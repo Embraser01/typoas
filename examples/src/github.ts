@@ -10615,48 +10615,13 @@ export function createContext(
     resolver: new r.RefResolver({
       integration: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-        ],
-      },
-      'webhook-config-insecure-ssl': { date: [[[r.TransformType.SELECT, []]]] },
-      'webhook-config': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'url'],
-            [r.TransformType.REF, 'webhook-config-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'content_type'],
-            [r.TransformType.REF, 'webhook-config-content-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'secret'],
-            [r.TransformType.REF, 'webhook-config-secret'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'insecure_ssl'],
-            [r.TransformType.REF, 'webhook-config-insecure-ssl'],
-          ],
         ],
       },
       'hook-delivery-item': {
         date: [
           [[r.TransformType.ACCESS, 'delivered_at'], [r.TransformType.THIS]],
-        ],
-      },
-      'validation-error': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'errors'],
-            [r.TransformType.LOOP],
-            [r.TransformType.ACCESS, 'value'],
-            [r.TransformType.SELECT, []],
-          ],
         ],
       },
       'hook-delivery': {
@@ -10674,44 +10639,15 @@ export function createContext(
         date: [
           [
             [r.TransformType.ACCESS, 'account'],
-            [
-              r.TransformType.SELECT,
-              [
-                [[r.TransformType.REF, 'simple-user']],
-                [[r.TransformType.REF, 'enterprise']],
-              ],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'permissions'],
-            [r.TransformType.REF, 'app-permissions'],
+            [r.TransformType.SELECT, [[[r.TransformType.REF, 'enterprise']]]],
           ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'suspended_by'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'suspended_at'], [r.TransformType.THIS]],
         ],
       },
       repository: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'license'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'license-simple']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'organization'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'pushed_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
@@ -10719,10 +10655,6 @@ export function createContext(
       },
       'installation-token': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'permissions'],
-            [r.TransformType.REF, 'app-permissions'],
-          ],
           [
             [r.TransformType.ACCESS, 'repositories'],
             [r.TransformType.LOOP],
@@ -10734,55 +10666,12 @@ export function createContext(
         date: [
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-        ],
-      },
-      'scoped-installation': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'permissions'],
-            [r.TransformType.REF, 'app-permissions'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'account'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
         ],
       },
       authorization: {
         date: [
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'installation'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'scoped-installation']]],
-            ],
-          ],
-        ],
-      },
-      'actions-enterprise-permissions': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'enabled_organizations'],
-            [r.TransformType.REF, 'enabled-organizations'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'allowed_actions'],
-            [r.TransformType.REF, 'allowed-actions'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'selected_actions_url'],
-            [r.TransformType.REF, 'selected-actions-url'],
-          ],
         ],
       },
       'authentication-token': {
@@ -10797,10 +10686,6 @@ export function createContext(
       },
       milestone: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'creator'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'closed_at'], [r.TransformType.THIS]],
@@ -10809,24 +10694,6 @@ export function createContext(
       },
       'issue-simple': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'labels'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'label'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignees'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'milestone'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'milestone']]]],
@@ -10840,10 +10707,6 @@ export function createContext(
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
             [r.TransformType.ACCESS, 'repository'],
             [r.TransformType.REF, 'repository'],
           ],
@@ -10855,36 +10718,16 @@ export function createContext(
       },
       'issue-comment': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'integration']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
           ],
         ],
       },
       event: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'actor'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'org'],
-            [r.TransformType.REF, 'actor'],
-          ],
           [
             [r.TransformType.ACCESS, 'payload'],
             [r.TransformType.ACCESS, 'issue'],
@@ -10898,63 +10741,10 @@ export function createContext(
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
         ],
       },
-      feed: {
-        date: [
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'timeline'],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'security_advisories'],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'current_user'],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'current_user_public'],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'current_user_actor'],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'current_user_organization'],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'current_user_organizations'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'link-with-type'],
-          ],
-        ],
-      },
       'base-gist': {
         date: [
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
         ],
       },
       'public-user': {
@@ -10966,10 +10756,6 @@ export function createContext(
       },
       'gist-history': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'committed_at'], [r.TransformType.THIS]],
         ],
       },
@@ -11008,65 +10794,21 @@ export function createContext(
             [r.TransformType.ACCESS, 'updated_at'],
             [r.TransformType.THIS],
           ],
-          [
-            [r.TransformType.ACCESS, 'fork_of'],
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'fork_of'],
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
         ],
       },
       'gist-comment': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
         ],
       },
       'gist-commit': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'committed_at'], [r.TransformType.THIS]],
         ],
       },
       issue: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'labels'],
-            [r.TransformType.LOOP],
-            [r.TransformType.SELECT, []],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignees'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'milestone'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'milestone']]]],
@@ -11080,10 +10822,6 @@ export function createContext(
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'closed_by'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
             [r.TransformType.ACCESS, 'repository'],
             [r.TransformType.REF, 'repository'],
           ],
@@ -11091,46 +10829,16 @@ export function createContext(
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'integration']]]],
           ],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
-          ],
-        ],
-      },
-      'marketplace-purchase': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'marketplace_pending_change'],
-            [r.TransformType.ACCESS, 'plan'],
-            [r.TransformType.REF, 'marketplace-listing-plan'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'marketplace_purchase'],
-            [r.TransformType.ACCESS, 'plan'],
-            [r.TransformType.REF, 'marketplace-listing-plan'],
-          ],
         ],
       },
       'minimal-repository': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'pushed_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
             [r.TransformType.ACCESS, 'template_repository'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'repository']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'code_of_conduct'],
-            [r.TransformType.REF, 'code-of-conduct'],
           ],
         ],
       },
@@ -11153,22 +10861,6 @@ export function createContext(
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
         ],
       },
-      'actions-organization-permissions': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'enabled_repositories'],
-            [r.TransformType.REF, 'enabled-repositories'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'allowed_actions'],
-            [r.TransformType.REF, 'allowed-actions'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'selected_actions_url'],
-            [r.TransformType.REF, 'selected-actions-url'],
-          ],
-        ],
-      },
       'organization-actions-secret': {
         date: [
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
@@ -11187,14 +10879,6 @@ export function createContext(
           ],
         ],
       },
-      'organization-invitation': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'inviter'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-        ],
-      },
       'org-hook': {
         date: [
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
@@ -11203,51 +10887,11 @@ export function createContext(
       },
       'interaction-limit-response': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'limit'],
-            [r.TransformType.REF, 'interaction-group'],
-          ],
           [[r.TransformType.ACCESS, 'expires_at'], [r.TransformType.THIS]],
-        ],
-      },
-      'interaction-limit': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'limit'],
-            [r.TransformType.REF, 'interaction-group'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'expiry'],
-            [r.TransformType.REF, 'interaction-expiry'],
-          ],
-        ],
-      },
-      team: {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'parent'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'team-simple']]]],
-          ],
-        ],
-      },
-      'org-membership': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'organization'],
-            [r.TransformType.REF, 'organization-simple'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
         ],
       },
       migration: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [
             [r.TransformType.ACCESS, 'repositories'],
             [r.TransformType.LOOP],
@@ -11259,10 +10903,6 @@ export function createContext(
       },
       package: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [
             [r.TransformType.ACCESS, 'repository'],
             [
@@ -11283,20 +10923,12 @@ export function createContext(
       },
       project: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'creator'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
         ],
       },
       'team-full': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'parent'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'team-simple']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
@@ -11307,64 +10939,25 @@ export function createContext(
       },
       'team-discussion': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'author'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'last_edited_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
-          ],
         ],
       },
       'team-discussion-comment': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'author'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'last_edited_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
-          ],
         ],
       },
       reaction: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
-        ],
-      },
-      'team-project': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'creator'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
         ],
       },
       'team-repository': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'license'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'license-simple']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'pushed_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
@@ -11376,10 +10969,6 @@ export function createContext(
       },
       'project-card': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'creator'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
         ],
@@ -11390,58 +10979,8 @@ export function createContext(
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
         ],
       },
-      'repository-collaborator-permission': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-        ],
-      },
-      'rate-limit-overview': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'resources'],
-            [r.TransformType.ACCESS, 'core'],
-            [r.TransformType.REF, 'rate-limit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'resources'],
-            [r.TransformType.ACCESS, 'graphql'],
-            [r.TransformType.REF, 'rate-limit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'resources'],
-            [r.TransformType.ACCESS, 'search'],
-            [r.TransformType.REF, 'rate-limit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'resources'],
-            [r.TransformType.ACCESS, 'source_import'],
-            [r.TransformType.REF, 'rate-limit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'resources'],
-            [r.TransformType.ACCESS, 'integration_manifest'],
-            [r.TransformType.REF, 'rate-limit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'resources'],
-            [r.TransformType.ACCESS, 'code_scanning_upload'],
-            [r.TransformType.REF, 'rate-limit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'rate'],
-            [r.TransformType.REF, 'rate-limit'],
-          ],
-        ],
-      },
       'full-repository': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'pushed_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
@@ -11450,27 +10989,12 @@ export function createContext(
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'repository']]]],
           ],
           [
-            [r.TransformType.ACCESS, 'license'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'license-simple']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'organization'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
             [r.TransformType.ACCESS, 'parent'],
             [r.TransformType.REF, 'repository'],
           ],
           [
             [r.TransformType.ACCESS, 'source'],
             [r.TransformType.REF, 'repository'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'code_of_conduct'],
-            [r.TransformType.REF, 'code-of-conduct-simple'],
           ],
         ],
       },
@@ -11499,32 +11023,11 @@ export function createContext(
           ],
         ],
       },
-      'actions-repository-permissions': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'enabled'],
-            [r.TransformType.REF, 'actions-enabled'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'allowed_actions'],
-            [r.TransformType.REF, 'allowed-actions'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'selected_actions_url'],
-            [r.TransformType.REF, 'selected-actions-url'],
-          ],
-        ],
-      },
       'simple-commit': {
         date: [[[r.TransformType.ACCESS, 'timestamp'], [r.TransformType.THIS]]],
       },
       'workflow-run': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'pull_requests'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'pull-request-minimal'],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
@@ -11558,10 +11061,6 @@ export function createContext(
             [r.TransformType.ACCESS, 'updated_at'],
             [r.TransformType.THIS],
           ],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
         ],
       },
       'pending-deployment': {
@@ -11570,36 +11069,10 @@ export function createContext(
             [r.TransformType.ACCESS, 'wait_timer_started_at'],
             [r.TransformType.THIS],
           ],
-          [
-            [r.TransformType.ACCESS, 'reviewers'],
-            [r.TransformType.LOOP],
-            [r.TransformType.ACCESS, 'type'],
-            [r.TransformType.REF, 'deployment-reviewer-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reviewers'],
-            [r.TransformType.LOOP],
-            [r.TransformType.ACCESS, 'reviewer'],
-            [
-              r.TransformType.SELECT,
-              [
-                [[r.TransformType.REF, 'simple-user']],
-                [[r.TransformType.REF, 'team']],
-              ],
-            ],
-          ],
         ],
       },
       deployment: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'payload'],
-            [r.TransformType.SELECT, []],
-          ],
-          [
-            [r.TransformType.ACCESS, 'creator'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
@@ -11619,111 +11092,6 @@ export function createContext(
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'deleted_at'], [r.TransformType.THIS]],
-        ],
-      },
-      'protected-branch-pull-request-review': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'dismissal_restrictions'],
-            [r.TransformType.ACCESS, 'users'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'dismissal_restrictions'],
-            [r.TransformType.ACCESS, 'teams'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'team'],
-          ],
-        ],
-      },
-      'branch-protection': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'enforce_admins'],
-            [r.TransformType.REF, 'protected-branch-admin-enforced'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'required_pull_request_reviews'],
-            [r.TransformType.REF, 'protected-branch-pull-request-review'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'restrictions'],
-            [r.TransformType.REF, 'branch-restriction-policy'],
-          ],
-        ],
-      },
-      'short-branch': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'protection'],
-            [r.TransformType.REF, 'branch-protection'],
-          ],
-        ],
-      },
-      commit: {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'commit'],
-            [r.TransformType.ACCESS, 'author'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'git-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'commit'],
-            [r.TransformType.ACCESS, 'committer'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'git-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'commit'],
-            [r.TransformType.ACCESS, 'verification'],
-            [r.TransformType.REF, 'verification'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'author'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'committer'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-        ],
-      },
-      'branch-with-protection': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'commit'],
-            [r.TransformType.REF, 'commit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'protection'],
-            [r.TransformType.REF, 'branch-protection'],
-          ],
-        ],
-      },
-      'protected-branch': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'required_status_checks'],
-            [r.TransformType.REF, 'status-check-policy'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'required_pull_request_reviews'],
-            [r.TransformType.ACCESS, 'dismissal_restrictions'],
-            [r.TransformType.ACCESS, 'users'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'required_pull_request_reviews'],
-            [r.TransformType.ACCESS, 'dismissal_restrictions'],
-            [r.TransformType.ACCESS, 'teams'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'team'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'restrictions'],
-            [r.TransformType.REF, 'branch-restriction-policy'],
-          ],
         ],
       },
       'deployment-simple': {
@@ -11753,11 +11121,6 @@ export function createContext(
       'check-suite': {
         date: [
           [
-            [r.TransformType.ACCESS, 'pull_requests'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'pull-request-minimal'],
-          ],
-          [
             [r.TransformType.ACCESS, 'app'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'integration']]]],
           ],
@@ -11781,203 +11144,44 @@ export function createContext(
           ],
         ],
       },
-      'alert-created-at': { date: [[[r.TransformType.THIS]]] },
-      'code-scanning-alert-dismissed-at': { date: [[[r.TransformType.THIS]]] },
-      'code-scanning-analysis-tool': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'name'],
-            [r.TransformType.REF, 'code-scanning-analysis-tool-name'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'version'],
-            [r.TransformType.REF, 'code-scanning-analysis-tool-version'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'guid'],
-            [r.TransformType.REF, 'code-scanning-analysis-tool-guid'],
-          ],
-        ],
+      'alert-created-at': {
+        date: [[[r.TransformType.THIS]]],
       },
-      'code-scanning-alert-instance': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'ref'],
-            [r.TransformType.REF, 'code-scanning-ref'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'analysis_key'],
-            [r.TransformType.REF, 'code-scanning-analysis-analysis-key'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'environment'],
-            [r.TransformType.REF, 'code-scanning-alert-environment'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'state'],
-            [r.TransformType.REF, 'code-scanning-alert-state'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'location'],
-            [r.TransformType.REF, 'code-scanning-alert-location'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'classifications'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'code-scanning-alert-classification'],
-          ],
-        ],
+      'code-scanning-alert-dismissed-at': {
+        date: [[[r.TransformType.THIS]]],
       },
       'code-scanning-alert-items': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'number'],
-            [r.TransformType.REF, 'alert-number'],
-          ],
           [
             [r.TransformType.ACCESS, 'created_at'],
             [r.TransformType.REF, 'alert-created-at'],
           ],
           [
-            [r.TransformType.ACCESS, 'url'],
-            [r.TransformType.REF, 'alert-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'html_url'],
-            [r.TransformType.REF, 'alert-html-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'instances_url'],
-            [r.TransformType.REF, 'alert-instances-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'state'],
-            [r.TransformType.REF, 'code-scanning-alert-state'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'dismissed_by'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'dismissed_at'],
             [r.TransformType.REF, 'code-scanning-alert-dismissed-at'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'dismissed_reason'],
-            [r.TransformType.REF, 'code-scanning-alert-dismissed-reason'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'rule'],
-            [r.TransformType.REF, 'code-scanning-alert-rule-summary'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'tool'],
-            [r.TransformType.REF, 'code-scanning-analysis-tool'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'most_recent_instance'],
-            [r.TransformType.REF, 'code-scanning-alert-instance'],
           ],
         ],
       },
       'code-scanning-alert': {
         date: [
           [
-            [r.TransformType.ACCESS, 'number'],
-            [r.TransformType.REF, 'alert-number'],
-          ],
-          [
             [r.TransformType.ACCESS, 'created_at'],
             [r.TransformType.REF, 'alert-created-at'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'url'],
-            [r.TransformType.REF, 'alert-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'html_url'],
-            [r.TransformType.REF, 'alert-html-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'instances_url'],
-            [r.TransformType.REF, 'alert-instances-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'state'],
-            [r.TransformType.REF, 'code-scanning-alert-state'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'dismissed_by'],
-            [r.TransformType.REF, 'simple-user'],
           ],
           [
             [r.TransformType.ACCESS, 'dismissed_at'],
             [r.TransformType.REF, 'code-scanning-alert-dismissed-at'],
           ],
-          [
-            [r.TransformType.ACCESS, 'dismissed_reason'],
-            [r.TransformType.REF, 'code-scanning-alert-dismissed-reason'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'rule'],
-            [r.TransformType.REF, 'code-scanning-alert-rule'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'tool'],
-            [r.TransformType.REF, 'code-scanning-analysis-tool'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'most_recent_instance'],
-            [r.TransformType.REF, 'code-scanning-alert-instance'],
-          ],
         ],
       },
-      'code-scanning-analysis-created-at': { date: [[[r.TransformType.THIS]]] },
+      'code-scanning-analysis-created-at': {
+        date: [[[r.TransformType.THIS]]],
+      },
       'code-scanning-analysis': {
         date: [
           [
-            [r.TransformType.ACCESS, 'ref'],
-            [r.TransformType.REF, 'code-scanning-ref'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'commit_sha'],
-            [r.TransformType.REF, 'code-scanning-analysis-commit-sha'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'analysis_key'],
-            [r.TransformType.REF, 'code-scanning-analysis-analysis-key'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'environment'],
-            [r.TransformType.REF, 'code-scanning-analysis-environment'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'category'],
-            [r.TransformType.REF, 'code-scanning-analysis-category'],
-          ],
-          [
             [r.TransformType.ACCESS, 'created_at'],
             [r.TransformType.REF, 'code-scanning-analysis-created-at'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'url'],
-            [r.TransformType.REF, 'code-scanning-analysis-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'sarif_id'],
-            [r.TransformType.REF, 'code-scanning-analysis-sarif-id'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'tool'],
-            [r.TransformType.REF, 'code-scanning-analysis-tool'],
-          ],
-        ],
-      },
-      'code-scanning-sarifs-receipt': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'id'],
-            [r.TransformType.REF, 'code-scanning-analysis-sarif-id'],
           ],
         ],
       },
@@ -11987,49 +11191,17 @@ export function createContext(
             [r.TransformType.ACCESS, 'repository'],
             [r.TransformType.REF, 'minimal-repository'],
           ],
-          [
-            [r.TransformType.ACCESS, 'invitee'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'inviter'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
         ],
       },
       'commit-comment': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
-          ],
-        ],
-      },
-      auto_merge: {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'enabled_by'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
         ],
       },
       'pull-request-simple': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [
             [r.TransformType.ACCESS, 'milestone'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'milestone']]]],
@@ -12039,91 +11211,14 @@ export function createContext(
           [[r.TransformType.ACCESS, 'closed_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'merged_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignees'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_reviewers'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_teams'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'team'],
-          ],
-          [
             [r.TransformType.ACCESS, 'head'],
             [r.TransformType.ACCESS, 'repo'],
             [r.TransformType.REF, 'repository'],
           ],
           [
-            [r.TransformType.ACCESS, 'head'],
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
             [r.TransformType.ACCESS, 'base'],
             [r.TransformType.ACCESS, 'repo'],
             [r.TransformType.REF, 'repository'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'base'],
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'comments'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'commits'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'statuses'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'html'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'issue'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'review_comments'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'review_comment'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'self'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'auto_merge'],
-            [r.TransformType.REF, 'auto_merge'],
           ],
         ],
       },
@@ -12146,103 +11241,13 @@ export function createContext(
           ],
         ],
       },
-      status: {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'creator'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-        ],
-      },
       'community-profile': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.ACCESS, 'code_of_conduct'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'code-of-conduct-simple']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.ACCESS, 'code_of_conduct_file'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'community-health-file']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.ACCESS, 'license'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'license-simple']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.ACCESS, 'contributing'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'community-health-file']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.ACCESS, 'readme'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'community-health-file']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.ACCESS, 'issue_template'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'community-health-file']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.ACCESS, 'pull_request_template'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'community-health-file']]],
-            ],
-          ],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-        ],
-      },
-      'commit-comparison': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'base_commit'],
-            [r.TransformType.REF, 'commit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'merge_base_commit'],
-            [r.TransformType.REF, 'commit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'commits'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'commit'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'files'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'diff-entry'],
-          ],
         ],
       },
       'deployment-status': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'creator'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
@@ -12255,41 +11260,6 @@ export function createContext(
         date: [
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'protection_rules'],
-            [r.TransformType.LOOP],
-            [
-              r.TransformType.SELECT,
-              [
-                [
-                  [r.TransformType.ACCESS, 'wait_timer'],
-                  [r.TransformType.REF, 'wait-timer'],
-                ],
-                [
-                  [r.TransformType.ACCESS, 'reviewers'],
-                  [r.TransformType.LOOP],
-                  [r.TransformType.ACCESS, 'type'],
-                  [r.TransformType.REF, 'deployment-reviewer-type'],
-                ],
-                [
-                  [r.TransformType.ACCESS, 'reviewers'],
-                  [r.TransformType.LOOP],
-                  [r.TransformType.ACCESS, 'reviewer'],
-                  [
-                    r.TransformType.SELECT,
-                    [
-                      [[r.TransformType.REF, 'simple-user']],
-                      [[r.TransformType.REF, 'team']],
-                    ],
-                  ],
-                ],
-              ],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'deployment_branch_policy'],
-            [r.TransformType.REF, 'deployment_branch_policy'],
-          ],
         ],
       },
       'git-commit': {
@@ -12306,98 +11276,18 @@ export function createContext(
           ],
         ],
       },
-      'git-tag': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'verification'],
-            [r.TransformType.REF, 'verification'],
-          ],
-        ],
-      },
       hook: {
         date: [
-          [
-            [r.TransformType.ACCESS, 'config'],
-            [r.TransformType.ACCESS, 'url'],
-            [r.TransformType.REF, 'webhook-config-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'config'],
-            [r.TransformType.ACCESS, 'insecure_ssl'],
-            [r.TransformType.REF, 'webhook-config-insecure-ssl'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'config'],
-            [r.TransformType.ACCESS, 'content_type'],
-            [r.TransformType.REF, 'webhook-config-content-type'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'config'],
-            [r.TransformType.ACCESS, 'secret'],
-            [r.TransformType.REF, 'webhook-config-secret'],
-          ],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'last_response'],
-            [r.TransformType.REF, 'hook-response'],
-          ],
         ],
       },
       'issue-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [
             [r.TransformType.ACCESS, 'issue'],
             [r.TransformType.REF, 'issue-simple'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'label'],
-            [r.TransformType.REF, 'issue-event-label'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assigner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'review_requester'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_reviewer'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_team'],
-            [r.TransformType.REF, 'team'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'dismissed_review'],
-            [r.TransformType.REF, 'issue-event-dismissed-review'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'milestone'],
-            [r.TransformType.REF, 'issue-event-milestone'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'project_card'],
-            [r.TransformType.REF, 'issue-event-project-card'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'rename'],
-            [r.TransformType.REF, 'issue-event-rename'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
           ],
           [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
@@ -12408,10 +11298,6 @@ export function createContext(
       'labeled-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
           ],
@@ -12419,10 +11305,6 @@ export function createContext(
       },
       'unlabeled-issue-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
@@ -12432,49 +11314,21 @@ export function createContext(
       'assigned-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assigner'],
-            [r.TransformType.REF, 'simple-user'],
           ],
         ],
       },
       'unassigned-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assigner'],
-            [r.TransformType.REF, 'simple-user'],
           ],
         ],
       },
       'milestoned-issue-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
@@ -12484,10 +11338,6 @@ export function createContext(
       'demilestoned-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
           ],
@@ -12495,10 +11345,6 @@ export function createContext(
       },
       'renamed-issue-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
@@ -12508,57 +11354,21 @@ export function createContext(
       'review-requested-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'review_requester'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_team'],
-            [r.TransformType.REF, 'team'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_reviewer'],
-            [r.TransformType.REF, 'simple-user'],
           ],
         ],
       },
       'review-request-removed-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'review_requester'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_team'],
-            [r.TransformType.REF, 'team'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_reviewer'],
-            [r.TransformType.REF, 'simple-user'],
           ],
         ],
       },
       'review-dismissed-issue-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
@@ -12568,10 +11378,6 @@ export function createContext(
       'locked-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
           ],
@@ -12579,10 +11385,6 @@ export function createContext(
       },
       'added-to-project-issue-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
@@ -12592,10 +11394,6 @@ export function createContext(
       'moved-column-in-project-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
           ],
@@ -12604,10 +11402,6 @@ export function createContext(
       'removed-from-project-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
           ],
@@ -12615,10 +11409,6 @@ export function createContext(
       },
       'converted-note-to-issue-issue-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
@@ -12653,36 +11443,16 @@ export function createContext(
       },
       'timeline-comment-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
           ],
         ],
       },
       'timeline-cross-referenced-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [
@@ -12708,33 +11478,13 @@ export function createContext(
       },
       'timeline-reviewed-event': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'submitted_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
         ],
       },
       'pull-request-review-comment': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
-          ],
         ],
       },
       'timeline-line-commented-event': {
@@ -12758,32 +11508,16 @@ export function createContext(
       'timeline-assigned-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.REF, 'simple-user'],
           ],
         ],
       },
       'timeline-unassigned-issue-event': {
         date: [
           [
-            [r.TransformType.ACCESS, 'actor'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'performed_via_github_app'],
             [r.TransformType.REF, 'integration'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.REF, 'simple-user'],
           ],
         ],
       },
@@ -12819,45 +11553,14 @@ export function createContext(
           ],
         ],
       },
-      'license-content': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'license'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'license-simple']]],
-            ],
-          ],
-        ],
-      },
-      page: {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'source'],
-            [r.TransformType.REF, 'pages-source-hash'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'https_certificate'],
-            [r.TransformType.REF, 'pages-https-certificate'],
-          ],
-        ],
-      },
       'page-build': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'pusher'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
         ],
       },
       'pull-request': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [
             [r.TransformType.ACCESS, 'milestone'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'milestone']]]],
@@ -12867,25 +11570,6 @@ export function createContext(
           [[r.TransformType.ACCESS, 'closed_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'merged_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignees'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_reviewers'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'requested_teams'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'team-simple'],
-          ],
-          [
             [r.TransformType.ACCESS, 'head'],
             [r.TransformType.ACCESS, 'repo'],
             [r.TransformType.ACCESS, 'pushed_at'],
@@ -12906,15 +11590,6 @@ export function createContext(
           [
             [r.TransformType.ACCESS, 'base'],
             [r.TransformType.ACCESS, 'repo'],
-            [r.TransformType.ACCESS, 'license'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'license-simple']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'base'],
-            [r.TransformType.ACCESS, 'repo'],
             [r.TransformType.ACCESS, 'pushed_at'],
             [r.TransformType.THIS],
           ],
@@ -12929,129 +11604,24 @@ export function createContext(
             [r.TransformType.ACCESS, 'repo'],
             [r.TransformType.ACCESS, 'updated_at'],
             [r.TransformType.THIS],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'comments'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'commits'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'statuses'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'html'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'issue'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'review_comments'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'review_comment'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'self'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'auto_merge'],
-            [r.TransformType.REF, 'auto_merge'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'merged_by'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-        ],
-      },
-      'pull-request-review-request': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'users'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'teams'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'team'],
           ],
         ],
       },
       'pull-request-review': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'submitted_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
         ],
       },
       'review-comment': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'self'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'html'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, '_links'],
-            [r.TransformType.ACCESS, 'pull_request'],
-            [r.TransformType.REF, 'link'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
-          ],
         ],
       },
       'release-asset': {
         date: [
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'uploader'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
         ],
       },
       release: {
@@ -13059,68 +11629,24 @@ export function createContext(
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'published_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'author'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
             [r.TransformType.ACCESS, 'assets'],
             [r.TransformType.LOOP],
             [r.TransformType.REF, 'release-asset'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'reactions'],
-            [r.TransformType.REF, 'reaction-rollup'],
           ],
         ],
       },
       'secret-scanning-alert': {
         date: [
           [
-            [r.TransformType.ACCESS, 'number'],
-            [r.TransformType.REF, 'alert-number'],
-          ],
-          [
             [r.TransformType.ACCESS, 'created_at'],
             [r.TransformType.REF, 'alert-created-at'],
           ],
-          [
-            [r.TransformType.ACCESS, 'url'],
-            [r.TransformType.REF, 'alert-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'html_url'],
-            [r.TransformType.REF, 'alert-html-url'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'state'],
-            [r.TransformType.REF, 'secret-scanning-alert-state'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'resolution'],
-            [r.TransformType.REF, 'secret-scanning-alert-resolution'],
-          ],
           [[r.TransformType.ACCESS, 'resolved_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'resolved_by'],
-            [r.TransformType.REF, 'simple-user'],
-          ],
         ],
       },
       stargazer: {
         date: [
           [[r.TransformType.ACCESS, 'starred_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-        ],
-      },
-      'contributor-activity': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'author'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
         ],
       },
       'repository-subscription': {
@@ -13161,12 +11687,6 @@ export function createContext(
             [r.TransformType.ACCESS, 'lastModified'],
             [r.TransformType.THIS],
           ],
-          [
-            [r.TransformType.ACCESS, 'operations'],
-            [r.TransformType.LOOP],
-            [r.TransformType.ACCESS, 'value'],
-            [r.TransformType.SELECT, []],
-          ],
         ],
       },
       'scim-user-list': {
@@ -13188,10 +11708,6 @@ export function createContext(
             [r.TransformType.ACCESS, 'last_modified_at'],
             [r.TransformType.THIS],
           ],
-          [
-            [r.TransformType.ACCESS, 'text_matches'],
-            [r.TransformType.REF, 'search-result-text-matches'],
-          ],
         ],
       },
       'commit-search-result-item': {
@@ -13203,48 +11719,13 @@ export function createContext(
             [r.TransformType.THIS],
           ],
           [
-            [r.TransformType.ACCESS, 'commit'],
-            [r.TransformType.ACCESS, 'committer'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'git-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'commit'],
-            [r.TransformType.ACCESS, 'verification'],
-            [r.TransformType.REF, 'verification'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'author'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'committer'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'git-user']]]],
-          ],
-          [
             [r.TransformType.ACCESS, 'repository'],
             [r.TransformType.REF, 'minimal-repository'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'text_matches'],
-            [r.TransformType.REF, 'search-result-text-matches'],
           ],
         ],
       },
       'issue-search-result-item': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'assignees'],
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, 'simple-user'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'user'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
-          [
-            [r.TransformType.ACCESS, 'assignee'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [
             [r.TransformType.ACCESS, 'milestone'],
             [r.TransformType.SELECT, [[[r.TransformType.REF, 'milestone']]]],
@@ -13253,17 +11734,9 @@ export function createContext(
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'closed_at'], [r.TransformType.THIS]],
           [
-            [r.TransformType.ACCESS, 'text_matches'],
-            [r.TransformType.REF, 'search-result-text-matches'],
-          ],
-          [
             [r.TransformType.ACCESS, 'pull_request'],
             [r.TransformType.ACCESS, 'merged_at'],
             [r.TransformType.THIS],
-          ],
-          [
-            [r.TransformType.ACCESS, 'author_association'],
-            [r.TransformType.REF, 'author_association'],
           ],
           [
             [r.TransformType.ACCESS, 'repository'],
@@ -13275,54 +11748,23 @@ export function createContext(
           ],
         ],
       },
-      'label-search-result-item': {
-        date: [
-          [
-            [r.TransformType.ACCESS, 'text_matches'],
-            [r.TransformType.REF, 'search-result-text-matches'],
-          ],
-        ],
-      },
       'repo-search-result-item': {
         date: [
-          [
-            [r.TransformType.ACCESS, 'owner'],
-            [r.TransformType.SELECT, [[[r.TransformType.REF, 'simple-user']]]],
-          ],
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'pushed_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'license'],
-            [
-              r.TransformType.SELECT,
-              [[[r.TransformType.REF, 'license-simple']]],
-            ],
-          ],
-          [
-            [r.TransformType.ACCESS, 'text_matches'],
-            [r.TransformType.REF, 'search-result-text-matches'],
-          ],
         ],
       },
       'topic-search-result-item': {
         date: [
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'text_matches'],
-            [r.TransformType.REF, 'search-result-text-matches'],
-          ],
         ],
       },
       'user-search-result-item': {
         date: [
           [[r.TransformType.ACCESS, 'created_at'], [r.TransformType.THIS]],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'text_matches'],
-            [r.TransformType.REF, 'search-result-text-matches'],
-          ],
           [[r.TransformType.ACCESS, 'suspended_at'], [r.TransformType.THIS]],
         ],
       },
@@ -13355,14 +11797,6 @@ export function createContext(
             [r.TransformType.THIS],
           ],
           [[r.TransformType.ACCESS, 'updated_at'], [r.TransformType.THIS]],
-          [
-            [r.TransformType.ACCESS, 'account'],
-            [r.TransformType.REF, 'marketplace-account'],
-          ],
-          [
-            [r.TransformType.ACCESS, 'plan'],
-            [r.TransformType.REF, 'marketplace-listing-plan'],
-          ],
         ],
       },
       'starred-repository': {

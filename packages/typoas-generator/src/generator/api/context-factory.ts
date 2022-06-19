@@ -1,20 +1,13 @@
 import { Context } from '../../context';
 import { OpenAPIObject } from 'openapi3-ts';
-import {
-  Block,
-  factory,
-  FunctionDeclaration,
-  PropertyAssignment,
-  SyntaxKind,
-} from 'typescript';
+import { Block, factory, FunctionDeclaration, SyntaxKind } from 'typescript';
 import {
   createRuntimeRefProperty,
   createRuntimeRefType,
   ExportedRef,
 } from '../utils/ref';
 import { AUTH_TYPE_NAME } from './security';
-import { createSchemaTransforms } from '../utils/transformers';
-import { hasUnsupportedIdentifierChar } from '../utils/operation-name';
+import { createAllSchemaTransforms } from '../utils/transformers';
 
 export function createContextFactory(
   specs: OpenAPIObject,
@@ -51,20 +44,10 @@ export function createContextFactoryBody(
   specs: OpenAPIObject,
   ctx: Context,
 ): Block {
-  const schemaTransformers = Object.entries(specs.components?.schemas || {})
-    .map(([name, schema]) => {
-      const transforms = createSchemaTransforms(schema, ctx);
-      if (!transforms) {
-        return null;
-      }
-      return factory.createPropertyAssignment(
-        hasUnsupportedIdentifierChar(name)
-          ? factory.createStringLiteral(name, true)
-          : factory.createIdentifier(name),
-        transforms,
-      );
-    })
-    .filter(Boolean) as PropertyAssignment[];
+  const schemasExpression = createAllSchemaTransforms(
+    specs.components?.schemas || {},
+    ctx,
+  );
 
   return factory.createBlock([
     factory.createReturnStatement(
@@ -83,7 +66,7 @@ export function createContextFactoryBody(
                 factory.createNewExpression(
                   createRuntimeRefProperty(ExportedRef.RefResolver),
                   [],
-                  [factory.createObjectLiteralExpression(schemaTransformers)],
+                  [schemasExpression],
                 ),
               ),
               factory.createPropertyAssignment(

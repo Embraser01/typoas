@@ -71,7 +71,9 @@ function findTransformsInternal(
       (subSchema: SchemaObject | ReferenceObject) =>
         findTransformsInternal(subSchema, [], isTransformableLeaf),
     );
-    currentField.push([TransformType.SELECT, subTransforms]);
+    if (subTransforms.length) {
+      currentField.push([TransformType.SELECT, subTransforms]);
+    }
     return [currentField];
   }
 
