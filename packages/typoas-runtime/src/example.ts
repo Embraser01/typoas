@@ -2,19 +2,18 @@ import { Context } from './context';
 import { TransformType } from './transformers';
 import { HttpMethod } from './fetcher';
 import { wrapApi } from './wrap-api';
-import { ContextParams } from './context/types';
+import { CreateContextParams } from './context/types';
 import { ServerConfiguration } from './configuration';
 import { RefResolver } from './resolver';
 import { HttpSecurityAuthentication } from './auth';
 
 type Pet = { a: 6 };
 
-export type AuthMethods = {
-  jwt: HttpSecurityAuthentication;
-};
+export type AuthMethods = { jwt: HttpSecurityAuthentication };
+// export type AuthMethods = Record<string, never>;
 
 async function findPetsByStatus(
-  ctx: Context,
+  ctx: Context<AuthMethods>,
   params: {
     status?: 'available' | 'pending' | 'sold';
   },
@@ -25,7 +24,7 @@ async function findPetsByStatus(
 }
 
 async function addPet(
-  ctx: Context,
+  ctx: Context<AuthMethods>,
   params: {
     status?: 'available' | 'pending' | 'sold';
   },
@@ -57,18 +56,42 @@ const apis = {
   findPetsByStatus,
 };
 
+export function configureAuth(
+  params?: CreateContextParams<AuthMethods>['authProviders'],
+): Partial<AuthMethods> {
+  return {
+    jwt:
+      params?.jwt &&
+      new HttpSecurityAuthentication(
+        { scheme: 'bearer', bearerFormat: '' },
+        params.jwt,
+      ),
+  };
+}
+
 export function createContext(
-  params?: Partial<ContextParams<AuthMethods>>,
+  params?: Partial<CreateContextParams<AuthMethods>>,
 ): Context<AuthMethods> {
   return new Context<AuthMethods>({
     resolver: new RefResolver({}),
     serverConfiguration: new ServerConfiguration('', {}),
-    authMethods: {},
+    authMethods: configureAuth(params?.authProviders),
     ...params,
   });
 }
 
-const client = wrapApi(createContext(), apis);
+const client = wrapApi(
+  createContext({
+    authProviders: {
+      jwt: {
+        getConfig() {
+          return 'test';
+        },
+      },
+    },
+  }),
+  apis,
+);
 
 client.findPetsByStatus({ status: 'available' }).then((pets) => pets.length);
 client.addPet({ status: 'sold' }, { a: 6 }).then((pet) => pet.a);

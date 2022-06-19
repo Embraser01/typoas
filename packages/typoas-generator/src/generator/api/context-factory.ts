@@ -78,9 +78,19 @@ export function createContextFactoryBody(
               ),
               factory.createPropertyAssignment(
                 factory.createIdentifier('authMethods'),
-                // Always generate empty auth methods as we can't know how
-                // to apply auth.
-                factory.createObjectLiteralExpression([]),
+                Object.keys(specs.components?.securitySchemes || {}).length
+                  ? factory.createCallExpression(
+                      factory.createIdentifier('configureAuth'),
+                      [],
+                      [
+                        factory.createPropertyAccessChain(
+                          factory.createIdentifier('params'),
+                          factory.createToken(SyntaxKind.QuestionDotToken),
+                          factory.createIdentifier('authProviders'),
+                        ),
+                      ],
+                    )
+                  : factory.createObjectLiteralExpression(),
               ),
               factory.createSpreadAssignment(
                 factory.createIdentifier('params'),

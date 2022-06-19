@@ -7,6 +7,7 @@ export enum ExportedRef {
   HttpMethod = 'HttpMethod',
   Context = 'Context',
   ContextParams = 'ContextParams',
+  CreateContextParams = 'CreateContextParams',
   ServerConfiguration = 'ServerConfiguration',
   RefResolver = 'RefResolver',
   AuthProvider = 'AuthProvider',

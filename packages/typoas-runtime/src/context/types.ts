@@ -1,9 +1,19 @@
 import type { Fetcher, HttpMethod, SerializerOptions } from '../fetcher';
 import type { TransformField } from '../transformers';
-import type { SecurityAuthentication } from '../auth';
+import type { AuthProvider, SecurityAuthentication } from '../auth';
 import type { TransformResolver } from '../resolver';
 import type { Transform } from '../transformers';
 import type { BaseServerConfiguration } from '../configuration';
+import {
+  ApiKeyConfiguration,
+  ApiKeySecurityAuthentication,
+  BaseFlowConfig,
+  BasicAuthConfig,
+  BearerAuthConfig,
+  HttpConfiguration,
+  HttpSecurityAuthentication,
+  OAuth2SecurityAuthentication,
+} from '../auth';
 
 export type CreateRequestParams = {
   /**
@@ -46,6 +56,22 @@ export type ContextParams<
   fetcher?: Fetcher;
   transformers?: Record<string, Transform<unknown, unknown>>;
   serializerOptions?: SerializerOptions;
+};
+
+export type CreateContextParams<
+  AuthModes extends Record<string, SecurityAuthentication>,
+> = Omit<ContextParams<AuthModes>, 'authMethods'> & {
+  authProviders: {
+    [key in keyof AuthModes]: AuthProvider<
+      AuthModes[key] extends ApiKeySecurityAuthentication
+        ? string
+        : AuthModes[key] extends HttpSecurityAuthentication
+        ? BasicAuthConfig | BearerAuthConfig
+        : AuthModes[key] extends OAuth2SecurityAuthentication
+        ? BaseFlowConfig
+        : never
+    >;
+  };
 };
 
 export type ResponseHandler = {

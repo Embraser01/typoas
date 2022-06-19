@@ -3,7 +3,7 @@ import type { RequestContext } from '../fetcher';
 
 export type ApiKeyLocation = 'query' | 'header' | 'cookie';
 
-type ApiKeyConfiguration = {
+export type ApiKeyConfiguration = {
   name: string;
   in: ApiKeyLocation;
 };
