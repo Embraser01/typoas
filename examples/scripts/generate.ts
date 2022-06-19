@@ -24,7 +24,7 @@ async function run() {
     stderr: process.stderr,
   };
 
-  await cli.run(makeArgs('github'), context);
+  // await cli.run(makeArgs('github'), context);
   await cli.run(makeArgs('petstore'), context);
 }
 

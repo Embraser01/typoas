@@ -1,16 +1,13 @@
 import type { Fetcher, HttpMethod, SerializerOptions } from '../fetcher';
-import type { TransformField } from '../transformers';
+import type { TransformField, TransformResolver } from '../transformers';
 import type { AuthProvider, SecurityAuthentication } from '../auth';
-import type { TransformResolver } from '../resolver';
 import type { Transform } from '../transformers';
 import type { BaseServerConfiguration } from '../configuration';
-import {
-  ApiKeyConfiguration,
+import type {
   ApiKeySecurityAuthentication,
   BaseFlowConfig,
   BasicAuthConfig,
   BearerAuthConfig,
-  HttpConfiguration,
   HttpSecurityAuthentication,
   OAuth2SecurityAuthentication,
 } from '../auth';
@@ -75,5 +72,5 @@ export type CreateContextParams<
 };
 
 export type ResponseHandler = {
-  transforms?: Record<string, TransformField>;
+  transforms?: Record<string, TransformField[]>;
 };

@@ -37,7 +37,10 @@ export function createOperation(
 
   return factory.createFunctionDeclaration(
     undefined,
-    [factory.createModifier(SyntaxKind.AsyncKeyword)],
+    [
+      factory.createModifier(SyntaxKind.ExportKeyword),
+      factory.createModifier(SyntaxKind.AsyncKeyword),
+    ],
     undefined,
     sanitizeOperationIdName(operation.operationId || `${path}/${method}`),
     undefined,

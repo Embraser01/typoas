@@ -29,7 +29,7 @@ export function createOperationDeclaration(
   const parameters: ParameterDeclaration[] = [
     factory.createParameterDeclaration(
       undefined,
-      [factory.createModifier(SyntaxKind.ExportKeyword)],
+      undefined,
       undefined,
       'ctx',
       undefined,

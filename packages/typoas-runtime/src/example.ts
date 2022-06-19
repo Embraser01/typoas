@@ -10,6 +10,7 @@ import { HttpSecurityAuthentication } from './auth';
 type Pet = { a: 6 };
 
 export type AuthMethods = { jwt: HttpSecurityAuthentication };
+
 // export type AuthMethods = Record<string, never>;
 
 async function findPetsByStatus(
@@ -44,7 +45,7 @@ async function addPet(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[TransformType.SELECT, [ctx.resolve('date', 'Pet')]]],
+        date: [[[TransformType.REF, 'Pet']]],
       },
     },
     '400': { transforms: {} },
@@ -73,7 +74,11 @@ export function createContext(
   params?: Partial<CreateContextParams<AuthMethods>>,
 ): Context<AuthMethods> {
   return new Context<AuthMethods>({
-    resolver: new RefResolver({}),
+    resolver: new RefResolver({
+      Pet: {
+        date: [[[TransformType.ACCESS, 'createdAt'], [TransformType.THIS]]],
+      },
+    }),
     serverConfiguration: new ServerConfiguration('', {}),
     authMethods: configureAuth(params?.authProviders),
     ...params,

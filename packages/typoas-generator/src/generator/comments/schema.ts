@@ -34,5 +34,5 @@ export function getJSDocFromSchema(schema: SchemaObject): string {
     str += `Learn more at {@link ${schema.externalDocs.url}}\n`;
   }
 
-  return str;
+  return str.trim();
 }

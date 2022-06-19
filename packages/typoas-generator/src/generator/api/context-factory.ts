@@ -7,6 +7,8 @@ import {
   ExportedRef,
 } from '../utils/ref';
 import { AUTH_TYPE_NAME } from './security';
+import { createSchemaTransforms } from '../utils/transformers';
+import { hasUnsupportedIdentifierChar } from '../utils/operation-name';
 
 export function createContextFactory(
   specs: OpenAPIObject,
@@ -58,8 +60,19 @@ export function createContextFactoryBody(
                 factory.createNewExpression(
                   createRuntimeRefProperty(ExportedRef.RefResolver),
                   [],
-                  // TODO Compute RefResolver params
-                  [factory.createObjectLiteralExpression()],
+                  [
+                    factory.createObjectLiteralExpression(
+                      Object.entries(specs.components?.schemas || {}).map(
+                        ([name, schema]) =>
+                          factory.createPropertyAssignment(
+                            hasUnsupportedIdentifierChar(name)
+                              ? factory.createStringLiteral(name, true)
+                              : factory.createIdentifier(name),
+                            createSchemaTransforms(schema, ctx),
+                          ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               factory.createPropertyAssignment(

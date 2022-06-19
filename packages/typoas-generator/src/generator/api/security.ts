@@ -81,6 +81,7 @@ export function createConfigureAuthFunction(
                   factory.createPropertyAccessChain(
                     factory.createIdentifier('params'),
                     factory.createToken(SyntaxKind.QuestionDotToken),
+                    // TODO Unsupported char
                     factory.createIdentifier(name),
                   ),
                   // TODO Generate security schema

@@ -4,10 +4,9 @@ import type {
   ResponseHandler,
 } from './types';
 import type { SecurityAuthentication } from '../auth';
-import type { TransformResolver } from '../resolver';
 import type { BaseServerConfiguration } from '../configuration';
 import { ApiException } from '../exception';
-import { applyTransform, Transform, TransformField } from '../transformers';
+import { applyTransform, Transform, TransformResolver } from '../transformers';
 import { DateTransformer } from '../transformers';
 import {
   Fetcher,
@@ -113,9 +112,19 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
 
     if (handler.transforms) {
       for (const [key, transformer] of Object.entries(this.transformers)) {
-        const transform = handler.transforms[key];
-        if (transform) {
-          applyTransform({ body }, 'body', transformer, transform, 0);
+        const transforms = handler.transforms[key];
+        if (transforms) {
+          for (const transform of transforms) {
+            applyTransform(
+              this.resolver,
+              { body },
+              'body',
+              key,
+              transformer,
+              transform,
+              0,
+            );
+          }
         }
       }
     }
@@ -125,9 +134,5 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
       return body as T;
     }
     throw new ApiException(res.httpStatusCode, body);
-  }
-
-  resolve(type: string, ref: string): TransformField {
-    return this.resolver.getTransforms(type, ref);
   }
 }

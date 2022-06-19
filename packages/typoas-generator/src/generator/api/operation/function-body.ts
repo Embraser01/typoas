@@ -10,6 +10,7 @@ import {
   ObjectLiteralElementLike,
   Statement,
 } from 'typescript';
+import { createSchemaTransforms } from '../../utils/transformers';
 
 export function createOperationBody(
   operation: OperationObject,
@@ -171,16 +172,19 @@ export function createOperationResponseHandlers(
       }
       res = ref.spec;
     }
+    const schema = res.content?.['application/json']?.schema;
 
     return factory.createPropertyAssignment(
       factory.createStringLiteral(code, true),
       factory.createObjectLiteralExpression([
-        factory.createPropertyAssignment(
-          factory.createIdentifier('transforms'),
-          factory.createObjectLiteralExpression([
-            // TODO Generate each transform from res
-          ]),
-        ),
+        ...(schema
+          ? [
+              factory.createPropertyAssignment(
+                factory.createIdentifier('transforms'),
+                createSchemaTransforms(schema, ctx),
+              ),
+            ]
+          : []),
       ]),
     );
   });
