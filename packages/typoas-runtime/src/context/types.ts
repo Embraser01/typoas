@@ -57,19 +57,21 @@ export type ContextParams<
 
 export type CreateContextParams<
   AuthModes extends Record<string, SecurityAuthentication>,
-> = Omit<ContextParams<AuthModes>, 'authMethods'> & {
-  authProviders: {
-    [key in keyof AuthModes]: AuthProvider<
-      AuthModes[key] extends ApiKeySecurityAuthentication
-        ? string
-        : AuthModes[key] extends HttpSecurityAuthentication
-        ? BasicAuthConfig | BearerAuthConfig
-        : AuthModes[key] extends OAuth2SecurityAuthentication
-        ? BaseFlowConfig
-        : never
-    >;
-  };
-};
+> = Partial<
+  Omit<ContextParams<AuthModes>, 'authMethods'> & {
+    authProviders: {
+      [key in keyof AuthModes]: AuthProvider<
+        AuthModes[key] extends ApiKeySecurityAuthentication
+          ? string
+          : AuthModes[key] extends HttpSecurityAuthentication
+          ? BasicAuthConfig | BearerAuthConfig
+          : AuthModes[key] extends OAuth2SecurityAuthentication
+          ? BaseFlowConfig
+          : never
+      >;
+    };
+  }
+>;
 
 export type ResponseHandler = {
   transforms?: Record<string, TransformField[]>;

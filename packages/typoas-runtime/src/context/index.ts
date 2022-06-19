@@ -22,6 +22,9 @@ import {
   serializeParameter,
 } from '../utils';
 
+const CONTENT_TYPE_HEADER = 'content-type';
+const EMPTY_BODY_CODES = [204, 304];
+
 export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
   fetcher: Fetcher;
   serializerOptions: SerializerOptions;
@@ -91,39 +94,46 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
    */
   async handleResponse<T = unknown>(
     res: ResponseContext,
-    handlers: Record<string, ResponseHandler>,
+    handlers?: Record<string, ResponseHandler>,
   ): Promise<T> {
-    let statusCode = Object.keys(handlers)
+    const mayBeJSONSchema =
+      res.headers[CONTENT_TYPE_HEADER]?.includes('application/json');
+
+    if (
+      !mayBeJSONSchema ||
+      !res.body ||
+      EMPTY_BODY_CODES.includes(res.httpStatusCode)
+    ) {
+      // In case there isn't body, force return value to null
+      return null as unknown as T;
+    }
+
+    const body = await res.body.json();
+
+    let statusCode = Object.keys(handlers || {})
       .filter((code) => code !== 'default')
       .find((code) => isCodeInRange(code, res.httpStatusCode));
 
-    if (!statusCode && handlers.default) {
+    if (!statusCode && handlers?.default) {
       statusCode = 'default';
     }
-    if (!statusCode) {
-      throw new ApiException(
-        res.httpStatusCode,
-        `No handler for status code ${res.httpStatusCode}`,
-      );
-    }
-    const handler = handlers[statusCode];
-
-    const body = {}; // TODO Parse body from response
-
-    if (handler.transforms) {
-      for (const [key, transformer] of Object.entries(this.transformers)) {
-        const transforms = handler.transforms[key];
-        if (transforms) {
-          for (const transform of transforms) {
-            applyTransform(
-              this.resolver,
-              { body },
-              'body',
-              key,
-              transformer,
-              transform,
-              0,
-            );
+    if (statusCode) {
+      const handler = handlers?.[statusCode];
+      if (handler?.transforms) {
+        for (const [key, transformer] of Object.entries(this.transformers)) {
+          const transforms = handler.transforms[key];
+          if (transforms) {
+            for (const transform of transforms) {
+              applyTransform(
+                this.resolver,
+                { body },
+                'body',
+                key,
+                transformer,
+                transform,
+                0,
+              );
+            }
           }
         }
       }

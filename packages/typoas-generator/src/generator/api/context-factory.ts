@@ -1,6 +1,12 @@
 import { Context } from '../../context';
 import { OpenAPIObject } from 'openapi3-ts';
-import { Block, factory, FunctionDeclaration, SyntaxKind } from 'typescript';
+import {
+  Block,
+  factory,
+  FunctionDeclaration,
+  PropertyAssignment,
+  SyntaxKind,
+} from 'typescript';
 import {
   createRuntimeRefProperty,
   createRuntimeRefType,
@@ -27,8 +33,10 @@ export function createContextFactory(
         undefined,
         'params',
         factory.createToken(SyntaxKind.QuestionToken),
-        factory.createTypeReferenceNode(factory.createIdentifier('Partial'), [
-          createRuntimeRefType(ExportedRef.ContextParams),
+        createRuntimeRefType(ExportedRef.CreateContextParams, [
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(AUTH_TYPE_NAME),
+          ),
         ]),
       ),
     ],
@@ -43,6 +51,21 @@ export function createContextFactoryBody(
   specs: OpenAPIObject,
   ctx: Context,
 ): Block {
+  const schemaTransformers = Object.entries(specs.components?.schemas || {})
+    .map(([name, schema]) => {
+      const transforms = createSchemaTransforms(schema, ctx);
+      if (!transforms) {
+        return null;
+      }
+      return factory.createPropertyAssignment(
+        hasUnsupportedIdentifierChar(name)
+          ? factory.createStringLiteral(name, true)
+          : factory.createIdentifier(name),
+        transforms,
+      );
+    })
+    .filter(Boolean) as PropertyAssignment[];
+
   return factory.createBlock([
     factory.createReturnStatement(
       factory.createNewExpression(
@@ -60,19 +83,7 @@ export function createContextFactoryBody(
                 factory.createNewExpression(
                   createRuntimeRefProperty(ExportedRef.RefResolver),
                   [],
-                  [
-                    factory.createObjectLiteralExpression(
-                      Object.entries(specs.components?.schemas || {}).map(
-                        ([name, schema]) =>
-                          factory.createPropertyAssignment(
-                            hasUnsupportedIdentifierChar(name)
-                              ? factory.createStringLiteral(name, true)
-                              : factory.createIdentifier(name),
-                            createSchemaTransforms(schema, ctx),
-                          ),
-                      ),
-                    ),
-                  ],
+                  [factory.createObjectLiteralExpression(schemaTransformers)],
                 ),
               ),
               factory.createPropertyAssignment(

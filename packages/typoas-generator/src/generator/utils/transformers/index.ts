@@ -14,7 +14,7 @@ import { createRuntimeRefProperty, ExportedRef } from '../ref';
 export function createSchemaTransforms(
   schema: SchemaObject | ReferenceObject,
   ctx: Context,
-): ObjectLiteralExpression {
+): ObjectLiteralExpression | null {
   const transforms: ObjectLiteralElementLike[] = [];
 
   // Date transform
@@ -28,6 +28,9 @@ export function createSchemaTransforms(
     );
   }
 
+  if (!transforms.length) {
+    return null;
+  }
   return factory.createObjectLiteralExpression(transforms);
 }
 

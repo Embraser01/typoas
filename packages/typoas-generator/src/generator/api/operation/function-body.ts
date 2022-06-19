@@ -163,29 +163,36 @@ export function createOperationResponseHandlers(
   ctx: Context,
 ): ObjectLiteralElementLike[] {
   const responses = Object.entries(operation.responses || {});
-  return responses.map(([code, response]) => {
-    let res = response as ResponseObject;
-    if (response.$ref) {
-      const ref = ctx.resolveReference('responses', response.$ref);
-      if (!ref) {
-        throw new Error(`$ref '${response.$ref}' not found`);
+  return responses
+    .map(([code, response]) => {
+      let res = response as ResponseObject;
+      if (response.$ref) {
+        const ref = ctx.resolveReference('responses', response.$ref);
+        if (!ref) {
+          throw new Error(`$ref '${response.$ref}' not found`);
+        }
+        res = ref.spec;
       }
-      res = ref.spec;
-    }
-    const schema = res.content?.['application/json']?.schema;
-
-    return factory.createPropertyAssignment(
-      factory.createStringLiteral(code, true),
-      factory.createObjectLiteralExpression([
-        ...(schema
-          ? [
-              factory.createPropertyAssignment(
-                factory.createIdentifier('transforms'),
-                createSchemaTransforms(schema, ctx),
-              ),
-            ]
-          : []),
-      ]),
-    );
-  });
+      const schema = res.content?.['application/json']?.schema;
+      if (!schema) {
+        return factory.createPropertyAssignment(
+          factory.createStringLiteral(code, true),
+          factory.createObjectLiteralExpression([]),
+        );
+      }
+      const transforms = createSchemaTransforms(schema, ctx);
+      if (!transforms) {
+        return null;
+      }
+      return factory.createPropertyAssignment(
+        factory.createStringLiteral(code, true),
+        factory.createObjectLiteralExpression([
+          factory.createPropertyAssignment(
+            factory.createIdentifier('transforms'),
+            transforms,
+          ),
+        ]),
+      );
+    })
+    .filter(Boolean) as ObjectLiteralElementLike[];
 }

@@ -7,7 +7,10 @@ import {
   TypeAliasDeclaration,
 } from 'typescript';
 import { createRuntimeRefType, ExportedRef } from '../utils/ref';
-import { createConfigTypeFromSecurityScheme } from '../components/security-scheme';
+import {
+  createConfigTypeFromSecurityScheme,
+  createRuntimeSecurityClass,
+} from '../components/security-scheme';
 import { hasUnsupportedIdentifierChar } from '../utils/operation-name';
 
 export const AUTH_TYPE_NAME = 'AuthMethods';
@@ -27,9 +30,7 @@ export function createAuthMethodsType(
           undefined,
           name,
           factory.createToken(SyntaxKind.QuestionToken),
-          createRuntimeRefType(ExportedRef.AuthProvider, [
-            createConfigTypeFromSecurityScheme(sec, ctx),
-          ]),
+          createConfigTypeFromSecurityScheme(sec, ctx),
         ),
       ),
     ),
@@ -65,52 +66,44 @@ export function createConfigureAuthFunction(
         ),
       ),
     ],
-    factory.createTypeReferenceNode(factory.createIdentifier('Partial'), [
-      factory.createTypeReferenceNode(AUTH_TYPE_NAME),
-    ]),
+    factory.createTypeReferenceNode(AUTH_TYPE_NAME),
     factory.createBlock(
       [
         factory.createReturnStatement(
           factory.createObjectLiteralExpression(
-            Object.entries(securitySchemes).map(([name, sec]) => {
-              return factory.createPropertyAssignment(
+            Object.entries(securitySchemes).map(([name, sec]) =>
+              factory.createPropertyAssignment(
                 hasUnsupportedIdentifierChar(name)
                   ? factory.createStringLiteral(name, true)
                   : factory.createIdentifier(name),
                 factory.createLogicalAnd(
-                  factory.createPropertyAccessChain(
-                    factory.createIdentifier('params'),
-                    factory.createToken(SyntaxKind.QuestionDotToken),
-                    // TODO Unsupported char
-                    factory.createIdentifier(name),
-                  ),
-                  // TODO Generate security schema
-                  factory.createNewExpression(
-                    factory.createIdentifier('HttpSecurityAuthentication'),
-                    undefined,
-                    [
-                      factory.createObjectLiteralExpression(
-                        [
-                          factory.createPropertyAssignment(
-                            factory.createIdentifier('scheme'),
-                            factory.createStringLiteral('bearer'),
-                          ),
-                          factory.createPropertyAssignment(
-                            factory.createIdentifier('bearerFormat'),
-                            factory.createStringLiteral(''),
-                          ),
-                        ],
-                        false,
-                      ),
-                      factory.createPropertyAccessExpression(
+                  hasUnsupportedIdentifierChar(name)
+                    ? factory.createElementAccessChain(
                         factory.createIdentifier('params'),
-                        factory.createIdentifier('jwt'),
+                        factory.createToken(SyntaxKind.QuestionDotToken),
+                        factory.createStringLiteral('jwt'),
+                      )
+                    : factory.createPropertyAccessChain(
+                        factory.createIdentifier('params'),
+                        factory.createToken(SyntaxKind.QuestionDotToken),
+                        factory.createIdentifier(name),
                       ),
-                    ],
+                  createRuntimeSecurityClass(
+                    sec,
+                    hasUnsupportedIdentifierChar(name)
+                      ? factory.createElementAccessExpression(
+                          factory.createIdentifier('params'),
+                          factory.createStringLiteral(name),
+                        )
+                      : factory.createPropertyAccessExpression(
+                          factory.createIdentifier('params'),
+                          factory.createIdentifier(name),
+                        ),
+                    ctx,
                   ),
                 ),
-              );
-            }),
+              ),
+            ),
           ),
         ),
       ],

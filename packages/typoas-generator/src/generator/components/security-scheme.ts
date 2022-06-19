@@ -1,7 +1,9 @@
 import {
   Expression,
   factory,
+  NewExpression,
   ObjectLiteralElementLike,
+  PropertyAccessExpression,
   SyntaxKind,
   TypeNode,
 } from 'typescript';
@@ -32,24 +34,21 @@ export function createConfigTypeFromSecurityScheme(
 
   switch (securityScheme.type) {
     case 'apiKey':
-      return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
+      return createRuntimeRefType(ExportedRef.ApiKeySecurityAuthentication);
     case 'http':
-      return factory.createUnionTypeNode([
-        createRuntimeRefType(ExportedRef.BasicAuthConfig),
-        createRuntimeRefType(ExportedRef.BearerAuthConfig),
-      ]);
+      return createRuntimeRefType(ExportedRef.HttpSecurityAuthentication);
     case 'oauth2':
-      return createRuntimeRefType(ExportedRef.BaseFlowConfig);
+      return createRuntimeRefType(ExportedRef.OAuth2SecurityAuthentication);
     case 'openIdConnect':
       throw new Error(`Unsupported security scheme '${securityScheme.type}'`);
   }
 }
 
-export function createRuntimeSecurityClassFromSecurityScheme(
+export function createRuntimeSecurityClass(
   securitySchemeOrRef: SecuritySchemeObject | ReferenceObject,
-  name: string,
+  authProviderExpression: Expression,
   ctx: Context,
-): Expression {
+): NewExpression {
   let securityScheme = securitySchemeOrRef as SecuritySchemeObject;
   if (securitySchemeOrRef.$ref) {
     const ref = ctx.resolveReference(
@@ -85,14 +84,7 @@ export function createRuntimeSecurityClassFromSecurityScheme(
       return factory.createNewExpression(
         createRuntimeRefProperty(ExportedRef.ApiKeySecurityAuthentication),
         undefined,
-        [
-          // Arg
-          factory.createObjectLiteralExpression(args),
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier('config'),
-            name,
-          ),
-        ],
+        [factory.createObjectLiteralExpression(args), authProviderExpression],
       );
     case 'http':
       if (securityScheme.scheme) {
@@ -114,47 +106,15 @@ export function createRuntimeSecurityClassFromSecurityScheme(
       return factory.createNewExpression(
         createRuntimeRefProperty(ExportedRef.HttpSecurityAuthentication),
         undefined,
-        [
-          // Arg
-          factory.createObjectLiteralExpression(args),
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier('config'),
-            name,
-          ),
-        ],
+        [factory.createObjectLiteralExpression(args), authProviderExpression],
       );
     case 'oauth2':
       return factory.createNewExpression(
         createRuntimeRefProperty(ExportedRef.OAuth2SecurityAuthentication),
         undefined,
-        [
-          // Arg
-          factory.createObjectLiteralExpression(args),
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier('config'),
-            name,
-          ),
-        ],
+        [factory.createObjectLiteralExpression(args), authProviderExpression],
       );
-
     case 'openIdConnect':
       throw new Error(`Unsupported security scheme '${securityScheme.type}'`);
   }
-}
-
-export function createMapTypeFromSecurityScheme(
-  securitySchemes: Record<string, SecuritySchemeObject | ReferenceObject>,
-): TypeNode {
-  return factory.createTypeLiteralNode(
-    Object.keys(securitySchemes).map((name) =>
-      factory.createPropertySignature(
-        undefined,
-        hasUnsupportedIdentifierChar(name)
-          ? factory.createStringLiteral(name, true)
-          : factory.createIdentifier(name),
-        undefined,
-        createRuntimeRefType(ExportedRef.SecurityAuthentication),
-      ),
-    ),
-  );
 }

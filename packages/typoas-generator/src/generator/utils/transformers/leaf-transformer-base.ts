@@ -28,7 +28,10 @@ function findTransformsInternal(
   isTransformableLeaf: (schema: SchemaObject) => boolean,
 ): TransformField[] {
   if (schemaOrRef.$ref) {
-    currentField.push([TransformType.REF, schemaOrRef.$ref]);
+    currentField.push([
+      TransformType.REF,
+      schemaOrRef.$ref.replace(/^#\/components\/schemas\//, ''),
+    ]);
     return [currentField];
   }
   const schema = schemaOrRef as SchemaObject;

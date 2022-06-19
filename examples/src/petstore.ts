@@ -121,29 +121,26 @@ export type ApiResponse = {
   message?: string;
 };
 export type AuthMethods = {
-  petstore_auth?: r.AuthProvider<r.BaseFlowConfig>;
-  api_key?: r.AuthProvider<string>;
+  petstore_auth?: r.OAuth2SecurityAuthentication;
+  api_key?: r.ApiKeySecurityAuthentication;
 };
 export function configureAuth(
   params?: r.CreateContextParams<AuthMethods>['authProviders'],
-): Partial<AuthMethods> {
+): AuthMethods {
   return {
     petstore_auth:
       params?.petstore_auth &&
-      new HttpSecurityAuthentication(
-        { scheme: 'bearer', bearerFormat: '' },
-        params.jwt,
-      ),
+      new r.OAuth2SecurityAuthentication({}, params.petstore_auth),
     api_key:
       params?.api_key &&
-      new HttpSecurityAuthentication(
-        { scheme: 'bearer', bearerFormat: '' },
-        params.jwt,
+      new r.ApiKeySecurityAuthentication(
+        { name: 'api_key', in: 'header' },
+        params.api_key,
       ),
   };
 }
 export function createContext(
-  params?: Partial<r.ContextParams>,
+  params?: r.CreateContextParams<AuthMethods>,
 ): r.Context<AuthMethods> {
   return new r.Context<AuthMethods>({
     resolver: new r.RefResolver({
@@ -155,28 +152,23 @@ export function createContext(
           [
             [r.TransformType.ACCESS, 'address'],
             [r.TransformType.LOOP],
-            [r.TransformType.REF, '#/components/schemas/Address'],
+            [r.TransformType.REF, 'Address'],
           ],
         ],
       },
-      Address: {},
-      Category: {},
-      User: {},
-      Tag: {},
       Pet: {
         date: [
           [
             [r.TransformType.ACCESS, 'category'],
-            [r.TransformType.REF, '#/components/schemas/Category'],
+            [r.TransformType.REF, 'Category'],
           ],
           [
             [r.TransformType.ACCESS, 'tags'],
             [r.TransformType.LOOP],
-            [r.TransformType.REF, '#/components/schemas/Tag'],
+            [r.TransformType.REF, 'Tag'],
           ],
         ],
       },
-      ApiResponse: {},
     }),
     serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
     authMethods: configureAuth(params?.authProviders),
@@ -202,11 +194,7 @@ export async function updatePet(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/Pet']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
     '400': {},
     '404': {},
     '405': {},
@@ -231,11 +219,7 @@ export async function addPet(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/Pet']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
     '405': {},
   });
 }
@@ -260,12 +244,7 @@ export async function findPetsByStatus(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [
-          [
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, '#/components/schemas/Pet'],
-          ],
-        ],
+        date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'Pet']]],
       },
     },
     '400': {},
@@ -292,12 +271,7 @@ export async function findPetsByTags(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [
-          [
-            [r.TransformType.LOOP],
-            [r.TransformType.REF, '#/components/schemas/Pet'],
-          ],
-        ],
+        date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'Pet']]],
       },
     },
     '400': {},
@@ -322,11 +296,7 @@ export async function getPetById(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/Pet']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
     '400': {},
     '404': {},
   });
@@ -397,11 +367,7 @@ export async function uploadFile(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/ApiResponse']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'ApiResponse']]] } },
   });
 }
 /**
@@ -422,9 +388,7 @@ export async function getInventory(
     auth: ['api_key'],
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '200': { transforms: {} },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Place an order for a pet
@@ -444,11 +408,7 @@ export async function placeOrder(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/Order']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
     '405': {},
   });
 }
@@ -470,11 +430,7 @@ export async function getOrderById(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/Order']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
     '400': {},
     '404': {},
   });
@@ -519,11 +475,7 @@ export async function createUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    default: {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/User']]],
-      },
-    },
+    default: { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
   });
 }
 /**
@@ -544,11 +496,7 @@ export async function createUsersWithListInput(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/User']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
     default: {},
   });
 }
@@ -570,7 +518,6 @@ export async function loginUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': { transforms: {} },
     '400': {},
   });
 }
@@ -609,11 +556,7 @@ export async function getUserByName(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.REF, '#/components/schemas/User']]],
-      },
-    },
+    '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
     '400': {},
     '404': {},
   });
