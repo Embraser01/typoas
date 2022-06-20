@@ -1,4 +1,4 @@
-import { OperationObject } from 'openapi3-ts';
+import { OperationObject, ResponseObject } from 'openapi3-ts';
 import {
   factory,
   ParameterDeclaration,
@@ -6,6 +6,7 @@ import {
   SyntaxKind,
   TypeReferenceNode,
 } from 'typescript';
+import { isEqual, uniqWith } from 'lodash';
 import { Context } from '../../../context';
 import { createRuntimeRefType, ExportedRef } from '../../utils/ref';
 import {
@@ -90,13 +91,28 @@ export function createOperationReturnType(
   operation: OperationObject,
   ctx: Context,
 ): TypeReferenceNode {
-  const responses = getSuccessResponses(operation);
+  const responses = uniqWith(getSuccessResponses(operation), (a, b) => {
+    if (a.$ref && b.$ref && a.$ref === b.$ref) {
+      return true;
+    }
+    if (a.$ref || b.$ref) {
+      return false;
+    }
+    return isEqual(
+      (a as ResponseObject).content?.['application/json'].schema,
+      (b as ResponseObject).content?.['application/json'].schema,
+    );
+  });
+
+  const node = ctx.generateAnyInsteadOfUnknown()
+    ? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword)
+    : factory.createKeywordTypeNode(SyntaxKind.UnknownKeyword);
 
   return factory.createTypeReferenceNode(factory.createIdentifier('Promise'), [
-    responses.length
-      ? factory.createUnionTypeNode(
+    !responses.length
+      ? node
+      : factory.createUnionTypeNode(
           responses.map((r) => createSchemaTypeFromResponse(r, ctx)),
-        )
-      : factory.createKeywordTypeNode(SyntaxKind.AnyKeyword),
+        ),
   ]);
 }

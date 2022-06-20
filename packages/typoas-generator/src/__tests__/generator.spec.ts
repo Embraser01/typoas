@@ -27,7 +27,7 @@ describe('create full specs', () => {
       readFileSync(resolve(__dirname, './spec-with-enums.json'), 'utf8'),
     ) as OpenAPIObject;
 
-    const node = generateClient(specs, 'EnumSchemasClient', {
+    const node = generateClient(specs, {
       jsDoc: false,
       generateEnums: true,
     });

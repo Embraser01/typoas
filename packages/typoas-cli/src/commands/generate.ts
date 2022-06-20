@@ -33,8 +33,8 @@ export class GenerateCommand extends Command {
   });
 
   name = Option.String('-n,--name', {
-    required: true,
-    description: 'Class name of the generated client',
+    hidden: true,
+    description: "Deprecated, name isn't used anymore",
   });
 
   jsDoc = Option.Boolean('--js-doc', {
@@ -50,14 +50,21 @@ export class GenerateCommand extends Command {
       'Generate enums instead of literal string types where possible',
   });
 
+  anyInsteadOfUnknown = Option.Boolean('--any-instead-of-unknown', {
+    description:
+      'Use the any keyword instead of unknown in api functions return value. ' +
+      'Schemas will never use the unknown keyword.',
+  });
+
   async execute(): Promise<void> {
     const specs = await loadSpec(this.input);
 
     this.context.stdout.write(`Info: Generating spec '${specs.info.title}'\n`);
-    const src = generateClient(specs, this.name, {
+    const src = generateClient(specs, {
       jsDoc: this.jsDoc,
       onlyTypes: this.onlyTypes,
       generateEnums: this.generateEnums,
+      anyInsteadOfUnknown: this.anyInsteadOfUnknown,
     });
 
     const content = getStringFromSourceFile(src);
@@ -65,7 +72,7 @@ export class GenerateCommand extends Command {
     const outputPath = path.resolve(process.cwd(), this.output);
     await writeFile(outputPath, content);
     this.context.stdout.write(
-      `Info: ${this.name} was generated at '${outputPath}'\n`,
+      `Info: ${specs.info.title} was generated at '${outputPath}'\n`,
     );
   }
 }

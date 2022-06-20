@@ -58,7 +58,6 @@ export function createSchemaComponents(
 
 export function generateClient(
   specs: OpenAPIObject,
-  name: string,
   opts?: ContextOptions,
 ): SourceFile {
   const ctx = new Context(opts);

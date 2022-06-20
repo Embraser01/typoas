@@ -12845,7 +12845,7 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp(
      */
     fingerprint?: string;
   },
-): Promise<Authorization | Authorization | any> {
+): Promise<Authorization | any> {
   const req = await ctx.createRequest({
     path: '/authorizations/clients/{client_id}',
     params,
@@ -12907,7 +12907,7 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
      */
     note_url?: string;
   },
-): Promise<Authorization | Authorization> {
+): Promise<Authorization> {
   const req = await ctx.createRequest({
     path: '/authorizations/clients/{client_id}/{fingerprint}',
     params,
@@ -17995,7 +17995,7 @@ export async function orgsCheckMembershipForUser(
     org: string;
     username: string;
   },
-): Promise<any | any> {
+): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/members/{username}',
     params,
@@ -19771,7 +19771,7 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg(
       | 'rocket'
       | 'eyes';
   },
-): Promise<Reaction | Reaction> {
+): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions',
     params,
@@ -19883,7 +19883,7 @@ export async function reactionsCreateForTeamDiscussionInOrg(
       | 'rocket'
       | 'eyes';
   },
-): Promise<Reaction | Reaction> {
+): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions',
     params,
@@ -24530,7 +24530,7 @@ export async function checksCreateSuite(
      */
     head_sha: string;
   },
-): Promise<CheckSuite | CheckSuite> {
+): Promise<CheckSuite> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites',
     params,
@@ -25484,7 +25484,7 @@ export async function reactionsCreateForCommitComment(
       | 'rocket'
       | 'eyes';
   },
-): Promise<Reaction | Reaction> {
+): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions',
     params,
@@ -26302,7 +26302,7 @@ export async function reposCreateOrUpdateFileContents(
       date?: string;
     };
   },
-): Promise<FileCommit | FileCommit> {
+): Promise<FileCommit> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contents/{path}',
     params,
@@ -28950,7 +28950,7 @@ export async function reactionsCreateForIssueComment(
       | 'rocket'
       | 'eyes';
   },
-): Promise<Reaction | Reaction> {
+): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions',
     params,
@@ -29650,7 +29650,7 @@ export async function reactionsCreateForIssue(
       | 'rocket'
       | 'eyes';
   },
-): Promise<Reaction | Reaction> {
+): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions',
     params,
@@ -31019,7 +31019,7 @@ export async function reactionsCreateForPullRequestReviewComment(
       | 'rocket'
       | 'eyes';
   },
-): Promise<Reaction | Reaction> {
+): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions',
     params,
@@ -32426,7 +32426,7 @@ export async function reactionsCreateForRelease(
      */
     content: '+1' | 'laugh' | 'heart' | 'hooray' | 'rocket' | 'eyes';
   },
-): Promise<Reaction | Reaction> {
+): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}/reactions',
     params,
@@ -34946,7 +34946,7 @@ export async function teamsUpdateLegacy(
      */
     parent_team_id?: number | null;
   },
-): Promise<TeamFull | TeamFull> {
+): Promise<TeamFull> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}',
     params,
