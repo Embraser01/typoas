@@ -8,7 +8,7 @@ type OpenAPI = Parameters<typeof generateClient>[0];
 
 export async function loadRemoteFile(url: URL): Promise<string> {
   const http =
-    url.protocol === 'http' ? await import('http') : await import('https');
+    url.protocol === 'http:' ? await import('http') : await import('https');
 
   return new Promise((resolve, reject) => {
     const request = http.request(url, (response) => {
