@@ -17,12 +17,12 @@ export function getQueryParams(
         throw new Error(`$ref '${p.$ref}' wasn't found`);
       }
       parameter = ref.spec;
+    }
 
-      if (!usedParams.has(parameter.name)) {
-        usedParams.add(parameter.name);
-        if (parameter.in === 'query') {
-          strings.push(factory.createStringLiteral(parameter.name));
-        }
+    if (!usedParams.has(parameter.name)) {
+      usedParams.add(parameter.name);
+      if (parameter.in === 'query') {
+        strings.push(factory.createStringLiteral(parameter.name));
       }
     }
   }

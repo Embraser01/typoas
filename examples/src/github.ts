@@ -12104,7 +12104,7 @@ export async function appsListInstallations(
     path: '/app/installations',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page', 'since'],
+    queryParams: ['per_page', 'page', 'since', 'outdated'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -12284,7 +12284,7 @@ export async function oauthAuthorizationsListGrants(
     path: '/applications/grants',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['per_page', 'page', 'client_id'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -12709,7 +12709,7 @@ export async function oauthAuthorizationsListAuthorizations(
     path: '/authorizations',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['per_page', 'page', 'client_id'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -14874,7 +14874,20 @@ export async function issuesList(
     path: '/issues',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['labels', 'direction', 'since', 'per_page', 'page'],
+    queryParams: [
+      'filter',
+      'state',
+      'labels',
+      'sort',
+      'direction',
+      'since',
+      'collab',
+      'orgs',
+      'owned',
+      'pulls',
+      'per_page',
+      'page',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -14907,7 +14920,7 @@ export async function licensesGetAllCommonlyUsed(
     path: '/licenses',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['featured', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -15092,7 +15105,7 @@ export async function appsListAccountsForPlan(
     path: '/marketplace_listing/plans/{plan_id}/accounts',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['sort', 'per_page', 'page'],
+    queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -15199,7 +15212,7 @@ export async function appsListAccountsForPlanStubbed(
     path: '/marketplace_listing/stubbed/plans/{plan_id}/accounts',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['sort', 'per_page', 'page'],
+    queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -15512,6 +15525,7 @@ export async function metaGetOctocat(
     path: '/octocat',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['s'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -17936,7 +17950,16 @@ export async function issuesListForOrg(
     path: '/orgs/{org}/issues',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['labels', 'direction', 'since', 'per_page', 'page'],
+    queryParams: [
+      'filter',
+      'state',
+      'labels',
+      'sort',
+      'direction',
+      'since',
+      'per_page',
+      'page',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -17968,7 +17991,7 @@ export async function orgsListMembers(
     path: '/orgs/{org}/members',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['filter', 'role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -18152,7 +18175,7 @@ export async function migrationsListForOrg(
     path: '/orgs/{org}/migrations',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['per_page', 'page', 'exclude'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -18230,6 +18253,7 @@ export async function migrationsGetStatusForOrg(
     path: '/orgs/{org}/migrations/{migration_id}',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['exclude'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -18362,7 +18386,7 @@ export async function orgsListOutsideCollaborators(
     path: '/orgs/{org}/outside_collaborators',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['filter', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -18524,6 +18548,7 @@ export async function packagesRestorePackageForOrg(
     path: '/orgs/{org}/packages/{package_type}/{package_name}/restore',
     params,
     method: r.HttpMethod.POST,
+    queryParams: ['token'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -18563,7 +18588,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg(
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['page', 'per_page'],
+    queryParams: ['page', 'per_page', 'state'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -18714,7 +18739,7 @@ export async function projectsListForOrg(
     path: '/orgs/{org}/projects',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -18900,7 +18925,7 @@ export async function reposListForOrg(
     path: '/orgs/{org}/repos',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['type', 'sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -19134,7 +19159,7 @@ export async function teamsListIdpGroupsForOrg(
     path: '/orgs/{org}/team-sync/groups',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page'],
+    queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -19374,7 +19399,7 @@ export async function teamsListDiscussionsInOrg(
     path: '/orgs/{org}/teams/{team_slug}/discussions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['direction', 'per_page', 'page'],
+    queryParams: ['direction', 'per_page', 'page', 'pinned'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -19730,7 +19755,7 @@ export async function reactionsListForTeamDiscussionCommentInOrg(
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -19843,7 +19868,7 @@ export async function reactionsListForTeamDiscussionInOrg(
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -19982,7 +20007,7 @@ export async function teamsListMembersInOrg(
     path: '/orgs/{org}/teams/{team_slug}/members',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -20707,7 +20732,7 @@ export async function projectsListCards(
     path: '/projects/columns/{column_id}/cards',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['archived_state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -20944,7 +20969,7 @@ export async function projectsListCollaborators(
     path: '/projects/{project_id}/collaborators',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['affiliation', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -22120,7 +22145,7 @@ export async function actionsListJobsForWorkflowRun(
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/jobs',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['filter', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -23044,7 +23069,7 @@ export async function reposListBranches(
     path: '/repos/{owner}/{repo}/branches',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['protected', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -24639,7 +24664,7 @@ export async function checksListForSuite(
     path: '/repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['check_name', 'status', 'per_page', 'page'],
+    queryParams: ['check_name', 'status', 'filter', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -24711,7 +24736,7 @@ export async function codeScanningListAlertsForRepo(
     path: '/repos/{owner}/{repo}/code-scanning/alerts',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['tool_name', 'tool_guid', 'page', 'per_page', 'ref'],
+    queryParams: ['tool_name', 'tool_guid', 'page', 'per_page', 'ref', 'state'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -24870,7 +24895,14 @@ export async function codeScanningListRecentAnalyses(
     path: '/repos/{owner}/{repo}/code-scanning/analyses',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['tool_name', 'tool_guid', 'page', 'per_page'],
+    queryParams: [
+      'tool_name',
+      'tool_guid',
+      'page',
+      'per_page',
+      'ref',
+      'sarif_id',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -25018,6 +25050,7 @@ export async function codeScanningDeleteAnalysis(
     path: '/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}',
     params,
     method: r.HttpMethod.DELETE,
+    queryParams: ['confirm_delete'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -25150,7 +25183,7 @@ export async function reposListCollaborators(
     path: '/repos/{owner}/{repo}/collaborators',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['affiliation', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -25445,7 +25478,7 @@ export async function reactionsListForCommitComment(
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -25578,7 +25611,15 @@ export async function reposListCommits(
     path: '/repos/{owner}/{repo}/commits',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['since', 'per_page', 'page'],
+    queryParams: [
+      'sha',
+      'path',
+      'author',
+      'since',
+      'until',
+      'per_page',
+      'page',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -25842,7 +25883,14 @@ export async function checksListForRef(
     path: '/repos/{owner}/{repo}/commits/{ref}/check-runs',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['check_name', 'status', 'per_page', 'page'],
+    queryParams: [
+      'check_name',
+      'status',
+      'filter',
+      'per_page',
+      'page',
+      'app_id',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -25886,7 +25934,7 @@ export async function checksListSuitesForRef(
     path: '/repos/{owner}/{repo}/commits/{ref}/check-suites',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['check_name', 'per_page', 'page'],
+    queryParams: ['app_id', 'check_name', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -26212,6 +26260,7 @@ export async function reposGetContent(
     path: '/repos/{owner}/{repo}/contents/{path}',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -26418,7 +26467,7 @@ export async function reposListContributors(
     path: '/repos/{owner}/{repo}/contributors',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['anon', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -26455,7 +26504,7 @@ export async function reposListDeployments(
     path: '/repos/{owner}/{repo}/deployments',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['sha', 'ref', 'task', 'environment', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -27018,7 +27067,7 @@ export async function reposListForks(
     path: '/repos/{owner}/{repo}/forks',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['sort', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -27705,6 +27754,7 @@ export async function gitGetTree(
     path: '/repos/{owner}/{repo}/git/trees/{tree_sha}',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['recursive'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -28684,7 +28734,19 @@ export async function issuesListForRepo(
     path: '/repos/{owner}/{repo}/issues',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['labels', 'direction', 'since', 'per_page', 'page'],
+    queryParams: [
+      'milestone',
+      'state',
+      'assignee',
+      'creator',
+      'mentioned',
+      'labels',
+      'sort',
+      'direction',
+      'since',
+      'per_page',
+      'page',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -28785,7 +28847,7 @@ export async function issuesListCommentsForRepo(
     path: '/repos/{owner}/{repo}/issues/comments',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['sort', 'since', 'per_page', 'page'],
+    queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -28911,7 +28973,7 @@ export async function reactionsListForIssueComment(
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -29610,7 +29672,7 @@ export async function reactionsListForIssue(
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -30121,7 +30183,7 @@ export async function issuesListMilestones(
     path: '/repos/{owner}/{repo}/milestones',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['state', 'sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -30653,7 +30715,7 @@ export async function projectsListForRepo(
     path: '/repos/{owner}/{repo}/projects',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -30740,7 +30802,15 @@ export async function pullsList(
     path: '/repos/{owner}/{repo}/pulls',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: [
+      'state',
+      'head',
+      'base',
+      'sort',
+      'direction',
+      'per_page',
+      'page',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -30846,7 +30916,7 @@ export async function pullsListReviewCommentsForRepo(
     path: '/repos/{owner}/{repo}/pulls/comments',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['since', 'per_page', 'page'],
+    queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -30980,7 +31050,7 @@ export async function reactionsListForPullRequestReviewComment(
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -31179,7 +31249,7 @@ export async function pullsListReviewComments(
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/comments',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['sort', 'since', 'per_page', 'page'],
+    queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -31953,6 +32023,7 @@ export async function reposGetReadme(
     path: '/repos/{owner}/{repo}/readme',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -31984,6 +32055,7 @@ export async function reposGetReadmeInDirectory(
     path: '/repos/{owner}/{repo}/readme/{dir}',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -32401,6 +32473,7 @@ export async function reposUploadReleaseAsset(
     params,
     method: r.HttpMethod.POST,
     body,
+    queryParams: ['name', 'label'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -32465,7 +32538,7 @@ export async function secretScanningListAlertsForRepo(
     path: '/repos/{owner}/{repo}/secret-scanning/alerts',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['page', 'per_page'],
+    queryParams: ['state', 'secret_type', 'page', 'per_page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -33652,7 +33725,7 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise(
     path: '/scim/v2/enterprises/{enterprise}/Groups',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['startIndex', 'count'],
+    queryParams: ['startIndex', 'count', 'filter', 'excludedAttributes'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -33724,6 +33797,7 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseGrou
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['excludedAttributes'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -33877,7 +33951,7 @@ export async function enterpriseAdminListProvisionedIdentitiesEnterprise(
     path: '/scim/v2/enterprises/{enterprise}/Users',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['startIndex', 'count'],
+    queryParams: ['startIndex', 'count', 'filter'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34170,6 +34244,7 @@ export async function scimListProvisionedIdentities(
     path: '/scim/v2/organizations/{org}/Users',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['startIndex', 'count', 'filter'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34504,7 +34579,7 @@ export async function searchCode(
     path: '/search/code',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['order', 'per_page', 'page'],
+    queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34560,7 +34635,7 @@ export async function searchCommits(
     path: '/search/commits',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['order', 'per_page', 'page'],
+    queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34627,7 +34702,7 @@ export async function searchIssuesAndPullRequests(
     path: '/search/issues',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['order', 'per_page', 'page'],
+    queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34685,7 +34760,7 @@ export async function searchLabels(
     path: '/search/labels',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['order', 'per_page', 'page'],
+    queryParams: ['repository_id', 'q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34747,7 +34822,7 @@ export async function searchRepos(
     path: '/search/repositories',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['order', 'per_page', 'page'],
+    queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34801,7 +34876,7 @@ export async function searchTopics(
     path: '/search/topics',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['q', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -34854,7 +34929,7 @@ export async function searchUsers(
     path: '/search/users',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['order', 'per_page', 'page'],
+    queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -35373,7 +35448,7 @@ export async function reactionsListForTeamDiscussionCommentLegacy(
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -35457,7 +35532,7 @@ export async function reactionsListForTeamDiscussionLegacy(
     path: '/teams/{team_id}/discussions/{discussion_number}/reactions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -35568,7 +35643,7 @@ export async function teamsListMembersLegacy(
     path: '/teams/{team_id}/members',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -37090,7 +37165,16 @@ export async function issuesListForAuthenticatedUser(
     path: '/user/issues',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['labels', 'direction', 'since', 'per_page', 'page'],
+    queryParams: [
+      'filter',
+      'state',
+      'labels',
+      'sort',
+      'direction',
+      'since',
+      'per_page',
+      'page',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -37314,7 +37398,7 @@ export async function orgsListMembershipsForAuthenticatedUser(
     path: '/user/memberships/orgs',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -37496,6 +37580,7 @@ export async function migrationsGetStatusForAuthenticatedUser(
     path: '/user/migrations/{migration_id}',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['exclude'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -37773,6 +37858,7 @@ export async function packagesRestorePackageForAuthenticatedUser(
     path: '/user/packages/{package_type}/{package_name}/restore',
     params,
     method: r.HttpMethod.POST,
+    queryParams: ['token'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -37811,7 +37897,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
     path: '/user/packages/{package_type}/{package_name}/versions',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['page', 'per_page'],
+    queryParams: ['page', 'per_page', 'state'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -38035,7 +38121,17 @@ export async function reposListForAuthenticatedUser(
     path: '/user/repos',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page', 'since', 'before'],
+    queryParams: [
+      'visibility',
+      'affiliation',
+      'type',
+      'sort',
+      'direction',
+      'per_page',
+      'page',
+      'since',
+      'before',
+    ],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -38774,6 +38870,7 @@ export async function usersGetContextForUser(
     path: '/users/{username}/hovercard',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['subject_type', 'subject_id'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -39002,7 +39099,7 @@ export async function projectsListForUser(
     path: '/users/{username}/projects',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -39094,7 +39191,7 @@ export async function reposListForUser(
     path: '/users/{username}/repos',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['type', 'sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {

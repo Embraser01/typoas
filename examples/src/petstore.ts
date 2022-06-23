@@ -216,6 +216,7 @@ export async function findPetsByStatus(
     path: '/pet/findByStatus',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['status'],
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req);
@@ -243,6 +244,7 @@ export async function findPetsByTags(
     path: '/pet/findByTags',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['tags'],
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req);
@@ -290,11 +292,12 @@ export async function updatePetWithForm(
     name?: string;
     status?: string;
   },
-): Promise<any> {
+): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
     params,
     method: r.HttpMethod.POST,
+    queryParams: ['name', 'status'],
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req);
@@ -312,7 +315,7 @@ export async function deletePet(
     api_key?: string;
     petId: number;
   },
-): Promise<any> {
+): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
     params,
@@ -341,6 +344,7 @@ export async function uploadFile(
     params,
     method: r.HttpMethod.POST,
     body,
+    queryParams: ['additionalMetadata'],
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req);
@@ -423,7 +427,7 @@ export async function deleteOrder(
   params: {
     orderId: number;
   },
-): Promise<any> {
+): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/store/order/{orderId}',
     params,
@@ -493,6 +497,7 @@ export async function loginUser(
     path: '/user/login',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['username', 'password'],
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
@@ -572,7 +577,7 @@ export async function deleteUser(
   params: {
     username: string;
   },
-): Promise<any> {
+): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,

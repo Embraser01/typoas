@@ -6,6 +6,6 @@ export class RefResolver implements TransformResolver {
   ) {}
 
   getTransforms(type: string, ref: string): TransformField[] {
-    return this.transforms[ref][type] || [];
+    return this.transforms[ref]?.[type] || [];
   }
 }
