@@ -1,8 +1,7 @@
-import { RequestContext, HttpMethod } from './http/http';
 import { applyTemplating } from './utils';
 
 export interface BaseServerConfiguration {
-  makeRequestContext(endpoint: string, httpMethod: HttpMethod): RequestContext;
+  getURL(endpoint: string): string;
 }
 
 /**
@@ -29,21 +28,7 @@ export class ServerConfiguration<T extends Record<string, string>>
     return this.variableConfiguration;
   }
 
-  /**
-   * Creates a new request context for this server using the url with variables
-   * replaced with their respective values and the endpoint of the request appended.
-   *
-   * @param endpoint the endpoint to be queried on the server
-   * @param httpMethod httpMethod to be used
-   *
-   */
-  public makeRequestContext(
-    endpoint: string,
-    httpMethod: HttpMethod,
-  ): RequestContext {
-    return new RequestContext(
-      applyTemplating(this.url, this.variableConfiguration) + endpoint,
-      httpMethod,
-    );
+  getURL(endpoint: string): string {
+    return applyTemplating(this.url, this.variableConfiguration) + endpoint;
   }
 }

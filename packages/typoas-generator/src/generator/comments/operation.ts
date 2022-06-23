@@ -23,5 +23,5 @@ export function getJSDocFromOperation(op: OperationObject): string {
     str += `Tags: ${op.tags.join(', ')}\n`;
   }
 
-  return str;
+  return str.trim();
 }

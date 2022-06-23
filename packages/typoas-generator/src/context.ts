@@ -60,6 +60,7 @@ export type ContextOptions = {
   generateEnums?: boolean;
   jsDoc?: boolean;
   onlyTypes?: boolean;
+  anyInsteadOfUnknown?: boolean;
 };
 
 export class Context {
@@ -141,6 +142,10 @@ export class Context {
 
   generateEnums(): boolean {
     return this.opts.generateEnums === true;
+  }
+
+  generateAnyInsteadOfUnknown(): boolean {
+    return this.opts.anyInsteadOfUnknown === true;
   }
 
   hasJSDoc(): boolean {

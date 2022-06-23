@@ -1,4 +1,4 @@
-import { RequestContext } from '../http/http';
+import type { RequestContext } from '../fetcher';
 
 /**
  * Base class authentication schemes.

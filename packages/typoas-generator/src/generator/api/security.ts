@@ -1,72 +1,113 @@
 import { Context } from '../../context';
 import { ReferenceObject, SecuritySchemeObject } from 'openapi3-ts';
-import { factory, Statement, SyntaxKind } from 'typescript';
+import {
+  factory,
+  FunctionDeclaration,
+  SyntaxKind,
+  TypeAliasDeclaration,
+} from 'typescript';
 import { createRuntimeRefType, ExportedRef } from '../utils/ref';
 import {
   createConfigTypeFromSecurityScheme,
-  createMapTypeFromSecurityScheme,
-  createRuntimeSecurityClassFromSecurityScheme,
+  createRuntimeSecurityClass,
 } from '../components/security-scheme';
+import { hasUnsupportedIdentifierChar } from '../utils/operation-name';
 
 export const AUTH_TYPE_NAME = 'AuthMethods';
-export const AUTH_CONFIGURE_METHOD = 'configureAuthMethods';
 
-export function createAuthMethodsFactory(
+export function createAuthMethodsType(
   securitySchemes: Record<string, SecuritySchemeObject | ReferenceObject>,
   ctx: Context,
-): Statement[] {
-  if (!Object.keys(securitySchemes).length) return [];
-  return [
-    factory.createTypeAliasDeclaration(
-      undefined,
-      undefined,
-      AUTH_TYPE_NAME,
-      undefined,
-      factory.createTypeLiteralNode(
-        Object.entries(securitySchemes).map(([name, sec]) =>
-          factory.createPropertySignature(
-            undefined,
-            name,
-            factory.createToken(SyntaxKind.QuestionToken),
-            createRuntimeRefType(ExportedRef.AuthProvider, [
-              createConfigTypeFromSecurityScheme(sec, ctx),
-            ]),
-          ),
+): TypeAliasDeclaration {
+  return factory.createTypeAliasDeclaration(
+    undefined,
+    [factory.createModifier(SyntaxKind.ExportKeyword)],
+    AUTH_TYPE_NAME,
+    undefined,
+    factory.createTypeLiteralNode(
+      Object.entries(securitySchemes).map(([name, sec]) =>
+        factory.createPropertySignature(
+          undefined,
+          name,
+          factory.createToken(SyntaxKind.QuestionToken),
+          createConfigTypeFromSecurityScheme(sec, ctx),
         ),
       ),
     ),
-    factory.createFunctionDeclaration(
-      undefined,
-      undefined,
-      undefined,
-      AUTH_CONFIGURE_METHOD,
-      undefined,
+  );
+}
+
+export function createConfigureAuthFunction(
+  securitySchemes: Record<string, SecuritySchemeObject | ReferenceObject>,
+  ctx: Context,
+): FunctionDeclaration {
+  return factory.createFunctionDeclaration(
+    undefined,
+    [factory.createModifier(SyntaxKind.ExportKeyword)],
+    undefined,
+    'configureAuth',
+    undefined,
+    [
+      factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier('params'),
+        factory.createToken(SyntaxKind.QuestionToken),
+        factory.createIndexedAccessTypeNode(
+          createRuntimeRefType(ExportedRef.CreateContextParams, [
+            factory.createTypeReferenceNode(
+              factory.createIdentifier(AUTH_TYPE_NAME),
+            ),
+          ]),
+          factory.createLiteralTypeNode(
+            factory.createStringLiteral('authProviders'),
+          ),
+        ),
+      ),
+    ],
+    factory.createTypeReferenceNode(AUTH_TYPE_NAME),
+    factory.createBlock(
       [
-        factory.createParameterDeclaration(
-          undefined,
-          undefined,
-          undefined,
-          'config',
-          undefined,
-          factory.createTypeReferenceNode(
-            factory.createIdentifier(AUTH_TYPE_NAME),
+        factory.createReturnStatement(
+          factory.createObjectLiteralExpression(
+            Object.entries(securitySchemes).map(([name, sec]) =>
+              factory.createPropertyAssignment(
+                hasUnsupportedIdentifierChar(name)
+                  ? factory.createStringLiteral(name, true)
+                  : factory.createIdentifier(name),
+                factory.createLogicalAnd(
+                  hasUnsupportedIdentifierChar(name)
+                    ? factory.createElementAccessChain(
+                        factory.createIdentifier('params'),
+                        factory.createToken(SyntaxKind.QuestionDotToken),
+                        factory.createStringLiteral('jwt'),
+                      )
+                    : factory.createPropertyAccessChain(
+                        factory.createIdentifier('params'),
+                        factory.createToken(SyntaxKind.QuestionDotToken),
+                        factory.createIdentifier(name),
+                      ),
+                  createRuntimeSecurityClass(
+                    sec,
+                    hasUnsupportedIdentifierChar(name)
+                      ? factory.createElementAccessExpression(
+                          factory.createIdentifier('params'),
+                          factory.createStringLiteral(name),
+                        )
+                      : factory.createPropertyAccessExpression(
+                          factory.createIdentifier('params'),
+                          factory.createIdentifier(name),
+                        ),
+                    ctx,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ],
-      createMapTypeFromSecurityScheme(securitySchemes),
-      factory.createBlock([
-        factory.createReturnStatement(
-          factory.createObjectLiteralExpression(
-            Object.entries(securitySchemes).map(([key, sec]) =>
-              factory.createPropertyAssignment(
-                key,
-                createRuntimeSecurityClassFromSecurityScheme(sec, key, ctx),
-              ),
-            ),
-            true,
-          ),
-        ),
-      ]),
+      true,
     ),
-  ];
+  );
 }

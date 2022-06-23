@@ -1,5 +1,5 @@
-import { AuthProvider, SecurityAuthentication } from './base';
-import { RequestContext } from '../http/http';
+import type { AuthProvider, SecurityAuthentication } from './base';
+import type { RequestContext } from '../fetcher';
 
 export type OAuth2Configuration = {
   // We don't actually need to have any configuration for OAuth2

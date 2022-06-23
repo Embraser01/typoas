@@ -1,4 +1,3 @@
-import { createClient } from './generator/api/client';
 import { Context, ContextOptions } from './context';
 import { OpenAPIObject, SchemasObject } from 'openapi3-ts';
 import {
@@ -19,7 +18,12 @@ import {
 import { IMPORT_RUNTIME } from './generator/utils/ref';
 import { createTypeFromSchema } from './generator/components/schemas';
 import { sanitizeTypeIdentifier } from './generator/utils/operation-name';
-import { createAuthMethodsFactory } from './generator/api/security';
+import {
+  createAuthMethodsType,
+  createConfigureAuthFunction,
+} from './generator/api/security';
+import { createOperationList } from './generator/api/operation-list';
+import { createContextFactory } from './generator/api/context-factory';
 
 export function createSchemaComponents(
   schemas: SchemasObject,
@@ -54,10 +58,10 @@ export function createSchemaComponents(
 
 export function generateClient(
   specs: OpenAPIObject,
-  name: string,
   opts?: ContextOptions,
 ): SourceFile {
   const ctx = new Context(opts);
+  const statements: Statement[] = [];
 
   if (!specs.openapi) {
     throw new Error("This specification doesn't look like an OpenAPI spec");
@@ -67,37 +71,43 @@ export function generateClient(
     ctx.initComponents(specs.components);
   }
 
-  const clientClass = createClient(specs, name, ctx);
-  const schemaStmts = specs.components?.schemas
-    ? createSchemaComponents(specs.components?.schemas, ctx)
-    : [];
+  if (specs.components?.schemas) {
+    statements.push(...createSchemaComponents(specs.components.schemas, ctx));
+  }
 
   if (ctx.isOnlyTypes()) {
     return factory.createSourceFile(
-      schemaStmts,
+      statements,
       factory.createToken(SyntaxKind.EndOfFileToken),
       NodeFlags.Const,
     );
   }
 
-  return factory.createSourceFile(
-    [
-      factory.createImportDeclaration(
+  // Add to start of the file
+  statements.unshift(
+    factory.createImportDeclaration(
+      undefined,
+      undefined,
+      factory.createImportClause(
+        false,
         undefined,
-        undefined,
-        factory.createImportClause(
-          false,
-          undefined,
-          factory.createNamespaceImport(
-            factory.createIdentifier(IMPORT_RUNTIME),
-          ),
-        ),
-        factory.createStringLiteral('@typoas/runtime', true),
+        factory.createNamespaceImport(factory.createIdentifier(IMPORT_RUNTIME)),
       ),
-      ...schemaStmts,
-      ...createAuthMethodsFactory(specs.components?.securitySchemes || {}, ctx),
-      clientClass,
-    ],
+      factory.createStringLiteral('@typoas/runtime', true),
+    ),
+  );
+
+  const securitySchemes = specs.components?.securitySchemes || {};
+  statements.push(createAuthMethodsType(securitySchemes, ctx));
+
+  if (Object.keys(securitySchemes).length) {
+    statements.push(createConfigureAuthFunction(securitySchemes, ctx));
+  }
+  statements.push(createContextFactory(specs, ctx));
+  statements.push(...createOperationList(specs, ctx));
+
+  return factory.createSourceFile(
+    statements,
     factory.createToken(SyntaxKind.EndOfFileToken),
     NodeFlags.Const,
   );
