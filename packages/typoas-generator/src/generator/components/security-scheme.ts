@@ -3,8 +3,6 @@ import {
   factory,
   NewExpression,
   ObjectLiteralElementLike,
-  PropertyAccessExpression,
-  SyntaxKind,
   TypeNode,
 } from 'typescript';
 import { Context } from '../../context';
@@ -14,7 +12,6 @@ import {
   createRuntimeRefType,
   ExportedRef,
 } from '../utils/ref';
-import { hasUnsupportedIdentifierChar } from '../utils/operation-name';
 
 export function createConfigTypeFromSecurityScheme(
   securitySchemeOrRef: SecuritySchemeObject | ReferenceObject,
