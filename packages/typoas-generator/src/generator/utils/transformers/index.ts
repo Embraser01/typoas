@@ -33,7 +33,7 @@ export function createAllSchemaTransforms(
   for (const [entityName, entityTransforms] of Object.entries(transforms)) {
     for (const [transformType, fields] of Object.entries(entityTransforms)) {
       if (
-        !isEntityHasTransforms(
+        !doesEntityHasTransforms(
           transforms,
           transformType,
           new WeakSet<TransformField>(),
@@ -70,7 +70,7 @@ export function createAllSchemaTransforms(
   );
 }
 
-function isEntityHasTransforms(
+function doesEntityHasTransforms(
   transforms: Record<string, Record<string, TransformField[]>>,
   transformerType: string,
   visited: WeakSet<TransformField>,
@@ -98,7 +98,7 @@ function isEntityHasTransforms(
       if (
         type === TransformType.REF &&
         transforms[data as string] &&
-        isEntityHasTransforms(
+        doesEntityHasTransforms(
           transforms,
           transformerType,
           visited,
@@ -108,7 +108,7 @@ function isEntityHasTransforms(
         hasTransforms = true;
       } else if (
         type === TransformType.SELECT &&
-        isEntityHasTransforms(
+        doesEntityHasTransforms(
           transforms,
           transformerType,
           visited,
@@ -125,7 +125,7 @@ function isEntityHasTransforms(
   return hasTransforms;
 }
 
-function getSchemaTransforms(
+export function getSchemaTransforms(
   schema: SchemaObject | ReferenceObject,
 ): Record<string, TransformField[]> {
   const transforms: Record<string, TransformField[]> = {};

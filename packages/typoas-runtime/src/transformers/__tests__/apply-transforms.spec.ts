@@ -124,6 +124,51 @@ describe('apply transforms', () => {
     expect(data.body).toEqual([{ d: date }, { d: date }]);
   });
 
+  it('should handle entries of dates', () => {
+    const date = new Date();
+
+    const data = {
+      body: { a: date.toISOString(), d: date.toISOString() },
+    };
+
+    applyTransform(
+      resolver,
+      data,
+      'body',
+      'date',
+      transform,
+      [[TransformType.ENTRIES], [TransformType.THIS]],
+      0,
+    );
+    expect(data.body).toEqual({ a: date, d: date });
+  });
+
+  it('should handle entries of nested dates', () => {
+    const date = new Date();
+
+    const data = {
+      body: {
+        a: { b: date.toISOString() },
+        d: { b: date.toISOString() },
+      },
+    };
+
+    applyTransform(
+      resolver,
+      data,
+      'body',
+      'date',
+      transform,
+      [
+        [TransformType.ENTRIES],
+        [TransformType.ACCESS, 'b'],
+        [TransformType.THIS],
+      ],
+      0,
+    );
+    expect(data.body).toEqual({ a: { b: date }, d: { b: date } });
+  });
+
   it('should handle selection (anyOf, oneOf, ...)', () => {
     const date = new Date();
 

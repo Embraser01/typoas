@@ -10,6 +10,7 @@ export enum TransformType {
   ACCESS = 'access',
   THIS = 'this',
   LOOP = 'loop',
+  ENTRIES = 'entries',
   SELECT = 'select',
   REF = 'ref',
 }
@@ -19,6 +20,7 @@ export type TransformLevel =
   | [TransformType.ACCESS, string]
   | [TransformType.THIS]
   | [TransformType.LOOP]
+  | [TransformType.ENTRIES]
   | [TransformType.REF, string]
   | [TransformType.SELECT, TransformField[]];
 
@@ -53,7 +55,14 @@ function findTransformsInternal(
     });
   }
 
-  // TODO Additional properties
+  if (typeof schema.additionalProperties === 'object') {
+    currentField.push([TransformType.ENTRIES]);
+    return findTransformsInternal(
+      schema.additionalProperties,
+      currentField,
+      isTransformableLeaf,
+    );
+  }
 
   if (schema.type === 'array' && schema.items) {
     currentField.push([TransformType.LOOP]);
