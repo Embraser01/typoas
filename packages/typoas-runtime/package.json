@@ -13,7 +13,6 @@
     "test:jest": "jest"
   },
   "dependencies": {
-    "openapi3-ts": "^2.0.1",
     "query-string": "^7.0.1"
   },
   "devDependencies": {

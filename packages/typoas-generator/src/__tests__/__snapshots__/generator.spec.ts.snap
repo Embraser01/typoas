@@ -1,271 +1,362 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`create full specs should generate client 1`] = `
-"export class PetStoreClient {
-    private authMethods: {
-        petstore_auth: r.SecurityAuthentication;
-        api_key: r.SecurityAuthentication;
-    };
-    constructor(private server: r.BaseServerConfiguration, authMethodConfig: AuthMethods, private http: r.HttpLibrary = new r.IsomorphicFetchHttpLibrary, private resolver: r.SchemaRefResolver = new r.RefResolver(JSON.parse('{\\"Order\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"petId\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"quantity\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"},\\"shipDate\\":{\\"type\\":\\"string\\",\\"format\\":\\"date-time\\"},\\"status\\":{\\"type\\":\\"string\\"},\\"complete\\":{\\"type\\":\\"boolean\\"}}},\\"Customer\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"username\\":{\\"type\\":\\"string\\"},\\"address\\":{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Address\\"}}}},\\"Address\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"street\\":{\\"type\\":\\"string\\"},\\"city\\":{\\"type\\":\\"string\\"},\\"state\\":{\\"type\\":\\"string\\"},\\"zip\\":{\\"type\\":\\"string\\"}}},\\"Category\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"name\\":{\\"type\\":\\"string\\"}}},\\"User\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"username\\":{\\"type\\":\\"string\\"},\\"firstName\\":{\\"type\\":\\"string\\"},\\"lastName\\":{\\"type\\":\\"string\\"},\\"email\\":{\\"type\\":\\"string\\"},\\"password\\":{\\"type\\":\\"string\\"},\\"phone\\":{\\"type\\":\\"string\\"},\\"userStatus\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"}}},\\"Tag\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"name\\":{\\"type\\":\\"string\\"}}},\\"Pet\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"name\\":{\\"type\\":\\"string\\"},\\"category\\":{\\"$ref\\":\\"#/components/schemas/Category\\"},\\"photoUrls\\":{\\"type\\":\\"array\\",\\"items\\":{\\"type\\":\\"string\\",\\"xml\\":{\\"name\\":\\"photoUrl\\"}}},\\"tags\\":{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Tag\\"}},\\"status\\":{\\"type\\":\\"string\\"}}},\\"ApiResponse\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"code\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"},\\"type\\":{\\"type\\":\\"string\\"},\\"message\\":{\\"type\\":\\"string\\"}}}}'))) { this.authMethods = configureAuthMethods(authMethodConfig); }
-    async updatePet(params: {}, body: Pet): Promise<Pet> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet', params), r.HttpMethod.PUT);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        requestContext.setBody(JSON.stringify(body));
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        if (r.isCodeInRange('404', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        if (r.isCodeInRange('405', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async addPet(params: {}, body: Pet): Promise<Pet> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet', params), r.HttpMethod.POST);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        requestContext.setBody(JSON.stringify(body));
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver);
-        if (r.isCodeInRange('405', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async findPetsByStatus(params: {
-        status?: 'available' | 'pending' | 'sold';
-    }): Promise<Pet[]> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/findByStatus', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        if (params.status !== undefined)
-            requestContext.setQueryParam('status', r.serializeParameter(params.status));
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async findPetsByTags(params: {
-        tags?: string[];
-    }): Promise<Pet[]> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/findByTags', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        if (params.tags !== undefined)
-            requestContext.setQueryParam('tags', r.serializeParameter(params.tags));
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"array\\",\\"items\\":{\\"$ref\\":\\"#/components/schemas/Pet\\"}}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async getPetById(params: {
-        petId: number;
-    }): Promise<Pet> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        await this.authMethods.api_key.applySecurityAuthentication(requestContext);
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/Pet\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        if (r.isCodeInRange('404', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async updatePetWithForm(params: {
-        petId: number;
-        name?: string;
-        status?: string;
-    }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}', params), r.HttpMethod.POST);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        if (params.name !== undefined)
-            requestContext.setQueryParam('name', r.serializeParameter(params.name));
-        if (params.status !== undefined)
-            requestContext.setQueryParam('status', r.serializeParameter(params.status));
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('2XX', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
-        if (r.isCodeInRange('405', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async deletePet(params: {
-        api_key?: string;
-        petId: number;
-    }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}', params), r.HttpMethod.DELETE);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        if (params.api_key !== undefined)
-            requestContext.setHeaderParam('api_key', r.serializeHeader(params.api_key));
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('2XX', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async uploadFile(params: {
-        petId: number;
-        additionalMetadata?: string;
-    }, body: any): Promise<ApiResponse> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/pet/{petId}/uploadImage', params), r.HttpMethod.POST);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        if (params.additionalMetadata !== undefined)
-            requestContext.setQueryParam('additionalMetadata', r.serializeParameter(params.additionalMetadata));
-        requestContext.setBody(JSON.stringify(body));
-        await this.authMethods.petstore_auth.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/ApiResponse\\"}'), this.resolver);
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async getInventory(params: {}): Promise<{
-        [key: string]: number;
-    }> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/inventory', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        await this.authMethods.api_key.applySecurityAuthentication(requestContext);
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\",\\"additionalProperties\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int32\\"}}'), this.resolver);
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async placeOrder(params: {}, body: Order): Promise<Order> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order', params), r.HttpMethod.POST);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        requestContext.setBody(JSON.stringify(body));
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/Order\\"}'), this.resolver);
-        if (r.isCodeInRange('405', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async getOrderById(params: {
-        orderId: number;
-    }): Promise<Order> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order/{orderId}', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/Order\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        if (r.isCodeInRange('404', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async deleteOrder(params: {
-        orderId: number;
-    }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/store/order/{orderId}', params), r.HttpMethod.DELETE);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('2XX', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        if (r.isCodeInRange('404', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async createUser(params: {}, body: User): Promise<User> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user', params), r.HttpMethod.POST);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        requestContext.setBody(JSON.stringify(body));
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('default', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async createUsersWithListInput(params: {}, body: User[]): Promise<User> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/createWithList', params), r.HttpMethod.POST);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        requestContext.setBody(JSON.stringify(body));
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
-        if (r.isCodeInRange('default', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async loginUser(params: {
-        username?: string;
-        password?: string;
-    }): Promise<string> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/login', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        if (params.username !== undefined)
-            requestContext.setQueryParam('username', r.serializeParameter(params.username));
-        if (params.password !== undefined)
-            requestContext.setQueryParam('password', r.serializeParameter(params.password));
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"string\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async logoutUser(params: {}): Promise<any> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/logout', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('default', res.httpStatusCode))
-            return r.handleResponse(res, {}, this.resolver);
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async getUserByName(params: {
-        username: string;
-    }): Promise<User> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/{username}', params), r.HttpMethod.GET);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('200', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"$ref\\":\\"#/components/schemas/User\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        if (r.isCodeInRange('404', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async updateUser(params: {
-        username: string;
-    }, body: User): Promise<any> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/{username}', params), r.HttpMethod.PUT);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        requestContext.setBody(JSON.stringify(body));
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('default', res.httpStatusCode))
-            return r.handleResponse(res, {}, this.resolver);
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-    async deleteUser(params: {
-        username: string;
-    }): Promise<any> {
-        const requestContext = this.server.makeRequestContext(r.applyTemplating('/user/{username}', params), r.HttpMethod.DELETE);
-        requestContext.setHeaderParam('Content-Type', 'application/json');
-        const res = await this.http.send(requestContext);
-        if (r.isCodeInRange('2XX', res.httpStatusCode))
-            return r.handleResponse(res, JSON.parse('{\\"type\\":\\"object\\"}'), this.resolver);
-        if (r.isCodeInRange('400', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        if (r.isCodeInRange('404', res.httpStatusCode))
-            throw new r.ApiException<any>(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-        throw new r.ApiException(res.httpStatusCode, await r.handleResponse(res, {}, this.resolver));
-    }
-}"
+"import * as r from '@typoas/runtime';
+export type Order = {
+    id?: number;
+    petId?: number;
+    quantity?: number;
+    shipDate?: Date;
+    status?: 'placed' | 'approved' | 'delivered';
+    complete?: boolean;
+};
+export type Customer = {
+    id?: number;
+    username?: string;
+    address?: Address[];
+};
+export type Address = {
+    street?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+};
+export type Category = {
+    id?: number;
+    name?: string;
+};
+export type User = {
+    id?: number;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    password?: string;
+    phone?: string;
+    userStatus?: number;
+};
+export type Tag = {
+    id?: number;
+    name?: string;
+};
+export type Pet = {
+    id?: number;
+    name: string;
+    category?: Category;
+    photoUrls: string[];
+    tags?: Tag[];
+    status?: 'available' | 'pending' | 'sold';
+};
+export type ApiResponse = {
+    code?: number;
+    type?: string;
+    message?: string;
+};
+export type AuthMethods = {
+    petstore_auth?: r.OAuth2SecurityAuthentication;
+    api_key?: r.ApiKeySecurityAuthentication;
+};
+export function configureAuth(params?: r.CreateContextParams<AuthMethods>[\\"authProviders\\"]): AuthMethods {
+    return { petstore_auth: params?.petstore_auth && new r.OAuth2SecurityAuthentication({}, params.petstore_auth), api_key: params?.api_key && new r.ApiKeySecurityAuthentication({ name: 'api_key', in: 'header' }, params.api_key) };
+}
+export function createContext(params?: r.CreateContextParams<AuthMethods>): r.Context<AuthMethods> { return new r.Context<AuthMethods>({
+    resolver: new r.RefResolver({
+        Order: {
+            date: [[[r.TransformType.ACCESS, \\"shipDate\\"], [r.TransformType.THIS]]]
+        }
+    }),
+    serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
+    authMethods: configureAuth(params?.authProviders),
+    ...params
+}); }
+export async function updatePet(ctx: r.Context<AuthMethods>, params: {}, body: Pet): Promise<Pet> {
+    const req = await ctx.createRequest({
+        path: '/pet',
+        params,
+        method: r.HttpMethod.PUT,
+        body,
+        auth: [\\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } },
+        '400': {},
+        '404': {},
+        '405': {}
+    });
+}
+export async function addPet(ctx: r.Context<AuthMethods>, params: {}, body: Pet): Promise<Pet> {
+    const req = await ctx.createRequest({
+        path: '/pet',
+        params,
+        method: r.HttpMethod.POST,
+        body,
+        auth: [\\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } },
+        '405': {}
+    });
+}
+export async function findPetsByStatus(ctx: r.Context<AuthMethods>, params: {
+    status?: 'available' | 'pending' | 'sold';
+}): Promise<Pet[]> {
+    const req = await ctx.createRequest({
+        path: '/pet/findByStatus',
+        params,
+        method: r.HttpMethod.GET,
+        queryParams: [
+            \\"status\\"
+        ],
+        auth: [\\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, \\"Pet\\"]]] } },
+        '400': {}
+    });
+}
+export async function findPetsByTags(ctx: r.Context<AuthMethods>, params: {
+    tags?: string[];
+}): Promise<Pet[]> {
+    const req = await ctx.createRequest({
+        path: '/pet/findByTags',
+        params,
+        method: r.HttpMethod.GET,
+        queryParams: [
+            \\"tags\\"
+        ],
+        auth: [\\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, \\"Pet\\"]]] } },
+        '400': {}
+    });
+}
+export async function getPetById(ctx: r.Context<AuthMethods>, params: {
+    petId: number;
+}): Promise<Pet> {
+    const req = await ctx.createRequest({
+        path: '/pet/{petId}',
+        params,
+        method: r.HttpMethod.GET,
+        auth: [\\"api_key\\", \\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } },
+        '400': {},
+        '404': {}
+    });
+}
+export async function updatePetWithForm(ctx: r.Context<AuthMethods>, params: {
+    petId: number;
+    name?: string;
+    status?: string;
+}): Promise<unknown> {
+    const req = await ctx.createRequest({
+        path: '/pet/{petId}',
+        params,
+        method: r.HttpMethod.POST,
+        queryParams: [
+            \\"name\\",
+            \\"status\\"
+        ],
+        auth: [\\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '405': {}
+    });
+}
+export async function deletePet(ctx: r.Context<AuthMethods>, params: {
+    api_key?: string;
+    petId: number;
+}): Promise<unknown> {
+    const req = await ctx.createRequest({
+        path: '/pet/{petId}',
+        params,
+        method: r.HttpMethod.DELETE,
+        auth: [\\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '400': {}
+    });
+}
+export async function uploadFile(ctx: r.Context<AuthMethods>, params: {
+    petId: number;
+    additionalMetadata?: string;
+}, body: any): Promise<ApiResponse> {
+    const req = await ctx.createRequest({
+        path: '/pet/{petId}/uploadImage',
+        params,
+        method: r.HttpMethod.POST,
+        body,
+        queryParams: [
+            \\"additionalMetadata\\"
+        ],
+        auth: [\\"petstore_auth\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"ApiResponse\\"]]] } }
+    });
+}
+export async function getInventory(ctx: r.Context<AuthMethods>, params: {}): Promise<{
+    [key: string]: number;
+}> {
+    const req = await ctx.createRequest({
+        path: '/store/inventory',
+        params,
+        method: r.HttpMethod.GET,
+        auth: [\\"api_key\\"]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {});
+}
+export async function placeOrder(ctx: r.Context<AuthMethods>, params: {}, body: Order): Promise<Order> {
+    const req = await ctx.createRequest({
+        path: '/store/order',
+        params,
+        method: r.HttpMethod.POST,
+        body
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Order\\"]]] } },
+        '405': {}
+    });
+}
+export async function getOrderById(ctx: r.Context<AuthMethods>, params: {
+    orderId: number;
+}): Promise<Order> {
+    const req = await ctx.createRequest({
+        path: '/store/order/{orderId}',
+        params,
+        method: r.HttpMethod.GET
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Order\\"]]] } },
+        '400': {},
+        '404': {}
+    });
+}
+export async function deleteOrder(ctx: r.Context<AuthMethods>, params: {
+    orderId: number;
+}): Promise<unknown> {
+    const req = await ctx.createRequest({
+        path: '/store/order/{orderId}',
+        params,
+        method: r.HttpMethod.DELETE
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '400': {},
+        '404': {}
+    });
+}
+export async function createUser(ctx: r.Context<AuthMethods>, params: {}, body: User): Promise<User> {
+    const req = await ctx.createRequest({
+        path: '/user',
+        params,
+        method: r.HttpMethod.POST,
+        body
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        'default': { transforms: { date: [[[r.TransformType.REF, \\"User\\"]]] } }
+    });
+}
+export async function createUsersWithListInput(ctx: r.Context<AuthMethods>, params: {}, body: User[]): Promise<User> {
+    const req = await ctx.createRequest({
+        path: '/user/createWithList',
+        params,
+        method: r.HttpMethod.POST,
+        body
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"User\\"]]] } },
+        'default': {}
+    });
+}
+export async function loginUser(ctx: r.Context<AuthMethods>, params: {
+    username?: string;
+    password?: string;
+}): Promise<string> {
+    const req = await ctx.createRequest({
+        path: '/user/login',
+        params,
+        method: r.HttpMethod.GET,
+        queryParams: [
+            \\"username\\",
+            \\"password\\"
+        ]
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '400': {}
+    });
+}
+export async function logoutUser(ctx: r.Context<AuthMethods>, params: {}): Promise<any> {
+    const req = await ctx.createRequest({
+        path: '/user/logout',
+        params,
+        method: r.HttpMethod.GET
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        'default': {}
+    });
+}
+export async function getUserByName(ctx: r.Context<AuthMethods>, params: {
+    username: string;
+}): Promise<User> {
+    const req = await ctx.createRequest({
+        path: '/user/{username}',
+        params,
+        method: r.HttpMethod.GET
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"User\\"]]] } },
+        '400': {},
+        '404': {}
+    });
+}
+export async function updateUser(ctx: r.Context<AuthMethods>, params: {
+    username: string;
+}, body: User): Promise<any> {
+    const req = await ctx.createRequest({
+        path: '/user/{username}',
+        params,
+        method: r.HttpMethod.PUT,
+        body
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        'default': {}
+    });
+}
+export async function deleteUser(ctx: r.Context<AuthMethods>, params: {
+    username: string;
+}): Promise<unknown> {
+    const req = await ctx.createRequest({
+        path: '/user/{username}',
+        params,
+        method: r.HttpMethod.DELETE
+    });
+    const res = await ctx.sendRequest(req);
+    return ctx.handleResponse(res, {
+        '400': {},
+        '404': {}
+    });
+}
+"
 `;
 
 exports[`create full specs should generate enums if possible 1`] = `
@@ -288,8 +379,16 @@ export type Pet = {
     photoUrls: string[];
     status?: PetStatus;
 };
-export class EnumSchemasClient {
-    constructor(private server: r.BaseServerConfiguration, private http: r.HttpLibrary = new r.IsomorphicFetchHttpLibrary, private resolver: r.SchemaRefResolver = new r.RefResolver(JSON.parse('{\\"Order\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"petId\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"shipDate\\":{\\"type\\":\\"string\\",\\"format\\":\\"date-time\\"},\\"status\\":{\\"type\\":\\"string\\"},\\"complete\\":{\\"type\\":\\"boolean\\"}}},\\"PetStatus\\":{\\"type\\":\\"string\\"},\\"Pet\\":{\\"type\\":\\"object\\",\\"properties\\":{\\"id\\":{\\"type\\":\\"integer\\",\\"format\\":\\"int64\\"},\\"name\\":{\\"type\\":\\"string\\"},\\"photoUrls\\":{\\"type\\":\\"array\\",\\"items\\":{\\"type\\":\\"string\\",\\"xml\\":{\\"name\\":\\"photoUrl\\"}}},\\"status\\":{\\"$ref\\":\\"#/components/schemas/PetStatus\\"}}}}'))) { }
-}
+export type AuthMethods = {};
+export function createContext(params?: r.CreateContextParams<AuthMethods>): r.Context<AuthMethods> { return new r.Context<AuthMethods>({
+    resolver: new r.RefResolver({
+        Order: {
+            date: [[[r.TransformType.ACCESS, \\"shipDate\\"], [r.TransformType.THIS]]]
+        }
+    }),
+    serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
+    authMethods: {},
+    ...params
+}); }
 "
 `;

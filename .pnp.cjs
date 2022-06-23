@@ -1750,7 +1750,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.4.0"],\
             ["jest", "virtual:9446e516ab1e967b6db5f66c3572caa1ade06cea155a1eb5261c1f7199776ddb67c883ce6adbb32eba835ebb07e501522df667db95070451b453657a2652fec4#npm:27.5.1"],\
             ["jest-environment-node", "npm:27.5.1"],\
-            ["openapi3-ts", "npm:2.0.1"],\
             ["query-string", "npm:7.1.1"],\
             ["ts-jest", "virtual:9446e516ab1e967b6db5f66c3572caa1ade06cea155a1eb5261c1f7199776ddb67c883ce6adbb32eba835ebb07e501522df667db95070451b453657a2652fec4#npm:27.1.3"],\
             ["typescript", "patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=142761"]\
