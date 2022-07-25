@@ -70,6 +70,10 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
       }
     }
     if (options.body !== undefined) {
+      requestContext.setHeaderParam(
+        CONTENT_TYPE_HEADER,
+        'application/json;charset=UTF-8',
+      );
       requestContext.setBody(JSON.stringify(options.body));
     }
     if (options.auth?.length) {
