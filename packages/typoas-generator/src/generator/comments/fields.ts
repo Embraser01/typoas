@@ -15,13 +15,20 @@ const srcFile = factory.createSourceFile(
   NodeFlags.Const,
 );
 
+/**
+ * Trim string to a maximum length.
+ */
+function cleanText(text: string): string {
+  return text.trim();
+}
+
 export function addJSDocToNode(node: Node, text: string): void {
-  if (!text.trim()) {
+  const cleanedText = cleanText(text);
+  if (!cleanedText) {
     return;
   }
 
-  const jsDoc = factory.createJSDocComment(text, []);
-
+  const jsDoc = factory.createJSDocComment(cleanedText, []);
   const output = jsDocPrinter
     .printNode(EmitHint.Unspecified, jsDoc, srcFile)
     .trim()
