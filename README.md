@@ -10,6 +10,7 @@ Main features are:
 - Support for `allOf`, `oneOf` and `anyOf` schemas.
 - References `$ref` handling (with cyclic refs)
 - Uses `fetch` api (can be customized)
+- **Tree Shaking** out of the box
 - Automatically convert `format: 'date-time'` to JS `Date`
 - Handle **API Key**, **HTTP Config** and **OAuth2**<sup>1</sup> auth security schemes
 - JSDoc for schemas and operations
@@ -38,8 +39,8 @@ It handles common things like serialization/authentification
 You can generate the TS client from the spec from the command line:
 
 ```bash
-yarn dlx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
-npx @typoas/cli generate -i my-spec.json -n MyClient -o src/client.ts
+yarn dlx @typoas/cli generate -i my-spec.json -o src/client.ts
+npx @typoas/cli generate -i my-spec.json -o src/client.ts
 ```
 
 Here is a short list of supported command line options:
@@ -47,12 +48,13 @@ Here is a short list of supported command line options:
 ```
     -i, --input [path/url]         Path or URL to the OpenAPI JSON specification (yaml/json format)
     -o, --output [path]            Path where to write the generated TS file
-    -n, --name                     Class name of the generated client
     -e,--generate-enums            Generate enums instead of literal string types where possible
     --js-doc, --no-js-doc          Whether to add JS Doc to the generated code (default: true)
     --only-types                   Use it to only generate types in #components/schemas/
     --version                      Output the version number
     -h, --help                     Display help for command
+
+    -n, --name                     Deprecated, name isn't used anymore
 ```
 
 or you can use it in code:
@@ -90,7 +92,9 @@ import { createPrinter, NewLineKind, SourceFile } from 'typescript';
 import { generateClient, getStringFromSourceFile } from '@typoas/generator';
 
 const specs = JSON.parse(readFileSync('path/to/github-openapi.json', 'utf8'));
-const src = generateClient(specs, 'GithubClient');
+const src = generateClient(specs, {
+  /* options */
+});
 const data = getStringFromSourceFile(src);
 
 writeFileSync('./src/client.ts', data, 'utf8');
@@ -103,20 +107,48 @@ Once the file is generated you'll be able to use it like this:
 ```typescript
 import fetch from 'node-fetch';
 import { ServerConfiguration } from '@typoas/runtime';
-import { GithubClient } from './client';
+import { createContext, pullsList } from './client';
 
 // Inject fetch polyfill into NodeJS env.
 if (!globalThis.fetch) {
   // @ts-ignore
   globalThis.fetch = fetch;
 }
+const ctx = createGithubContext();
 
-const client = new GithubClient(
-  new ServerConfiguration('https://api.github.com', {}),
-);
+pullsList(ctx, {
+  repo: 'typoas',
+  owner: 'embraser01',
+})
+  .then((list) => console.log('List of PRs', list))
+  .catch((err) => console.error('Error while getting PRs', err));
+```
 
-client
-  .pullsList({
+### Migrating from v1 to v2
+
+In v1, the whole API was generated in a single class. In V2 this was replaced by individual function
+which allow [Tree Shaking](https://webpack.js.org/guides/tree-shaking/). To get a similar result,
+you can use `wrapApi` helper:
+
+```typescript
+import fetch from 'node-fetch';
+import { ServerConfiguration, wrapApi } from '@typoas/runtime';
+import { createContext, pullsList, issuesList } from './client';
+
+// Inject fetch polyfill into NodeJS env.
+if (!globalThis.fetch) {
+  // @ts-ignore
+  globalThis.fetch = fetch;
+}
+const ctx = createGithubContext();
+const ghClient = wrapApi(ctx, {
+  pullsList,
+  issuesList,
+  // ...
+});
+
+ghClient
+  .pullsList(ctx, {
     repo: 'typoas',
     owner: 'embraser01',
   })
