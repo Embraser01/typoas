@@ -58,3 +58,7 @@ export function applyTemplating(
     val,
   );
 }
+
+export function isHttpStatusValid(status: number): boolean {
+  return status >= 200 && status < 400;
+}

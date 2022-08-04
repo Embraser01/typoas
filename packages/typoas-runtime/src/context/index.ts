@@ -18,6 +18,7 @@ import {
 import {
   applyTemplating,
   isCodeInRange,
+  isHttpStatusValid,
   serializeHeader,
   serializeParameter,
 } from '../utils';
@@ -108,8 +109,11 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
       !res.body ||
       EMPTY_BODY_CODES.includes(res.httpStatusCode)
     ) {
-      // In case there isn't body, force return value to null
-      return null as unknown as T;
+      if (isHttpStatusValid(res.httpStatusCode)) {
+        // In case there isn't body, force return value to null
+        return null as unknown as T;
+      }
+      throw new ApiException(res.httpStatusCode, null);
     }
 
     const body = await res.body.json();
@@ -144,7 +148,7 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
     }
 
     // Do not throw on valid http status code.
-    if (res.httpStatusCode >= 200 && res.httpStatusCode < 400) {
+    if (isHttpStatusValid(res.httpStatusCode)) {
       return body as T;
     }
     throw new ApiException(res.httpStatusCode, body);
