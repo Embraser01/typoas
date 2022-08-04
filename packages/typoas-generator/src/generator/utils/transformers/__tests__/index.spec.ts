@@ -56,6 +56,17 @@ describe('getSchemaTransforms', () => {
     });
   });
 
+  it('should not generate anything if oneOf does not have transforms', () => {
+    expect(
+      getSchemaTransforms({
+        oneOf: [
+          { type: 'string', format: 'password' },
+          { type: 'string', format: 'byte' },
+        ],
+      }),
+    ).toEqual({});
+  });
+
   it('should handle anyOf ', () => {
     expect(
       getSchemaTransforms({

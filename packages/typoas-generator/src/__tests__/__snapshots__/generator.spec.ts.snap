@@ -79,10 +79,7 @@ export async function updatePet(ctx: r.Context<AuthMethods>, params: {}, body: P
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } },
-        '400': {},
-        '404': {},
-        '405': {}
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } }
     });
 }
 export async function addPet(ctx: r.Context<AuthMethods>, params: {}, body: Pet): Promise<Pet> {
@@ -95,8 +92,7 @@ export async function addPet(ctx: r.Context<AuthMethods>, params: {}, body: Pet)
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } },
-        '405': {}
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } }
     });
 }
 export async function findPetsByStatus(ctx: r.Context<AuthMethods>, params: {
@@ -113,8 +109,7 @@ export async function findPetsByStatus(ctx: r.Context<AuthMethods>, params: {
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, \\"Pet\\"]]] } },
-        '400': {}
+        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, \\"Pet\\"]]] } }
     });
 }
 export async function findPetsByTags(ctx: r.Context<AuthMethods>, params: {
@@ -131,8 +126,7 @@ export async function findPetsByTags(ctx: r.Context<AuthMethods>, params: {
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, \\"Pet\\"]]] } },
-        '400': {}
+        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, \\"Pet\\"]]] } }
     });
 }
 export async function getPetById(ctx: r.Context<AuthMethods>, params: {
@@ -146,9 +140,7 @@ export async function getPetById(ctx: r.Context<AuthMethods>, params: {
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } },
-        '400': {},
-        '404': {}
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Pet\\"]]] } }
     });
 }
 export async function updatePetWithForm(ctx: r.Context<AuthMethods>, params: {
@@ -167,9 +159,7 @@ export async function updatePetWithForm(ctx: r.Context<AuthMethods>, params: {
         auth: [\\"petstore_auth\\"]
     });
     const res = await ctx.sendRequest(req);
-    return ctx.handleResponse(res, {
-        '405': {}
-    });
+    return ctx.handleResponse(res, {});
 }
 export async function deletePet(ctx: r.Context<AuthMethods>, params: {
     api_key?: string;
@@ -182,9 +172,7 @@ export async function deletePet(ctx: r.Context<AuthMethods>, params: {
         auth: [\\"petstore_auth\\"]
     });
     const res = await ctx.sendRequest(req);
-    return ctx.handleResponse(res, {
-        '400': {}
-    });
+    return ctx.handleResponse(res, {});
 }
 export async function uploadFile(ctx: r.Context<AuthMethods>, params: {
     petId: number;
@@ -226,8 +214,7 @@ export async function placeOrder(ctx: r.Context<AuthMethods>, params: {}, body: 
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, \\"Order\\"]]] } },
-        '405': {}
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Order\\"]]] } }
     });
 }
 export async function getOrderById(ctx: r.Context<AuthMethods>, params: {
@@ -240,9 +227,7 @@ export async function getOrderById(ctx: r.Context<AuthMethods>, params: {
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, \\"Order\\"]]] } },
-        '400': {},
-        '404': {}
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"Order\\"]]] } }
     });
 }
 export async function deleteOrder(ctx: r.Context<AuthMethods>, params: {
@@ -254,10 +239,7 @@ export async function deleteOrder(ctx: r.Context<AuthMethods>, params: {
         method: r.HttpMethod.DELETE
     });
     const res = await ctx.sendRequest(req);
-    return ctx.handleResponse(res, {
-        '400': {},
-        '404': {}
-    });
+    return ctx.handleResponse(res, {});
 }
 export async function createUser(ctx: r.Context<AuthMethods>, params: {}, body: User): Promise<User> {
     const req = await ctx.createRequest({
@@ -280,8 +262,7 @@ export async function createUsersWithListInput(ctx: r.Context<AuthMethods>, para
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, \\"User\\"]]] } },
-        'default': {}
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"User\\"]]] } }
     });
 }
 export async function loginUser(ctx: r.Context<AuthMethods>, params: {
@@ -298,9 +279,7 @@ export async function loginUser(ctx: r.Context<AuthMethods>, params: {
         ]
     });
     const res = await ctx.sendRequest(req);
-    return ctx.handleResponse(res, {
-        '400': {}
-    });
+    return ctx.handleResponse(res, {});
 }
 export async function logoutUser(ctx: r.Context<AuthMethods>, params: {}): Promise<any> {
     const req = await ctx.createRequest({
@@ -309,9 +288,7 @@ export async function logoutUser(ctx: r.Context<AuthMethods>, params: {}): Promi
         method: r.HttpMethod.GET
     });
     const res = await ctx.sendRequest(req);
-    return ctx.handleResponse(res, {
-        'default': {}
-    });
+    return ctx.handleResponse(res, {});
 }
 export async function getUserByName(ctx: r.Context<AuthMethods>, params: {
     username: string;
@@ -323,9 +300,7 @@ export async function getUserByName(ctx: r.Context<AuthMethods>, params: {
     });
     const res = await ctx.sendRequest(req);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, \\"User\\"]]] } },
-        '400': {},
-        '404': {}
+        '200': { transforms: { date: [[[r.TransformType.REF, \\"User\\"]]] } }
     });
 }
 export async function updateUser(ctx: r.Context<AuthMethods>, params: {
@@ -338,9 +313,7 @@ export async function updateUser(ctx: r.Context<AuthMethods>, params: {
         body
     });
     const res = await ctx.sendRequest(req);
-    return ctx.handleResponse(res, {
-        'default': {}
-    });
+    return ctx.handleResponse(res, {});
 }
 export async function deleteUser(ctx: r.Context<AuthMethods>, params: {
     username: string;
@@ -351,10 +324,7 @@ export async function deleteUser(ctx: r.Context<AuthMethods>, params: {
         method: r.HttpMethod.DELETE
     });
     const res = await ctx.sendRequest(req);
-    return ctx.handleResponse(res, {
-        '400': {},
-        '404': {}
-    });
+    return ctx.handleResponse(res, {});
 }
 "
 `;

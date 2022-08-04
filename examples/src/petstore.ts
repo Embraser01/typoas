@@ -173,9 +173,6 @@ export async function updatePet(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
-    '400': {},
-    '404': {},
-    '405': {},
   });
 }
 /**
@@ -198,7 +195,6 @@ export async function addPet(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
-    '405': {},
   });
 }
 /**
@@ -226,7 +222,6 @@ export async function findPetsByStatus(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'Pet']]],
       },
     },
-    '400': {},
   });
 }
 /**
@@ -254,7 +249,6 @@ export async function findPetsByTags(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'Pet']]],
       },
     },
-    '400': {},
   });
 }
 /**
@@ -277,8 +271,6 @@ export async function getPetById(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
-    '400': {},
-    '404': {},
   });
 }
 /**
@@ -301,9 +293,7 @@ export async function updatePetWithForm(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '405': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Deletes a pet
@@ -323,9 +313,7 @@ export async function deletePet(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '400': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * uploads an image
@@ -391,7 +379,6 @@ export async function placeOrder(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
-    '405': {},
   });
 }
 /**
@@ -413,8 +400,6 @@ export async function getOrderById(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
-    '400': {},
-    '404': {},
   });
 }
 /**
@@ -434,10 +419,7 @@ export async function deleteOrder(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '400': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create user
@@ -479,7 +461,6 @@ export async function createUsersWithListInput(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
-    default: {},
   });
 }
 /**
@@ -500,9 +481,7 @@ export async function loginUser(
     queryParams: ['username', 'password'],
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '400': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Logs out current logged in user session
@@ -518,9 +497,7 @@ export async function logoutUser(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    default: {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get user by user name
@@ -540,8 +517,6 @@ export async function getUserByName(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
-    '400': {},
-    '404': {},
   });
 }
 /**
@@ -563,9 +538,7 @@ export async function updateUser(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    default: {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete user
@@ -584,8 +557,5 @@ export async function deleteUser(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '400': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }

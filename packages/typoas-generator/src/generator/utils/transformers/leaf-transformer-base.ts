@@ -83,7 +83,10 @@ function findTransformsInternal(
     if (subTransforms.length) {
       currentField.push([TransformType.SELECT, subTransforms]);
     }
-    return [currentField];
+    if (currentField.length) {
+      return [currentField];
+    }
+    return [];
   }
 
   return [];

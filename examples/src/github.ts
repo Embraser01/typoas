@@ -12161,7 +12161,6 @@ export async function appsDeleteInstallation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -12234,7 +12233,6 @@ export async function appsSuspendInstallation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -12259,7 +12257,6 @@ export async function appsUnsuspendInstallation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -12295,7 +12292,6 @@ export async function oauthAuthorizationsListGrants(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12324,7 +12320,6 @@ export async function oauthAuthorizationsGetGrant(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'application-grant']]] },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -12351,8 +12346,6 @@ export async function oauthAuthorizationsDeleteGrant(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -12384,7 +12377,6 @@ export async function appsDeleteAuthorization(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -12414,9 +12406,7 @@ export async function appsRevokeGrantForApplication(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check a token
@@ -12509,7 +12499,6 @@ export async function appsDeleteToken(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -12660,9 +12649,7 @@ export async function appsRevokeAuthorizationForApplication(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an app
@@ -12720,7 +12707,6 @@ export async function oauthAuthorizationsListAuthorizations(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12788,7 +12774,6 @@ export async function oauthAuthorizationsCreateAuthorization(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12856,7 +12841,6 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp(
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -12944,7 +12928,6 @@ export async function oauthAuthorizationsGetAuthorization(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -13032,8 +13015,6 @@ export async function oauthAuthorizationsDeleteAuthorization(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -13061,7 +13042,6 @@ export async function codesOfConductGetAllCodesOfConduct(
         ],
       },
     },
-    '304': {},
   });
 }
 /**
@@ -13085,7 +13065,6 @@ export async function codesOfConductGetConductCode(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'code-of-conduct']]] },
     },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -13110,9 +13089,7 @@ export async function emojisGet(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '304': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get GitHub Actions permissions for an enterprise
@@ -13167,9 +13144,7 @@ export async function enterpriseAdminSetGithubActionsPermissionsEnterprise(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List selected organizations enabled for GitHub Actions in an enterprise
@@ -13238,9 +13213,7 @@ export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubAction
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Enable a selected organization for GitHub Actions in an enterprise
@@ -13263,9 +13236,7 @@ export async function enterpriseAdminEnableSelectedOrganizationGithubActionsEnte
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Disable a selected organization for GitHub Actions in an enterprise
@@ -13288,9 +13259,7 @@ export async function enterpriseAdminDisableSelectedOrganizationGithubActionsEnt
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get allowed actions for an enterprise
@@ -13340,9 +13309,7 @@ export async function enterpriseAdminSetAllowedActionsEnterprise(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List self-hosted runner groups for an enterprise
@@ -13522,9 +13489,7 @@ export async function enterpriseAdminDeleteSelfHostedRunnerGroupFromEnterprise(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization access to a self-hosted runner group in an enterprise
@@ -13595,9 +13560,7 @@ export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterp
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add organization access to a self-hosted runner group in an enterprise
@@ -13621,9 +13584,7 @@ export async function enterpriseAdminAddOrgAccessToSelfHostedRunnerGroupInEnterp
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove organization access to a self-hosted runner group in an enterprise
@@ -13647,9 +13608,7 @@ export async function enterpriseAdminRemoveOrgAccessToSelfHostedRunnerGroupInEnt
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List self-hosted runners in a group for an enterprise
@@ -13720,9 +13679,7 @@ export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add a self-hosted runner to a group for an enterprise
@@ -13747,9 +13704,7 @@ export async function enterpriseAdminAddSelfHostedRunnerToGroupForEnterprise(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a self-hosted runner from a group for an enterprise
@@ -13773,9 +13728,7 @@ export async function enterpriseAdminRemoveSelfHostedRunnerFromGroupForEnterpris
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List self-hosted runners for an enterprise
@@ -13962,9 +13915,7 @@ export async function enterpriseAdminDeleteSelfHostedRunnerFromEnterprise(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the audit log for an enterprise
@@ -14120,7 +14071,6 @@ export async function activityListPublicEvents(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'event']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -14181,7 +14131,6 @@ export async function gistsList(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'base-gist']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -14231,7 +14180,6 @@ export async function gistsCreate(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'gist-simple']]] } },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -14268,7 +14216,6 @@ export async function gistsListPublic(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'base-gist']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -14302,7 +14249,6 @@ export async function gistsListStarred(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'base-gist']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14326,7 +14272,6 @@ export async function gistsGet(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gist-simple']]] } },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -14376,8 +14321,6 @@ export async function gistsDelete(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14408,7 +14351,6 @@ export async function gistsListComments(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'gist-comment']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14440,7 +14382,6 @@ export async function gistsCreateComment(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'gist-comment']]] } },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14465,7 +14406,6 @@ export async function gistsGetComment(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gist-comment']]] } },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -14519,8 +14459,6 @@ export async function gistsDeleteComment(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14551,7 +14489,6 @@ export async function gistsListCommits(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'gist-commit']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14582,7 +14519,6 @@ export async function gistsListForks(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'gist-simple']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14607,7 +14543,6 @@ export async function gistsFork(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'base-gist']]] } },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -14633,8 +14568,6 @@ export async function gistsCheckIsStarred(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -14657,8 +14590,6 @@ export async function gistsStar(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14681,8 +14612,6 @@ export async function gistsUnstar(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14730,9 +14659,7 @@ export async function gitignoreGetAllTemplates(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '304': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a gitignore template
@@ -14757,7 +14684,6 @@ export async function gitignoreGetTemplate(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'gitignore-template']]] },
     },
-    '304': {},
   });
 }
 /**
@@ -14804,7 +14730,6 @@ export async function appsListReposAccessibleToInstallation(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14829,9 +14754,7 @@ export async function appsRevokeInstallationAccessToken(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List issues assigned to the authenticated user
@@ -14896,7 +14819,6 @@ export async function issuesList(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'issue']]],
       },
     },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -14931,7 +14853,6 @@ export async function licensesGetAllCommonlyUsed(
         ],
       },
     },
-    '304': {},
   });
 }
 /**
@@ -14953,7 +14874,6 @@ export async function licensesGet(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'license']]] } },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14990,10 +14910,7 @@ export async function markdownRender(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '200': {},
-    '304': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Render a Markdown document in raw mode
@@ -15013,10 +14930,7 @@ export async function markdownRenderRaw(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '200': {},
-    '304': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a subscription plan for an account
@@ -15151,7 +15065,6 @@ export async function appsGetSubscriptionPlanForAccountStubbed(
       transforms: { date: [[[r.TransformType.REF, 'marketplace-purchase']]] },
     },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '404': {},
   });
 }
 /**
@@ -15249,7 +15162,6 @@ export async function metaGet(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'api-overview']]] } },
-    '304': {},
   });
 }
 /**
@@ -15280,7 +15192,6 @@ export async function activityListPublicEventsForRepoNetwork(
       },
     },
     '301': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -15322,7 +15233,6 @@ export async function activityListNotificationsForAuthenticatedUser(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'thread']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -15364,8 +15274,6 @@ export async function activityMarkNotificationsAsRead(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '205': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -15389,7 +15297,6 @@ export async function activityGetThread(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'thread']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -15412,8 +15319,6 @@ export async function activityMarkThreadAsRead(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '205': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -15441,7 +15346,6 @@ export async function activityGetThreadSubscriptionForAuthenticatedUser(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'thread-subscription']]] },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -15479,7 +15383,6 @@ export async function activitySetThreadSubscription(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'thread-subscription']]] },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -15503,8 +15406,6 @@ export async function activityDeleteThreadSubscription(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -15528,9 +15429,7 @@ export async function metaGetOctocat(
     queryParams: ['s'],
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '200': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organizations
@@ -15565,7 +15464,6 @@ export async function orgsList(
         ],
       },
     },
-    '304': {},
   });
 }
 /**
@@ -15803,9 +15701,7 @@ export async function actionsSetGithubActionsPermissionsOrganization(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List selected repositories enabled for GitHub Actions in an organization
@@ -15874,9 +15770,7 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Enable a selected repository for GitHub Actions in an organization
@@ -15899,9 +15793,7 @@ export async function actionsEnableSelectedRepositoryGithubActionsOrganization(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Disable a selected repository for GitHub Actions in an organization
@@ -15924,9 +15816,7 @@ export async function actionsDisableSelectedRepositoryGithubActionsOrganization(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get allowed actions for an organization
@@ -15980,9 +15870,7 @@ export async function actionsSetAllowedActionsOrganization(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List self-hosted runner groups for an organization
@@ -16166,9 +16054,7 @@ export async function actionsDeleteSelfHostedRunnerGroupFromOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository access to a self-hosted runner group in an organization
@@ -16243,9 +16129,7 @@ export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add repository access to a self-hosted runner group in an organization
@@ -16273,9 +16157,7 @@ export async function actionsAddRepoAccessToSelfHostedRunnerGroupInOrg(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove repository access to a self-hosted runner group in an organization
@@ -16302,9 +16184,7 @@ export async function actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List self-hosted runners in a group for an organization
@@ -16379,9 +16259,7 @@ export async function actionsSetSelfHostedRunnersInGroupForOrg(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add a self-hosted runner to a group for an organization
@@ -16409,9 +16287,7 @@ export async function actionsAddSelfHostedRunnerToGroupForOrg(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a self-hosted runner from a group for an organization
@@ -16438,9 +16314,7 @@ export async function actionsRemoveSelfHostedRunnerFromGroupForOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List self-hosted runners for an organization
@@ -16627,9 +16501,7 @@ export async function actionsDeleteSelfHostedRunnerFromOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization secrets
@@ -16837,7 +16709,6 @@ export async function actionsCreateOrUpdateOrgSecret(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'empty-object']]] } },
-    '204': {},
   });
 }
 /**
@@ -16859,9 +16730,7 @@ export async function actionsDeleteOrgSecret(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List selected repositories for an organization secret
@@ -16928,9 +16797,7 @@ export async function actionsSetSelectedReposForOrgSecret(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add selected repository to an organization secret
@@ -16952,10 +16819,7 @@ export async function actionsAddSelectedRepoToOrgSecret(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '409': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove selected repository from an organization secret
@@ -16977,10 +16841,7 @@ export async function actionsRemoveSelectedRepoFromOrgSecret(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '409': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the audit log for an organization
@@ -17073,7 +16934,6 @@ export async function orgsCheckBlockedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -17096,7 +16956,6 @@ export async function orgsBlockUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -17120,9 +16979,7 @@ export async function orgsUnblockUser(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List SAML SSO authorizations for an organization
@@ -17179,7 +17036,6 @@ export async function orgsRemoveSamlSsoAuthorization(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -17437,7 +17293,6 @@ export async function orgsDeleteWebhook(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -17613,7 +17468,6 @@ export async function orgsPingWebhook(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -17761,9 +17615,7 @@ export async function interactionsRemoveRestrictionsForOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List pending organization invitations
@@ -17877,7 +17729,6 @@ export async function orgsCancelInvitation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -18000,7 +17851,6 @@ export async function orgsListMembers(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'simple-user']]],
       },
     },
-    '302': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -18025,11 +17875,7 @@ export async function orgsCheckMembershipForUser(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '302': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove an organization member
@@ -18051,7 +17897,6 @@ export async function orgsRemoveMember(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -18151,7 +17996,6 @@ export async function orgsRemoveMembershipForUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -18281,7 +18125,6 @@ export async function migrationsDownloadArchiveForOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '302': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -18305,7 +18148,6 @@ export async function migrationsDeleteArchiveForOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -18330,7 +18172,6 @@ export async function migrationsUnlockRepoForOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -18417,8 +18258,6 @@ export async function orgsConvertMemberToOutsideCollaborator(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '403': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -18441,9 +18280,7 @@ export async function orgsRemoveOutsideCollaborator(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a package for an organization
@@ -18509,7 +18346,6 @@ export async function packagesDeletePackageForOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18552,7 +18388,6 @@ export async function packagesRestorePackageForOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18672,7 +18507,6 @@ export async function packagesDeletePackageVersionForOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18714,7 +18548,6 @@ export async function packagesRestorePackageVersionForOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18844,10 +18677,7 @@ export async function orgsCheckPublicMembershipForUser(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set public organization membership for the authenticated user
@@ -18871,7 +18701,6 @@ export async function orgsSetPublicMembershipForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -18893,9 +18722,7 @@ export async function orgsRemovePublicMembershipForAuthenticatedUser(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization repositories
@@ -19372,9 +19199,7 @@ export async function teamsDeleteInOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List discussions
@@ -19545,9 +19370,7 @@ export async function teamsDeleteDiscussionInOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List discussion comments
@@ -19719,9 +19542,7 @@ export async function teamsDeleteDiscussionCommentInOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List reactions for a team discussion comment
@@ -19833,9 +19654,7 @@ export async function reactionsDeleteForTeamDiscussionComment(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List reactions for a team discussion
@@ -19944,9 +19763,7 @@ export async function reactionsDeleteForTeamDiscussion(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List pending team invitations
@@ -20051,7 +19868,6 @@ export async function teamsGetMembershipForUserInOrg(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-membership']]] },
     },
-    '404': {},
   });
 }
 /**
@@ -20098,8 +19914,6 @@ export async function teamsAddOrUpdateMembershipForUserInOrg(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-membership']]] },
     },
-    '403': {},
-    '422': {},
   });
 }
 /**
@@ -20128,10 +19942,7 @@ export async function teamsRemoveMembershipForUserInOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '403': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List team projects
@@ -20189,7 +20000,6 @@ export async function teamsCheckPermissionsForProjectInOrg(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'team-project']]] } },
-    '404': {},
   });
 }
 /**
@@ -20225,9 +20035,7 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a project from a team
@@ -20251,9 +20059,7 @@ export async function teamsRemoveProjectInOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List team repositories
@@ -20320,8 +20126,6 @@ export async function teamsCheckPermissionsForRepoInOrg(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-repository']]] },
     },
-    '204': {},
-    '404': {},
   });
 }
 /**
@@ -20363,9 +20167,7 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a repository from a team
@@ -20390,9 +20192,7 @@ export async function teamsRemoveRepoInOrg(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List IdP groups for a team
@@ -20519,7 +20319,6 @@ export async function projectsGetCard(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project-card']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20556,7 +20355,6 @@ export async function projectsUpdateCard(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project-card']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20585,8 +20383,6 @@ export async function projectsDeleteCard(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -20622,7 +20418,6 @@ export async function projectsMoveCard(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -20650,7 +20445,6 @@ export async function projectsGetColumn(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'project-column']]] },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20685,7 +20479,6 @@ export async function projectsUpdateColumn(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'project-column']]] },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -20708,8 +20501,6 @@ export async function projectsDeleteColumn(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -20741,7 +20532,6 @@ export async function projectsListCards(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'project-card']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -20786,7 +20576,6 @@ export async function projectsCreateCard(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'project-card']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -20832,7 +20621,6 @@ export async function projectsMoveColumn(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -20862,7 +20650,6 @@ export async function projectsGet(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -20913,9 +20700,7 @@ export async function projectsUpdate(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '404': {},
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: {
@@ -20943,8 +20728,6 @@ export async function projectsDelete(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20978,7 +20761,6 @@ export async function projectsListCollaborators(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'simple-user']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -21016,8 +20798,6 @@ export async function projectsAddCollaborator(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -21046,8 +20826,6 @@ export async function projectsRemoveCollaborator(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -21081,7 +20859,6 @@ export async function projectsGetPermissionForUser(
         date: [[[r.TransformType.REF, 'repository-collaborator-permission']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -21118,7 +20895,6 @@ export async function projectsListColumns(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -21152,7 +20928,6 @@ export async function projectsCreateColumn(
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'project-column']]] },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -21184,7 +20959,6 @@ export async function rateLimitGet(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'rate-limit-overview']]] },
     },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -21210,8 +20984,6 @@ export async function reactionsDeleteLegacy(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -21398,7 +21170,6 @@ export async function reposDelete(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '307': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -21486,9 +21257,7 @@ export async function actionsDeleteArtifact(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Download an artifact
@@ -21514,9 +21283,7 @@ export async function actionsDownloadArtifact(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '302': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a job for a workflow run
@@ -21565,9 +21332,7 @@ export async function actionsDownloadJobLogsForWorkflowRun(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '302': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get GitHub Actions permissions for a repository
@@ -21627,9 +21392,7 @@ export async function actionsSetGithubActionsPermissionsRepository(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get allowed actions for a repository
@@ -21685,9 +21448,7 @@ export async function actionsSetAllowedActionsRepository(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List self-hosted runners for a repository
@@ -21877,9 +21638,7 @@ export async function actionsDeleteSelfHostedRunnerFromRepo(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List workflow runs for a repository
@@ -21994,9 +21753,7 @@ export async function actionsDeleteWorkflowRun(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the review history for a workflow run
@@ -22185,9 +21942,7 @@ export async function actionsDownloadWorkflowRunLogs(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '302': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete workflow run logs
@@ -22209,9 +21964,7 @@ export async function actionsDeleteWorkflowRunLogs(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get pending deployments for a workflow run
@@ -22542,9 +22295,7 @@ export async function actionsCreateOrUpdateRepoSecret(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a repository secret
@@ -22566,9 +22317,7 @@ export async function actionsDeleteRepoSecret(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository workflows
@@ -22655,9 +22404,7 @@ export async function actionsDisableWorkflow(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a workflow dispatch event
@@ -22696,9 +22443,7 @@ export async function actionsCreateWorkflowDispatch(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Enable a workflow
@@ -22722,9 +22467,7 @@ export async function actionsEnableWorkflow(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List workflow runs
@@ -22878,7 +22621,6 @@ export async function issuesCheckUserCanBeAssigned(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -23000,7 +22742,6 @@ export async function reposDeleteAutolink(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -23023,9 +22764,7 @@ export async function reposEnableAutomatedSecurityFixes(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Disable automated security fixes
@@ -23046,9 +22785,7 @@ export async function reposDisableAutomatedSecurityFixes(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List branches
@@ -23278,7 +23015,6 @@ export async function reposDeleteBranchProtection(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -23363,7 +23099,6 @@ export async function reposDeleteAdminBranchProtection(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -23479,7 +23214,6 @@ export async function reposDeletePullRequestReviewProtection(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -23570,7 +23304,6 @@ export async function reposDeleteCommitSignatureProtection(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -23664,9 +23397,7 @@ export async function reposRemoveStatusCheckProtection(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get all status check contexts
@@ -23856,9 +23587,7 @@ export async function reposDeleteAccessRestrictions(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get apps with access to the protected branch
@@ -25125,10 +24854,8 @@ export async function codeScanningUploadSarif(
         date: [[[r.TransformType.REF, 'code-scanning-sarifs-receipt']]],
       },
     },
-    '400': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '413': {},
   });
 }
 /**
@@ -25158,7 +24885,6 @@ export async function codeScanningGetSarif(
       },
     },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '404': {},
   });
 }
 /**
@@ -25217,10 +24943,7 @@ export async function reposCheckCollaborator(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add a repository collaborator
@@ -25273,7 +24996,6 @@ export async function reposAddCollaborator(
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'repository-invitation']]] },
     },
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -25299,9 +25021,7 @@ export async function reposRemoveCollaborator(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get repository permissions for a user
@@ -25445,7 +25165,6 @@ export async function reposDeleteCommitComment(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -25556,9 +25275,7 @@ export async function reactionsDeleteForCommitComment(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List commits
@@ -26199,7 +25916,6 @@ export async function appsCreateContentAttachment(
         date: [[[r.TransformType.REF, 'content-reference-attachment']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -26281,7 +25997,6 @@ export async function reposGetContent(
         ],
       },
     },
-    '302': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -26476,7 +26191,6 @@ export async function reposListContributors(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'contributor']]],
       },
     },
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -26630,7 +26344,6 @@ export async function reposCreateDeployment(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'deployment']]] } },
-    '409': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -26688,7 +26401,6 @@ export async function reposDeleteDeployment(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: {
@@ -26874,7 +26586,6 @@ export async function reposCreateDispatchEvent(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -27015,9 +26726,7 @@ export async function reposDeleteAnEnvironment(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository events
@@ -27517,7 +27226,6 @@ export async function gitDeleteRef(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -27975,7 +27683,6 @@ export async function reposDeleteWebhook(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -28157,7 +27864,6 @@ export async function reposPingWebhook(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -28184,7 +27890,6 @@ export async function reposTestPushWebhook(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -28357,9 +28062,7 @@ export async function migrationsCancelImport(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get commit authors
@@ -28584,7 +28287,6 @@ export async function interactionsSetRestrictionsForRepo(
         date: [[[r.TransformType.REF, 'interaction-limit-response']]],
       },
     },
-    '409': {},
   });
 }
 /**
@@ -28606,10 +28308,7 @@ export async function interactionsRemoveRestrictionsForRepo(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '409': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository invitations
@@ -28697,9 +28396,7 @@ export async function reposDeleteInvitation(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository issues
@@ -28940,9 +28637,7 @@ export async function issuesDeleteComment(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List reactions for an issue comment
@@ -29051,9 +28746,7 @@ export async function reactionsDeleteForIssueComment(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List issue events for a repository
@@ -29146,7 +28839,6 @@ export async function issuesGet(
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'issue']]] } },
     '301': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -29539,7 +29231,6 @@ export async function issuesRemoveAllLabels(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -29608,7 +29299,6 @@ export async function issuesLock(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29638,7 +29328,6 @@ export async function issuesUnlock(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -29751,9 +29440,7 @@ export async function reactionsDeleteForIssue(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List timeline events for an issue
@@ -29908,9 +29595,7 @@ export async function reposDeleteDeployKey(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List labels for a repository
@@ -30064,9 +29749,7 @@ export async function issuesDeleteLabel(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository languages
@@ -30153,10 +29836,7 @@ export async function reposMerge(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'commit']]] } },
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '404': {},
-    '409': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -30328,7 +30008,6 @@ export async function issuesDeleteMilestone(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -30435,9 +30114,7 @@ export async function activityMarkRepoNotificationsAsRead(
     body,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '205': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a GitHub Pages site
@@ -30528,7 +30205,6 @@ export async function reposUpdateInformationAboutPagesSite(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -30554,7 +30230,6 @@ export async function reposDeletePagesSite(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -30690,9 +30365,7 @@ export async function reposGetPagesHealthCheck(
       transforms: { date: [[[r.TransformType.REF, 'pages-health-check']]] },
     },
     '202': { transforms: { date: [[[r.TransformType.REF, 'empty-object']]] } },
-    '400': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '422': {},
   });
 }
 /**
@@ -30824,7 +30497,6 @@ export async function pullsList(
         ],
       },
     },
-    '304': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -31017,7 +30689,6 @@ export async function pullsDeleteReviewComment(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -31128,9 +30799,7 @@ export async function reactionsDeleteForPullRequestComment(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a pull request
@@ -31168,7 +30837,6 @@ export async function pullsGet(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'pull-request']]] } },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '500': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -31467,10 +31135,7 @@ export async function pullsCheckIfMerged(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Merge a pull request
@@ -31581,7 +31246,6 @@ export async function pullsRequestReviewers(
       transforms: { date: [[[r.TransformType.REF, 'pull-request-simple']]] },
     },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '422': {},
   });
 }
 /**
@@ -32181,7 +31845,6 @@ export async function reposGetReleaseAsset(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'release-asset']]] } },
-    '302': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -32243,9 +31906,7 @@ export async function reposDeleteReleaseAsset(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the latest release
@@ -32398,9 +32059,7 @@ export async function reposDeleteRelease(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List release assets
@@ -32552,7 +32211,6 @@ export async function secretScanningListAlertsForRepo(
         ],
       },
     },
-    '404': {},
   });
 }
 /**
@@ -32581,7 +32239,6 @@ export async function secretScanningGetAlert(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'secret-scanning-alert']]] },
     },
-    '404': {},
   });
 }
 /**
@@ -32615,8 +32272,6 @@ export async function secretScanningUpdateAlert(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'secret-scanning-alert']]] },
     },
-    '404': {},
-    '422': {},
   });
 }
 /**
@@ -32694,7 +32349,6 @@ export async function reposGetCodeFrequencyStats(
         ],
       },
     },
-    '204': {},
   });
 }
 /**
@@ -32724,7 +32378,6 @@ export async function reposGetCommitActivityStats(
         ],
       },
     },
-    '204': {},
   });
 }
 /**
@@ -32763,7 +32416,6 @@ export async function reposGetContributorsStats(
         ],
       },
     },
-    '204': {},
   });
 }
 /**
@@ -32830,7 +32482,6 @@ export async function reposGetPunchCardStats(
         ],
       },
     },
-    '204': {},
   });
 }
 /**
@@ -32936,7 +32587,6 @@ export async function activityGetRepoSubscription(
       },
     },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '404': {},
   });
 }
 /**
@@ -32996,9 +32646,7 @@ export async function activityDeleteRepoSubscription(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository tags
@@ -33052,9 +32700,7 @@ export async function reposDownloadTarballArchive(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '302': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository teams
@@ -33313,10 +32959,7 @@ export async function reposCheckVulnerabilityAlerts(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Enable vulnerability alerts
@@ -33337,9 +32980,7 @@ export async function reposEnableVulnerabilityAlerts(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Disable vulnerability alerts
@@ -33360,9 +33001,7 @@ export async function reposDisableVulnerabilityAlerts(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Download a repository archive (zip)
@@ -33387,9 +33026,7 @@ export async function reposDownloadZipballArchive(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '302': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a repository using a template
@@ -33475,7 +33112,6 @@ export async function reposListPublic(
         ],
       },
     },
-    '304': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -33678,7 +33314,6 @@ export async function actionsCreateOrUpdateEnvironmentSecret(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'empty-object']]] } },
-    '204': {},
   });
 }
 /**
@@ -33701,9 +33336,7 @@ export async function actionsDeleteEnvironmentSecret(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List provisioned SCIM groups for an enterprise
@@ -33911,9 +33544,7 @@ export async function enterpriseAdminDeleteScimGroupFromEnterprise(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List SCIM provisioned identities for an enterprise
@@ -34206,9 +33837,7 @@ export async function enterpriseAdminDeleteUserFromEnterprise(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List SCIM provisioned identities
@@ -34248,8 +33877,6 @@ export async function scimListProvisionedIdentities(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {},
-    '304': {},
     '400': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -34322,8 +33949,6 @@ export async function scimProvisionAndInviteUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '201': {},
-    '304': {},
     '400': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -34350,8 +33975,6 @@ export async function scimGetProvisioningInformationForUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
   });
@@ -34428,8 +34051,6 @@ export async function scimSetInformationForProvisionedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
   });
@@ -34502,8 +34123,6 @@ export async function scimUpdateAttributeForUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '200': {},
-    '304': {},
     '400': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -34529,8 +34148,6 @@ export async function scimDeleteUserFromOrg(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
   });
@@ -34594,7 +34211,6 @@ export async function searchCode(
         ],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -34650,7 +34266,6 @@ export async function searchCommits(
         ],
       },
     },
-    '304': {},
   });
 }
 /**
@@ -34717,7 +34332,6 @@ export async function searchIssuesAndPullRequests(
         ],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -34775,7 +34389,6 @@ export async function searchLabels(
         ],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -34837,7 +34450,6 @@ export async function searchRepos(
         ],
       },
     },
-    '304': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -34891,7 +34503,6 @@ export async function searchTopics(
         ],
       },
     },
-    '304': {},
   });
 }
 /**
@@ -34944,7 +34555,6 @@ export async function searchUsers(
         ],
       },
     },
-    '304': {},
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
     },
@@ -35063,7 +34673,6 @@ export async function teamsDeleteLegacy(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -35238,9 +34847,7 @@ export async function teamsDeleteDiscussionLegacy(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List discussion comments (Legacy)
@@ -35412,9 +35019,7 @@ export async function teamsDeleteDiscussionCommentLegacy(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List reactions for a team discussion comment (Legacy)
@@ -35679,10 +35284,7 @@ export async function teamsGetMemberLegacy(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add team member (Legacy)
@@ -35715,10 +35317,7 @@ export async function teamsAddMemberLegacy(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '404': {},
-    '422': {},
   });
 }
 /**
@@ -35749,10 +35348,7 @@ export async function teamsRemoveMemberLegacy(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get team membership for a user (Legacy)
@@ -35834,9 +35430,7 @@ export async function teamsAddOrUpdateMembershipForUserLegacy(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-membership']]] },
     },
-    '403': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
-    '422': {},
   });
 }
 /**
@@ -35865,10 +35459,7 @@ export async function teamsRemoveMembershipForUserLegacy(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '403': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List team projects (Legacy)
@@ -35927,7 +35518,6 @@ export async function teamsCheckPermissionsForProjectLegacy(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'team-project']]] } },
-    '404': {},
   });
 }
 /**
@@ -35964,7 +35554,6 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -35994,7 +35583,6 @@ export async function teamsRemoveProjectLegacy(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -36063,8 +35651,6 @@ export async function teamsCheckPermissionsForRepoLegacy(
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-repository']]] },
     },
-    '204': {},
-    '404': {},
   });
 }
 /**
@@ -36105,7 +35691,6 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -36135,9 +35720,7 @@ export async function teamsRemoveRepoLegacy(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List IdP groups for a team (Legacy)
@@ -36304,7 +35887,6 @@ export async function usersGetAuthenticated(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -36368,7 +35950,6 @@ export async function usersUpdateAuthenticated(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'private-user']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36399,7 +35980,6 @@ export async function usersListBlockedByAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'simple-user']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36423,8 +36003,6 @@ export async function usersCheckBlocked(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36448,8 +36026,6 @@ export async function usersBlock(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36476,8 +36052,6 @@ export async function usersUnblock(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36512,7 +36086,6 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'email']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36547,7 +36120,6 @@ export async function usersListEmailsForAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'email']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36586,7 +36158,6 @@ export async function usersAddEmailForAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'email']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36622,8 +36193,6 @@ export async function usersDeleteEmailForAuthenticated(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36658,7 +36227,6 @@ export async function usersListFollowersForAuthenticatedUser(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'simple-user']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -36689,7 +36257,6 @@ export async function usersListFollowedByAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'simple-user']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -36712,8 +36279,6 @@ export async function usersCheckPersonIsFollowedByAuthenticated(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36740,8 +36305,6 @@ export async function usersFollow(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36766,8 +36329,6 @@ export async function usersUnfollow(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36799,7 +36360,6 @@ export async function usersListGpgKeysForAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'gpg-key']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36830,7 +36390,6 @@ export async function usersCreateGpgKeyForAuthenticated(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'gpg-key']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36859,7 +36418,6 @@ export async function usersGetGpgKeyForAuthenticated(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gpg-key']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36884,8 +36442,6 @@ export async function usersDeleteGpgKeyForAuthenticated(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36938,7 +36494,6 @@ export async function appsListInstallationsForAuthenticatedUser(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -36989,7 +36544,6 @@ export async function appsListInstallationReposForAuthenticatedUser(
         ],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -37016,8 +36570,6 @@ export async function appsAddRepoToInstallation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -37044,8 +36596,6 @@ export async function appsRemoveRepoFromInstallation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -37079,7 +36629,6 @@ export async function interactionsGetRestrictionsForAuthenticatedUser(
         ],
       },
     },
-    '204': {},
   });
 }
 /**
@@ -37127,9 +36676,7 @@ export async function interactionsRemoveRestrictionsForAuthenticatedUser(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List user account issues assigned to the authenticated user
@@ -37183,7 +36730,6 @@ export async function issuesListForAuthenticatedUser(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'issue']]],
       },
     },
-    '304': {},
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -37213,7 +36759,6 @@ export async function usersListPublicSshKeysForAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'key']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37249,7 +36794,6 @@ export async function usersCreatePublicSshKeyForAuthenticated(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'key']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37278,7 +36822,6 @@ export async function usersGetPublicSshKeyForAuthenticated(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'key']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37303,8 +36846,6 @@ export async function usersDeletePublicSshKeyForAuthenticated(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37341,7 +36882,6 @@ export async function appsListSubscriptionsForAuthenticatedUser(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -37377,7 +36917,6 @@ export async function appsListSubscriptionsForAuthenticatedUserStubbed(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
 }
@@ -37409,7 +36948,6 @@ export async function orgsListMembershipsForAuthenticatedUser(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -37503,7 +37041,6 @@ export async function migrationsListForAuthenticatedUser(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'migration']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -37548,7 +37085,6 @@ export async function migrationsStartForAuthenticatedUser(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'migration']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -37585,7 +37121,6 @@ export async function migrationsGetStatusForAuthenticatedUser(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'migration']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37630,8 +37165,6 @@ export async function migrationsGetArchiveForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '302': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -37655,8 +37188,6 @@ export async function migrationsDeleteArchiveForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37682,8 +37213,6 @@ export async function migrationsUnlockRepoForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37756,7 +37285,6 @@ export async function orgsListForAuthenticatedUser(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -37822,7 +37350,6 @@ export async function packagesDeletePackageForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37862,7 +37389,6 @@ export async function packagesRestorePackageForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37978,7 +37504,6 @@ export async function packagesDeletePackageVersionForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38017,7 +37542,6 @@ export async function packagesRestorePackageVersionForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38053,7 +37577,6 @@ export async function projectsCreateForAuthenticatedUser(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -38089,7 +37612,6 @@ export async function usersListPublicEmailsForAuthenticated(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'email']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38140,7 +37662,6 @@ export async function reposListForAuthenticatedUser(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'repository']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -38266,7 +37787,6 @@ export async function reposCreateForAuthenticatedUser(
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'repository']]] } },
-    '304': {},
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38307,7 +37827,6 @@ export async function reposListInvitationsForAuthenticatedUser(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38331,8 +37850,6 @@ export async function reposAcceptInvitation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '409': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38356,8 +37873,6 @@ export async function reposDeclineInvitation(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '409': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38393,7 +37908,6 @@ export async function activityListReposStarredByAuthenticatedUser(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'repository']]],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -38417,8 +37931,6 @@ export async function activityCheckRepoIsStarredByAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38444,8 +37956,6 @@ export async function activityStarRepoForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38470,8 +37980,6 @@ export async function activityUnstarRepoForAuthenticatedUser(
   });
   const res = await ctx.sendRequest(req);
   return ctx.handleResponse(res, {
-    '204': {},
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38505,7 +38013,6 @@ export async function activityListWatchedReposForAuthenticatedUser(
         ],
       },
     },
-    '304': {},
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -38536,7 +38043,6 @@ export async function teamsListForAuthenticatedUser(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'team-full']]],
       },
     },
-    '304': {},
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -38569,7 +38075,6 @@ export async function usersList(
         date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'simple-user']]],
       },
     },
-    '304': {},
   });
 }
 /**
@@ -38778,10 +38283,7 @@ export async function usersCheckFollowingForUser(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '204': {},
-    '404': {},
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List gists for a user
@@ -39380,7 +38882,5 @@ export async function metaGetZen(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req);
-  return ctx.handleResponse(res, {
-    '200': {},
-  });
+  return ctx.handleResponse(res, {});
 }

@@ -175,10 +175,7 @@ export function createOperationResponseHandlers(
       }
       const schema = res.content?.['application/json']?.schema;
       if (!schema) {
-        return factory.createPropertyAssignment(
-          factory.createStringLiteral(code, true),
-          factory.createObjectLiteralExpression([]),
-        );
+        return null;
       }
       const transforms = createSchemaTransforms(schema, ctx);
       if (!transforms) {
