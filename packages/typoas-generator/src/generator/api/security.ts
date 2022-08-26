@@ -28,7 +28,9 @@ export function createAuthMethodsType(
       Object.entries(securitySchemes).map(([name, sec]) =>
         factory.createPropertySignature(
           undefined,
-          name,
+          hasUnsupportedIdentifierChar(name)
+            ? factory.createStringLiteral(name, true)
+            : factory.createIdentifier(name),
           factory.createToken(SyntaxKind.QuestionToken),
           createConfigTypeFromSecurityScheme(sec, ctx),
         ),
