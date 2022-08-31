@@ -83,7 +83,7 @@ export function createOperationBody(
                             ),
                           ]
                         : []),
-                      ...(operation.security?.length
+                      ...(securities.size
                         ? [
                             factory.createPropertyAssignment(
                               factory.createIdentifier('auth'),
