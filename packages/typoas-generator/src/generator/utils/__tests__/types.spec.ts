@@ -53,7 +53,17 @@ describe('create type from schema', () => {
     expect(getStringFromNode(node)).toMatchSnapshot();
   });
 
+  it('should handle type as an array', () => {
+    const schema: SchemaObject = { type: ['string', 'number'] };
+
+    const node = createTypeFromSchema(schema, new Context());
+
+    expect(getStringFromNode(node)).toMatchSnapshot();
+  });
+
   it('should handle const string', () => {
+    // @ts-expect-error const is not supported by openapi3, but we still
+    // have support for it
     const schema: SchemaObject = { type: 'string', const: 'a' };
 
     const node = createTypeFromSchema(schema, new Context());

@@ -1,4 +1,8 @@
-import type { ParameterObject, ReferenceObject } from 'openapi3-ts';
+import {
+  ParameterObject,
+  ReferenceObject,
+  isReferenceObject,
+} from 'openapi3-ts';
 import { factory, StringLiteral } from 'typescript';
 import { Context } from '../../../context';
 
@@ -11,7 +15,7 @@ export function getQueryParams(
   const usedParams = new Set<string>();
   for (const p of parametersOrRefs) {
     let parameter = p as ParameterObject;
-    if (p.$ref) {
+    if (isReferenceObject(p)) {
       const ref = ctx.resolveReference('parameters', p.$ref);
       if (!ref) {
         throw new Error(`$ref '${p.$ref}' wasn't found`);

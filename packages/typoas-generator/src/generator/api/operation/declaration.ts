@@ -1,4 +1,8 @@
-import { OperationObject, ResponseObject } from 'openapi3-ts';
+import {
+  isReferenceObject,
+  OperationObject,
+  ResponseObject,
+} from 'openapi3-ts';
 import {
   factory,
   ParameterDeclaration,
@@ -31,7 +35,6 @@ export function createOperationDeclaration(
     factory.createParameterDeclaration(
       undefined,
       undefined,
-      undefined,
       'ctx',
       undefined,
       createRuntimeRefType(ExportedRef.Context, [
@@ -41,7 +44,6 @@ export function createOperationDeclaration(
       ]),
     ),
     factory.createParameterDeclaration(
-      undefined,
       undefined,
       undefined,
       'params',
@@ -76,7 +78,6 @@ export function createOperationDeclaration(
       factory.createParameterDeclaration(
         undefined,
         undefined,
-        undefined,
         'body',
         undefined,
         createSchemaTypeFromRequestBody(operation.requestBody, ctx),
@@ -92,10 +93,10 @@ export function createOperationReturnType(
   ctx: Context,
 ): TypeReferenceNode {
   const responses = uniqWith(getSuccessResponses(operation), (a, b) => {
-    if (a.$ref && b.$ref && a.$ref === b.$ref) {
+    if (isReferenceObject(a) && isReferenceObject(b) && a.$ref === b.$ref) {
       return true;
     }
-    if (a.$ref || b.$ref) {
+    if (isReferenceObject(a) || isReferenceObject(b)) {
       return false;
     }
     return isEqual(

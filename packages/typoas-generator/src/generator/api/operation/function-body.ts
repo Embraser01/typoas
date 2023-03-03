@@ -2,7 +2,7 @@ import { Context } from '../../../context';
 import { getQueryParams } from './query-params';
 import { createRuntimeRefProperty, ExportedRef } from '../../utils/ref';
 import { GlobalParameters } from './types';
-import { OperationObject, ResponseObject } from 'openapi3-ts';
+import { isReferenceObject, OperationObject } from 'openapi3-ts';
 import {
   Block,
   factory,
@@ -164,12 +164,11 @@ export function createOperationResponseHandlers(
 ): ObjectLiteralElementLike[] {
   const responses = Object.entries(operation.responses || {});
   return responses
-    .map(([code, response]) => {
-      let res = response as ResponseObject;
-      if (response.$ref) {
-        const ref = ctx.resolveReference('responses', response.$ref);
+    .map(([code, res]) => {
+      if (isReferenceObject(res)) {
+        const ref = ctx.resolveReference('responses', res.$ref);
         if (!ref) {
-          throw new Error(`$ref '${response.$ref}' not found`);
+          throw new Error(`$ref '${res.$ref}' not found`);
         }
         res = ref.spec;
       }
