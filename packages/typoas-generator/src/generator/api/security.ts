@@ -20,7 +20,6 @@ export function createAuthMethodsType(
   ctx: Context,
 ): TypeAliasDeclaration {
   return factory.createTypeAliasDeclaration(
-    undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
     AUTH_TYPE_NAME,
     undefined,
@@ -44,14 +43,12 @@ export function createConfigureAuthFunction(
   ctx: Context,
 ): FunctionDeclaration {
   return factory.createFunctionDeclaration(
-    undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
     undefined,
     'configureAuth',
     undefined,
     [
       factory.createParameterDeclaration(
-        undefined,
         undefined,
         undefined,
         factory.createIdentifier('params'),

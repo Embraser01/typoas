@@ -1,5 +1,5 @@
 import { Context, ContextOptions } from './context';
-import { OpenAPIObject, SchemasObject } from 'openapi3-ts';
+import { ComponentsObject, isSchemaObject, OpenAPIObject } from 'openapi3-ts';
 import {
   createPrinter,
   factory,
@@ -26,7 +26,7 @@ import { createOperationList } from './generator/api/operation-list';
 import { createContextFactory } from './generator/api/context-factory';
 
 export function createSchemaComponents(
-  schemas: SchemasObject,
+  schemas: Exclude<ComponentsObject['schemas'], undefined>,
   ctx: Context,
 ): Statement[] {
   return Object.entries(schemas).map(([key, schema]) => {
@@ -34,14 +34,12 @@ export function createSchemaComponents(
 
     if (ctx.generateEnums() && canConvertSchemaToEnum(schema)) {
       node = factory.createEnumDeclaration(
-        undefined,
         [factory.createModifier(SyntaxKind.ExportKeyword)],
         factory.createIdentifier(sanitizeTypeIdentifier(key)),
         createEnumMembersFromSchema(schema),
       );
     } else {
       node = factory.createTypeAliasDeclaration(
-        undefined,
         [factory.createModifier(SyntaxKind.ExportKeyword)],
         factory.createIdentifier(sanitizeTypeIdentifier(key)),
         undefined,
@@ -49,7 +47,7 @@ export function createSchemaComponents(
       );
     }
 
-    if (ctx.hasJSDoc()) {
+    if (ctx.hasJSDoc() && isSchemaObject(schema)) {
       addJSDocToNode(node, getJSDocFromSchema(schema));
     }
     return node;
@@ -86,7 +84,6 @@ export function generateClient(
   // Add to start of the file
   statements.unshift(
     factory.createImportDeclaration(
-      undefined,
       undefined,
       factory.createImportClause(
         false,

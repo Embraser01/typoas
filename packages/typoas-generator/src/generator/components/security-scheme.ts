@@ -6,7 +6,11 @@ import {
   TypeNode,
 } from 'typescript';
 import { Context } from '../../context';
-import { ReferenceObject, SecuritySchemeObject } from 'openapi3-ts';
+import {
+  isReferenceObject,
+  ReferenceObject,
+  SecuritySchemeObject,
+} from 'openapi3-ts';
 import {
   createRuntimeRefProperty,
   createRuntimeRefType,
@@ -18,7 +22,7 @@ export function createConfigTypeFromSecurityScheme(
   ctx: Context,
 ): TypeNode {
   let securityScheme = securitySchemeOrRef as SecuritySchemeObject;
-  if (securitySchemeOrRef.$ref) {
+  if (isReferenceObject(securitySchemeOrRef)) {
     const ref = ctx.resolveReference(
       'securitySchemes',
       securitySchemeOrRef.$ref,
@@ -47,7 +51,7 @@ export function createRuntimeSecurityClass(
   ctx: Context,
 ): NewExpression {
   let securityScheme = securitySchemeOrRef as SecuritySchemeObject;
-  if (securitySchemeOrRef.$ref) {
+  if (isReferenceObject(securitySchemeOrRef)) {
     const ref = ctx.resolveReference(
       'securitySchemes',
       securitySchemeOrRef.$ref,

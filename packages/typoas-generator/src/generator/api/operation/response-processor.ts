@@ -14,7 +14,3 @@ export function getSuccessResponses(
   }
   return successResponses.map((k) => operation.responses[k]);
 }
-
-export function isEmptyResponse(statusCode: string): boolean {
-  return statusCode === '204' || statusCode === '304';
-}

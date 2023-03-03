@@ -15,14 +15,14 @@
   },
   "dependencies": {
     "@typoas/generator": "workspace:^",
-    "clipanion": "^3.2.0-rc.11",
+    "clipanion": "^3.2.0",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.5",
-    "@types/node": "^14.17.11",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.4"
+    "@types/node": "^18.14.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   },
   "files": [
     "/lib/**/*.js",

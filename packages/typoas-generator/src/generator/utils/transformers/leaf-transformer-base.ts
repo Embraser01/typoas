@@ -1,4 +1,4 @@
-import { ReferenceObject, SchemaObject } from 'openapi3-ts';
+import { isReferenceObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
 
 // Here we duplicate the code from runtime.
 // It only concerns:
@@ -25,18 +25,17 @@ export type TransformLevel =
   | [TransformType.SELECT, TransformField[]];
 
 function findTransformsInternal(
-  schemaOrRef: SchemaObject | ReferenceObject,
+  schema: SchemaObject | ReferenceObject,
   currentField: TransformField,
   isTransformableLeaf: (schema: SchemaObject) => boolean,
 ): TransformField[] {
-  if (schemaOrRef.$ref) {
+  if (isReferenceObject(schema)) {
     currentField.push([
       TransformType.REF,
-      schemaOrRef.$ref.replace(/^#\/components\/schemas\//, ''),
+      schema.$ref.replace(/^#\/components\/schemas\//, ''),
     ]);
     return [currentField];
   }
-  const schema = schemaOrRef as SchemaObject;
 
   if (isTransformableLeaf(schema)) {
     currentField.push([TransformType.THIS]);

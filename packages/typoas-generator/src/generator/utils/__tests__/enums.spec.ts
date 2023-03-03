@@ -42,7 +42,6 @@ describe('createEnumMembersFromSchema', () => {
       enum: ['dog-and-cat', 'dog', 'catWithoutDog'],
     };
     const node = factory.createEnumDeclaration(
-      undefined,
       [factory.createModifier(SyntaxKind.ExportKeyword)],
       factory.createIdentifier('Test'),
       createEnumMembersFromSchema(schema),
@@ -56,7 +55,6 @@ describe('createEnumMembersFromSchema', () => {
       enum: ['my:complex:enum', 'and:this/one'],
     };
     const node = factory.createEnumDeclaration(
-      undefined,
       [factory.createModifier(SyntaxKind.ExportKeyword)],
       factory.createIdentifier('Test'),
       createEnumMembersFromSchema(schema),

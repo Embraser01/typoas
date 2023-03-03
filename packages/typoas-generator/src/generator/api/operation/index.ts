@@ -36,7 +36,6 @@ export function createOperation(
   //       - transforms to compute
 
   return factory.createFunctionDeclaration(
-    undefined,
     [
       factory.createModifier(SyntaxKind.ExportKeyword),
       factory.createModifier(SyntaxKind.AsyncKeyword),

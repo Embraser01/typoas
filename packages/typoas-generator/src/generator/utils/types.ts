@@ -1,4 +1,9 @@
-import { ReferenceObject, SchemaObject } from 'openapi3-ts';
+import {
+  isReferenceObject,
+  isSchemaObject,
+  ReferenceObject,
+  SchemaObject,
+} from 'openapi3-ts';
 import { factory, TypeNode, SyntaxKind } from 'typescript';
 import { Context } from '../../context';
 import { addJSDocToNode } from '../comments/fields';
@@ -7,8 +12,6 @@ import {
   hasUnsupportedIdentifierChar,
   sanitizeTypeIdentifier,
 } from './operation-name';
-
-const ENUM_SUPPORTED_TYPE = ['integer', 'number', 'string', 'null', 'boolean'];
 
 export function createTypeFromSchema(
   schemaOrRef: SchemaObject | ReferenceObject | undefined,
@@ -19,7 +22,7 @@ export function createTypeFromSchema(
   if (!schemaOrRef) {
     return node;
   }
-  if (schemaOrRef.$ref) {
+  if (isReferenceObject(schemaOrRef)) {
     const ref = ctx.resolveReference('schemas', schemaOrRef.$ref);
     if (!ref) {
       throw new Error(`$ref '${schemaOrRef.$ref}' wasn't found`);
@@ -29,16 +32,18 @@ export function createTypeFromSchema(
     );
   }
 
-  const schema: SchemaObject = schemaOrRef;
+  const schema = schemaOrRef as SchemaObject;
 
   let sEnum = null;
   if (schema.enum) {
     sEnum = schema.enum;
+    // @ts-expect-error OpenAPI doesn't support const, but we do as a bonus.
   } else if (schema.const) {
+    // @ts-expect-error OpenAPI doesn't support const, but we do as a bonus.
     sEnum = [schema.const];
   }
 
-  if (sEnum && schema.type && ENUM_SUPPORTED_TYPE.includes(schema.type)) {
+  if (sEnum) {
     node = factory.createUnionTypeNode(
       sEnum
         .map((e) => {
@@ -64,6 +69,10 @@ export function createTypeFromSchema(
   } else if (schema.allOf && schema.allOf.length) {
     node = factory.createIntersectionTypeNode(
       schema.allOf.map((s) => createTypeFromSchema(s, ctx)),
+    );
+  } else if (Array.isArray(schema.type)) {
+    node = factory.createUnionTypeNode(
+      schema.type.map((t) => createTypeFromSchema({ ...schema, type: t }, ctx)),
     );
   } else {
     switch (schema.type) {
@@ -105,7 +114,7 @@ export function createTypeFromSchema(
                 createTypeFromSchema(val, ctx),
               );
 
-              if (ctx.hasJSDoc() && !val.$ref) {
+              if (ctx.hasJSDoc() && isSchemaObject(val)) {
                 addJSDocToNode(field, getJSDocFromSchema(val));
               }
               return field;
@@ -116,10 +125,8 @@ export function createTypeFromSchema(
           const additionalPropsNode = factory.createTypeLiteralNode([
             factory.createIndexSignature(
               undefined,
-              undefined,
               [
                 factory.createParameterDeclaration(
-                  undefined,
                   undefined,
                   undefined,
                   factory.createIdentifier('key'),

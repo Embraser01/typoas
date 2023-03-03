@@ -5,7 +5,7 @@ import {
   ObjectLiteralElementLike,
   ObjectLiteralExpression,
 } from 'typescript';
-import { ReferenceObject, SchemaObject, SchemasObject } from 'openapi3-ts';
+import { ComponentsObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
 import { Context } from '../../../context';
 import { isTransformableLeafDate } from './date';
 import {
@@ -17,7 +17,7 @@ import { createRuntimeRefProperty, ExportedRef } from '../ref';
 import { hasUnsupportedIdentifierChar } from '../operation-name';
 
 export function createAllSchemaTransforms(
-  schemas: SchemasObject,
+  schemas: Exclude<ComponentsObject['schemas'], undefined>,
   ctx: Context,
 ): ObjectLiteralExpression {
   const transforms: Record<string, Record<string, TransformField[]>> = {};

@@ -14,14 +14,12 @@ export function createContextFactory(
   ctx: Context,
 ): FunctionDeclaration {
   return factory.createFunctionDeclaration(
-    undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
     undefined,
     'createContext',
     undefined,
     [
       factory.createParameterDeclaration(
-        undefined,
         undefined,
         undefined,
         'params',
