@@ -11,7 +11,8 @@
   "bin": "./src/bin.ts",
   "scripts": {
     "prepack": "tsc",
-    "start": "ts-node ./src/bin.ts"
+    "start": "ts-node ./src/bin.ts",
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "@typoas/generator": "workspace:^",
