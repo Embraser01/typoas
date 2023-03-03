@@ -10,7 +10,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "prepack": "tsc",
-    "test:jest": "jest"
+    "test:jest": "jest",
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "lodash": "^4.17.21",

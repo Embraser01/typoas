@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node src/index.ts",
+    "test:types": "tsc --noEmit",
     "generate": "ts-node scripts/generate.ts && prettier -w src/"
   },
   "dependencies": {
