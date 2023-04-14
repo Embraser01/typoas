@@ -103,6 +103,11 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
   ): Promise<T> {
     const mayBeJSONSchema =
       res.headers[CONTENT_TYPE_HEADER]?.includes('application/json');
+    const treatAsBinaryContent = !mayBeJSONSchema && res.headers[CONTENT_TYPE_HEADER]?.match(/^(application|image|audio|video)\//i);
+
+    if (treatAsBinaryContent && res.body && !EMPTY_BODY_CODES.includes(res.httpStatusCode)) {
+      return res.getBodyAsFile() as T;
+    }
 
     if (
       !mayBeJSONSchema ||
