@@ -6,6 +6,7 @@ import {
   isReferenceObject,
 } from 'openapi3-ts';
 import { createTypeFromSchema } from '../utils/types';
+import { getContentTypeSchema } from '../utils/content-type';
 
 export function createSchemaTypeFromResponse(
   response: ResponseObject | ReferenceObject,
@@ -17,12 +18,9 @@ export function createSchemaTypeFromResponse(
       throw new Error(`$ref '${response.$ref}' wasn't found`);
     }
     return createTypeFromSchema(
-      ref.spec.content?.['application/json']?.schema,
+      getContentTypeSchema(ref.spec.content, ctx),
       ctx,
     );
   }
-  return createTypeFromSchema(
-    response.content?.['application/json']?.schema,
-    ctx,
-  );
+  return createTypeFromSchema(getContentTypeSchema(response.content, ctx), ctx);
 }

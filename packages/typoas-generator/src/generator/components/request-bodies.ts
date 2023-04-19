@@ -6,6 +6,7 @@ import {
   RequestBodyObject,
 } from 'openapi3-ts';
 import { createTypeFromSchema } from '../utils/types';
+import { getContentTypeSchema } from '../utils/content-type';
 
 export function createSchemaTypeFromRequestBody(
   requestBody: RequestBodyObject | ReferenceObject,
@@ -17,13 +18,13 @@ export function createSchemaTypeFromRequestBody(
       throw new Error(`$ref '${requestBody.$ref}' wasn't found`);
     }
     return createTypeFromSchema(
-      ref.spec.content['application/json']?.schema,
+      getContentTypeSchema(ref.spec.content, ctx),
       ctx,
     );
   }
 
   return createTypeFromSchema(
-    requestBody.content['application/json']?.schema,
+    getContentTypeSchema(requestBody.content, ctx),
     ctx,
   );
 }

@@ -14,6 +14,7 @@ Main features are:
 - Automatically convert `format: 'date-time'` to JS `Date`
 - Handle **API Key**, **HTTP Config** and **OAuth2**<sup>1</sup> auth security schemes
 - JSDoc for schemas and operations
+- Non JSON content type support
 - And more...
 
 > <sup>1</sup>: OAuth2 scheme does not handle flows to retrieve an `accessToken`.

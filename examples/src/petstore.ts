@@ -325,7 +325,7 @@ export async function uploadFile(
     petId: number;
     additionalMetadata?: string;
   },
-  body: any,
+  body: Blob,
 ): Promise<ApiResponse> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}/uploadImage',

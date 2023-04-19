@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "test:lint": "prettier . -c",
-    "test:eslint": "eslint .",
+    "test:eslint": "eslint --max-warnings 0 .",
     "test:types": "yarn workspaces foreach -ptv run test:types",
     "test:jest": "yarn workspaces foreach -ptv run test:jest"
   },

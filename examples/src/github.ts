@@ -14921,7 +14921,7 @@ export async function markdownRender(
 export async function markdownRenderRaw(
   ctx: r.Context<AuthMethods>,
   params: {},
-  body: any,
+  body: string,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/markdown/raw',
@@ -38875,7 +38875,7 @@ export async function activityListReposWatchedByUser(
 export async function metaGetZen(
   ctx: r.Context<AuthMethods>,
   params: {},
-): Promise<any> {
+): Promise<string> {
   const req = await ctx.createRequest({
     path: '/zen',
     params,

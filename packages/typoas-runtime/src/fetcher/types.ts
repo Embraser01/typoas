@@ -21,7 +21,7 @@ export type HttpFile = Blob & { readonly name: string };
 /**
  * Represents the body of an outgoing HTTP request.
  */
-export type RequestBody = undefined | string | FormData;
+export type RequestBody = undefined | string | FormData | Blob;
 
 export type QueryStyles =
   | 'form'
