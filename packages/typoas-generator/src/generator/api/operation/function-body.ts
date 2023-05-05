@@ -11,6 +11,7 @@ import {
   Statement,
 } from 'typescript';
 import { createSchemaTransforms } from '../../utils/transformers';
+import { getContentTypeSchema } from '../../utils/content-type';
 
 export function createOperationBody(
   operation: OperationObject,
@@ -172,7 +173,7 @@ export function createOperationResponseHandlers(
         }
         res = ref.spec;
       }
-      const schema = res.content?.['application/json']?.schema;
+      const schema = getContentTypeSchema(res.content, ctx);
       if (!schema) {
         return null;
       }

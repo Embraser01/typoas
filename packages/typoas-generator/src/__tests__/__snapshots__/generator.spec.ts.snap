@@ -177,7 +177,7 @@ export async function deletePet(ctx: r.Context<AuthMethods>, params: {
 export async function uploadFile(ctx: r.Context<AuthMethods>, params: {
     petId: number;
     additionalMetadata?: string;
-}, body: any): Promise<ApiResponse> {
+}, body: Blob): Promise<ApiResponse> {
     const req = await ctx.createRequest({
         path: '/pet/{petId}/uploadImage',
         params,

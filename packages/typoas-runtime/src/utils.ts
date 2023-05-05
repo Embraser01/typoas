@@ -62,3 +62,11 @@ export function applyTemplating(
 export function isHttpStatusValid(status: number): boolean {
   return status >= 200 && status < 400;
 }
+
+export function isBlob(data: unknown): data is Blob {
+  return data?.constructor.name === 'Blob';
+}
+
+export function isFormData(data: unknown): data is FormData {
+  return data?.constructor.name === 'FormData';
+}

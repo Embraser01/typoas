@@ -1,8 +1,4 @@
-import {
-  isReferenceObject,
-  OperationObject,
-  ResponseObject,
-} from 'openapi3-ts';
+import { isReferenceObject, OperationObject } from 'openapi3-ts';
 import {
   factory,
   ParameterDeclaration,
@@ -24,6 +20,7 @@ import { GlobalParameters } from './types';
 import { createSchemaTypeFromResponse } from '../../components/responses';
 import { getSuccessResponses } from './response-processor';
 import { AUTH_TYPE_NAME } from '../security';
+import { getContentTypeSchema } from '../../utils/content-type';
 
 export function createOperationDeclaration(
   operation: OperationObject,
@@ -100,8 +97,8 @@ export function createOperationReturnType(
       return false;
     }
     return isEqual(
-      (a as ResponseObject).content?.['application/json'].schema,
-      (b as ResponseObject).content?.['application/json'].schema,
+      getContentTypeSchema(a.content, ctx),
+      getContentTypeSchema(b.content, ctx),
     );
   });
 

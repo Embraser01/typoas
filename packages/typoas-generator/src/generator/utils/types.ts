@@ -12,6 +12,7 @@ import {
   hasUnsupportedIdentifierChar,
   sanitizeTypeIdentifier,
 } from './operation-name';
+import { TYPOAS_BLOB_TYPE_KEY } from './content-type';
 
 export function createTypeFromSchema(
   schemaOrRef: SchemaObject | ReferenceObject | undefined,
@@ -33,6 +34,10 @@ export function createTypeFromSchema(
   }
 
   const schema = schemaOrRef as SchemaObject;
+
+  if (schema[TYPOAS_BLOB_TYPE_KEY]) {
+    return factory.createTypeReferenceNode(factory.createIdentifier('Blob'));
+  }
 
   let sEnum = null;
   if (schema.enum) {

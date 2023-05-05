@@ -17,7 +17,9 @@ import {
 } from '../fetcher';
 import {
   applyTemplating,
+  isBlob,
   isCodeInRange,
+  isFormData,
   isHttpStatusValid,
   serializeHeader,
   serializeParameter,
@@ -71,11 +73,22 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
       }
     }
     if (options.body !== undefined) {
-      requestContext.setHeaderParam(
-        CONTENT_TYPE_HEADER,
-        'application/json;charset=UTF-8',
-      );
-      requestContext.setBody(JSON.stringify(options.body));
+      if (isBlob(options.body)) {
+        requestContext.setHeaderParam(CONTENT_TYPE_HEADER, options.body.type);
+        requestContext.setBody(options.body);
+      } else if (isFormData(options.body)) {
+        requestContext.setHeaderParam(
+          CONTENT_TYPE_HEADER,
+          'multipart/form-data',
+        );
+        requestContext.setBody(options.body);
+      } else {
+        requestContext.setHeaderParam(
+          CONTENT_TYPE_HEADER,
+          'application/json;charset=UTF-8',
+        );
+        requestContext.setBody(JSON.stringify(options.body));
+      }
     }
     if (options.auth?.length) {
       for (const mode of options.auth) {
@@ -101,14 +114,7 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
     res: ResponseContext,
     handlers?: Record<string, ResponseHandler>,
   ): Promise<T> {
-    const mayBeJSONSchema =
-      res.headers[CONTENT_TYPE_HEADER]?.includes('application/json');
-
-    if (
-      !mayBeJSONSchema ||
-      !res.body ||
-      EMPTY_BODY_CODES.includes(res.httpStatusCode)
-    ) {
+    if (EMPTY_BODY_CODES.includes(res.httpStatusCode) || !res.body) {
       if (isHttpStatusValid(res.httpStatusCode)) {
         // In case there isn't body, force return value to null
         return null as unknown as T;
@@ -116,8 +122,7 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
       throw new ApiException(res.httpStatusCode, null);
     }
 
-    const body = await res.body.json();
-
+    const contentType = res.headers[CONTENT_TYPE_HEADER];
     let statusCode = Object.keys(handlers || {})
       .filter((code) => code !== 'default')
       .find((code) => isCodeInRange(code, res.httpStatusCode));
@@ -125,26 +130,36 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
     if (!statusCode && handlers?.default) {
       statusCode = 'default';
     }
-    if (statusCode) {
-      const handler = handlers?.[statusCode];
-      if (handler?.transforms) {
-        for (const [key, transformer] of Object.entries(this.transformers)) {
-          const transforms = handler.transforms[key];
-          if (transforms) {
-            for (const transform of transforms) {
-              applyTransform(
-                this.resolver,
-                { body },
-                'body',
-                key,
-                transformer,
-                transform,
-                0,
-              );
+
+    let body: unknown;
+    if (contentType?.includes('application/json')) {
+      body = await res.body.json();
+
+      if (statusCode) {
+        const handler = handlers?.[statusCode];
+        if (handler?.transforms) {
+          for (const [key, transformer] of Object.entries(this.transformers)) {
+            const transforms = handler.transforms[key];
+            if (transforms) {
+              for (const transform of transforms) {
+                applyTransform(
+                  this.resolver,
+                  { body },
+                  'body',
+                  key,
+                  transformer,
+                  transform,
+                  0,
+                );
+              }
             }
           }
         }
       }
+    } else if (contentType?.includes('text/')) {
+      body = await res.body.text();
+    } else {
+      body = await res.body.binary();
     }
 
     // Do not throw on valid http status code.
