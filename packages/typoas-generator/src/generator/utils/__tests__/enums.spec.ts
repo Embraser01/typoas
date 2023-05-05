@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
-import { SchemaObject } from 'openapi3-ts';
+import { SchemaObject } from 'openapi3-ts/oas31';
+import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
 import { factory, SyntaxKind } from 'typescript';
 import { canConvertSchemaToEnum, createEnumMembersFromSchema } from '../enums';
 import { getStringFromNode } from '../ts-node';
@@ -26,7 +27,7 @@ describe('canConvertSchemaToEnum', () => {
   });
 
   it('should not handle nullable enums', () => {
-    const schema: SchemaObject = {
+    const schema: SchemaObjectOAS30 = {
       type: 'string',
       enum: ['a', 'test'],
       nullable: true,

@@ -3,7 +3,8 @@ import {
   isSchemaObject,
   ReferenceObject,
   SchemaObject,
-} from 'openapi3-ts';
+} from 'openapi3-ts/oas31';
+import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
 import { factory, TypeNode, SyntaxKind } from 'typescript';
 import { Context } from '../../context';
 import { addJSDocToNode } from '../comments/fields';
@@ -15,7 +16,7 @@ import {
 import { TYPOAS_BLOB_TYPE_KEY } from './content-type';
 
 export function createTypeFromSchema(
-  schemaOrRef: SchemaObject | ReferenceObject | undefined,
+  schemaOrRef: SchemaObjectOAS30 | SchemaObject | ReferenceObject | undefined,
   ctx: Context,
 ): TypeNode {
   let node: TypeNode = factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
@@ -163,7 +164,7 @@ export function createTypeFromSchema(
     }
   }
 
-  if (schema.nullable) {
+  if ((schema as SchemaObjectOAS30).nullable) {
     node = factory.createUnionTypeNode([
       node,
       factory.createLiteralTypeNode(factory.createNull()),

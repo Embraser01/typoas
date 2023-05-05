@@ -12,7 +12,7 @@ import {
   ResponseObject,
   SchemaObject,
   SecuritySchemeObject,
-} from 'openapi3-ts';
+} from 'openapi3-ts/oas31';
 
 type ComponentContext<T> = {
   tsNode?: TypeNode;

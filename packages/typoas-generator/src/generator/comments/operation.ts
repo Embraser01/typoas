@@ -1,4 +1,4 @@
-import { OperationObject } from 'openapi3-ts';
+import { OperationObject } from 'openapi3-ts/oas31';
 
 export function getJSDocFromOperation(op: OperationObject): string {
   let str = '';

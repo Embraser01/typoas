@@ -5,7 +5,11 @@ import {
   ObjectLiteralElementLike,
   ObjectLiteralExpression,
 } from 'typescript';
-import { ComponentsObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
+import {
+  ComponentsObject,
+  ReferenceObject,
+  SchemaObject,
+} from 'openapi3-ts/oas31';
 import { Context } from '../../../context';
 import { isTransformableLeafDate } from './date';
 import {

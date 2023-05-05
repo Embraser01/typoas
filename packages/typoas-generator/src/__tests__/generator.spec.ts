@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { describe, expect, it } from '@jest/globals';
 import { resolve } from 'path';
-import { OpenAPIObject } from 'openapi3-ts';
+import { OpenAPIObject } from 'openapi3-ts/oas31';
 import { getStringFromNode } from '../generator/utils/ts-node';
 import { generateClient } from '../index';
 

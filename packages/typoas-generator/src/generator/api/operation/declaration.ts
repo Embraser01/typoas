@@ -1,4 +1,4 @@
-import { isReferenceObject, OperationObject } from 'openapi3-ts';
+import { isReferenceObject, OperationObject } from 'openapi3-ts/oas31';
 import {
   factory,
   ParameterDeclaration,

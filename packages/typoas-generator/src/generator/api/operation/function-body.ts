@@ -2,7 +2,7 @@ import { Context } from '../../../context';
 import { getQueryParams } from './query-params';
 import { createRuntimeRefProperty, ExportedRef } from '../../utils/ref';
 import { GlobalParameters } from './types';
-import { isReferenceObject, OperationObject } from 'openapi3-ts';
+import { isReferenceObject, OperationObject } from 'openapi3-ts/oas31';
 import {
   Block,
   factory,

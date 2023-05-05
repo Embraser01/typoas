@@ -1,5 +1,5 @@
 import { Context } from '../../context';
-import { OpenAPIObject } from 'openapi3-ts';
+import { OpenAPIObject } from 'openapi3-ts/oas31';
 import { Block, factory, FunctionDeclaration, SyntaxKind } from 'typescript';
 import {
   createRuntimeRefProperty,

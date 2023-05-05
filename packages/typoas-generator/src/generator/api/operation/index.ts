@@ -1,4 +1,4 @@
-import { OperationObject } from 'openapi3-ts';
+import { OperationObject } from 'openapi3-ts/oas31';
 import { factory, FunctionDeclaration, SyntaxKind } from 'typescript';
 import { Context } from '../../../context';
 import { sanitizeOperationIdName } from '../../utils/operation-name';

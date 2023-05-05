@@ -1,4 +1,8 @@
-import { OperationObject, ReferenceObject, ResponseObject } from 'openapi3-ts';
+import {
+  OperationObject,
+  ReferenceObject,
+  ResponseObject,
+} from 'openapi3-ts/oas31';
 
 export function getSuccessResponses(
   operation: OperationObject,
