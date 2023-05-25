@@ -1,5 +1,9 @@
 import { Context, ContextOptions } from './context';
-import { ComponentsObject, isSchemaObject, OpenAPIObject } from 'openapi3-ts';
+import {
+  ComponentsObject,
+  isSchemaObject,
+  OpenAPIObject,
+} from 'openapi3-ts/oas31';
 import {
   createPrinter,
   factory,

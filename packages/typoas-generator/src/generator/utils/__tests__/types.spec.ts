@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
-import { ReferenceObject, SchemaObject } from 'openapi3-ts';
+import { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
 import { getStringFromNode } from '../ts-node';
 import { createTypeFromSchema } from '../types';
 import { Context } from '../../../context';
@@ -209,7 +210,7 @@ describe('create type from schema', () => {
     });
 
     it('should handle nullable props', () => {
-      const schema: SchemaObject = { type: 'integer', nullable: true };
+      const schema: SchemaObjectOAS30 = { type: 'integer', nullable: true };
 
       const node = createTypeFromSchema(schema, new Context());
 

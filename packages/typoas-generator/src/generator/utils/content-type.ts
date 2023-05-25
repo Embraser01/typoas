@@ -1,4 +1,8 @@
-import { ContentObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
+import {
+  ContentObject,
+  ReferenceObject,
+  SchemaObject,
+} from 'openapi3-ts/oas31';
 import { Context } from '../../context';
 
 // This key is a simple hack for the createTypeFromSchema function

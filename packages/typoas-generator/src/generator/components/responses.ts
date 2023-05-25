@@ -4,7 +4,7 @@ import {
   ReferenceObject,
   ResponseObject,
   isReferenceObject,
-} from 'openapi3-ts';
+} from 'openapi3-ts/oas31';
 import { createTypeFromSchema } from '../utils/types';
 import { getContentTypeSchema } from '../utils/content-type';
 

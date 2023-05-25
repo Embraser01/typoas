@@ -1,4 +1,8 @@
-import { isReferenceObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
+import {
+  isReferenceObject,
+  ReferenceObject,
+  SchemaObject,
+} from 'openapi3-ts/oas31';
 
 // Here we duplicate the code from runtime.
 // It only concerns:

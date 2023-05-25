@@ -10,7 +10,7 @@ import {
   isReferenceObject,
   ReferenceObject,
   SecuritySchemeObject,
-} from 'openapi3-ts';
+} from 'openapi3-ts/oas31';
 import {
   createRuntimeRefProperty,
   createRuntimeRefType,

@@ -1,9 +1,14 @@
-import { isReferenceObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
+import {
+  isReferenceObject,
+  ReferenceObject,
+  SchemaObject,
+} from 'openapi3-ts/oas31';
+import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
 import { factory, EnumMember } from 'typescript';
 import { screamingSnakeCase } from './operation-name';
 
 export function canConvertSchemaToEnum(
-  schema: SchemaObject | ReferenceObject,
+  schema: SchemaObject | SchemaObjectOAS30 | ReferenceObject,
 ): schema is SchemaObject {
   if (isReferenceObject(schema)) {
     return false;
@@ -18,7 +23,7 @@ export function canConvertSchemaToEnum(
   return (
     schema.enum !== undefined &&
     schema.enum.every((e) => ![null, '', undefined].includes(e)) &&
-    !schema.nullable
+    !(schema as SchemaObjectOAS30).nullable
   );
 }
 

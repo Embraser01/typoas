@@ -4,7 +4,7 @@ import {
   isReferenceObject,
   ParameterObject,
   ReferenceObject,
-} from 'openapi3-ts';
+} from 'openapi3-ts/oas31';
 import { createTypeFromSchema } from '../utils/types';
 
 export function createSchemaTypeFromParameters(

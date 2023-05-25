@@ -1,5 +1,5 @@
 import { Context } from '../../context';
-import { ReferenceObject, SecuritySchemeObject } from 'openapi3-ts';
+import { ReferenceObject, SecuritySchemeObject } from 'openapi3-ts/oas31';
 import {
   factory,
   FunctionDeclaration,
