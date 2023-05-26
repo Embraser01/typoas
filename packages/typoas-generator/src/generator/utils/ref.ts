@@ -2,6 +2,8 @@ import { Expression, factory, TypeNode } from 'typescript';
 
 export const IMPORT_RUNTIME = 'r';
 
+export const FETCHER_DATA_NAME = 'FetcherData';
+
 export enum ExportedRef {
   HttpMethod = 'HttpMethod',
   Context = 'Context',

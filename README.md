@@ -52,6 +52,7 @@ Here is a short list of supported command line options:
     -e,--generate-enums            Generate enums instead of literal string types where possible
     --js-doc, --no-js-doc          Whether to add JS Doc to the generated code (default: true)
     --only-types                   Use it to only generate types in #components/schemas/
+    --no-fetcher-options           Use it to disable the additional param added to every operations
     --version                      Output the version number
     -h, --help                     Display help for command
 

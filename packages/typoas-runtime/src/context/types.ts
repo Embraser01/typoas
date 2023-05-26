@@ -46,19 +46,21 @@ export type CreateRequestParams = {
 
 export type ContextParams<
   AuthModes extends Record<string, SecurityAuthentication>,
+  FetcherData = unknown,
 > = {
   resolver: TransformResolver;
   serverConfiguration: BaseServerConfiguration;
   authMethods: Partial<AuthModes>;
-  fetcher?: Fetcher;
+  fetcher?: Fetcher<FetcherData>;
   transformers?: Record<string, Transform<unknown, unknown>>;
   serializerOptions?: SerializerOptions;
 };
 
 export type CreateContextParams<
   AuthModes extends Record<string, SecurityAuthentication>,
+  FetcherData = unknown,
 > = Partial<
-  Omit<ContextParams<AuthModes>, 'authMethods'> & {
+  Omit<ContextParams<AuthModes, FetcherData>, 'authMethods'> & {
     authProviders: {
       [key in keyof AuthModes]: AuthProvider<
         AuthModes[key] extends ApiKeySecurityAuthentication

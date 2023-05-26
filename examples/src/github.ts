@@ -10608,10 +10608,10 @@ export type KeySimple = {
   key: string;
 };
 export type AuthMethods = {};
-export function createContext(
-  params?: r.CreateContextParams<AuthMethods>,
-): r.Context<AuthMethods> {
-  return new r.Context<AuthMethods>({
+export function createContext<FetcherData>(
+  params?: r.CreateContextParams<AuthMethods, FetcherData>,
+): r.Context<AuthMethods, FetcherData> {
+  return new r.Context<AuthMethods, FetcherData>({
     resolver: new r.RefResolver({
       integration: {
         date: [
@@ -11823,9 +11823,10 @@ export function createContext(
  * Learn more at {@link https://docs.github.com/rest/overview/resources-in-the-rest-api#root-endpoint}
  * Tags: meta
  */
-export async function metaRoot(
-  ctx: r.Context<AuthMethods>,
+export async function metaRoot<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<{
   current_user_url: string;
   current_user_authorizations_html_url: string;
@@ -11866,7 +11867,7 @@ export async function metaRoot(
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -11877,16 +11878,17 @@ export async function metaRoot(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<Integration> {
   const req = await ctx.createRequest({
     path: '/app',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'integration']]] } },
   });
@@ -11897,12 +11899,13 @@ export async function appsGetAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-github-app-from-a-manifest}
  * Tags: apps
  */
-export async function appsCreateFromManifest(
-  ctx: r.Context<AuthMethods>,
+export async function appsCreateFromManifest<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     code: string;
   },
   body: any,
+  opts?: FetcherData,
 ): Promise<
   Integration &
     ({
@@ -11920,7 +11923,7 @@ export async function appsCreateFromManifest(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -11945,16 +11948,17 @@ export async function appsCreateFromManifest(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-webhook-configuration-for-an-app}
  * Tags: apps
  */
-export async function appsGetWebhookConfigForApp(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetWebhookConfigForApp<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<WebhookConfig> {
   const req = await ctx.createRequest({
     path: '/app/hook/config',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'webhook-config']]] },
@@ -11969,8 +11973,8 @@ export async function appsGetWebhookConfigForApp(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#update-a-webhook-configuration-for-an-app}
  * Tags: apps
  */
-export async function appsUpdateWebhookConfigForApp(
-  ctx: r.Context<AuthMethods>,
+export async function appsUpdateWebhookConfigForApp<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     url?: WebhookConfigUrl;
@@ -11978,6 +11982,7 @@ export async function appsUpdateWebhookConfigForApp(
     secret?: WebhookConfigSecret;
     insecure_ssl?: WebhookConfigInsecureSsl;
   },
+  opts?: FetcherData,
 ): Promise<WebhookConfig> {
   const req = await ctx.createRequest({
     path: '/app/hook/config',
@@ -11985,7 +11990,7 @@ export async function appsUpdateWebhookConfigForApp(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'webhook-config']]] },
@@ -12000,12 +12005,13 @@ export async function appsUpdateWebhookConfigForApp(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-deliveries-for-an-app-webhook}
  * Tags: apps
  */
-export async function appsListWebhookDeliveries(
-  ctx: r.Context<AuthMethods>,
+export async function appsListWebhookDeliveries<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     cursor?: string;
   },
+  opts?: FetcherData,
 ): Promise<HookDeliveryItem[]> {
   const req = await ctx.createRequest({
     path: '/app/hook/deliveries',
@@ -12013,7 +12019,7 @@ export async function appsListWebhookDeliveries(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'cursor'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -12036,18 +12042,19 @@ export async function appsListWebhookDeliveries(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-delivery-for-an-app-webhook}
  * Tags: apps
  */
-export async function appsGetWebhookDelivery(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetWebhookDelivery<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     delivery_id: number;
   },
+  opts?: FetcherData,
 ): Promise<HookDelivery> {
   const req = await ctx.createRequest({
     path: '/app/hook/deliveries/{delivery_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'hook-delivery']]] } },
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12064,18 +12071,19 @@ export async function appsGetWebhookDelivery(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#redeliver-a-delivery-for-an-app-webhook}
  * Tags: apps
  */
-export async function appsRedeliverWebhookDelivery(
-  ctx: r.Context<AuthMethods>,
+export async function appsRedeliverWebhookDelivery<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     delivery_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/app/hook/deliveries/{delivery_id}/attempts',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -12091,14 +12099,15 @@ export async function appsRedeliverWebhookDelivery(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-installations-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsListInstallations(
-  ctx: r.Context<AuthMethods>,
+export async function appsListInstallations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
     since?: Date;
     outdated?: string;
   },
+  opts?: FetcherData,
 ): Promise<Installation[]> {
   const req = await ctx.createRequest({
     path: '/app/installations',
@@ -12106,7 +12115,7 @@ export async function appsListInstallations(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page', 'since', 'outdated'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -12123,18 +12132,19 @@ export async function appsListInstallations(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-an-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Installation> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'installation']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12148,18 +12158,19 @@ export async function appsGetInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsDeleteInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsDeleteInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -12172,8 +12183,8 @@ export async function appsDeleteInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/apps/#create-an-installation-access-token-for-an-app}
  * Tags: apps
  */
-export async function appsCreateInstallationAccessToken(
-  ctx: r.Context<AuthMethods>,
+export async function appsCreateInstallationAccessToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
   },
@@ -12192,6 +12203,7 @@ export async function appsCreateInstallationAccessToken(
     repository_ids?: number[];
     permissions?: AppPermissions;
   },
+  opts?: FetcherData,
 ): Promise<InstallationToken> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}/access_tokens',
@@ -12199,7 +12211,7 @@ export async function appsCreateInstallationAccessToken(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'installation-token']]] },
@@ -12220,18 +12232,19 @@ export async function appsCreateInstallationAccessToken(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#suspend-an-app-installation}
  * Tags: apps
  */
-export async function appsSuspendInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsSuspendInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}/suspended',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -12244,18 +12257,19 @@ export async function appsSuspendInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#unsuspend-an-app-installation}
  * Tags: apps
  */
-export async function appsUnsuspendInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsUnsuspendInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}/suspended',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -12269,13 +12283,14 @@ export async function appsUnsuspendInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#list-your-grants}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsListGrants(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsListGrants<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
     client_id?: string;
   },
+  opts?: FetcherData,
 ): Promise<ApplicationGrant[] | any> {
   const req = await ctx.createRequest({
     path: '/applications/grants',
@@ -12283,7 +12298,7 @@ export async function oauthAuthorizationsListGrants(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page', 'client_id'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -12304,18 +12319,19 @@ export async function oauthAuthorizationsListGrants(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-a-single-grant}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsGetGrant(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsGetGrant<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     grant_id: number;
   },
+  opts?: FetcherData,
 ): Promise<ApplicationGrant | any> {
   const req = await ctx.createRequest({
     path: '/applications/grants/{grant_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'application-grant']]] },
@@ -12333,18 +12349,19 @@ export async function oauthAuthorizationsGetGrant(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#delete-a-grant}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsDeleteGrant(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsDeleteGrant<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     grant_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/applications/grants/{grant_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12357,8 +12374,8 @@ export async function oauthAuthorizationsDeleteGrant(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-app-authorization}
  * Tags: apps
  */
-export async function appsDeleteAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function appsDeleteAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
   },
@@ -12368,6 +12385,7 @@ export async function appsDeleteAuthorization(
      */
     access_token?: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/grant',
@@ -12375,7 +12393,7 @@ export async function appsDeleteAuthorization(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -12393,19 +12411,20 @@ export async function appsDeleteAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-a-grant-for-an-application}
  * Tags: apps
  */
-export async function appsRevokeGrantForApplication(
-  ctx: r.Context<AuthMethods>,
+export async function appsRevokeGrantForApplication<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
     access_token: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/grants/{access_token}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -12414,8 +12433,8 @@ export async function appsRevokeGrantForApplication(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#check-a-token}
  * Tags: apps
  */
-export async function appsCheckToken(
-  ctx: r.Context<AuthMethods>,
+export async function appsCheckToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
   },
@@ -12425,6 +12444,7 @@ export async function appsCheckToken(
      */
     access_token: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token',
@@ -12432,7 +12452,7 @@ export async function appsCheckToken(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12447,8 +12467,8 @@ export async function appsCheckToken(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#reset-a-token}
  * Tags: apps
  */
-export async function appsResetToken(
-  ctx: r.Context<AuthMethods>,
+export async function appsResetToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
   },
@@ -12458,6 +12478,7 @@ export async function appsResetToken(
      */
     access_token: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token',
@@ -12465,7 +12486,7 @@ export async function appsResetToken(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '422': {
@@ -12479,8 +12500,8 @@ export async function appsResetToken(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-app-token}
  * Tags: apps
  */
-export async function appsDeleteToken(
-  ctx: r.Context<AuthMethods>,
+export async function appsDeleteToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
   },
@@ -12490,6 +12511,7 @@ export async function appsDeleteToken(
      */
     access_token: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token',
@@ -12497,7 +12519,7 @@ export async function appsDeleteToken(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -12510,8 +12532,8 @@ export async function appsDeleteToken(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-scoped-access-token}
  * Tags: apps
  */
-export async function appsScopeToken(
-  ctx: r.Context<AuthMethods>,
+export async function appsScopeToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
   },
@@ -12545,6 +12567,7 @@ export async function appsScopeToken(
     repository_ids?: number[];
     permissions?: AppPermissions;
   },
+  opts?: FetcherData,
 ): Promise<Authorization> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token/scoped',
@@ -12552,7 +12575,7 @@ export async function appsScopeToken(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12572,19 +12595,20 @@ export async function appsScopeToken(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#check-an-authorization}
  * Tags: apps
  */
-export async function appsCheckAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function appsCheckAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
     access_token: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization | null> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/tokens/{access_token}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -12610,19 +12634,20 @@ export async function appsCheckAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#reset-an-authorization}
  * Tags: apps
  */
-export async function appsResetAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function appsResetAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
     access_token: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/tokens/{access_token}',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
   });
@@ -12636,19 +12661,20 @@ export async function appsResetAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-an-authorization-for-an-application}
  * Tags: apps
  */
-export async function appsRevokeAuthorizationForApplication(
-  ctx: r.Context<AuthMethods>,
+export async function appsRevokeAuthorizationForApplication<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
     access_token: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/tokens/{access_token}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -12659,18 +12685,19 @@ export async function appsRevokeAuthorizationForApplication(
  * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-an-app}
  * Tags: apps
  */
-export async function appsGetBySlug(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetBySlug<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     app_slug: string;
   },
+  opts?: FetcherData,
 ): Promise<Integration> {
   const req = await ctx.createRequest({
     path: '/apps/{app_slug}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'integration']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12684,13 +12711,14 @@ export async function appsGetBySlug(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#list-your-authorizations}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsListAuthorizations(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsListAuthorizations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
     client_id?: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization[] | any> {
   const req = await ctx.createRequest({
     path: '/authorizations',
@@ -12698,7 +12726,7 @@ export async function oauthAuthorizationsListAuthorizations(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page', 'client_id'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -12729,8 +12757,8 @@ export async function oauthAuthorizationsListAuthorizations(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#create-a-new-authorization}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsCreateAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsCreateAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -12764,6 +12792,7 @@ export async function oauthAuthorizationsCreateAuthorization(
      */
     fingerprint?: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization | any> {
   const req = await ctx.createRequest({
     path: '/authorizations',
@@ -12771,7 +12800,7 @@ export async function oauthAuthorizationsCreateAuthorization(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12797,8 +12826,10 @@ export async function oauthAuthorizationsCreateAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsGetOrCreateAuthorizationForApp(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsGetOrCreateAuthorizationForApp<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
   },
@@ -12830,6 +12861,7 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp(
      */
     fingerprint?: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization | any> {
   const req = await ctx.createRequest({
     path: '/authorizations/clients/{client_id}',
@@ -12837,7 +12869,7 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
@@ -12861,8 +12893,10 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app-and-fingerprint}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFingerprint(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFingerprint<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
     fingerprint: string;
@@ -12891,6 +12925,7 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
      */
     note_url?: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization> {
   const req = await ctx.createRequest({
     path: '/authorizations/clients/{client_id}/{fingerprint}',
@@ -12898,7 +12933,7 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
@@ -12914,18 +12949,19 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-a-single-authorization}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsGetAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsGetAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     authorization_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Authorization | any> {
   const req = await ctx.createRequest({
     path: '/authorizations/{authorization_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -12943,8 +12979,8 @@ export async function oauthAuthorizationsGetAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#update-an-existing-authorization}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsUpdateAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsUpdateAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     authorization_id: number;
   },
@@ -12980,6 +13016,7 @@ export async function oauthAuthorizationsUpdateAuthorization(
      */
     fingerprint?: string;
   },
+  opts?: FetcherData,
 ): Promise<Authorization> {
   const req = await ctx.createRequest({
     path: '/authorizations/{authorization_id}',
@@ -12987,7 +13024,7 @@ export async function oauthAuthorizationsUpdateAuthorization(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'authorization']]] } },
     '422': {
@@ -13002,18 +13039,19 @@ export async function oauthAuthorizationsUpdateAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#delete-an-authorization}
  * Tags: oauth-authorizations
  */
-export async function oauthAuthorizationsDeleteAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function oauthAuthorizationsDeleteAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     authorization_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/authorizations/{authorization_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -13024,16 +13062,17 @@ export async function oauthAuthorizationsDeleteAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/codes-of-conduct#get-all-codes-of-conduct}
  * Tags: codes-of-conduct
  */
-export async function codesOfConductGetAllCodesOfConduct(
-  ctx: r.Context<AuthMethods>,
+export async function codesOfConductGetAllCodesOfConduct<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<CodeOfConduct[] | any> {
   const req = await ctx.createRequest({
     path: '/codes_of_conduct',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13049,18 +13088,19 @@ export async function codesOfConductGetAllCodesOfConduct(
  * Learn more at {@link https://docs.github.com/rest/reference/codes-of-conduct#get-a-code-of-conduct}
  * Tags: codes-of-conduct
  */
-export async function codesOfConductGetConductCode(
-  ctx: r.Context<AuthMethods>,
+export async function codesOfConductGetConductCode<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     key: string;
   },
+  opts?: FetcherData,
 ): Promise<CodeOfConduct | any> {
   const req = await ctx.createRequest({
     path: '/codes_of_conduct/{key}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'code-of-conduct']]] },
@@ -13074,9 +13114,10 @@ export async function codesOfConductGetConductCode(
  * Learn more at {@link https://docs.github.com/rest/reference/emojis#get-emojis}
  * Tags: emojis
  */
-export async function emojisGet(
-  ctx: r.Context<AuthMethods>,
+export async function emojisGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<
   | {
       [key: string]: string;
@@ -13088,7 +13129,7 @@ export async function emojisGet(
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13099,18 +13140,21 @@ export async function emojisGet(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-github-actions-permissions-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminGetGithubActionsPermissionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminGetGithubActionsPermissionsEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsEnterprisePermissions> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13127,8 +13171,10 @@ export async function enterpriseAdminGetGithubActionsPermissionsEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-github-actions-permissions-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminSetGithubActionsPermissionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminSetGithubActionsPermissionsEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
@@ -13136,6 +13182,7 @@ export async function enterpriseAdminSetGithubActionsPermissionsEnterprise(
     enabled_organizations: EnabledOrganizations;
     allowed_actions?: AllowedActions;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions',
@@ -13143,7 +13190,7 @@ export async function enterpriseAdminSetGithubActionsPermissionsEnterprise(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13154,13 +13201,16 @@ export async function enterpriseAdminSetGithubActionsPermissionsEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-selected-organizations-enabled-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActionsEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   organizations: OrganizationSimple[];
@@ -13171,7 +13221,7 @@ export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActio
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13194,8 +13244,10 @@ export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActio
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-selected-organizations-enabled-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubActionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubActionsEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
@@ -13205,6 +13257,7 @@ export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubAction
      */
     selected_organization_ids: number[];
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/organizations',
@@ -13212,7 +13265,7 @@ export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubAction
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13223,19 +13276,22 @@ export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubAction
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#enable-a-selected-organization-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminEnableSelectedOrganizationGithubActionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminEnableSelectedOrganizationGithubActionsEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     org_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/organizations/{org_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13246,19 +13302,22 @@ export async function enterpriseAdminEnableSelectedOrganizationGithubActionsEnte
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#disable-a-selected-organization-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminDisableSelectedOrganizationGithubActionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminDisableSelectedOrganizationGithubActionsEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     org_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/organizations/{org_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13269,18 +13328,19 @@ export async function enterpriseAdminDisableSelectedOrganizationGithubActionsEnt
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-allowed-actions-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminGetAllowedActionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminGetAllowedActionsEnterprise<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<SelectedActions> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/selected-actions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'selected-actions']]] },
@@ -13295,12 +13355,13 @@ export async function enterpriseAdminGetAllowedActionsEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-allowed-actions-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminSetAllowedActionsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminSetAllowedActionsEnterprise<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
   body: SelectedActions,
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/selected-actions',
@@ -13308,7 +13369,7 @@ export async function enterpriseAdminSetAllowedActionsEnterprise(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13319,13 +13380,16 @@ export async function enterpriseAdminSetAllowedActionsEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runner-groups-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   runner_groups: RunnerGroupsEnterprise[];
@@ -13336,7 +13400,7 @@ export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13359,8 +13423,10 @@ export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#create-self-hosted-runner-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
@@ -13382,6 +13448,7 @@ export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise(
      */
     runners?: number[];
   },
+  opts?: FetcherData,
 ): Promise<RunnerGroupsEnterprise> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups',
@@ -13389,7 +13456,7 @@ export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -13406,19 +13473,22 @@ export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-a-self-hosted-runner-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminGetSelfHostedRunnerGroupForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminGetSelfHostedRunnerGroupForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
   },
+  opts?: FetcherData,
 ): Promise<RunnerGroupsEnterprise> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13435,8 +13505,10 @@ export async function enterpriseAdminGetSelfHostedRunnerGroupForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-a-self-hosted-runner-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
@@ -13452,6 +13524,7 @@ export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise(
      */
     visibility?: 'selected' | 'all';
   },
+  opts?: FetcherData,
 ): Promise<RunnerGroupsEnterprise> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}',
@@ -13459,7 +13532,7 @@ export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13476,19 +13549,22 @@ export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-a-self-hosted-runner-group-from-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminDeleteSelfHostedRunnerGroupFromEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminDeleteSelfHostedRunnerGroupFromEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13499,14 +13575,17 @@ export async function enterpriseAdminDeleteSelfHostedRunnerGroupFromEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-organization-access-to-a-self-hosted-runner-group-in-a-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   organizations: OrganizationSimple[];
@@ -13517,7 +13596,7 @@ export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnter
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13540,8 +13619,10 @@ export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnter
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-organization-access-to-a-self-hosted-runner-group-in-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
@@ -13552,6 +13633,7 @@ export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterp
      */
     selected_organization_ids: number[];
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations',
@@ -13559,7 +13641,7 @@ export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterp
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13570,20 +13652,23 @@ export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterp
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#add-organization-access-to-a-self-hosted-runner-group-in-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminAddOrgAccessToSelfHostedRunnerGroupInEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminAddOrgAccessToSelfHostedRunnerGroupInEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
     org_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13594,20 +13679,23 @@ export async function enterpriseAdminAddOrgAccessToSelfHostedRunnerGroupInEnterp
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#remove-organization-access-to-a-self-hosted-runner-group-in-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminRemoveOrgAccessToSelfHostedRunnerGroupInEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminRemoveOrgAccessToSelfHostedRunnerGroupInEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
     org_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13618,14 +13706,17 @@ export async function enterpriseAdminRemoveOrgAccessToSelfHostedRunnerGroupInEnt
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runners-in-a-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   runners: Runner[];
@@ -13636,7 +13727,7 @@ export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13659,8 +13750,10 @@ export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-self-hosted-runners-in-a-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
@@ -13671,6 +13764,7 @@ export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise(
      */
     runners: number[];
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners',
@@ -13678,7 +13772,7 @@ export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13690,20 +13784,23 @@ export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#add-a-self-hosted-runner-to-a-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminAddSelfHostedRunnerToGroupForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminAddSelfHostedRunnerToGroupForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13714,20 +13811,23 @@ export async function enterpriseAdminAddSelfHostedRunnerToGroupForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#remove-a-self-hosted-runner-from-a-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminRemoveSelfHostedRunnerFromGroupForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminRemoveSelfHostedRunnerFromGroupForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_group_id: number;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13738,13 +13838,16 @@ export async function enterpriseAdminRemoveSelfHostedRunnerFromGroupForEnterpris
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runners-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListSelfHostedRunnersForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListSelfHostedRunnersForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count?: number;
   runners?: Runner[];
@@ -13755,7 +13858,7 @@ export async function enterpriseAdminListSelfHostedRunnersForEnterprise(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13778,18 +13881,21 @@ export async function enterpriseAdminListSelfHostedRunnersForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-runner-applications-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListRunnerApplicationsForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListRunnerApplicationsForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<RunnerApplication[]> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/downloads',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13816,18 +13922,21 @@ export async function enterpriseAdminListRunnerApplicationsForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#create-a-registration-token-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminCreateRegistrationTokenForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminCreateRegistrationTokenForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<AuthenticationToken> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/registration-token',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'authentication-token']]] },
@@ -13851,18 +13960,21 @@ export async function enterpriseAdminCreateRegistrationTokenForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#create-a-remove-token-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminCreateRemoveTokenForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminCreateRemoveTokenForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<AuthenticationToken> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/remove-token',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'authentication-token']]] },
@@ -13877,19 +13989,22 @@ export async function enterpriseAdminCreateRemoveTokenForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-a-self-hosted-runner-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminGetSelfHostedRunnerForEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminGetSelfHostedRunnerForEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Runner> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'runner']]] } },
   });
@@ -13902,19 +14017,22 @@ export async function enterpriseAdminGetSelfHostedRunnerForEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-self-hosted-runner-from-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminDeleteSelfHostedRunnerFromEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminDeleteSelfHostedRunnerFromEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -13923,8 +14041,8 @@ export async function enterpriseAdminDeleteSelfHostedRunnerFromEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-the-audit-log-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminGetAuditLog(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminGetAuditLog<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     phrase?: string;
@@ -13935,6 +14053,7 @@ export async function enterpriseAdminGetAuditLog(
     page?: number;
     per_page?: number;
   },
+  opts?: FetcherData,
 ): Promise<AuditLogEvent[]> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/audit-log',
@@ -13950,7 +14069,7 @@ export async function enterpriseAdminGetAuditLog(
       'per_page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -13971,18 +14090,19 @@ export async function enterpriseAdminGetAuditLog(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-actions-billing-for-an-enterprise}
  * Tags: billing
  */
-export async function billingGetGithubActionsBillingGhe(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetGithubActionsBillingGhe<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsBillingUsage> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/settings/billing/actions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-billing-usage']]] },
@@ -13999,18 +14119,19 @@ export async function billingGetGithubActionsBillingGhe(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-packages-billing-for-an-enterprise}
  * Tags: billing
  */
-export async function billingGetGithubPackagesBillingGhe(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetGithubPackagesBillingGhe<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<PackagesBillingUsage> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/settings/billing/packages',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'packages-billing-usage']]] },
@@ -14027,18 +14148,19 @@ export async function billingGetGithubPackagesBillingGhe(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-shared-storage-billing-for-an-enterprise}
  * Tags: billing
  */
-export async function billingGetSharedStorageBillingGhe(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetSharedStorageBillingGhe<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
+  opts?: FetcherData,
 ): Promise<CombinedBillingUsage> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/settings/billing/shared-storage',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'combined-billing-usage']]] },
@@ -14051,12 +14173,13 @@ export async function billingGetSharedStorageBillingGhe(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events}
  * Tags: activity
  */
-export async function activityListPublicEvents(
-  ctx: r.Context<AuthMethods>,
+export async function activityListPublicEvents<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[] | any> {
   const req = await ctx.createRequest({
     path: '/events',
@@ -14064,7 +14187,7 @@ export async function activityListPublicEvents(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14090,16 +14213,17 @@ export async function activityListPublicEvents(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#get-feeds}
  * Tags: activity
  */
-export async function activityGetFeeds(
-  ctx: r.Context<AuthMethods>,
+export async function activityGetFeeds<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<Feed> {
   const req = await ctx.createRequest({
     path: '/feeds',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'feed']]] } },
   });
@@ -14110,13 +14234,14 @@ export async function activityGetFeeds(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-gists-for-the-authenticated-user}
  * Tags: gists
  */
-export async function gistsList(
-  ctx: r.Context<AuthMethods>,
+export async function gistsList<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: Date;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<BaseGist[] | any> {
   const req = await ctx.createRequest({
     path: '/gists',
@@ -14124,7 +14249,7 @@ export async function gistsList(
     method: r.HttpMethod.GET,
     queryParams: ['since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14142,8 +14267,8 @@ export async function gistsList(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#create-a-gist}
  * Tags: gists
  */
-export async function gistsCreate(
-  ctx: r.Context<AuthMethods>,
+export async function gistsCreate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -14170,6 +14295,7 @@ export async function gistsCreate(
     };
     public?: boolean | ('true' | 'false');
   },
+  opts?: FetcherData,
 ): Promise<GistSimple | any> {
   const req = await ctx.createRequest({
     path: '/gists',
@@ -14177,7 +14303,7 @@ export async function gistsCreate(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'gist-simple']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14195,13 +14321,14 @@ export async function gistsCreate(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-public-gists}
  * Tags: gists
  */
-export async function gistsListPublic(
-  ctx: r.Context<AuthMethods>,
+export async function gistsListPublic<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: Date;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<BaseGist[] | any> {
   const req = await ctx.createRequest({
     path: '/gists/public',
@@ -14209,7 +14336,7 @@ export async function gistsListPublic(
     method: r.HttpMethod.GET,
     queryParams: ['since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14228,13 +14355,14 @@ export async function gistsListPublic(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-starred-gists}
  * Tags: gists
  */
-export async function gistsListStarred(
-  ctx: r.Context<AuthMethods>,
+export async function gistsListStarred<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: Date;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<BaseGist[] | any> {
   const req = await ctx.createRequest({
     path: '/gists/starred',
@@ -14242,7 +14370,7 @@ export async function gistsListStarred(
     method: r.HttpMethod.GET,
     queryParams: ['since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14258,18 +14386,19 @@ export async function gistsListStarred(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#get-a-gist}
  * Tags: gists
  */
-export async function gistsGet(
-  ctx: r.Context<AuthMethods>,
+export async function gistsGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
+  opts?: FetcherData,
 ): Promise<GistSimple | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gist-simple']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14281,12 +14410,13 @@ export async function gistsGet(
  * Learn more at {@link https://docs.github.com/rest/reference/gists/#update-a-gist}
  * Tags: gists
  */
-export async function gistsUpdate(
-  ctx: r.Context<AuthMethods>,
+export async function gistsUpdate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
   body: (any | any) | null,
+  opts?: FetcherData,
 ): Promise<GistSimple> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}',
@@ -14294,7 +14424,7 @@ export async function gistsUpdate(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gist-simple']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14308,18 +14438,19 @@ export async function gistsUpdate(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#delete-a-gist}
  * Tags: gists
  */
-export async function gistsDelete(
-  ctx: r.Context<AuthMethods>,
+export async function gistsDelete<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14330,13 +14461,14 @@ export async function gistsDelete(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-gist-comments}
  * Tags: gists
  */
-export async function gistsListComments(
-  ctx: r.Context<AuthMethods>,
+export async function gistsListComments<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<GistComment[] | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments',
@@ -14344,7 +14476,7 @@ export async function gistsListComments(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14360,8 +14492,8 @@ export async function gistsListComments(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#create-a-gist-comment}
  * Tags: gists
  */
-export async function gistsCreateComment(
-  ctx: r.Context<AuthMethods>,
+export async function gistsCreateComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
@@ -14372,6 +14504,7 @@ export async function gistsCreateComment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<GistComment | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments',
@@ -14379,7 +14512,7 @@ export async function gistsCreateComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'gist-comment']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14391,19 +14524,20 @@ export async function gistsCreateComment(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#get-a-gist-comment}
  * Tags: gists
  */
-export async function gistsGetComment(
-  ctx: r.Context<AuthMethods>,
+export async function gistsGetComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<GistComment | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gist-comment']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14414,8 +14548,8 @@ export async function gistsGetComment(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#update-a-gist-comment}
  * Tags: gists
  */
-export async function gistsUpdateComment(
-  ctx: r.Context<AuthMethods>,
+export async function gistsUpdateComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
     comment_id: number;
@@ -14427,6 +14561,7 @@ export async function gistsUpdateComment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<GistComment> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments/{comment_id}',
@@ -14434,7 +14569,7 @@ export async function gistsUpdateComment(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gist-comment']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14445,19 +14580,20 @@ export async function gistsUpdateComment(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#delete-a-gist-comment}
  * Tags: gists
  */
-export async function gistsDeleteComment(
-  ctx: r.Context<AuthMethods>,
+export async function gistsDeleteComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14468,13 +14604,14 @@ export async function gistsDeleteComment(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-gist-commits}
  * Tags: gists
  */
-export async function gistsListCommits(
-  ctx: r.Context<AuthMethods>,
+export async function gistsListCommits<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<GistCommit[] | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/commits',
@@ -14482,7 +14619,7 @@ export async function gistsListCommits(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14498,13 +14635,14 @@ export async function gistsListCommits(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-gist-forks}
  * Tags: gists
  */
-export async function gistsListForks(
-  ctx: r.Context<AuthMethods>,
+export async function gistsListForks<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<GistSimple[] | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/forks',
@@ -14512,7 +14650,7 @@ export async function gistsListForks(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14529,18 +14667,19 @@ export async function gistsListForks(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#fork-a-gist}
  * Tags: gists
  */
-export async function gistsFork(
-  ctx: r.Context<AuthMethods>,
+export async function gistsFork<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
+  opts?: FetcherData,
 ): Promise<BaseGist | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/forks',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'base-gist']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14555,18 +14694,19 @@ export async function gistsFork(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#check-if-a-gist-is-starred}
  * Tags: gists
  */
-export async function gistsCheckIsStarred(
-  ctx: r.Context<AuthMethods>,
+export async function gistsCheckIsStarred<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/star',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -14577,18 +14717,19 @@ export async function gistsCheckIsStarred(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#star-a-gist}
  * Tags: gists
  */
-export async function gistsStar(
-  ctx: r.Context<AuthMethods>,
+export async function gistsStar<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/star',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14599,18 +14740,19 @@ export async function gistsStar(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#unstar-a-gist}
  * Tags: gists
  */
-export async function gistsUnstar(
-  ctx: r.Context<AuthMethods>,
+export async function gistsUnstar<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/star',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14621,19 +14763,20 @@ export async function gistsUnstar(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#get-a-gist-revision}
  * Tags: gists
  */
-export async function gistsGetRevision(
-  ctx: r.Context<AuthMethods>,
+export async function gistsGetRevision<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
     sha: string;
   },
+  opts?: FetcherData,
 ): Promise<GistSimple> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/{sha}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gist-simple']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14649,16 +14792,17 @@ export async function gistsGetRevision(
  * Learn more at {@link https://docs.github.com/rest/reference/gitignore#get-all-gitignore-templates}
  * Tags: gitignore
  */
-export async function gitignoreGetAllTemplates(
-  ctx: r.Context<AuthMethods>,
+export async function gitignoreGetAllTemplates<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<string[] | any> {
   const req = await ctx.createRequest({
     path: '/gitignore/templates',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -14668,18 +14812,19 @@ export async function gitignoreGetAllTemplates(
  * Learn more at {@link https://docs.github.com/rest/reference/gitignore#get-a-gitignore-template}
  * Tags: gitignore
  */
-export async function gitignoreGetTemplate(
-  ctx: r.Context<AuthMethods>,
+export async function gitignoreGetTemplate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     name: string;
   },
+  opts?: FetcherData,
 ): Promise<GitignoreTemplate | any> {
   const req = await ctx.createRequest({
     path: '/gitignore/templates/{name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'gitignore-template']]] },
@@ -14694,12 +14839,13 @@ export async function gitignoreGetTemplate(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-repositories-accessible-to-the-app-installation}
  * Tags: apps
  */
-export async function appsListReposAccessibleToInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsListReposAccessibleToInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -14717,7 +14863,7 @@ export async function appsListReposAccessibleToInstallation(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14744,16 +14890,17 @@ export async function appsListReposAccessibleToInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-an-installation-access-token}
  * Tags: apps
  */
-export async function appsRevokeInstallationAccessToken(
-  ctx: r.Context<AuthMethods>,
+export async function appsRevokeInstallationAccessToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/installation/token',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -14770,8 +14917,8 @@ export async function appsRevokeInstallationAccessToken(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
-export async function issuesList(
-  ctx: r.Context<AuthMethods>,
+export async function issuesList<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     filter?:
       | 'assigned'
@@ -14792,6 +14939,7 @@ export async function issuesList(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Issue[] | any> {
   const req = await ctx.createRequest({
     path: '/issues',
@@ -14812,7 +14960,7 @@ export async function issuesList(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14830,13 +14978,14 @@ export async function issuesList(
  * Learn more at {@link https://docs.github.com/rest/reference/licenses#get-all-commonly-used-licenses}
  * Tags: licenses
  */
-export async function licensesGetAllCommonlyUsed(
-  ctx: r.Context<AuthMethods>,
+export async function licensesGetAllCommonlyUsed<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     featured?: boolean;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<LicenseSimple[] | any> {
   const req = await ctx.createRequest({
     path: '/licenses',
@@ -14844,7 +14993,7 @@ export async function licensesGetAllCommonlyUsed(
     method: r.HttpMethod.GET,
     queryParams: ['featured', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -14860,18 +15009,19 @@ export async function licensesGetAllCommonlyUsed(
  * Learn more at {@link https://docs.github.com/rest/reference/licenses#get-a-license}
  * Tags: licenses
  */
-export async function licensesGet(
-  ctx: r.Context<AuthMethods>,
+export async function licensesGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     license: string;
   },
+  opts?: FetcherData,
 ): Promise<License | any> {
   const req = await ctx.createRequest({
     path: '/licenses/{license}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'license']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -14883,8 +15033,8 @@ export async function licensesGet(
  * Learn more at {@link https://docs.github.com/rest/reference/markdown#render-a-markdown-document}
  * Tags: markdown
  */
-export async function markdownRender(
-  ctx: r.Context<AuthMethods>,
+export async function markdownRender<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -14902,6 +15052,7 @@ export async function markdownRender(
      */
     context?: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/markdown',
@@ -14909,7 +15060,7 @@ export async function markdownRender(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -14918,10 +15069,11 @@ export async function markdownRender(
  * Learn more at {@link https://docs.github.com/rest/reference/markdown#render-a-markdown-document-in-raw-mode}
  * Tags: markdown
  */
-export async function markdownRenderRaw(
-  ctx: r.Context<AuthMethods>,
+export async function markdownRenderRaw<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: string,
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/markdown/raw',
@@ -14929,7 +15081,7 @@ export async function markdownRenderRaw(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -14940,18 +15092,19 @@ export async function markdownRenderRaw(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-subscription-plan-for-an-account}
  * Tags: apps
  */
-export async function appsGetSubscriptionPlanForAccount(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetSubscriptionPlanForAccount<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account_id: number;
   },
+  opts?: FetcherData,
 ): Promise<MarketplacePurchase> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/accounts/{account_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'marketplace-purchase']]] },
@@ -14968,12 +15121,13 @@ export async function appsGetSubscriptionPlanForAccount(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-plans}
  * Tags: apps
  */
-export async function appsListPlans(
-  ctx: r.Context<AuthMethods>,
+export async function appsListPlans<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MarketplaceListingPlan[]> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/plans',
@@ -14981,7 +15135,7 @@ export async function appsListPlans(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15005,8 +15159,8 @@ export async function appsListPlans(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-accounts-for-a-plan}
  * Tags: apps
  */
-export async function appsListAccountsForPlan(
-  ctx: r.Context<AuthMethods>,
+export async function appsListAccountsForPlan<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     plan_id: number;
     sort?: 'created' | 'updated';
@@ -15014,6 +15168,7 @@ export async function appsListAccountsForPlan(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MarketplacePurchase[]> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/plans/{plan_id}/accounts',
@@ -15021,7 +15176,7 @@ export async function appsListAccountsForPlan(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15048,18 +15203,19 @@ export async function appsListAccountsForPlan(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-subscription-plan-for-an-account-stubbed}
  * Tags: apps
  */
-export async function appsGetSubscriptionPlanForAccountStubbed(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetSubscriptionPlanForAccountStubbed<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account_id: number;
   },
+  opts?: FetcherData,
 ): Promise<MarketplacePurchase> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/stubbed/accounts/{account_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'marketplace-purchase']]] },
@@ -15075,12 +15231,13 @@ export async function appsGetSubscriptionPlanForAccountStubbed(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-plans-stubbed}
  * Tags: apps
  */
-export async function appsListPlansStubbed(
-  ctx: r.Context<AuthMethods>,
+export async function appsListPlansStubbed<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MarketplaceListingPlan[]> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/stubbed/plans',
@@ -15088,7 +15245,7 @@ export async function appsListPlansStubbed(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15111,8 +15268,8 @@ export async function appsListPlansStubbed(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-accounts-for-a-plan-stubbed}
  * Tags: apps
  */
-export async function appsListAccountsForPlanStubbed(
-  ctx: r.Context<AuthMethods>,
+export async function appsListAccountsForPlanStubbed<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     plan_id: number;
     sort?: 'created' | 'updated';
@@ -15120,6 +15277,7 @@ export async function appsListAccountsForPlanStubbed(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MarketplacePurchase[]> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/stubbed/plans/{plan_id}/accounts',
@@ -15127,7 +15285,7 @@ export async function appsListAccountsForPlanStubbed(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15150,16 +15308,17 @@ export async function appsListAccountsForPlanStubbed(
  * Learn more at {@link https://docs.github.com/rest/reference/meta#get-github-meta-information}
  * Tags: meta
  */
-export async function metaGet(
-  ctx: r.Context<AuthMethods>,
+export async function metaGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<ApiOverview | any> {
   const req = await ctx.createRequest({
     path: '/meta',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'api-overview']]] } },
   });
@@ -15169,14 +15328,15 @@ export async function metaGet(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events-for-a-network-of-repositories}
  * Tags: activity
  */
-export async function activityListPublicEventsForRepoNetwork(
-  ctx: r.Context<AuthMethods>,
+export async function activityListPublicEventsForRepoNetwork<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[] | BasicError | any> {
   const req = await ctx.createRequest({
     path: '/networks/{owner}/{repo}/events',
@@ -15184,7 +15344,7 @@ export async function activityListPublicEventsForRepoNetwork(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15202,8 +15362,10 @@ export async function activityListPublicEventsForRepoNetwork(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-notifications-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListNotificationsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListNotificationsForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     all?: boolean;
     participating?: boolean;
@@ -15212,6 +15374,7 @@ export async function activityListNotificationsForAuthenticatedUser(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Thread[] | any> {
   const req = await ctx.createRequest({
     path: '/notifications',
@@ -15226,7 +15389,7 @@ export async function activityListNotificationsForAuthenticatedUser(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15246,8 +15409,8 @@ export async function activityListNotificationsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-notifications-as-read}
  * Tags: activity
  */
-export async function activityMarkNotificationsAsRead(
-  ctx: r.Context<AuthMethods>,
+export async function activityMarkNotificationsAsRead<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -15259,6 +15422,7 @@ export async function activityMarkNotificationsAsRead(
      */
     read?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       message?: string;
@@ -15272,7 +15436,7 @@ export async function activityMarkNotificationsAsRead(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -15283,18 +15447,19 @@ export async function activityMarkNotificationsAsRead(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#get-a-thread}
  * Tags: activity
  */
-export async function activityGetThread(
-  ctx: r.Context<AuthMethods>,
+export async function activityGetThread<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Thread | any> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'thread']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -15306,18 +15471,19 @@ export async function activityGetThread(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-a-thread-as-read}
  * Tags: activity
  */
-export async function activityMarkThreadAsRead(
-  ctx: r.Context<AuthMethods>,
+export async function activityMarkThreadAsRead<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}',
     params,
     method: r.HttpMethod.PATCH,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -15330,18 +15496,21 @@ export async function activityMarkThreadAsRead(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#get-a-thread-subscription-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityGetThreadSubscriptionForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityGetThreadSubscriptionForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
   },
+  opts?: FetcherData,
 ): Promise<ThreadSubscription | any> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}/subscription',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'thread-subscription']]] },
@@ -15360,8 +15529,8 @@ export async function activityGetThreadSubscriptionForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#set-a-thread-subscription}
  * Tags: activity
  */
-export async function activitySetThreadSubscription(
-  ctx: r.Context<AuthMethods>,
+export async function activitySetThreadSubscription<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
   },
@@ -15371,6 +15540,7 @@ export async function activitySetThreadSubscription(
      */
     ignored?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<ThreadSubscription | any> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}/subscription',
@@ -15378,7 +15548,7 @@ export async function activitySetThreadSubscription(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'thread-subscription']]] },
@@ -15393,18 +15563,19 @@ export async function activitySetThreadSubscription(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#delete-a-thread-subscription}
  * Tags: activity
  */
-export async function activityDeleteThreadSubscription(
-  ctx: r.Context<AuthMethods>,
+export async function activityDeleteThreadSubscription<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}/subscription',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -15416,11 +15587,12 @@ export async function activityDeleteThreadSubscription(
  * Learn more at {@link https://docs.github.com/rest/reference/meta#get-octocat}
  * Tags: meta
  */
-export async function metaGetOctocat(
-  ctx: r.Context<AuthMethods>,
+export async function metaGetOctocat<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     s?: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/octocat',
@@ -15428,7 +15600,7 @@ export async function metaGetOctocat(
     method: r.HttpMethod.GET,
     queryParams: ['s'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -15439,12 +15611,13 @@ export async function metaGetOctocat(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organizations}
  * Tags: orgs
  */
-export async function orgsList(
-  ctx: r.Context<AuthMethods>,
+export async function orgsList<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: number;
     per_page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationSimple[] | any> {
   const req = await ctx.createRequest({
     path: '/organizations',
@@ -15452,7 +15625,7 @@ export async function orgsList(
     method: r.HttpMethod.GET,
     queryParams: ['since', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15474,18 +15647,19 @@ export async function orgsList(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-an-organization}
  * Tags: orgs
  */
-export async function orgsGet(
-  ctx: r.Context<AuthMethods>,
+export async function orgsGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationFull> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'organization-full']]] },
@@ -15501,8 +15675,8 @@ export async function orgsGet(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs/#update-an-organization}
  * Tags: orgs
  */
-export async function orgsUpdate(
-  ctx: r.Context<AuthMethods>,
+export async function orgsUpdate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -15616,6 +15790,7 @@ export async function orgsUpdate(
      */
     blog?: string;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationFull> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}',
@@ -15623,7 +15798,7 @@ export async function orgsUpdate(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'organization-full']]] },
@@ -15654,18 +15829,21 @@ export async function orgsUpdate(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-github-actions-permissions-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetGithubActionsPermissionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetGithubActionsPermissionsOrganization<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsOrganizationPermissions> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15684,8 +15862,10 @@ export async function actionsGetGithubActionsPermissionsOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-github-actions-permissions-for-an-organization}
  * Tags: actions
  */
-export async function actionsSetGithubActionsPermissionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetGithubActionsPermissionsOrganization<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -15693,6 +15873,7 @@ export async function actionsSetGithubActionsPermissionsOrganization(
     enabled_repositories: EnabledRepositories;
     allowed_actions?: AllowedActions;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions',
@@ -15700,7 +15881,7 @@ export async function actionsSetGithubActionsPermissionsOrganization(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -15711,13 +15892,16 @@ export async function actionsSetGithubActionsPermissionsOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-selected-repositories-enabled-for-github-actions-in-an-organization}
  * Tags: actions
  */
-export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganization<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   repositories: Repository[];
@@ -15728,7 +15912,7 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15751,8 +15935,10 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-selected-repositories-enabled-for-github-actions-in-an-organization}
  * Tags: actions
  */
-export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganization<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -15762,6 +15948,7 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
      */
     selected_repository_ids: number[];
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/repositories',
@@ -15769,7 +15956,7 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -15780,19 +15967,22 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
  * Learn more at {@link https://docs.github.com/rest/reference/actions#enable-a-selected-repository-for-github-actions-in-an-organization}
  * Tags: actions
  */
-export async function actionsEnableSelectedRepositoryGithubActionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsEnableSelectedRepositoryGithubActionsOrganization<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -15803,19 +15993,22 @@ export async function actionsEnableSelectedRepositoryGithubActionsOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#disable-a-selected-repository-for-github-actions-in-an-organization}
  * Tags: actions
  */
-export async function actionsDisableSelectedRepositoryGithubActionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDisableSelectedRepositoryGithubActionsOrganization<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -15826,18 +16019,19 @@ export async function actionsDisableSelectedRepositoryGithubActionsOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-allowed-actions-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetAllowedActionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetAllowedActionsOrganization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<SelectedActions> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/selected-actions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'selected-actions']]] },
@@ -15856,12 +16050,13 @@ export async function actionsGetAllowedActionsOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-allowed-actions-for-an-organization}
  * Tags: actions
  */
-export async function actionsSetAllowedActionsOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetAllowedActionsOrganization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
   body: SelectedActions,
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/selected-actions',
@@ -15869,7 +16064,7 @@ export async function actionsSetAllowedActionsOrganization(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -15882,13 +16077,14 @@ export async function actionsSetAllowedActionsOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runner-groups-for-an-organization}
  * Tags: actions
  */
-export async function actionsListSelfHostedRunnerGroupsForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListSelfHostedRunnerGroupsForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   runner_groups: RunnerGroupsOrg[];
@@ -15899,7 +16095,7 @@ export async function actionsListSelfHostedRunnerGroupsForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -15924,8 +16120,8 @@ export async function actionsListSelfHostedRunnerGroupsForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-self-hosted-runner-group-for-an-organization}
  * Tags: actions
  */
-export async function actionsCreateSelfHostedRunnerGroupForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateSelfHostedRunnerGroupForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -15948,6 +16144,7 @@ export async function actionsCreateSelfHostedRunnerGroupForOrg(
      */
     runners?: number[];
   },
+  opts?: FetcherData,
 ): Promise<RunnerGroupsOrg> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups',
@@ -15955,7 +16152,7 @@ export async function actionsCreateSelfHostedRunnerGroupForOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'runner-groups-org']]] },
@@ -15972,19 +16169,20 @@ export async function actionsCreateSelfHostedRunnerGroupForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-group-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetSelfHostedRunnerGroupForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetSelfHostedRunnerGroupForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
   },
+  opts?: FetcherData,
 ): Promise<RunnerGroupsOrg> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'runner-groups-org']]] },
@@ -16001,8 +16199,8 @@ export async function actionsGetSelfHostedRunnerGroupForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#update-a-self-hosted-runner-group-for-an-organization}
  * Tags: actions
  */
-export async function actionsUpdateSelfHostedRunnerGroupForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsUpdateSelfHostedRunnerGroupForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
@@ -16017,6 +16215,7 @@ export async function actionsUpdateSelfHostedRunnerGroupForOrg(
      */
     visibility?: 'selected' | 'all' | 'private';
   },
+  opts?: FetcherData,
 ): Promise<RunnerGroupsOrg> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
@@ -16024,7 +16223,7 @@ export async function actionsUpdateSelfHostedRunnerGroupForOrg(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'runner-groups-org']]] },
@@ -16041,19 +16240,20 @@ export async function actionsUpdateSelfHostedRunnerGroupForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-group-from-an-organization}
  * Tags: actions
  */
-export async function actionsDeleteSelfHostedRunnerGroupFromOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteSelfHostedRunnerGroupFromOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16066,14 +16266,17 @@ export async function actionsDeleteSelfHostedRunnerGroupFromOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-access-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
  */
-export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
     page?: number;
     per_page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   repositories: MinimalRepository[];
@@ -16084,7 +16287,7 @@ export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16109,8 +16312,10 @@ export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-repository-access-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
  */
-export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
@@ -16121,6 +16326,7 @@ export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg(
      */
     selected_repository_ids: number[];
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories',
@@ -16128,7 +16334,7 @@ export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16143,20 +16349,23 @@ export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#add-repository-acess-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
  */
-export async function actionsAddRepoAccessToSelfHostedRunnerGroupInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsAddRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16170,20 +16379,23 @@ export async function actionsAddRepoAccessToSelfHostedRunnerGroupInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-repository-access-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
  */
-export async function actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16196,14 +16408,15 @@ export async function actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-organization}
  * Tags: actions
  */
-export async function actionsListSelfHostedRunnersInGroupForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListSelfHostedRunnersInGroupForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   runners: Runner[];
@@ -16214,7 +16427,7 @@ export async function actionsListSelfHostedRunnersInGroupForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16239,8 +16452,8 @@ export async function actionsListSelfHostedRunnersInGroupForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-organization}
  * Tags: actions
  */
-export async function actionsSetSelfHostedRunnersInGroupForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetSelfHostedRunnersInGroupForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
@@ -16251,6 +16464,7 @@ export async function actionsSetSelfHostedRunnersInGroupForOrg(
      */
     runners: number[];
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners',
@@ -16258,7 +16472,7 @@ export async function actionsSetSelfHostedRunnersInGroupForOrg(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16273,20 +16487,21 @@ export async function actionsSetSelfHostedRunnersInGroupForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#add-a-self-hosted-runner-to-a-group-for-an-organization}
  * Tags: actions
  */
-export async function actionsAddSelfHostedRunnerToGroupForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsAddSelfHostedRunnerToGroupForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16300,20 +16515,21 @@ export async function actionsAddSelfHostedRunnerToGroupForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-a-self-hosted-runner-from-a-group-for-an-organization}
  * Tags: actions
  */
-export async function actionsRemoveSelfHostedRunnerFromGroupForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsRemoveSelfHostedRunnerFromGroupForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_group_id: number;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16324,13 +16540,14 @@ export async function actionsRemoveSelfHostedRunnerFromGroupForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-for-an-organization}
  * Tags: actions
  */
-export async function actionsListSelfHostedRunnersForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   runners: Runner[];
@@ -16341,7 +16558,7 @@ export async function actionsListSelfHostedRunnersForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16364,18 +16581,19 @@ export async function actionsListSelfHostedRunnersForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-runner-applications-for-an-organization}
  * Tags: actions
  */
-export async function actionsListRunnerApplicationsForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListRunnerApplicationsForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<RunnerApplication[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/downloads',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16402,18 +16620,19 @@ export async function actionsListRunnerApplicationsForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-registration-token-for-an-organization}
  * Tags: actions
  */
-export async function actionsCreateRegistrationTokenForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateRegistrationTokenForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<AuthenticationToken> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/registration-token',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'authentication-token']]] },
@@ -16437,18 +16656,19 @@ export async function actionsCreateRegistrationTokenForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-remove-token-for-an-organization}
  * Tags: actions
  */
-export async function actionsCreateRemoveTokenForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateRemoveTokenForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<AuthenticationToken> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/remove-token',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'authentication-token']]] },
@@ -16463,19 +16683,20 @@ export async function actionsCreateRemoveTokenForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetSelfHostedRunnerForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetSelfHostedRunnerForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Runner> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'runner']]] } },
   });
@@ -16488,19 +16709,20 @@ export async function actionsGetSelfHostedRunnerForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-from-an-organization}
  * Tags: actions
  */
-export async function actionsDeleteSelfHostedRunnerFromOrg(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteSelfHostedRunnerFromOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16509,13 +16731,14 @@ export async function actionsDeleteSelfHostedRunnerFromOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-organization-secrets}
  * Tags: actions
  */
-export async function actionsListOrgSecrets(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListOrgSecrets<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   secrets: OrganizationActionsSecret[];
@@ -16526,7 +16749,7 @@ export async function actionsListOrgSecrets(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16547,18 +16770,19 @@ export async function actionsListOrgSecrets(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-organization-public-key}
  * Tags: actions
  */
-export async function actionsGetOrgPublicKey(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetOrgPublicKey<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsPublicKey> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/public-key',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-public-key']]] },
@@ -16571,19 +16795,20 @@ export async function actionsGetOrgPublicKey(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-organization-secret}
  * Tags: actions
  */
-export async function actionsGetOrgSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetOrgSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     secret_name: string;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationActionsSecret> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16672,8 +16897,8 @@ export async function actionsGetOrgSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret}
  * Tags: actions
  */
-export async function actionsCreateOrUpdateOrgSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     secret_name: string;
@@ -16699,6 +16924,7 @@ export async function actionsCreateOrUpdateOrgSecret(
      */
     selected_repository_ids?: string[];
   },
+  opts?: FetcherData,
 ): Promise<EmptyObject | any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}',
@@ -16706,7 +16932,7 @@ export async function actionsCreateOrUpdateOrgSecret(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'empty-object']]] } },
   });
@@ -16717,19 +16943,20 @@ export async function actionsCreateOrUpdateOrgSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-organization-secret}
  * Tags: actions
  */
-export async function actionsDeleteOrgSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteOrgSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     secret_name: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16738,14 +16965,15 @@ export async function actionsDeleteOrgSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
-export async function actionsListSelectedReposForOrgSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListSelectedReposForOrgSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     secret_name: string;
     page?: number;
     per_page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   repositories: MinimalRepository[];
@@ -16756,7 +16984,7 @@ export async function actionsListSelectedReposForOrgSecret(
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16777,8 +17005,8 @@ export async function actionsListSelectedReposForOrgSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
-export async function actionsSetSelectedReposForOrgSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetSelectedReposForOrgSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     secret_name: string;
@@ -16789,6 +17017,7 @@ export async function actionsSetSelectedReposForOrgSecret(
      */
     selected_repository_ids?: number[];
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}/repositories',
@@ -16796,7 +17025,7 @@ export async function actionsSetSelectedReposForOrgSecret(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16805,20 +17034,21 @@ export async function actionsSetSelectedReposForOrgSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#add-selected-repository-to-an-organization-secret}
  * Tags: actions
  */
-export async function actionsAddSelectedRepoToOrgSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsAddSelectedRepoToOrgSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     secret_name: string;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16827,20 +17057,21 @@ export async function actionsAddSelectedRepoToOrgSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-selected-repository-from-an-organization-secret}
  * Tags: actions
  */
-export async function actionsRemoveSelectedRepoFromOrgSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsRemoveSelectedRepoFromOrgSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     secret_name: string;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16851,8 +17082,8 @@ export async function actionsRemoveSelectedRepoFromOrgSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-audit-log}
  * Tags: orgs
  */
-export async function orgsGetAuditLog(
-  ctx: r.Context<AuthMethods>,
+export async function orgsGetAuditLog<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     phrase?: string;
@@ -16863,6 +17094,7 @@ export async function orgsGetAuditLog(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<AuditLogEvent[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/audit-log',
@@ -16878,7 +17110,7 @@ export async function orgsGetAuditLog(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16895,18 +17127,19 @@ export async function orgsGetAuditLog(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-users-blocked-by-an-organization}
  * Tags: orgs
  */
-export async function orgsListBlockedUsers(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListBlockedUsers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -16920,19 +17153,20 @@ export async function orgsListBlockedUsers(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#check-if-a-user-is-blocked-by-an-organization}
  * Tags: orgs
  */
-export async function orgsCheckBlockedUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsCheckBlockedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -16942,19 +17176,20 @@ export async function orgsCheckBlockedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#block-a-user-from-an-organization}
  * Tags: orgs
  */
-export async function orgsBlockUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsBlockUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -16966,19 +17201,20 @@ export async function orgsBlockUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#unblock-a-user-from-an-organization}
  * Tags: orgs
  */
-export async function orgsUnblockUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsUnblockUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -16989,18 +17225,19 @@ export async function orgsUnblockUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-saml-sso-authorizations-for-an-organization}
  * Tags: orgs
  */
-export async function orgsListSamlSsoAuthorizations(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListSamlSsoAuthorizations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<CredentialAuthorization[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/credential-authorizations',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17022,19 +17259,20 @@ export async function orgsListSamlSsoAuthorizations(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-a-saml-sso-authorization-for-an-organization}
  * Tags: orgs
  */
-export async function orgsRemoveSamlSsoAuthorization(
-  ctx: r.Context<AuthMethods>,
+export async function orgsRemoveSamlSsoAuthorization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     credential_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/credential-authorizations/{credential_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -17044,13 +17282,14 @@ export async function orgsRemoveSamlSsoAuthorization(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-organization-events}
  * Tags: activity
  */
-export async function activityListPublicOrgEvents(
-  ctx: r.Context<AuthMethods>,
+export async function activityListPublicOrgEvents<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/events',
@@ -17058,7 +17297,7 @@ export async function activityListPublicOrgEvents(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17073,13 +17312,14 @@ export async function activityListPublicOrgEvents(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-failed-organization-invitations}
  * Tags: orgs
  */
-export async function orgsListFailedInvitations(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListFailedInvitations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationInvitation[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/failed_invitations',
@@ -17087,7 +17327,7 @@ export async function orgsListFailedInvitations(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17107,13 +17347,14 @@ export async function orgsListFailedInvitations(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-webhooks}
  * Tags: orgs
  */
-export async function orgsListWebhooks(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListWebhooks<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrgHook[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks',
@@ -17121,7 +17362,7 @@ export async function orgsListWebhooks(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17137,8 +17378,8 @@ export async function orgsListWebhooks(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#create-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsCreateWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function orgsCreateWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -17178,6 +17419,7 @@ export async function orgsCreateWebhook(
      */
     active?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<OrgHook> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks',
@@ -17185,7 +17427,7 @@ export async function orgsCreateWebhook(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'org-hook']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -17200,19 +17442,20 @@ export async function orgsCreateWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsGetWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function orgsGetWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<OrgHook> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'org-hook']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -17224,8 +17467,8 @@ export async function orgsGetWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsUpdateWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function orgsUpdateWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
@@ -17258,6 +17501,7 @@ export async function orgsUpdateWebhook(
      */
     name?: string;
   },
+  opts?: FetcherData,
 ): Promise<OrgHook> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}',
@@ -17265,7 +17509,7 @@ export async function orgsUpdateWebhook(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'org-hook']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -17279,19 +17523,20 @@ export async function orgsUpdateWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#delete-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsDeleteWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function orgsDeleteWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -17304,19 +17549,20 @@ export async function orgsDeleteWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
-export async function orgsGetWebhookConfigForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function orgsGetWebhookConfigForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<WebhookConfig> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/config',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'webhook-config']]] },
@@ -17331,8 +17577,8 @@ export async function orgsGetWebhookConfigForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
-export async function orgsUpdateWebhookConfigForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function orgsUpdateWebhookConfigForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
@@ -17343,6 +17589,7 @@ export async function orgsUpdateWebhookConfigForOrg(
     secret?: WebhookConfigSecret;
     insecure_ssl?: WebhookConfigInsecureSsl;
   },
+  opts?: FetcherData,
 ): Promise<WebhookConfig> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/config',
@@ -17350,7 +17597,7 @@ export async function orgsUpdateWebhookConfigForOrg(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'webhook-config']]] },
@@ -17363,14 +17610,15 @@ export async function orgsUpdateWebhookConfigForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-deliveries-for-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsListWebhookDeliveries(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListWebhookDeliveries<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
     per_page?: number;
     cursor?: string;
   },
+  opts?: FetcherData,
 ): Promise<HookDeliveryItem[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/deliveries',
@@ -17378,7 +17626,7 @@ export async function orgsListWebhookDeliveries(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'cursor'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17399,20 +17647,21 @@ export async function orgsListWebhookDeliveries(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-a-webhook-delivery-for-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsGetWebhookDelivery(
-  ctx: r.Context<AuthMethods>,
+export async function orgsGetWebhookDelivery<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
     delivery_id: number;
   },
+  opts?: FetcherData,
 ): Promise<HookDelivery> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'hook-delivery']]] } },
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -17427,20 +17676,21 @@ export async function orgsGetWebhookDelivery(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#redeliver-a-delivery-for-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsRedeliverWebhookDelivery(
-  ctx: r.Context<AuthMethods>,
+export async function orgsRedeliverWebhookDelivery<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
     delivery_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -17454,19 +17704,20 @@ export async function orgsRedeliverWebhookDelivery(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#ping-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsPingWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function orgsPingWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/pings',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -17479,18 +17730,19 @@ export async function orgsPingWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-an-organization-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetOrgInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetOrgInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<Installation> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/installation',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'installation']]] } },
   });
@@ -17501,13 +17753,14 @@ export async function appsGetOrgInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-app-installations-for-an-organization}
  * Tags: orgs
  */
-export async function orgsListAppInstallations(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListAppInstallations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   installations: Installation[];
@@ -17518,7 +17771,7 @@ export async function orgsListAppInstallations(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17539,18 +17792,19 @@ export async function orgsListAppInstallations(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
-export async function interactionsGetRestrictionsForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsGetRestrictionsForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<InteractionLimitResponse | any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/interaction-limits',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17572,12 +17826,13 @@ export async function interactionsGetRestrictionsForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
-export async function interactionsSetRestrictionsForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsSetRestrictionsForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
   body: InteractionLimit,
+  opts?: FetcherData,
 ): Promise<InteractionLimitResponse> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/interaction-limits',
@@ -17585,7 +17840,7 @@ export async function interactionsSetRestrictionsForOrg(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17603,18 +17858,19 @@ export async function interactionsSetRestrictionsForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
-export async function interactionsRemoveRestrictionsForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsRemoveRestrictionsForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/interaction-limits',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -17623,13 +17879,14 @@ export async function interactionsRemoveRestrictionsForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-pending-organization-invitations}
  * Tags: orgs
  */
-export async function orgsListPendingInvitations(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListPendingInvitations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationInvitation[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations',
@@ -17637,7 +17894,7 @@ export async function orgsListPendingInvitations(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17660,8 +17917,8 @@ export async function orgsListPendingInvitations(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#create-an-organization-invitation}
  * Tags: orgs
  */
-export async function orgsCreateInvitation(
-  ctx: r.Context<AuthMethods>,
+export async function orgsCreateInvitation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -17687,6 +17944,7 @@ export async function orgsCreateInvitation(
      */
     team_ids?: number[];
   },
+  opts?: FetcherData,
 ): Promise<OrganizationInvitation> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations',
@@ -17694,7 +17952,7 @@ export async function orgsCreateInvitation(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -17715,19 +17973,20 @@ export async function orgsCreateInvitation(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#cancel-an-organization-invitation}
  * Tags: orgs
  */
-export async function orgsCancelInvitation(
-  ctx: r.Context<AuthMethods>,
+export async function orgsCancelInvitation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     invitation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations/{invitation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -17741,14 +18000,15 @@ export async function orgsCancelInvitation(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-invitation-teams}
  * Tags: orgs
  */
-export async function orgsListInvitationTeams(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListInvitationTeams<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     invitation_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations/{invitation_id}/teams',
@@ -17756,7 +18016,7 @@ export async function orgsListInvitationTeams(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17777,8 +18037,8 @@ export async function orgsListInvitationTeams(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-organization-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
-export async function issuesListForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     filter?:
@@ -17796,6 +18056,7 @@ export async function issuesListForOrg(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Issue[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/issues',
@@ -17812,7 +18073,7 @@ export async function issuesListForOrg(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17828,8 +18089,8 @@ export async function issuesListForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-members}
  * Tags: orgs
  */
-export async function orgsListMembers(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListMembers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     filter?: '2fa_disabled' | 'all';
@@ -17837,6 +18098,7 @@ export async function orgsListMembers(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[] | any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/members',
@@ -17844,7 +18106,7 @@ export async function orgsListMembers(
     method: r.HttpMethod.GET,
     queryParams: ['filter', 'role', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -17862,19 +18124,20 @@ export async function orgsListMembers(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#check-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsCheckMembershipForUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsCheckMembershipForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/members/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -17883,19 +18146,20 @@ export async function orgsCheckMembershipForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-an-organization-member}
  * Tags: orgs
  */
-export async function orgsRemoveMember(
-  ctx: r.Context<AuthMethods>,
+export async function orgsRemoveMember<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/members/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -17906,19 +18170,20 @@ export async function orgsRemoveMember(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsGetMembershipForUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsGetMembershipForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<OrgMembership> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/memberships/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'org-membership']]] },
@@ -17941,8 +18206,8 @@ export async function orgsGetMembershipForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#set-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsSetMembershipForUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsSetMembershipForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
@@ -17956,6 +18221,7 @@ export async function orgsSetMembershipForUser(
      */
     role?: 'admin' | 'member';
   },
+  opts?: FetcherData,
 ): Promise<OrgMembership> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/memberships/{username}',
@@ -17963,7 +18229,7 @@ export async function orgsSetMembershipForUser(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'org-membership']]] },
@@ -17982,19 +18248,20 @@ export async function orgsSetMembershipForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsRemoveMembershipForUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsRemoveMembershipForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/memberships/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18006,14 +18273,15 @@ export async function orgsRemoveMembershipForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-organization-migrations}
  * Tags: migrations
  */
-export async function migrationsListForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsListForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
     exclude?: 'repositories'[];
   },
+  opts?: FetcherData,
 ): Promise<Migration[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations',
@@ -18021,7 +18289,7 @@ export async function migrationsListForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page', 'exclude'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -18036,8 +18304,8 @@ export async function migrationsListForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#start-an-organization-migration}
  * Tags: migrations
  */
-export async function migrationsStartForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsStartForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -18056,6 +18324,7 @@ export async function migrationsStartForOrg(
     exclude_attachments?: boolean;
     exclude?: 'repositories'[];
   },
+  opts?: FetcherData,
 ): Promise<Migration> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations',
@@ -18063,7 +18332,7 @@ export async function migrationsStartForOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'migration']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18085,13 +18354,14 @@ export async function migrationsStartForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-an-organization-migration-status}
  * Tags: migrations
  */
-export async function migrationsGetStatusForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsGetStatusForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     migration_id: number;
     exclude?: 'repositories'[];
   },
+  opts?: FetcherData,
 ): Promise<Migration> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}',
@@ -18099,7 +18369,7 @@ export async function migrationsGetStatusForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['exclude'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'migration']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18111,19 +18381,20 @@ export async function migrationsGetStatusForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#download-an-organization-migration-archive}
  * Tags: migrations
  */
-export async function migrationsDownloadArchiveForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsDownloadArchiveForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     migration_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -18134,19 +18405,20 @@ export async function migrationsDownloadArchiveForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#delete-an-organization-migration-archive}
  * Tags: migrations
  */
-export async function migrationsDeleteArchiveForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsDeleteArchiveForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     migration_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -18157,20 +18429,21 @@ export async function migrationsDeleteArchiveForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#unlock-an-organization-repository}
  * Tags: migrations
  */
-export async function migrationsUnlockRepoForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsUnlockRepoForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     migration_id: number;
     repo_name: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -18181,14 +18454,15 @@ export async function migrationsUnlockRepoForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-repositories-in-an-organization-migration}
  * Tags: migrations
  */
-export async function migrationsListReposForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsListReposForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     migration_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/repositories',
@@ -18196,7 +18470,7 @@ export async function migrationsListReposForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -18214,14 +18488,15 @@ export async function migrationsListReposForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-outside-collaborators-for-an-organization}
  * Tags: orgs
  */
-export async function orgsListOutsideCollaborators(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListOutsideCollaborators<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     filter?: '2fa_disabled' | 'all';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/outside_collaborators',
@@ -18229,7 +18504,7 @@ export async function orgsListOutsideCollaborators(
     method: r.HttpMethod.GET,
     queryParams: ['filter', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -18244,19 +18519,20 @@ export async function orgsListOutsideCollaborators(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#convert-an-organization-member-to-outside-collaborator}
  * Tags: orgs
  */
-export async function orgsConvertMemberToOutsideCollaborator(
-  ctx: r.Context<AuthMethods>,
+export async function orgsConvertMemberToOutsideCollaborator<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/outside_collaborators/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -18267,19 +18543,20 @@ export async function orgsConvertMemberToOutsideCollaborator(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-outside-collaborator-from-an-organization}
  * Tags: orgs
  */
-export async function orgsRemoveOutsideCollaborator(
-  ctx: r.Context<AuthMethods>,
+export async function orgsRemoveOutsideCollaborator<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/outside_collaborators/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -18291,8 +18568,8 @@ export async function orgsRemoveOutsideCollaborator(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-an-organization}
  * Tags: packages
  */
-export async function packagesGetPackageForOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetPackageForOrganization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -18304,13 +18581,14 @@ export async function packagesGetPackageForOrganization(
     package_name: string;
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<Package> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'package']]] } },
   });
@@ -18325,8 +18603,8 @@ export async function packagesGetPackageForOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-for-an-organization}
  * Tags: packages
  */
-export async function packagesDeletePackageForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function packagesDeletePackageForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -18338,13 +18616,14 @@ export async function packagesDeletePackageForOrg(
     package_name: string;
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18365,8 +18644,8 @@ export async function packagesDeletePackageForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-for-an-organization}
  * Tags: packages
  */
-export async function packagesRestorePackageForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function packagesRestorePackageForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -18379,6 +18658,7 @@ export async function packagesRestorePackageForOrg(
     org: string;
     token?: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/restore',
@@ -18386,7 +18666,7 @@ export async function packagesRestorePackageForOrg(
     method: r.HttpMethod.POST,
     queryParams: ['token'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18402,8 +18682,10 @@ export async function packagesRestorePackageForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-an-organization}
  * Tags: packages
  */
-export async function packagesGetAllPackageVersionsForPackageOwnedByOrg(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -18418,6 +18700,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg(
     per_page?: number;
     state?: 'active' | 'deleted';
   },
+  opts?: FetcherData,
 ): Promise<PackageVersion[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions',
@@ -18425,7 +18708,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg(
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page', 'state'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -18448,8 +18731,8 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-an-organization}
  * Tags: packages
  */
-export async function packagesGetPackageVersionForOrganization(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetPackageVersionForOrganization<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -18462,13 +18745,14 @@ export async function packagesGetPackageVersionForOrganization(
     org: string;
     package_version_id: number;
   },
+  opts?: FetcherData,
 ): Promise<PackageVersion> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'package-version']]] },
@@ -18485,8 +18769,8 @@ export async function packagesGetPackageVersionForOrganization(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-version-for-an-organization}
  * Tags: packages
  */
-export async function packagesDeletePackageVersionForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function packagesDeletePackageVersionForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -18499,13 +18783,14 @@ export async function packagesDeletePackageVersionForOrg(
     org: string;
     package_version_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18526,8 +18811,8 @@ export async function packagesDeletePackageVersionForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-version-for-an-organization}
  * Tags: packages
  */
-export async function packagesRestorePackageVersionForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function packagesRestorePackageVersionForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -18540,13 +18825,14 @@ export async function packagesRestorePackageVersionForOrg(
     org: string;
     package_version_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18559,14 +18845,15 @@ export async function packagesRestorePackageVersionForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-organization-projects}
  * Tags: projects
  */
-export async function projectsListForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function projectsListForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     state?: 'open' | 'closed' | 'all';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Project[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/projects',
@@ -18574,7 +18861,7 @@ export async function projectsListForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['state', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -18594,8 +18881,8 @@ export async function projectsListForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#create-an-organization-project}
  * Tags: projects
  */
-export async function projectsCreateForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function projectsCreateForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -18609,6 +18896,7 @@ export async function projectsCreateForOrg(
      */
     body?: string;
   },
+  opts?: FetcherData,
 ): Promise<Project> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/projects',
@@ -18616,7 +18904,7 @@ export async function projectsCreateForOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18636,13 +18924,14 @@ export async function projectsCreateForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-public-organization-members}
  * Tags: orgs
  */
-export async function orgsListPublicMembers(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListPublicMembers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members',
@@ -18650,7 +18939,7 @@ export async function orgsListPublicMembers(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -18664,19 +18953,20 @@ export async function orgsListPublicMembers(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#check-public-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsCheckPublicMembershipForUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsCheckPublicMembershipForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -18687,19 +18977,20 @@ export async function orgsCheckPublicMembershipForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#set-public-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsSetPublicMembershipForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsSetPublicMembershipForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -18709,19 +19000,22 @@ export async function orgsSetPublicMembershipForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-public-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsRemovePublicMembershipForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsRemovePublicMembershipForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -18730,8 +19024,8 @@ export async function orgsRemovePublicMembershipForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-organization-repositories}
  * Tags: repos
  */
-export async function reposListForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function reposListForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     type?:
@@ -18747,6 +19041,7 @@ export async function reposListForOrg(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/repos',
@@ -18754,7 +19049,7 @@ export async function reposListForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['type', 'sort', 'direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -18778,8 +19073,8 @@ export async function reposListForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-an-organization-repository}
  * Tags: repos
  */
-export async function reposCreateInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -18864,6 +19159,7 @@ export async function reposCreateInOrg(
      */
     delete_branch_on_merge?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<Repository> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/repos',
@@ -18871,7 +19167,7 @@ export async function reposCreateInOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'repository']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -18890,18 +19186,19 @@ export async function reposCreateInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-actions-billing-for-an-organization}
  * Tags: billing
  */
-export async function billingGetGithubActionsBillingOrg(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetGithubActionsBillingOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsBillingUsage> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/settings/billing/actions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-billing-usage']]] },
@@ -18918,18 +19215,19 @@ export async function billingGetGithubActionsBillingOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-packages-billing-for-an-organization}
  * Tags: billing
  */
-export async function billingGetGithubPackagesBillingOrg(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetGithubPackagesBillingOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<PackagesBillingUsage> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/settings/billing/packages',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'packages-billing-usage']]] },
@@ -18946,18 +19244,19 @@ export async function billingGetGithubPackagesBillingOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-shared-storage-billing-for-an-organization}
  * Tags: billing
  */
-export async function billingGetSharedStorageBillingOrg(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetSharedStorageBillingOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<CombinedBillingUsage> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/settings/billing/shared-storage',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'combined-billing-usage']]] },
@@ -18974,13 +19273,14 @@ export async function billingGetSharedStorageBillingOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-an-organization}
  * Tags: teams
  */
-export async function teamsListIdpGroupsForOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListIdpGroupsForOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: string;
   },
+  opts?: FetcherData,
 ): Promise<GroupMapping> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/team-sync/groups',
@@ -18988,7 +19288,7 @@ export async function teamsListIdpGroupsForOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'group-mapping']]] } },
   });
@@ -18999,13 +19299,14 @@ export async function teamsListIdpGroupsForOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-teams}
  * Tags: teams
  */
-export async function teamsList(
-  ctx: r.Context<AuthMethods>,
+export async function teamsList<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams',
@@ -19013,7 +19314,7 @@ export async function teamsList(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19031,8 +19332,8 @@ export async function teamsList(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-team}
  * Tags: teams
  */
-export async function teamsCreate(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCreate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -19077,6 +19378,7 @@ export async function teamsCreate(
      */
     parent_team_id?: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamFull> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams',
@@ -19084,7 +19386,7 @@ export async function teamsCreate(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'team-full']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -19101,19 +19403,20 @@ export async function teamsCreate(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-team-by-name}
  * Tags: teams
  */
-export async function teamsGetByName(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetByName<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamFull> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'team-full']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -19127,8 +19430,8 @@ export async function teamsGetByName(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-team}
  * Tags: teams
  */
-export async function teamsUpdateInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsUpdateInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19164,6 +19467,7 @@ export async function teamsUpdateInOrg(
      */
     parent_team_id?: number | null;
   },
+  opts?: FetcherData,
 ): Promise<TeamFull> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}',
@@ -19171,7 +19475,7 @@ export async function teamsUpdateInOrg(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'team-full']]] } },
   });
@@ -19186,19 +19490,20 @@ export async function teamsUpdateInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-team}
  * Tags: teams
  */
-export async function teamsDeleteInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsDeleteInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -19209,8 +19514,8 @@ export async function teamsDeleteInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussions}
  * Tags: teams
  */
-export async function teamsListDiscussionsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListDiscussionsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19219,6 +19524,7 @@ export async function teamsListDiscussionsInOrg(
     page?: number;
     pinned?: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions',
@@ -19226,7 +19532,7 @@ export async function teamsListDiscussionsInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['direction', 'per_page', 'page', 'pinned'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19247,8 +19553,8 @@ export async function teamsListDiscussionsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion}
  * Tags: teams
  */
-export async function teamsCreateDiscussionInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCreateDiscussionInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19267,6 +19573,7 @@ export async function teamsCreateDiscussionInOrg(
      */
     private?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions',
@@ -19274,7 +19581,7 @@ export async function teamsCreateDiscussionInOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'team-discussion']]] },
@@ -19289,20 +19596,21 @@ export async function teamsCreateDiscussionInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion}
  * Tags: teams
  */
-export async function teamsGetDiscussionInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetDiscussionInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     discussion_number: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-discussion']]] },
@@ -19317,8 +19625,8 @@ export async function teamsGetDiscussionInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsUpdateDiscussionInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19334,6 +19642,7 @@ export async function teamsUpdateDiscussionInOrg(
      */
     body?: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}',
@@ -19341,7 +19650,7 @@ export async function teamsUpdateDiscussionInOrg(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-discussion']]] },
@@ -19356,20 +19665,21 @@ export async function teamsUpdateDiscussionInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsDeleteDiscussionInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     discussion_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -19380,8 +19690,8 @@ export async function teamsDeleteDiscussionInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussion-comments}
  * Tags: teams
  */
-export async function teamsListDiscussionCommentsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListDiscussionCommentsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19390,6 +19700,7 @@ export async function teamsListDiscussionCommentsInOrg(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments',
@@ -19397,7 +19708,7 @@ export async function teamsListDiscussionCommentsInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19421,8 +19732,8 @@ export async function teamsListDiscussionCommentsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsCreateDiscussionCommentInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19434,6 +19745,7 @@ export async function teamsCreateDiscussionCommentInOrg(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments',
@@ -19441,7 +19753,7 @@ export async function teamsCreateDiscussionCommentInOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -19458,21 +19770,22 @@ export async function teamsCreateDiscussionCommentInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsGetDiscussionCommentInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetDiscussionCommentInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     discussion_number: number;
     comment_number: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19489,8 +19802,8 @@ export async function teamsGetDiscussionCommentInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionCommentInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19503,6 +19816,7 @@ export async function teamsUpdateDiscussionCommentInOrg(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}',
@@ -19510,7 +19824,7 @@ export async function teamsUpdateDiscussionCommentInOrg(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19527,21 +19841,22 @@ export async function teamsUpdateDiscussionCommentInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionCommentInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsDeleteDiscussionCommentInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     discussion_number: number;
     comment_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -19552,8 +19867,8 @@ export async function teamsDeleteDiscussionCommentInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion-comment}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionCommentInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19571,6 +19886,7 @@ export async function reactionsListForTeamDiscussionCommentInOrg(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions',
@@ -19578,7 +19894,7 @@ export async function reactionsListForTeamDiscussionCommentInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19595,8 +19911,8 @@ export async function reactionsListForTeamDiscussionCommentInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForTeamDiscussionCommentInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19617,6 +19933,7 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions',
@@ -19624,7 +19941,7 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
@@ -19638,8 +19955,8 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-team-discussion-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForTeamDiscussionComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsDeleteForTeamDiscussionComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19647,13 +19964,14 @@ export async function reactionsDeleteForTeamDiscussionComment(
     comment_number: number;
     reaction_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -19664,8 +19982,8 @@ export async function reactionsDeleteForTeamDiscussionComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19682,6 +20000,7 @@ export async function reactionsListForTeamDiscussionInOrg(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions',
@@ -19689,7 +20008,7 @@ export async function reactionsListForTeamDiscussionInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19706,8 +20025,8 @@ export async function reactionsListForTeamDiscussionInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion}
  * Tags: reactions
  */
-export async function reactionsCreateForTeamDiscussionInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19727,6 +20046,7 @@ export async function reactionsCreateForTeamDiscussionInOrg(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions',
@@ -19734,7 +20054,7 @@ export async function reactionsCreateForTeamDiscussionInOrg(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
@@ -19748,21 +20068,22 @@ export async function reactionsCreateForTeamDiscussionInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-team-discussion-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForTeamDiscussion(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsDeleteForTeamDiscussion<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     discussion_number: number;
     reaction_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -19773,14 +20094,15 @@ export async function reactionsDeleteForTeamDiscussion(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-pending-team-invitations}
  * Tags: teams
  */
-export async function teamsListPendingInvitationsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListPendingInvitationsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationInvitation[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/invitations',
@@ -19788,7 +20110,7 @@ export async function teamsListPendingInvitationsInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19810,8 +20132,8 @@ export async function teamsListPendingInvitationsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-members}
  * Tags: teams
  */
-export async function teamsListMembersInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListMembersInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19819,6 +20141,7 @@ export async function teamsListMembersInOrg(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/members',
@@ -19826,7 +20149,7 @@ export async function teamsListMembersInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['role', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19850,20 +20173,21 @@ export async function teamsListMembersInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user}
  * Tags: teams
  */
-export async function teamsGetMembershipForUserInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetMembershipForUserInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamMembership> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/memberships/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-membership']]] },
@@ -19886,8 +20210,8 @@ export async function teamsGetMembershipForUserInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user}
  * Tags: teams
  */
-export async function teamsAddOrUpdateMembershipForUserInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsAddOrUpdateMembershipForUserInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -19902,6 +20226,7 @@ export async function teamsAddOrUpdateMembershipForUserInOrg(
      */
     role?: 'member' | 'maintainer';
   },
+  opts?: FetcherData,
 ): Promise<TeamMembership> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/memberships/{username}',
@@ -19909,7 +20234,7 @@ export async function teamsAddOrUpdateMembershipForUserInOrg(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-membership']]] },
@@ -19928,20 +20253,21 @@ export async function teamsAddOrUpdateMembershipForUserInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user}
  * Tags: teams
  */
-export async function teamsRemoveMembershipForUserInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsRemoveMembershipForUserInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/memberships/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -19952,14 +20278,15 @@ export async function teamsRemoveMembershipForUserInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-projects}
  * Tags: teams
  */
-export async function teamsListProjectsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListProjectsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamProject[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects',
@@ -19967,7 +20294,7 @@ export async function teamsListProjectsInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -19984,20 +20311,21 @@ export async function teamsListProjectsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-project}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForProjectInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCheckPermissionsForProjectInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     project_id: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamProject> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects/{project_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'team-project']]] } },
   });
@@ -20010,8 +20338,8 @@ export async function teamsCheckPermissionsForProjectInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-project-permissions}
  * Tags: teams
  */
-export async function teamsAddOrUpdateProjectPermissionsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsAddOrUpdateProjectPermissionsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -20027,6 +20355,7 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg(
      */
     permission?: 'read' | 'write' | 'admin';
   } | null,
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects/{project_id}',
@@ -20034,7 +20363,7 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -20045,20 +20374,21 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-a-project-from-a-team}
  * Tags: teams
  */
-export async function teamsRemoveProjectInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsRemoveProjectInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     project_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects/{project_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -20069,14 +20399,15 @@ export async function teamsRemoveProjectInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-repositories}
  * Tags: teams
  */
-export async function teamsListReposInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListReposInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos',
@@ -20084,7 +20415,7 @@ export async function teamsListReposInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -20107,21 +20438,22 @@ export async function teamsListReposInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-repository}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForRepoInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCheckPermissionsForRepoInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamRepository | any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-repository']]] },
@@ -20138,8 +20470,8 @@ export async function teamsCheckPermissionsForRepoInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-repository-permissions}
  * Tags: teams
  */
-export async function teamsAddOrUpdateRepoPermissionsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsAddOrUpdateRepoPermissionsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -20159,6 +20491,7 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg(
      */
     permission?: 'pull' | 'push' | 'admin' | 'maintain' | 'triage';
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}',
@@ -20166,7 +20499,7 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -20177,21 +20510,22 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-repository-from-a-team}
  * Tags: teams
  */
-export async function teamsRemoveRepoInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsRemoveRepoInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -20204,19 +20538,20 @@ export async function teamsRemoveRepoInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team}
  * Tags: teams
  */
-export async function teamsListIdpGroupsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListIdpGroupsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
   },
+  opts?: FetcherData,
 ): Promise<GroupMapping> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/team-sync/group-mappings',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'group-mapping']]] } },
   });
@@ -20231,8 +20566,8 @@ export async function teamsListIdpGroupsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections}
  * Tags: teams
  */
-export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
@@ -20256,6 +20591,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg(
       group_description: string;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<GroupMapping> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/team-sync/group-mappings',
@@ -20263,7 +20599,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'group-mapping']]] } },
   });
@@ -20276,14 +20612,15 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-child-teams}
  * Tags: teams
  */
-export async function teamsListChildInOrg(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListChildInOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     team_slug: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/teams',
@@ -20291,7 +20628,7 @@ export async function teamsListChildInOrg(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -20305,18 +20642,19 @@ export async function teamsListChildInOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#get-a-project-card}
  * Tags: projects
  */
-export async function projectsGetCard(
-  ctx: r.Context<AuthMethods>,
+export async function projectsGetCard<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
   },
+  opts?: FetcherData,
 ): Promise<ProjectCard | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project-card']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20329,8 +20667,8 @@ export async function projectsGetCard(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#update-a-project-card}
  * Tags: projects
  */
-export async function projectsUpdateCard(
-  ctx: r.Context<AuthMethods>,
+export async function projectsUpdateCard<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
   },
@@ -20345,6 +20683,7 @@ export async function projectsUpdateCard(
      */
     archived?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<ProjectCard | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}',
@@ -20352,7 +20691,7 @@ export async function projectsUpdateCard(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project-card']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20370,18 +20709,19 @@ export async function projectsUpdateCard(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#delete-a-project-card}
  * Tags: projects
  */
-export async function projectsDeleteCard(
-  ctx: r.Context<AuthMethods>,
+export async function projectsDeleteCard<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20392,8 +20732,8 @@ export async function projectsDeleteCard(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#move-a-project-card}
  * Tags: projects
  */
-export async function projectsMoveCard(
-  ctx: r.Context<AuthMethods>,
+export async function projectsMoveCard<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
   },
@@ -20409,6 +20749,7 @@ export async function projectsMoveCard(
      */
     column_id?: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}/moves',
@@ -20416,7 +20757,7 @@ export async function projectsMoveCard(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -20429,18 +20770,19 @@ export async function projectsMoveCard(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#get-a-project-column}
  * Tags: projects
  */
-export async function projectsGetColumn(
-  ctx: r.Context<AuthMethods>,
+export async function projectsGetColumn<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
   },
+  opts?: FetcherData,
 ): Promise<ProjectColumn | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'project-column']]] },
@@ -20455,8 +20797,8 @@ export async function projectsGetColumn(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#update-a-project-column}
  * Tags: projects
  */
-export async function projectsUpdateColumn(
-  ctx: r.Context<AuthMethods>,
+export async function projectsUpdateColumn<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
   },
@@ -20467,6 +20809,7 @@ export async function projectsUpdateColumn(
      */
     name: string;
   },
+  opts?: FetcherData,
 ): Promise<ProjectColumn | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}',
@@ -20474,7 +20817,7 @@ export async function projectsUpdateColumn(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'project-column']]] },
@@ -20488,18 +20831,19 @@ export async function projectsUpdateColumn(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#delete-a-project-column}
  * Tags: projects
  */
-export async function projectsDeleteColumn(
-  ctx: r.Context<AuthMethods>,
+export async function projectsDeleteColumn<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20510,14 +20854,15 @@ export async function projectsDeleteColumn(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-project-cards}
  * Tags: projects
  */
-export async function projectsListCards(
-  ctx: r.Context<AuthMethods>,
+export async function projectsListCards<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
     archived_state?: 'all' | 'archived' | 'not_archived';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<ProjectCard[] | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}/cards',
@@ -20525,7 +20870,7 @@ export async function projectsListCards(
     method: r.HttpMethod.GET,
     queryParams: ['archived_state', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -20541,8 +20886,8 @@ export async function projectsListCards(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#create-a-project-card}
  * Tags: projects
  */
-export async function projectsCreateCard(
-  ctx: r.Context<AuthMethods>,
+export async function projectsCreateCard<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
   },
@@ -20566,6 +20911,7 @@ export async function projectsCreateCard(
          */
         content_type: string;
       },
+  opts?: FetcherData,
 ): Promise<ProjectCard | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}/cards',
@@ -20573,7 +20919,7 @@ export async function projectsCreateCard(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'project-card']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20600,8 +20946,8 @@ export async function projectsCreateCard(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#move-a-project-column}
  * Tags: projects
  */
-export async function projectsMoveColumn(
-  ctx: r.Context<AuthMethods>,
+export async function projectsMoveColumn<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
   },
@@ -20612,6 +20958,7 @@ export async function projectsMoveColumn(
      */
     position: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}/moves',
@@ -20619,7 +20966,7 @@ export async function projectsMoveColumn(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20636,18 +20983,19 @@ export async function projectsMoveColumn(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#get-a-project}
  * Tags: projects
  */
-export async function projectsGet(
-  ctx: r.Context<AuthMethods>,
+export async function projectsGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Project | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20660,8 +21008,8 @@ export async function projectsGet(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#update-a-project}
  * Tags: projects
  */
-export async function projectsUpdate(
-  ctx: r.Context<AuthMethods>,
+export async function projectsUpdate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
   },
@@ -20690,6 +21038,7 @@ export async function projectsUpdate(
      */
     private?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<Project | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}',
@@ -20697,7 +21046,7 @@ export async function projectsUpdate(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20715,18 +21064,19 @@ export async function projectsUpdate(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#delete-a-project}
  * Tags: projects
  */
-export async function projectsDelete(
-  ctx: r.Context<AuthMethods>,
+export async function projectsDelete<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20739,14 +21089,15 @@ export async function projectsDelete(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-project-collaborators}
  * Tags: projects
  */
-export async function projectsListCollaborators(
-  ctx: r.Context<AuthMethods>,
+export async function projectsListCollaborators<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
     affiliation?: 'outside' | 'direct' | 'all';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[] | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators',
@@ -20754,7 +21105,7 @@ export async function projectsListCollaborators(
     method: r.HttpMethod.GET,
     queryParams: ['affiliation', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -20775,8 +21126,8 @@ export async function projectsListCollaborators(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#add-project-collaborator}
  * Tags: projects
  */
-export async function projectsAddCollaborator(
-  ctx: r.Context<AuthMethods>,
+export async function projectsAddCollaborator<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
     username: string;
@@ -20789,6 +21140,7 @@ export async function projectsAddCollaborator(
      */
     permission?: 'read' | 'write' | 'admin';
   } | null,
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators/{username}',
@@ -20796,7 +21148,7 @@ export async function projectsAddCollaborator(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20812,19 +21164,20 @@ export async function projectsAddCollaborator(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#remove-project-collaborator}
  * Tags: projects
  */
-export async function projectsRemoveCollaborator(
-  ctx: r.Context<AuthMethods>,
+export async function projectsRemoveCollaborator<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20840,19 +21193,20 @@ export async function projectsRemoveCollaborator(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#get-project-permission-for-a-user}
  * Tags: projects
  */
-export async function projectsGetPermissionForUser(
-  ctx: r.Context<AuthMethods>,
+export async function projectsGetPermissionForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<RepositoryCollaboratorPermission | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators/{username}/permission',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -20872,13 +21226,14 @@ export async function projectsGetPermissionForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-project-columns}
  * Tags: projects
  */
-export async function projectsListColumns(
-  ctx: r.Context<AuthMethods>,
+export async function projectsListColumns<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<ProjectColumn[] | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/columns',
@@ -20886,7 +21241,7 @@ export async function projectsListColumns(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -20904,8 +21259,8 @@ export async function projectsListColumns(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#create-a-project-column}
  * Tags: projects
  */
-export async function projectsCreateColumn(
-  ctx: r.Context<AuthMethods>,
+export async function projectsCreateColumn<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
   },
@@ -20916,6 +21271,7 @@ export async function projectsCreateColumn(
      */
     name: string;
   },
+  opts?: FetcherData,
 ): Promise<ProjectColumn | any> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/columns',
@@ -20923,7 +21279,7 @@ export async function projectsCreateColumn(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'project-column']]] },
@@ -20945,16 +21301,17 @@ export async function projectsCreateColumn(
  * Learn more at {@link https://docs.github.com/rest/reference/rate-limit#get-rate-limit-status-for-the-authenticated-user}
  * Tags: rate-limit
  */
-export async function rateLimitGet(
-  ctx: r.Context<AuthMethods>,
+export async function rateLimitGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<RateLimitOverview | any> {
   const req = await ctx.createRequest({
     path: '/rate_limit',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'rate-limit-overview']]] },
@@ -20971,18 +21328,19 @@ export async function rateLimitGet(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy}
  * Tags: reactions
  */
-export async function reactionsDeleteLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsDeleteLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     reaction_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -20997,19 +21355,20 @@ export async function reactionsDeleteLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository}
  * Tags: repos
  */
-export async function reposGet(
-  ctx: r.Context<AuthMethods>,
+export async function reposGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<FullRepository | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'full-repository']]] },
@@ -21025,8 +21384,8 @@ export async function reposGet(
  * Learn more at {@link https://docs.github.com/rest/reference/repos/#update-a-repository}
  * Tags: repos
  */
-export async function reposUpdate(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -21127,6 +21486,7 @@ export async function reposUpdate(
      */
     archived?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<FullRepository | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}',
@@ -21134,7 +21494,7 @@ export async function reposUpdate(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'full-repository']]] },
@@ -21156,19 +21516,20 @@ export async function reposUpdate(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-repository}
  * Tags: repos
  */
-export async function reposDelete(
-  ctx: r.Context<AuthMethods>,
+export async function reposDelete<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '307': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -21180,14 +21541,15 @@ export async function reposDelete(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-artifacts-for-a-repository}
  * Tags: actions
  */
-export async function actionsListArtifactsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListArtifactsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   artifacts: Artifact[];
@@ -21198,7 +21560,7 @@ export async function actionsListArtifactsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21219,20 +21581,21 @@ export async function actionsListArtifactsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-artifact}
  * Tags: actions
  */
-export async function actionsGetArtifact(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetArtifact<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     artifact_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Artifact> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/artifacts/{artifact_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'artifact']]] } },
   });
@@ -21243,20 +21606,21 @@ export async function actionsGetArtifact(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-artifact}
  * Tags: actions
  */
-export async function actionsDeleteArtifact(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteArtifact<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     artifact_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/artifacts/{artifact_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21268,21 +21632,22 @@ export async function actionsDeleteArtifact(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#download-an-artifact}
  * Tags: actions
  */
-export async function actionsDownloadArtifact(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDownloadArtifact<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     artifact_id: number;
     archive_format: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/artifacts/{artifact_id}/{archive_format}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21291,20 +21656,21 @@ export async function actionsDownloadArtifact(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-job-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetJobForWorkflowRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetJobForWorkflowRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     job_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Job> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/jobs/{job_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'job']]] } },
   });
@@ -21318,20 +21684,21 @@ export async function actionsGetJobForWorkflowRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#download-job-logs-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsDownloadJobLogsForWorkflowRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDownloadJobLogsForWorkflowRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     job_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/jobs/{job_id}/logs',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21343,19 +21710,20 @@ export async function actionsDownloadJobLogsForWorkflowRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-github-actions-permissions-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetGithubActionsPermissionsRepository(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetGithubActionsPermissionsRepository<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsRepositoryPermissions> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21374,8 +21742,8 @@ export async function actionsGetGithubActionsPermissionsRepository(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-github-actions-permissions-for-a-repository}
  * Tags: actions
  */
-export async function actionsSetGithubActionsPermissionsRepository(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetGithubActionsPermissionsRepository<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -21384,6 +21752,7 @@ export async function actionsSetGithubActionsPermissionsRepository(
     enabled: ActionsEnabled;
     allowed_actions?: AllowedActions;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions',
@@ -21391,7 +21760,7 @@ export async function actionsSetGithubActionsPermissionsRepository(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21402,19 +21771,20 @@ export async function actionsSetGithubActionsPermissionsRepository(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-allowed-actions-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetAllowedActionsRepository(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetAllowedActionsRepository<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<SelectedActions> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions/selected-actions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'selected-actions']]] },
@@ -21433,13 +21803,14 @@ export async function actionsGetAllowedActionsRepository(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-allowed-actions-for-a-repository}
  * Tags: actions
  */
-export async function actionsSetAllowedActionsRepository(
-  ctx: r.Context<AuthMethods>,
+export async function actionsSetAllowedActionsRepository<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
   body: SelectedActions,
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions/selected-actions',
@@ -21447,7 +21818,7 @@ export async function actionsSetAllowedActionsRepository(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21456,14 +21827,15 @@ export async function actionsSetAllowedActionsRepository(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-for-a-repository}
  * Tags: actions
  */
-export async function actionsListSelfHostedRunnersForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   runners: Runner[];
@@ -21474,7 +21846,7 @@ export async function actionsListSelfHostedRunnersForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21497,19 +21869,20 @@ export async function actionsListSelfHostedRunnersForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-runner-applications-for-a-repository}
  * Tags: actions
  */
-export async function actionsListRunnerApplicationsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListRunnerApplicationsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<RunnerApplication[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/downloads',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21535,19 +21908,20 @@ export async function actionsListRunnerApplicationsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-registration-token-for-a-repository}
  * Tags: actions
  */
-export async function actionsCreateRegistrationTokenForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateRegistrationTokenForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<AuthenticationToken> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/registration-token',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'authentication-token']]] },
@@ -21569,19 +21943,20 @@ export async function actionsCreateRegistrationTokenForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-remove-token-for-a-repository}
  * Tags: actions
  */
-export async function actionsCreateRemoveTokenForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateRemoveTokenForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<AuthenticationToken> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/remove-token',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'authentication-token']]] },
@@ -21597,20 +21972,21 @@ export async function actionsCreateRemoveTokenForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetSelfHostedRunnerForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetSelfHostedRunnerForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Runner> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'runner']]] } },
   });
@@ -21624,20 +22000,21 @@ export async function actionsGetSelfHostedRunnerForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository}
  * Tags: actions
  */
-export async function actionsDeleteSelfHostedRunnerFromRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteSelfHostedRunnerFromRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     runner_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21648,8 +22025,8 @@ export async function actionsDeleteSelfHostedRunnerFromRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-runs-for-a-repository}
  * Tags: actions
  */
-export async function actionsListWorkflowRunsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListWorkflowRunsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -21674,6 +22051,7 @@ export async function actionsListWorkflowRunsForRepo(
     page?: number;
     created?: Date;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   workflow_runs: WorkflowRun[];
@@ -21692,7 +22070,7 @@ export async function actionsListWorkflowRunsForRepo(
       'created',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21713,20 +22091,21 @@ export async function actionsListWorkflowRunsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetWorkflowRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetWorkflowRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<WorkflowRun> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'workflow-run']]] } },
   });
@@ -21739,20 +22118,21 @@ export async function actionsGetWorkflowRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-workflow-run}
  * Tags: actions
  */
-export async function actionsDeleteWorkflowRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteWorkflowRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21761,20 +22141,21 @@ export async function actionsDeleteWorkflowRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-the-review-history-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetReviewsForRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetReviewsForRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<EnvironmentApprovals[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/approvals',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21796,20 +22177,21 @@ export async function actionsGetReviewsForRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#approve-a-workflow-run-for-a-fork-pull-request}
  * Tags: actions
  */
-export async function actionsApproveWorkflowRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsApproveWorkflowRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<EmptyObject> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/approve',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'empty-object']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -21822,8 +22204,8 @@ export async function actionsApproveWorkflowRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-run-artifacts}
  * Tags: actions
  */
-export async function actionsListWorkflowRunArtifacts(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListWorkflowRunArtifacts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -21831,6 +22213,7 @@ export async function actionsListWorkflowRunArtifacts(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   artifacts: Artifact[];
@@ -21841,7 +22224,7 @@ export async function actionsListWorkflowRunArtifacts(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21862,20 +22245,21 @@ export async function actionsListWorkflowRunArtifacts(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#cancel-a-workflow-run}
  * Tags: actions
  */
-export async function actionsCancelWorkflowRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCancelWorkflowRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/cancel',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21884,8 +22268,8 @@ export async function actionsCancelWorkflowRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-jobs-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsListJobsForWorkflowRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListJobsForWorkflowRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -21894,6 +22278,7 @@ export async function actionsListJobsForWorkflowRun(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   jobs: Job[];
@@ -21904,7 +22289,7 @@ export async function actionsListJobsForWorkflowRun(
     method: r.HttpMethod.GET,
     queryParams: ['filter', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -21928,20 +22313,21 @@ export async function actionsListJobsForWorkflowRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#download-workflow-run-logs}
  * Tags: actions
  */
-export async function actionsDownloadWorkflowRunLogs(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDownloadWorkflowRunLogs<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/logs',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21950,20 +22336,21 @@ export async function actionsDownloadWorkflowRunLogs(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-workflow-run-logs}
  * Tags: actions
  */
-export async function actionsDeleteWorkflowRunLogs(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteWorkflowRunLogs<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/logs',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -21974,20 +22361,21 @@ export async function actionsDeleteWorkflowRunLogs(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetPendingDeploymentsForRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetPendingDeploymentsForRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<PendingDeployment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22006,8 +22394,8 @@ export async function actionsGetPendingDeploymentsForRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#review-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsReviewPendingDeploymentsForRun(
-  ctx: r.Context<AuthMethods>,
+export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -22034,6 +22422,7 @@ export async function actionsReviewPendingDeploymentsForRun(
      */
     comment: string;
   },
+  opts?: FetcherData,
 ): Promise<Deployment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments',
@@ -22041,7 +22430,7 @@ export async function actionsReviewPendingDeploymentsForRun(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22056,20 +22445,21 @@ export async function actionsReviewPendingDeploymentsForRun(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#re-run-a-workflow}
  * Tags: actions
  */
-export async function actionsReRunWorkflow(
-  ctx: r.Context<AuthMethods>,
+export async function actionsReRunWorkflow<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/rerun',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22080,20 +22470,21 @@ export async function actionsReRunWorkflow(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-workflow-run-usage}
  * Tags: actions
  */
-export async function actionsGetWorkflowRunUsage(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetWorkflowRunUsage<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<WorkflowRunUsage> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/timing',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'workflow-run-usage']]] },
@@ -22106,14 +22497,15 @@ export async function actionsGetWorkflowRunUsage(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-secrets}
  * Tags: actions
  */
-export async function actionsListRepoSecrets(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListRepoSecrets<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   secrets: ActionsSecret[];
@@ -22124,7 +22516,7 @@ export async function actionsListRepoSecrets(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22145,19 +22537,20 @@ export async function actionsListRepoSecrets(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-repository-public-key}
  * Tags: actions
  */
-export async function actionsGetRepoPublicKey(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetRepoPublicKey<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsPublicKey> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/public-key',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-public-key']]] },
@@ -22170,20 +22563,21 @@ export async function actionsGetRepoPublicKey(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-repository-secret}
  * Tags: actions
  */
-export async function actionsGetRepoSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetRepoSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     secret_name: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsSecret> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-secret']]] },
@@ -22270,8 +22664,8 @@ export async function actionsGetRepoSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-or-update-a-repository-secret}
  * Tags: actions
  */
-export async function actionsCreateOrUpdateRepoSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateOrUpdateRepoSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -22287,6 +22681,7 @@ export async function actionsCreateOrUpdateRepoSecret(
      */
     key_id?: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/{secret_name}',
@@ -22294,7 +22689,7 @@ export async function actionsCreateOrUpdateRepoSecret(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22303,20 +22698,21 @@ export async function actionsCreateOrUpdateRepoSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-repository-secret}
  * Tags: actions
  */
-export async function actionsDeleteRepoSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteRepoSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     secret_name: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22325,14 +22721,15 @@ export async function actionsDeleteRepoSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-workflows}
  * Tags: actions
  */
-export async function actionsListRepoWorkflows(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListRepoWorkflows<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   workflows: Workflow[];
@@ -22343,7 +22740,7 @@ export async function actionsListRepoWorkflows(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22364,20 +22761,21 @@ export async function actionsListRepoWorkflows(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-workflow}
  * Tags: actions
  */
-export async function actionsGetWorkflow(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetWorkflow<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     workflow_id: number | string;
   },
+  opts?: FetcherData,
 ): Promise<Workflow> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'workflow']]] } },
   });
@@ -22390,20 +22788,21 @@ export async function actionsGetWorkflow(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#disable-a-workflow}
  * Tags: actions
  */
-export async function actionsDisableWorkflow(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDisableWorkflow<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     workflow_id: number | string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22416,8 +22815,8 @@ export async function actionsDisableWorkflow(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-workflow-dispatch-event}
  * Tags: actions
  */
-export async function actionsCreateWorkflowDispatch(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateWorkflowDispatch<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -22435,6 +22834,7 @@ export async function actionsCreateWorkflowDispatch(
       [key: string]: string;
     };
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches',
@@ -22442,7 +22842,7 @@ export async function actionsCreateWorkflowDispatch(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22453,20 +22853,21 @@ export async function actionsCreateWorkflowDispatch(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#enable-a-workflow}
  * Tags: actions
  */
-export async function actionsEnableWorkflow(
-  ctx: r.Context<AuthMethods>,
+export async function actionsEnableWorkflow<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     workflow_id: number | string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22477,8 +22878,8 @@ export async function actionsEnableWorkflow(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-runs}
  * Tags: actions
  */
-export async function actionsListWorkflowRuns(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListWorkflowRuns<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -22504,6 +22905,7 @@ export async function actionsListWorkflowRuns(
     page?: number;
     created?: Date;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   workflow_runs: WorkflowRun[];
@@ -22522,7 +22924,7 @@ export async function actionsListWorkflowRuns(
       'created',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22545,20 +22947,21 @@ export async function actionsListWorkflowRuns(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-workflow-usage}
  * Tags: actions
  */
-export async function actionsGetWorkflowUsage(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetWorkflowUsage<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     workflow_id: number | string;
   },
+  opts?: FetcherData,
 ): Promise<WorkflowUsage> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'workflow-usage']]] },
@@ -22571,14 +22974,15 @@ export async function actionsGetWorkflowUsage(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-assignees}
  * Tags: issues
  */
-export async function issuesListAssignees(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListAssignees<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/assignees',
@@ -22586,7 +22990,7 @@ export async function issuesListAssignees(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22606,20 +23010,21 @@ export async function issuesListAssignees(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#check-if-a-user-can-be-assigned}
  * Tags: issues
  */
-export async function issuesCheckUserCanBeAssigned(
-  ctx: r.Context<AuthMethods>,
+export async function issuesCheckUserCanBeAssigned<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     assignee: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/assignees/{assignee}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -22632,13 +23037,14 @@ export async function issuesCheckUserCanBeAssigned(
  * Learn more at {@link https://docs.github.com/v3/repos#list-autolinks}
  * Tags: repos
  */
-export async function reposListAutolinks(
-  ctx: r.Context<AuthMethods>,
+export async function reposListAutolinks<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Autolink[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks',
@@ -22646,7 +23052,7 @@ export async function reposListAutolinks(
     method: r.HttpMethod.GET,
     queryParams: ['page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22661,8 +23067,8 @@ export async function reposListAutolinks(
  * Learn more at {@link https://docs.github.com/v3/repos#create-an-autolink}
  * Tags: repos
  */
-export async function reposCreateAutolink(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateAutolink<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -22677,6 +23083,7 @@ export async function reposCreateAutolink(
      */
     url_template: string;
   },
+  opts?: FetcherData,
 ): Promise<Autolink> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks',
@@ -22684,7 +23091,7 @@ export async function reposCreateAutolink(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'autolink']]] } },
     '422': {
@@ -22700,20 +23107,21 @@ export async function reposCreateAutolink(
  * Learn more at {@link https://docs.github.com/v3/repos#get-autolink}
  * Tags: repos
  */
-export async function reposGetAutolink(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetAutolink<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     autolink_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Autolink> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks/{autolink_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'autolink']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -22727,20 +23135,21 @@ export async function reposGetAutolink(
  * Learn more at {@link https://docs.github.com/v3/repos#delete-autolink}
  * Tags: repos
  */
-export async function reposDeleteAutolink(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteAutolink<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     autolink_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks/{autolink_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -22751,19 +23160,20 @@ export async function reposDeleteAutolink(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#enable-automated-security-fixes}
  * Tags: repos
  */
-export async function reposEnableAutomatedSecurityFixes(
-  ctx: r.Context<AuthMethods>,
+export async function reposEnableAutomatedSecurityFixes<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/automated-security-fixes',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22772,19 +23182,20 @@ export async function reposEnableAutomatedSecurityFixes(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#disable-automated-security-fixes}
  * Tags: repos
  */
-export async function reposDisableAutomatedSecurityFixes(
-  ctx: r.Context<AuthMethods>,
+export async function reposDisableAutomatedSecurityFixes<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/automated-security-fixes',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -22792,8 +23203,8 @@ export async function reposDisableAutomatedSecurityFixes(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-branches}
  * Tags: repos
  */
-export async function reposListBranches(
-  ctx: r.Context<AuthMethods>,
+export async function reposListBranches<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -22801,6 +23212,7 @@ export async function reposListBranches(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<ShortBranch[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches',
@@ -22808,7 +23220,7 @@ export async function reposListBranches(
     method: r.HttpMethod.GET,
     queryParams: ['protected', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -22823,20 +23235,21 @@ export async function reposListBranches(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-branch}
  * Tags: repos
  */
-export async function reposGetBranch(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetBranch<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<BranchWithProtection | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'branch-with-protection']]] },
@@ -22851,20 +23264,21 @@ export async function reposGetBranch(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-branch-protection}
  * Tags: repos
  */
-export async function reposGetBranchProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetBranchProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<BranchProtection> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'branch-protection']]] },
@@ -22884,8 +23298,8 @@ export async function reposGetBranchProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-branch-protection}
  * Tags: repos
  */
-export async function reposUpdateBranchProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateBranchProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -22973,6 +23387,7 @@ export async function reposUpdateBranchProtection(
      */
     required_conversation_resolution?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<ProtectedBranch> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection',
@@ -22980,7 +23395,7 @@ export async function reposUpdateBranchProtection(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'protected-branch']]] },
@@ -23000,20 +23415,21 @@ export async function reposUpdateBranchProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-branch-protection}
  * Tags: repos
  */
-export async function reposDeleteBranchProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteBranchProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -23024,20 +23440,21 @@ export async function reposDeleteBranchProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-admin-branch-protection}
  * Tags: repos
  */
-export async function reposGetAdminBranchProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetAdminBranchProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<ProtectedBranchAdminEnforced> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23054,20 +23471,21 @@ export async function reposGetAdminBranchProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-admin-branch-protection}
  * Tags: repos
  */
-export async function reposSetAdminBranchProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposSetAdminBranchProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<ProtectedBranchAdminEnforced> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23084,20 +23502,21 @@ export async function reposSetAdminBranchProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-admin-branch-protection}
  * Tags: repos
  */
-export async function reposDeleteAdminBranchProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteAdminBranchProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -23108,20 +23527,21 @@ export async function reposDeleteAdminBranchProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-pull-request-review-protection}
  * Tags: repos
  */
-export async function reposGetPullRequestReviewProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetPullRequestReviewProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<ProtectedBranchPullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23140,8 +23560,8 @@ export async function reposGetPullRequestReviewProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-pull-request-review-protection}
  * Tags: repos
  */
-export async function reposUpdatePullRequestReviewProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdatePullRequestReviewProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23174,6 +23594,7 @@ export async function reposUpdatePullRequestReviewProtection(
      */
     required_approving_review_count?: number;
   },
+  opts?: FetcherData,
 ): Promise<ProtectedBranchPullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews',
@@ -23181,7 +23602,7 @@ export async function reposUpdatePullRequestReviewProtection(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23199,20 +23620,21 @@ export async function reposUpdatePullRequestReviewProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-pull-request-review-protection}
  * Tags: repos
  */
-export async function reposDeletePullRequestReviewProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeletePullRequestReviewProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -23227,20 +23649,21 @@ export async function reposDeletePullRequestReviewProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-commit-signature-protection}
  * Tags: repos
  */
-export async function reposGetCommitSignatureProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCommitSignatureProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<ProtectedBranchAdminEnforced> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_signatures',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23258,20 +23681,21 @@ export async function reposGetCommitSignatureProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-commit-signature-protection}
  * Tags: repos
  */
-export async function reposCreateCommitSignatureProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateCommitSignatureProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<ProtectedBranchAdminEnforced> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_signatures',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23289,20 +23713,21 @@ export async function reposCreateCommitSignatureProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-commit-signature-protection}
  * Tags: repos
  */
-export async function reposDeleteCommitSignatureProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteCommitSignatureProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_signatures',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -23313,20 +23738,21 @@ export async function reposDeleteCommitSignatureProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-status-checks-protection}
  * Tags: repos
  */
-export async function reposGetStatusChecksProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetStatusChecksProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<StatusCheckPolicy> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'status-check-policy']]] },
@@ -23342,8 +23768,8 @@ export async function reposGetStatusChecksProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-status-check-potection}
  * Tags: repos
  */
-export async function reposUpdateStatusCheckProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateStatusCheckProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23359,6 +23785,7 @@ export async function reposUpdateStatusCheckProtection(
      */
     contexts?: string[];
   },
+  opts?: FetcherData,
 ): Promise<StatusCheckPolicy> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks',
@@ -23366,7 +23793,7 @@ export async function reposUpdateStatusCheckProtection(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'status-check-policy']]] },
@@ -23383,20 +23810,21 @@ export async function reposUpdateStatusCheckProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-status-check-protection}
  * Tags: repos
  */
-export async function reposRemoveStatusCheckProtection(
-  ctx: r.Context<AuthMethods>,
+export async function reposRemoveStatusCheckProtection<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -23405,20 +23833,21 @@ export async function reposRemoveStatusCheckProtection(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-status-check-contexts}
  * Tags: repos
  */
-export async function reposGetAllStatusCheckContexts(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetAllStatusCheckContexts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<string[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -23429,8 +23858,8 @@ export async function reposGetAllStatusCheckContexts(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-status-check-contexts}
  * Tags: repos
  */
-export async function reposAddStatusCheckContexts(
-  ctx: r.Context<AuthMethods>,
+export async function reposAddStatusCheckContexts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23444,6 +23873,7 @@ export async function reposAddStatusCheckContexts(
         contexts: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<string[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
@@ -23451,7 +23881,7 @@ export async function reposAddStatusCheckContexts(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -23466,8 +23896,8 @@ export async function reposAddStatusCheckContexts(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-status-check-contexts}
  * Tags: repos
  */
-export async function reposSetStatusCheckContexts(
-  ctx: r.Context<AuthMethods>,
+export async function reposSetStatusCheckContexts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23481,6 +23911,7 @@ export async function reposSetStatusCheckContexts(
         contexts: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<string[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
@@ -23488,7 +23919,7 @@ export async function reposSetStatusCheckContexts(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -23502,8 +23933,8 @@ export async function reposSetStatusCheckContexts(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-status-check-contexts}
  * Tags: repos
  */
-export async function reposRemoveStatusCheckContexts(
-  ctx: r.Context<AuthMethods>,
+export async function reposRemoveStatusCheckContexts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23517,6 +23948,7 @@ export async function reposRemoveStatusCheckContexts(
         contexts: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<string[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
@@ -23524,7 +23956,7 @@ export async function reposRemoveStatusCheckContexts(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -23542,20 +23974,21 @@ export async function reposRemoveStatusCheckContexts(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-access-restrictions}
  * Tags: repos
  */
-export async function reposGetAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<BranchRestrictionPolicy> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23573,20 +24006,21 @@ export async function reposGetAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-access-restrictions}
  * Tags: repos
  */
-export async function reposDeleteAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -23597,20 +24031,21 @@ export async function reposDeleteAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-apps-with-access-to-the-protected-branch}
  * Tags: repos
  */
-export async function reposGetAppsWithAccessToProtectedBranch(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetAppsWithAccessToProtectedBranch<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<Integration[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23632,8 +24067,8 @@ export async function reposGetAppsWithAccessToProtectedBranch(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-app-access-restrictions}
  * Tags: repos
  */
-export async function reposAddAppAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposAddAppAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23647,6 +24082,7 @@ export async function reposAddAppAccessRestrictions(
         apps: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<Integration[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
@@ -23654,7 +24090,7 @@ export async function reposAddAppAccessRestrictions(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23678,8 +24114,8 @@ export async function reposAddAppAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-app-access-restrictions}
  * Tags: repos
  */
-export async function reposSetAppAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposSetAppAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23693,6 +24129,7 @@ export async function reposSetAppAccessRestrictions(
         apps: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<Integration[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
@@ -23700,7 +24137,7 @@ export async function reposSetAppAccessRestrictions(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23724,8 +24161,8 @@ export async function reposSetAppAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-app-access-restrictions}
  * Tags: repos
  */
-export async function reposRemoveAppAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposRemoveAppAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23739,6 +24176,7 @@ export async function reposRemoveAppAccessRestrictions(
         apps: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<Integration[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
@@ -23746,7 +24184,7 @@ export async function reposRemoveAppAccessRestrictions(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23766,20 +24204,21 @@ export async function reposRemoveAppAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-teams-with-access-to-the-protected-branch}
  * Tags: repos
  */
-export async function reposGetTeamsWithAccessToProtectedBranch(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetTeamsWithAccessToProtectedBranch<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23801,8 +24240,8 @@ export async function reposGetTeamsWithAccessToProtectedBranch(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-team-access-restrictions}
  * Tags: repos
  */
-export async function reposAddTeamAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposAddTeamAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23816,6 +24255,7 @@ export async function reposAddTeamAccessRestrictions(
         teams: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
@@ -23823,7 +24263,7 @@ export async function reposAddTeamAccessRestrictions(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23847,8 +24287,8 @@ export async function reposAddTeamAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-team-access-restrictions}
  * Tags: repos
  */
-export async function reposSetTeamAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposSetTeamAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23862,6 +24302,7 @@ export async function reposSetTeamAccessRestrictions(
         teams: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
@@ -23869,7 +24310,7 @@ export async function reposSetTeamAccessRestrictions(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23893,8 +24334,8 @@ export async function reposSetTeamAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-team-access-restrictions}
  * Tags: repos
  */
-export async function reposRemoveTeamAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposRemoveTeamAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23908,6 +24349,7 @@ export async function reposRemoveTeamAccessRestrictions(
         teams: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
@@ -23915,7 +24357,7 @@ export async function reposRemoveTeamAccessRestrictions(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23935,20 +24377,21 @@ export async function reposRemoveTeamAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-users-with-access-to-the-protected-branch}
  * Tags: repos
  */
-export async function reposGetUsersWithAccessToProtectedBranch(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetUsersWithAccessToProtectedBranch<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     branch: string;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -23970,8 +24413,8 @@ export async function reposGetUsersWithAccessToProtectedBranch(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-user-access-restrictions}
  * Tags: repos
  */
-export async function reposAddUserAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposAddUserAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -23985,6 +24428,7 @@ export async function reposAddUserAccessRestrictions(
         users: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
@@ -23992,7 +24436,7 @@ export async function reposAddUserAccessRestrictions(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24016,8 +24460,8 @@ export async function reposAddUserAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-user-access-restrictions}
  * Tags: repos
  */
-export async function reposSetUserAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposSetUserAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24031,6 +24475,7 @@ export async function reposSetUserAccessRestrictions(
         users: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
@@ -24038,7 +24483,7 @@ export async function reposSetUserAccessRestrictions(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24062,8 +24507,8 @@ export async function reposSetUserAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-user-access-restrictions}
  * Tags: repos
  */
-export async function reposRemoveUserAccessRestrictions(
-  ctx: r.Context<AuthMethods>,
+export async function reposRemoveUserAccessRestrictions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24077,6 +24522,7 @@ export async function reposRemoveUserAccessRestrictions(
         users: string[];
       }
     | string[],
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
@@ -24084,7 +24530,7 @@ export async function reposRemoveUserAccessRestrictions(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24116,8 +24562,8 @@ export async function reposRemoveUserAccessRestrictions(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#rename-a-branch}
  * Tags: repos
  */
-export async function reposRenameBranch(
-  ctx: r.Context<AuthMethods>,
+export async function reposRenameBranch<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24129,6 +24575,7 @@ export async function reposRenameBranch(
      */
     new_name: string;
   },
+  opts?: FetcherData,
 ): Promise<BranchWithProtection> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/rename',
@@ -24136,7 +24583,7 @@ export async function reposRenameBranch(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'branch-with-protection']]] },
@@ -24158,13 +24605,14 @@ export async function reposRenameBranch(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#create-a-check-run}
  * Tags: checks
  */
-export async function checksCreate(
-  ctx: r.Context<AuthMethods>,
+export async function checksCreate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
   body: any | any,
+  opts?: FetcherData,
 ): Promise<CheckRun> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs',
@@ -24172,7 +24620,7 @@ export async function checksCreate(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'check-run']]] } },
   });
@@ -24185,20 +24633,21 @@ export async function checksCreate(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#get-a-check-run}
  * Tags: checks
  */
-export async function checksGet(
-  ctx: r.Context<AuthMethods>,
+export async function checksGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     check_run_id: number;
   },
+  opts?: FetcherData,
 ): Promise<CheckRun> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs/{check_run_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'check-run']]] } },
   });
@@ -24211,14 +24660,15 @@ export async function checksGet(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#update-a-check-run}
  * Tags: checks
  */
-export async function checksUpdate(
-  ctx: r.Context<AuthMethods>,
+export async function checksUpdate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     check_run_id: number;
   },
   body: any | any,
+  opts?: FetcherData,
 ): Promise<CheckRun> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs/{check_run_id}',
@@ -24226,7 +24676,7 @@ export async function checksUpdate(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'check-run']]] } },
   });
@@ -24237,8 +24687,8 @@ export async function checksUpdate(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-run-annotations}
  * Tags: checks
  */
-export async function checksListAnnotations(
-  ctx: r.Context<AuthMethods>,
+export async function checksListAnnotations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24246,6 +24696,7 @@ export async function checksListAnnotations(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<CheckAnnotation[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs/{check_run_id}/annotations',
@@ -24253,7 +24704,7 @@ export async function checksListAnnotations(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24272,8 +24723,8 @@ export async function checksListAnnotations(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#create-a-check-suite}
  * Tags: checks
  */
-export async function checksCreateSuite(
-  ctx: r.Context<AuthMethods>,
+export async function checksCreateSuite<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24284,6 +24735,7 @@ export async function checksCreateSuite(
      */
     head_sha: string;
   },
+  opts?: FetcherData,
 ): Promise<CheckSuite> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites',
@@ -24291,7 +24743,7 @@ export async function checksCreateSuite(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'check-suite']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'check-suite']]] } },
@@ -24303,8 +24755,8 @@ export async function checksCreateSuite(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#update-repository-preferences-for-check-suites}
  * Tags: checks
  */
-export async function checksSetSuitesPreferences(
-  ctx: r.Context<AuthMethods>,
+export async function checksSetSuitesPreferences<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24325,6 +24777,7 @@ export async function checksSetSuitesPreferences(
       setting: boolean;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<CheckSuitePreference> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites/preferences',
@@ -24332,7 +24785,7 @@ export async function checksSetSuitesPreferences(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'check-suite-preference']]] },
@@ -24347,20 +24800,21 @@ export async function checksSetSuitesPreferences(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#get-a-check-suite}
  * Tags: checks
  */
-export async function checksGetSuite(
-  ctx: r.Context<AuthMethods>,
+export async function checksGetSuite<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     check_suite_id: number;
   },
+  opts?: FetcherData,
 ): Promise<CheckSuite> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites/{check_suite_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'check-suite']]] } },
   });
@@ -24373,8 +24827,8 @@ export async function checksGetSuite(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-runs-in-a-check-suite}
  * Tags: checks
  */
-export async function checksListForSuite(
-  ctx: r.Context<AuthMethods>,
+export async function checksListForSuite<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24385,6 +24839,7 @@ export async function checksListForSuite(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   check_runs: CheckRun[];
@@ -24395,7 +24850,7 @@ export async function checksListForSuite(
     method: r.HttpMethod.GET,
     queryParams: ['check_name', 'status', 'filter', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24418,20 +24873,21 @@ export async function checksListForSuite(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#rerequest-a-check-suite}
  * Tags: checks
  */
-export async function checksRerequestSuite(
-  ctx: r.Context<AuthMethods>,
+export async function checksRerequestSuite<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     check_suite_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -24448,8 +24904,8 @@ export async function checksRerequestSuite(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningListAlertsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningListAlertsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24460,6 +24916,7 @@ export async function codeScanningListAlertsForRepo(
     ref?: CodeScanningRef;
     state?: CodeScanningAlertState;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningAlertItems[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts',
@@ -24467,7 +24924,7 @@ export async function codeScanningListAlertsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['tool_name', 'tool_guid', 'page', 'per_page', 'ref', 'state'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24492,20 +24949,21 @@ export async function codeScanningListAlertsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#get-a-code-scanning-alert}
  * Tags: code-scanning
  */
-export async function codeScanningGetAlert(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningGetAlert<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     alert_number: AlertNumber;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningAlert> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'code-scanning-alert']]] },
@@ -24520,8 +24978,8 @@ export async function codeScanningGetAlert(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#update-a-code-scanning-alert}
  * Tags: code-scanning
  */
-export async function codeScanningUpdateAlert(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningUpdateAlert<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24531,6 +24989,7 @@ export async function codeScanningUpdateAlert(
     state: CodeScanningAlertSetState;
     dismissed_reason?: CodeScanningAlertDismissedReason;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningAlert> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}',
@@ -24538,7 +24997,7 @@ export async function codeScanningUpdateAlert(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'code-scanning-alert']]] },
@@ -24553,8 +25012,8 @@ export async function codeScanningUpdateAlert(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-instances-of-a-code-scanning-alert}
  * Tags: code-scanning
  */
-export async function codeScanningListAlertInstances(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningListAlertInstances<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24563,6 +25022,7 @@ export async function codeScanningListAlertInstances(
     per_page?: number;
     ref?: CodeScanningRef;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningAlertInstance[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances',
@@ -24570,7 +25030,7 @@ export async function codeScanningListAlertInstances(
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page', 'ref'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24607,8 +25067,8 @@ export async function codeScanningListAlertInstances(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningListRecentAnalyses(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningListRecentAnalyses<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24619,6 +25079,7 @@ export async function codeScanningListRecentAnalyses(
     ref?: CodeScanningRef;
     sarif_id?: CodeScanningAnalysisSarifId;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningAnalysis[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/analyses',
@@ -24633,7 +25094,7 @@ export async function codeScanningListRecentAnalyses(
       'sarif_id',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24675,20 +25136,21 @@ export async function codeScanningListRecentAnalyses(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningGetAnalysis(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningGetAnalysis<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     analysis_id: number;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningAnalysis> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'code-scanning-analysis']]] },
@@ -24766,14 +25228,15 @@ export async function codeScanningGetAnalysis(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#delete-a-code-scanning-analysis-from-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningDeleteAnalysis(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningDeleteAnalysis<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     analysis_id: number;
     confirm_delete?: string | null;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningAnalysisDeletion> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}',
@@ -24781,7 +25244,7 @@ export async function codeScanningDeleteAnalysis(
     method: r.HttpMethod.DELETE,
     queryParams: ['confirm_delete'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24815,8 +25278,8 @@ export async function codeScanningDeleteAnalysis(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#upload-a-sarif-file}
  * Tags: code-scanning
  */
-export async function codeScanningUploadSarif(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningUploadSarif<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24840,6 +25303,7 @@ export async function codeScanningUploadSarif(
      */
     tool_name?: string;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningSarifsReceipt> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/sarifs',
@@ -24847,7 +25311,7 @@ export async function codeScanningUploadSarif(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '202': {
       transforms: {
@@ -24864,20 +25328,21 @@ export async function codeScanningUploadSarif(
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-recent-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningGetSarif(
-  ctx: r.Context<AuthMethods>,
+export async function codeScanningGetSarif<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     sarif_id: string;
   },
+  opts?: FetcherData,
 ): Promise<CodeScanningSarifsStatus> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24895,8 +25360,8 @@ export async function codeScanningGetSarif(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-collaborators}
  * Tags: repos
  */
-export async function reposListCollaborators(
-  ctx: r.Context<AuthMethods>,
+export async function reposListCollaborators<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24904,6 +25369,7 @@ export async function reposListCollaborators(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Collaborator[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators',
@@ -24911,7 +25377,7 @@ export async function reposListCollaborators(
     method: r.HttpMethod.GET,
     queryParams: ['affiliation', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -24929,20 +25395,21 @@ export async function reposListCollaborators(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#check-if-a-user-is-a-repository-collaborator}
  * Tags: repos
  */
-export async function reposCheckCollaborator(
-  ctx: r.Context<AuthMethods>,
+export async function reposCheckCollaborator<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -24961,8 +25428,8 @@ export async function reposCheckCollaborator(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-a-repository-collaborator}
  * Tags: repos
  */
-export async function reposAddCollaborator(
-  ctx: r.Context<AuthMethods>,
+export async function reposAddCollaborator<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -24984,6 +25451,7 @@ export async function reposAddCollaborator(
      */
     permissions?: string;
   },
+  opts?: FetcherData,
 ): Promise<RepositoryInvitation | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}',
@@ -24991,7 +25459,7 @@ export async function reposAddCollaborator(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'repository-invitation']]] },
@@ -25007,20 +25475,21 @@ export async function reposAddCollaborator(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-a-repository-collaborator}
  * Tags: repos
  */
-export async function reposRemoveCollaborator(
-  ctx: r.Context<AuthMethods>,
+export async function reposRemoveCollaborator<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -25029,20 +25498,21 @@ export async function reposRemoveCollaborator(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-permissions-for-a-user}
  * Tags: repos
  */
-export async function reposGetCollaboratorPermissionLevel(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCollaboratorPermissionLevel<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<RepositoryCollaboratorPermission> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}/permission',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25060,14 +25530,15 @@ export async function reposGetCollaboratorPermissionLevel(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-comments-for-a-repository}
  * Tags: repos
  */
-export async function reposListCommitCommentsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function reposListCommitCommentsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<CommitComment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments',
@@ -25075,7 +25546,7 @@ export async function reposListCommitCommentsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25091,20 +25562,21 @@ export async function reposListCommitCommentsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-commit-comment}
  * Tags: repos
  */
-export async function reposGetCommitComment(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCommitComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<CommitComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'commit-comment']]] },
@@ -25117,8 +25589,8 @@ export async function reposGetCommitComment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-commit-comment}
  * Tags: repos
  */
-export async function reposUpdateCommitComment(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateCommitComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25130,6 +25602,7 @@ export async function reposUpdateCommitComment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<CommitComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}',
@@ -25137,7 +25610,7 @@ export async function reposUpdateCommitComment(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'commit-comment']]] },
@@ -25150,20 +25623,21 @@ export async function reposUpdateCommitComment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-commit-comment}
  * Tags: repos
  */
-export async function reposDeleteCommitComment(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteCommitComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -25174,8 +25648,8 @@ export async function reposDeleteCommitComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-a-commit-comment}
  * Tags: reactions
  */
-export async function reactionsListForCommitComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForCommitComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25192,6 +25666,7 @@ export async function reactionsListForCommitComment(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions',
@@ -25199,7 +25674,7 @@ export async function reactionsListForCommitComment(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25215,8 +25690,8 @@ export async function reactionsListForCommitComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-commit-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForCommitComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForCommitComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25236,6 +25711,7 @@ export async function reactionsCreateForCommitComment(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions',
@@ -25243,7 +25719,7 @@ export async function reactionsCreateForCommitComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
@@ -25260,21 +25736,22 @@ export async function reactionsCreateForCommitComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-a-commit-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForCommitComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsDeleteForCommitComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
     reaction_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -25310,8 +25787,8 @@ export async function reactionsDeleteForCommitComment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commits}
  * Tags: repos
  */
-export async function reposListCommits(
-  ctx: r.Context<AuthMethods>,
+export async function reposListCommits<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25323,6 +25800,7 @@ export async function reposListCommits(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Commit[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits',
@@ -25338,7 +25816,7 @@ export async function reposListCommits(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25359,20 +25837,21 @@ export async function reposListCommits(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-branches-for-head-commit}
  * Tags: repos
  */
-export async function reposListBranchesForHeadCommit(
-  ctx: r.Context<AuthMethods>,
+export async function reposListBranchesForHeadCommit<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     commit_sha: string;
   },
+  opts?: FetcherData,
 ): Promise<BranchShort[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25390,8 +25869,8 @@ export async function reposListBranchesForHeadCommit(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-comments}
  * Tags: repos
  */
-export async function reposListCommentsForCommit(
-  ctx: r.Context<AuthMethods>,
+export async function reposListCommentsForCommit<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25399,6 +25878,7 @@ export async function reposListCommentsForCommit(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<CommitComment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/comments',
@@ -25406,7 +25886,7 @@ export async function reposListCommentsForCommit(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25425,8 +25905,8 @@ export async function reposListCommentsForCommit(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-commit-comment}
  * Tags: repos
  */
-export async function reposCreateCommitComment(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateCommitComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25450,6 +25930,7 @@ export async function reposCreateCommitComment(
      */
     line?: number;
   },
+  opts?: FetcherData,
 ): Promise<CommitComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/comments',
@@ -25457,7 +25938,7 @@ export async function reposCreateCommitComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'commit-comment']]] },
@@ -25474,8 +25955,8 @@ export async function reposCreateCommitComment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-pull-requests-associated-with-a-commit}
  * Tags: repos
  */
-export async function reposListPullRequestsAssociatedWithCommit(
-  ctx: r.Context<AuthMethods>,
+export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25483,6 +25964,7 @@ export async function reposListPullRequestsAssociatedWithCommit(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestSimple[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/pulls',
@@ -25490,7 +25972,7 @@ export async function reposListPullRequestsAssociatedWithCommit(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25545,8 +26027,8 @@ export async function reposListPullRequestsAssociatedWithCommit(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-commit}
  * Tags: repos
  */
-export async function reposGetCommit(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCommit<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25554,6 +26036,7 @@ export async function reposGetCommit(
     per_page?: number;
     ref: string;
   },
+  opts?: FetcherData,
 ): Promise<Commit> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}',
@@ -25561,7 +26044,7 @@ export async function reposGetCommit(
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'commit']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -25579,8 +26062,8 @@ export async function reposGetCommit(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-runs-for-a-git-reference}
  * Tags: checks
  */
-export async function checksListForRef(
-  ctx: r.Context<AuthMethods>,
+export async function checksListForRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25592,6 +26075,7 @@ export async function checksListForRef(
     page?: number;
     app_id?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   check_runs: CheckRun[];
@@ -25609,7 +26093,7 @@ export async function checksListForRef(
       'app_id',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25632,8 +26116,8 @@ export async function checksListForRef(
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-suites-for-a-git-reference}
  * Tags: checks
  */
-export async function checksListSuitesForRef(
-  ctx: r.Context<AuthMethods>,
+export async function checksListSuitesForRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25643,6 +26127,7 @@ export async function checksListSuitesForRef(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   check_suites: CheckSuite[];
@@ -25653,7 +26138,7 @@ export async function checksListSuitesForRef(
     method: r.HttpMethod.GET,
     queryParams: ['app_id', 'check_name', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25682,8 +26167,8 @@ export async function checksListSuitesForRef(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-combined-status-for-a-specific-reference}
  * Tags: repos
  */
-export async function reposGetCombinedStatusForRef(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCombinedStatusForRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25691,6 +26176,7 @@ export async function reposGetCombinedStatusForRef(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<CombinedCommitStatus> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}/status',
@@ -25698,7 +26184,7 @@ export async function reposGetCombinedStatusForRef(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'combined-commit-status']]] },
@@ -25714,8 +26200,8 @@ export async function reposGetCombinedStatusForRef(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-statuses-for-a-reference}
  * Tags: repos
  */
-export async function reposListCommitStatusesForRef(
-  ctx: r.Context<AuthMethods>,
+export async function reposListCommitStatusesForRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25723,6 +26209,7 @@ export async function reposListCommitStatusesForRef(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Status[] | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}/statuses',
@@ -25730,7 +26217,7 @@ export async function reposListCommitStatusesForRef(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25748,19 +26235,20 @@ export async function reposListCommitStatusesForRef(
  * Learn more at {@link https://docs.github.com/rest/reference/codes-of-conduct#get-the-code-of-conduct-for-a-repository}
  * Tags: codes-of-conduct
  */
-export async function codesOfConductGetForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function codesOfConductGetForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<CodeOfConduct> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/community/code_of_conduct',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'code-of-conduct']]] },
@@ -25784,19 +26272,20 @@ export async function codesOfConductGetForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-community-profile-metrics}
  * Tags: repos
  */
-export async function reposGetCommunityProfileMetrics(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCommunityProfileMetrics<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<CommunityProfile> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/community/profile',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'community-profile']]] },
@@ -25848,8 +26337,8 @@ export async function reposGetCommunityProfileMetrics(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#compare-two-commits}
  * Tags: repos
  */
-export async function reposCompareCommits(
-  ctx: r.Context<AuthMethods>,
+export async function reposCompareCommits<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25857,6 +26346,7 @@ export async function reposCompareCommits(
     per_page?: number;
     basehead: string;
   },
+  opts?: FetcherData,
 ): Promise<CommitComparison> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/compare/{basehead}',
@@ -25864,7 +26354,7 @@ export async function reposCompareCommits(
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'commit-comparison']]] },
@@ -25883,8 +26373,8 @@ export async function reposCompareCommits(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-content-attachment}
  * Tags: apps
  */
-export async function appsCreateContentAttachment(
-  ctx: r.Context<AuthMethods>,
+export async function appsCreateContentAttachment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -25902,6 +26392,7 @@ export async function appsCreateContentAttachment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<ContentReferenceAttachment | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments',
@@ -25909,7 +26400,7 @@ export async function appsCreateContentAttachment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -25961,14 +26452,15 @@ export async function appsCreateContentAttachment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-content}
  * Tags: repos
  */
-export async function reposGetContent(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetContent<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     path: string;
     ref?: string;
   },
+  opts?: FetcherData,
 ): Promise<
   (ContentDirectory | ContentFile | ContentSymlink | ContentSubmodule) | any
 > {
@@ -25978,7 +26470,7 @@ export async function reposGetContent(
     method: r.HttpMethod.GET,
     queryParams: ['ref'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -26007,8 +26499,8 @@ export async function reposGetContent(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-or-update-file-contents}
  * Tags: repos
  */
-export async function reposCreateOrUpdateFileContents(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateOrUpdateFileContents<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26066,6 +26558,7 @@ export async function reposCreateOrUpdateFileContents(
       date?: string;
     };
   },
+  opts?: FetcherData,
 ): Promise<FileCommit> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contents/{path}',
@@ -26073,7 +26566,7 @@ export async function reposCreateOrUpdateFileContents(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'file-commit']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'file-commit']]] } },
@@ -26096,8 +26589,8 @@ export async function reposCreateOrUpdateFileContents(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-file}
  * Tags: repos
  */
-export async function reposDeleteFile(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteFile<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26143,6 +26636,7 @@ export async function reposDeleteFile(
       email?: string;
     };
   },
+  opts?: FetcherData,
 ): Promise<FileCommit> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contents/{path}',
@@ -26150,7 +26644,7 @@ export async function reposDeleteFile(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'file-commit']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -26168,8 +26662,8 @@ export async function reposDeleteFile(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-contributors}
  * Tags: repos
  */
-export async function reposListContributors(
-  ctx: r.Context<AuthMethods>,
+export async function reposListContributors<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26177,6 +26671,7 @@ export async function reposListContributors(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Contributor[] | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contributors',
@@ -26184,7 +26679,7 @@ export async function reposListContributors(
     method: r.HttpMethod.GET,
     queryParams: ['anon', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -26201,8 +26696,8 @@ export async function reposListContributors(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-deployments}
  * Tags: repos
  */
-export async function reposListDeployments(
-  ctx: r.Context<AuthMethods>,
+export async function reposListDeployments<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26213,6 +26708,7 @@ export async function reposListDeployments(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Deployment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments',
@@ -26220,7 +26716,7 @@ export async function reposListDeployments(
     method: r.HttpMethod.GET,
     queryParams: ['sha', 'ref', 'task', 'environment', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -26279,8 +26775,8 @@ export async function reposListDeployments(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deployment}
  * Tags: repos
  */
-export async function reposCreateDeployment(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateDeployment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26329,6 +26825,7 @@ export async function reposCreateDeployment(
      */
     production_environment?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<
   | Deployment
   | {
@@ -26341,7 +26838,7 @@ export async function reposCreateDeployment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'deployment']]] } },
     '422': {
@@ -26354,20 +26851,21 @@ export async function reposCreateDeployment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-deployment}
  * Tags: repos
  */
-export async function reposGetDeployment(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetDeployment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     deployment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Deployment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'deployment']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -26386,20 +26884,21 @@ export async function reposGetDeployment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-deployment}
  * Tags: repos
  */
-export async function reposDeleteDeployment(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteDeployment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     deployment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -26415,8 +26914,8 @@ export async function reposDeleteDeployment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-deployment-statuses}
  * Tags: repos
  */
-export async function reposListDeploymentStatuses(
-  ctx: r.Context<AuthMethods>,
+export async function reposListDeploymentStatuses<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26424,6 +26923,7 @@ export async function reposListDeploymentStatuses(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<DeploymentStatus[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}/statuses',
@@ -26431,7 +26931,7 @@ export async function reposListDeploymentStatuses(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -26451,8 +26951,8 @@ export async function reposListDeploymentStatuses(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deployment-status}
  * Tags: repos
  */
-export async function reposCreateDeploymentStatus(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateDeploymentStatus<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26499,6 +26999,7 @@ export async function reposCreateDeploymentStatus(
      */
     auto_inactive?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<DeploymentStatus> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}/statuses',
@@ -26506,7 +27007,7 @@ export async function reposCreateDeploymentStatus(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'deployment-status']]] },
@@ -26522,21 +27023,22 @@ export async function reposCreateDeploymentStatus(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-deployment-status}
  * Tags: repos
  */
-export async function reposGetDeploymentStatus(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetDeploymentStatus<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     deployment_id: number;
     status_id: number;
   },
+  opts?: FetcherData,
 ): Promise<DeploymentStatus> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'deployment-status']]] },
@@ -26559,8 +27061,8 @@ export async function reposGetDeploymentStatus(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-dispatch-event}
  * Tags: repos
  */
-export async function reposCreateDispatchEvent(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateDispatchEvent<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26577,6 +27079,7 @@ export async function reposCreateDispatchEvent(
       [key: string]: any;
     };
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/dispatches',
@@ -26584,7 +27087,7 @@ export async function reposCreateDispatchEvent(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -26599,12 +27102,13 @@ export async function reposCreateDispatchEvent(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-environments}
  * Tags: repos
  */
-export async function reposGetAllEnvironments(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetAllEnvironments<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<{
   /**
    * The number of environments in this repository
@@ -26618,7 +27122,7 @@ export async function reposGetAllEnvironments(
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -26639,20 +27143,21 @@ export async function reposGetAllEnvironments(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-an-environment}
  * Tags: repos
  */
-export async function reposGetEnvironment(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetEnvironment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     environment_name: string;
   },
+  opts?: FetcherData,
 ): Promise<Environment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/environments/{environment_name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'environment']]] } },
   });
@@ -26669,8 +27174,8 @@ export async function reposGetEnvironment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-or-update-an-environment}
  * Tags: repos
  */
-export async function reposCreateOrUpdateEnvironment(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateOrUpdateEnvironment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26693,6 +27198,7 @@ export async function reposCreateOrUpdateEnvironment(
       | null;
     deployment_branch_policy?: DeploymentBranchPolicy;
   } | null,
+  opts?: FetcherData,
 ): Promise<Environment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/environments/{environment_name}',
@@ -26700,7 +27206,7 @@ export async function reposCreateOrUpdateEnvironment(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'environment']]] } },
     '422': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -26712,20 +27218,21 @@ export async function reposCreateOrUpdateEnvironment(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-an-environment}
  * Tags: repos
  */
-export async function reposDeleteAnEnvironment(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteAnEnvironment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     environment_name: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/environments/{environment_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -26733,14 +27240,15 @@ export async function reposDeleteAnEnvironment(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repository-events}
  * Tags: activity
  */
-export async function activityListRepoEvents(
-  ctx: r.Context<AuthMethods>,
+export async function activityListRepoEvents<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/events',
@@ -26748,7 +27256,7 @@ export async function activityListRepoEvents(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -26762,8 +27270,8 @@ export async function activityListRepoEvents(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-forks}
  * Tags: repos
  */
-export async function reposListForks(
-  ctx: r.Context<AuthMethods>,
+export async function reposListForks<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26771,6 +27279,7 @@ export async function reposListForks(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/forks',
@@ -26778,7 +27287,7 @@ export async function reposListForks(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -26798,8 +27307,8 @@ export async function reposListForks(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-fork}
  * Tags: repos
  */
-export async function reposCreateFork(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateFork<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26810,6 +27319,7 @@ export async function reposCreateFork(
      */
     organization?: string;
   } | null,
+  opts?: FetcherData,
 ): Promise<FullRepository> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/forks',
@@ -26817,7 +27327,7 @@ export async function reposCreateFork(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '202': {
       transforms: { date: [[[r.TransformType.REF, 'full-repository']]] },
@@ -26835,8 +27345,8 @@ export async function reposCreateFork(
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-blob}
  * Tags: git
  */
-export async function gitCreateBlob(
-  ctx: r.Context<AuthMethods>,
+export async function gitCreateBlob<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26852,6 +27362,7 @@ export async function gitCreateBlob(
      */
     encoding?: string;
   },
+  opts?: FetcherData,
 ): Promise<ShortBlob> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/blobs',
@@ -26859,7 +27370,7 @@ export async function gitCreateBlob(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'short-blob']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -26878,20 +27389,21 @@ export async function gitCreateBlob(
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-blob}
  * Tags: git
  */
-export async function gitGetBlob(
-  ctx: r.Context<AuthMethods>,
+export async function gitGetBlob<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     file_sha: string;
   },
+  opts?: FetcherData,
 ): Promise<Blob> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/blobs/{file_sha}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'blob']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -26936,8 +27448,8 @@ export async function gitGetBlob(
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-commit}
  * Tags: git
  */
-export async function gitCreateCommit(
-  ctx: r.Context<AuthMethods>,
+export async function gitCreateCommit<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -26994,6 +27506,7 @@ export async function gitCreateCommit(
      */
     signature?: string;
   },
+  opts?: FetcherData,
 ): Promise<GitCommit> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/commits',
@@ -27001,7 +27514,7 @@ export async function gitCreateCommit(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'git-commit']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27045,20 +27558,21 @@ export async function gitCreateCommit(
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-commit}
  * Tags: git
  */
-export async function gitGetCommit(
-  ctx: r.Context<AuthMethods>,
+export async function gitGetCommit<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     commit_sha: string;
   },
+  opts?: FetcherData,
 ): Promise<GitCommit> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/commits/{commit_sha}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'git-commit']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27076,8 +27590,8 @@ export async function gitGetCommit(
  * Learn more at {@link https://docs.github.com/rest/reference/git#list-matching-references}
  * Tags: git
  */
-export async function gitListMatchingRefs(
-  ctx: r.Context<AuthMethods>,
+export async function gitListMatchingRefs<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27085,6 +27599,7 @@ export async function gitListMatchingRefs(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<GitRef[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/matching-refs/{ref}',
@@ -27092,7 +27607,7 @@ export async function gitListMatchingRefs(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -27109,20 +27624,21 @@ export async function gitListMatchingRefs(
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-reference}
  * Tags: git
  */
-export async function gitGetRef(
-  ctx: r.Context<AuthMethods>,
+export async function gitGetRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     ref: string;
   },
+  opts?: FetcherData,
 ): Promise<GitRef> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/ref/{ref}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'git-ref']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27134,8 +27650,8 @@ export async function gitGetRef(
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-reference}
  * Tags: git
  */
-export async function gitCreateRef(
-  ctx: r.Context<AuthMethods>,
+export async function gitCreateRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27154,6 +27670,7 @@ export async function gitCreateRef(
      */
     key?: string;
   },
+  opts?: FetcherData,
 ): Promise<GitRef> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/refs',
@@ -27161,7 +27678,7 @@ export async function gitCreateRef(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'git-ref']]] } },
     '422': {
@@ -27174,8 +27691,8 @@ export async function gitCreateRef(
  * Learn more at {@link https://docs.github.com/rest/reference/git#update-a-reference}
  * Tags: git
  */
-export async function gitUpdateRef(
-  ctx: r.Context<AuthMethods>,
+export async function gitUpdateRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27191,6 +27708,7 @@ export async function gitUpdateRef(
      */
     force?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<GitRef> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/refs/{ref}',
@@ -27198,7 +27716,7 @@ export async function gitUpdateRef(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'git-ref']]] } },
     '422': {
@@ -27211,20 +27729,21 @@ export async function gitUpdateRef(
  * Learn more at {@link https://docs.github.com/rest/reference/git#delete-a-reference}
  * Tags: git
  */
-export async function gitDeleteRef(
-  ctx: r.Context<AuthMethods>,
+export async function gitDeleteRef<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     ref: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/refs/{ref}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '422': {
       transforms: { date: [[[r.TransformType.REF, 'validation-error']]] },
@@ -27266,8 +27785,8 @@ export async function gitDeleteRef(
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-tag-object}
  * Tags: git
  */
-export async function gitCreateTag(
-  ctx: r.Context<AuthMethods>,
+export async function gitCreateTag<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27307,6 +27826,7 @@ export async function gitCreateTag(
       date?: Date;
     };
   },
+  opts?: FetcherData,
 ): Promise<GitTag> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/tags',
@@ -27314,7 +27834,7 @@ export async function gitCreateTag(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'git-tag']]] } },
     '422': {
@@ -27355,20 +27875,21 @@ export async function gitCreateTag(
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-tag}
  * Tags: git
  */
-export async function gitGetTag(
-  ctx: r.Context<AuthMethods>,
+export async function gitGetTag<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     tag_sha: string;
   },
+  opts?: FetcherData,
 ): Promise<GitTag> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/tags/{tag_sha}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'git-tag']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27382,8 +27903,8 @@ export async function gitGetTag(
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-tree}
  * Tags: git
  */
-export async function gitCreateTree(
-  ctx: r.Context<AuthMethods>,
+export async function gitCreateTree<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27424,6 +27945,7 @@ export async function gitCreateTree(
      */
     base_tree?: string;
   },
+  opts?: FetcherData,
 ): Promise<GitTree> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/trees',
@@ -27431,7 +27953,7 @@ export async function gitCreateTree(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'git-tree']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27449,14 +27971,15 @@ export async function gitCreateTree(
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-tree}
  * Tags: git
  */
-export async function gitGetTree(
-  ctx: r.Context<AuthMethods>,
+export async function gitGetTree<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     tree_sha: string;
     recursive?: string;
   },
+  opts?: FetcherData,
 ): Promise<GitTree> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/trees/{tree_sha}',
@@ -27464,7 +27987,7 @@ export async function gitGetTree(
     method: r.HttpMethod.GET,
     queryParams: ['recursive'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'git-tree']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27478,14 +28001,15 @@ export async function gitGetTree(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-webhooks}
  * Tags: repos
  */
-export async function reposListWebhooks(
-  ctx: r.Context<AuthMethods>,
+export async function reposListWebhooks<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Hook[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks',
@@ -27493,7 +28017,7 @@ export async function reposListWebhooks(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -27510,8 +28034,8 @@ export async function reposListWebhooks(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-webhook}
  * Tags: repos
  */
-export async function reposCreateWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27552,6 +28076,7 @@ export async function reposCreateWebhook(
      */
     active?: boolean;
   } | null,
+  opts?: FetcherData,
 ): Promise<Hook> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks',
@@ -27559,7 +28084,7 @@ export async function reposCreateWebhook(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'hook']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27575,20 +28100,21 @@ export async function reposCreateWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-webhook}
  * Tags: repos
  */
-export async function reposGetWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Hook> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'hook']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27600,8 +28126,8 @@ export async function reposGetWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-repository-webhook}
  * Tags: repos
  */
-export async function reposUpdateWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27647,6 +28173,7 @@ export async function reposUpdateWebhook(
      */
     active?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<Hook> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}',
@@ -27654,7 +28181,7 @@ export async function reposUpdateWebhook(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'hook']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27668,20 +28195,21 @@ export async function reposUpdateWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-repository-webhook}
  * Tags: repos
  */
-export async function reposDeleteWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -27694,20 +28222,21 @@ export async function reposDeleteWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
-export async function reposGetWebhookConfigForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetWebhookConfigForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<WebhookConfig> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/config',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'webhook-config']]] },
@@ -27722,8 +28251,8 @@ export async function reposGetWebhookConfigForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
-export async function reposUpdateWebhookConfigForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateWebhookConfigForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27735,6 +28264,7 @@ export async function reposUpdateWebhookConfigForRepo(
     secret?: WebhookConfigSecret;
     insecure_ssl?: WebhookConfigInsecureSsl;
   },
+  opts?: FetcherData,
 ): Promise<WebhookConfig> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/config',
@@ -27742,7 +28272,7 @@ export async function reposUpdateWebhookConfigForRepo(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'webhook-config']]] },
@@ -27755,8 +28285,8 @@ export async function reposUpdateWebhookConfigForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-deliveries-for-a-repository-webhook}
  * Tags: repos
  */
-export async function reposListWebhookDeliveries(
-  ctx: r.Context<AuthMethods>,
+export async function reposListWebhookDeliveries<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27764,6 +28294,7 @@ export async function reposListWebhookDeliveries(
     per_page?: number;
     cursor?: string;
   },
+  opts?: FetcherData,
 ): Promise<HookDeliveryItem[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/deliveries',
@@ -27771,7 +28302,7 @@ export async function reposListWebhookDeliveries(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'cursor'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -27792,21 +28323,22 @@ export async function reposListWebhookDeliveries(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-delivery-for-a-repository-webhook}
  * Tags: repos
  */
-export async function reposGetWebhookDelivery(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetWebhookDelivery<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     hook_id: number;
     delivery_id: number;
   },
+  opts?: FetcherData,
 ): Promise<HookDelivery> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'hook-delivery']]] } },
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27821,21 +28353,22 @@ export async function reposGetWebhookDelivery(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#redeliver-a-delivery-for-a-repository-webhook}
  * Tags: repos
  */
-export async function reposRedeliverWebhookDelivery(
-  ctx: r.Context<AuthMethods>,
+export async function reposRedeliverWebhookDelivery<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     hook_id: number;
     delivery_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}/attempts',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -27849,20 +28382,21 @@ export async function reposRedeliverWebhookDelivery(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#ping-a-repository-webhook}
  * Tags: repos
  */
-export async function reposPingWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function reposPingWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/pings',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -27875,20 +28409,21 @@ export async function reposPingWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#test-the-push-repository-webhook}
  * Tags: repos
  */
-export async function reposTestPushWebhook(
-  ctx: r.Context<AuthMethods>,
+export async function reposTestPushWebhook<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     hook_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/tests',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -27932,19 +28467,20 @@ export async function reposTestPushWebhook(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-an-import-status}
  * Tags: migrations
  */
-export async function migrationsGetImportStatus(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsGetImportStatus<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<Import> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'import']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -27956,8 +28492,8 @@ export async function migrationsGetImportStatus(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#start-an-import}
  * Tags: migrations
  */
-export async function migrationsStartImport(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsStartImport<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -27984,6 +28520,7 @@ export async function migrationsStartImport(
      */
     tfvc_project?: string;
   },
+  opts?: FetcherData,
 ): Promise<Import> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
@@ -27991,7 +28528,7 @@ export async function migrationsStartImport(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'import']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28007,8 +28544,8 @@ export async function migrationsStartImport(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#update-an-import}
  * Tags: migrations
  */
-export async function migrationsUpdateImport(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsUpdateImport<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28031,6 +28568,7 @@ export async function migrationsUpdateImport(
      */
     tfvc_project?: string;
   } | null,
+  opts?: FetcherData,
 ): Promise<Import> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
@@ -28038,7 +28576,7 @@ export async function migrationsUpdateImport(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'import']]] } },
   });
@@ -28049,19 +28587,20 @@ export async function migrationsUpdateImport(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#cancel-an-import}
  * Tags: migrations
  */
-export async function migrationsCancelImport(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsCancelImport<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -28072,13 +28611,14 @@ export async function migrationsCancelImport(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-commit-authors}
  * Tags: migrations
  */
-export async function migrationsGetCommitAuthors(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsGetCommitAuthors<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     since?: number;
   },
+  opts?: FetcherData,
 ): Promise<PorterAuthor[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/authors',
@@ -28086,7 +28626,7 @@ export async function migrationsGetCommitAuthors(
     method: r.HttpMethod.GET,
     queryParams: ['since'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28104,8 +28644,8 @@ export async function migrationsGetCommitAuthors(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#map-a-commit-author}
  * Tags: migrations
  */
-export async function migrationsMapCommitAuthor(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsMapCommitAuthor<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28121,6 +28661,7 @@ export async function migrationsMapCommitAuthor(
      */
     name?: string;
   },
+  opts?: FetcherData,
 ): Promise<PorterAuthor> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/authors/{author_id}',
@@ -28128,7 +28669,7 @@ export async function migrationsMapCommitAuthor(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'porter-author']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28143,19 +28684,20 @@ export async function migrationsMapCommitAuthor(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-large-files}
  * Tags: migrations
  */
-export async function migrationsGetLargeFiles(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsGetLargeFiles<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<PorterLargeFile[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/large_files',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28172,8 +28714,8 @@ export async function migrationsGetLargeFiles(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#update-git-lfs-preference}
  * Tags: migrations
  */
-export async function migrationsSetLfsPreference(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsSetLfsPreference<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28184,6 +28726,7 @@ export async function migrationsSetLfsPreference(
      */
     use_lfs: 'opt_in' | 'opt_out';
   },
+  opts?: FetcherData,
 ): Promise<Import> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/lfs',
@@ -28191,7 +28734,7 @@ export async function migrationsSetLfsPreference(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'import']]] } },
     '422': {
@@ -28207,19 +28750,20 @@ export async function migrationsSetLfsPreference(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetRepoInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetRepoInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<Installation | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/installation',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'installation']]] } },
     '301': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28232,19 +28776,20 @@ export async function appsGetRepoInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
-export async function interactionsGetRestrictionsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsGetRestrictionsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<InteractionLimitResponse | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/interaction-limits',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28266,13 +28811,14 @@ export async function interactionsGetRestrictionsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
-export async function interactionsSetRestrictionsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsSetRestrictionsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
   body: InteractionLimit,
+  opts?: FetcherData,
 ): Promise<InteractionLimitResponse> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/interaction-limits',
@@ -28280,7 +28826,7 @@ export async function interactionsSetRestrictionsForRepo(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28295,19 +28841,20 @@ export async function interactionsSetRestrictionsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
-export async function interactionsRemoveRestrictionsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsRemoveRestrictionsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/interaction-limits',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -28316,14 +28863,15 @@ export async function interactionsRemoveRestrictionsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-invitations}
  * Tags: repos
  */
-export async function reposListInvitations(
-  ctx: r.Context<AuthMethods>,
+export async function reposListInvitations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<RepositoryInvitation[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/invitations',
@@ -28331,7 +28879,7 @@ export async function reposListInvitations(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28350,8 +28898,8 @@ export async function reposListInvitations(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-repository-invitation}
  * Tags: repos
  */
-export async function reposUpdateInvitation(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateInvitation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28363,6 +28911,7 @@ export async function reposUpdateInvitation(
      */
     permissions?: 'read' | 'write' | 'maintain' | 'triage' | 'admin';
   },
+  opts?: FetcherData,
 ): Promise<RepositoryInvitation> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/invitations/{invitation_id}',
@@ -28370,7 +28919,7 @@ export async function reposUpdateInvitation(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'repository-invitation']]] },
@@ -28382,20 +28931,21 @@ export async function reposUpdateInvitation(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-repository-invitation}
  * Tags: repos
  */
-export async function reposDeleteInvitation(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteInvitation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     invitation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/invitations/{invitation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -28409,8 +28959,8 @@ export async function reposDeleteInvitation(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-repository-issues}
  * Tags: issues
  */
-export async function issuesListForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28426,6 +28976,7 @@ export async function issuesListForRepo(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<IssueSimple[] | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues',
@@ -28445,7 +28996,7 @@ export async function issuesListForRepo(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28467,8 +29018,8 @@ export async function issuesListForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#create-an-issue}
  * Tags: issues
  */
-export async function issuesCreate(
-  ctx: r.Context<AuthMethods>,
+export async function issuesCreate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28504,6 +29055,7 @@ export async function issuesCreate(
      */
     assignees?: string[];
   },
+  opts?: FetcherData,
 ): Promise<Issue> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues',
@@ -28511,7 +29063,7 @@ export async function issuesCreate(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'issue']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28528,8 +29080,8 @@ export async function issuesCreate(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-comments-for-a-repository}
  * Tags: issues
  */
-export async function issuesListCommentsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListCommentsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28539,6 +29091,7 @@ export async function issuesListCommentsForRepo(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<IssueComment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments',
@@ -28546,7 +29099,7 @@ export async function issuesListCommentsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28566,20 +29119,21 @@ export async function issuesListCommentsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#get-an-issue-comment}
  * Tags: issues
  */
-export async function issuesGetComment(
-  ctx: r.Context<AuthMethods>,
+export async function issuesGetComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<IssueComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'issue-comment']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28590,8 +29144,8 @@ export async function issuesGetComment(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#update-an-issue-comment}
  * Tags: issues
  */
-export async function issuesUpdateComment(
-  ctx: r.Context<AuthMethods>,
+export async function issuesUpdateComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28603,6 +29157,7 @@ export async function issuesUpdateComment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<IssueComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}',
@@ -28610,7 +29165,7 @@ export async function issuesUpdateComment(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'issue-comment']]] } },
     '422': {
@@ -28623,20 +29178,21 @@ export async function issuesUpdateComment(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#delete-an-issue-comment}
  * Tags: issues
  */
-export async function issuesDeleteComment(
-  ctx: r.Context<AuthMethods>,
+export async function issuesDeleteComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -28645,8 +29201,8 @@ export async function issuesDeleteComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-an-issue-comment}
  * Tags: reactions
  */
-export async function reactionsListForIssueComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForIssueComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28663,6 +29219,7 @@ export async function reactionsListForIssueComment(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions',
@@ -28670,7 +29227,7 @@ export async function reactionsListForIssueComment(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28686,8 +29243,8 @@ export async function reactionsListForIssueComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-an-issue-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForIssueComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForIssueComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28707,6 +29264,7 @@ export async function reactionsCreateForIssueComment(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions',
@@ -28714,7 +29272,7 @@ export async function reactionsCreateForIssueComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
@@ -28731,21 +29289,22 @@ export async function reactionsCreateForIssueComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-an-issue-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForIssueComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsDeleteForIssueComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
     reaction_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -28753,14 +29312,15 @@ export async function reactionsDeleteForIssueComment(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-events-for-a-repository}
  * Tags: issues
  */
-export async function issuesListEventsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListEventsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<IssueEvent[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/events',
@@ -28768,7 +29328,7 @@ export async function issuesListEventsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -28785,20 +29345,21 @@ export async function issuesListEventsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#get-an-issue-event}
  * Tags: issues
  */
-export async function issuesGetEvent(
-  ctx: r.Context<AuthMethods>,
+export async function issuesGetEvent<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     event_id: number;
   },
+  opts?: FetcherData,
 ): Promise<IssueEvent> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/events/{event_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'issue-event']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28822,20 +29383,21 @@ export async function issuesGetEvent(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#get-an-issue}
  * Tags: issues
  */
-export async function issuesGet(
-  ctx: r.Context<AuthMethods>,
+export async function issuesGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     issue_number: number;
   },
+  opts?: FetcherData,
 ): Promise<Issue | BasicError | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'issue']]] } },
     '301': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28849,8 +29411,8 @@ export async function issuesGet(
  * Learn more at {@link https://docs.github.com/rest/reference/issues/#update-an-issue}
  * Tags: issues
  */
-export async function issuesUpdate(
-  ctx: r.Context<AuthMethods>,
+export async function issuesUpdate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28891,6 +29453,7 @@ export async function issuesUpdate(
      */
     assignees?: string[];
   },
+  opts?: FetcherData,
 ): Promise<Issue | BasicError> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}',
@@ -28898,7 +29461,7 @@ export async function issuesUpdate(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'issue']]] } },
     '301': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -28916,8 +29479,8 @@ export async function issuesUpdate(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#add-assignees-to-an-issue}
  * Tags: issues
  */
-export async function issuesAddAssignees(
-  ctx: r.Context<AuthMethods>,
+export async function issuesAddAssignees<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28929,6 +29492,7 @@ export async function issuesAddAssignees(
      */
     assignees?: string[];
   },
+  opts?: FetcherData,
 ): Promise<IssueSimple> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/assignees',
@@ -28936,7 +29500,7 @@ export async function issuesAddAssignees(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'issue-simple']]] } },
   });
@@ -28947,8 +29511,8 @@ export async function issuesAddAssignees(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#remove-assignees-from-an-issue}
  * Tags: issues
  */
-export async function issuesRemoveAssignees(
-  ctx: r.Context<AuthMethods>,
+export async function issuesRemoveAssignees<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28960,6 +29524,7 @@ export async function issuesRemoveAssignees(
      */
     assignees?: string[];
   },
+  opts?: FetcherData,
 ): Promise<IssueSimple> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/assignees',
@@ -28967,7 +29532,7 @@ export async function issuesRemoveAssignees(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'issue-simple']]] } },
   });
@@ -28978,8 +29543,8 @@ export async function issuesRemoveAssignees(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-comments}
  * Tags: issues
  */
-export async function issuesListComments(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListComments<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -28988,6 +29553,7 @@ export async function issuesListComments(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<IssueComment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/comments',
@@ -28995,7 +29561,7 @@ export async function issuesListComments(
     method: r.HttpMethod.GET,
     queryParams: ['since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29014,8 +29580,8 @@ export async function issuesListComments(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#create-an-issue-comment}
  * Tags: issues
  */
-export async function issuesCreateComment(
-  ctx: r.Context<AuthMethods>,
+export async function issuesCreateComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29027,6 +29593,7 @@ export async function issuesCreateComment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<IssueComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/comments',
@@ -29034,7 +29601,7 @@ export async function issuesCreateComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'issue-comment']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29050,8 +29617,8 @@ export async function issuesCreateComment(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issue-events}
  * Tags: issues
  */
-export async function issuesListEvents(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListEvents<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29059,6 +29626,7 @@ export async function issuesListEvents(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<IssueEventForIssue[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/events',
@@ -29066,7 +29634,7 @@ export async function issuesListEvents(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29086,8 +29654,8 @@ export async function issuesListEvents(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-labels-for-an-issue}
  * Tags: issues
  */
-export async function issuesListLabelsOnIssue(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListLabelsOnIssue<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29095,6 +29663,7 @@ export async function issuesListLabelsOnIssue(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Label[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
@@ -29102,7 +29671,7 @@ export async function issuesListLabelsOnIssue(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29117,8 +29686,8 @@ export async function issuesListLabelsOnIssue(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#add-labels-to-an-issue}
  * Tags: issues
  */
-export async function issuesAddLabels(
-  ctx: r.Context<AuthMethods>,
+export async function issuesAddLabels<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29141,6 +29710,7 @@ export async function issuesAddLabels(
         name: string;
       }[]
     | string,
+  opts?: FetcherData,
 ): Promise<Label[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
@@ -29148,7 +29718,7 @@ export async function issuesAddLabels(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29167,8 +29737,8 @@ export async function issuesAddLabels(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#set-labels-for-an-issue}
  * Tags: issues
  */
-export async function issuesSetLabels(
-  ctx: r.Context<AuthMethods>,
+export async function issuesSetLabels<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29191,6 +29761,7 @@ export async function issuesSetLabels(
         name: string;
       }[]
     | string,
+  opts?: FetcherData,
 ): Promise<Label[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
@@ -29198,7 +29769,7 @@ export async function issuesSetLabels(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29216,20 +29787,21 @@ export async function issuesSetLabels(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#remove-all-labels-from-an-issue}
  * Tags: issues
  */
-export async function issuesRemoveAllLabels(
-  ctx: r.Context<AuthMethods>,
+export async function issuesRemoveAllLabels<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     issue_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '410': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -29240,21 +29812,22 @@ export async function issuesRemoveAllLabels(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#remove-a-label-from-an-issue}
  * Tags: issues
  */
-export async function issuesRemoveLabel(
-  ctx: r.Context<AuthMethods>,
+export async function issuesRemoveLabel<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     issue_number: number;
     name: string;
   },
+  opts?: FetcherData,
 ): Promise<Label[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels/{name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29273,8 +29846,8 @@ export async function issuesRemoveLabel(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#lock-an-issue}
  * Tags: issues
  */
-export async function issuesLock(
-  ctx: r.Context<AuthMethods>,
+export async function issuesLock<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29290,6 +29863,7 @@ export async function issuesLock(
      */
     lock_reason?: 'off-topic' | 'too heated' | 'resolved' | 'spam';
   } | null,
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/lock',
@@ -29297,7 +29871,7 @@ export async function issuesLock(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29313,20 +29887,21 @@ export async function issuesLock(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#unlock-an-issue}
  * Tags: issues
  */
-export async function issuesUnlock(
-  ctx: r.Context<AuthMethods>,
+export async function issuesUnlock<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     issue_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/lock',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29338,8 +29913,8 @@ export async function issuesUnlock(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-an-issue}
  * Tags: reactions
  */
-export async function reactionsListForIssue(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForIssue<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29356,6 +29931,7 @@ export async function reactionsListForIssue(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions',
@@ -29363,7 +29939,7 @@ export async function reactionsListForIssue(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29380,8 +29956,8 @@ export async function reactionsListForIssue(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-an-issue}
  * Tags: reactions
  */
-export async function reactionsCreateForIssue(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForIssue<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29401,6 +29977,7 @@ export async function reactionsCreateForIssue(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions',
@@ -29408,7 +29985,7 @@ export async function reactionsCreateForIssue(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
@@ -29425,21 +30002,22 @@ export async function reactionsCreateForIssue(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-an-issue-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForIssue(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsDeleteForIssue<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     issue_number: number;
     reaction_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -29447,8 +30025,8 @@ export async function reactionsDeleteForIssue(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-timeline-events-for-an-issue}
  * Tags: issues
  */
-export async function issuesListEventsForTimeline(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListEventsForTimeline<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29456,6 +30034,7 @@ export async function issuesListEventsForTimeline(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<TimelineIssueEvents[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/timeline',
@@ -29463,7 +30042,7 @@ export async function issuesListEventsForTimeline(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29484,14 +30063,15 @@ export async function issuesListEventsForTimeline(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-deploy-keys}
  * Tags: repos
  */
-export async function reposListDeployKeys(
-  ctx: r.Context<AuthMethods>,
+export async function reposListDeployKeys<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<DeployKey[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys',
@@ -29499,7 +30079,7 @@ export async function reposListDeployKeys(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29514,8 +30094,8 @@ export async function reposListDeployKeys(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deploy-key}
  * Tags: repos
  */
-export async function reposCreateDeployKey(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateDeployKey<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29536,6 +30116,7 @@ export async function reposCreateDeployKey(
      */
     read_only?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<DeployKey> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys',
@@ -29543,7 +30124,7 @@ export async function reposCreateDeployKey(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'deploy-key']]] } },
     '422': {
@@ -29556,20 +30137,21 @@ export async function reposCreateDeployKey(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-deploy-key}
  * Tags: repos
  */
-export async function reposGetDeployKey(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetDeployKey<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     key_id: number;
   },
+  opts?: FetcherData,
 ): Promise<DeployKey> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys/{key_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'deploy-key']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29581,20 +30163,21 @@ export async function reposGetDeployKey(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-deploy-key}
  * Tags: repos
  */
-export async function reposDeleteDeployKey(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteDeployKey<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     key_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys/{key_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -29602,14 +30185,15 @@ export async function reposDeleteDeployKey(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-labels-for-a-repository}
  * Tags: issues
  */
-export async function issuesListLabelsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListLabelsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Label[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels',
@@ -29617,7 +30201,7 @@ export async function issuesListLabelsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29632,8 +30216,8 @@ export async function issuesListLabelsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#create-a-label}
  * Tags: issues
  */
-export async function issuesCreateLabel(
-  ctx: r.Context<AuthMethods>,
+export async function issuesCreateLabel<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29652,6 +30236,7 @@ export async function issuesCreateLabel(
      */
     description?: string;
   },
+  opts?: FetcherData,
 ): Promise<Label> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels',
@@ -29659,7 +30244,7 @@ export async function issuesCreateLabel(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'label']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29673,20 +30258,21 @@ export async function issuesCreateLabel(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#get-a-label}
  * Tags: issues
  */
-export async function issuesGetLabel(
-  ctx: r.Context<AuthMethods>,
+export async function issuesGetLabel<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     name: string;
   },
+  opts?: FetcherData,
 ): Promise<Label> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels/{name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'label']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29697,8 +30283,8 @@ export async function issuesGetLabel(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#update-a-label}
  * Tags: issues
  */
-export async function issuesUpdateLabel(
-  ctx: r.Context<AuthMethods>,
+export async function issuesUpdateLabel<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29718,6 +30304,7 @@ export async function issuesUpdateLabel(
      */
     description?: string;
   },
+  opts?: FetcherData,
 ): Promise<Label> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels/{name}',
@@ -29725,7 +30312,7 @@ export async function issuesUpdateLabel(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'label']]] } },
   });
@@ -29735,20 +30322,21 @@ export async function issuesUpdateLabel(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#delete-a-label}
  * Tags: issues
  */
-export async function issuesDeleteLabel(
-  ctx: r.Context<AuthMethods>,
+export async function issuesDeleteLabel<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     name: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels/{name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -29757,19 +30345,20 @@ export async function issuesDeleteLabel(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-languages}
  * Tags: repos
  */
-export async function reposListLanguages(
-  ctx: r.Context<AuthMethods>,
+export async function reposListLanguages<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<Language> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/languages',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'language']]] } },
   });
@@ -29782,19 +30371,20 @@ export async function reposListLanguages(
  * Learn more at {@link https://docs.github.com/rest/reference/licenses/#get-the-license-for-a-repository}
  * Tags: licenses
  */
-export async function licensesGetForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function licensesGetForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<LicenseContent> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/license',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'license-content']]] },
@@ -29806,8 +30396,8 @@ export async function licensesGetForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#merge-a-branch}
  * Tags: repos
  */
-export async function reposMerge(
-  ctx: r.Context<AuthMethods>,
+export async function reposMerge<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29826,6 +30416,7 @@ export async function reposMerge(
      */
     commit_message?: string;
   },
+  opts?: FetcherData,
 ): Promise<Commit | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/merges',
@@ -29833,7 +30424,7 @@ export async function reposMerge(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'commit']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29847,8 +30438,8 @@ export async function reposMerge(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-milestones}
  * Tags: issues
  */
-export async function issuesListMilestones(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListMilestones<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29858,6 +30449,7 @@ export async function issuesListMilestones(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Milestone[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones',
@@ -29865,7 +30457,7 @@ export async function issuesListMilestones(
     method: r.HttpMethod.GET,
     queryParams: ['state', 'sort', 'direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -29880,8 +30472,8 @@ export async function issuesListMilestones(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#create-a-milestone}
  * Tags: issues
  */
-export async function issuesCreateMilestone(
-  ctx: r.Context<AuthMethods>,
+export async function issuesCreateMilestone<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29905,6 +30497,7 @@ export async function issuesCreateMilestone(
      */
     due_on?: Date;
   },
+  opts?: FetcherData,
 ): Promise<Milestone> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones',
@@ -29912,7 +30505,7 @@ export async function issuesCreateMilestone(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'milestone']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29926,20 +30519,21 @@ export async function issuesCreateMilestone(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#get-a-milestone}
  * Tags: issues
  */
-export async function issuesGetMilestone(
-  ctx: r.Context<AuthMethods>,
+export async function issuesGetMilestone<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     milestone_number: number;
   },
+  opts?: FetcherData,
 ): Promise<Milestone> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'milestone']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -29950,8 +30544,8 @@ export async function issuesGetMilestone(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#update-a-milestone}
  * Tags: issues
  */
-export async function issuesUpdateMilestone(
-  ctx: r.Context<AuthMethods>,
+export async function issuesUpdateMilestone<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -29976,6 +30570,7 @@ export async function issuesUpdateMilestone(
      */
     due_on?: Date;
   },
+  opts?: FetcherData,
 ): Promise<Milestone> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}',
@@ -29983,7 +30578,7 @@ export async function issuesUpdateMilestone(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'milestone']]] } },
   });
@@ -29993,20 +30588,21 @@ export async function issuesUpdateMilestone(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#delete-a-milestone}
  * Tags: issues
  */
-export async function issuesDeleteMilestone(
-  ctx: r.Context<AuthMethods>,
+export async function issuesDeleteMilestone<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     milestone_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -30016,8 +30612,8 @@ export async function issuesDeleteMilestone(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-labels-for-issues-in-a-milestone}
  * Tags: issues
  */
-export async function issuesListLabelsForMilestone(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListLabelsForMilestone<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30025,6 +30621,7 @@ export async function issuesListLabelsForMilestone(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Label[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}/labels',
@@ -30032,7 +30629,7 @@ export async function issuesListLabelsForMilestone(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30047,8 +30644,10 @@ export async function issuesListLabelsForMilestone(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repository-notifications-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListRepoNotificationsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListRepoNotificationsForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30059,6 +30658,7 @@ export async function activityListRepoNotificationsForAuthenticatedUser(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Thread[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/notifications',
@@ -30073,7 +30673,7 @@ export async function activityListRepoNotificationsForAuthenticatedUser(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30088,8 +30688,8 @@ export async function activityListRepoNotificationsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-repository-notifications-as-read}
  * Tags: activity
  */
-export async function activityMarkRepoNotificationsAsRead(
-  ctx: r.Context<AuthMethods>,
+export async function activityMarkRepoNotificationsAsRead<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30100,6 +30700,7 @@ export async function activityMarkRepoNotificationsAsRead(
      */
     last_read_at?: Date;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       message?: string;
@@ -30113,7 +30714,7 @@ export async function activityMarkRepoNotificationsAsRead(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -30121,19 +30722,20 @@ export async function activityMarkRepoNotificationsAsRead(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-github-pages-site}
  * Tags: repos
  */
-export async function reposGetPages(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetPages<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<Page> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'page']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -30145,8 +30747,8 @@ export async function reposGetPages(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-github-pages-site}
  * Tags: repos
  */
-export async function reposCreatePagesSite(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreatePagesSite<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30167,6 +30769,7 @@ export async function reposCreatePagesSite(
       path?: '/' | '/docs';
     };
   } | null,
+  opts?: FetcherData,
 ): Promise<Page> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
@@ -30174,7 +30777,7 @@ export async function reposCreatePagesSite(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'page']]] } },
     '409': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -30189,13 +30792,14 @@ export async function reposCreatePagesSite(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-information-about-a-github-pages-site}
  * Tags: repos
  */
-export async function reposUpdateInformationAboutPagesSite(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateInformationAboutPagesSite<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
   body: any | any | any | any,
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
@@ -30203,7 +30807,7 @@ export async function reposUpdateInformationAboutPagesSite(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -30216,19 +30820,20 @@ export async function reposUpdateInformationAboutPagesSite(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-github-pages-site}
  * Tags: repos
  */
-export async function reposDeletePagesSite(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeletePagesSite<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -30241,14 +30846,15 @@ export async function reposDeletePagesSite(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-github-pages-builds}
  * Tags: repos
  */
-export async function reposListPagesBuilds(
-  ctx: r.Context<AuthMethods>,
+export async function reposListPagesBuilds<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<PageBuild[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds',
@@ -30256,7 +30862,7 @@ export async function reposListPagesBuilds(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30273,19 +30879,20 @@ export async function reposListPagesBuilds(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#request-a-github-pages-build}
  * Tags: repos
  */
-export async function reposRequestPagesBuild(
-  ctx: r.Context<AuthMethods>,
+export async function reposRequestPagesBuild<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<PageBuildStatus> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'page-build-status']]] },
@@ -30297,19 +30904,20 @@ export async function reposRequestPagesBuild(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-latest-pages-build}
  * Tags: repos
  */
-export async function reposGetLatestPagesBuild(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetLatestPagesBuild<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<PageBuild> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds/latest',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'page-build']]] } },
   });
@@ -30319,20 +30927,21 @@ export async function reposGetLatestPagesBuild(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-github-pages-build}
  * Tags: repos
  */
-export async function reposGetPagesBuild(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetPagesBuild<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     build_id: number;
   },
+  opts?: FetcherData,
 ): Promise<PageBuild> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds/{build_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'page-build']]] } },
   });
@@ -30347,19 +30956,20 @@ export async function reposGetPagesBuild(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-dns-health-check-for-github-pages}
  * Tags: repos
  */
-export async function reposGetPagesHealthCheck(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetPagesHealthCheck<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<PagesHealthCheck | EmptyObject> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/health',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pages-health-check']]] },
@@ -30374,8 +30984,8 @@ export async function reposGetPagesHealthCheck(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-repository-projects}
  * Tags: projects
  */
-export async function projectsListForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function projectsListForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30383,6 +30993,7 @@ export async function projectsListForRepo(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Project[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/projects',
@@ -30390,7 +31001,7 @@ export async function projectsListForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['state', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30414,8 +31025,8 @@ export async function projectsListForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#create-a-repository-project}
  * Tags: projects
  */
-export async function projectsCreateForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function projectsCreateForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30430,6 +31041,7 @@ export async function projectsCreateForRepo(
      */
     body?: string;
   },
+  opts?: FetcherData,
 ): Promise<Project> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/projects',
@@ -30437,7 +31049,7 @@ export async function projectsCreateForRepo(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -30457,8 +31069,8 @@ export async function projectsCreateForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-pull-requests}
  * Tags: pulls
  */
-export async function pullsList(
-  ctx: r.Context<AuthMethods>,
+export async function pullsList<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30470,6 +31082,7 @@ export async function pullsList(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestSimple[] | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls',
@@ -30485,7 +31098,7 @@ export async function pullsList(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30514,8 +31127,8 @@ export async function pullsList(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-pull-request}
  * Tags: pulls
  */
-export async function pullsCreate(
-  ctx: r.Context<AuthMethods>,
+export async function pullsCreate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30550,6 +31163,7 @@ export async function pullsCreate(
      */
     issue?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequest> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls',
@@ -30557,7 +31171,7 @@ export async function pullsCreate(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'pull-request']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -30572,8 +31186,8 @@ export async function pullsCreate(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-review-comments-in-a-repository}
  * Tags: pulls
  */
-export async function pullsListReviewCommentsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function pullsListReviewCommentsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30583,6 +31197,7 @@ export async function pullsListReviewCommentsForRepo(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReviewComment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments',
@@ -30590,7 +31205,7 @@ export async function pullsListReviewCommentsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30610,20 +31225,21 @@ export async function pullsListReviewCommentsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#get-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsGetReviewComment(
-  ctx: r.Context<AuthMethods>,
+export async function pullsGetReviewComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReviewComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30639,8 +31255,8 @@ export async function pullsGetReviewComment(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#update-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsUpdateReviewComment(
-  ctx: r.Context<AuthMethods>,
+export async function pullsUpdateReviewComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30652,6 +31268,7 @@ export async function pullsUpdateReviewComment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReviewComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}',
@@ -30659,7 +31276,7 @@ export async function pullsUpdateReviewComment(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30674,20 +31291,21 @@ export async function pullsUpdateReviewComment(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#delete-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsDeleteReviewComment(
-  ctx: r.Context<AuthMethods>,
+export async function pullsDeleteReviewComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -30698,8 +31316,8 @@ export async function pullsDeleteReviewComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-a-pull-request-review-comment}
  * Tags: reactions
  */
-export async function reactionsListForPullRequestReviewComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForPullRequestReviewComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30716,6 +31334,7 @@ export async function reactionsListForPullRequestReviewComment(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions',
@@ -30723,7 +31342,7 @@ export async function reactionsListForPullRequestReviewComment(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30739,8 +31358,8 @@ export async function reactionsListForPullRequestReviewComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-pull-request-review-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForPullRequestReviewComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForPullRequestReviewComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30760,6 +31379,7 @@ export async function reactionsCreateForPullRequestReviewComment(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions',
@@ -30767,7 +31387,7 @@ export async function reactionsCreateForPullRequestReviewComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
@@ -30784,21 +31404,22 @@ export async function reactionsCreateForPullRequestReviewComment(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-a-pull-request-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForPullRequestComment(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsDeleteForPullRequestComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     comment_id: number;
     reaction_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -30821,20 +31442,21 @@ export async function reactionsDeleteForPullRequestComment(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#get-a-pull-request}
  * Tags: pulls
  */
-export async function pullsGet(
-  ctx: r.Context<AuthMethods>,
+export async function pullsGet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     pull_number: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequest | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'pull-request']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -30849,8 +31471,8 @@ export async function pullsGet(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls/#update-a-pull-request}
  * Tags: pulls
  */
-export async function pullsUpdate(
-  ctx: r.Context<AuthMethods>,
+export async function pullsUpdate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30878,6 +31500,7 @@ export async function pullsUpdate(
      */
     maintainer_can_modify?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<PullRequest> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}',
@@ -30885,7 +31508,7 @@ export async function pullsUpdate(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'pull-request']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -30900,8 +31523,8 @@ export async function pullsUpdate(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-review-comments-on-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListReviewComments(
-  ctx: r.Context<AuthMethods>,
+export async function pullsListReviewComments<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30912,6 +31535,7 @@ export async function pullsListReviewComments(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReviewComment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/comments',
@@ -30919,7 +31543,7 @@ export async function pullsListReviewComments(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -30946,8 +31570,8 @@ export async function pullsListReviewComments(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsCreateReviewComment(
-  ctx: r.Context<AuthMethods>,
+export async function pullsCreateReviewComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -30991,6 +31615,7 @@ export async function pullsCreateReviewComment(
      */
     in_reply_to?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReviewComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/comments',
@@ -30998,7 +31623,7 @@ export async function pullsCreateReviewComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -31019,8 +31644,8 @@ export async function pullsCreateReviewComment(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-reply-for-a-review-comment}
  * Tags: pulls
  */
-export async function pullsCreateReplyForReviewComment(
-  ctx: r.Context<AuthMethods>,
+export async function pullsCreateReplyForReviewComment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31033,6 +31658,7 @@ export async function pullsCreateReplyForReviewComment(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReviewComment> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies',
@@ -31040,7 +31666,7 @@ export async function pullsCreateReplyForReviewComment(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -31056,8 +31682,8 @@ export async function pullsCreateReplyForReviewComment(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-commits-on-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListCommits(
-  ctx: r.Context<AuthMethods>,
+export async function pullsListCommits<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31065,6 +31691,7 @@ export async function pullsListCommits(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Commit[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/commits',
@@ -31072,7 +31699,7 @@ export async function pullsListCommits(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -31087,8 +31714,8 @@ export async function pullsListCommits(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-pull-requests-files}
  * Tags: pulls
  */
-export async function pullsListFiles(
-  ctx: r.Context<AuthMethods>,
+export async function pullsListFiles<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31096,6 +31723,7 @@ export async function pullsListFiles(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<DiffEntry[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/files',
@@ -31103,7 +31731,7 @@ export async function pullsListFiles(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -31121,20 +31749,21 @@ export async function pullsListFiles(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#check-if-a-pull-request-has-been-merged}
  * Tags: pulls
  */
-export async function pullsCheckIfMerged(
-  ctx: r.Context<AuthMethods>,
+export async function pullsCheckIfMerged<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     pull_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/merge',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -31143,8 +31772,8 @@ export async function pullsCheckIfMerged(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#merge-a-pull-request}
  * Tags: pulls
  */
-export async function pullsMerge(
-  ctx: r.Context<AuthMethods>,
+export async function pullsMerge<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31168,6 +31797,7 @@ export async function pullsMerge(
      */
     merge_method?: 'merge' | 'squash' | 'rebase';
   } | null,
+  opts?: FetcherData,
 ): Promise<PullRequestMergeResult> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/merge',
@@ -31175,7 +31805,7 @@ export async function pullsMerge(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -31194,8 +31824,8 @@ export async function pullsMerge(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-requested-reviewers-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListRequestedReviewers(
-  ctx: r.Context<AuthMethods>,
+export async function pullsListRequestedReviewers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31203,6 +31833,7 @@ export async function pullsListRequestedReviewers(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReviewRequest> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers',
@@ -31210,7 +31841,7 @@ export async function pullsListRequestedReviewers(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -31225,14 +31856,15 @@ export async function pullsListRequestedReviewers(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#request-reviewers-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsRequestReviewers(
-  ctx: r.Context<AuthMethods>,
+export async function pullsRequestReviewers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     pull_number: number;
   },
   body: any | any,
+  opts?: FetcherData,
 ): Promise<PullRequestSimple> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers',
@@ -31240,7 +31872,7 @@ export async function pullsRequestReviewers(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-simple']]] },
@@ -31253,8 +31885,8 @@ export async function pullsRequestReviewers(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#remove-requested-reviewers-from-a-pull-request}
  * Tags: pulls
  */
-export async function pullsRemoveRequestedReviewers(
-  ctx: r.Context<AuthMethods>,
+export async function pullsRemoveRequestedReviewers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31270,6 +31902,7 @@ export async function pullsRemoveRequestedReviewers(
      */
     team_reviewers?: string[];
   },
+  opts?: FetcherData,
 ): Promise<PullRequestSimple> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers',
@@ -31277,7 +31910,7 @@ export async function pullsRemoveRequestedReviewers(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-simple']]] },
@@ -31293,8 +31926,8 @@ export async function pullsRemoveRequestedReviewers(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-reviews-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListReviews(
-  ctx: r.Context<AuthMethods>,
+export async function pullsListReviews<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31302,6 +31935,7 @@ export async function pullsListReviews(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReview[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews',
@@ -31309,7 +31943,7 @@ export async function pullsListReviews(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -31335,8 +31969,8 @@ export async function pullsListReviews(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsCreateReview(
-  ctx: r.Context<AuthMethods>,
+export async function pullsCreateReview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31389,6 +32023,7 @@ export async function pullsCreateReview(
       start_side?: string;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews',
@@ -31396,7 +32031,7 @@ export async function pullsCreateReview(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-review']]] },
@@ -31414,21 +32049,22 @@ export async function pullsCreateReview(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#get-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsGetReview(
-  ctx: r.Context<AuthMethods>,
+export async function pullsGetReview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     pull_number: number;
     review_id: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-review']]] },
@@ -31442,8 +32078,8 @@ export async function pullsGetReview(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#update-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsUpdateReview(
-  ctx: r.Context<AuthMethods>,
+export async function pullsUpdateReview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31456,6 +32092,7 @@ export async function pullsUpdateReview(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
@@ -31463,7 +32100,7 @@ export async function pullsUpdateReview(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-review']]] },
@@ -31480,21 +32117,22 @@ export async function pullsUpdateReview(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#delete-a-pending-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsDeletePendingReview(
-  ctx: r.Context<AuthMethods>,
+export async function pullsDeletePendingReview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     pull_number: number;
     review_id: number;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-review']]] },
@@ -31513,8 +32151,8 @@ export async function pullsDeletePendingReview(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-comments-for-a-pull-request-review}
  * Tags: pulls
  */
-export async function pullsListCommentsForReview(
-  ctx: r.Context<AuthMethods>,
+export async function pullsListCommentsForReview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31523,6 +32161,7 @@ export async function pullsListCommentsForReview(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<ReviewComment[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments',
@@ -31530,7 +32169,7 @@ export async function pullsListCommentsForReview(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -31548,8 +32187,8 @@ export async function pullsListCommentsForReview(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#dismiss-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsDismissReview(
-  ctx: r.Context<AuthMethods>,
+export async function pullsDismissReview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31566,6 +32205,7 @@ export async function pullsDismissReview(
      */
     event?: string;
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals',
@@ -31573,7 +32213,7 @@ export async function pullsDismissReview(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-review']]] },
@@ -31591,8 +32231,8 @@ export async function pullsDismissReview(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#submit-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsSubmitReview(
-  ctx: r.Context<AuthMethods>,
+export async function pullsSubmitReview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31609,6 +32249,7 @@ export async function pullsSubmitReview(
      */
     event: 'APPROVE' | 'REQUEST_CHANGES' | 'COMMENT';
   },
+  opts?: FetcherData,
 ): Promise<PullRequestReview> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events',
@@ -31616,7 +32257,7 @@ export async function pullsSubmitReview(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'pull-request-review']]] },
@@ -31636,8 +32277,8 @@ export async function pullsSubmitReview(
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#update-a-pull-request-branch}
  * Tags: pulls
  */
-export async function pullsUpdateBranch(
-  ctx: r.Context<AuthMethods>,
+export async function pullsUpdateBranch<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31649,6 +32290,7 @@ export async function pullsUpdateBranch(
      */
     expected_head_sha?: string;
   } | null,
+  opts?: FetcherData,
 ): Promise<{
   message?: string;
   url?: string;
@@ -31659,7 +32301,7 @@ export async function pullsUpdateBranch(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -31675,13 +32317,14 @@ export async function pullsUpdateBranch(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-readme}
  * Tags: repos
  */
-export async function reposGetReadme(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetReadme<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     ref?: string;
   },
+  opts?: FetcherData,
 ): Promise<ContentFile> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/readme',
@@ -31689,7 +32332,7 @@ export async function reposGetReadme(
     method: r.HttpMethod.GET,
     queryParams: ['ref'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'content-file']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -31706,14 +32349,15 @@ export async function reposGetReadme(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-directory-readme}
  * Tags: repos
  */
-export async function reposGetReadmeInDirectory(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetReadmeInDirectory<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     dir: string;
     ref?: string;
   },
+  opts?: FetcherData,
 ): Promise<ContentFile> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/readme/{dir}',
@@ -31721,7 +32365,7 @@ export async function reposGetReadmeInDirectory(
     method: r.HttpMethod.GET,
     queryParams: ['ref'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'content-file']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -31738,14 +32382,15 @@ export async function reposGetReadmeInDirectory(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-releases}
  * Tags: repos
  */
-export async function reposListReleases(
-  ctx: r.Context<AuthMethods>,
+export async function reposListReleases<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Release[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases',
@@ -31753,7 +32398,7 @@ export async function reposListReleases(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -31771,8 +32416,8 @@ export async function reposListReleases(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-release}
  * Tags: repos
  */
-export async function reposCreateRelease(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateRelease<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31807,6 +32452,7 @@ export async function reposCreateRelease(
      */
     discussion_category_name?: string;
   },
+  opts?: FetcherData,
 ): Promise<Release> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases',
@@ -31814,7 +32460,7 @@ export async function reposCreateRelease(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'release']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -31829,20 +32475,21 @@ export async function reposCreateRelease(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release-asset}
  * Tags: repos
  */
-export async function reposGetReleaseAsset(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetReleaseAsset<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     asset_id: number;
   },
+  opts?: FetcherData,
 ): Promise<ReleaseAsset | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/assets/{asset_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'release-asset']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -31854,8 +32501,8 @@ export async function reposGetReleaseAsset(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-release-asset}
  * Tags: repos
  */
-export async function reposUpdateReleaseAsset(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateReleaseAsset<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -31875,6 +32522,7 @@ export async function reposUpdateReleaseAsset(
      */
     state?: string;
   },
+  opts?: FetcherData,
 ): Promise<ReleaseAsset> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/assets/{asset_id}',
@@ -31882,7 +32530,7 @@ export async function reposUpdateReleaseAsset(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'release-asset']]] } },
   });
@@ -31892,20 +32540,21 @@ export async function reposUpdateReleaseAsset(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-release-asset}
  * Tags: repos
  */
-export async function reposDeleteReleaseAsset(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteReleaseAsset<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     asset_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/assets/{asset_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -31916,19 +32565,20 @@ export async function reposDeleteReleaseAsset(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-latest-release}
  * Tags: repos
  */
-export async function reposGetLatestRelease(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetLatestRelease<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<Release> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/latest',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'release']]] } },
   });
@@ -31939,20 +32589,21 @@ export async function reposGetLatestRelease(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release-by-tag-name}
  * Tags: repos
  */
-export async function reposGetReleaseByTag(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetReleaseByTag<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     tag: string;
   },
+  opts?: FetcherData,
 ): Promise<Release> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/tags/{tag}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'release']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -31964,20 +32615,21 @@ export async function reposGetReleaseByTag(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release}
  * Tags: repos
  */
-export async function reposGetRelease(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetRelease<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     release_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Release> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'release']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -31989,8 +32641,8 @@ export async function reposGetRelease(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-release}
  * Tags: repos
  */
-export async function reposUpdateRelease(
-  ctx: r.Context<AuthMethods>,
+export async function reposUpdateRelease<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32026,6 +32678,7 @@ export async function reposUpdateRelease(
      */
     discussion_category_name?: string;
   },
+  opts?: FetcherData,
 ): Promise<Release> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}',
@@ -32033,7 +32686,7 @@ export async function reposUpdateRelease(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'release']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -32045,20 +32698,21 @@ export async function reposUpdateRelease(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-release}
  * Tags: repos
  */
-export async function reposDeleteRelease(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeleteRelease<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     release_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -32066,8 +32720,8 @@ export async function reposDeleteRelease(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-release-assets}
  * Tags: repos
  */
-export async function reposListReleaseAssets(
-  ctx: r.Context<AuthMethods>,
+export async function reposListReleaseAssets<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32075,6 +32729,7 @@ export async function reposListReleaseAssets(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<ReleaseAsset[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}/assets',
@@ -32082,7 +32737,7 @@ export async function reposListReleaseAssets(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32116,8 +32771,8 @@ export async function reposListReleaseAssets(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#upload-a-release-asset}
  * Tags: repos
  */
-export async function reposUploadReleaseAsset(
-  ctx: r.Context<AuthMethods>,
+export async function reposUploadReleaseAsset<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32126,6 +32781,7 @@ export async function reposUploadReleaseAsset(
     label?: string;
   },
   body: any,
+  opts?: FetcherData,
 ): Promise<ReleaseAsset> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}/assets',
@@ -32134,7 +32790,7 @@ export async function reposUploadReleaseAsset(
     body,
     queryParams: ['name', 'label'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'release-asset']]] } },
   });
@@ -32145,8 +32801,8 @@ export async function reposUploadReleaseAsset(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-release}
  * Tags: reactions
  */
-export async function reactionsCreateForRelease(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForRelease<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32158,6 +32814,7 @@ export async function reactionsCreateForRelease(
      */
     content: '+1' | 'laugh' | 'heart' | 'hooray' | 'rocket' | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}/reactions',
@@ -32165,7 +32822,7 @@ export async function reactionsCreateForRelease(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
@@ -32182,8 +32839,8 @@ export async function reactionsCreateForRelease(
  * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#list-secret-scanning-alerts-for-a-repository}
  * Tags: secret-scanning
  */
-export async function secretScanningListAlertsForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function secretScanningListAlertsForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32192,6 +32849,7 @@ export async function secretScanningListAlertsForRepo(
     page?: number;
     per_page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SecretScanningAlert[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/secret-scanning/alerts',
@@ -32199,7 +32857,7 @@ export async function secretScanningListAlertsForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['state', 'secret_type', 'page', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32221,20 +32879,21 @@ export async function secretScanningListAlertsForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#get-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
-export async function secretScanningGetAlert(
-  ctx: r.Context<AuthMethods>,
+export async function secretScanningGetAlert<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     alert_number: AlertNumber;
   },
+  opts?: FetcherData,
 ): Promise<SecretScanningAlert> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'secret-scanning-alert']]] },
@@ -32249,8 +32908,8 @@ export async function secretScanningGetAlert(
  * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#update-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
-export async function secretScanningUpdateAlert(
-  ctx: r.Context<AuthMethods>,
+export async function secretScanningUpdateAlert<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32260,6 +32919,7 @@ export async function secretScanningUpdateAlert(
     state: SecretScanningAlertState;
     resolution?: SecretScanningAlertResolution;
   },
+  opts?: FetcherData,
 ): Promise<SecretScanningAlert> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}',
@@ -32267,7 +32927,7 @@ export async function secretScanningUpdateAlert(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'secret-scanning-alert']]] },
@@ -32282,14 +32942,15 @@ export async function secretScanningUpdateAlert(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-stargazers}
  * Tags: activity
  */
-export async function activityListStargazersForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function activityListStargazersForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[] | Stargazer[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stargazers',
@@ -32297,7 +32958,7 @@ export async function activityListStargazersForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32325,19 +32986,20 @@ export async function activityListStargazersForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-weekly-commit-activity}
  * Tags: repos
  */
-export async function reposGetCodeFrequencyStats(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCodeFrequencyStats<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<CodeFrequencyStat[] | any | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/code_frequency',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32357,19 +33019,20 @@ export async function reposGetCodeFrequencyStats(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-last-year-of-commit-activity}
  * Tags: repos
  */
-export async function reposGetCommitActivityStats(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetCommitActivityStats<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<CommitActivity[] | any | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/commit_activity',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32392,19 +33055,20 @@ export async function reposGetCommitActivityStats(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-contributor-commit-activity}
  * Tags: repos
  */
-export async function reposGetContributorsStats(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetContributorsStats<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<ContributorActivity[] | any | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/contributors',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32426,19 +33090,20 @@ export async function reposGetContributorsStats(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-weekly-commit-count}
  * Tags: repos
  */
-export async function reposGetParticipationStats(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetParticipationStats<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<ParticipationStats> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/participation',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'participation-stats']]] },
@@ -32458,19 +33123,20 @@ export async function reposGetParticipationStats(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-hourly-commit-count-for-each-day}
  * Tags: repos
  */
-export async function reposGetPunchCardStats(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetPunchCardStats<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<CodeFrequencyStat[] | any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/punch_card',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32492,8 +33158,8 @@ export async function reposGetPunchCardStats(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-commit-status}
  * Tags: repos
  */
-export async function reposCreateCommitStatus(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateCommitStatus<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32520,6 +33186,7 @@ export async function reposCreateCommitStatus(
      */
     context?: string;
   },
+  opts?: FetcherData,
 ): Promise<Status> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/statuses/{sha}',
@@ -32527,7 +33194,7 @@ export async function reposCreateCommitStatus(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'status']]] } },
   });
@@ -32538,14 +33205,15 @@ export async function reposCreateCommitStatus(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-watchers}
  * Tags: activity
  */
-export async function activityListWatchersForRepo(
-  ctx: r.Context<AuthMethods>,
+export async function activityListWatchersForRepo<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscribers',
@@ -32553,7 +33221,7 @@ export async function activityListWatchersForRepo(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32567,19 +33235,20 @@ export async function activityListWatchersForRepo(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#get-a-repository-subscription}
  * Tags: activity
  */
-export async function activityGetRepoSubscription(
-  ctx: r.Context<AuthMethods>,
+export async function activityGetRepoSubscription<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<RepositorySubscription> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscription',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32595,8 +33264,8 @@ export async function activityGetRepoSubscription(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#set-a-repository-subscription}
  * Tags: activity
  */
-export async function activitySetRepoSubscription(
-  ctx: r.Context<AuthMethods>,
+export async function activitySetRepoSubscription<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32611,6 +33280,7 @@ export async function activitySetRepoSubscription(
      */
     ignored?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<RepositorySubscription> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscription',
@@ -32618,7 +33288,7 @@ export async function activitySetRepoSubscription(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32633,19 +33303,20 @@ export async function activitySetRepoSubscription(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#delete-a-repository-subscription}
  * Tags: activity
  */
-export async function activityDeleteRepoSubscription(
-  ctx: r.Context<AuthMethods>,
+export async function activityDeleteRepoSubscription<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscription',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -32653,14 +33324,15 @@ export async function activityDeleteRepoSubscription(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-tags}
  * Tags: repos
  */
-export async function reposListTags(
-  ctx: r.Context<AuthMethods>,
+export async function reposListTags<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Tag[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/tags',
@@ -32668,7 +33340,7 @@ export async function reposListTags(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32686,20 +33358,21 @@ export async function reposListTags(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#download-a-repository-archive}
  * Tags: repos
  */
-export async function reposDownloadTarballArchive(
-  ctx: r.Context<AuthMethods>,
+export async function reposDownloadTarballArchive<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     ref: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/tarball/{ref}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -32707,14 +33380,15 @@ export async function reposDownloadTarballArchive(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-teams}
  * Tags: repos
  */
-export async function reposListTeams(
-  ctx: r.Context<AuthMethods>,
+export async function reposListTeams<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/teams',
@@ -32722,7 +33396,7 @@ export async function reposListTeams(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32736,14 +33410,15 @@ export async function reposListTeams(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-repository-topics}
  * Tags: repos
  */
-export async function reposGetAllTopics(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetAllTopics<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     page?: number;
     per_page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Topic> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/topics',
@@ -32751,7 +33426,7 @@ export async function reposGetAllTopics(
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'topic']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -32762,8 +33437,8 @@ export async function reposGetAllTopics(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#replace-all-repository-topics}
  * Tags: repos
  */
-export async function reposReplaceAllTopics(
-  ctx: r.Context<AuthMethods>,
+export async function reposReplaceAllTopics<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32774,6 +33449,7 @@ export async function reposReplaceAllTopics(
      */
     names: string[];
   },
+  opts?: FetcherData,
 ): Promise<Topic> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/topics',
@@ -32781,7 +33457,7 @@ export async function reposReplaceAllTopics(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'topic']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -32798,13 +33474,14 @@ export async function reposReplaceAllTopics(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-clones}
  * Tags: repos
  */
-export async function reposGetClones(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetClones<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per?: '' | 'day' | 'week';
   },
+  opts?: FetcherData,
 ): Promise<CloneTraffic> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/clones',
@@ -32812,7 +33489,7 @@ export async function reposGetClones(
     method: r.HttpMethod.GET,
     queryParams: ['per'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'clone-traffic']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -32824,19 +33501,20 @@ export async function reposGetClones(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-top-referral-paths}
  * Tags: repos
  */
-export async function reposGetTopPaths(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetTopPaths<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<ContentTraffic[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/popular/paths',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32854,19 +33532,20 @@ export async function reposGetTopPaths(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-top-referral-sources}
  * Tags: repos
  */
-export async function reposGetTopReferrers(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetTopReferrers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<ReferrerTraffic[]> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/popular/referrers',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -32884,13 +33563,14 @@ export async function reposGetTopReferrers(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-page-views}
  * Tags: repos
  */
-export async function reposGetViews(
-  ctx: r.Context<AuthMethods>,
+export async function reposGetViews<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     per?: '' | 'day' | 'week';
   },
+  opts?: FetcherData,
 ): Promise<ViewTraffic> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/views',
@@ -32898,7 +33578,7 @@ export async function reposGetViews(
     method: r.HttpMethod.GET,
     queryParams: ['per'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'view-traffic']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -32910,8 +33590,8 @@ export async function reposGetViews(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#transfer-a-repository}
  * Tags: repos
  */
-export async function reposTransfer(
-  ctx: r.Context<AuthMethods>,
+export async function reposTransfer<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
@@ -32926,6 +33606,7 @@ export async function reposTransfer(
      */
     team_ids?: number[];
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/transfer',
@@ -32933,7 +33614,7 @@ export async function reposTransfer(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '202': {
       transforms: { date: [[[r.TransformType.REF, 'minimal-repository']]] },
@@ -32946,19 +33627,20 @@ export async function reposTransfer(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#check-if-vulnerability-alerts-are-enabled-for-a-repository}
  * Tags: repos
  */
-export async function reposCheckVulnerabilityAlerts(
-  ctx: r.Context<AuthMethods>,
+export async function reposCheckVulnerabilityAlerts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/vulnerability-alerts',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -32967,19 +33649,20 @@ export async function reposCheckVulnerabilityAlerts(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#enable-vulnerability-alerts}
  * Tags: repos
  */
-export async function reposEnableVulnerabilityAlerts(
-  ctx: r.Context<AuthMethods>,
+export async function reposEnableVulnerabilityAlerts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/vulnerability-alerts',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -32988,19 +33671,20 @@ export async function reposEnableVulnerabilityAlerts(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#disable-vulnerability-alerts}
  * Tags: repos
  */
-export async function reposDisableVulnerabilityAlerts(
-  ctx: r.Context<AuthMethods>,
+export async function reposDisableVulnerabilityAlerts<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/vulnerability-alerts',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -33012,20 +33696,21 @@ export async function reposDisableVulnerabilityAlerts(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#download-a-repository-archive}
  * Tags: repos
  */
-export async function reposDownloadZipballArchive(
-  ctx: r.Context<AuthMethods>,
+export async function reposDownloadZipballArchive<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
     ref: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/zipball/{ref}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -33041,8 +33726,8 @@ export async function reposDownloadZipballArchive(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-using-a-template}
  * Tags: repos
  */
-export async function reposCreateUsingTemplate(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateUsingTemplate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     template_owner: string;
     template_repo: string;
@@ -33069,6 +33754,7 @@ export async function reposCreateUsingTemplate(
      */
     private?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<Repository> {
   const req = await ctx.createRequest({
     path: '/repos/{template_owner}/{template_repo}/generate',
@@ -33076,7 +33762,7 @@ export async function reposCreateUsingTemplate(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'repository']]] } },
   });
@@ -33091,11 +33777,12 @@ export async function reposCreateUsingTemplate(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-public-repositories}
  * Tags: repos
  */
-export async function reposListPublic(
-  ctx: r.Context<AuthMethods>,
+export async function reposListPublic<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[] | any> {
   const req = await ctx.createRequest({
     path: '/repositories',
@@ -33103,7 +33790,7 @@ export async function reposListPublic(
     method: r.HttpMethod.GET,
     queryParams: ['since'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -33123,14 +33810,15 @@ export async function reposListPublic(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-environment-secrets}
  * Tags: actions
  */
-export async function actionsListEnvironmentSecrets(
-  ctx: r.Context<AuthMethods>,
+export async function actionsListEnvironmentSecrets<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     repository_id: number;
     environment_name: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<{
   total_count: number;
   secrets: ActionsSecret[];
@@ -33141,7 +33829,7 @@ export async function actionsListEnvironmentSecrets(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -33162,19 +33850,20 @@ export async function actionsListEnvironmentSecrets(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-environment-public-key}
  * Tags: actions
  */
-export async function actionsGetEnvironmentPublicKey(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetEnvironmentPublicKey<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     repository_id: number;
     environment_name: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsPublicKey> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/public-key',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-public-key']]] },
@@ -33187,20 +33876,21 @@ export async function actionsGetEnvironmentPublicKey(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-environment-secret}
  * Tags: actions
  */
-export async function actionsGetEnvironmentSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsGetEnvironmentSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     repository_id: number;
     environment_name: string;
     secret_name: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsSecret> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-secret']]] },
@@ -33287,8 +33977,8 @@ export async function actionsGetEnvironmentSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-or-update-an-environment-secret}
  * Tags: actions
  */
-export async function actionsCreateOrUpdateEnvironmentSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     repository_id: number;
     environment_name: string;
@@ -33304,6 +33994,7 @@ export async function actionsCreateOrUpdateEnvironmentSecret(
      */
     key_id?: string;
   },
+  opts?: FetcherData,
 ): Promise<EmptyObject | any> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}',
@@ -33311,7 +34002,7 @@ export async function actionsCreateOrUpdateEnvironmentSecret(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'empty-object']]] } },
   });
@@ -33322,20 +34013,21 @@ export async function actionsCreateOrUpdateEnvironmentSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-environment-secret}
  * Tags: actions
  */
-export async function actionsDeleteEnvironmentSecret(
-  ctx: r.Context<AuthMethods>,
+export async function actionsDeleteEnvironmentSecret<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     repository_id: number;
     environment_name: string;
     secret_name: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -33344,8 +34036,10 @@ export async function actionsDeleteEnvironmentSecret(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-provisioned-scim-groups-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListProvisionedGroupsEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListProvisionedGroupsEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     startIndex?: number;
@@ -33353,6 +34047,7 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise(
     filter?: string;
     excludedAttributes?: string;
   },
+  opts?: FetcherData,
 ): Promise<ScimGroupListEnterprise> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups',
@@ -33360,7 +34055,7 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise(
     method: r.HttpMethod.GET,
     queryParams: ['startIndex', 'count', 'filter', 'excludedAttributes'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -33377,8 +34072,10 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#provision-a-scim-enterprise-group-and-invite-users}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminProvisionAndInviteEnterpriseGroup(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminProvisionAndInviteEnterpriseGroup<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
@@ -33398,6 +34095,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseGroup(
       value: string;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseGroup> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups',
@@ -33405,7 +34103,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseGroup(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-group']]] },
@@ -33418,13 +34116,16 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseGroup(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-scim-provisioning-information-for-an-enterprise-group}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminGetProvisioningInformationForEnterpriseGroup(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminGetProvisioningInformationForEnterpriseGroup<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_group_id: string;
     excludedAttributes?: string;
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseGroup> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
@@ -33432,7 +34133,7 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseGrou
     method: r.HttpMethod.GET,
     queryParams: ['excludedAttributes'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-group']]] },
@@ -33447,8 +34148,10 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseGrou
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-group}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_group_id: string;
@@ -33469,6 +34172,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup
       value: string;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseGroup> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
@@ -33476,7 +34180,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-group']]] },
@@ -33491,8 +34195,10 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-group}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminUpdateAttributeForEnterpriseGroup(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminUpdateAttributeForEnterpriseGroup<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_group_id: string;
@@ -33511,6 +34217,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseGroup(
       value?: string | any | any[];
     }[];
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseGroup> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
@@ -33518,7 +34225,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseGroup(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-group']]] },
@@ -33531,19 +34238,20 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseGroup(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-a-scim-group-from-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminDeleteScimGroupFromEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminDeleteScimGroupFromEnterprise<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_group_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -33569,14 +34277,17 @@ export async function enterpriseAdminDeleteScimGroupFromEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-scim-provisioned-identities-for-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminListProvisionedIdentitiesEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminListProvisionedIdentitiesEnterprise<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     startIndex?: number;
     count?: number;
     filter?: string;
   },
+  opts?: FetcherData,
 ): Promise<ScimUserListEnterprise> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users',
@@ -33584,7 +34295,7 @@ export async function enterpriseAdminListProvisionedIdentitiesEnterprise(
     method: r.HttpMethod.GET,
     queryParams: ['startIndex', 'count', 'filter'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -33603,8 +34314,10 @@ export async function enterpriseAdminListProvisionedIdentitiesEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#provision-and-invite-a-scim-enterprise-user}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminProvisionAndInviteEnterpriseUser(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminProvisionAndInviteEnterpriseUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
   },
@@ -33651,6 +34364,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseUser(
       value?: string;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseUser> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users',
@@ -33658,7 +34372,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseUser(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-user']]] },
@@ -33671,19 +34385,22 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseUser(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-scim-provisioning-information-for-an-enterprise-user}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminGetProvisioningInformationForEnterpriseUser(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminGetProvisioningInformationForEnterpriseUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_user_id: string;
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseUser> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-user']]] },
@@ -33702,8 +34419,10 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseUser
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-user}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_user_id: string;
@@ -33751,6 +34470,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser(
       value?: string;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseUser> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
@@ -33758,7 +34478,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-user']]] },
@@ -33788,8 +34508,10 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-user}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminUpdateAttributeForEnterpriseUser(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminUpdateAttributeForEnterpriseUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_user_id: string;
@@ -33804,6 +34526,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseUser(
      */
     Operations: any[];
   },
+  opts?: FetcherData,
 ): Promise<ScimEnterpriseUser> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
@@ -33811,7 +34534,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseUser(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'scim-enterprise-user']]] },
@@ -33824,19 +34547,20 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseUser(
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-a-scim-user-from-an-enterprise}
  * Tags: enterprise-admin
  */
-export async function enterpriseAdminDeleteUserFromEnterprise(
-  ctx: r.Context<AuthMethods>,
+export async function enterpriseAdminDeleteUserFromEnterprise<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
     scim_user_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -33860,14 +34584,15 @@ export async function enterpriseAdminDeleteUserFromEnterprise(
  * Learn more at {@link https://docs.github.com/rest/reference/scim#list-scim-provisioned-identities}
  * Tags: scim
  */
-export async function scimListProvisionedIdentities(
-  ctx: r.Context<AuthMethods>,
+export async function scimListProvisionedIdentities<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     startIndex?: number;
     count?: number;
     filter?: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users',
@@ -33875,7 +34600,7 @@ export async function scimListProvisionedIdentities(
     method: r.HttpMethod.GET,
     queryParams: ['startIndex', 'count', 'filter'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '400': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -33888,8 +34613,8 @@ export async function scimListProvisionedIdentities(
  * Learn more at {@link https://docs.github.com/rest/reference/scim#provision-and-invite-a-scim-user}
  * Tags: scim
  */
-export async function scimProvisionAndInviteUser(
-  ctx: r.Context<AuthMethods>,
+export async function scimProvisionAndInviteUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -33940,6 +34665,7 @@ export async function scimProvisionAndInviteUser(
     groups?: string[];
     active?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users',
@@ -33947,7 +34673,7 @@ export async function scimProvisionAndInviteUser(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '400': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -33961,19 +34687,20 @@ export async function scimProvisionAndInviteUser(
  * Learn more at {@link https://docs.github.com/rest/reference/scim#get-scim-provisioning-information-for-a-user}
  * Tags: scim
  */
-export async function scimGetProvisioningInformationForUser(
-  ctx: r.Context<AuthMethods>,
+export async function scimGetProvisioningInformationForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     scim_user_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -33989,8 +34716,8 @@ export async function scimGetProvisioningInformationForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/scim#set-scim-information-for-a-provisioned-user}
  * Tags: scim
  */
-export async function scimSetInformationForProvisionedUser(
-  ctx: r.Context<AuthMethods>,
+export async function scimSetInformationForProvisionedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     scim_user_id: string;
@@ -34042,6 +34769,7 @@ export async function scimSetInformationForProvisionedUser(
       primary?: boolean;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
@@ -34049,7 +34777,7 @@ export async function scimSetInformationForProvisionedUser(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -34076,8 +34804,8 @@ export async function scimSetInformationForProvisionedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/scim#update-an-attribute-for-a-scim-user}
  * Tags: scim
  */
-export async function scimUpdateAttributeForUser(
-  ctx: r.Context<AuthMethods>,
+export async function scimUpdateAttributeForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     scim_user_id: string;
@@ -34114,6 +34842,7 @@ export async function scimUpdateAttributeForUser(
         | string;
     }[];
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
@@ -34121,7 +34850,7 @@ export async function scimUpdateAttributeForUser(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '400': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -34134,19 +34863,20 @@ export async function scimUpdateAttributeForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/scim#delete-a-scim-user-from-an-organization}
  * Tags: scim
  */
-export async function scimDeleteUserFromOrg(
-  ctx: r.Context<AuthMethods>,
+export async function scimDeleteUserFromOrg<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
     scim_user_id: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'scim-error']]] } },
@@ -34175,8 +34905,8 @@ export async function scimDeleteUserFromOrg(
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-code}
  * Tags: search
  */
-export async function searchCode(
-  ctx: r.Context<AuthMethods>,
+export async function searchCode<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
     sort?: 'indexed';
@@ -34184,6 +34914,7 @@ export async function searchCode(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -34198,7 +34929,7 @@ export async function searchCode(
     method: r.HttpMethod.GET,
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34230,8 +34961,8 @@ export async function searchCode(
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-commits}
  * Tags: search
  */
-export async function searchCommits(
-  ctx: r.Context<AuthMethods>,
+export async function searchCommits<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
     sort?: 'author-date' | 'committer-date';
@@ -34239,6 +34970,7 @@ export async function searchCommits(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -34253,7 +34985,7 @@ export async function searchCommits(
     method: r.HttpMethod.GET,
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34285,8 +35017,8 @@ export async function searchCommits(
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-issues-and-pull-requests}
  * Tags: search
  */
-export async function searchIssuesAndPullRequests(
-  ctx: r.Context<AuthMethods>,
+export async function searchIssuesAndPullRequests<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
     sort?:
@@ -34305,6 +35037,7 @@ export async function searchIssuesAndPullRequests(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -34319,7 +35052,7 @@ export async function searchIssuesAndPullRequests(
     method: r.HttpMethod.GET,
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34352,8 +35085,8 @@ export async function searchIssuesAndPullRequests(
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-labels}
  * Tags: search
  */
-export async function searchLabels(
-  ctx: r.Context<AuthMethods>,
+export async function searchLabels<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     repository_id: number;
     q: string;
@@ -34362,6 +35095,7 @@ export async function searchLabels(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -34376,7 +35110,7 @@ export async function searchLabels(
     method: r.HttpMethod.GET,
     queryParams: ['repository_id', 'q', 'sort', 'order', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34414,8 +35148,8 @@ export async function searchLabels(
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-repositories}
  * Tags: search
  */
-export async function searchRepos(
-  ctx: r.Context<AuthMethods>,
+export async function searchRepos<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
     sort?: 'stars' | 'forks' | 'help-wanted-issues' | 'updated';
@@ -34423,6 +35157,7 @@ export async function searchRepos(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -34437,7 +35172,7 @@ export async function searchRepos(
     method: r.HttpMethod.GET,
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34469,13 +35204,14 @@ export async function searchRepos(
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-topics}
  * Tags: search
  */
-export async function searchTopics(
-  ctx: r.Context<AuthMethods>,
+export async function searchTopics<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -34490,7 +35226,7 @@ export async function searchTopics(
     method: r.HttpMethod.GET,
     queryParams: ['q', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34519,8 +35255,8 @@ export async function searchTopics(
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-users}
  * Tags: search
  */
-export async function searchUsers(
-  ctx: r.Context<AuthMethods>,
+export async function searchUsers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
     sort?: 'followers' | 'repositories' | 'joined';
@@ -34528,6 +35264,7 @@ export async function searchUsers(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -34542,7 +35279,7 @@ export async function searchUsers(
     method: r.HttpMethod.GET,
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34567,18 +35304,19 @@ export async function searchUsers(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#get-a-team-legacy}
  * Tags: teams
  */
-export async function teamsGetLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamFull> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'team-full']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -34595,8 +35333,8 @@ export async function teamsGetLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#update-a-team-legacy}
  * Tags: teams
  */
-export async function teamsUpdateLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsUpdateLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
   },
@@ -34631,6 +35369,7 @@ export async function teamsUpdateLegacy(
      */
     parent_team_id?: number | null;
   },
+  opts?: FetcherData,
 ): Promise<TeamFull> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}',
@@ -34638,7 +35377,7 @@ export async function teamsUpdateLegacy(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'team-full']]] } },
     '201': { transforms: { date: [[[r.TransformType.REF, 'team-full']]] } },
@@ -34660,18 +35399,19 @@ export async function teamsUpdateLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#delete-a-team-legacy}
  * Tags: teams
  */
-export async function teamsDeleteLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsDeleteLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -34688,14 +35428,15 @@ export async function teamsDeleteLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussions-legacy}
  * Tags: teams
  */
-export async function teamsListDiscussionsLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListDiscussionsLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     direction?: 'asc' | 'desc';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions',
@@ -34703,7 +35444,7 @@ export async function teamsListDiscussionsLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34725,8 +35466,8 @@ export async function teamsListDiscussionsLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsCreateDiscussionLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCreateDiscussionLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
   },
@@ -34744,6 +35485,7 @@ export async function teamsCreateDiscussionLegacy(
      */
     private?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions',
@@ -34751,7 +35493,7 @@ export async function teamsCreateDiscussionLegacy(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: { date: [[[r.TransformType.REF, 'team-discussion']]] },
@@ -34767,19 +35509,20 @@ export async function teamsCreateDiscussionLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsGetDiscussionLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetDiscussionLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-discussion']]] },
@@ -34795,8 +35538,8 @@ export async function teamsGetDiscussionLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsUpdateDiscussionLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -34811,6 +35554,7 @@ export async function teamsUpdateDiscussionLegacy(
      */
     body?: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussion> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}',
@@ -34818,7 +35562,7 @@ export async function teamsUpdateDiscussionLegacy(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-discussion']]] },
@@ -34834,19 +35578,20 @@ export async function teamsUpdateDiscussionLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsDeleteDiscussionLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -34858,8 +35603,8 @@ export async function teamsDeleteDiscussionLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussion-comments-legacy}
  * Tags: teams
  */
-export async function teamsListDiscussionCommentsLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListDiscussionCommentsLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -34867,6 +35612,7 @@ export async function teamsListDiscussionCommentsLegacy(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments',
@@ -34874,7 +35620,7 @@ export async function teamsListDiscussionCommentsLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34899,8 +35645,8 @@ export async function teamsListDiscussionCommentsLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsCreateDiscussionCommentLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -34911,6 +35657,7 @@ export async function teamsCreateDiscussionCommentLegacy(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments',
@@ -34918,7 +35665,7 @@ export async function teamsCreateDiscussionCommentLegacy(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -34936,20 +35683,21 @@ export async function teamsCreateDiscussionCommentLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsGetDiscussionCommentLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetDiscussionCommentLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
     comment_number: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -34967,8 +35715,8 @@ export async function teamsGetDiscussionCommentLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionCommentLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -34980,6 +35728,7 @@ export async function teamsUpdateDiscussionCommentLegacy(
      */
     body: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamDiscussionComment> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}',
@@ -34987,7 +35736,7 @@ export async function teamsUpdateDiscussionCommentLegacy(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35005,20 +35754,21 @@ export async function teamsUpdateDiscussionCommentLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionCommentLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsDeleteDiscussionCommentLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
     comment_number: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -35030,8 +35780,8 @@ export async function teamsDeleteDiscussionCommentLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion-comment-legacy}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionCommentLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -35048,6 +35798,7 @@ export async function reactionsListForTeamDiscussionCommentLegacy(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions',
@@ -35055,7 +35806,7 @@ export async function reactionsListForTeamDiscussionCommentLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35073,8 +35824,10 @@ export async function reactionsListForTeamDiscussionCommentLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion-comment-legacy}
  * Tags: reactions
  */
-export async function reactionsCreateForTeamDiscussionCommentLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForTeamDiscussionCommentLegacy<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -35094,6 +35847,7 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions',
@@ -35101,7 +35855,7 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
   });
@@ -35115,8 +35869,8 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion-legacy}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -35132,6 +35886,7 @@ export async function reactionsListForTeamDiscussionLegacy(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Reaction[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/reactions',
@@ -35139,7 +35894,7 @@ export async function reactionsListForTeamDiscussionLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['content', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35157,8 +35912,8 @@ export async function reactionsListForTeamDiscussionLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion-legacy}
  * Tags: reactions
  */
-export async function reactionsCreateForTeamDiscussionLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function reactionsCreateForTeamDiscussionLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     discussion_number: number;
@@ -35177,6 +35932,7 @@ export async function reactionsCreateForTeamDiscussionLegacy(
       | 'rocket'
       | 'eyes';
   },
+  opts?: FetcherData,
 ): Promise<Reaction> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/reactions',
@@ -35184,7 +35940,7 @@ export async function reactionsCreateForTeamDiscussionLegacy(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'reaction']]] } },
   });
@@ -35198,13 +35954,14 @@ export async function reactionsCreateForTeamDiscussionLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-pending-team-invitations-legacy}
  * Tags: teams
  */
-export async function teamsListPendingInvitationsLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListPendingInvitationsLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationInvitation[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/invitations',
@@ -35212,7 +35969,7 @@ export async function teamsListPendingInvitationsLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35235,14 +35992,15 @@ export async function teamsListPendingInvitationsLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-members-legacy}
  * Tags: teams
  */
-export async function teamsListMembersLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListMembersLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     role?: 'member' | 'maintainer' | 'all';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members',
@@ -35250,7 +36008,7 @@ export async function teamsListMembersLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['role', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35271,19 +36029,20 @@ export async function teamsListMembersLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-member-legacy}
  * Tags: teams
  */
-export async function teamsGetMemberLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetMemberLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -35303,19 +36062,20 @@ export async function teamsGetMemberLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-team-member-legacy}
  * Tags: teams
  */
-export async function teamsAddMemberLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsAddMemberLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
   });
@@ -35335,19 +36095,20 @@ export async function teamsAddMemberLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-member-legacy}
  * Tags: teams
  */
-export async function teamsRemoveMemberLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsRemoveMemberLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -35366,19 +36127,20 @@ export async function teamsRemoveMemberLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user-legacy}
  * Tags: teams
  */
-export async function teamsGetMembershipForUserLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsGetMembershipForUserLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamMembership> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/memberships/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-membership']]] },
@@ -35403,8 +36165,8 @@ export async function teamsGetMembershipForUserLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy}
  * Tags: teams
  */
-export async function teamsAddOrUpdateMembershipForUserLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsAddOrUpdateMembershipForUserLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     username: string;
@@ -35418,6 +36180,7 @@ export async function teamsAddOrUpdateMembershipForUserLegacy(
      */
     role?: 'member' | 'maintainer';
   },
+  opts?: FetcherData,
 ): Promise<TeamMembership> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/memberships/{username}',
@@ -35425,7 +36188,7 @@ export async function teamsAddOrUpdateMembershipForUserLegacy(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-membership']]] },
@@ -35446,19 +36209,20 @@ export async function teamsAddOrUpdateMembershipForUserLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user-legacy}
  * Tags: teams
  */
-export async function teamsRemoveMembershipForUserLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsRemoveMembershipForUserLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/memberships/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -35470,13 +36234,14 @@ export async function teamsRemoveMembershipForUserLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-projects-legacy}
  * Tags: teams
  */
-export async function teamsListProjectsLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListProjectsLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamProject[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects',
@@ -35484,7 +36249,7 @@ export async function teamsListProjectsLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35503,19 +36268,20 @@ export async function teamsListProjectsLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-project-legacy}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForProjectLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCheckPermissionsForProjectLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     project_id: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamProject> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects/{project_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'team-project']]] } },
   });
@@ -35529,8 +36295,8 @@ export async function teamsCheckPermissionsForProjectLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-project-permissions-legacy}
  * Tags: teams
  */
-export async function teamsAddOrUpdateProjectPermissionsLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     project_id: number;
@@ -35545,6 +36311,7 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy(
      */
     permission?: 'read' | 'write' | 'admin';
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects/{project_id}',
@@ -35552,7 +36319,7 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -35569,19 +36336,20 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-project-from-a-team-legacy}
  * Tags: teams
  */
-export async function teamsRemoveProjectLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsRemoveProjectLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     project_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects/{project_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -35596,13 +36364,14 @@ export async function teamsRemoveProjectLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-repositories-legacy}
  * Tags: teams
  */
-export async function teamsListReposLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListReposLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos',
@@ -35610,7 +36379,7 @@ export async function teamsListReposLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35633,20 +36402,21 @@ export async function teamsListReposLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-repository-legacy}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForRepoLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCheckPermissionsForRepoLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<TeamRepository | any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'team-repository']]] },
@@ -35664,8 +36434,8 @@ export async function teamsCheckPermissionsForRepoLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-repository-permissions-legacy}
  * Tags: teams
  */
-export async function teamsAddOrUpdateRepoPermissionsLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsAddOrUpdateRepoPermissionsLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     owner: string;
@@ -35682,6 +36452,7 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy(
      */
     permission?: 'pull' | 'push' | 'admin';
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos/{owner}/{repo}',
@@ -35689,7 +36460,7 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '422': {
@@ -35706,20 +36477,21 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-repository-from-a-team-legacy}
  * Tags: teams
  */
-export async function teamsRemoveRepoLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsRemoveRepoLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -35733,18 +36505,19 @@ export async function teamsRemoveRepoLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team-legacy}
  * Tags: teams
  */
-export async function teamsListIdpGroupsForLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListIdpGroupsForLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
   },
+  opts?: FetcherData,
 ): Promise<GroupMapping> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/team-sync/group-mappings',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'group-mapping']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -35762,8 +36535,8 @@ export async function teamsListIdpGroupsForLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections-legacy}
  * Tags: teams
  */
-export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
   },
@@ -35802,6 +36575,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy(
      */
     synced_at?: string;
   },
+  opts?: FetcherData,
 ): Promise<GroupMapping> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/team-sync/group-mappings',
@@ -35809,7 +36583,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'group-mapping']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -35825,13 +36599,14 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-child-teams-legacy}
  * Tags: teams
  */
-export async function teamsListChildLegacy(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListChildLegacy<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Team[]> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/teams',
@@ -35839,7 +36614,7 @@ export async function teamsListChildLegacy(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35861,16 +36636,17 @@ export async function teamsListChildLegacy(
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-the-authenticated-user}
  * Tags: users
  */
-export async function usersGetAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersGetAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<(PrivateUser | PublicUser) | any> {
   const req = await ctx.createRequest({
     path: '/user',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35897,8 +36673,8 @@ export async function usersGetAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users/#update-the-authenticated-user}
  * Tags: users
  */
-export async function usersUpdateAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersUpdateAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -35940,6 +36716,7 @@ export async function usersUpdateAuthenticated(
      */
     bio?: string;
   },
+  opts?: FetcherData,
 ): Promise<PrivateUser | any> {
   const req = await ctx.createRequest({
     path: '/user',
@@ -35947,7 +36724,7 @@ export async function usersUpdateAuthenticated(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'private-user']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -35964,16 +36741,17 @@ export async function usersUpdateAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-users-blocked-by-the-authenticated-user}
  * Tags: users
  */
-export async function usersListBlockedByAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersListBlockedByAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<SimpleUser[] | any> {
   const req = await ctx.createRequest({
     path: '/user/blocks',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -35990,18 +36768,19 @@ export async function usersListBlockedByAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#check-if-a-user-is-blocked-by-the-authenticated-user}
  * Tags: users
  */
-export async function usersCheckBlocked(
-  ctx: r.Context<AuthMethods>,
+export async function usersCheckBlocked<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/blocks/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36013,18 +36792,19 @@ export async function usersCheckBlocked(
  * Learn more at {@link https://docs.github.com/rest/reference/users#block-a-user}
  * Tags: users
  */
-export async function usersBlock(
-  ctx: r.Context<AuthMethods>,
+export async function usersBlock<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/blocks/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36039,18 +36819,19 @@ export async function usersBlock(
  * Learn more at {@link https://docs.github.com/rest/reference/users#unblock-a-user}
  * Tags: users
  */
-export async function usersUnblock(
-  ctx: r.Context<AuthMethods>,
+export async function usersUnblock<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/blocks/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36063,8 +36844,10 @@ export async function usersUnblock(
  * Learn more at {@link https://docs.github.com/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersSetPrimaryEmailVisibilityForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersSetPrimaryEmailVisibilityForAuthenticated<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -36072,6 +36855,7 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated(
      */
     visibility: 'public' | 'private';
   },
+  opts?: FetcherData,
 ): Promise<Email[] | any> {
   const req = await ctx.createRequest({
     path: '/user/email/visibility',
@@ -36079,7 +36863,7 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36100,12 +36884,13 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListEmailsForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersListEmailsForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Email[] | any> {
   const req = await ctx.createRequest({
     path: '/user/emails',
@@ -36113,7 +36898,7 @@ export async function usersListEmailsForAuthenticated(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36131,8 +36916,8 @@ export async function usersListEmailsForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#add-an-email-address-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersAddEmailForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersAddEmailForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body:
     | {
@@ -36144,6 +36929,7 @@ export async function usersAddEmailForAuthenticated(
       }
     | string[]
     | string,
+  opts?: FetcherData,
 ): Promise<Email[] | any> {
   const req = await ctx.createRequest({
     path: '/user/emails',
@@ -36151,7 +36937,7 @@ export async function usersAddEmailForAuthenticated(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': {
       transforms: {
@@ -36172,8 +36958,8 @@ export async function usersAddEmailForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#delete-an-email-address-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeleteEmailForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersDeleteEmailForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body:
     | {
@@ -36184,6 +36970,7 @@ export async function usersDeleteEmailForAuthenticated(
       }
     | string[]
     | string,
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/emails',
@@ -36191,7 +36978,7 @@ export async function usersDeleteEmailForAuthenticated(
     method: r.HttpMethod.DELETE,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36207,12 +36994,13 @@ export async function usersDeleteEmailForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-followers-of-the-authenticated-user}
  * Tags: users
  */
-export async function usersListFollowersForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function usersListFollowersForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[] | any> {
   const req = await ctx.createRequest({
     path: '/user/followers',
@@ -36220,7 +37008,7 @@ export async function usersListFollowersForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36237,12 +37025,13 @@ export async function usersListFollowersForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-the-people-the-authenticated-user-follows}
  * Tags: users
  */
-export async function usersListFollowedByAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersListFollowedByAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[] | any> {
   const req = await ctx.createRequest({
     path: '/user/following',
@@ -36250,7 +37039,7 @@ export async function usersListFollowedByAuthenticated(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36266,18 +37055,19 @@ export async function usersListFollowedByAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#check-if-a-person-is-followed-by-the-authenticated-user}
  * Tags: users
  */
-export async function usersCheckPersonIsFollowedByAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/following/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36292,18 +37082,19 @@ export async function usersCheckPersonIsFollowedByAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#follow-a-user}
  * Tags: users
  */
-export async function usersFollow(
-  ctx: r.Context<AuthMethods>,
+export async function usersFollow<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/following/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36316,18 +37107,19 @@ export async function usersFollow(
  * Learn more at {@link https://docs.github.com/rest/reference/users#unfollow-a-user}
  * Tags: users
  */
-export async function usersUnfollow(
-  ctx: r.Context<AuthMethods>,
+export async function usersUnfollow<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/following/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36340,12 +37132,13 @@ export async function usersUnfollow(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-gpg-keys-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListGpgKeysForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersListGpgKeysForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<GpgKey[] | any> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys',
@@ -36353,7 +37146,7 @@ export async function usersListGpgKeysForAuthenticated(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36371,8 +37164,8 @@ export async function usersListGpgKeysForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#create-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersCreateGpgKeyForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersCreateGpgKeyForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -36380,6 +37173,7 @@ export async function usersCreateGpgKeyForAuthenticated(
      */
     armored_public_key: string;
   },
+  opts?: FetcherData,
 ): Promise<GpgKey | any> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys',
@@ -36387,7 +37181,7 @@ export async function usersCreateGpgKeyForAuthenticated(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'gpg-key']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36404,18 +37198,19 @@ export async function usersCreateGpgKeyForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersGetGpgKeyForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersGetGpgKeyForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gpg_key_id: number;
   },
+  opts?: FetcherData,
 ): Promise<GpgKey | any> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys/{gpg_key_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'gpg-key']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36429,18 +37224,19 @@ export async function usersGetGpgKeyForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#delete-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeleteGpgKeyForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersDeleteGpgKeyForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gpg_key_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys/{gpg_key_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36462,12 +37258,13 @@ export async function usersDeleteGpgKeyForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-app-installations-accessible-to-the-user-access-token}
  * Tags: apps
  */
-export async function appsListInstallationsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -36481,7 +37278,7 @@ export async function appsListInstallationsForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36510,13 +37307,16 @@ export async function appsListInstallationsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-repositories-accessible-to-the-user-access-token}
  * Tags: apps
  */
-export async function appsListInstallationReposForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function appsListInstallationReposForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<
   | {
       total_count: number;
@@ -36531,7 +37331,7 @@ export async function appsListInstallationReposForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36556,19 +37356,20 @@ export async function appsListInstallationReposForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#add-a-repository-to-an-app-installation}
  * Tags: apps
  */
-export async function appsAddRepoToInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsAddRepoToInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/installations/{installation_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36582,19 +37383,20 @@ export async function appsAddRepoToInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#remove-a-repository-from-an-app-installation}
  * Tags: apps
  */
-export async function appsRemoveRepoFromInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsRemoveRepoFromInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
     repository_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/installations/{installation_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36606,16 +37408,19 @@ export async function appsRemoveRepoFromInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-your-public-repositories}
  * Tags: interactions
  */
-export async function interactionsGetRestrictionsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsGetRestrictionsForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<(InteractionLimitResponse | any) | any> {
   const req = await ctx.createRequest({
     path: '/user/interaction-limits',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36637,10 +37442,13 @@ export async function interactionsGetRestrictionsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-your-public-repositories}
  * Tags: interactions
  */
-export async function interactionsSetRestrictionsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsSetRestrictionsForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: InteractionLimit,
+  opts?: FetcherData,
 ): Promise<InteractionLimitResponse> {
   const req = await ctx.createRequest({
     path: '/user/interaction-limits',
@@ -36648,7 +37456,7 @@ export async function interactionsSetRestrictionsForAuthenticatedUser(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36666,16 +37474,19 @@ export async function interactionsSetRestrictionsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-from-your-public-repositories}
  * Tags: interactions
  */
-export async function interactionsRemoveRestrictionsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function interactionsRemoveRestrictionsForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/user/interaction-limits',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -36689,8 +37500,8 @@ export async function interactionsRemoveRestrictionsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-user-account-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
-export async function issuesListForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function issuesListForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     filter?:
       | 'assigned'
@@ -36707,6 +37518,7 @@ export async function issuesListForAuthenticatedUser(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Issue[] | any> {
   const req = await ctx.createRequest({
     path: '/user/issues',
@@ -36723,7 +37535,7 @@ export async function issuesListForAuthenticatedUser(
       'page',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36739,12 +37551,13 @@ export async function issuesListForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-ssh-keys-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListPublicSshKeysForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersListPublicSshKeysForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Key[] | any> {
   const req = await ctx.createRequest({
     path: '/user/keys',
@@ -36752,7 +37565,7 @@ export async function usersListPublicSshKeysForAuthenticated(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36770,8 +37583,8 @@ export async function usersListPublicSshKeysForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersCreatePublicSshKeyForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersCreatePublicSshKeyForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -36784,6 +37597,7 @@ export async function usersCreatePublicSshKeyForAuthenticated(
      */
     key: string;
   },
+  opts?: FetcherData,
 ): Promise<Key | any> {
   const req = await ctx.createRequest({
     path: '/user/keys',
@@ -36791,7 +37605,7 @@ export async function usersCreatePublicSshKeyForAuthenticated(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'key']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36808,18 +37622,19 @@ export async function usersCreatePublicSshKeyForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersGetPublicSshKeyForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersGetPublicSshKeyForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     key_id: number;
   },
+  opts?: FetcherData,
 ): Promise<Key | any> {
   const req = await ctx.createRequest({
     path: '/user/keys/{key_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'key']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36833,18 +37648,19 @@ export async function usersGetPublicSshKeyForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/users#delete-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeletePublicSshKeyForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersDeletePublicSshKeyForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     key_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/keys/{key_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -36857,12 +37673,13 @@ export async function usersDeletePublicSshKeyForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user}
  * Tags: apps
  */
-export async function appsListSubscriptionsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<UserMarketplacePurchase[] | any> {
   const req = await ctx.createRequest({
     path: '/user/marketplace_purchases',
@@ -36870,7 +37687,7 @@ export async function appsListSubscriptionsForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36892,12 +37709,15 @@ export async function appsListSubscriptionsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user-stubbed}
  * Tags: apps
  */
-export async function appsListSubscriptionsForAuthenticatedUserStubbed(
-  ctx: r.Context<AuthMethods>,
+export async function appsListSubscriptionsForAuthenticatedUserStubbed<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<UserMarketplacePurchase[] | any> {
   const req = await ctx.createRequest({
     path: '/user/marketplace_purchases/stubbed',
@@ -36905,7 +37725,7 @@ export async function appsListSubscriptionsForAuthenticatedUserStubbed(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36925,13 +37745,14 @@ export async function appsListSubscriptionsForAuthenticatedUserStubbed(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-memberships-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsListMembershipsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListMembershipsForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     state?: 'active' | 'pending';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrgMembership[] | any> {
   const req = await ctx.createRequest({
     path: '/user/memberships/orgs',
@@ -36939,7 +37760,7 @@ export async function orgsListMembershipsForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['state', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -36960,18 +37781,19 @@ export async function orgsListMembershipsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-an-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsGetMembershipForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsGetMembershipForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
+  opts?: FetcherData,
 ): Promise<OrgMembership> {
   const req = await ctx.createRequest({
     path: '/user/memberships/orgs/{org}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'org-membership']]] },
@@ -36985,8 +37807,8 @@ export async function orgsGetMembershipForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsUpdateMembershipForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsUpdateMembershipForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
   },
@@ -36996,6 +37818,7 @@ export async function orgsUpdateMembershipForAuthenticatedUser(
      */
     state: 'active';
   },
+  opts?: FetcherData,
 ): Promise<OrgMembership> {
   const req = await ctx.createRequest({
     path: '/user/memberships/orgs/{org}',
@@ -37003,7 +37826,7 @@ export async function orgsUpdateMembershipForAuthenticatedUser(
     method: r.HttpMethod.PATCH,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'org-membership']]] },
@@ -37021,12 +37844,13 @@ export async function orgsUpdateMembershipForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-user-migrations}
  * Tags: migrations
  */
-export async function migrationsListForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsListForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Migration[] | any> {
   const req = await ctx.createRequest({
     path: '/user/migrations',
@@ -37034,7 +37858,7 @@ export async function migrationsListForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37051,8 +37875,8 @@ export async function migrationsListForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#start-a-user-migration}
  * Tags: migrations
  */
-export async function migrationsStartForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsStartForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -37075,6 +37899,7 @@ export async function migrationsStartForAuthenticatedUser(
     exclude?: 'repositories'[];
     repositories: string[];
   },
+  opts?: FetcherData,
 ): Promise<Migration | any> {
   const req = await ctx.createRequest({
     path: '/user/migrations',
@@ -37082,7 +37907,7 @@ export async function migrationsStartForAuthenticatedUser(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'migration']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37105,12 +37930,13 @@ export async function migrationsStartForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-a-user-migration-status}
  * Tags: migrations
  */
-export async function migrationsGetStatusForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsGetStatusForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
     exclude?: string[];
   },
+  opts?: FetcherData,
 ): Promise<Migration | any> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}',
@@ -37118,7 +37944,7 @@ export async function migrationsGetStatusForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['exclude'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'migration']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37152,18 +37978,19 @@ export async function migrationsGetStatusForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive}
  * Tags: migrations
  */
-export async function migrationsGetArchiveForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsGetArchiveForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37175,18 +38002,19 @@ export async function migrationsGetArchiveForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#delete-a-user-migration-archive}
  * Tags: migrations
  */
-export async function migrationsDeleteArchiveForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsDeleteArchiveForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37199,19 +38027,20 @@ export async function migrationsDeleteArchiveForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#unlock-a-user-repository}
  * Tags: migrations
  */
-export async function migrationsUnlockRepoForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsUnlockRepoForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
     repo_name: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/repos/{repo_name}/lock',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37224,13 +38053,14 @@ export async function migrationsUnlockRepoForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#list-repositories-for-a-user-migration}
  * Tags: migrations
  */
-export async function migrationsListReposForUser(
-  ctx: r.Context<AuthMethods>,
+export async function migrationsListReposForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/repositories',
@@ -37238,7 +38068,7 @@ export async function migrationsListReposForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37260,12 +38090,13 @@ export async function migrationsListReposForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsListForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationSimple[] | any> {
   const req = await ctx.createRequest({
     path: '/user/orgs',
@@ -37273,7 +38104,7 @@ export async function orgsListForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37298,8 +38129,8 @@ export async function orgsListForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesGetPackageForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetPackageForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -37310,13 +38141,14 @@ export async function packagesGetPackageForAuthenticatedUser(
       | 'container';
     package_name: string;
   },
+  opts?: FetcherData,
 ): Promise<Package> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'package']]] } },
   });
@@ -37330,8 +38162,8 @@ export async function packagesGetPackageForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesDeletePackageForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesDeletePackageForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -37342,13 +38174,14 @@ export async function packagesDeletePackageForAuthenticatedUser(
       | 'container';
     package_name: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37367,8 +38200,8 @@ export async function packagesDeletePackageForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesRestorePackageForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -37380,6 +38213,7 @@ export async function packagesRestorePackageForAuthenticatedUser(
     package_name: string;
     token?: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/restore',
@@ -37387,7 +38221,7 @@ export async function packagesRestorePackageForAuthenticatedUser(
     method: r.HttpMethod.POST,
     queryParams: ['token'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37403,8 +38237,10 @@ export async function packagesRestorePackageForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -37418,6 +38254,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
     per_page?: number;
     state?: 'active' | 'deleted';
   },
+  opts?: FetcherData,
 ): Promise<PackageVersion[]> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions',
@@ -37425,7 +38262,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
     method: r.HttpMethod.GET,
     queryParams: ['page', 'per_page', 'state'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37448,8 +38285,10 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesGetPackageVersionForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetPackageVersionForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -37461,13 +38300,14 @@ export async function packagesGetPackageVersionForAuthenticatedUser(
     package_name: string;
     package_version_id: number;
   },
+  opts?: FetcherData,
 ): Promise<PackageVersion> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'package-version']]] },
@@ -37483,8 +38323,10 @@ export async function packagesGetPackageVersionForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-version-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesDeletePackageVersionForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesDeletePackageVersionForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -37496,13 +38338,14 @@ export async function packagesDeletePackageVersionForAuthenticatedUser(
     package_name: string;
     package_version_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37521,8 +38364,10 @@ export async function packagesDeletePackageVersionForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-version-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesRestorePackageVersionForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesRestorePackageVersionForAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -37534,13 +38379,14 @@ export async function packagesRestorePackageVersionForAuthenticatedUser(
     package_name: string;
     package_version_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore',
     params,
     method: r.HttpMethod.POST,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37552,8 +38398,8 @@ export async function packagesRestorePackageVersionForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#create-a-user-project}
  * Tags: projects
  */
-export async function projectsCreateForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function projectsCreateForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -37567,6 +38413,7 @@ export async function projectsCreateForAuthenticatedUser(
      */
     body?: string | null;
   },
+  opts?: FetcherData,
 ): Promise<Project | any> {
   const req = await ctx.createRequest({
     path: '/user/projects',
@@ -37574,7 +38421,7 @@ export async function projectsCreateForAuthenticatedUser(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'project']]] } },
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37592,12 +38439,13 @@ export async function projectsCreateForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListPublicEmailsForAuthenticated(
-  ctx: r.Context<AuthMethods>,
+export async function usersListPublicEmailsForAuthenticated<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Email[] | any> {
   const req = await ctx.createRequest({
     path: '/user/public_emails',
@@ -37605,7 +38453,7 @@ export async function usersListPublicEmailsForAuthenticated(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37625,8 +38473,8 @@ export async function usersListPublicEmailsForAuthenticated(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repositories-for-the-authenticated-user}
  * Tags: repos
  */
-export async function reposListForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function reposListForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     visibility?: 'all' | 'public' | 'private';
     affiliation?: string;
@@ -37638,6 +38486,7 @@ export async function reposListForAuthenticatedUser(
     since?: Date;
     before?: Date;
   },
+  opts?: FetcherData,
 ): Promise<Repository[] | any> {
   const req = await ctx.createRequest({
     path: '/user/repos',
@@ -37655,7 +38504,7 @@ export async function reposListForAuthenticatedUser(
       'before',
     ],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37682,8 +38531,8 @@ export async function reposListForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-for-the-authenticated-user}
  * Tags: repos
  */
-export async function reposCreateForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function reposCreateForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
     /**
@@ -37777,6 +38626,7 @@ export async function reposCreateForAuthenticatedUser(
      */
     is_template?: boolean;
   },
+  opts?: FetcherData,
 ): Promise<Repository | any> {
   const req = await ctx.createRequest({
     path: '/user/repos',
@@ -37784,7 +38634,7 @@ export async function reposCreateForAuthenticatedUser(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '201': { transforms: { date: [[[r.TransformType.REF, 'repository']]] } },
     '400': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37802,12 +38652,13 @@ export async function reposCreateForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-invitations-for-the-authenticated-user}
  * Tags: repos
  */
-export async function reposListInvitationsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function reposListInvitationsForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<RepositoryInvitation[] | any> {
   const req = await ctx.createRequest({
     path: '/user/repository_invitations',
@@ -37815,7 +38666,7 @@ export async function reposListInvitationsForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37837,18 +38688,19 @@ export async function reposListInvitationsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#accept-a-repository-invitation}
  * Tags: repos
  */
-export async function reposAcceptInvitation(
-  ctx: r.Context<AuthMethods>,
+export async function reposAcceptInvitation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invitation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/repository_invitations/{invitation_id}',
     params,
     method: r.HttpMethod.PATCH,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37860,18 +38712,19 @@ export async function reposAcceptInvitation(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#decline-a-repository-invitation}
  * Tags: repos
  */
-export async function reposDeclineInvitation(
-  ctx: r.Context<AuthMethods>,
+export async function reposDeclineInvitation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invitation_id: number;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/repository_invitations/{invitation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37886,14 +38739,15 @@ export async function reposDeclineInvitation(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-starred-by-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListReposStarredByAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListReposStarredByAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     sort?: 'created' | 'updated';
     direction?: 'asc' | 'desc';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Repository[] | any> {
   const req = await ctx.createRequest({
     path: '/user/starred',
@@ -37901,7 +38755,7 @@ export async function activityListReposStarredByAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -37917,19 +38771,22 @@ export async function activityListReposStarredByAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#check-if-a-repository-is-starred-by-the-authenticated-user}
  * Tags: activity
  */
-export async function activityCheckRepoIsStarredByAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityCheckRepoIsStarredByAuthenticatedUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/starred/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37942,19 +38799,20 @@ export async function activityCheckRepoIsStarredByAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#star-a-repository-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityStarRepoForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityStarRepoForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/starred/{owner}/{repo}',
     params,
     method: r.HttpMethod.PUT,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37966,19 +38824,20 @@ export async function activityStarRepoForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#unstar-a-repository-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityUnstarRepoForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityUnstarRepoForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
     repo: string;
   },
+  opts?: FetcherData,
 ): Promise<any | any> {
   const req = await ctx.createRequest({
     path: '/user/starred/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '401': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
     '403': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -37991,12 +38850,13 @@ export async function activityUnstarRepoForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-watched-by-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListWatchedReposForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[] | any> {
   const req = await ctx.createRequest({
     path: '/user/subscriptions',
@@ -38004,7 +38864,7 @@ export async function activityListWatchedReposForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38023,12 +38883,13 @@ export async function activityListWatchedReposForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-teams-for-the-authenticated-user}
  * Tags: teams
  */
-export async function teamsListForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function teamsListForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<TeamFull[] | any> {
   const req = await ctx.createRequest({
     path: '/user/teams',
@@ -38036,7 +38897,7 @@ export async function teamsListForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38055,12 +38916,13 @@ export async function teamsListForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-users}
  * Tags: users
  */
-export async function usersList(
-  ctx: r.Context<AuthMethods>,
+export async function usersList<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: number;
     per_page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[] | any> {
   const req = await ctx.createRequest({
     path: '/users',
@@ -38068,7 +38930,7 @@ export async function usersList(
     method: r.HttpMethod.GET,
     queryParams: ['since', 'per_page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38089,18 +38951,19 @@ export async function usersList(
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-user}
  * Tags: users
  */
-export async function usersGetByUsername(
-  ctx: r.Context<AuthMethods>,
+export async function usersGetByUsername<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<(PrivateUser | PublicUser) | any> {
   const req = await ctx.createRequest({
     path: '/users/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38126,13 +38989,14 @@ export async function usersGetByUsername(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-events-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListEventsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListEventsForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/events',
@@ -38140,7 +39004,7 @@ export async function activityListEventsForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38155,14 +39019,15 @@ export async function activityListEventsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-organization-events-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListOrgEventsForAuthenticatedUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListOrgEventsForAuthenticatedUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     org: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/events/orgs/{org}',
@@ -38170,7 +39035,7 @@ export async function activityListOrgEventsForAuthenticatedUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38184,13 +39049,14 @@ export async function activityListOrgEventsForAuthenticatedUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events-for-a-user}
  * Tags: activity
  */
-export async function activityListPublicEventsForUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListPublicEventsForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/events/public',
@@ -38198,7 +39064,7 @@ export async function activityListPublicEventsForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38213,13 +39079,14 @@ export async function activityListPublicEventsForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-followers-of-a-user}
  * Tags: users
  */
-export async function usersListFollowersForUser(
-  ctx: r.Context<AuthMethods>,
+export async function usersListFollowersForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/followers',
@@ -38227,7 +39094,7 @@ export async function usersListFollowersForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38242,13 +39109,14 @@ export async function usersListFollowersForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-the-people-a-user-follows}
  * Tags: users
  */
-export async function usersListFollowingForUser(
-  ctx: r.Context<AuthMethods>,
+export async function usersListFollowingForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<SimpleUser[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/following',
@@ -38256,7 +39124,7 @@ export async function usersListFollowingForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38270,19 +39138,20 @@ export async function usersListFollowingForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#check-if-a-user-follows-another-user}
  * Tags: users
  */
-export async function usersCheckFollowingForUser(
-  ctx: r.Context<AuthMethods>,
+export async function usersCheckFollowingForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     target_user: string;
   },
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/users/{username}/following/{target_user}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -38291,14 +39160,15 @@ export async function usersCheckFollowingForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-gists-for-a-user}
  * Tags: gists
  */
-export async function gistsListForUser(
-  ctx: r.Context<AuthMethods>,
+export async function gistsListForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     since?: Date;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<BaseGist[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/gists',
@@ -38306,7 +39176,7 @@ export async function gistsListForUser(
     method: r.HttpMethod.GET,
     queryParams: ['since', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38324,13 +39194,14 @@ export async function gistsListForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-gpg-keys-for-a-user}
  * Tags: users
  */
-export async function usersListGpgKeysForUser(
-  ctx: r.Context<AuthMethods>,
+export async function usersListGpgKeysForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<GpgKey[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/gpg_keys',
@@ -38338,7 +39209,7 @@ export async function usersListGpgKeysForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38360,13 +39231,14 @@ export async function usersListGpgKeysForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-contextual-information-for-a-user}
  * Tags: users
  */
-export async function usersGetContextForUser(
-  ctx: r.Context<AuthMethods>,
+export async function usersGetContextForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     subject_type?: 'organization' | 'repository' | 'issue' | 'pull_request';
     subject_id?: string;
   },
+  opts?: FetcherData,
 ): Promise<Hovercard> {
   const req = await ctx.createRequest({
     path: '/users/{username}/hovercard',
@@ -38374,7 +39246,7 @@ export async function usersGetContextForUser(
     method: r.HttpMethod.GET,
     queryParams: ['subject_type', 'subject_id'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'hovercard']]] } },
     '404': { transforms: { date: [[[r.TransformType.REF, 'basic-error']]] } },
@@ -38391,18 +39263,19 @@ export async function usersGetContextForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-user-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetUserInstallation(
-  ctx: r.Context<AuthMethods>,
+export async function appsGetUserInstallation<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<Installation> {
   const req = await ctx.createRequest({
     path: '/users/{username}/installation',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'installation']]] } },
   });
@@ -38413,13 +39286,14 @@ export async function appsGetUserInstallation(
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-keys-for-a-user}
  * Tags: users
  */
-export async function usersListPublicKeysForUser(
-  ctx: r.Context<AuthMethods>,
+export async function usersListPublicKeysForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<KeySimple[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/keys',
@@ -38427,7 +39301,7 @@ export async function usersListPublicKeysForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38444,13 +39318,14 @@ export async function usersListPublicKeysForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organizations-for-a-user}
  * Tags: orgs
  */
-export async function orgsListForUser(
-  ctx: r.Context<AuthMethods>,
+export async function orgsListForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<OrganizationSimple[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/orgs',
@@ -38458,7 +39333,7 @@ export async function orgsListForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38481,8 +39356,8 @@ export async function orgsListForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-a-user}
  * Tags: packages
  */
-export async function packagesGetPackageForUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetPackageForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -38494,13 +39369,14 @@ export async function packagesGetPackageForUser(
     package_name: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<Package> {
   const req = await ctx.createRequest({
     path: '/users/{username}/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'package']]] } },
   });
@@ -38514,8 +39390,10 @@ export async function packagesGetPackageForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-a-user}
  * Tags: packages
  */
-export async function packagesGetAllPackageVersionsForPackageOwnedByUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -38527,13 +39405,14 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser(
     package_name: string;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<PackageVersion[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/packages/{package_type}/{package_name}/versions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38556,8 +39435,8 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser(
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-a-user}
  * Tags: packages
  */
-export async function packagesGetPackageVersionForUser(
-  ctx: r.Context<AuthMethods>,
+export async function packagesGetPackageVersionForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
       | 'npm'
@@ -38570,13 +39449,14 @@ export async function packagesGetPackageVersionForUser(
     package_version_id: number;
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<PackageVersion> {
   const req = await ctx.createRequest({
     path: '/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'package-version']]] },
@@ -38588,14 +39468,15 @@ export async function packagesGetPackageVersionForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-user-projects}
  * Tags: projects
  */
-export async function projectsListForUser(
-  ctx: r.Context<AuthMethods>,
+export async function projectsListForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     state?: 'open' | 'closed' | 'all';
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Project[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/projects',
@@ -38603,7 +39484,7 @@ export async function projectsListForUser(
     method: r.HttpMethod.GET,
     queryParams: ['state', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38621,13 +39502,14 @@ export async function projectsListForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-events-received-by-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListReceivedEventsForUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListReceivedEventsForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/received_events',
@@ -38635,7 +39517,7 @@ export async function activityListReceivedEventsForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38649,13 +39531,14 @@ export async function activityListReceivedEventsForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events-received-by-a-user}
  * Tags: activity
  */
-export async function activityListReceivedPublicEventsForUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListReceivedPublicEventsForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<Event[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/received_events/public',
@@ -38663,7 +39546,7 @@ export async function activityListReceivedPublicEventsForUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38678,8 +39561,8 @@ export async function activityListReceivedPublicEventsForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repositories-for-a-user}
  * Tags: repos
  */
-export async function reposListForUser(
-  ctx: r.Context<AuthMethods>,
+export async function reposListForUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     type?: 'all' | 'owner' | 'member';
@@ -38688,6 +39571,7 @@ export async function reposListForUser(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/repos',
@@ -38695,7 +39579,7 @@ export async function reposListForUser(
     method: r.HttpMethod.GET,
     queryParams: ['type', 'sort', 'direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38716,18 +39600,19 @@ export async function reposListForUser(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-actions-billing-for-a-user}
  * Tags: billing
  */
-export async function billingGetGithubActionsBillingUser(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetGithubActionsBillingUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<ActionsBillingUsage> {
   const req = await ctx.createRequest({
     path: '/users/{username}/settings/billing/actions',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'actions-billing-usage']]] },
@@ -38744,18 +39629,19 @@ export async function billingGetGithubActionsBillingUser(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-packages-billing-for-a-user}
  * Tags: billing
  */
-export async function billingGetGithubPackagesBillingUser(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetGithubPackagesBillingUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<PackagesBillingUsage> {
   const req = await ctx.createRequest({
     path: '/users/{username}/settings/billing/packages',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'packages-billing-usage']]] },
@@ -38772,18 +39658,19 @@ export async function billingGetGithubPackagesBillingUser(
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-shared-storage-billing-for-a-user}
  * Tags: billing
  */
-export async function billingGetSharedStorageBillingUser(
-  ctx: r.Context<AuthMethods>,
+export async function billingGetSharedStorageBillingUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<CombinedBillingUsage> {
   const req = await ctx.createRequest({
     path: '/users/{username}/settings/billing/shared-storage',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: { date: [[[r.TransformType.REF, 'combined-billing-usage']]] },
@@ -38798,8 +39685,8 @@ export async function billingGetSharedStorageBillingUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-starred-by-a-user}
  * Tags: activity
  */
-export async function activityListReposStarredByUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListReposStarredByUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     sort?: 'created' | 'updated';
@@ -38807,6 +39694,7 @@ export async function activityListReposStarredByUser(
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<StarredRepository[] | Repository[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/starred',
@@ -38814,7 +39702,7 @@ export async function activityListReposStarredByUser(
     method: r.HttpMethod.GET,
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38842,13 +39730,14 @@ export async function activityListReposStarredByUser(
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-watched-by-a-user}
  * Tags: activity
  */
-export async function activityListReposWatchedByUser(
-  ctx: r.Context<AuthMethods>,
+export async function activityListReposWatchedByUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
     per_page?: number;
     page?: number;
   },
+  opts?: FetcherData,
 ): Promise<MinimalRepository[]> {
   const req = await ctx.createRequest({
     path: '/users/{username}/subscriptions',
@@ -38856,7 +39745,7 @@ export async function activityListReposWatchedByUser(
     method: r.HttpMethod.GET,
     queryParams: ['per_page', 'page'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -38872,15 +39761,16 @@ export async function activityListReposWatchedByUser(
  * Get a random sentence from the Zen of GitHub
  * Tags: meta
  */
-export async function metaGetZen(
-  ctx: r.Context<AuthMethods>,
+export async function metaGetZen<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<string> {
   const req = await ctx.createRequest({
     path: '/zen',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }

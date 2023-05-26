@@ -5,6 +5,7 @@ import {
   createRuntimeRefProperty,
   createRuntimeRefType,
   ExportedRef,
+  FETCHER_DATA_NAME,
 } from '../utils/ref';
 import { AUTH_TYPE_NAME } from './security';
 import { createAllSchemaTransforms } from '../utils/transformers';
@@ -17,7 +18,9 @@ export function createContextFactory(
     [factory.createModifier(SyntaxKind.ExportKeyword)],
     undefined,
     'createContext',
-    undefined,
+    ctx.hasFetcherOptions()
+      ? [factory.createTypeParameterDeclaration(undefined, FETCHER_DATA_NAME)]
+      : undefined,
     [
       factory.createParameterDeclaration(
         undefined,
@@ -25,14 +28,18 @@ export function createContextFactory(
         'params',
         factory.createToken(SyntaxKind.QuestionToken),
         createRuntimeRefType(ExportedRef.CreateContextParams, [
-          factory.createTypeReferenceNode(
-            factory.createIdentifier(AUTH_TYPE_NAME),
-          ),
+          factory.createTypeReferenceNode(AUTH_TYPE_NAME),
+          ...(ctx.hasFetcherOptions()
+            ? [factory.createTypeReferenceNode(FETCHER_DATA_NAME)]
+            : []),
         ]),
       ),
     ],
     createRuntimeRefType(ExportedRef.Context, [
-      factory.createTypeReferenceNode(factory.createIdentifier(AUTH_TYPE_NAME)),
+      factory.createTypeReferenceNode(AUTH_TYPE_NAME),
+      ...(ctx.hasFetcherOptions()
+        ? [factory.createTypeReferenceNode(FETCHER_DATA_NAME)]
+        : []),
     ]),
     createContextFactoryBody(specs, ctx),
   );
@@ -52,9 +59,10 @@ export function createContextFactoryBody(
       factory.createNewExpression(
         createRuntimeRefProperty(ExportedRef.Context),
         [
-          factory.createTypeReferenceNode(
-            factory.createIdentifier(AUTH_TYPE_NAME),
-          ),
+          factory.createTypeReferenceNode(AUTH_TYPE_NAME),
+          ...(ctx.hasFetcherOptions()
+            ? [factory.createTypeReferenceNode(FETCHER_DATA_NAME)]
+            : []),
         ],
         [
           factory.createObjectLiteralExpression(

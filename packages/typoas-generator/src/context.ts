@@ -60,6 +60,7 @@ export type ContextOptions = {
   generateEnums?: boolean;
   jsDoc?: boolean;
   onlyTypes?: boolean;
+  fetcherOptions?: boolean;
   anyInsteadOfUnknown?: boolean;
 };
 
@@ -150,6 +151,10 @@ export class Context {
 
   hasJSDoc(): boolean {
     return this.opts.jsDoc !== false;
+  }
+
+  hasFetcherOptions(): boolean {
+    return this.opts.fetcherOptions !== false;
   }
 
   isOnlyTypes(): boolean {
