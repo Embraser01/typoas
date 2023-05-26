@@ -62,6 +62,7 @@ export type ContextOptions = {
   onlyTypes?: boolean;
   fetcherOptions?: boolean;
   anyInsteadOfUnknown?: boolean;
+  wrapLinesAt?: number;
 };
 
 export class Context {
@@ -159,5 +160,9 @@ export class Context {
 
   isOnlyTypes(): boolean {
     return !!this.opts.onlyTypes;
+  }
+
+  getWrapLinesAt(): number {
+    return this.opts.wrapLinesAt || 120;
   }
 }

@@ -11872,9 +11872,15 @@ export async function metaRoot<FetcherData>(
 }
 /**
  * Get the authenticated app
- * Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
+ * Returns the GitHub App associated with the authentication credentials used. To see how many app installations are
+ * associated with this GitHub App, see the `installations_count` in the response. For more details about your app's
+ * installations, see the "[List installations for the authenticated
+ * app](https://docs.github.com/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use
+ * a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-the-authenticated-app}
  * Tags: apps
  */
@@ -11895,7 +11901,10 @@ export async function appsGetAuthenticated<FetcherData>(
 }
 /**
  * Create a GitHub App from a manifest
- * Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`.
+ * Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest
+ * flow](https://docs.github.com/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub
+ * App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key),
+ * and `webhook_secret`.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-github-app-from-a-manifest}
  * Tags: apps
  */
@@ -11942,9 +11951,12 @@ export async function appsCreateFromManifest<FetcherData>(
 }
 /**
  * Get a webhook configuration for an app
- * Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+ * Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see
+ * "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-webhook-configuration-for-an-app}
  * Tags: apps
  */
@@ -11967,9 +11979,12 @@ export async function appsGetWebhookConfigForApp<FetcherData>(
 }
 /**
  * Update a webhook configuration for an app
- * Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+ * Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see
+ * "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#update-a-webhook-configuration-for-an-app}
  * Tags: apps
  */
@@ -12001,7 +12016,9 @@ export async function appsUpdateWebhookConfigForApp<FetcherData>(
  * List deliveries for an app webhook
  * Returns a list of webhook deliveries for the webhook configured for a GitHub App.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-deliveries-for-an-app-webhook}
  * Tags: apps
  */
@@ -12038,7 +12055,9 @@ export async function appsListWebhookDeliveries<FetcherData>(
  * Get a delivery for an app webhook
  * Returns a delivery for the webhook configured for a GitHub App.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-delivery-for-an-app-webhook}
  * Tags: apps
  */
@@ -12067,7 +12086,9 @@ export async function appsGetWebhookDelivery<FetcherData>(
  * Redeliver a delivery for an app webhook
  * Redeliver a delivery for the webhook configured for a GitHub App.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#redeliver-a-delivery-for-an-app-webhook}
  * Tags: apps
  */
@@ -12093,7 +12114,9 @@ export async function appsRedeliverWebhookDelivery<FetcherData>(
 }
 /**
  * List installations for the authenticated app
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  *
  * The permissions the installation has are included under the `permissions` key.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-installations-for-the-authenticated-app}
@@ -12126,9 +12149,13 @@ export async function appsListInstallations<FetcherData>(
 }
 /**
  * Get an installation for the authenticated app
- * Enables an authenticated GitHub App to find an installation's information using the installation id. The installation's account type (`target_type`) will be either an organization or a user account, depending which account the repository belongs to.
+ * Enables an authenticated GitHub App to find an installation's information using the installation id. The installation's
+ * account type (`target_type`) will be either an organization or a user account, depending which account the repository
+ * belongs to.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-an-installation-for-the-authenticated-app}
  * Tags: apps
  */
@@ -12152,9 +12179,13 @@ export async function appsGetInstallation<FetcherData>(
 }
 /**
  * Delete an installation for the authenticated app
- * Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/rest/reference/apps/#suspend-an-app-installation)" endpoint.
+ * Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's
+ * access to your account's resources, then we recommend the "[Suspend an app
+ * installation](https://docs.github.com/rest/reference/apps/#suspend-an-app-installation)" endpoint.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-installation-for-the-authenticated-app}
  * Tags: apps
  */
@@ -12177,9 +12208,16 @@ export async function appsDeleteInstallation<FetcherData>(
 }
 /**
  * Create an installation access token for an app
- * Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token. By default the installation token has access to all repositories that the installation can access. To restrict the access to specific repositories, you can provide the `repository_ids` when creating the token. When you omit `repository_ids`, the response does not contain the `repositories` key.
+ * Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's
+ * installation on an organization or individual account. Installation tokens expire one hour from the time you create
+ * them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation
+ * token. By default the installation token has access to all repositories that the installation can access. To restrict
+ * the access to specific repositories, you can provide the `repository_ids` when creating the token. When you omit
+ * `repository_ids`, the response does not contain the `repositories` key.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps/#create-an-installation-access-token-for-an-app}
  * Tags: apps
  */
@@ -12226,9 +12264,13 @@ export async function appsCreateInstallationAccessToken<FetcherData>(
 }
 /**
  * Suspend an app installation
- * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub API or webhook events is blocked for that account.
+ * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's
+ * resources. When a GitHub App is suspended, the app's access to the GitHub API or webhook events is blocked for that
+ * account.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#suspend-an-app-installation}
  * Tags: apps
  */
@@ -12253,7 +12295,9 @@ export async function appsSuspendInstallation<FetcherData>(
  * Unsuspend an app installation
  * Removes a GitHub App installation suspension.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#unsuspend-an-app-installation}
  * Tags: apps
  */
@@ -12276,9 +12320,23 @@ export async function appsUnsuspendInstallation<FetcherData>(
 }
 /**
  * List your grants
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more
+ * information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  *
- * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
+ * You can use this API to list
+ * the set of OAuth applications that have been granted access to your account. Unlike the [list your
+ * authorizations](https://docs.github.com/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does
+ * not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to
+ * your account, regardless of the number of tokens an application has generated for your user. The list of OAuth
+ * applications returned matches what is shown on [the application authorizations settings screen within
+ * GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized
+ * for the application. For example, if an application has one token with `repo` scope and another token with `user` scope,
+ * the grant will return `["repo", "user"]`.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#list-your-grants}
  * Tags: oauth-authorizations
@@ -12314,7 +12372,13 @@ export async function oauthAuthorizationsListGrants<FetcherData>(
 }
 /**
  * Get a single grant
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth
+ * Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020.
+ * For more information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-a-single-grant}
  * Tags: oauth-authorizations
@@ -12342,9 +12406,18 @@ export async function oauthAuthorizationsGetGrant<FetcherData>(
 }
 /**
  * Delete a grant
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more
+ * information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  *
- * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the application has no access to your account and is no longer listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
+ * Deleting an OAuth
+ * application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the
+ * application has no access to your account and is no longer listed on [the application authorizations settings screen
+ * within GitHub](https://github.com/settings/applications#authorized).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#delete-a-grant}
  * Tags: oauth-authorizations
@@ -12369,8 +12442,14 @@ export async function oauthAuthorizationsDeleteGrant<FetcherData>(
 }
 /**
  * Delete an app authorization
- * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
- * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
+ * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also
+ * provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+ * Deleting
+ * an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once
+ * deleted, the application will have no access to the user's account and will no longer be listed on [the application
+ * authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
  * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-app-authorization}
  * Tags: apps
  */
@@ -12402,11 +12481,21 @@ export async function appsDeleteAuthorization<FetcherData>(
 }
 /**
  * Revoke a grant for an application
- * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We
+ * have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the
+ * request body. For more information, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
  *
- * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid token as `:access_token` and the grant for the token's owner will be deleted.
+ * OAuth application owners can
+ * revoke a grant for their OAuth application and a specific user. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also
+ * provide a valid token as `:access_token` and the grant for the token's owner will be deleted.
  *
- * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the Applications settings page under "Authorized OAuth Apps" on GitHub](https://github.com/settings/applications#authorized).
+ * Deleting an OAuth
+ * application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the
+ * application will have no access to the user's account and will no longer be listed on [the Applications settings page
+ * under "Authorized OAuth Apps" on GitHub](https://github.com/settings/applications#authorized).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-a-grant-for-an-application}
  * Tags: apps
@@ -12429,7 +12518,11 @@ export async function appsRevokeGrantForApplication<FetcherData>(
 }
 /**
  * Check a token
- * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.
+ * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate
+ * limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) to use this
+ * endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid
+ * tokens will return `404 NOT FOUND`.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#check-a-token}
  * Tags: apps
  */
@@ -12463,7 +12556,11 @@ export async function appsCheckToken<FetcherData>(
 }
 /**
  * Reset a token
- * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+ * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must
+ * save the "token" property in the response because changes take effect immediately. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid
+ * tokens will return `404 NOT FOUND`.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#reset-a-token}
  * Tags: apps
  */
@@ -12496,7 +12593,9 @@ export async function appsResetToken<FetcherData>(
 }
 /**
  * Delete an app token
- * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+ * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#delete-an-app-token}
  * Tags: apps
  */
@@ -12528,7 +12627,12 @@ export async function appsDeleteToken<FetcherData>(
 }
 /**
  * Create a scoped access token
- * Use a non-scoped user-to-server OAuth access token to create a repository scoped and/or permission scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+ * Use a non-scoped user-to-server OAuth access token to create a repository scoped and/or permission scoped user-to-server
+ * OAuth access token. You can specify which repositories the token can access and which permissions are granted to the
+ * token. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid
+ * tokens will return `404 NOT FOUND`.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-scoped-access-token}
  * Tags: apps
  */
@@ -12588,9 +12692,17 @@ export async function appsScopeToken<FetcherData>(
 }
 /**
  * Check an authorization
- * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We
+ * have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the
+ * request body. For more information, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
  *
- * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+ * OAuth applications can use a
+ * special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts.
+ * Authentication works differently with this particular endpoint. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid
+ * tokens will return `404 NOT FOUND`.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/apps#check-an-authorization}
  * Tags: apps
@@ -12627,9 +12739,17 @@ export async function appsCheckAuthorization<FetcherData>(
 }
 /**
  * Reset an authorization
- * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We
+ * have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the
+ * request body. For more information, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
  *
- * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+ * OAuth applications can use this
+ * API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the
+ * response because changes take effect immediately. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid
+ * tokens will return `404 NOT FOUND`.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/apps#reset-an-authorization}
  * Tags: apps
@@ -12654,9 +12774,15 @@ export async function appsResetAuthorization<FetcherData>(
 }
 /**
  * Revoke an authorization for an application
- * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We
+ * have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the
+ * request body. For more information, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
  *
- * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+ * OAuth application owners can
+ * revoke a single token for an OAuth application. You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
+ * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-an-authorization-for-an-application}
  * Tags: apps
@@ -12679,9 +12805,15 @@ export async function appsRevokeAuthorizationForApplication<FetcherData>(
 }
 /**
  * Get an app
- * **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
+ * **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for
+ * your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
  *
- * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+ * If the GitHub App you specify is public, you can
+ * access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a
+ * [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an
+ * [installation access
+ * token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps/#get-an-app}
  * Tags: apps
  */
@@ -12706,7 +12838,13 @@ export async function appsGetBySlug<FetcherData>(
 }
 /**
  * List your authorizations
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth
+ * Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020.
+ * For more information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#list-your-authorizations}
  * Tags: oauth-authorizations
@@ -12742,17 +12880,40 @@ export async function oauthAuthorizationsListAuthorizations<FetcherData>(
 }
 /**
  * Create a new authorization
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more
+ * information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  *
- * **Warning:** Apps must use the [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
+ * **Warning:** Apps must use the
+ * [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to
+ * obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be
+ * unable to access GitHub SAML organizations. For more information, see the [blog
+ * post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
  *
- * Creates OAuth tokens using [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+ * Creates OAuth
+ * tokens using [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication). If you have
+ * two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP)
+ * and your username and password instead of tokens. For more information, see "[Working with two-factor
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
  *
- * To create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.
+ * To
+ * create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to
+ * create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page.
+ * If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between
+ * them.
  *
- * You can also create tokens on GitHub from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://help.github.com/articles/creating-an-access-token-for-command-line-use).
+ * You can also create tokens on GitHub from the [personal access tokens
+ * settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help
+ * documentation](https://help.github.com/articles/creating-an-access-token-for-command-line-use).
  *
- * Organizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://help.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).
+ * Organizations that
+ * enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help
+ * documentation](https://help.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#create-a-new-authorization}
  * Tags: oauth-authorizations
@@ -12813,15 +12974,38 @@ export async function oauthAuthorizationsCreateAuthorization<FetcherData>(
 }
 /**
  * Get-or-create an authorization for a specific app
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more
+ * information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  *
- * **Warning:** Apps must use the [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
+ * **Warning:** Apps must use the
+ * [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to
+ * obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be
+ * unable to access GitHub SAML organizations. For more information, see the [blog
+ * post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
  *
- * Creates a new authorization for the specified OAuth application, only if an authorization for that application doesn't already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
+ * Creates a new
+ * authorization for the specified OAuth application, only if an authorization for that application doesn't already exist
+ * for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. It returns the
+ * user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
  *
- * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+ * If
+ * you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time
+ * password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
  *
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation
+ * Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more
+ * information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app}
  * Tags: oauth-authorizations
@@ -12882,13 +13066,31 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp<
 }
 /**
  * Get-or-create an authorization for a specific app and fingerprint
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more
+ * information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  *
- * **Warning:** Apps must use the [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
+ * **Warning:** Apps must use the
+ * [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to
+ * obtain OAuth tokens that work with GitHub SAML organizations. OAuth tokens created using the Authorizations API will be
+ * unable to access GitHub SAML organizations. For more information, see the [blog
+ * post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
  *
- * This method will create a new authorization for the specified OAuth application, only if an authorization for that application and fingerprint do not already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. `fingerprint` is a unique string to distinguish an authorization from others created for the same client ID and user. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
+ * This method will
+ * create a new authorization for the specified OAuth application, only if an authorization for that application and
+ * fingerprint do not already exist for the user. The URL includes the 20 character client ID for the OAuth app that is
+ * requesting the token. `fingerprint` is a unique string to distinguish an authorization from others created for the same
+ * client ID and user. It returns the user's existing authorization for the application if one is present. Otherwise, it
+ * creates and returns a new one.
  *
- * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+ * If you have two-factor authentication setup, Basic Authentication for this endpoint
+ * requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information,
+ * see "[Working with two-factor
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app-and-fingerprint}
  * Tags: oauth-authorizations
@@ -12944,7 +13146,13 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
 }
 /**
  * Get a single authorization
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth
+ * Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020.
+ * For more information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#get-a-single-authorization}
  * Tags: oauth-authorizations
@@ -12970,11 +13178,21 @@ export async function oauthAuthorizationsGetAuthorization<FetcherData>(
 }
 /**
  * Update an existing authorization
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations/), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more
+ * information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  *
- * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
+ * If you have two-factor
+ * authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your
+ * username and password instead of tokens. For more information, see "[Working with two-factor
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
  *
- * You can only send one of these scope keys at a time.
+ * You
+ * can only send one of these scope keys at a time.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#update-an-existing-authorization}
  * Tags: oauth-authorizations
@@ -13034,7 +13252,13 @@ export async function oauthAuthorizationsUpdateAuthorization<FetcherData>(
 }
 /**
  * Delete an authorization
- * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+ * **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations
+ * API](https://docs.github.com/rest/reference/oauth-authorizations), which is used by integrations to create personal
+ * access tokens and OAuth tokens, and you must now create these tokens using our [web application
+ * flow](https://docs.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth
+ * Authorizations API](https://docs.github.com/rest/reference/oauth-authorizations) will be removed on November, 13, 2020.
+ * For more information, including scheduled brownouts, see the [blog
+ * post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/oauth-authorizations#delete-an-authorization}
  * Tags: oauth-authorizations
@@ -13136,7 +13360,8 @@ export async function emojisGet<FetcherData>(
  * Get GitHub Actions permissions for an enterprise
  * Gets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must
+ * authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-github-actions-permissions-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13167,7 +13392,8 @@ export async function enterpriseAdminGetGithubActionsPermissionsEnterprise<
  * Set GitHub Actions permissions for an enterprise
  * Sets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must
+ * authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-github-actions-permissions-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13195,9 +13421,12 @@ export async function enterpriseAdminSetGithubActionsPermissionsEnterprise<
 }
 /**
  * List selected organizations enabled for GitHub Actions in an enterprise
- * Lists the organizations that are selected to have GitHub Actions enabled in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+ * Lists the organizations that are selected to have GitHub Actions enabled in an enterprise. To use this endpoint, the
+ * enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see
+ * "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must
+ * authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-selected-organizations-enabled-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13238,9 +13467,12 @@ export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActio
 }
 /**
  * Set selected organizations enabled for GitHub Actions in an enterprise
- * Replaces the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+ * Replaces the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint,
+ * the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see
+ * "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must
+ * authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-selected-organizations-enabled-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13270,9 +13502,13 @@ export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubAction
 }
 /**
  * Enable a selected organization for GitHub Actions in an enterprise
- * Adds an organization to the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+ * Adds an organization to the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use
+ * this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more
+ * information, see "[Set GitHub Actions permissions for an
+ * enterprise](#set-github-actions-permissions-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#enable-a-selected-organization-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13296,9 +13532,13 @@ export async function enterpriseAdminEnableSelectedOrganizationGithubActionsEnte
 }
 /**
  * Disable a selected organization for GitHub Actions in an enterprise
- * Removes an organization from the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+ * Removes an organization from the list of selected organizations that are enabled for GitHub Actions in an enterprise. To
+ * use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For
+ * more information, see "[Set GitHub Actions permissions for an
+ * enterprise](#set-github-actions-permissions-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#disable-a-selected-organization-for-github-actions-in-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13322,9 +13562,12 @@ export async function enterpriseAdminDisableSelectedOrganizationGithubActionsEnt
 }
 /**
  * Get allowed actions for an enterprise
- * Gets the selected actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+ * Gets the selected actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for
+ * `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an
+ * enterprise](#set-github-actions-permissions-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-allowed-actions-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13349,9 +13592,12 @@ export async function enterpriseAdminGetAllowedActionsEnterprise<FetcherData>(
 }
 /**
  * Set allowed actions for an enterprise
- * Sets the actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+ * Sets the actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for
+ * `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an
+ * enterprise](#set-github-actions-permissions-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-allowed-actions-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13376,7 +13622,8 @@ export async function enterpriseAdminSetAllowedActionsEnterprise<FetcherData>(
  * List self-hosted runner groups for an enterprise
  * Lists all self-hosted runner groups for an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runner-groups-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13419,7 +13666,8 @@ export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise<
  * Create a self-hosted runner group for an enterprise
  * Creates a new self-hosted runner group for an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#create-self-hosted-runner-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13469,7 +13717,8 @@ export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise<
  * Get a self-hosted runner group for an enterprise
  * Gets a specific self-hosted runner group for an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-a-self-hosted-runner-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13501,7 +13750,8 @@ export async function enterpriseAdminGetSelfHostedRunnerGroupForEnterprise<
  * Update a self-hosted runner group for an enterprise
  * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an
+ * access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-a-self-hosted-runner-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13545,7 +13795,8 @@ export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise<
  * Delete a self-hosted runner group from an enterprise
  * Deletes a self-hosted runner group for an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-a-self-hosted-runner-group-from-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13571,7 +13822,8 @@ export async function enterpriseAdminDeleteSelfHostedRunnerGroupFromEnterprise<
  * List organization access to a self-hosted runner group in an enterprise
  * Lists the organizations with access to a self-hosted runner group.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-organization-access-to-a-self-hosted-runner-group-in-a-enterprise}
  * Tags: enterprise-admin
  */
@@ -13615,7 +13867,8 @@ export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnter
  * Set organization access for a self-hosted runner group in an enterprise
  * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must
+ * authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-organization-access-to-a-self-hosted-runner-group-in-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13646,9 +13899,12 @@ export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterp
 }
 /**
  * Add organization access to a self-hosted runner group in an enterprise
- * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
+ * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group
+ * must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an
+ * enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with
+ * the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#add-organization-access-to-a-self-hosted-runner-group-in-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13673,9 +13929,12 @@ export async function enterpriseAdminAddOrgAccessToSelfHostedRunnerGroupInEnterp
 }
 /**
  * Remove organization access to a self-hosted runner group in an enterprise
- * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
+ * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner
+ * group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an
+ * enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with
+ * the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#remove-organization-access-to-a-self-hosted-runner-group-in-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13702,7 +13961,8 @@ export async function enterpriseAdminRemoveOrgAccessToSelfHostedRunnerGroupInEnt
  * List self-hosted runners in a group for an enterprise
  * Lists the self-hosted runners that are in a specific enterprise group.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with
+ * the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runners-in-a-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13746,7 +14006,8 @@ export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise<
  * Set self-hosted runners in a group for an enterprise
  * Replaces the list of self-hosted runners that are part of an enterprise runner group.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an
+ * access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-self-hosted-runners-in-a-group-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13779,7 +14040,8 @@ export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise<
  * Add a self-hosted runner to a group for an enterprise
  * Adds a self-hosted runner to a runner group configured in an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise`
+ * You must authenticate using an access token
+ * with the `admin:enterprise`
  * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#add-a-self-hosted-runner-to-a-group-for-an-enterprise}
  * Tags: enterprise-admin
@@ -13805,7 +14067,8 @@ export async function enterpriseAdminAddSelfHostedRunnerToGroupForEnterprise<
 }
 /**
  * Remove a self-hosted runner from a group for an enterprise
- * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
+ * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default
+ * group.
  *
  * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#remove-a-self-hosted-runner-from-a-group-for-an-enterprise}
@@ -13834,7 +14097,8 @@ export async function enterpriseAdminRemoveSelfHostedRunnerFromGroupForEnterpris
  * List self-hosted runners for an enterprise
  * Lists all self-hosted runners configured for an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-self-hosted-runners-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13877,7 +14141,8 @@ export async function enterpriseAdminListSelfHostedRunnersForEnterprise<
  * List runner applications for an enterprise
  * Lists binaries for the runner application that you can download and run.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token
+ * with the `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-runner-applications-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -13910,11 +14175,14 @@ export async function enterpriseAdminListRunnerApplicationsForEnterprise<
  * Create a registration token for an enterprise
  * Returns a token that you can pass to the `config` script. The token expires after one hour.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using
+ * an access token with the `admin:enterprise` scope to use this endpoint.
  *
- * #### Example using registration token
+ * #### Example using registration
+ * token
  *
- * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+ * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this
+ * endpoint.
  *
  * ```
  * ./config.sh --url https://github.com/enterprises/octo-enterprise --token TOKEN
@@ -13945,13 +14213,16 @@ export async function enterpriseAdminCreateRegistrationTokenForEnterprise<
 }
 /**
  * Create a remove token for an enterprise
- * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
+ * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token
+ * expires after one hour.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the `admin:enterprise` scope to use this
+ * endpoint.
  *
  * #### Example using remove token
  *
- * To remove your self-hosted runner from an enterprise, replace `TOKEN` with the remove token provided by this
+ * To remove your self-hosted runner from an enterprise, replace `TOKEN` with
+ * the remove token provided by this
  * endpoint.
  *
  * ```
@@ -13985,7 +14256,8 @@ export async function enterpriseAdminCreateRemoveTokenForEnterprise<
  * Get a self-hosted runner for an enterprise
  * Gets a specific self-hosted runner configured in an enterprise.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-a-self-hosted-runner-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -14011,9 +14283,11 @@ export async function enterpriseAdminGetSelfHostedRunnerForEnterprise<
 }
 /**
  * Delete a self-hosted runner from an enterprise
- * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+ * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner
+ * when the machine you were using no longer exists.
  *
- * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:enterprise` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#delete-self-hosted-runner-from-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -14037,7 +14311,8 @@ export async function enterpriseAdminDeleteSelfHostedRunnerFromEnterprise<
 }
 /**
  * Get the audit log for an enterprise
- * Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.
+ * Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access
+ * token with the `admin:enterprise` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#get-the-audit-log-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -14084,9 +14359,14 @@ export async function enterpriseAdminGetAuditLog<FetcherData>(
  * Get GitHub Actions billing for an enterprise
  * Gets the summary of the free and paid GitHub Actions minutes used.
  *
- * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+ * Paid minutes only apply to workflows in private
+ * repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any
+ * job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and
+ * is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub
+ * Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
- * The authenticated user must be an enterprise admin.
+ * The
+ * authenticated user must be an enterprise admin.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-actions-billing-for-an-enterprise}
  * Tags: billing
  */
@@ -14113,9 +14393,12 @@ export async function billingGetGithubActionsBillingGhe<FetcherData>(
  * Get GitHub Packages billing for an enterprise
  * Gets the free and paid storage used for GitHub Packages in gigabytes.
  *
- * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+ * Paid minutes only apply to packages stored for
+ * private repositories. For more information, see "[Managing billing for GitHub
+ * Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * The authenticated user must be an enterprise admin.
+ * The
+ * authenticated user must be an enterprise admin.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-packages-billing-for-an-enterprise}
  * Tags: billing
  */
@@ -14142,9 +14425,12 @@ export async function billingGetGithubPackagesBillingGhe<FetcherData>(
  * Get shared storage billing for an enterprise
  * Gets the estimated paid and estimated total storage used for GitHub Actions and Github Packages.
  *
- * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+ * Paid minutes only
+ * apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub
+ * Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * The authenticated user must be an enterprise admin.
+ * The
+ * authenticated user must be an enterprise admin.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-shared-storage-billing-for-an-enterprise}
  * Tags: billing
  */
@@ -14169,7 +14455,8 @@ export async function billingGetSharedStorageBillingGhe<FetcherData>(
 }
 /**
  * List public events
- * We delay the public events feed by five minutes, which means the most recent event returned by the public events API actually occurred at least five minutes ago.
+ * We delay the public events feed by five minutes, which means the most recent event returned by the public events API
+ * actually occurred at least five minutes ago.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-public-events}
  * Tags: activity
  */
@@ -14199,17 +14486,27 @@ export async function activityListPublicEvents<FetcherData>(
 }
 /**
  * Get feeds
- * GitHub provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
+ * GitHub provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API
+ * lists all the feeds available to the authenticated user:
  *
  * *   **Timeline**: The GitHub global public timeline
- * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia)
- * *   **Current user public**: The public timeline for the authenticated user
+ * *
+ * **User**: The public timeline for any user, using [URI
+ * template](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia)
+ * *   **Current user public**: The
+ * public timeline for the authenticated user
  * *   **Current user**: The private timeline for the authenticated user
- * *   **Current user actor**: The private timeline for activity created by the authenticated user
- * *   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
- * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub.
+ * *
+ * **Current user actor**: The private timeline for activity created by the authenticated user
+ * *   **Current user
+ * organizations**: The private timeline for the organizations the authenticated user is a member of.
+ * *   **Security
+ * advisories**: A collection of public announcements that provide information about security-related vulnerabilities in
+ * software on GitHub.
  *
- * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
+ * **Note**: Private feeds are only returned when [authenticating via Basic
+ * Auth](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs
+ * use the older, non revocable auth tokens.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#get-feeds}
  * Tags: activity
  */
@@ -14263,7 +14560,8 @@ export async function gistsList<FetcherData>(
  * Create a gist
  * Allows you to add a new gist with one or more files.
  *
- * **Note:** Don't name your files "gistfile" with a numerical suffix. This is the format of the automatic naming scheme that Gist uses internally.
+ * **Note:** Don't name your files "gistfile" with a numerical
+ * suffix. This is the format of the automatic naming scheme that Gist uses internally.
  * Learn more at {@link https://docs.github.com/rest/reference/gists#create-a-gist}
  * Tags: gists
  */
@@ -14317,7 +14615,9 @@ export async function gistsCreate<FetcherData>(
  * List public gists
  * List public gists sorted by most recently updated to least recently updated.
  *
- * Note: With [pagination](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
+ * Note: With
+ * [pagination](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000
+ * gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
  * Learn more at {@link https://docs.github.com/rest/reference/gists#list-public-gists}
  * Tags: gists
  */
@@ -14406,7 +14706,8 @@ export async function gistsGet<FetcherData>(
 }
 /**
  * Update a gist
- * Allows you to update or delete a gist file and rename gist files. Files from the previous version of the gist that aren't explicitly changed during an edit are unchanged.
+ * Allows you to update or delete a gist file and rename gist files. Files from the previous version of the gist that
+ * aren't explicitly changed during an edit are unchanged.
  * Learn more at {@link https://docs.github.com/rest/reference/gists/#update-a-gist}
  * Tags: gists
  */
@@ -14713,7 +15014,8 @@ export async function gistsCheckIsStarred<FetcherData>(
 }
 /**
  * Star a gist
- * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
+ * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  * Learn more at {@link https://docs.github.com/rest/reference/gists#star-a-gist}
  * Tags: gists
  */
@@ -14788,7 +15090,8 @@ export async function gistsGetRevision<FetcherData>(
 }
 /**
  * Get all gitignore templates
- * List all templates available to pass as an option when [creating a repository](https://docs.github.com/rest/reference/repos#create-a-repository-for-the-authenticated-user).
+ * List all templates available to pass as an option when [creating a
+ * repository](https://docs.github.com/rest/reference/repos#create-a-repository-for-the-authenticated-user).
  * Learn more at {@link https://docs.github.com/rest/reference/gitignore#get-all-gitignore-templates}
  * Tags: gitignore
  */
@@ -14808,7 +15111,8 @@ export async function gitignoreGetAllTemplates<FetcherData>(
 /**
  * Get a gitignore template
  * The API also allows fetching the source of a single template.
- * Use the raw [media type](https://docs.github.com/rest/overview/media-types/) to get the raw contents.
+ * Use the raw [media
+ * type](https://docs.github.com/rest/overview/media-types/) to get the raw contents.
  * Learn more at {@link https://docs.github.com/rest/reference/gitignore#get-a-gitignore-template}
  * Tags: gitignore
  */
@@ -14835,7 +15139,9 @@ export async function gitignoreGetTemplate<FetcherData>(
  * List repositories accessible to the app installation
  * List repositories that an app installation can access.
  *
- * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+ * You must use an [installation access
+ * token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-repositories-accessible-to-the-app-installation}
  * Tags: apps
  */
@@ -14884,9 +15190,16 @@ export async function appsListReposAccessibleToInstallation<FetcherData>(
  * Revoke an installation access token
  * Revokes the installation token you're using to authenticate as an installation and access this endpoint.
  *
- * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
+ * Once an
+ * installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked
+ * installation token must have a new installation token to work. You can create a new token using the "[Create an
+ * installation access token for an
+ * app](https://docs.github.com/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
  *
- * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+ * You must
+ * use an [installation access
+ * token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#revoke-an-installation-access-token}
  * Tags: apps
  */
@@ -14905,15 +15218,21 @@ export async function appsRevokeInstallationAccessToken<FetcherData>(
 }
 /**
  * List issues assigned to the authenticated user
- * List issues assigned to the authenticated user across all visible repositories including owned repositories, member
- * repositories, and organization repositories. You can use the `filter` query parameter to fetch issues that are not
+ * List issues assigned to the authenticated user across all visible repositories including owned repositories,
+ * member
+ * repositories, and organization repositories. You can use the `filter` query parameter to fetch issues that are
+ * not
  * necessarily assigned to you.
  *
  *
- * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+ * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every
+ * issue is a pull request. For this
+ * reason, "Issues" endpoints may return both issues and pull requests in the response.
+ * You can identify pull requests by
+ * the `pull_request` key. Be aware that the `id` of a pull request returned from
+ * "Issues" endpoints will be an _issue id_. To find out the pull
+ * request id, use the "[List pull
+ * requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
@@ -15065,7 +15384,9 @@ export async function markdownRender<FetcherData>(
 }
 /**
  * Render a Markdown document in raw mode
- * You must send Markdown as plain text (using a `Content-Type` header of `text/plain` or `text/x-markdown`) to this endpoint, rather than using JSON format. In raw mode, [GitHub Flavored Markdown](https://github.github.com/gfm/) is not supported and Markdown will be rendered in plain format like a README.md file. Markdown content must be 400 KB or less.
+ * You must send Markdown as plain text (using a `Content-Type` header of `text/plain` or `text/x-markdown`) to this
+ * endpoint, rather than using JSON format. In raw mode, [GitHub Flavored Markdown](https://github.github.com/gfm/) is not
+ * supported and Markdown will be rendered in plain format like a README.md file. Markdown content must be 400 KB or less.
  * Learn more at {@link https://docs.github.com/rest/reference/markdown#render-a-markdown-document-in-raw-mode}
  * Tags: markdown
  */
@@ -15086,9 +15407,15 @@ export async function markdownRenderRaw<FetcherData>(
 }
 /**
  * Get a subscription plan for an account
- * Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+ * Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App.
+ * When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the
+ * upcoming pending change.
  *
- * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+ * GitHub Apps must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint. OAuth Apps must use [basic
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
+ * client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-subscription-plan-for-an-account}
  * Tags: apps
  */
@@ -15117,7 +15444,11 @@ export async function appsGetSubscriptionPlanForAccount<FetcherData>(
  * List plans
  * Lists all plans that are part of your GitHub Marketplace listing.
  *
- * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+ * GitHub Apps must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint. OAuth Apps must use [basic
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
+ * client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-plans}
  * Tags: apps
  */
@@ -15153,9 +15484,16 @@ export async function appsListPlans<FetcherData>(
 }
 /**
  * List accounts for a plan
- * Returns user and organization accounts associated with the specified plan, including free plans. For per-seat pricing, you see the list of accounts that have purchased the plan, including the number of seats purchased. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+ * Returns user and organization accounts associated with the specified plan, including free plans. For per-seat pricing,
+ * you see the list of accounts that have purchased the plan, including the number of seats purchased. When someone submits
+ * a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending
+ * change.
  *
- * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+ * GitHub Apps must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint. OAuth Apps must use [basic
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
+ * client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-accounts-for-a-plan}
  * Tags: apps
  */
@@ -15197,9 +15535,15 @@ export async function appsListAccountsForPlan<FetcherData>(
 }
 /**
  * Get a subscription plan for an account (stubbed)
- * Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+ * Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App.
+ * When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the
+ * upcoming pending change.
  *
- * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+ * GitHub Apps must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint. OAuth Apps must use [basic
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
+ * client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-subscription-plan-for-an-account-stubbed}
  * Tags: apps
  */
@@ -15227,7 +15571,11 @@ export async function appsGetSubscriptionPlanForAccountStubbed<FetcherData>(
  * List plans (stubbed)
  * Lists all plans that are part of your GitHub Marketplace listing.
  *
- * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+ * GitHub Apps must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint. OAuth Apps must use [basic
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
+ * client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-plans-stubbed}
  * Tags: apps
  */
@@ -15262,9 +15610,16 @@ export async function appsListPlansStubbed<FetcherData>(
 }
 /**
  * List accounts for a plan (stubbed)
- * Returns repository and organization accounts associated with the specified plan, including free plans. For per-seat pricing, you see the list of accounts that have purchased the plan, including the number of seats purchased. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+ * Returns repository and organization accounts associated with the specified plan, including free plans. For per-seat
+ * pricing, you see the list of accounts that have purchased the plan, including the number of seats purchased. When
+ * someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the
+ * upcoming pending change.
  *
- * GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth Apps must use [basic authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their client ID and client secret to access this endpoint.
+ * GitHub Apps must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint. OAuth Apps must use [basic
+ * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
+ * client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-accounts-for-a-plan-stubbed}
  * Tags: apps
  */
@@ -15302,9 +15657,12 @@ export async function appsListAccountsForPlanStubbed<FetcherData>(
 }
 /**
  * Get GitHub meta information
- * Returns meta information about GitHub, including a list of GitHub's IP addresses. For more information, see "[About GitHub's IP addresses](https://help.github.com/articles/about-github-s-ip-addresses/)."
+ * Returns meta information about GitHub, including a list of GitHub's IP addresses. For more information, see "[About
+ * GitHub's IP addresses](https://help.github.com/articles/about-github-s-ip-addresses/)."
  *
- * **Note:** The IP addresses shown in the documentation's response are only example values. You must always query the API directly to get the latest list of IP addresses.
+ * **Note:** The IP addresses
+ * shown in the documentation's response are only example values. You must always query the API directly to get the latest
+ * list of IP addresses.
  * Learn more at {@link https://docs.github.com/rest/reference/meta#get-github-meta-information}
  * Tags: meta
  */
@@ -15405,7 +15763,12 @@ export async function activityListNotificationsForAuthenticatedUser<
 }
 /**
  * Mark notifications as read
- * Marks all notifications as "read" removes it from the [default view on GitHub](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+ * Marks all notifications as "read" removes it from the [default view on GitHub](https://github.com/notifications). If the
+ * number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub
+ * will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain,
+ * you can use the [List notifications for the authenticated
+ * user](https://docs.github.com/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass
+ * the query parameter `all=false`.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-notifications-as-read}
  * Tags: activity
  */
@@ -15490,9 +15853,12 @@ export async function activityMarkThreadAsRead<FetcherData>(
 }
 /**
  * Get a thread subscription for the authenticated user
- * This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/rest/reference/activity#get-a-repository-subscription).
+ * This checks to see if the current user is subscribed to a thread. You can also [get a repository
+ * subscription](https://docs.github.com/rest/reference/activity#get-a-repository-subscription).
  *
- * Note that subscriptions are only generated if a user is participating in a conversation--for example, they've replied to the thread, were **@mentioned**, or manually subscribe to a thread.
+ * Note that subscriptions
+ * are only generated if a user is participating in a conversation--for example, they've replied to the thread, were
+ * **@mentioned**, or manually subscribe to a thread.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#get-a-thread-subscription-for-the-authenticated-user}
  * Tags: activity
  */
@@ -15521,11 +15887,16 @@ export async function activityGetThreadSubscriptionForAuthenticatedUser<
 }
 /**
  * Set a thread subscription
- * If you are watching a repository, you receive notifications for all threads by default. Use this endpoint to ignore future notifications for threads until you comment on the thread or get an **@mention**.
+ * If you are watching a repository, you receive notifications for all threads by default. Use this endpoint to ignore
+ * future notifications for threads until you comment on the thread or get an **@mention**.
  *
- * You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously ignored.
+ * You can also use this endpoint
+ * to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have
+ * previously ignored.
  *
- * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/rest/reference/activity#delete-a-thread-subscription) endpoint.
+ * Unsubscribing from a conversation in a repository that you are not watching is functionally
+ * equivalent to the [Delete a thread
+ * subscription](https://docs.github.com/rest/reference/activity#delete-a-thread-subscription) endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#set-a-thread-subscription}
  * Tags: activity
  */
@@ -15559,7 +15930,11 @@ export async function activitySetThreadSubscription<FetcherData>(
 }
 /**
  * Delete a thread subscription
- * Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`.
+ * Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are
+ * watching the repository of the thread, you will still receive notifications. To ignore future notifications for a
+ * repository you are watching, use the [Set a thread
+ * subscription](https://docs.github.com/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to
+ * `true`.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#delete-a-thread-subscription}
  * Tags: activity
  */
@@ -15607,7 +15982,10 @@ export async function metaGetOctocat<FetcherData>(
  * List organizations
  * Lists all organizations, in the order that they were created on GitHub.
  *
- * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
+ * **Note:** Pagination is powered exclusively by
+ * the `since` parameter. Use the [Link
+ * header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of
+ * organizations.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organizations}
  * Tags: orgs
  */
@@ -15641,9 +16019,16 @@ export async function orgsList<FetcherData>(
 }
 /**
  * Get an organization
- * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://help.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
+ * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org`
+ * scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing
+ * managers, and outside collaborators to enable [two-factor
+ * authentication](https://help.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
  *
- * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub plan. See "[Authenticating with GitHub Apps](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub plan information' below."
+ * GitHub
+ * Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's
+ * GitHub plan. See "[Authenticating with GitHub
+ * Apps](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example
+ * response, see 'Response with GitHub plan information' below."
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-an-organization}
  * Tags: orgs
  */
@@ -15669,9 +16054,15 @@ export async function orgsGet<FetcherData>(
 }
 /**
  * Update an organization
- * **Parameter Deprecation Notice:** GitHub will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
+ * **Parameter Deprecation Notice:** GitHub will replace and discontinue `members_allowed_repository_creation_type` in
+ * favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`,
+ * `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for
+ * organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For
+ * more information, see the [blog
+ * post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
  *
- * Enables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.
+ * Enables an authenticated
+ * organization owner with the `admin:org` scope to update the organization's profile and member privileges.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs/#update-an-organization}
  * Tags: orgs
  */
@@ -15825,7 +16216,9 @@ export async function orgsUpdate<FetcherData>(
  * Get GitHub Actions permissions for an organization
  * Gets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You must
+ * authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
+ * `administration` organization permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-github-actions-permissions-for-an-organization}
  * Tags: actions
  */
@@ -15856,9 +16249,13 @@ export async function actionsGetGithubActionsPermissionsOrganization<
  * Set GitHub Actions permissions for an organization
  * Sets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
  *
- * If the organization belongs to an enterprise that has set restrictive permissions at the enterprise level, such as `allowed_actions` to `selected` actions, then you cannot override them for the organization.
+ * If the organization
+ * belongs to an enterprise that has set restrictive permissions at the enterprise level, such as `allowed_actions` to
+ * `selected` actions, then you cannot override them for the organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You must authenticate using an access token
+ * with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to
+ * use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-github-actions-permissions-for-an-organization}
  * Tags: actions
  */
@@ -15886,9 +16283,13 @@ export async function actionsSetGithubActionsPermissionsOrganization<
 }
 /**
  * List selected repositories enabled for GitHub Actions in an organization
- * Lists the selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+ * Lists the selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the
+ * organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see
+ * "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You must
+ * authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
+ * `administration` organization permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-selected-repositories-enabled-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -15929,9 +16330,13 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
 }
 /**
  * Set selected repositories enabled for GitHub Actions in an organization
- * Replaces the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+ * Replaces the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint,
+ * the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information,
+ * see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You
+ * must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
+ * `administration` organization permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-selected-repositories-enabled-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -15961,9 +16366,14 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
 }
 /**
  * Enable a selected repository for GitHub Actions in an organization
- * Adds a repository to the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+ * Adds a repository to the list of selected repositories that are enabled for GitHub Actions in an organization. To use
+ * this endpoint, the organization permission policy for `enabled_repositories` must be must be configured to `selected`.
+ * For more information, see "[Set GitHub Actions permissions for an
+ * organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You must authenticate using an access token with
+ * the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use
+ * this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#enable-a-selected-repository-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -15987,9 +16397,14 @@ export async function actionsEnableSelectedRepositoryGithubActionsOrganization<
 }
 /**
  * Disable a selected repository for GitHub Actions in an organization
- * Removes a repository from the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+ * Removes a repository from the list of selected repositories that are enabled for GitHub Actions in an organization. To
+ * use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For
+ * more information, see "[Set GitHub Actions permissions for an
+ * organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You must authenticate using an access token with
+ * the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use
+ * this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#disable-a-selected-repository-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -16013,9 +16428,13 @@ export async function actionsDisableSelectedRepositoryGithubActionsOrganization<
 }
 /**
  * Get allowed actions for an organization
- * Gets the selected actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization).""
+ * Gets the selected actions that are allowed in an organization. To use this endpoint, the organization permission policy
+ * for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for
+ * an organization](#set-github-actions-permissions-for-an-organization).""
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You must authenticate using an access token
+ * with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to
+ * use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-allowed-actions-for-an-organization}
  * Tags: actions
  */
@@ -16040,13 +16459,20 @@ export async function actionsGetAllowedActionsOrganization<FetcherData>(
 }
 /**
  * Set allowed actions for an organization
- * Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+ * Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for
+ * `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an
+ * organization](#set-github-actions-permissions-for-an-organization)."
  *
- * If the organization belongs to an enterprise that has `selected` actions set at the enterprise level, then you cannot override any of the enterprise's allowed actions settings.
+ * If the organization belongs to an enterprise that
+ * has `selected` actions set at the enterprise level, then you cannot override any of the enterprise's allowed actions
+ * settings.
  *
- * To use the `patterns_allowed` setting for private repositories, the organization must belong to an enterprise. If the organization does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories in the organization.
+ * To use the `patterns_allowed` setting for private repositories, the organization must belong to an
+ * enterprise. If the organization does not belong to an enterprise, then the `patterns_allowed` setting only applies to
+ * public repositories in the organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+ * You must authenticate using an access token with the `admin:org` scope to use
+ * this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-allowed-actions-for-an-organization}
  * Tags: actions
  */
@@ -16069,11 +16495,14 @@ export async function actionsSetAllowedActionsOrganization<FetcherData>(
 }
 /**
  * List self-hosted runner groups for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.
+ * Lists all self-hosted runner
+ * groups configured in an organization and inherited from an enterprise.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with
+ * the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runner-groups-for-an-organization}
  * Tags: actions
  */
@@ -16112,11 +16541,15 @@ export async function actionsListSelfHostedRunnerGroupsForOrg<FetcherData>(
 }
 /**
  * Create a self-hosted runner group for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more
+ * information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Creates a new self-hosted runner group for an organization.
+ * Creates a new self-hosted
+ * runner group for an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the `admin:org` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-self-hosted-runner-group-for-an-organization}
  * Tags: actions
  */
@@ -16161,11 +16594,14 @@ export async function actionsCreateSelfHostedRunnerGroupForOrg<FetcherData>(
 }
 /**
  * Get a self-hosted runner group for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Gets a specific self-hosted runner group for an organization.
+ * Gets a specific self-hosted
+ * runner group for an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the `admin:org` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-group-for-an-organization}
  * Tags: actions
  */
@@ -16191,11 +16627,14 @@ export async function actionsGetSelfHostedRunnerGroupForOrg<FetcherData>(
 }
 /**
  * Update a self-hosted runner group for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Updates the `name` and `visibility` of a self-hosted runner group in an organization.
+ * Updates the `name` and
+ * `visibility` of a self-hosted runner group in an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#update-a-self-hosted-runner-group-for-an-organization}
  * Tags: actions
  */
@@ -16232,9 +16671,11 @@ export async function actionsUpdateSelfHostedRunnerGroupForOrg<FetcherData>(
 }
 /**
  * Delete a self-hosted runner group from an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Deletes a self-hosted runner group for an organization.
+ * Deletes a self-hosted runner
+ * group for an organization.
  *
  * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-group-from-an-organization}
@@ -16258,11 +16699,15 @@ export async function actionsDeleteSelfHostedRunnerGroupFromOrg<FetcherData>(
 }
 /**
  * List repository access to a self-hosted runner group in an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more
+ * information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Lists the repositories with access to a self-hosted runner group configured in an organization.
+ * Lists the repositories with
+ * access to a self-hosted runner group configured in an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with
+ * the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-access-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
  */
@@ -16304,11 +16749,14 @@ export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg<
 }
 /**
  * Set repository access for a self-hosted runner group in an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.
+ * Replaces the list of
+ * repositories that have access to a self-hosted runner group configured in an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using
+ * an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-repository-access-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
  */
@@ -16339,12 +16787,17 @@ export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg<
 }
 /**
  * Add repository access to a self-hosted runner group in an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
  *
- * Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
+ * Adds a repository to the list
+ * of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to
+ * `selected`. For more information, see "[Create a self-hosted runner group for an
+ * organization](#create-a-self-hosted-runner-group-for-an-organization)."
  *
- * You must authenticate using an access token with the `admin:org`
+ * You must authenticate using an access token
+ * with the `admin:org`
  * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#add-repository-acess-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
@@ -16370,12 +16823,17 @@ export async function actionsAddRepoAccessToSelfHostedRunnerGroupInOrg<
 }
 /**
  * Remove repository access to a self-hosted runner group in an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
  *
- * Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
+ * Removes a repository from the
+ * list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to
+ * `selected`. For more information, see "[Create a self-hosted runner group for an
+ * organization](#create-a-self-hosted-runner-group-for-an-organization)."
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token
+ * with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-repository-access-to-a-self-hosted-runner-group-in-an-organization}
  * Tags: actions
  */
@@ -16400,11 +16858,14 @@ export async function actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg<
 }
 /**
  * List self-hosted runners in a group for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Lists self-hosted runners that are in a specific organization group.
+ * Lists self-hosted runners that
+ * are in a specific organization group.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the `admin:org` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-organization}
  * Tags: actions
  */
@@ -16444,11 +16905,14 @@ export async function actionsListSelfHostedRunnersInGroupForOrg<FetcherData>(
 }
 /**
  * Set self-hosted runners in a group for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
- * Replaces the list of self-hosted runners that are part of an organization runner group.
+ * Replaces the list of
+ * self-hosted runners that are part of an organization runner group.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-organization}
  * Tags: actions
  */
@@ -16477,13 +16941,16 @@ export async function actionsSetSelfHostedRunnersInGroupForOrg<FetcherData>(
 }
 /**
  * Add a self-hosted runner to a group for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
  *
- * Adds a self-hosted runner to a runner group configured in an organization.
+ * Adds a self-hosted runner to
+ * a runner group configured in an organization.
  *
  * You must authenticate using an access token with the `admin:org`
- * scope to use this endpoint.
+ * scope to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#add-a-self-hosted-runner-to-a-group-for-an-organization}
  * Tags: actions
  */
@@ -16506,12 +16973,15 @@ export async function actionsAddSelfHostedRunnerToGroupForOrg<FetcherData>(
 }
 /**
  * Remove a self-hosted runner from a group for an organization
- * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+ * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
  *
  *
- * Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.
+ * Removes a self-hosted runner
+ * from a group configured in an organization. The runner is then returned to the default group.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate
+ * using an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-a-self-hosted-runner-from-a-group-for-an-organization}
  * Tags: actions
  */
@@ -16536,7 +17006,8 @@ export async function actionsRemoveSelfHostedRunnerFromGroupForOrg<FetcherData>(
  * List self-hosted runners for an organization
  * Lists all self-hosted runners configured in an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-for-an-organization}
  * Tags: actions
  */
@@ -16577,7 +17048,8 @@ export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
  * List runner applications for an organization
  * Lists binaries for the runner application that you can download and run.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token
+ * with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-runner-applications-for-an-organization}
  * Tags: actions
  */
@@ -16608,14 +17080,17 @@ export async function actionsListRunnerApplicationsForOrg<FetcherData>(
  * Create a registration token for an organization
  * Returns a token that you can pass to the `config` script. The token expires after one hour.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using
+ * an access token with the `admin:org` scope to use this endpoint.
  *
  * #### Example using registration token
  *
- * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+ * Configure your
+ * self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
  *
  * ```
- * ./config.sh --url https://github.com/octo-org --token TOKEN
+ * ./config.sh --url
+ * https://github.com/octo-org --token TOKEN
  * ```
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-registration-token-for-an-organization}
  * Tags: actions
@@ -16641,13 +17116,16 @@ export async function actionsCreateRegistrationTokenForOrg<FetcherData>(
 }
 /**
  * Create a remove token for an organization
- * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour.
+ * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token
+ * expires after one hour.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the `admin:org` scope to use this
+ * endpoint.
  *
  * #### Example using remove token
  *
- * To remove your self-hosted runner from an organization, replace `TOKEN` with the remove token provided by this
+ * To remove your self-hosted runner from an organization, replace `TOKEN` with
+ * the remove token provided by this
  * endpoint.
  *
  * ```
@@ -16679,7 +17157,8 @@ export async function actionsCreateRemoveTokenForOrg<FetcherData>(
  * Get a self-hosted runner for an organization
  * Gets a specific self-hosted runner configured in an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
@@ -16703,9 +17182,11 @@ export async function actionsGetSelfHostedRunnerForOrg<FetcherData>(
 }
 /**
  * Delete a self-hosted runner from an organization
- * Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+ * Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the
+ * runner when the machine you were using no longer exists.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-from-an-organization}
  * Tags: actions
  */
@@ -16727,7 +17208,9 @@ export async function actionsDeleteSelfHostedRunnerFromOrg<FetcherData>(
 }
 /**
  * List organization secrets
- * Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an
+ * access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-organization-secrets}
  * Tags: actions
  */
@@ -16766,7 +17249,9 @@ export async function actionsListOrgSecrets<FetcherData>(
 }
 /**
  * Get an organization public key
- * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update
+ * secrets. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must
+ * have the `secrets` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-organization-public-key}
  * Tags: actions
  */
@@ -16791,7 +17276,9 @@ export async function actionsGetOrgPublicKey<FetcherData>(
 }
 /**
  * Get an organization secret
- * Gets a single organization secret without revealing its encrypted value. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Gets a single organization secret without revealing its encrypted value. You must authenticate using an access token
+ * with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-organization-secret}
  * Tags: actions
  */
@@ -16819,77 +17306,100 @@ export async function actionsGetOrgSecret<FetcherData>(
 }
 /**
  * Create or update an organization secret
- * Creates or updates an organization secret with an encrypted value. Encrypt your secret using
- * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
- * token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to
+ * Creates or updates an organization secret with an encrypted value. Encrypt your secret
+ * using
+ * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an
+ * access
+ * token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization
+ * permission to
  * use this endpoint.
  *
  * #### Example encrypting a secret using Node.js
  *
- * Encrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.
+ * Encrypt your secret using the
+ * [tweetsodium](https://github.com/github/tweetsodium) library.
  *
  * ```
  * const sodium = require('tweetsodium');
  *
- * const key = "base64-encoded-public-key";
+ * const key =
+ * "base64-encoded-public-key";
  * const value = "plain-text-secret";
  *
- * // Convert the message and key to Uint8Array's (Buffer implements that interface)
+ * // Convert the message and key to Uint8Array's (Buffer
+ * implements that interface)
  * const messageBytes = Buffer.from(value);
  * const keyBytes = Buffer.from(key, 'base64');
  *
- * // Encrypt using LibSodium.
+ * //
+ * Encrypt using LibSodium.
  * const encryptedBytes = sodium.seal(messageBytes, keyBytes);
  *
- * // Base64 the encrypted secret
+ * // Base64 the encrypted
+ * secret
  * const encrypted = Buffer.from(encryptedBytes).toString('base64');
  *
  * console.log(encrypted);
  * ```
  *
  *
- * #### Example encrypting a secret using Python
+ * #### Example
+ * encrypting a secret using Python
  *
- * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
+ * Encrypt your secret using
+ * [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
  *
  * ```
- * from base64 import b64encode
+ * from base64 import
+ * b64encode
  * from nacl import encoding, public
  *
  * def encrypt(public_key: str, secret_value: str) -> str:
- *   """Encrypt a Unicode string using the public key."""
- *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+ *   """Encrypt a
+ * Unicode string using the public key."""
+ *   public_key = public.PublicKey(public_key.encode("utf-8"),
+ * encoding.Base64Encoder())
  *   sealed_box = public.SealedBox(public_key)
- *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+ *   encrypted =
+ * sealed_box.encrypt(secret_value.encode("utf-8"))
  *   return b64encode(encrypted).decode("utf-8")
  * ```
  *
- * #### Example encrypting a secret using C#
+ * #### Example
+ * encrypting a secret using C#
  *
- * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
+ * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/)
+ * package.
  *
  * ```
  * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
- * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
+ * var publicKey =
+ * Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
  *
- * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
+ * var sealedPublicKeyBox =
+ * Sodium.SealedPublicKeyBox.Create(secretValue,
+ * publicKey);
  *
  * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
  * ```
  *
- * #### Example encrypting a secret using Ruby
+ * #### Example encrypting a secret using
+ * Ruby
  *
  * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
  *
  * ```ruby
- * require "rbnacl"
+ * require
+ * "rbnacl"
  * require "base64"
  *
  * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
- * public_key = RbNaCl::PublicKey.new(key)
+ * public_key =
+ * RbNaCl::PublicKey.new(key)
  *
  * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
- * encrypted_secret = box.encrypt("my_secret")
+ * encrypted_secret =
+ * box.encrypt("my_secret")
  *
  * # Print the base64 encoded secret
  * puts Base64.strict_encode64(encrypted_secret)
@@ -16939,7 +17449,9 @@ export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
 }
 /**
  * Delete an organization secret
- * Deletes a secret in an organization using the secret name. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Deletes a secret in an organization using the secret name. You must authenticate using an access token with the
+ * `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-organization-secret}
  * Tags: actions
  */
@@ -16961,7 +17473,9 @@ export async function actionsDeleteOrgSecret<FetcherData>(
 }
 /**
  * List selected repositories for an organization secret
- * Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to
+ * `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps
+ * must have the `secrets` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
@@ -17001,7 +17515,11 @@ export async function actionsListSelectedReposForOrgSecret<FetcherData>(
 }
 /**
  * Set selected repositories for an organization secret
- * Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`.
+ * The visibility is set when you [Create or update an organization
+ * secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate
+ * using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
@@ -17030,7 +17548,11 @@ export async function actionsSetSelectedReposForOrgSecret<FetcherData>(
 }
 /**
  * Add selected repository to an organization secret
- * Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The
+ * visibility is set when you [Create or update an organization
+ * secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate
+ * using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#add-selected-repository-to-an-organization-secret}
  * Tags: actions
  */
@@ -17053,7 +17575,11 @@ export async function actionsAddSelectedRepoToOrgSecret<FetcherData>(
 }
 /**
  * Remove selected repository from an organization secret
- * Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+ * Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The
+ * visibility is set when you [Create or update an organization
+ * secret](https://docs.github.com/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate
+ * using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#remove-selected-repository-from-an-organization-secret}
  * Tags: actions
  */
@@ -17076,9 +17602,12 @@ export async function actionsRemoveSelectedRepoFromOrgSecret<FetcherData>(
 }
 /**
  * Get the audit log for an organization
- * Gets the audit log for an organization. For more information, see "[Reviewing the audit log for your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization)."
+ * Gets the audit log for an organization. For more information, see "[Reviewing the audit log for your
+ * organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization)."
  *
- * To use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.
+ * To
+ * use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `organization_administration` read permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-audit-log}
  * Tags: orgs
  */
@@ -17219,9 +17748,14 @@ export async function orgsUnblockUser<FetcherData>(
 }
 /**
  * List SAML SSO authorizations for an organization
- * Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products).
+ * Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more
+ * information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products).
  *
- * An authenticated organization owner with the `read:org` scope can list all credential authorizations for an organization that uses SAML single sign-on (SSO). The credentials are either personal access tokens or SSH keys that organization members have authorized for the organization. For more information, see [About authentication with SAML single sign-on](https://help.github.com/en/articles/about-authentication-with-saml-single-sign-on).
+ * An
+ * authenticated organization owner with the `read:org` scope can list all credential authorizations for an organization
+ * that uses SAML single sign-on (SSO). The credentials are either personal access tokens or SSH keys that organization
+ * members have authorized for the organization. For more information, see [About authentication with SAML single
+ * sign-on](https://help.github.com/en/articles/about-authentication-with-saml-single-sign-on).
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-saml-sso-authorizations-for-an-organization}
  * Tags: orgs
  */
@@ -17253,9 +17787,13 @@ export async function orgsListSamlSsoAuthorizations<FetcherData>(
 }
 /**
  * Remove a SAML SSO authorization for an organization
- * Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products).
+ * Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more
+ * information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products).
  *
- * An authenticated organization owner with the `admin:org` scope can remove a credential authorization for an organization that uses SAML SSO. Once you remove someone's credential authorization, they will need to create a new personal access token or SSH key and authorize it for the organization they want to access.
+ * An
+ * authenticated organization owner with the `admin:org` scope can remove a credential authorization for an organization
+ * that uses SAML SSO. Once you remove someone's credential authorization, they will need to create a new personal access
+ * token or SSH key and authorize it for the organization they want to access.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-a-saml-sso-authorization-for-an-organization}
  * Tags: orgs
  */
@@ -17308,7 +17846,8 @@ export async function activityListPublicOrgEvents<FetcherData>(
 }
 /**
  * List failed organization invitations
- * The return hash contains `failed_at` and `failed_reason` fields which represent the time at which the invitation failed and the reason for the failure.
+ * The return hash contains `failed_at` and `failed_reason` fields which represent the time at which the invitation failed
+ * and the reason for the failure.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-failed-organization-invitations}
  * Tags: orgs
  */
@@ -17438,7 +17977,8 @@ export async function orgsCreateWebhook<FetcherData>(
 }
 /**
  * Get an organization webhook
- * Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook configuration for an organization](/rest/reference/orgs#get-a-webhook-configuration-for-an-organization)."
+ * Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook
+ * configuration for an organization](/rest/reference/orgs#get-a-webhook-configuration-for-an-organization)."
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-an-organization-webhook}
  * Tags: orgs
  */
@@ -17463,7 +18003,10 @@ export async function orgsGetWebhook<FetcherData>(
 }
 /**
  * Update an organization webhook
- * Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/reference/orgs#update-a-webhook-configuration-for-an-organization)."
+ * Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you
+ * previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed.
+ * If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an
+ * organization](/rest/reference/orgs#update-a-webhook-configuration-for-an-organization)."
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-an-organization-webhook}
  * Tags: orgs
  */
@@ -17543,9 +18086,11 @@ export async function orgsDeleteWebhook<FetcherData>(
 }
 /**
  * Get a webhook configuration for an organization
- * Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
+ * Returns the webhook configuration for an organization. To get more information about the webhook, including the `active`
+ * state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
  *
- * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
+ * Access
+ * tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
@@ -17571,9 +18116,12 @@ export async function orgsGetWebhookConfigForOrg<FetcherData>(
 }
 /**
  * Update a webhook configuration for an organization
- * Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)."
+ * Updates the webhook configuration for an organization. To update more information about the webhook, including the
+ * `active` state and `events`, use "[Update an organization webhook
+ * ](/rest/reference/orgs#update-an-organization-webhook)."
  *
- * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
+ * Access tokens must have the `admin:org_hook` scope, and GitHub
+ * Apps must have the `organization_hooks:write` permission.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#update-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
@@ -17726,7 +18274,9 @@ export async function orgsPingWebhook<FetcherData>(
  * Get an organization installation for the authenticated app
  * Enables an authenticated GitHub App to find the organization's installation information.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-an-organization-installation-for-the-authenticated-app}
  * Tags: apps
  */
@@ -17749,7 +18299,8 @@ export async function appsGetOrgInstallation<FetcherData>(
 }
 /**
  * List app installations for an organization
- * Lists all GitHub Apps in an organization. The installation count includes all GitHub Apps installed on repositories in the organization. You must be an organization owner with `admin:read` scope to use this endpoint.
+ * Lists all GitHub Apps in an organization. The installation count includes all GitHub Apps installed on repositories in
+ * the organization. You must be an organization owner with `admin:read` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-app-installations-for-an-organization}
  * Tags: orgs
  */
@@ -17788,7 +18339,8 @@ export async function orgsListAppInstallations<FetcherData>(
 }
 /**
  * Get interaction restrictions for an organization
- * Shows which type of GitHub user can interact with this organization and when the restriction expires. If there is no restrictions, you will see an empty response.
+ * Shows which type of GitHub user can interact with this organization and when the restriction expires. If there is no
+ * restrictions, you will see an empty response.
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
@@ -17822,7 +18374,9 @@ export async function interactionsGetRestrictionsForOrg<FetcherData>(
 }
 /**
  * Set interaction restrictions for an organization
- * Temporarily restricts interactions to a certain type of GitHub user in any public repository in the given organization. You must be an organization owner to set these restrictions. Setting the interaction limit at the organization level will overwrite any interaction limits that are set for individual repositories owned by the organization.
+ * Temporarily restricts interactions to a certain type of GitHub user in any public repository in the given organization.
+ * You must be an organization owner to set these restrictions. Setting the interaction limit at the organization level
+ * will overwrite any interaction limits that are set for individual repositories owned by the organization.
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
@@ -17854,7 +18408,8 @@ export async function interactionsSetRestrictionsForOrg<FetcherData>(
 }
 /**
  * Remove interaction restrictions for an organization
- * Removes all interaction restrictions from public repositories in the given organization. You must be an organization owner to remove restrictions.
+ * Removes all interaction restrictions from public repositories in the given organization. You must be an organization
+ * owner to remove restrictions.
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
@@ -17875,7 +18430,9 @@ export async function interactionsRemoveRestrictionsForOrg<FetcherData>(
 }
 /**
  * List pending organization invitations
- * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`.
+ * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the
+ * following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a
+ * GitHub member, the `login` field in the return hash will be `null`.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-pending-organization-invitations}
  * Tags: orgs
  */
@@ -17911,9 +18468,16 @@ export async function orgsListPendingInvitations<FetcherData>(
 }
 /**
  * Create an organization invitation
- * Invite people to an organization by using their GitHub user ID or their email address. In order to create invitations in an organization, the authenticated user must be an organization owner.
+ * Invite people to an organization by using their GitHub user ID or their email address. In order to create invitations in
+ * an organization, the authenticated user must be an organization owner.
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#create-an-organization-invitation}
  * Tags: orgs
  */
@@ -17967,9 +18531,11 @@ export async function orgsCreateInvitation<FetcherData>(
 }
 /**
  * Cancel an organization invitation
- * Cancel an organization invitation. In order to cancel an organization invitation, the authenticated user must be an organization owner.
+ * Cancel an organization invitation. In order to cancel an organization invitation, the authenticated user must be an
+ * organization owner.
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#cancel-an-organization-invitation}
  * Tags: orgs
  */
@@ -17996,7 +18562,8 @@ export async function orgsCancelInvitation<FetcherData>(
 }
 /**
  * List organization invitation teams
- * List all teams associated with an invitation. In order to see invitations in an organization, the authenticated user must be an organization owner.
+ * List all teams associated with an invitation. In order to see invitations in an organization, the authenticated user
+ * must be an organization owner.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-invitation-teams}
  * Tags: orgs
  */
@@ -18030,10 +18597,14 @@ export async function orgsListInvitationTeams<FetcherData>(
  * List organization issues assigned to the authenticated user
  * List issues in an organization assigned to the authenticated user.
  *
- * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+ * **Note**: GitHub's REST API v3 considers every pull
+ * request an issue, but not every issue is a pull request. For this
+ * reason, "Issues" endpoints may return both issues and
+ * pull requests in the response. You can identify pull requests by
+ * the `pull_request` key. Be aware that the `id` of a
+ * pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+ * request id, use the "[List
+ * pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-organization-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
@@ -18085,7 +18656,8 @@ export async function issuesListForOrg<FetcherData>(
 }
 /**
  * List organization members
- * List all users who are members of an organization. If the authenticated user is also a member of this organization then both concealed and public members will be returned.
+ * List all users who are members of an organization. If the authenticated user is also a member of this organization then
+ * both concealed and public members will be returned.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organization-members}
  * Tags: orgs
  */
@@ -18142,7 +18714,8 @@ export async function orgsCheckMembershipForUser<FetcherData>(
 }
 /**
  * Remove an organization member
- * Removing a user from this list will remove them from all teams and they will no longer have any access to the organization's repositories.
+ * Removing a user from this list will remove them from all teams and they will no longer have any access to the
+ * organization's repositories.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-an-organization-member}
  * Tags: orgs
  */
@@ -18166,7 +18739,8 @@ export async function orgsRemoveMember<FetcherData>(
 }
 /**
  * Get organization membership for a user
- * In order to get a user's membership with an organization, the authenticated user must be an organization member. The `state` parameter in the response can be used to identify the user's membership status.
+ * In order to get a user's membership with an organization, the authenticated user must be an organization member. The
+ * `state` parameter in the response can be used to identify the user's membership status.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#get-organization-membership-for-a-user}
  * Tags: orgs
  */
@@ -18196,13 +18770,22 @@ export async function orgsGetMembershipForUser<FetcherData>(
  * Set organization membership for a user
  * Only authenticated organization owners can add a member to the organization or update the member's role.
  *
- * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
+ * *   If the
+ * authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the
+ * organization. The user's [membership
+ * status](https://docs.github.com/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they
+ * accept the invitation.
  *
- * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
+ * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If
+ * the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that
+ * they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be
+ * sent.
  *
  * **Rate limits**
  *
- * To prevent abuse, the authenticated user is limited to 50 organization invitations per 24 hour period. If the organization is more than one month old or on a paid plan, the limit is 500 invitations per 24 hour period.
+ * To prevent abuse, the authenticated user is limited to 50 organization invitations per 24 hour
+ * period. If the organization is more than one month old or on a paid plan, the limit is 500 invitations per 24 hour
+ * period.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#set-organization-membership-for-a-user}
  * Tags: orgs
  */
@@ -18244,7 +18827,10 @@ export async function orgsSetMembershipForUser<FetcherData>(
  * Remove organization membership for a user
  * In order to remove a user's membership with an organization, the authenticated user must be an organization owner.
  *
- * If the specified user is an active member of the organization, this will remove them from the organization. If the specified user has been invited to the organization, this will cancel their invitation. The specified user will receive an email notification in both cases.
+ * If
+ * the specified user is an active member of the organization, this will remove them from the organization. If the
+ * specified user has been invited to the organization, this will cancel their invitation. The specified user will receive
+ * an email notification in both cases.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#remove-organization-membership-for-a-user}
  * Tags: orgs
  */
@@ -18347,9 +18933,11 @@ export async function migrationsStartForOrg<FetcherData>(
  *
  * The `state` of a migration can be one of the following values:
  *
- * *   `pending`, which means the migration hasn't started yet.
+ * *   `pending`, which
+ * means the migration hasn't started yet.
  * *   `exporting`, which means the migration is in progress.
- * *   `exported`, which means the migration finished successfully.
+ * *   `exported`, which
+ * means the migration finished successfully.
  * *   `failed`, which means the migration failed.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-an-organization-migration-status}
  * Tags: migrations
@@ -18425,7 +19013,9 @@ export async function migrationsDeleteArchiveForOrg<FetcherData>(
 }
 /**
  * Unlock an organization repository
- * Unlocks a repository that was locked for migration. You should unlock each migrated repository and [delete them](https://docs.github.com/rest/reference/repos#delete-a-repository) when the migration is complete and you no longer need the source data.
+ * Unlocks a repository that was locked for migration. You should unlock each migrated repository and [delete
+ * them](https://docs.github.com/rest/reference/repos#delete-a-repository) when the migration is complete and you no longer
+ * need the source data.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#unlock-an-organization-repository}
  * Tags: migrations
  */
@@ -18515,7 +19105,10 @@ export async function orgsListOutsideCollaborators<FetcherData>(
 }
 /**
  * Convert an organization member to outside collaborator
- * When an organization member is converted to an outside collaborator, they'll only have access to the repositories that their current team membership allows. The user will no longer be a member of the organization. For more information, see "[Converting an organization member to an outside collaborator](https://help.github.com/articles/converting-an-organization-member-to-an-outside-collaborator/)".
+ * When an organization member is converted to an outside collaborator, they'll only have access to the repositories that
+ * their current team membership allows. The user will no longer be a member of the organization. For more information, see
+ * "[Converting an organization member to an outside
+ * collaborator](https://help.github.com/articles/converting-an-organization-member-to-an-outside-collaborator/)".
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#convert-an-organization-member-to-outside-collaborator}
  * Tags: orgs
  */
@@ -18563,7 +19156,8 @@ export async function orgsRemoveOutsideCollaborator<FetcherData>(
  * Get a package for an organization
  * Gets a specific package in an organization.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+ * To use this endpoint, you must authenticate using an access token with the
+ * `packages:read` scope.
  * If `package_type` is not `container`, your token must also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-an-organization}
  * Tags: packages
@@ -18595,10 +19189,14 @@ export async function packagesGetPackageForOrganization<FetcherData>(
 }
 /**
  * Delete a package for an organization
- * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
+ * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more
+ * than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
  *
- * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:
- * - If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must
+ * have admin permissions in the organization and authenticate using an access token with the `packages:read` and
+ * `packages:delete` scopes. In addition:
+ * - If `package_type` is not `container`, your token must also include the `repo`
+ * scope.
  * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-for-an-organization}
  * Tags: packages
@@ -18635,12 +19233,19 @@ export async function packagesDeletePackageForOrg<FetcherData>(
  * Restores an entire package in an organization.
  *
  * You can restore a deleted package under the following conditions:
- *   - The package was deleted within the last 30 days.
- *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+ *   -
+ * The package was deleted within the last 30 days.
+ *   - The same package namespace and version is still available and not
+ * reused for a new package. If the same package namespace is not available, you will not be able to restore your package.
+ * In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's
+ * namespace first.
  *
- * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:
- * - If `package_type` is not `container`, your token must also include the `repo` scope.
- * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+ * To use this endpoint, you must have admin permissions in the organization and authenticate using an
+ * access token with the `packages:read` and `packages:write` scopes. In addition:
+ * - If `package_type` is not `container`,
+ * your token must also include the `repo` scope.
+ * - If `package_type` is `container`, you must also have admin permissions
+ * to the container that you want to restore.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-for-an-organization}
  * Tags: packages
  */
@@ -18677,8 +19282,10 @@ export async function packagesRestorePackageForOrg<FetcherData>(
  * Get all package versions for a package owned by an organization
  * Returns all package versions for a package owned by an organization.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must authenticate using
+ * an access token with the `packages:read` scope.
+ * If `package_type` is not `container`, your token must also include the
+ * `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-an-organization}
  * Tags: packages
  */
@@ -18726,7 +19333,8 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
  * Get a package version for an organization
  * Gets a specific package version in an organization.
  *
- * You must authenticate using an access token with the `packages:read` scope.
+ * You must authenticate using an access token with the
+ * `packages:read` scope.
  * If `package_type` is not `container`, your token must also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-an-organization}
  * Tags: packages
@@ -18761,11 +19369,16 @@ export async function packagesGetPackageVersionForOrganization<FetcherData>(
 }
 /**
  * Delete package version for an organization
- * Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+ * Deletes a specific package version in an organization. If the package is public and the package version has more than
+ * 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further
+ * assistance.
  *
- * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:
- * - If `package_type` is not `container`, your token must also include the `repo` scope.
- * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+ * To use this endpoint, you must have admin permissions in the organization and authenticate using an access
+ * token with the `packages:read` and `packages:delete` scopes. In addition:
+ * - If `package_type` is not `container`, your
+ * token must also include the `repo` scope.
+ * - If `package_type` is `container`, you must also have admin permissions to
+ * the container you want to delete.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-version-for-an-organization}
  * Tags: packages
  */
@@ -18801,13 +19414,20 @@ export async function packagesDeletePackageVersionForOrg<FetcherData>(
  * Restore package version for an organization
  * Restores a specific package version in an organization.
  *
- * You can restore a deleted package under the following conditions:
+ * You can restore a deleted package under the following
+ * conditions:
  *   - The package was deleted within the last 30 days.
- *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+ *   - The same package namespace and version is still
+ * available and not reused for a new package. If the same package namespace is not available, you will not be able to
+ * restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the
+ * deleted package's namespace first.
  *
- * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:
- * - If `package_type` is not `container`, your token must also include the `repo` scope.
- * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+ * To use this endpoint, you must have admin permissions in the organization and
+ * authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:
+ * - If
+ * `package_type` is not `container`, your token must also include the `repo` scope.
+ * - If `package_type` is `container`,
+ * you must also have admin permissions to the container that you want to restore.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-version-for-an-organization}
  * Tags: packages
  */
@@ -18841,7 +19461,8 @@ export async function packagesRestorePackageVersionForOrg<FetcherData>(
 }
 /**
  * List organization projects
- * Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If
+ * you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-organization-projects}
  * Tags: projects
  */
@@ -18877,7 +19498,8 @@ export async function projectsListForOrg<FetcherData>(
 }
 /**
  * Create an organization project
- * Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If
+ * you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#create-an-organization-project}
  * Tags: projects
  */
@@ -18973,7 +19595,9 @@ export async function orgsCheckPublicMembershipForUser<FetcherData>(
  * Set public organization membership for the authenticated user
  * The user can publicize their own membership. (A user cannot publicize the membership for another user.)
  *
- * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note that
+ * you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP
+ * verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#set-public-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
@@ -19062,13 +19686,17 @@ export async function reposListForOrg<FetcherData>(
 }
 /**
  * Create an organization repository
- * Creates a new repository in the specified organization. The authenticated user must be a member of the organization.
+ * Creates a new repository in the specified organization. The authenticated user must be a member of the
+ * organization.
  *
  * **OAuth scope requirements**
  *
- * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+ * When using
+ * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
+ * include:
  *
- * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+ * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope
+ * to create an internal repository.
  * *   `repo` scope to create a private repository
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-an-organization-repository}
  * Tags: repos
@@ -19180,9 +19808,14 @@ export async function reposCreateInOrg<FetcherData>(
  * Get GitHub Actions billing for an organization
  * Gets the summary of the free and paid GitHub Actions minutes used.
  *
- * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+ * Paid minutes only apply to workflows in private
+ * repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any
+ * job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows
+ * runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub
+ * Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
- * Access tokens must have the `repo` or `admin:org` scope.
+ * Access
+ * tokens must have the `repo` or `admin:org` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-actions-billing-for-an-organization}
  * Tags: billing
  */
@@ -19209,9 +19842,12 @@ export async function billingGetGithubActionsBillingOrg<FetcherData>(
  * Get GitHub Packages billing for an organization
  * Gets the free and paid storage used for GitHub Packages in gigabytes.
  *
- * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+ * Paid minutes only apply to packages stored for
+ * private repositories. For more information, see "[Managing billing for GitHub
+ * Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access tokens must have the `repo` or `admin:org` scope.
+ * Access
+ * tokens must have the `repo` or `admin:org` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-packages-billing-for-an-organization}
  * Tags: billing
  */
@@ -19238,9 +19874,12 @@ export async function billingGetGithubPackagesBillingOrg<FetcherData>(
  * Get shared storage billing for an organization
  * Gets the estimated paid and estimated total storage used for GitHub Actions and Github Packages.
  *
- * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+ * Paid minutes only
+ * apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub
+ * Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access tokens must have the `repo` or `admin:org` scope.
+ * Access
+ * tokens must have the `repo` or `admin:org` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-shared-storage-billing-for-an-organization}
  * Tags: billing
  */
@@ -19265,11 +19904,18 @@ export async function billingGetSharedStorageBillingOrg<FetcherData>(
 }
 /**
  * List IdP groups for an organization
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * List IdP groups available in an organization. You can limit your page results using the `per_page` parameter. GitHub generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see "[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89)."
+ * List IdP groups available in an organization. You can limit your page results using the `per_page`
+ * parameter. GitHub generates a url-encoded `page` token using a cursor value for where the next page begins. For more
+ * information on cursor pagination, see "[Offset and Cursor Pagination
+ * explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89)."
  *
- * The `per_page` parameter provides pagination for a list of IdP groups the authenticated user can access in an organization. For example, if the user `octocat` wants to see two groups per page in `octo-org` via cURL, it would look like this:
+ * The `per_page` parameter provides
+ * pagination for a list of IdP groups the authenticated user can access in an organization. For example, if the user
+ * `octocat` wants to see two groups per page in `octo-org` via cURL, it would look like this:
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-an-organization}
  * Tags: teams
  */
@@ -19326,9 +19972,15 @@ export async function teamsList<FetcherData>(
 }
 /**
  * Create a team
- * To create a team, the authenticated user must be a member or owner of `{org}`. By default, organization members can create teams. Organization owners can limit team creation to organization owners. For more information, see "[Setting team creation permissions](https://help.github.com/en/articles/setting-team-creation-permissions-in-your-organization)."
+ * To create a team, the authenticated user must be a member or owner of `{org}`. By default, organization members can
+ * create teams. Organization owners can limit team creation to organization owners. For more information, see "[Setting
+ * team creation
+ * permissions](https://help.github.com/en/articles/setting-team-creation-permissions-in-your-organization)."
  *
- * When you create a new team, you automatically become a team maintainer without explicitly adding yourself to the optional array of `maintainers`. For more information, see "[About teams](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/about-teams)".
+ * When you
+ * create a new team, you automatically become a team maintainer without explicitly adding yourself to the optional array
+ * of `maintainers`. For more information, see "[About
+ * teams](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/about-teams)".
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-team}
  * Tags: teams
  */
@@ -19399,7 +20051,8 @@ export async function teamsCreate<FetcherData>(
  * Get a team by name
  * Gets a team using the team's `slug`. GitHub generates the `slug` from the team `name`.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.
+ * **Note:** You can also specify a
+ * team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-team-by-name}
  * Tags: teams
  */
@@ -19426,7 +20079,8 @@ export async function teamsGetByName<FetcherData>(
  * Update a team
  * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}`.
+ * **Note:** You can
+ * also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-team}
  * Tags: teams
  */
@@ -19484,9 +20138,11 @@ export async function teamsUpdateInOrg<FetcherData>(
  * Delete a team
  * To delete a team, the authenticated user must be an organization owner or team maintainer.
  *
- * If you are an organization owner, deleting a parent team will delete all of its child teams as well.
+ * If you are an organization
+ * owner, deleting a parent team will delete all of its child teams as well.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}`.
+ * **Note:** You can also specify a team by
+ * `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-team}
  * Tags: teams
  */
@@ -19508,9 +20164,11 @@ export async function teamsDeleteInOrg<FetcherData>(
 }
 /**
  * List discussions
- * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List all discussions on a team's page. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussions}
  * Tags: teams
  */
@@ -19545,11 +20203,19 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
 }
 /**
  * Create a discussion
- * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST
+ * /organizations/{org_id}/team/{team_id}/discussions`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion}
  * Tags: teams
  */
@@ -19590,9 +20256,12 @@ export async function teamsCreateDiscussionInOrg<FetcherData>(
 }
 /**
  * Get a discussion
- * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `GET
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion}
  * Tags: teams
  */
@@ -19619,9 +20288,13 @@ export async function teamsGetDiscussionInOrg<FetcherData>(
 }
 /**
  * Update a discussion
- * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens
+ * require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `PATCH
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion}
  * Tags: teams
  */
@@ -19659,9 +20332,12 @@ export async function teamsUpdateDiscussionInOrg<FetcherData>(
 }
 /**
  * Delete a discussion
- * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `DELETE
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion}
  * Tags: teams
  */
@@ -19684,9 +20360,12 @@ export async function teamsDeleteDiscussionInOrg<FetcherData>(
 }
 /**
  * List discussion comments
- * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List all comments on a team discussion. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `GET
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussion-comments}
  * Tags: teams
  */
@@ -19724,11 +20403,19 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
 }
 /**
  * Create a discussion comment
- * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-comment}
  * Tags: teams
  */
@@ -19764,9 +20451,12 @@ export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Get a discussion comment
- * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `GET
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-comment}
  * Tags: teams
  */
@@ -19796,9 +20486,12 @@ export async function teamsGetDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Update a discussion comment
- * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `PATCH
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-comment}
  * Tags: teams
  */
@@ -19835,9 +20528,12 @@ export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Delete a discussion comment
- * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `DELETE
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-comment}
  * Tags: teams
  */
@@ -19861,9 +20557,13 @@ export async function teamsDeleteDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * List reactions for a team discussion comment
- * List the reactions to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List the reactions to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments/).
+ * OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `GET
+ * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion-comment}
  * Tags: reactions
  */
@@ -19905,9 +20605,14 @@ export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Create reaction for a team discussion comment
- * Create a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+ * Create a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments).
+ * OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP
+ * `200` status means that you already added the reaction type to this team discussion comment.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `POST
+ * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion-comment}
  * Tags: reactions
  */
@@ -19949,9 +20654,13 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Delete team discussion comment reaction
- * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
+ * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE
+ * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
  *
- * Delete a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Delete
+ * a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth
+ * access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-team-discussion-comment-reaction}
  * Tags: reactions
  */
@@ -19976,9 +20685,13 @@ export async function reactionsDeleteForTeamDiscussionComment<FetcherData>(
 }
 /**
  * List reactions for a team discussion
- * List the reactions to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List the reactions to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens
+ * require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `GET
+ * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion}
  * Tags: reactions
  */
@@ -20019,9 +20732,14 @@ export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
 }
 /**
  * Create reaction for a team discussion
- * Create a reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+ * Create a reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens
+ * require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP
+ * `200` status means that you already added the reaction type to this team discussion.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+ * **Note:** You can also specify a
+ * team by `org_id` and `team_id` using the route `POST
+ * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion}
  * Tags: reactions
  */
@@ -20062,9 +20780,12 @@ export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
 }
 /**
  * Delete team discussion reaction
- * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
+ * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE
+ * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
  *
- * Delete a reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Delete a reaction to a
+ * [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the
+ * `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-team-discussion-reaction}
  * Tags: reactions
  */
@@ -20088,9 +20809,12 @@ export async function reactionsDeleteForTeamDiscussion<FetcherData>(
 }
 /**
  * List pending team invitations
- * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`.
+ * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the
+ * following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a
+ * GitHub member, the `login` field in the return hash will be `null`.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/invitations`.
+ * **Note:** You can also specify a team by `org_id`
+ * and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/invitations`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-pending-team-invitations}
  * Tags: teams
  */
@@ -20128,7 +20852,8 @@ export async function teamsListPendingInvitationsInOrg<FetcherData>(
  * List team members
  * Team members will include the members of child teams.
  *
- * To list members in a team, the team must be visible to the authenticated user.
+ * To list members in a team, the team must be visible to the
+ * authenticated user.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-members}
  * Tags: teams
  */
@@ -20162,14 +20887,18 @@ export async function teamsListMembersInOrg<FetcherData>(
  * Get team membership for a user
  * Team members will include the members of child teams.
  *
- * To get a user's membership with a team, the team must be visible to the authenticated user.
+ * To get a user's membership with a team, the team must be visible
+ * to the authenticated user.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/memberships/{username}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET
+ * /organizations/{org_id}/team/{team_id}/memberships/{username}`.
  *
  * **Note:**
- * The response contains the `state` of the membership and the member's `role`.
+ * The response contains the `state` of the
+ * membership and the member's `role`.
  *
- * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+ * The `role` for organization owners is set to `maintainer`. For more information
+ * about `maintainer` roles, see see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user}
  * Tags: teams
  */
@@ -20196,17 +20925,33 @@ export async function teamsGetMembershipForUserInOrg<FetcherData>(
 }
 /**
  * Add or update team membership for a user
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * Adds an organization member to a team. An authenticated organization owner or team maintainer can add organization members to a team.
+ * Adds an organization member to a team. An authenticated organization owner or team maintainer can add
+ * organization members to a team.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+ * **Note:** When you have team synchronization set up for a team with your organization's
+ * identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's
+ * membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through
+ * your identity provider, which automatically adds and removes team members in an organization. For more information, see
+ * "[Synchronizing teams between your identity provider and
+ * GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
  *
- * An organization owner can add someone who is not part of the team's organization to a team. When an organization owner adds someone to a team who is not an organization member, this endpoint will send an invitation to the person via email. This newly-created membership will be in the "pending" state until the person accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team.
+ * An
+ * organization owner can add someone who is not part of the team's organization to a team. When an organization owner adds
+ * someone to a team who is not an organization member, this endpoint will send an invitation to the person via email. This
+ * newly-created membership will be in the "pending" state until the person accepts the invitation, at which point the
+ * membership will transition to the "active" state and the user will be added as a member of the team.
  *
- * If the user is already a member of the team, this endpoint will update the role of the team member's role. To update the membership of a team member, the authenticated user must be an organization owner or a team maintainer.
+ * If the user is
+ * already a member of the team, this endpoint will update the role of the team member's role. To update the membership of
+ * a team member, the authenticated user must be an organization owner or a team maintainer.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/memberships/{username}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `PUT
+ * /organizations/{org_id}/team/{team_id}/memberships/{username}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user}
  * Tags: teams
  */
@@ -20243,13 +20988,24 @@ export async function teamsAddOrUpdateMembershipForUserInOrg<FetcherData>(
 }
 /**
  * Remove team membership for a user
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
+ * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions
+ * to the team or be an owner of the organization that the team is associated with. Removing team membership does not
+ * delete the user, it just removes their membership from the team.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+ * **Note:** When you have team synchronization set up
+ * for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for
+ * making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage
+ * GitHub team membership through your identity provider, which automatically adds and removes team members in an
+ * organization. For more information, see "[Synchronizing teams between your identity provider and
+ * GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/memberships/{username}`.
+ * **Note:**
+ * You can also specify a team by `org_id` and `team_id` using the route `DELETE
+ * /organizations/{org_id}/team/{team_id}/memberships/{username}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user}
  * Tags: teams
  */
@@ -20274,7 +21030,8 @@ export async function teamsRemoveMembershipForUserInOrg<FetcherData>(
  * List team projects
  * Lists the organization projects for a team.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/projects`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the
+ * route `GET /organizations/{org_id}/team/{team_id}/projects`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-projects}
  * Tags: teams
  */
@@ -20305,9 +21062,11 @@ export async function teamsListProjectsInOrg<FetcherData>(
 }
 /**
  * Check team permissions for a project
- * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
+ * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes
+ * projects inherited from a parent team.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route
+ * `GET /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-project}
  * Tags: teams
  */
@@ -20332,9 +21091,12 @@ export async function teamsCheckPermissionsForProjectInOrg<FetcherData>(
 }
 /**
  * Add or update team project permissions
- * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
+ * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the
+ * authenticated user must have `admin` permissions for the project. The project and team must be part of the same
+ * organization.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT
+ * /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-project-permissions}
  * Tags: teams
  */
@@ -20368,9 +21130,13 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg<FetcherData>(
 }
 /**
  * Remove a project from a team
- * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. This endpoint removes the project from the team, but does not delete the project.
+ * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the
+ * team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both
+ * the team and project, or `admin` access to the team or project. This endpoint removes the project from the team, but
+ * does not delete the project.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE
+ * /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-a-project-from-a-team}
  * Tags: teams
  */
@@ -20395,7 +21161,8 @@ export async function teamsRemoveProjectInOrg<FetcherData>(
  * List team repositories
  * Lists a team's repositories visible to the authenticated user.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`.
+ * **Note:** You can also specify a team by `org_id` and
+ * `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-team-repositories}
  * Tags: teams
  */
@@ -20428,13 +21195,19 @@ export async function teamsListReposInOrg<FetcherData>(
 }
 /**
  * Check team permissions for a repository
- * Checks whether a team has `admin`, `push`, `maintain`, `triage`, or `pull` permission for a repository. Repositories inherited through a parent team will also be checked.
+ * Checks whether a team has `admin`, `push`, `maintain`, `triage`, or `pull` permission for a repository. Repositories
+ * inherited through a parent team will also be checked.
  *
- * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept header.
+ * You can also get information about the specified repository,
+ * including what permissions the team grants on it, by passing the following custom [media
+ * type](https://docs.github.com/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept
+ * header.
  *
- * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
+ * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response
+ * status.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET
+ * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-repository}
  * Tags: teams
  */
@@ -20462,11 +21235,20 @@ export async function teamsCheckPermissionsForRepoInOrg<FetcherData>(
 }
 /**
  * Add or update team repository permissions
- * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin
+ * access to the repository, and must be able to see the team. The repository must be owned by the organization, or a
+ * direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt
+ * to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any
+ * parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
+ * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `PUT
+ * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  *
- * For more information about the permission levels, see "[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
+ * For more information about the permission levels, see
+ * "[Repository permission levels for an
+ * organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-repository-permissions}
  * Tags: teams
  */
@@ -20504,9 +21286,13 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg<FetcherData>(
 }
 /**
  * Remove a repository from a team
- * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. This does not delete the repository, it just removes it from the team.
+ * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team.
+ * To remove a repository from a team as an organization member, the authenticated user must have admin access to the
+ * repository and must be able to see the team. This does not delete the repository, it just removes it from the
+ * team.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE
+ * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-repository-from-a-team}
  * Tags: teams
  */
@@ -20530,11 +21316,14 @@ export async function teamsRemoveRepoInOrg<FetcherData>(
 }
 /**
  * List IdP groups for a team
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
  * List IdP groups connected to a team on GitHub.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.
+ * **Note:** You can also specify a team by `org_id` and
+ * `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team}
  * Tags: teams
  */
@@ -20558,11 +21347,16 @@ export async function teamsListIdpGroupsInOrg<FetcherData>(
 }
 /**
  * Create or update IdP group connections
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * Creates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.
+ * Creates, updates, or removes a connection between a team and an IdP group. When adding groups to a team,
+ * you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty
+ * `groups` array will remove all connections for a team.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.
+ * **Note:** You can also specify a team by `org_id` and `team_id`
+ * using the route `PATCH /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections}
  * Tags: teams
  */
@@ -20608,7 +21402,8 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg<FetcherData>(
  * List child teams
  * Lists the child teams of the team specified by `{team_slug}`.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/teams`.
+ * **Note:** You can also specify a team by `org_id` and
+ * `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/teams`.
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-child-teams}
  * Tags: teams
  */
@@ -20979,7 +21774,8 @@ export async function projectsMoveColumn<FetcherData>(
 }
 /**
  * Get a project
- * Gets a project by its `id`. Returns a `404 Not Found` status if projects are disabled. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * Gets a project by its `id`. Returns a `404 Not Found` status if projects are disabled. If you do not have sufficient
+ * privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#get-a-project}
  * Tags: projects
  */
@@ -21004,7 +21800,8 @@ export async function projectsGet<FetcherData>(
 }
 /**
  * Update a project
- * Updates a project board's information. Returns a `404 Not Found` status if projects are disabled. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * Updates a project board's information. Returns a `404 Not Found` status if projects are disabled. If you do not have
+ * sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#update-a-project}
  * Tags: projects
  */
@@ -21085,7 +21882,10 @@ export async function projectsDelete<FetcherData>(
 }
 /**
  * List project collaborators
- * Lists the collaborators for an organization project. For a project, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners. You must be an organization owner or a project `admin` to list collaborators.
+ * Lists the collaborators for an organization project. For a project, the list of collaborators includes outside
+ * collaborators, organization members that are direct collaborators, organization members with access through team
+ * memberships, organization members with access through default organization permissions, and organization owners. You
+ * must be an organization owner or a project `admin` to list collaborators.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-project-collaborators}
  * Tags: projects
  */
@@ -21122,7 +21922,8 @@ export async function projectsListCollaborators<FetcherData>(
 }
 /**
  * Add project collaborator
- * Adds a collaborator to an organization project and sets their permission level. You must be an organization owner or a project `admin` to add a collaborator.
+ * Adds a collaborator to an organization project and sets their permission level. You must be an organization owner or a
+ * project `admin` to add a collaborator.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#add-project-collaborator}
  * Tags: projects
  */
@@ -21160,7 +21961,8 @@ export async function projectsAddCollaborator<FetcherData>(
 }
 /**
  * Remove user as a collaborator
- * Removes a collaborator from an organization project. You must be an organization owner or a project `admin` to remove a collaborator.
+ * Removes a collaborator from an organization project. You must be an organization owner or a project `admin` to remove a
+ * collaborator.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#remove-project-collaborator}
  * Tags: projects
  */
@@ -21189,7 +21991,9 @@ export async function projectsRemoveCollaborator<FetcherData>(
 }
 /**
  * Get project permission for a user
- * Returns the collaborator's permission level for an organization project. Possible values for the `permission` key: `admin`, `write`, `read`, `none`. You must be an organization owner or a project `admin` to review a user's permission level.
+ * Returns the collaborator's permission level for an organization project. Possible values for the `permission` key:
+ * `admin`, `write`, `read`, `none`. You must be an organization owner or a project `admin` to review a user's permission
+ * level.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#get-project-permission-for-a-user}
  * Tags: projects
  */
@@ -21297,7 +22101,9 @@ export async function projectsCreateColumn<FetcherData>(
  * Get rate limit status for the authenticated user
  * **Note:** Accessing this endpoint does not count against your REST API rate limit.
  *
- * **Note:** The `rate` object is deprecated. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.
+ * **Note:** The `rate` object is
+ * deprecated. If you're writing new API client code or updating existing code, you should use the `core` object instead of
+ * the `rate` object. The `core` object contains the same information that is present in the `rate` object.
  * Learn more at {@link https://docs.github.com/rest/reference/rate-limit#get-rate-limit-status-for-the-authenticated-user}
  * Tags: rate-limit
  */
@@ -21321,9 +22127,14 @@ export async function rateLimitGet<FetcherData>(
 }
 /**
  * Delete a reaction (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Reactions API. We recommend migrating your existing code to use the new delete reactions endpoints. For more information, see this [blog post](https://developer.github.com/changes/2020-02-26-new-delete-reactions-endpoints/).
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Reactions API. We recommend
+ * migrating your existing code to use the new delete reactions endpoints. For more information, see this [blog
+ * post](https://developer.github.com/changes/2020-02-26-new-delete-reactions-endpoints/).
  *
- * OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), when deleting a [team discussion](https://docs.github.com/rest/reference/teams#discussions) or [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments).
+ * OAuth access tokens require the
+ * `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), when
+ * deleting a [team discussion](https://docs.github.com/rest/reference/teams#discussions) or [team discussion
+ * comment](https://docs.github.com/rest/reference/teams#discussion-comments).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy}
  * Tags: reactions
@@ -21349,9 +22160,12 @@ export async function reactionsDeleteLegacy<FetcherData>(
 }
 /**
  * Get a repository
- * When you pass the `scarlet-witch-preview` media type, requests to get a repository will also return the repository's code of conduct if it can be detected from the repository's code of conduct file.
+ * When you pass the `scarlet-witch-preview` media type, requests to get a repository will also return the repository's
+ * code of conduct if it can be detected from the repository's code of conduct file.
  *
- * The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.
+ * The `parent` and `source` objects are
+ * present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the
+ * ultimate source for the network.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository}
  * Tags: repos
  */
@@ -21380,7 +22194,8 @@ export async function reposGet<FetcherData>(
 }
 /**
  * Update a repository
- * **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/rest/reference/repos#replace-all-repository-topics) endpoint.
+ * **Note**: To edit a repository's topics, use the [Replace all repository
+ * topics](https://docs.github.com/rest/reference/repos#replace-all-repository-topics) endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/repos/#update-a-repository}
  * Tags: repos
  */
@@ -21511,8 +22326,10 @@ export async function reposUpdate<FetcherData>(
  * Delete a repository
  * Deleting a repository requires admin access. If OAuth is used, the `delete_repo` scope is required.
  *
- * If an organization owner has configured the organization to prevent members from deleting organization-owned
- * repositories, you will get a `403 Forbidden` response.
+ * If an organization
+ * owner has configured the organization to prevent members from deleting organization-owned
+ * repositories, you will get a
+ * `403 Forbidden` response.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-repository}
  * Tags: repos
  */
@@ -21537,7 +22354,9 @@ export async function reposDelete<FetcherData>(
 }
 /**
  * List artifacts for a repository
- * Lists all artifacts for a repository. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Lists all artifacts for a repository. Anyone with read access to the repository can use this endpoint. If the repository
+ * is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-artifacts-for-a-repository}
  * Tags: actions
  */
@@ -21577,7 +22396,9 @@ export async function actionsListArtifactsForRepo<FetcherData>(
 }
 /**
  * Get an artifact
- * Gets a specific artifact for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Gets a specific artifact for a workflow run. Anyone with read access to the repository can use this endpoint. If the
+ * repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-artifact}
  * Tags: actions
  */
@@ -21602,7 +22423,8 @@ export async function actionsGetArtifact<FetcherData>(
 }
 /**
  * Delete an artifact
- * Deletes an artifact for a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * Deletes an artifact for a workflow run. You must authenticate using an access token with the `repo` scope to use this
+ * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-artifact}
  * Tags: actions
  */
@@ -21625,9 +22447,12 @@ export async function actionsDeleteArtifact<FetcherData>(
 }
 /**
  * Download an artifact
- * Gets a redirect URL to download an archive for a repository. This URL expires after 1 minute. Look for `Location:` in
- * the response header to find the URL for the download. The `:archive_format` must be `zip`. Anyone with read access to
- * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+ * Gets a redirect URL to download an archive for a repository. This URL expires after 1 minute. Look for `Location:`
+ * in
+ * the response header to find the URL for the download. The `:archive_format` must be `zip`. Anyone with read access
+ * to
+ * the repository can use this endpoint. If the repository is private you must use an access token with the `repo`
+ * scope.
  * GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#download-an-artifact}
  * Tags: actions
@@ -21652,7 +22477,9 @@ export async function actionsDownloadArtifact<FetcherData>(
 }
 /**
  * Get a job for a workflow run
- * Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the
+ * repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-job-for-a-workflow-run}
  * Tags: actions
  */
@@ -21678,9 +22505,12 @@ export async function actionsGetJobForWorkflowRun<FetcherData>(
 /**
  * Download job logs for a workflow run
  * Gets a redirect URL to download a plain text file of logs for a workflow job. This link expires after 1 minute. Look
- * for `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can
- * use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must
- * have the `actions:read` permission to use this endpoint.
+ * for
+ * `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can
+ * use
+ * this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must
+ * have
+ * the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#download-job-logs-for-a-workflow-run}
  * Tags: actions
  */
@@ -21703,9 +22533,11 @@ export async function actionsDownloadJobLogsForWorkflowRun<FetcherData>(
 }
 /**
  * Get GitHub Actions permissions for a repository
- * Gets the GitHub Actions permissions policy for a repository, including whether GitHub Actions is enabled and the actions allowed to run in the repository.
+ * Gets the GitHub Actions permissions policy for a repository, including whether GitHub Actions is enabled and the actions
+ * allowed to run in the repository.
  *
- * You must authenticate using an access token with the `repo` scope to use this
+ * You must authenticate using an access token with the `repo` scope to use
+ * this
  * endpoint. GitHub Apps must have the `administration` repository permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-github-actions-permissions-for-a-repository}
  * Tags: actions
@@ -21736,9 +22568,13 @@ export async function actionsGetGithubActionsPermissionsRepository<FetcherData>(
  * Set GitHub Actions permissions for a repository
  * Sets the GitHub Actions permissions policy for enabling GitHub Actions and allowed actions in the repository.
  *
- * If the repository belongs to an organization or enterprise that has set restrictive permissions at the organization or enterprise levels, such as `allowed_actions` to `selected` actions, then you cannot override them for the repository.
+ * If the
+ * repository belongs to an organization or enterprise that has set restrictive permissions at the organization or
+ * enterprise levels, such as `allowed_actions` to `selected` actions, then you cannot override them for the
+ * repository.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+ * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must
+ * have the `administration` repository permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-github-actions-permissions-for-a-repository}
  * Tags: actions
  */
@@ -21765,9 +22601,12 @@ export async function actionsSetGithubActionsPermissionsRepository<FetcherData>(
 }
 /**
  * Get allowed actions for a repository
- * Gets the settings for selected actions that are allowed in a repository. To use this endpoint, the repository policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+ * Gets the settings for selected actions that are allowed in a repository. To use this endpoint, the repository policy for
+ * `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a
+ * repository](#set-github-actions-permissions-for-a-repository)."
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+ * You must authenticate using an access token with the
+ * `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-allowed-actions-for-a-repository}
  * Tags: actions
  */
@@ -21793,13 +22632,20 @@ export async function actionsGetAllowedActionsRepository<FetcherData>(
 }
 /**
  * Set allowed actions for a repository
- * Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+ * Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for
+ * `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a
+ * repository](#set-github-actions-permissions-for-a-repository)."
  *
- * If the repository belongs to an organization or enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the allowed actions settings.
+ * If the repository belongs to an organization or
+ * enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the
+ * allowed actions settings.
  *
- * To use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.
+ * To use the `patterns_allowed` setting for private repositories, the repository must belong to
+ * an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to
+ * public repositories.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+ * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub
+ * Apps must have the `administration` repository permission to use this API.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#set-allowed-actions-for-a-repository}
  * Tags: actions
  */
@@ -21823,7 +22669,8 @@ export async function actionsSetAllowedActionsRepository<FetcherData>(
 }
 /**
  * List self-hosted runners for a repository
- * Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint.
+ * Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-self-hosted-runners-for-a-repository}
  * Tags: actions
  */
@@ -21865,7 +22712,8 @@ export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
  * List runner applications for a repository
  * Lists binaries for the runner application that you can download and run.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint.
+ * You must authenticate using an access token
+ * with the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-runner-applications-for-a-repository}
  * Tags: actions
  */
@@ -21896,14 +22744,17 @@ export async function actionsListRunnerApplicationsForRepo<FetcherData>(
 /**
  * Create a registration token for a repository
  * Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate
- * using an access token with the `repo` scope to use this endpoint.
+ * using
+ * an access token with the `repo` scope to use this endpoint.
  *
  * #### Example using registration token
  *
- * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+ * Configure your
+ * self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
  *
  * ```
- * ./config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN
+ * ./config.sh --url
+ * https://github.com/octo-org/octo-repo-artifacts --token TOKEN
  * ```
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-registration-token-for-a-repository}
  * Tags: actions
@@ -21930,12 +22781,15 @@ export async function actionsCreateRegistrationTokenForRepo<FetcherData>(
 }
 /**
  * Create a remove token for a repository
- * Returns a token that you can pass to remove a self-hosted runner from a repository. The token expires after one hour.
+ * Returns a token that you can pass to remove a self-hosted runner from a repository. The token expires after one
+ * hour.
  * You must authenticate using an access token with the `repo` scope to use this endpoint.
  *
- * #### Example using remove token
+ * #### Example using remove
+ * token
  *
- * To remove your self-hosted runner from a repository, replace TOKEN with the remove token provided by this endpoint.
+ * To remove your self-hosted runner from a repository, replace TOKEN with the remove token provided by this
+ * endpoint.
  *
  * ```
  * ./config.sh remove --token TOKEN
@@ -21967,7 +22821,8 @@ export async function actionsCreateRemoveTokenForRepo<FetcherData>(
  * Get a self-hosted runner for a repository
  * Gets a specific self-hosted runner configured in a repository.
  *
- * You must authenticate using an access token with the `repo` scope to use this
+ * You must authenticate using an access token with the
+ * `repo` scope to use this
  * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-self-hosted-runner-for-a-repository}
  * Tags: actions
@@ -21993,10 +22848,12 @@ export async function actionsGetSelfHostedRunnerForRepo<FetcherData>(
 }
 /**
  * Delete a self-hosted runner from a repository
- * Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+ * Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner
+ * when the machine you were using no longer exists.
  *
  * You must authenticate using an access token with the `repo`
- * scope to use this endpoint.
+ * scope to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository}
  * Tags: actions
  */
@@ -22019,9 +22876,13 @@ export async function actionsDeleteSelfHostedRunnerFromRepo<FetcherData>(
 }
 /**
  * List workflow runs for a repository
- * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+ * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information
+ * about using parameters, see
+ * [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
  *
- * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone with read access to
+ * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+ * GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-runs-for-a-repository}
  * Tags: actions
  */
@@ -22087,7 +22948,9 @@ export async function actionsListWorkflowRunsForRepo<FetcherData>(
 }
 /**
  * Get a workflow run
- * Gets a specific workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Gets a specific workflow run. Anyone with read access to the repository can use this endpoint. If the repository is
+ * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-workflow-run}
  * Tags: actions
  */
@@ -22112,8 +22975,10 @@ export async function actionsGetWorkflowRun<FetcherData>(
 }
 /**
  * Delete a workflow run
- * Delete a specific workflow run. Anyone with write access to the repository can use this endpoint. If the repository is
- * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:write` permission to use
+ * Delete a specific workflow run. Anyone with write access to the repository can use this endpoint. If the repository
+ * is
+ * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:write` permission to
+ * use
  * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-workflow-run}
  * Tags: actions
@@ -22137,7 +23002,8 @@ export async function actionsDeleteWorkflowRun<FetcherData>(
 }
 /**
  * Get the review history for a workflow run
- * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access
+ * token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-the-review-history-for-a-workflow-run}
  * Tags: actions
  */
@@ -22171,9 +23037,13 @@ export async function actionsGetReviewsForRun<FetcherData>(
 }
 /**
  * Approve a workflow run for a fork pull request
- * Approves a workflow run for a pull request from a public fork of a first time contributor. For more information, see ["Approving workflow runs from public forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)."
+ * Approves a workflow run for a pull request from a public fork of a first time contributor. For more information, see
+ * ["Approving workflow runs from public
+ * forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)."
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * You must
+ * authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write`
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#approve-a-workflow-run-for-a-fork-pull-request}
  * Tags: actions
  */
@@ -22200,7 +23070,9 @@ export async function actionsApproveWorkflowRun<FetcherData>(
 }
 /**
  * List workflow run artifacts
- * Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository
+ * is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-run-artifacts}
  * Tags: actions
  */
@@ -22241,7 +23113,8 @@ export async function actionsListWorkflowRunArtifacts<FetcherData>(
 }
 /**
  * Cancel a workflow run
- * Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this
+ * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#cancel-a-workflow-run}
  * Tags: actions
  */
@@ -22264,7 +23137,10 @@ export async function actionsCancelWorkflowRun<FetcherData>(
 }
 /**
  * List jobs for a workflow run
- * Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+ * Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is
+ * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use
+ * this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see
+ * [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-jobs-for-a-workflow-run}
  * Tags: actions
  */
@@ -22306,9 +23182,12 @@ export async function actionsListJobsForWorkflowRun<FetcherData>(
 }
 /**
  * Download workflow run logs
- * Gets a redirect URL to download an archive of log files for a workflow run. This link expires after 1 minute. Look for
- * `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can use
- * this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have
+ * Gets a redirect URL to download an archive of log files for a workflow run. This link expires after 1 minute. Look
+ * for
+ * `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can
+ * use
+ * this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must
+ * have
  * the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#download-workflow-run-logs}
  * Tags: actions
@@ -22332,7 +23211,8 @@ export async function actionsDownloadWorkflowRunLogs<FetcherData>(
 }
 /**
  * Delete workflow run logs
- * Deletes all logs for a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * Deletes all logs for a workflow run. You must authenticate using an access token with the `repo` scope to use this
+ * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-workflow-run-logs}
  * Tags: actions
  */
@@ -22357,7 +23237,9 @@ export async function actionsDeleteWorkflowRunLogs<FetcherData>(
  * Get pending deployments for a workflow run
  * Get all deployment environments for a workflow run that are waiting for protection rules to pass.
  *
- * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone with read
+ * access to the repository can use this endpoint. If the repository is private, you must use an access token with the
+ * `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
@@ -22390,7 +23272,8 @@ export async function actionsGetPendingDeploymentsForRun<FetcherData>(
  * Review pending deployments for a workflow run
  * Approve or reject pending deployments that are waiting on approval by a required reviewer.
  *
- * Anyone with read access to the repository contents and deployments can use this endpoint.
+ * Anyone with read access to
+ * the repository contents and deployments can use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#review-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
@@ -22441,7 +23324,8 @@ export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
 }
 /**
  * Re-run a workflow
- * Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this
+ * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#re-run-a-workflow}
  * Tags: actions
  */
@@ -22464,9 +23348,16 @@ export async function actionsReRunWorkflow<FetcherData>(
 }
 /**
  * Get workflow run usage
- * Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+ * Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to
+ * workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner
+ * operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the
+ * multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see
+ * "[Managing billing for GitHub
+ * Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
- * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone
+ * with read access to the repository can use this endpoint. If the repository is private you must use an access token with
+ * the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-workflow-run-usage}
  * Tags: actions
  */
@@ -22493,7 +23384,9 @@ export async function actionsGetWorkflowRunUsage<FetcherData>(
 }
 /**
  * List repository secrets
- * Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an
+ * access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-secrets}
  * Tags: actions
  */
@@ -22533,7 +23426,9 @@ export async function actionsListRepoSecrets<FetcherData>(
 }
 /**
  * Get a repository public key
- * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update
+ * secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an
+ * access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-repository-public-key}
  * Tags: actions
  */
@@ -22559,7 +23454,8 @@ export async function actionsGetRepoPublicKey<FetcherData>(
 }
 /**
  * Get a repository secret
- * Gets a single repository secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Gets a single repository secret without revealing its encrypted value. You must authenticate using an access token with
+ * the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-repository-secret}
  * Tags: actions
  */
@@ -22586,77 +23482,100 @@ export async function actionsGetRepoSecret<FetcherData>(
 }
 /**
  * Create or update a repository secret
- * Creates or updates a repository secret with an encrypted value. Encrypt your secret using
- * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
- * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
+ * Creates or updates a repository secret with an encrypted value. Encrypt your secret
+ * using
+ * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an
+ * access
+ * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to
+ * use
  * this endpoint.
  *
  * #### Example encrypting a secret using Node.js
  *
- * Encrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.
+ * Encrypt your secret using the
+ * [tweetsodium](https://github.com/github/tweetsodium) library.
  *
  * ```
  * const sodium = require('tweetsodium');
  *
- * const key = "base64-encoded-public-key";
+ * const key =
+ * "base64-encoded-public-key";
  * const value = "plain-text-secret";
  *
- * // Convert the message and key to Uint8Array's (Buffer implements that interface)
+ * // Convert the message and key to Uint8Array's (Buffer
+ * implements that interface)
  * const messageBytes = Buffer.from(value);
  * const keyBytes = Buffer.from(key, 'base64');
  *
- * // Encrypt using LibSodium.
+ * //
+ * Encrypt using LibSodium.
  * const encryptedBytes = sodium.seal(messageBytes, keyBytes);
  *
- * // Base64 the encrypted secret
+ * // Base64 the encrypted
+ * secret
  * const encrypted = Buffer.from(encryptedBytes).toString('base64');
  *
  * console.log(encrypted);
  * ```
  *
  *
- * #### Example encrypting a secret using Python
+ * #### Example
+ * encrypting a secret using Python
  *
- * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
+ * Encrypt your secret using
+ * [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
  *
  * ```
- * from base64 import b64encode
+ * from base64 import
+ * b64encode
  * from nacl import encoding, public
  *
  * def encrypt(public_key: str, secret_value: str) -> str:
- *   """Encrypt a Unicode string using the public key."""
- *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+ *   """Encrypt a
+ * Unicode string using the public key."""
+ *   public_key = public.PublicKey(public_key.encode("utf-8"),
+ * encoding.Base64Encoder())
  *   sealed_box = public.SealedBox(public_key)
- *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+ *   encrypted =
+ * sealed_box.encrypt(secret_value.encode("utf-8"))
  *   return b64encode(encrypted).decode("utf-8")
  * ```
  *
- * #### Example encrypting a secret using C#
+ * #### Example
+ * encrypting a secret using C#
  *
- * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
+ * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/)
+ * package.
  *
  * ```
  * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
- * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
+ * var publicKey =
+ * Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
  *
- * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
+ * var sealedPublicKeyBox =
+ * Sodium.SealedPublicKeyBox.Create(secretValue,
+ * publicKey);
  *
  * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
  * ```
  *
- * #### Example encrypting a secret using Ruby
+ * #### Example encrypting a secret using
+ * Ruby
  *
  * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
  *
  * ```ruby
- * require "rbnacl"
+ * require
+ * "rbnacl"
  * require "base64"
  *
  * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
- * public_key = RbNaCl::PublicKey.new(key)
+ * public_key =
+ * RbNaCl::PublicKey.new(key)
  *
  * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
- * encrypted_secret = box.encrypt("my_secret")
+ * encrypted_secret =
+ * box.encrypt("my_secret")
  *
  * # Print the base64 encoded secret
  * puts Base64.strict_encode64(encrypted_secret)
@@ -22694,7 +23613,8 @@ export async function actionsCreateOrUpdateRepoSecret<FetcherData>(
 }
 /**
  * Delete a repository secret
- * Deletes a secret in a repository using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Deletes a secret in a repository using the secret name. You must authenticate using an access token with the `repo`
+ * scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-a-repository-secret}
  * Tags: actions
  */
@@ -22717,7 +23637,9 @@ export async function actionsDeleteRepoSecret<FetcherData>(
 }
 /**
  * List repository workflows
- * Lists the workflows in a repository. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Lists the workflows in a repository. Anyone with read access to the repository can use this endpoint. If the repository
+ * is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-repository-workflows}
  * Tags: actions
  */
@@ -22757,7 +23679,9 @@ export async function actionsListRepoWorkflows<FetcherData>(
 }
 /**
  * Get a workflow
- * Gets a specific workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Gets a specific workflow. You can replace `workflow_id` with the workflow file name. For example, you could use
+ * `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use
+ * an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-a-workflow}
  * Tags: actions
  */
@@ -22782,9 +23706,11 @@ export async function actionsGetWorkflow<FetcherData>(
 }
 /**
  * Disable a workflow
- * Disables a workflow and sets the `state` of the workflow to `disabled_manually`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+ * Disables a workflow and sets the `state` of the workflow to `disabled_manually`. You can replace `workflow_id` with the
+ * workflow file name. For example, you could use `main.yaml`.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * You must authenticate using an access token with the `repo`
+ * scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#disable-a-workflow}
  * Tags: actions
  */
@@ -22807,11 +23733,19 @@ export async function actionsDisableWorkflow<FetcherData>(
 }
 /**
  * Create a workflow dispatch event
- * You can use this endpoint to manually trigger a GitHub Actions workflow run. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+ * You can use this endpoint to manually trigger a GitHub Actions workflow run. You can replace `workflow_id` with the
+ * workflow file name. For example, you could use `main.yaml`.
  *
- * You must configure your GitHub Actions workflow to run when the [`workflow_dispatch` webhook](/developers/webhooks-and-events/webhook-events-and-payloads#workflow_dispatch) event occurs. The `inputs` are configured in the workflow file. For more information about how to configure the `workflow_dispatch` event in the workflow file, see "[Events that trigger workflows](/actions/reference/events-that-trigger-workflows#workflow_dispatch)."
+ * You must configure your GitHub Actions workflow to run when
+ * the [`workflow_dispatch` webhook](/developers/webhooks-and-events/webhook-events-and-payloads#workflow_dispatch) event
+ * occurs. The `inputs` are configured in the workflow file. For more information about how to configure the
+ * `workflow_dispatch` event in the workflow file, see "[Events that trigger
+ * workflows](/actions/reference/events-that-trigger-workflows#workflow_dispatch)."
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)."
+ * You must authenticate using an access
+ * token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this
+ * endpoint. For more information, see "[Creating a personal access token for the command
+ * line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)."
  * Learn more at {@link https://docs.github.com/rest/reference/actions#create-a-workflow-dispatch-event}
  * Tags: actions
  */
@@ -22847,9 +23781,11 @@ export async function actionsCreateWorkflowDispatch<FetcherData>(
 }
 /**
  * Enable a workflow
- * Enables a workflow and sets the `state` of the workflow to `active`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+ * Enables a workflow and sets the `state` of the workflow to `active`. You can replace `workflow_id` with the workflow
+ * file name. For example, you could use `main.yaml`.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * You must authenticate using an access token with the `repo` scope to
+ * use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#enable-a-workflow}
  * Tags: actions
  */
@@ -22872,9 +23808,12 @@ export async function actionsEnableWorkflow<FetcherData>(
 }
 /**
  * List workflow runs
- * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+ * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could
+ * use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see
+ * [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
  *
- * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+ * Anyone with read access to
+ * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-workflow-runs}
  * Tags: actions
  */
@@ -22941,9 +23880,17 @@ export async function actionsListWorkflowRuns<FetcherData>(
 }
 /**
  * Get workflow usage
- * Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+ * Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only
+ * apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner
+ * operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the
+ * multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see
+ * "[Managing billing for GitHub
+ * Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
- * You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * You
+ * can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access
+ * to the repository can use this endpoint. If the repository is private you must use an access token with the `repo`
+ * scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-workflow-usage}
  * Tags: actions
  */
@@ -22970,7 +23917,9 @@ export async function actionsGetWorkflowUsage<FetcherData>(
 }
 /**
  * List assignees
- * Lists the [available assignees](https://help.github.com/articles/assigning-issues-and-pull-requests-to-other-github-users/) for issues in a repository.
+ * Lists the [available
+ * assignees](https://help.github.com/articles/assigning-issues-and-pull-requests-to-other-github-users/) for issues in a
+ * repository.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-assignees}
  * Tags: issues
  */
@@ -23004,7 +23953,8 @@ export async function issuesListAssignees<FetcherData>(
  * Check if a user can be assigned
  * Checks if a user has permission to be assigned to an issue in this repository.
  *
- * If the `assignee` can be assigned to issues in the repository, a `204` header with no content is returned.
+ * If the `assignee` can be assigned to
+ * issues in the repository, a `204` header with no content is returned.
  *
  * Otherwise a `404` status code is returned.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#check-if-a-user-can-be-assigned}
@@ -23033,7 +23983,8 @@ export async function issuesCheckUserCanBeAssigned<FetcherData>(
  * List all autolinks of a repository
  * This returns a list of autolinks configured for the given repository.
  *
- * Information about autolinks are only available to repository administrators.
+ * Information about autolinks are only available to
+ * repository administrators.
  * Learn more at {@link https://docs.github.com/v3/repos#list-autolinks}
  * Tags: repos
  */
@@ -23103,7 +24054,8 @@ export async function reposCreateAutolink<FetcherData>(
  * Get an autolink reference of a repository
  * This returns a single autolink reference by ID that was configured for the given repository.
  *
- * Information about autolinks are only available to repository administrators.
+ * Information about
+ * autolinks are only available to repository administrators.
  * Learn more at {@link https://docs.github.com/v3/repos#get-autolink}
  * Tags: repos
  */
@@ -23131,7 +24083,8 @@ export async function reposGetAutolink<FetcherData>(
  * Delete an autolink reference from a repository
  * This deletes a single autolink reference by ID that was configured for the given repository.
  *
- * Information about autolinks are only available to repository administrators.
+ * Information about
+ * autolinks are only available to repository administrators.
  * Learn more at {@link https://docs.github.com/v3/repos#delete-autolink}
  * Tags: repos
  */
@@ -23156,7 +24109,9 @@ export async function reposDeleteAutolink<FetcherData>(
 }
 /**
  * Enable automated security fixes
- * Enables automated security fixes for a repository. The authenticated user must have admin access to the repository. For more information, see "[Configuring automated security fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)".
+ * Enables automated security fixes for a repository. The authenticated user must have admin access to the repository. For
+ * more information, see "[Configuring automated security
+ * fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)".
  * Learn more at {@link https://docs.github.com/rest/reference/repos#enable-automated-security-fixes}
  * Tags: repos
  */
@@ -23178,7 +24133,9 @@ export async function reposEnableAutomatedSecurityFixes<FetcherData>(
 }
 /**
  * Disable automated security fixes
- * Disables automated security fixes for a repository. The authenticated user must have admin access to the repository. For more information, see "[Configuring automated security fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)".
+ * Disables automated security fixes for a repository. The authenticated user must have admin access to the repository. For
+ * more information, see "[Configuring automated security
+ * fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)".
  * Learn more at {@link https://docs.github.com/rest/reference/repos#disable-automated-security-fixes}
  * Tags: repos
  */
@@ -23260,7 +24217,10 @@ export async function reposGetBranch<FetcherData>(
 }
 /**
  * Get branch protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-branch-protection}
  * Tags: repos
  */
@@ -23288,13 +24248,18 @@ export async function reposGetBranchProtection<FetcherData>(
 }
 /**
  * Update branch protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
  * Protecting a branch requires admin or owner permissions to the repository.
  *
- * **Note**: Passing new arrays of `users` and `teams` replaces their previous values.
+ * **Note**:
+ * Passing new arrays of `users` and `teams` replaces their previous values.
  *
- * **Note**: The list of users, apps, and teams in total is limited to 100 items.
+ * **Note**: The list of users, apps, and teams
+ * in total is limited to 100 items.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-branch-protection}
  * Tags: repos
  */
@@ -23411,7 +24376,10 @@ export async function reposUpdateBranchProtection<FetcherData>(
 }
 /**
  * Delete branch protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-branch-protection}
  * Tags: repos
  */
@@ -23436,7 +24404,10 @@ export async function reposDeleteBranchProtection<FetcherData>(
 }
 /**
  * Get admin branch protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-admin-branch-protection}
  * Tags: repos
  */
@@ -23465,9 +24436,13 @@ export async function reposGetAdminBranchProtection<FetcherData>(
 }
 /**
  * Set admin branch protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Adding admin enforcement requires admin or owner permissions to the repository and branch protection to be enabled.
+ * Adding admin enforcement requires admin or owner permissions to the repository and
+ * branch protection to be enabled.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-admin-branch-protection}
  * Tags: repos
  */
@@ -23496,9 +24471,13 @@ export async function reposSetAdminBranchProtection<FetcherData>(
 }
 /**
  * Delete admin branch protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Removing admin enforcement requires admin or owner permissions to the repository and branch protection to be enabled.
+ * Removing admin enforcement requires admin or owner permissions to the repository and
+ * branch protection to be enabled.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-admin-branch-protection}
  * Tags: repos
  */
@@ -23523,7 +24502,10 @@ export async function reposDeleteAdminBranchProtection<FetcherData>(
 }
 /**
  * Get pull request review protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-pull-request-review-protection}
  * Tags: repos
  */
@@ -23552,11 +24534,16 @@ export async function reposGetPullRequestReviewProtection<FetcherData>(
 }
 /**
  * Update pull request review protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Updating pull request review enforcement requires admin or owner permissions to the repository and branch protection to be enabled.
+ * Updating pull request review enforcement requires admin or owner permissions to the
+ * repository and branch protection to be enabled.
  *
- * **Note**: Passing new arrays of `users` and `teams` replaces their previous values.
+ * **Note**: Passing new arrays of `users` and `teams` replaces their
+ * previous values.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-pull-request-review-protection}
  * Tags: repos
  */
@@ -23616,7 +24603,10 @@ export async function reposUpdatePullRequestReviewProtection<FetcherData>(
 }
 /**
  * Delete pull request review protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-pull-request-review-protection}
  * Tags: repos
  */
@@ -23641,11 +24631,18 @@ export async function reposDeletePullRequestReviewProtection<FetcherData>(
 }
 /**
  * Get commit signature protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * When authenticated with admin or owner permissions to the repository, you can use this endpoint to check whether a branch requires signed commits. An enabled status of `true` indicates you must sign commits on this branch. For more information, see [Signing commits with GPG](https://help.github.com/articles/signing-commits-with-gpg) in GitHub Help.
+ * When authenticated with admin or owner permissions to the repository, you can use
+ * this endpoint to check whether a branch requires signed commits. An enabled status of `true` indicates you must sign
+ * commits on this branch. For more information, see [Signing commits with
+ * GPG](https://help.github.com/articles/signing-commits-with-gpg) in GitHub Help.
  *
- * **Note**: You must enable branch protection to require signed commits.
+ * **Note**: You must enable branch
+ * protection to require signed commits.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-commit-signature-protection}
  * Tags: repos
  */
@@ -23675,9 +24672,13 @@ export async function reposGetCommitSignatureProtection<FetcherData>(
 }
 /**
  * Create commit signature protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * When authenticated with admin or owner permissions to the repository, you can use this endpoint to require signed commits on a branch. You must enable branch protection to require signed commits.
+ * When authenticated with admin or owner permissions to the repository, you can use
+ * this endpoint to require signed commits on a branch. You must enable branch protection to require signed commits.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-commit-signature-protection}
  * Tags: repos
  */
@@ -23707,9 +24708,14 @@ export async function reposCreateCommitSignatureProtection<FetcherData>(
 }
 /**
  * Delete commit signature protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * When authenticated with admin or owner permissions to the repository, you can use this endpoint to disable required signed commits on a branch. You must enable branch protection to require signed commits.
+ * When authenticated with admin or owner permissions to the repository, you can use
+ * this endpoint to disable required signed commits on a branch. You must enable branch protection to require signed
+ * commits.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-commit-signature-protection}
  * Tags: repos
  */
@@ -23734,7 +24740,10 @@ export async function reposDeleteCommitSignatureProtection<FetcherData>(
 }
 /**
  * Get status checks protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-status-checks-protection}
  * Tags: repos
  */
@@ -23762,9 +24771,13 @@ export async function reposGetStatusChecksProtection<FetcherData>(
 }
 /**
  * Update status check protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Updating required status checks requires admin or owner permissions to the repository and branch protection to be enabled.
+ * Updating required status checks requires admin or owner permissions to the repository
+ * and branch protection to be enabled.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-status-check-potection}
  * Tags: repos
  */
@@ -23806,7 +24819,10 @@ export async function reposUpdateStatusCheckProtection<FetcherData>(
 }
 /**
  * Remove status check protection
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-status-check-protection}
  * Tags: repos
  */
@@ -23829,7 +24845,10 @@ export async function reposRemoveStatusCheckProtection<FetcherData>(
 }
 /**
  * Get all status check contexts
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-status-check-contexts}
  * Tags: repos
  */
@@ -23854,7 +24873,10 @@ export async function reposGetAllStatusCheckContexts<FetcherData>(
 }
 /**
  * Add status check contexts
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-status-check-contexts}
  * Tags: repos
  */
@@ -23892,7 +24914,10 @@ export async function reposAddStatusCheckContexts<FetcherData>(
 }
 /**
  * Set status check contexts
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-status-check-contexts}
  * Tags: repos
  */
@@ -23929,7 +24954,10 @@ export async function reposSetStatusCheckContexts<FetcherData>(
 }
 /**
  * Remove status check contexts
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-status-check-contexts}
  * Tags: repos
  */
@@ -23966,11 +24994,15 @@ export async function reposRemoveStatusCheckContexts<FetcherData>(
 }
 /**
  * Get access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
  * Lists who has access to this protected branch.
  *
- * **Note**: Users, apps, and teams `restrictions` are only available for organization-owned repositories.
+ * **Note**: Users, apps, and teams
+ * `restrictions` are only available for organization-owned repositories.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-access-restrictions}
  * Tags: repos
  */
@@ -24000,7 +25032,10 @@ export async function reposGetAccessRestrictions<FetcherData>(
 }
 /**
  * Delete access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
  * Disables the ability to restrict who can push to this branch.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-access-restrictions}
@@ -24025,9 +25060,13 @@ export async function reposDeleteAccessRestrictions<FetcherData>(
 }
 /**
  * Get apps with access to the protected branch
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Lists the GitHub Apps that have push access to this branch. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+ * Lists the GitHub Apps that have push access to this branch. Only installed GitHub
+ * Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-apps-with-access-to-the-protected-branch}
  * Tags: repos
  */
@@ -24057,13 +25096,22 @@ export async function reposGetAppsWithAccessToProtectedBranch<FetcherData>(
 }
 /**
  * Add app access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Grants the specified apps push access for this branch. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+ * Grants the specified apps push access for this branch. Only installed GitHub Apps
+ * with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
  *
- * | Type    | Description                                                                                                                                                |
- * | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
- * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    |
+ * Description
+ * |
+ * | ------- |
+ * ----------------------------------------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users,
+ * apps, and teams in total is limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-app-access-restrictions}
  * Tags: repos
  */
@@ -24104,13 +25152,23 @@ export async function reposAddAppAccessRestrictions<FetcherData>(
 }
 /**
  * Set app access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Replaces the list of apps that have push access to this branch. This removes all apps that previously had push access and grants push access to the new list of apps. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+ * Replaces the list of apps that have push access to this branch. This removes all apps
+ * that previously had push access and grants push access to the new list of apps. Only installed GitHub Apps with `write`
+ * access to the `contents` permission can be added as authorized actors on a protected branch.
  *
- * | Type    | Description                                                                                                                                                |
- * | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
- * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    | Description
+ *
+ * |
+ * | ------- |
+ * ----------------------------------------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users,
+ * apps, and teams in total is limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-app-access-restrictions}
  * Tags: repos
  */
@@ -24151,13 +25209,22 @@ export async function reposSetAppAccessRestrictions<FetcherData>(
 }
 /**
  * Remove app access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Removes the ability of an app to push to this branch. Only installed GitHub Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+ * Removes the ability of an app to push to this branch. Only installed GitHub Apps with
+ * `write` access to the `contents` permission can be added as authorized actors on a protected branch.
  *
- * | Type    | Description                                                                                                                                                |
- * | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
- * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    |
+ * Description
+ * |
+ * | ------- |
+ * ----------------------------------------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | The GitHub Apps that have push access to this branch. Use the app's `slug`. **Note**: The list of users,
+ * apps, and teams in total is limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-app-access-restrictions}
  * Tags: repos
  */
@@ -24198,7 +25265,10 @@ export async function reposRemoveAppAccessRestrictions<FetcherData>(
 }
 /**
  * Get teams with access to the protected branch
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
  * Lists the teams who have push access to this branch. The list includes child teams.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-teams-with-access-to-the-protected-branch}
@@ -24230,13 +25300,21 @@ export async function reposGetTeamsWithAccessToProtectedBranch<FetcherData>(
 }
 /**
  * Add team access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Grants the specified teams push access for this branch. You can also give push access to child teams.
+ * Grants the specified teams push access for this branch. You can also give push access
+ * to child teams.
  *
- * | Type    | Description                                                                                                                                |
- * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
- * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    | Description
+ * |
+ * | ------- |
+ * ------------------------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams
+ * in total is limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-team-access-restrictions}
  * Tags: repos
  */
@@ -24277,13 +25355,22 @@ export async function reposAddTeamAccessRestrictions<FetcherData>(
 }
 /**
  * Set team access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Replaces the list of teams that have push access to this branch. This removes all teams that previously had push access and grants push access to the new list of teams. Team restrictions include child teams.
+ * Replaces the list of teams that have push access to this branch. This removes all
+ * teams that previously had push access and grants push access to the new list of teams. Team restrictions include child
+ * teams.
  *
- * | Type    | Description                                                                                                                                |
- * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
- * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    | Description
+ * |
+ * | ------- |
+ * ------------------------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams
+ * in total is limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-team-access-restrictions}
  * Tags: repos
  */
@@ -24324,13 +25411,21 @@ export async function reposSetTeamAccessRestrictions<FetcherData>(
 }
 /**
  * Remove team access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Removes the ability of a team to push to this branch. You can also remove push access for child teams.
+ * Removes the ability of a team to push to this branch. You can also remove push access
+ * for child teams.
  *
- * | Type    | Description                                                                                                                                         |
- * | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
- * | `array` | Teams that should no longer have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    | Description
+ * |
+ * | ------- |
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | Teams that should no longer have push access. Use the team's `slug`. **Note**: The list of users, apps,
+ * and teams in total is limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-team-access-restrictions}
  * Tags: repos
  */
@@ -24371,7 +25466,10 @@ export async function reposRemoveTeamAccessRestrictions<FetcherData>(
 }
 /**
  * Get users with access to the protected branch
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
  * Lists the people who have push access to this branch.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-users-with-access-to-the-protected-branch}
@@ -24403,13 +25501,21 @@ export async function reposGetUsersWithAccessToProtectedBranch<FetcherData>(
 }
 /**
  * Add user access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
  * Grants the specified people push access for this branch.
  *
- * | Type    | Description                                                                                                                   |
- * | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
- * | `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    | Description
+ * |
+ * |
+ * ------- |
+ * -----------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is
+ * limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-user-access-restrictions}
  * Tags: repos
  */
@@ -24450,13 +25556,21 @@ export async function reposAddUserAccessRestrictions<FetcherData>(
 }
 /**
  * Set user access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Replaces the list of people that have push access to this branch. This removes all people that previously had push access and grants push access to the new list of people.
+ * Replaces the list of people that have push access to this branch. This removes all
+ * people that previously had push access and grants push access to the new list of people.
  *
- * | Type    | Description                                                                                                                   |
- * | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
- * | `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    | Description
+ * |
+ * | ------- |
+ * -----------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is
+ * limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#set-user-access-restrictions}
  * Tags: repos
  */
@@ -24497,13 +25611,21 @@ export async function reposSetUserAccessRestrictions<FetcherData>(
 }
 /**
  * Remove user access restrictions
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
  * Removes the ability of a user to push to this branch.
  *
- * | Type    | Description                                                                                                                                   |
- * | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
- * | `array` | Usernames of the people who should no longer have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
+ * | Type    | Description
+ *
+ * |
+ * | ------- |
+ * ---------------------------------------------------------------------------------------------------------------------------------------------
+ * |
+ * | `array` | Usernames of the people who should no longer have push access. **Note**: The list of users, apps, and
+ * teams in total is limited to 100 items. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#remove-user-access-restrictions}
  * Tags: repos
  */
@@ -24546,18 +25668,24 @@ export async function reposRemoveUserAccessRestrictions<FetcherData>(
  * Rename a branch
  * Renames a branch in a repository.
  *
- * **Note:** Although the API responds immediately, the branch rename process might take some extra time to complete in the background. You won't be able to push to the old branch name while the rename process is in progress. For more information, see "[Renaming a branch](https://docs.github.com/github/administering-a-repository/renaming-a-branch)".
+ * **Note:** Although the API responds immediately, the branch rename process might take
+ * some extra time to complete in the background. You won't be able to push to the old branch name while the rename process
+ * is in progress. For more information, see "[Renaming a
+ * branch](https://docs.github.com/github/administering-a-repository/renaming-a-branch)".
  *
- * The permissions required to use this endpoint depends on whether you are renaming the default branch.
+ * The permissions required to use
+ * this endpoint depends on whether you are renaming the default branch.
  *
  * To rename a non-default branch:
  *
- * * Users must have push access.
+ * * Users must
+ * have push access.
  * * GitHub Apps must have the `contents:write` repository permission.
  *
  * To rename the default branch:
  *
- * * Users must have admin or owner permissions.
+ * *
+ * Users must have admin or owner permissions.
  * * GitHub Apps must have the `administration:write` repository permission.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#rename-a-branch}
  * Tags: repos
@@ -24597,11 +25725,15 @@ export async function reposRenameBranch<FetcherData>(
 }
 /**
  * Create a check run
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  *
- * Creates a new check run for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to create check runs.
+ * Creates a new check run
+ * for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to create check runs.
  *
- * In a check suite, GitHub limits the number of check runs with the same name to 1000. Once these check runs exceed 1000, GitHub will start to automatically delete older check runs.
+ * In
+ * a check suite, GitHub limits the number of check runs with the same name to 1000. Once these check runs exceed 1000,
+ * GitHub will start to automatically delete older check runs.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#create-a-check-run}
  * Tags: checks
  */
@@ -24627,9 +25759,13 @@ export async function checksCreate<FetcherData>(
 }
 /**
  * Get a check run
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  *
- * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+ * Gets a single check run
+ * using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public
+ * repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a
+ * private repository.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#get-a-check-run}
  * Tags: checks
  */
@@ -24654,9 +25790,11 @@ export async function checksGet<FetcherData>(
 }
 /**
  * Update a check run
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  *
- * Updates a check run for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to edit check runs.
+ * Updates a check run for
+ * a specific commit in a repository. Your GitHub App must have the `checks:write` permission to edit check runs.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#update-a-check-run}
  * Tags: checks
  */
@@ -24683,7 +25821,9 @@ export async function checksUpdate<FetcherData>(
 }
 /**
  * List check run annotations
- * Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth Apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
+ * Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a
+ * private repository or pull access to a public repository to get annotations for a check run. OAuth Apps and
+ * authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-run-annotations}
  * Tags: checks
  */
@@ -24717,9 +25857,15 @@ export async function checksListAnnotations<FetcherData>(
 }
 /**
  * Create a check suite
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
+ * `head_branch`.
  *
- * By default, check suites are automatically created when you create a [check run](https://docs.github.com/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+ * By default, check suites are automatically created when you create a [check
+ * run](https://docs.github.com/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating
+ * check suites when you've disabled automatic creation using "[Update repository preferences for check
+ * suites](https://docs.github.com/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App
+ * must have the `checks:write` permission to create check suites.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#create-a-check-suite}
  * Tags: checks
  */
@@ -24751,7 +25897,10 @@ export async function checksCreateSuite<FetcherData>(
 }
 /**
  * Update repository preferences for check suites
- * Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
+ * Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each
+ * time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a
+ * check suite](https://docs.github.com/rest/reference/checks#create-a-check-suite). You must have admin permissions in the
+ * repository to set preferences for check suites.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#update-repository-preferences-for-check-suites}
  * Tags: checks
  */
@@ -24794,9 +25943,13 @@ export async function checksSetSuitesPreferences<FetcherData>(
 }
 /**
  * Get a check suite
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
+ * `head_branch`.
  *
- * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+ * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a
+ * private repository or pull access to a public repository to get check suites. OAuth Apps and authenticated users must
+ * have the `repo` scope to get check suites in a private repository.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#get-a-check-suite}
  * Tags: checks
  */
@@ -24821,9 +25974,13 @@ export async function checksGetSuite<FetcherData>(
 }
 /**
  * List check runs in a check suite
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  *
- * Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+ * Lists check runs for a
+ * check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to
+ * a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs
+ * in a private repository.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-runs-in-a-check-suite}
  * Tags: checks
  */
@@ -24867,9 +26024,13 @@ export async function checksListForSuite<FetcherData>(
 }
 /**
  * Rerequest a check suite
- * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
+ * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will
+ * trigger the [`check_suite` webhook](https://docs.github.com/webhooks/event-payloads/#check_suite) event with the action
+ * `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is
+ * cleared.
  *
- * To rerequest a check suite, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+ * To rerequest a check suite, your GitHub App must have the `checks:read` permission on a private repository or
+ * pull access to a public repository.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#rerequest-a-check-suite}
  * Tags: checks
  */
@@ -24893,12 +26054,15 @@ export async function checksRerequestSuite<FetcherData>(
 /**
  * List code scanning alerts for a repository
  * Lists all open code scanning alerts for the default branch (usually `main`
- * or `master`). You must use an access token with the `security_events` scope to use
- * this endpoint. GitHub Apps must have the `security_events` read permission to use
+ * or `master`). You must use an access token
+ * with the `security_events` scope to use
+ * this endpoint. GitHub Apps must have the `security_events` read permission to
+ * use
  * this endpoint.
  *
  * The response includes a `most_recent_instance` object.
- * This provides details of the most recent instance of this alert
+ * This provides details of the most recent
+ * instance of this alert
  * for the default branch or for the specified Git reference
  * (if you used `ref` in the request).
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository}
@@ -24942,10 +26106,14 @@ export async function codeScanningListAlertsForRepo<FetcherData>(
 }
 /**
  * Get a code scanning alert
- * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
+ * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint.
+ * GitHub Apps must have the `security_events` read permission to use this endpoint.
  *
  * **Deprecation notice**:
- * The instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.
+ * The instances
+ * field is deprecated and will, in future, not be included in the response for this endpoint. The example response
+ * reflects this change. The same information can now be retrieved via a GET request to the URL specified by
+ * `instances_url`.
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#get-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -24974,7 +26142,8 @@ export async function codeScanningGetAlert<FetcherData>(
 }
 /**
  * Update a code scanning alert
- * Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
+ * Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use
+ * this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#update-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -25008,7 +26177,8 @@ export async function codeScanningUpdateAlert<FetcherData>(
 }
 /**
  * List instances of a code scanning alert
- * Lists all instances of the specified code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
+ * Lists all instances of the specified code scanning alert. You must use an access token with the `security_events` scope
+ * to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-instances-of-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -25050,20 +26220,27 @@ export async function codeScanningListAlertInstances<FetcherData>(
  * List code scanning analyses for a repository
  * Lists the details of all code scanning analyses for a repository,
  * starting with the most recent.
- * The response is paginated and you can use the `page` and `per_page` parameters
+ * The response is
+ * paginated and you can use the `page` and `per_page` parameters
  * to list the analyses you're interested in.
- * By default 30 analyses are listed per page.
+ * By default 30
+ * analyses are listed per page.
  *
  * The `rules_count` field in the response give the number of rules
- * that were run in the analysis.
+ * that were run in the
+ * analysis.
  * For very old analyses this data is not available,
  * and `0` is returned in this field.
  *
- * You must use an access token with the `security_events` scope to use this endpoint.
- * GitHub Apps must have the `security_events` read permission to use this endpoint.
+ * You must use an access
+ * token with the `security_events` scope to use this endpoint.
+ * GitHub Apps must have the `security_events` read permission
+ * to use this endpoint.
  *
  * **Deprecation notice**:
- * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+ * The `tool_name` field is deprecated and will, in future, not be included
+ * in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the
+ * `tool` field.
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
  */
@@ -25113,26 +26290,35 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
 /**
  * Get a code scanning analysis for a repository
  * Gets a specified code scanning analysis for a repository.
- * You must use an access token with the `security_events` scope to use this endpoint.
+ * You must use an access token with the `security_events` scope
+ * to use this endpoint.
  * GitHub Apps must have the `security_events` read permission to use this endpoint.
  *
- * The default JSON response contains fields that describe the analysis.
- * This includes the Git reference and commit SHA to which the analysis relates,
+ * The default
+ * JSON response contains fields that describe the analysis.
+ * This includes the Git reference and commit SHA to which the
+ * analysis relates,
  * the datetime of the analysis, the name of the code scanning tool,
  * and the number of alerts.
  *
- * The `rules_count` field in the default response give the number of rules
+ * The
+ * `rules_count` field in the default response give the number of rules
  * that were run in the analysis.
- * For very old analyses this data is not available,
+ * For very old
+ * analyses this data is not available,
  * and `0` is returned in this field.
  *
- * If you use the Accept header `application/sarif+json`,
+ * If you use the Accept header
+ * `application/sarif+json`,
  * the response contains the analysis data that was uploaded.
  * This is formatted as
- * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+ * [SARIF version
+ * 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
  *
  * **Deprecation notice**:
- * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+ * The
+ * `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example
+ * response reflects this change. The tool name can now be found inside the `tool` field.
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository}
  * Tags: code-scanning
  */
@@ -25162,69 +26348,95 @@ export async function codeScanningGetAnalysis<FetcherData>(
 /**
  * Delete a code scanning analysis from a repository
  * Deletes a specified code scanning analysis from a repository. For
- * private repositories, you must use an access token with the `repo` scope. For public repositories,
- * you must use an access token with `public_repo` and `repo:security_events` scopes.
+ * private repositories, you must use an access token
+ * with the `repo` scope. For public repositories,
+ * you must use an access token with `public_repo` and
+ * `repo:security_events` scopes.
  * GitHub Apps must have the `security_events` write permission to use this endpoint.
  *
- * You can delete one analysis at a time.
- * To delete a series of analyses, start with the most recent analysis and work backwards.
+ * You
+ * can delete one analysis at a time.
+ * To delete a series of analyses, start with the most recent analysis and work
+ * backwards.
  * Conceptually, the process is similar to the undo function in a text editor.
  *
- * When you list the analyses for a repository,
+ * When you list the analyses for a
+ * repository,
  * one or more will be identified as deletable in the response:
  *
  * ```
  * "deletable": true
  * ```
  *
- * An analysis is deletable when it's the most recent in a set of analyses.
- * Typically, a repository will have multiple sets of analyses
+ * An analysis is
+ * deletable when it's the most recent in a set of analyses.
+ * Typically, a repository will have multiple sets of
+ * analyses
  * for each enabled code scanning tool,
  * where a set is determined by a unique combination of analysis values:
  *
- * * `ref`
+ * *
+ * `ref`
  * * `tool`
  * * `analysis_key`
  * * `environment`
  *
- * If you attempt to delete an analysis that is not the most recent in a set,
+ * If you attempt to delete an analysis that is not the most recent in a
+ * set,
  * you'll get a 400 response with the message:
  *
  * ```
  * Analysis specified is not deletable.
  * ```
  *
- * The response from a successful `DELETE` operation provides you with
+ * The response from a
+ * successful `DELETE` operation provides you with
  * two alternative URLs for deleting the next analysis in the set
- * (see the example default response below).
- * Use the `next_analysis_url` URL if you want to avoid accidentally deleting the final analysis
+ * (see the
+ * example default response below).
+ * Use the `next_analysis_url` URL if you want to avoid accidentally deleting the final
+ * analysis
  * in the set. This is a useful option if you want to preserve at least one analysis
- * for the specified tool in your repository.
+ * for the specified tool in
+ * your repository.
  * Use the `confirm_delete_url` URL if you are content to remove all analyses for a tool.
- * When you delete the last analysis in a set the value of `next_analysis_url` and `confirm_delete_url`
+ * When you delete
+ * the last analysis in a set the value of `next_analysis_url` and `confirm_delete_url`
  * in the 200 response is `null`.
  *
- * As an example of the deletion process,
- * let's imagine that you added a workflow that configured a particular code scanning tool
+ * As
+ * an example of the deletion process,
+ * let's imagine that you added a workflow that configured a particular code scanning
+ * tool
  * to analyze the code in a repository. This tool has added 15 analyses:
- * 10 on the default branch, and another 5 on a topic branch.
+ * 10 on the default branch, and another 5 on a
+ * topic branch.
  * You therefore have two separate sets of analyses for this tool.
- * You've now decided that you want to remove all of the analyses for the tool.
+ * You've now decided that you want to remove
+ * all of the analyses for the tool.
  * To do this you must make 15 separate deletion requests.
- * To start, you must find the deletable analysis for one of the sets,
+ * To start, you must find the
+ * deletable analysis for one of the sets,
  * step through deleting the analyses in that set,
- * and then repeat the process for the second set.
+ * and then repeat the process for
+ * the second set.
  * The procedure therefore consists of a nested loop:
  *
  * **Outer loop**:
- * * List the analyses for the repository, filtered by tool.
+ * * List the analyses for the
+ * repository, filtered by tool.
  * * Parse this list to find a deletable analysis. If found:
  *
  *   **Inner loop**:
- *   * Delete the identified analysis.
- *   * Parse the response for the value of `confirm_delete_url` and, if found, use this in the next iteration.
+ *   * Delete
+ * the identified analysis.
+ *   * Parse the response for the value of `confirm_delete_url` and, if found, use this in the
+ * next iteration.
  *
- * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `confirm_delete_url` value. Alternatively, you could use the `next_analysis_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
+ * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user
+ * interface, for the specified repository, and it therefore uses the `confirm_delete_url` value. Alternatively, you could
+ * use the `next_analysis_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's
+ * analysis entirely.
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#delete-a-code-scanning-analysis-from-a-repository}
  * Tags: code-scanning
  */
@@ -25258,23 +26470,39 @@ export async function codeScanningDeleteAnalysis<FetcherData>(
 }
 /**
  * Upload an analysis as SARIF data
- * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
+ * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You
+ * must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the
+ * `security_events` write permission to use this endpoint.
  *
- * There are two places where you can upload code scanning results.
- *  - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull requests](/code-security/secure-coding/triaging-code-scanning-alerts-in-pull-requests)."
- *  - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see "[Managing code scanning alerts for your repository](/code-security/secure-coding/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
+ * There are two places where you can upload code scanning
+ * results.
+ *  - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then
+ * the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull
+ * requests](/code-security/secure-coding/triaging-code-scanning-alerts-in-pull-requests)."
+ *  - If you upload to a branch,
+ * for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more
+ * information, see "[Managing code scanning alerts for your
+ * repository](/code-security/secure-coding/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
  *
- * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
+ * You
+ * must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64
+ * format string. For example:
  *
  * ```
  * gzip -c analysis-data.sarif | base64 -w0
  * ```
  *
- * SARIF upload supports a maximum of 5000 results per analysis run. Any results over this limit are ignored and any SARIF uploads with more than 25,000 results are rejected. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
+ * SARIF upload supports a maximum of 5000
+ * results per analysis run. Any results over this limit are ignored and any SARIF uploads with more than 25,000 results
+ * are rejected. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning
+ * tool generates too many results, you should update the analysis configuration to run only the most important rules or
+ * queries.
  *
  * The `202 Accepted`, response includes an `id` value.
- * You can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.
- * For more information, see "[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
+ * You can use this ID to check the status of the upload by
+ * using this for the `/sarifs/{sarif_id}` endpoint.
+ * For more information, see "[Get information about a SARIF
+ * upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#upload-a-sarif-file}
  * Tags: code-scanning
  */
@@ -25324,7 +26552,11 @@ export async function codeScanningUploadSarif<FetcherData>(
 }
 /**
  * Get information about a SARIF upload
- * Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
+ * Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you
+ * can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a
+ * repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token
+ * with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/code-scanning#list-recent-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
  */
@@ -25354,9 +26586,12 @@ export async function codeScanningGetSarif<FetcherData>(
 }
 /**
  * List repository collaborators
- * For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners.
+ * For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that
+ * are direct collaborators, organization members with access through team memberships, organization members with access
+ * through default organization permissions, and organization owners.
  *
- * Team members will include the members of child teams.
+ * Team members will include the members of child
+ * teams.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-collaborators}
  * Tags: repos
  */
@@ -25389,9 +26624,12 @@ export async function reposListCollaborators<FetcherData>(
 }
 /**
  * Check if a user is a repository collaborator
- * For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners.
+ * For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that
+ * are direct collaborators, organization members with access through team memberships, organization members with access
+ * through default organization permissions, and organization owners.
  *
- * Team members will include the members of child teams.
+ * Team members will include the members of child
+ * teams.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#check-if-a-user-is-a-repository-collaborator}
  * Tags: repos
  */
@@ -25414,17 +26652,32 @@ export async function reposCheckCollaborator<FetcherData>(
 }
 /**
  * Add a repository collaborator
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  *
- * For more information the permission levels, see "[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
+ * For more information the permission levels, see "[Repository permission levels for an
+ * organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
  *
- * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note
+ * that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this
+ * endpoint. For more information, see "[HTTP
+ * verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  *
- * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/rest/reference/repos#invitations).
+ * The invitee will receive a
+ * notification that they have been invited to the repository, which they must accept or decline. They may do this via the
+ * notifications page, the email they receive, or by using the [repository invitations API
+ * endpoints](https://docs.github.com/rest/reference/repos#invitations).
  *
  * **Rate limits**
  *
- * You are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.
+ * You are limited to sending 50
+ * invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an
+ * organization repository.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#add-a-repository-collaborator}
  * Tags: repos
  */
@@ -25494,7 +26747,8 @@ export async function reposRemoveCollaborator<FetcherData>(
 }
 /**
  * Get repository permissions for a user
- * Checks the repository permission of a collaborator. The possible repository permissions are `admin`, `write`, `read`, and `none`.
+ * Checks the repository permission of a collaborator. The possible repository permissions are `admin`, `write`, `read`,
+ * and `none`.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-permissions-for-a-user}
  * Tags: repos
  */
@@ -25524,9 +26778,11 @@ export async function reposGetCollaboratorPermissionLevel<FetcherData>(
 }
 /**
  * List commit comments for a repository
- * Commit Comments use [these custom media types](https://docs.github.com/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/rest/overview/media-types/).
+ * Commit Comments use [these custom media types](https://docs.github.com/rest/reference/repos#custom-media-types). You can
+ * read more about the use of media types in the API [here](https://docs.github.com/rest/overview/media-types/).
  *
- * Comments are ordered by ascending ID.
+ * Comments
+ * are ordered by ascending ID.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-comments-for-a-repository}
  * Tags: repos
  */
@@ -25686,7 +26942,8 @@ export async function reactionsListForCommitComment<FetcherData>(
 }
 /**
  * Create reaction for a commit comment
- * Create a reaction to a [commit comment](https://docs.github.com/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment.
+ * Create a reaction to a [commit comment](https://docs.github.com/rest/reference/repos#comments). A response with an HTTP
+ * `200` status means that you already added the reaction type to this commit comment.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-commit-comment}
  * Tags: reactions
  */
@@ -25730,9 +26987,11 @@ export async function reactionsCreateForCommitComment<FetcherData>(
 }
 /**
  * Delete a commit comment reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
+ * **Note:** You can also specify a repository by `repository_id` using the route `DELETE
+ * /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
  *
- * Delete a reaction to a [commit comment](https://docs.github.com/rest/reference/repos#comments).
+ * Delete a reaction to a [commit
+ * comment](https://docs.github.com/rest/reference/repos#comments).
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-a-commit-comment-reaction}
  * Tags: reactions
  */
@@ -25758,32 +27017,49 @@ export async function reactionsDeleteForCommitComment<FetcherData>(
  * List commits
  * **Signature verification object**
  *
- * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+ * The response will include a `verification` object that describes the result of
+ * verifying the commit's signature. The following fields are included in the `verification` object:
  *
- * | Name | Type | Description |
+ * | Name | Type |
+ * Description |
  * | ---- | ---- | ----------- |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
- * | `signature` | `string` | The signature that was extracted from the commit. |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the signature
+ * in this commit to be verified. |
+ * | `reason` | `string` | The reason for verified value. Possible values and their
+ * meanings are enumerated in table below. |
+ * | `signature` | `string` | The signature that was extracted from the commit.
+ * |
  * | `payload` | `string` | The value that was signed. |
  *
- * These are the possible values for `reason` in the `verification` object:
+ * These are the possible values for `reason` in the
+ * `verification` object:
  *
  * | Value | Description |
  * | ----- | ----------- |
- * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * | `expired_key` | The key that made the
+ * signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
+ * the signature. |
  * | `gpgverify_error` | There was an error communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does not include a signature. |
+ * |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
  * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
- * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on her/his account. |
+ * |
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * signature. |
  * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commits}
  * Tags: repos
  */
@@ -25831,9 +27107,13 @@ export async function reposListCommits<FetcherData>(
 }
 /**
  * List branches for HEAD commit
- * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in
+ * public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For
+ * more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help documentation.
  *
- * Returns all branches where the given commit SHA is the HEAD, or latest commit for the branch.
+ * Returns all branches where the given commit SHA is the HEAD, or latest commit for the
+ * branch.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-branches-for-head-commit}
  * Tags: repos
  */
@@ -25901,7 +27181,13 @@ export async function reposListCommentsForCommit<FetcherData>(
  * Create a commit comment
  * Create a comment for a commit using its `:commit_sha`.
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-commit-comment}
  * Tags: repos
  */
@@ -25951,7 +27237,11 @@ export async function reposCreateCommitComment<FetcherData>(
 }
 /**
  * List pull requests associated with a commit
- * Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests) endpoint.
+ * Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default
+ * branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull
+ * requests. Additional preview headers may be required to see certain details for associated pull requests, such as
+ * whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the
+ * [List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests) endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-pull-requests-associated-with-a-commit}
  * Tags: repos
  */
@@ -25988,41 +27278,67 @@ export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
 }
 /**
  * Get a commit
- * Returns the contents of a single commit reference. You must have `read` access for the repository to use this endpoint.
+ * Returns the contents of a single commit reference. You must have `read` access for the repository to use this
+ * endpoint.
  *
- * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the only changes are to the file listing.
+ * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link
+ * headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the
+ * only changes are to the file listing.
  *
- * You can pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
+ * You can pass the appropriate [media
+ * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff`
+ * and `patch` formats. Diffs with binary data will have no `patch` property.
  *
- * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+ * To return only the SHA-1 hash of the commit
+ * reference, you can provide the `sha` custom [media
+ * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept`
+ * header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's
+ * SHA-1 hash by providing the local SHA-1 reference as the ETag.
  *
  * **Signature verification object**
  *
- * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+ * The response will
+ * include a `verification` object that describes the result of verifying the commit's signature. The following fields are
+ * included in the `verification` object:
  *
  * | Name | Type | Description |
  * | ---- | ---- | ----------- |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
- * | `signature` | `string` | The signature that was extracted from the commit. |
- * | `payload` | `string` | The value that was signed. |
+ * | `verified` |
+ * `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+ * | `reason` | `string` |
+ * The reason for verified value. Possible values and their meanings are enumerated in table below. |
+ * | `signature` |
+ * `string` | The signature that was extracted from the commit. |
+ * | `payload` | `string` | The value that was signed.
+ * |
  *
  * These are the possible values for `reason` in the `verification` object:
  *
  * | Value | Description |
- * | ----- | ----------- |
+ * | ----- |
+ * ----------- |
  * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `not_signing_key` | The "signing" flag
+ * is not among the usage flags in the GPG key that made the signature. |
+ * | `gpgverify_error` | There was an error
+ * communicating with the signature verification service. |
+ * | `gpgverify_unavailable` | The signature verification service
+ * is currently unavailable. |
  * | `unsigned` | The object does not include a signature. |
- * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
- * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
- * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+ * | `unknown_signature_type` | A
+ * non-PGP signature was found in the commit. |
+ * | `no_user` | No user was associated with the `committer` email address in
+ * the commit. |
+ * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the
+ * email address is not verified on her/his account. |
+ * | `bad_email` | The `committer` email address in the commit is not
+ * included in the identities of the PGP key that made the signature. |
+ * | `unknown_key` | The key that made the signature
+ * has not been registered with any user's account. |
+ * | `malformed_signature` | There was an error parsing the signature.
+ * |
+ * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the
+ * signature. |
  * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-commit}
  * Tags: repos
@@ -26056,9 +27372,13 @@ export async function reposGetCommit<FetcherData>(
 }
 /**
  * List check runs for a Git reference
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  *
- * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+ * Lists check runs for a
+ * commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a
+ * private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have
+ * the `repo` scope to get check runs in a private repository.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-runs-for-a-git-reference}
  * Tags: checks
  */
@@ -26110,9 +27430,13 @@ export async function checksListForRef<FetcherData>(
 }
 /**
  * List check suites for a Git reference
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
+ * to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
+ * `head_branch`.
  *
- * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+ * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps
+ * must have the `checks:read` permission on a private repository or pull access to a public repository to list check
+ * suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
  * Learn more at {@link https://docs.github.com/rest/reference/checks#list-check-suites-for-a-git-reference}
  * Tags: checks
  */
@@ -26155,15 +27479,20 @@ export async function checksListSuitesForRef<FetcherData>(
 }
 /**
  * Get the combined status for a specific reference
- * Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.
+ * Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a
+ * SHA, a branch name, or a tag name.
  *
- * The most recent status for each context is returned, up to 100. This field [paginates](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination) if there are over 100 contexts.
+ * The most recent status for each context is returned, up to 100. This field
+ * [paginates](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination) if there are over 100
+ * contexts.
  *
  * Additionally, a combined `state` is returned. The `state` is one of:
  *
- * *   **failure** if any of the contexts report as `error` or `failure`
+ * *   **failure** if any of the contexts
+ * report as `error` or `failure`
  * *   **pending** if there are no statuses or a context is `pending`
- * *   **success** if the latest status for all contexts is `success`
+ * *   **success** if the
+ * latest status for all contexts is `success`
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-combined-status-for-a-specific-reference}
  * Tags: repos
  */
@@ -26194,7 +27523,9 @@ export async function reposGetCombinedStatusForRef<FetcherData>(
 }
 /**
  * List commit statuses for a reference
- * Users with pull access in a repository can view commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name. Statuses are returned in reverse chronological order. The first status in the list will be the latest one.
+ * Users with pull access in a repository can view commit statuses for a given ref. The ref can be a SHA, a branch name, or
+ * a tag name. Statuses are returned in reverse chronological order. The first status in the list will be the latest
+ * one.
  *
  * This resource is also available via a legacy route: `GET /repos/:owner/:repo/statuses/:ref`.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-commit-statuses-for-a-reference}
@@ -26231,7 +27562,9 @@ export async function reposListCommitStatusesForRef<FetcherData>(
  * Get the code of conduct for a repository
  * Returns the contents of the repository's code of conduct file, if one is detected.
  *
- * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
+ * A code of conduct is detected if
+ * there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it
+ * is using fuzzy matching.
  * Learn more at {@link https://docs.github.com/rest/reference/codes-of-conduct#get-the-code-of-conduct-for-a-repository}
  * Tags: codes-of-conduct
  */
@@ -26258,15 +27591,20 @@ export async function codesOfConductGetForRepo<FetcherData>(
 /**
  * Get community profile metrics
  * This endpoint will return all community profile metrics, including an
- * overall health score, repository description, the presence of documentation, detected
- * code of conduct, detected license, and the presence of ISSUE\_TEMPLATE, PULL\_REQUEST\_TEMPLATE,
+ * overall health score, repository description, the
+ * presence of documentation, detected
+ * code of conduct, detected license, and the presence of ISSUE\_TEMPLATE,
+ * PULL\_REQUEST\_TEMPLATE,
  * README, and CONTRIBUTING files.
  *
- * The `health_percentage` score is defined as a percentage of how many of
+ * The `health_percentage` score is defined as a percentage of
+ * how many of
  * these four documents are present: README, CONTRIBUTING, LICENSE, and
- * CODE_OF_CONDUCT. For example, if all four documents are present, then
+ * CODE_OF_CONDUCT. For example, if all
+ * four documents are present, then
  * the `health_percentage` is `100`. If only one is present, then the
- * `health_percentage` is `25`.
+ * `health_percentage`
+ * is `25`.
  *
  * `content_reports_enabled` is only returned for organization-owned repositories.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-community-profile-metrics}
@@ -26294,46 +27632,78 @@ export async function reposGetCommunityProfileMetrics<FetcherData>(
 }
 /**
  * Compare two commits
- * The `basehead` param is comprised of two parts: `base` and `head`. Both must be branch names in `repo`. To compare branches across other repositories in the same network as `repo`, use the format `<USERNAME>:branch`.
+ * The `basehead` param is comprised of two parts: `base` and `head`. Both must be branch names in `repo`. To compare
+ * branches across other repositories in the same network as `repo`, use the format `<USERNAME>:branch`.
  *
- * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+ * The response from
+ * the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order.
+ * Pass the appropriate [media
+ * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and
+ * patch formats.
  *
- * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
+ * The response also includes details on the files that were changed between the two commits. This includes
+ * the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change
+ * itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the
+ * file, and files with a `modified` status have a `patch` field showing the changes made to the file.
  *
- * **Working with large comparisons**
+ * **Working with
+ * large comparisons**
  *
- * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
+ * To process a response with a large number of commits, you can use (`per_page` or `page`) to
+ * paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all
+ * changed files for the entire comparison. For more information on working with pagination, see "[Traversing with
+ * pagination](/rest/guides/traversing-with-pagination)."
  *
- * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
+ * When calling this API without any paging parameters (`per_page`
+ * or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire
+ * comparison. When a paging parameter is specified, the first commit in the returned list of each page is the
+ * earliest.
  *
  * **Signature verification object**
  *
- * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+ * The response will include a `verification` object that describes the
+ * result of verifying the commit's signature. The following fields are included in the `verification` object:
  *
- * | Name | Type | Description |
+ * | Name |
+ * Type | Description |
  * | ---- | ---- | ----------- |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
- * | `signature` | `string` | The signature that was extracted from the commit. |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the
+ * signature in this commit to be verified. |
+ * | `reason` | `string` | The reason for verified value. Possible values and
+ * their meanings are enumerated in table below. |
+ * | `signature` | `string` | The signature that was extracted from the
+ * commit. |
  * | `payload` | `string` | The value that was signed. |
  *
- * These are the possible values for `reason` in the `verification` object:
+ * These are the possible values for `reason` in the
+ * `verification` object:
  *
  * | Value | Description |
  * | ----- | ----------- |
- * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * | `expired_key` | The key that made the
+ * signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
+ * the signature. |
  * | `gpgverify_error` | There was an error communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does not include a signature. |
+ * |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
  * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
- * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on her/his account. |
+ * |
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * signature. |
  * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/reference/repos#compare-two-commits}
  * Tags: repos
  */
@@ -26365,11 +27735,18 @@ export async function reposCompareCommits<FetcherData>(
 }
 /**
  * Create a content attachment
- * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
+ * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and
+ * `repository` `full_name` of the content reference from the [`content_reference`
+ * event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
  *
- * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/apps/using-content-attachments/)" for details about content attachments.
+ * The app must create
+ * a content attachment within six hours of the content reference URL being posted. See "[Using content
+ * attachments](https://docs.github.com/apps/using-content-attachments/)" for details about content attachments.
  *
- * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+ * You must
+ * use an [installation access
+ * token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#create-a-content-attachment}
  * Tags: apps
  */
@@ -26417,37 +27794,56 @@ export async function appsCreateContentAttachment<FetcherData>(
 }
 /**
  * Get repository content
- * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
- * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
+ * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you
+ * omit
+ * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what
+ * the API response includes for directories.
  *
- * Files and symlinks support [a custom media type](https://docs.github.com/rest/reference/repos#custom-media-types) for
- * retrieving the raw content or rendered HTML (when supported). All content types support [a custom media
- * type](https://docs.github.com/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
+ * Files and symlinks support [a custom media
+ * type](https://docs.github.com/rest/reference/repos#custom-media-types) for
+ * retrieving the raw content or rendered HTML
+ * (when supported). All content types support [a custom
+ * media
+ * type](https://docs.github.com/rest/reference/repos#custom-media-types) to ensure the content is returned in a
+ * consistent
  * object format.
  *
  * **Note**:
- * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/rest/reference/git#trees).
- * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
+ * *   To get a repository's contents recursively, you can [recursively get the
+ * tree](https://docs.github.com/rest/reference/git#trees).
+ * *   This API has an upper limit of 1,000 files for a directory.
+ * If you need to retrieve more files, use the [Git Trees
  * API](https://docs.github.com/rest/reference/git#get-a-tree).
- * *   This API supports files up to 1 megabyte in size.
+ * *
+ * This API supports files up to 1 megabyte in size.
  *
  * #### If the content is a directory
- * The response will be an array of objects, one object for each item in the directory.
- * When listing the contents of a directory, submodules have their "type" specified as "file". Logically, the value
- * _should_ be "submodule". This behavior exists in API v3 [for backwards compatibility purposes](https://git.io/v1YCW).
- * In the next major version of the API, the type will be returned as "submodule".
+ * The response will be an array of
+ * objects, one object for each item in the directory.
+ * When listing the contents of a directory, submodules have their
+ * "type" specified as "file". Logically, the value
+ * _should_ be "submodule". This behavior exists in API v3 [for backwards
+ * compatibility purposes](https://git.io/v1YCW).
+ * In the next major version of the API, the type will be returned as
+ * "submodule".
  *
  * #### If the content is a symlink
- * If the requested `:path` points to a symlink, and the symlink's target is a normal file in the repository, then the
- * API responds with the content of the file (in the format shown in the example. Otherwise, the API responds with an object
+ * If the requested `:path` points to a symlink, and the symlink's target
+ * is a normal file in the repository, then the
+ * API responds with the content of the file (in the format shown in the
+ * example. Otherwise, the API responds with an object
  * describing the symlink itself.
  *
- * #### If the content is a submodule
- * The `submodule_git_url` identifies the location of the submodule repository, and the `sha` identifies a specific
- * commit within the submodule repository. Git uses the given URL when cloning the submodule repository, and checks out
+ * #### If the content is a
+ * submodule
+ * The `submodule_git_url` identifies the location of the submodule repository, and the `sha` identifies a
+ * specific
+ * commit within the submodule repository. Git uses the given URL when cloning the submodule repository, and
+ * checks out
  * the submodule at that specific commit.
  *
- * If the submodule repository is not hosted on github.com, the Git URLs (`git_url` and `_links["git"]`) and the
+ * If the submodule repository is not hosted on github.com, the Git URLs
+ * (`git_url` and `_links["git"]`) and the
  * github.com URLs (`html_url` and `_links["html"]`) will have null values.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-content}
  * Tags: repos
@@ -26581,11 +27977,15 @@ export async function reposCreateOrUpdateFileContents<FetcherData>(
  * Delete a file
  * Deletes a file in a repository.
  *
- * You can provide an additional `committer` parameter, which is an object containing information about the committer. Or, you can provide an `author` parameter, which is an object containing information about the author.
+ * You can provide an additional `committer` parameter, which is an object containing
+ * information about the committer. Or, you can provide an `author` parameter, which is an object containing information
+ * about the author.
  *
- * The `author` section is optional and is filled in with the `committer` information if omitted. If the `committer` information is omitted, the authenticated user's information is used.
+ * The `author` section is optional and is filled in with the `committer` information if omitted. If the
+ * `committer` information is omitted, the authenticated user's information is used.
  *
- * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
+ * You must provide values for both
+ * `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-file}
  * Tags: repos
  */
@@ -26656,9 +28056,14 @@ export async function reposDeleteFile<FetcherData>(
 }
 /**
  * List repository contributors
- * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order. This endpoint may return information that is a few hours old because the GitHub REST API v3 caches contributor data to improve performance.
+ * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending
+ * order. This endpoint may return information that is a few hours old because the GitHub REST API v3 caches contributor
+ * data to improve performance.
  *
- * GitHub identifies contributors by author email address. This endpoint groups contribution counts by GitHub user, which includes all associated email addresses. To improve performance, only the first 500 author email addresses in the repository link to GitHub users. The rest will appear as anonymous contributors without associated GitHub user information.
+ * GitHub identifies contributors by author email address. This endpoint groups contribution
+ * counts by GitHub user, which includes all associated email addresses. To improve performance, only the first 500 author
+ * email addresses in the repository link to GitHub users. The rest will appear as anonymous contributors without
+ * associated GitHub user information.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-contributors}
  * Tags: repos
  */
@@ -26729,49 +28134,74 @@ export async function reposListDeployments<FetcherData>(
  * Create a deployment
  * Deployments offer a few configurable parameters with certain defaults.
  *
- * The `ref` parameter can be any named branch, tag, or SHA. At GitHub we often deploy branches and verify them
+ * The `ref` parameter can be any named branch,
+ * tag, or SHA. At GitHub we often deploy branches and verify them
  * before we merge a pull request.
  *
- * The `environment` parameter allows deployments to be issued to different runtime environments. Teams often have
- * multiple environments for verifying their applications, such as `production`, `staging`, and `qa`. This parameter
- * makes it easier to track which environments have requested deployments. The default environment is `production`.
+ * The `environment`
+ * parameter allows deployments to be issued to different runtime environments. Teams often have
+ * multiple environments for
+ * verifying their applications, such as `production`, `staging`, and `qa`. This parameter
+ * makes it easier to track which
+ * environments have requested deployments. The default environment is `production`.
  *
- * The `auto_merge` parameter is used to ensure that the requested ref is not behind the repository's default branch. If
- * the ref _is_ behind the default branch for the repository, we will attempt to merge it for you. If the merge succeeds,
- * the API will return a successful merge commit. If merge conflicts prevent the merge from succeeding, the API will
+ * The `auto_merge` parameter is used to
+ * ensure that the requested ref is not behind the repository's default branch. If
+ * the ref _is_ behind the default branch
+ * for the repository, we will attempt to merge it for you. If the merge succeeds,
+ * the API will return a successful merge
+ * commit. If merge conflicts prevent the merge from succeeding, the API will
  * return a failure response.
  *
- * By default, [commit statuses](https://docs.github.com/rest/reference/repos#statuses) for every submitted context must be in a `success`
- * state. The `required_contexts` parameter allows you to specify a subset of contexts that must be `success`, or to
- * specify contexts that have not yet been submitted. You are not required to use commit statuses to deploy. If you do
+ * By default,
+ * [commit statuses](https://docs.github.com/rest/reference/repos#statuses) for every submitted context must be in a
+ * `success`
+ * state. The `required_contexts` parameter allows you to specify a subset of contexts that must be `success`, or
+ * to
+ * specify contexts that have not yet been submitted. You are not required to use commit statuses to deploy. If you
+ * do
  * not require any contexts or create any commit statuses, the deployment will always succeed.
  *
- * The `payload` parameter is available for any extra information that a deployment system might need. It is a JSON text
- * field that will be passed on when a deployment event is dispatched.
+ * The `payload` parameter
+ * is available for any extra information that a deployment system might need. It is a JSON text
+ * field that will be passed
+ * on when a deployment event is dispatched.
  *
- * The `task` parameter is used by the deployment system to allow different execution paths. In the web world this might
- * be `deploy:migrations` to run schema changes on the system. In the compiled world this could be a flag to compile an
+ * The `task` parameter is used by the deployment system to allow different
+ * execution paths. In the web world this might
+ * be `deploy:migrations` to run schema changes on the system. In the compiled
+ * world this could be a flag to compile an
  * application with debugging enabled.
  *
- * Users with `repo` or `repo_deployment` scopes can create a deployment for a given ref.
+ * Users with `repo` or `repo_deployment`
+ * scopes can create a deployment for a given ref.
  *
  * #### Merged branch response
- * You will see this response when GitHub automatically merges the base branch into the topic branch instead of creating
- * a deployment. This auto-merge happens when:
+ * You will see this response when GitHub
+ * automatically merges the base branch into the topic branch instead of creating
+ * a deployment. This auto-merge happens
+ * when:
  * *   Auto-merge option is enabled in the repository
- * *   Topic branch does not include the latest changes on the base branch, which is `master` in the response example
+ * *   Topic branch does not include the latest changes on the
+ * base branch, which is `master` in the response example
  * *   There are no merge conflicts
  *
- * If there are no new commits in the base branch, a new request to create a deployment should give a successful
+ * If there are no new commits in
+ * the base branch, a new request to create a deployment should give a successful
  * response.
  *
- * #### Merge conflict response
- * This error happens when the `auto_merge` option is enabled and when the default branch (in this case `master`), can't
+ * #### Merge conflict
+ * response
+ * This error happens when the `auto_merge` option is enabled and when the default branch (in this case `master`),
+ * can't
  * be merged into the branch that's being deployed (in this case `topic-branch`), due to merge conflicts.
  *
- * #### Failed commit status checks
- * This error happens when the `required_contexts` parameter indicates that one or more contexts need to have a `success`
- * status for the commit to be deployed, but one or more of the required contexts do not have a state of `success`.
+ * ####
+ * Failed commit status checks
+ * This error happens when the `required_contexts` parameter indicates that one or more
+ * contexts need to have a `success`
+ * status for the commit to be deployed, but one or more of the required contexts do not
+ * have a state of `success`.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deployment}
  * Tags: repos
  */
@@ -26873,14 +28303,19 @@ export async function reposGetDeployment<FetcherData>(
 }
 /**
  * Delete a deployment
- * To ensure there can always be an active deployment, you can only delete an _inactive_ deployment. Anyone with `repo` or `repo_deployment` scopes can delete an inactive deployment.
+ * To ensure there can always be an active deployment, you can only delete an _inactive_ deployment. Anyone with `repo` or
+ * `repo_deployment` scopes can delete an inactive deployment.
  *
  * To set a deployment as inactive, you must:
  *
- * *   Create a new deployment that is active so that the system has a record of the current state, then delete the previously active deployment.
+ * *   Create a
+ * new deployment that is active so that the system has a record of the current state, then delete the previously active
+ * deployment.
  * *   Mark the active deployment as inactive by adding any non-successful deployment status.
  *
- * For more information, see "[Create a deployment](https://docs.github.com/rest/reference/repos/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/rest/reference/repos#create-a-deployment-status)."
+ * For more
+ * information, see "[Create a deployment](https://docs.github.com/rest/reference/repos/#create-a-deployment)" and "[Create
+ * a deployment status](https://docs.github.com/rest/reference/repos#create-a-deployment-status)."
  * Learn more at {@link https://docs.github.com/rest/reference/repos#delete-a-deployment}
  * Tags: repos
  */
@@ -26947,7 +28382,9 @@ export async function reposListDeploymentStatuses<FetcherData>(
  * Create a deployment status
  * Users with `push` access can create deployment statuses for a given deployment.
  *
- * GitHub Apps require `read & write` access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth Apps require the `repo_deployment` scope.
+ * GitHub Apps require `read & write`
+ * access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth Apps require the
+ * `repo_deployment` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-deployment-status}
  * Tags: repos
  */
@@ -27048,16 +28485,27 @@ export async function reposGetDeploymentStatus<FetcherData>(
 }
 /**
  * Create a repository dispatch event
- * You can use this endpoint to trigger a webhook event called `repository_dispatch` when you want activity that happens outside of GitHub to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions workflow or GitHub App to run when the `repository_dispatch` event occurs. For an example `repository_dispatch` webhook payload, see "[RepositoryDispatchEvent](https://docs.github.com/webhooks/event-payloads/#repository_dispatch)."
+ * You can use this endpoint to trigger a webhook event called `repository_dispatch` when you want activity that happens
+ * outside of GitHub to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions
+ * workflow or GitHub App to run when the `repository_dispatch` event occurs. For an example `repository_dispatch` webhook
+ * payload, see "[RepositoryDispatchEvent](https://docs.github.com/webhooks/event-payloads/#repository_dispatch)."
  *
- * The `client_payload` parameter is available for any extra information that your workflow might need. This parameter is a JSON payload that will be passed on when the webhook event is dispatched. For example, the `client_payload` can include a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test to debug your workflow.
+ * The
+ * `client_payload` parameter is available for any extra information that your workflow might need. This parameter is a
+ * JSON payload that will be passed on when the webhook event is dispatched. For example, the `client_payload` can include
+ * a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test
+ * to debug your workflow.
  *
  * This endpoint requires write access to the repository by providing either:
  *
- *   - Personal access tokens with `repo` scope. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help documentation.
+ *   - Personal access
+ * tokens with `repo` scope. For more information, see "[Creating a personal access token for the command
+ * line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help
+ * documentation.
  *   - GitHub Apps with both `metadata:read` and `contents:read&write` permissions.
  *
- * This input example shows how you can use the `client_payload` as a test to debug your workflow.
+ * This input example
+ * shows how you can use the `client_payload` as a test to debug your workflow.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-dispatch-event}
  * Tags: repos
  */
@@ -27098,7 +28546,9 @@ export async function reposCreateDispatchEvent<FetcherData>(
  * Get all environments
  * Get all environments for a repository.
  *
- * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone with read access to the repository can use this endpoint. If the
+ * repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-environments}
  * Tags: repos
  */
@@ -27139,7 +28589,8 @@ export async function reposGetAllEnvironments<FetcherData>(
 }
 /**
  * Get an environment
- * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access
+ * token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-an-environment}
  * Tags: repos
  */
@@ -27164,13 +28615,20 @@ export async function reposGetEnvironment<FetcherData>(
 }
 /**
  * Create or update an environment
- * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
+ * Create or update an environment with protection rules, such as required reviewers. For more information about
+ * environment protection rules, see
+ * "[Environments](/actions/reference/environments#environment-protection-rules)."
  *
- * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
+ * **Note:** Although you can use this
+ * operation to specify that only branches that match specified name patterns can deploy to this environment, you must use
+ * the UI to set the name patterns. For more information, see
+ * "[Environments](/actions/reference/environments#deployment-branches)."
  *
- * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
+ * **Note:** To create or update secrets for an
+ * environment, see "[Secrets](/rest/reference/actions#secrets)."
  *
- * You must authenticate using an access token with the repo scope to use this endpoint.
+ * You must authenticate using an access token with the
+ * repo scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-or-update-an-environment}
  * Tags: repos
  */
@@ -27303,7 +28761,9 @@ export async function reposListForks<FetcherData>(
  * Create a fork
  * Create a fork for the authenticated user.
  *
- * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Support](https://support.github.com/contact?tags=rest-api).
+ * **Note**: Forking a Repository happens asynchronously. You may have to wait a
+ * short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact
+ * [GitHub Support](https://support.github.com/contact?tags=rest-api).
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-fork}
  * Tags: repos
  */
@@ -27385,7 +28845,8 @@ export async function gitCreateBlob<FetcherData>(
  * Get a blob
  * The `content` in the response will always be Base64 encoded.
  *
- * _Note_: This API supports blobs up to 100 megabytes in size.
+ * _Note_: This API supports blobs up to 100 megabytes in
+ * size.
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-blob}
  * Tags: git
  */
@@ -27417,34 +28878,52 @@ export async function gitGetBlob<FetcherData>(
  * Create a commit
  * Creates a new Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
  *
- * **Signature verification object**
+ * **Signature
+ * verification object**
  *
- * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+ * The response will include a `verification` object that describes the result of verifying the
+ * commit's signature. The following fields are included in the `verification` object:
  *
  * | Name | Type | Description |
- * | ---- | ---- | ----------- |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+ * |
+ * ---- | ---- | ----------- |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit
+ * to be verified. |
+ * | `reason` | `string` | The reason for verified value. Possible values and their meanings are
+ * enumerated in table below. |
  * | `signature` | `string` | The signature that was extracted from the commit. |
- * | `payload` | `string` | The value that was signed. |
+ * | `payload`
+ * | `string` | The value that was signed. |
  *
  * These are the possible values for `reason` in the `verification` object:
  *
- * | Value | Description |
+ * |
+ * Value | Description |
  * | ----- | ----------- |
  * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does not include a signature. |
+ * |
+ * `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * |
+ * `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
  * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
- * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on her/his account. |
+ * |
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * signature. |
  * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-commit}
  * Tags: git
  */
@@ -27527,34 +29006,52 @@ export async function gitCreateCommit<FetcherData>(
  * Get a commit
  * Gets a Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
  *
- * **Signature verification object**
+ * **Signature
+ * verification object**
  *
- * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+ * The response will include a `verification` object that describes the result of verifying the
+ * commit's signature. The following fields are included in the `verification` object:
  *
  * | Name | Type | Description |
- * | ---- | ---- | ----------- |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+ * |
+ * ---- | ---- | ----------- |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit
+ * to be verified. |
+ * | `reason` | `string` | The reason for verified value. Possible values and their meanings are
+ * enumerated in table below. |
  * | `signature` | `string` | The signature that was extracted from the commit. |
- * | `payload` | `string` | The value that was signed. |
+ * | `payload`
+ * | `string` | The value that was signed. |
  *
  * These are the possible values for `reason` in the `verification` object:
  *
- * | Value | Description |
+ * |
+ * Value | Description |
  * | ----- | ----------- |
  * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does not include a signature. |
+ * |
+ * `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * |
+ * `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
  * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
- * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on her/his account. |
+ * |
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * signature. |
  * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-commit}
  * Tags: git
  */
@@ -27580,13 +29077,22 @@ export async function gitGetCommit<FetcherData>(
 }
 /**
  * List matching references
- * Returns an array of references from your Git database that match the supplied name. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't exist in the repository, but existing refs start with `:ref`, they will be returned as an array.
+ * Returns an array of references from your Git database that match the supplied name. The `:ref` in the URL must be
+ * formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't exist in the
+ * repository, but existing refs start with `:ref`, they will be returned as an array.
  *
- * When you use this endpoint without providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
+ * When you use this endpoint without
+ * providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if
+ * they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
  *
- * **Note:** You need to explicitly [request a pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+ * **Note:** You need to
+ * explicitly [request a pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) to trigger a test
+ * merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull
+ * requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
  *
- * If you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`.
+ * If
+ * you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can
+ * still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`.
  * Learn more at {@link https://docs.github.com/rest/reference/git#list-matching-references}
  * Tags: git
  */
@@ -27618,9 +29124,14 @@ export async function gitListMatchingRefs<FetcherData>(
 }
 /**
  * Get a reference
- * Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
+ * Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for
+ * branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
  *
- * **Note:** You need to explicitly [request a pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+ * **Note:**
+ * You need to explicitly [request a pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) to
+ * trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking
+ * mergeability of pull
+ * requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-reference}
  * Tags: git
  */
@@ -27646,7 +29157,8 @@ export async function gitGetRef<FetcherData>(
 }
 /**
  * Create a reference
- * Creates a reference for your repository. You are unable to create new references for empty repositories, even if the commit SHA-1 hash used exists. Empty repositories are repositories without branches.
+ * Creates a reference for your repository. You are unable to create new references for empty repositories, even if the
+ * commit SHA-1 hash used exists. Empty repositories are repositories without branches.
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-reference}
  * Tags: git
  */
@@ -27752,35 +29264,56 @@ export async function gitDeleteRef<FetcherData>(
 }
 /**
  * Create a tag object
- * Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
+ * Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an
+ * annotated tag in Git, you have to do this call to create the tag object, and then
+ * [create](https://docs.github.com/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to
+ * create a lightweight tag, you only have to [create](https://docs.github.com/rest/reference/git#create-a-reference) the
+ * tag reference - this call would be unnecessary.
  *
  * **Signature verification object**
  *
- * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+ * The response will include a
+ * `verification` object that describes the result of verifying the commit's signature. The following fields are included
+ * in the `verification` object:
  *
  * | Name | Type | Description |
  * | ---- | ---- | ----------- |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
- * | `signature` | `string` | The signature that was extracted from the commit. |
+ * | `verified` | `boolean` |
+ * Indicates whether GitHub considers the signature in this commit to be verified. |
+ * | `reason` | `string` | The reason for
+ * verified value. Possible values and their meanings are enumerated in table below. |
+ * | `signature` | `string` | The
+ * signature that was extracted from the commit. |
  * | `payload` | `string` | The value that was signed. |
  *
- * These are the possible values for `reason` in the `verification` object:
+ * These are the
+ * possible values for `reason` in the `verification` object:
  *
  * | Value | Description |
  * | ----- | ----------- |
- * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * |
+ * `expired_key` | The key that made the signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the
+ * usage flags in the GPG key that made the signature. |
+ * | `gpgverify_error` | There was an error communicating with the
+ * signature verification service. |
+ * | `gpgverify_unavailable` | The signature verification service is currently
+ * unavailable. |
  * | `unsigned` | The object does not include a signature. |
- * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
- * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
- * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+ * | `unknown_signature_type` | A non-PGP
+ * signature was found in the commit. |
+ * | `no_user` | No user was associated with the `committer` email address in the
+ * commit. |
+ * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email
+ * address is not verified on her/his account. |
+ * | `bad_email` | The `committer` email address in the commit is not
+ * included in the identities of the PGP key that made the signature. |
+ * | `unknown_key` | The key that made the signature
+ * has not been registered with any user's account. |
+ * | `malformed_signature` | There was an error parsing the signature.
+ * |
+ * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the
+ * signature. |
  * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-tag-object}
  * Tags: git
@@ -27846,32 +29379,49 @@ export async function gitCreateTag<FetcherData>(
  * Get a tag
  * **Signature verification object**
  *
- * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+ * The response will include a `verification` object that describes the result of
+ * verifying the commit's signature. The following fields are included in the `verification` object:
  *
- * | Name | Type | Description |
+ * | Name | Type |
+ * Description |
  * | ---- | ---- | ----------- |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
- * | `signature` | `string` | The signature that was extracted from the commit. |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the signature
+ * in this commit to be verified. |
+ * | `reason` | `string` | The reason for verified value. Possible values and their
+ * meanings are enumerated in table below. |
+ * | `signature` | `string` | The signature that was extracted from the commit.
+ * |
  * | `payload` | `string` | The value that was signed. |
  *
- * These are the possible values for `reason` in the `verification` object:
+ * These are the possible values for `reason` in the
+ * `verification` object:
  *
  * | Value | Description |
  * | ----- | ----------- |
- * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * | `expired_key` | The key that made the
+ * signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
+ * the signature. |
  * | `gpgverify_error` | There was an error communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does not include a signature. |
+ * |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
  * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
- * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on her/his account. |
+ * |
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * signature. |
  * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-tag}
  * Tags: git
  */
@@ -27897,9 +29447,14 @@ export async function gitGetTag<FetcherData>(
 }
 /**
  * Create a tree
- * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
+ * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this
+ * endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
  *
- * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/rest/reference/git#update-a-reference)."
+ * If you
+ * use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then
+ * update a branch to point to the commit. For more information see "[Create a
+ * commit](https://docs.github.com/rest/reference/git#create-a-commit)" and "[Update a
+ * reference](https://docs.github.com/rest/reference/git#update-a-reference)."
  * Learn more at {@link https://docs.github.com/rest/reference/git#create-a-tree}
  * Tags: git
  */
@@ -27967,7 +29522,9 @@ export async function gitCreateTree<FetcherData>(
  * Get a tree
  * Returns a single tree using the SHA1 value for that tree.
  *
- * If `truncated` is `true` in the response then the number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of fetching trees, and fetch one sub-tree at a time.
+ * If `truncated` is `true` in the response then the number of
+ * items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of
+ * fetching trees, and fetch one sub-tree at a time.
  * Learn more at {@link https://docs.github.com/rest/reference/git#get-a-tree}
  * Tags: git
  */
@@ -28029,7 +29586,8 @@ export async function reposListWebhooks<FetcherData>(
 }
 /**
  * Create a repository webhook
- * Repositories can have multiple webhooks installed. Each webhook should have a unique `config`. Multiple webhooks can
+ * Repositories can have multiple webhooks installed. Each webhook should have a unique `config`. Multiple webhooks
+ * can
  * share the same `config` as long as those webhooks do not have any `events` that overlap.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-webhook}
  * Tags: repos
@@ -28096,7 +29654,8 @@ export async function reposCreateWebhook<FetcherData>(
 }
 /**
  * Get a repository webhook
- * Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/reference/repos#get-a-webhook-configuration-for-a-repository)."
+ * Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook
+ * configuration for a repository](/rest/reference/repos#get-a-webhook-configuration-for-a-repository)."
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-webhook}
  * Tags: repos
  */
@@ -28122,7 +29681,10 @@ export async function reposGetWebhook<FetcherData>(
 }
 /**
  * Update a repository webhook
- * Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/reference/repos#update-a-webhook-configuration-for-a-repository)."
+ * Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret`
+ * or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties,
+ * use "[Update a webhook configuration for a
+ * repository](/rest/reference/repos#update-a-webhook-configuration-for-a-repository)."
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-repository-webhook}
  * Tags: repos
  */
@@ -28216,9 +29778,11 @@ export async function reposDeleteWebhook<FetcherData>(
 }
 /**
  * Get a webhook configuration for a repository
- * Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
+ * Returns the webhook configuration for a repository. To get more information about the webhook, including the `active`
+ * state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
  *
- * Access tokens must have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
+ * Access tokens must
+ * have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
@@ -28245,9 +29809,12 @@ export async function reposGetWebhookConfigForRepo<FetcherData>(
 }
 /**
  * Update a webhook configuration for a repository
- * Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
+ * Updates the webhook configuration for a repository. To update more information about the webhook, including the `active`
+ * state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
  *
- * Access tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write` permission.
+ * Access
+ * tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write`
+ * permission.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
@@ -28403,7 +29970,9 @@ export async function reposPingWebhook<FetcherData>(
 }
 /**
  * Test the push repository webhook
- * This will trigger the hook with the latest push to the current repository if the hook is subscribed to `push` events. If the hook is not subscribed to `push` events, the server will respond with 204 but no test POST will be generated.
+ * This will trigger the hook with the latest push to the current repository if the hook is subscribed to `push` events. If
+ * the hook is not subscribed to `push` events, the server will respond with 204 but no test POST will be
+ * generated.
  *
  * **Note**: Previously `/repos/:owner/:repo/hooks/:hook_id/test`
  * Learn more at {@link https://docs.github.com/rest/reference/repos#test-the-push-repository-webhook}
@@ -28434,36 +30003,70 @@ export async function reposTestPushWebhook<FetcherData>(
  *
  * **Import status**
  *
- * This section includes details about the possible values of the `status` field of the Import Progress response.
+ * This section includes details about the possible values of the
+ * `status` field of the Import Progress response.
  *
- * An import that does not have errors will progress through these steps:
+ * An import that does not have errors will progress through these
+ * steps:
  *
- * *   `detecting` - the "detection" step of the import is in progress because the request did not include a `vcs` parameter. The import is identifying the type of source control present at the URL.
- * *   `importing` - the "raw" step of the import is in progress. This is where commit data is fetched from the original repository. The import progress response will include `commit_count` (the total number of raw commits that will be imported) and `percent` (0 - 100, the current progress through the import).
- * *   `mapping` - the "rewrite" step of the import is in progress. This is where SVN branches are converted to Git branches, and where author updates are applied. The import progress response does not include progress information.
- * *   `pushing` - the "push" step of the import is in progress. This is where the importer updates the repository on GitHub. The import progress response will include `push_percent`, which is the percent value reported by `git push` when it is "Writing objects".
- * *   `complete` - the import is complete, and the repository is ready on GitHub.
+ * *   `detecting` - the "detection" step of the import is in progress because the request did not include a `vcs`
+ * parameter. The import is identifying the type of source control present at the URL.
+ * *   `importing` - the "raw" step of
+ * the import is in progress. This is where commit data is fetched from the original repository. The import progress
+ * response will include `commit_count` (the total number of raw commits that will be imported) and `percent` (0 - 100, the
+ * current progress through the import).
+ * *   `mapping` - the "rewrite" step of the import is in progress. This is where SVN
+ * branches are converted to Git branches, and where author updates are applied. The import progress response does not
+ * include progress information.
+ * *   `pushing` - the "push" step of the import is in progress. This is where the importer
+ * updates the repository on GitHub. The import progress response will include `push_percent`, which is the percent value
+ * reported by `git push` when it is "Writing objects".
+ * *   `complete` - the import is complete, and the repository is
+ * ready on GitHub.
  *
  * If there are problems, you will see one of these in the `status` field:
  *
- * *   `auth_failed` - the import requires authentication in order to connect to the original repository. To update authentication for the import, please see the [Update an import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
- * *   `error` - the import encountered an error. The import progress response will include the `failed_step` and an error message. Contact [GitHub Support](https://support.github.com/contact?tags=rest-api) for more information.
- * *   `detection_needs_auth` - the importer requires authentication for the originating repository to continue detection. To update authentication for the import, please see the [Update an import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
- * *   `detection_found_nothing` - the importer didn't recognize any source control at the URL. To resolve, [Cancel the import](https://docs.github.com/rest/reference/migrations#cancel-an-import) and [retry](https://docs.github.com/rest/reference/migrations#start-an-import) with the correct URL.
- * *   `detection_found_multiple` - the importer found several projects or repositories at the provided URL. When this is the case, the Import Progress response will also include a `project_choices` field with the possible project choices as values. To update project choice, please see the [Update an import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
+ * *   `auth_failed` - the
+ * import requires authentication in order to connect to the original repository. To update authentication for the import,
+ * please see the [Update an import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
+ * *
+ * `error` - the import encountered an error. The import progress response will include the `failed_step` and an error
+ * message. Contact [GitHub Support](https://support.github.com/contact?tags=rest-api) for more information.
+ * *
+ * `detection_needs_auth` - the importer requires authentication for the originating repository to continue detection. To
+ * update authentication for the import, please see the [Update an
+ * import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
+ * *   `detection_found_nothing` - the
+ * importer didn't recognize any source control at the URL. To resolve, [Cancel the
+ * import](https://docs.github.com/rest/reference/migrations#cancel-an-import) and
+ * [retry](https://docs.github.com/rest/reference/migrations#start-an-import) with the correct URL.
+ * *
+ * `detection_found_multiple` - the importer found several projects or repositories at the provided URL. When this is the
+ * case, the Import Progress response will also include a `project_choices` field with the possible project choices as
+ * values. To update project choice, please see the [Update an
+ * import](https://docs.github.com/rest/reference/migrations#update-an-import) section.
  *
- * **The project_choices field**
+ * **The project_choices
+ * field**
  *
- * When multiple projects are found at the provided URL, the response hash will include a `project_choices` field, the value of which is an array of hashes each representing a project choice. The exact key/value pairs of the project hashes will differ depending on the version control type.
+ * When multiple projects are found at the provided URL, the response hash will include a `project_choices` field,
+ * the value of which is an array of hashes each representing a project choice. The exact key/value pairs of the project
+ * hashes will differ depending on the version control type.
  *
  * **Git LFS related fields**
  *
- * This section includes details about Git LFS related fields that may be present in the Import Progress response.
+ * This section includes details
+ * about Git LFS related fields that may be present in the Import Progress response.
  *
- * *   `use_lfs` - describes whether the import has been opted in or out of using Git LFS. The value can be `opt_in`, `opt_out`, or `undecided` if no action has been taken.
- * *   `has_large_files` - the boolean value describing whether files larger than 100MB were found during the `importing` step.
- * *   `large_files_size` - the total size in gigabytes of files larger than 100MB found in the originating repository.
- * *   `large_files_count` - the total number of files larger than 100MB found in the originating repository. To see a list of these files, make a "Get Large Files" request.
+ * *   `use_lfs` - describes whether the
+ * import has been opted in or out of using Git LFS. The value can be `opt_in`, `opt_out`, or `undecided` if no action has
+ * been taken.
+ * *   `has_large_files` - the boolean value describing whether files larger than 100MB were found during the
+ * `importing` step.
+ * *   `large_files_size` - the total size in gigabytes of files larger than 100MB found in the
+ * originating repository.
+ * *   `large_files_count` - the total number of files larger than 100MB found in the originating
+ * repository. To see a list of these files, make a "Get Large Files" request.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-an-import-status}
  * Tags: migrations
  */
@@ -28539,7 +30142,8 @@ export async function migrationsStartImport<FetcherData>(
 }
 /**
  * Update an import
- * An import can be updated with credentials or a project choice by passing in the appropriate parameters in this API
+ * An import can be updated with credentials or a project choice by passing in the appropriate parameters in this
+ * API
  * request. If no parameters are provided, the import will be restarted.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#update-an-import}
  * Tags: migrations
@@ -28605,9 +30209,14 @@ export async function migrationsCancelImport<FetcherData>(
 }
 /**
  * Get commit authors
- * Each type of source control system represents authors in a different way. For example, a Git commit author has a display name and an email address, but a Subversion commit author just has a username. The GitHub Importer will make the author information valid, but the author might not be correct. For example, it will change the bare Subversion username `hubot` into something like `hubot <hubot@12341234-abab-fefe-8787-fedcba987654>`.
+ * Each type of source control system represents authors in a different way. For example, a Git commit author has a display
+ * name and an email address, but a Subversion commit author just has a username. The GitHub Importer will make the author
+ * information valid, but the author might not be correct. For example, it will change the bare Subversion username `hubot`
+ * into something like `hubot <hubot@12341234-abab-fefe-8787-fedcba987654>`.
  *
- * This endpoint and the [Map a commit author](https://docs.github.com/rest/reference/migrations#map-a-commit-author) endpoint allow you to provide correct Git author information.
+ * This endpoint and the [Map a commit
+ * author](https://docs.github.com/rest/reference/migrations#map-a-commit-author) endpoint allow you to provide correct Git
+ * author information.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-commit-authors}
  * Tags: migrations
  */
@@ -28640,7 +30249,8 @@ export async function migrationsGetCommitAuthors<FetcherData>(
 }
 /**
  * Map a commit author
- * Update an author's identity for the import. Your application can continue updating authors any time before you push new commits to the repository.
+ * Update an author's identity for the import. Your application can continue updating authors any time before you push new
+ * commits to the repository.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#map-a-commit-author}
  * Tags: migrations
  */
@@ -28710,7 +30320,9 @@ export async function migrationsGetLargeFiles<FetcherData>(
 }
 /**
  * Update Git LFS preference
- * You can import repositories from Subversion, Mercurial, and TFS that include files larger than 100MB. This ability is powered by [Git LFS](https://git-lfs.github.com). You can learn more about our LFS feature and working with large files [on our help site](https://help.github.com/articles/versioning-large-files/).
+ * You can import repositories from Subversion, Mercurial, and TFS that include files larger than 100MB. This ability is
+ * powered by [Git LFS](https://git-lfs.github.com). You can learn more about our LFS feature and working with large files
+ * [on our help site](https://help.github.com/articles/versioning-large-files/).
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#update-git-lfs-preference}
  * Tags: migrations
  */
@@ -28744,9 +30356,12 @@ export async function migrationsSetLfsPreference<FetcherData>(
 }
 /**
  * Get a repository installation for the authenticated app
- * Enables an authenticated GitHub App to find the repository's installation information. The installation's account type will be either an organization or a user account, depending which account the repository belongs to.
+ * Enables an authenticated GitHub App to find the repository's installation information. The installation's account type
+ * will be either an organization or a user account, depending which account the repository belongs to.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app}
  * Tags: apps
  */
@@ -28772,7 +30387,8 @@ export async function appsGetRepoInstallation<FetcherData>(
 }
 /**
  * Get interaction restrictions for a repository
- * Shows which type of GitHub user can interact with this repository and when the restriction expires. If there are no restrictions, you will see an empty response.
+ * Shows which type of GitHub user can interact with this repository and when the restriction expires. If there are no
+ * restrictions, you will see an empty response.
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
@@ -28807,7 +30423,10 @@ export async function interactionsGetRestrictionsForRepo<FetcherData>(
 }
 /**
  * Set interaction restrictions for a repository
- * Temporarily restricts interactions to a certain type of GitHub user within the given repository. You must have owner or admin access to set these restrictions. If an interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository.
+ * Temporarily restricts interactions to a certain type of GitHub user within the given repository. You must have owner or
+ * admin access to set these restrictions. If an interaction limit is set for the user or organization that owns this
+ * repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the
+ * interaction limit for a single repository.
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
@@ -28837,7 +30456,10 @@ export async function interactionsSetRestrictionsForRepo<FetcherData>(
 }
 /**
  * Remove interaction restrictions for a repository
- * Removes all interaction restrictions from the given repository. You must have owner or admin access to remove restrictions. If the interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository.
+ * Removes all interaction restrictions from the given repository. You must have owner or admin access to remove
+ * restrictions. If the interaction limit is set for the user or organization that owns this repository, you will receive a
+ * `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single
+ * repository.
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
@@ -28859,7 +30481,8 @@ export async function interactionsRemoveRestrictionsForRepo<FetcherData>(
 }
 /**
  * List repository invitations
- * When authenticating as a user with admin rights to a repository, this endpoint will list all currently open repository invitations.
+ * When authenticating as a user with admin rights to a repository, this endpoint will list all currently open repository
+ * invitations.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-invitations}
  * Tags: repos
  */
@@ -28952,10 +30575,14 @@ export async function reposDeleteInvitation<FetcherData>(
  * List repository issues
  * List issues in a repository.
  *
- * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+ * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue
+ * is a pull request. For this
+ * reason, "Issues" endpoints may return both issues and pull requests in the response. You can
+ * identify pull requests by
+ * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues"
+ * endpoints will be an _issue id_. To find out the pull
+ * request id, use the "[List pull
+ * requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-repository-issues}
  * Tags: issues
  */
@@ -29012,9 +30639,17 @@ export async function issuesListForRepo<FetcherData>(
 }
 /**
  * Create an issue
- * Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://help.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.
+ * Any user with pull access to a repository can create an issue. If [issues are disabled in the
+ * repository](https://help.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint
+ * triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#create-an-issue}
  * Tags: issues
  */
@@ -29239,7 +30874,8 @@ export async function reactionsListForIssueComment<FetcherData>(
 }
 /**
  * Create reaction for an issue comment
- * Create a reaction to an [issue comment](https://docs.github.com/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment.
+ * Create a reaction to an [issue comment](https://docs.github.com/rest/reference/issues#comments). A response with an HTTP
+ * `200` status means that you already added the reaction type to this issue comment.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-an-issue-comment}
  * Tags: reactions
  */
@@ -29283,9 +30919,11 @@ export async function reactionsCreateForIssueComment<FetcherData>(
 }
 /**
  * Delete an issue comment reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
+ * **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete
+ * /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
  *
- * Delete a reaction to an [issue comment](https://docs.github.com/rest/reference/issues#comments).
+ * Delete a reaction to an [issue
+ * comment](https://docs.github.com/rest/reference/issues#comments).
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-an-issue-comment-reaction}
  * Tags: reactions
  */
@@ -29369,17 +31007,28 @@ export async function issuesGetEvent<FetcherData>(
 }
 /**
  * Get an issue
- * The API returns a [`301 Moved Permanently` status](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
- * [transferred](https://help.github.com/articles/transferring-an-issue-to-another-repository/) to another repository. If
- * the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API
- * returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read
- * access, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe
+ * The API returns a [`301 Moved Permanently`
+ * status](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue
+ * was
+ * [transferred](https://help.github.com/articles/transferring-an-issue-to-another-repository/) to another repository.
+ * If
+ * the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the
+ * API
+ * returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has
+ * read
+ * access, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues,
+ * subscribe
  * to the [`issues`](https://docs.github.com/webhooks/event-payloads/#issues) webhook.
  *
- * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+ * **Note**: GitHub's REST
+ * API v3 considers every pull request an issue, but not every issue is a pull request. For this
+ * reason, "Issues" endpoints
+ * may return both issues and pull requests in the response. You can identify pull requests by
+ * the `pull_request` key. Be
+ * aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the
+ * pull
+ * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)"
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#get-an-issue}
  * Tags: issues
  */
@@ -29576,7 +31225,13 @@ export async function issuesListComments<FetcherData>(
 }
 /**
  * Create an issue comment
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#create-an-issue-comment}
  * Tags: issues
  */
@@ -29808,7 +31463,8 @@ export async function issuesRemoveAllLabels<FetcherData>(
 }
 /**
  * Remove a label from an issue
- * Removes the specified label from the issue, and returns the remaining labels on the issue. This endpoint returns a `404 Not Found` status if the label does not exist.
+ * Removes the specified label from the issue, and returns the remaining labels on the issue. This endpoint returns a `404
+ * Not Found` status if the label does not exist.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#remove-a-label-from-an-issue}
  * Tags: issues
  */
@@ -29842,7 +31498,9 @@ export async function issuesRemoveLabel<FetcherData>(
  * Lock an issue
  * Users with push access can lock an issue or pull request's conversation.
  *
- * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note that, if you choose not to pass any
+ * parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
+ * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  * Learn more at {@link https://docs.github.com/rest/reference/issues#lock-an-issue}
  * Tags: issues
  */
@@ -29952,7 +31610,8 @@ export async function reactionsListForIssue<FetcherData>(
 }
 /**
  * Create reaction for an issue
- * Create a reaction to an [issue](https://docs.github.com/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue.
+ * Create a reaction to an [issue](https://docs.github.com/rest/reference/issues/). A response with an HTTP `200` status
+ * means that you already added the reaction type to this issue.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-an-issue}
  * Tags: reactions
  */
@@ -29996,9 +31655,11 @@ export async function reactionsCreateForIssue<FetcherData>(
 }
 /**
  * Delete an issue reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
+ * **Note:** You can also specify a repository by `repository_id` using the route `DELETE
+ * /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
  *
- * Delete a reaction to an [issue](https://docs.github.com/rest/reference/issues/).
+ * Delete a reaction to an
+ * [issue](https://docs.github.com/rest/reference/issues/).
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-an-issue-reaction}
  * Tags: reactions
  */
@@ -30341,7 +32002,8 @@ export async function issuesDeleteLabel<FetcherData>(
 }
 /**
  * List repository languages
- * Lists languages for the specified repository. The value shown for each language is the number of bytes of code written in that language.
+ * Lists languages for the specified repository. The value shown for each language is the number of bytes of code written
+ * in that language.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repository-languages}
  * Tags: repos
  */
@@ -30367,7 +32029,10 @@ export async function reposListLanguages<FetcherData>(
  * Get the license for a repository
  * This method returns the contents of the repository's license file, if one is detected.
  *
- * Similar to [Get repository content](https://docs.github.com/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+ * Similar to [Get repository
+ * content](https://docs.github.com/rest/reference/repos#get-repository-content), this method also supports [custom media
+ * types](https://docs.github.com/rest/overview/media-types) for retrieving the raw license content or rendered license
+ * HTML.
  * Learn more at {@link https://docs.github.com/rest/reference/licenses/#get-the-license-for-a-repository}
  * Tags: licenses
  */
@@ -30684,7 +32349,12 @@ export async function activityListRepoNotificationsForAuthenticatedUser<
 }
 /**
  * Mark repository notifications as read
- * Marks all notifications in a repository as "read" removes them from the [default view on GitHub](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+ * Marks all notifications in a repository as "read" removes them from the [default view on
+ * GitHub](https://github.com/notifications). If the number of notifications is too large to complete in one request, you
+ * will receive a `202 Accepted` status and GitHub will run an asynchronous process to mark notifications as "read." To
+ * check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated
+ * user](https://docs.github.com/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint
+ * and pass the query parameter `all=false`.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#mark-repository-notifications-as-read}
  * Tags: activity
  */
@@ -30743,7 +32413,8 @@ export async function reposGetPages<FetcherData>(
 }
 /**
  * Create a GitHub Pages site
- * Configures a GitHub Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)."
+ * Configures a GitHub Pages site. For more information, see "[About GitHub
+ * Pages](/github/working-with-github-pages/about-github-pages)."
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-github-pages-site}
  * Tags: repos
  */
@@ -30788,7 +32459,8 @@ export async function reposCreatePagesSite<FetcherData>(
 }
 /**
  * Update information about a GitHub Pages site
- * Updates information for a GitHub Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
+ * Updates information for a GitHub Pages site. For more information, see "[About GitHub
+ * Pages](/github/working-with-github-pages/about-github-pages).
  * Learn more at {@link https://docs.github.com/rest/reference/repos#update-information-about-a-github-pages-site}
  * Tags: repos
  */
@@ -30873,9 +32545,13 @@ export async function reposListPagesBuilds<FetcherData>(
 }
 /**
  * Request a GitHub Pages build
- * You can request that your site be built from the latest revision on the default branch. This has the same effect as pushing a commit to your default branch, but does not require an additional commit. Manually triggering page builds can be helpful when diagnosing build warnings and failures.
+ * You can request that your site be built from the latest revision on the default branch. This has the same effect as
+ * pushing a commit to your default branch, but does not require an additional commit. Manually triggering page builds can
+ * be helpful when diagnosing build warnings and failures.
  *
- * Build requests are limited to one concurrent build per repository and one concurrent build per requester. If you request a build while another is still in progress, the second request will be queued until the first completes.
+ * Build requests are limited to one concurrent build per
+ * repository and one concurrent build per requester. If you request a build while another is still in progress, the second
+ * request will be queued until the first completes.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#request-a-github-pages-build}
  * Tags: repos
  */
@@ -30950,9 +32626,13 @@ export async function reposGetPagesBuild<FetcherData>(
  * Get a DNS health check for GitHub Pages
  * Gets a health check of the DNS settings for the `CNAME` record configured for a repository's GitHub Pages.
  *
- * The first request to this endpoint returns a `202 Accepted` status and starts an asynchronous background task to get the results for the domain. After the background task completes, subsequent requests to this endpoint return a `200 OK` status with the health check results in the response.
+ * The first
+ * request to this endpoint returns a `202 Accepted` status and starts an asynchronous background task to get the results
+ * for the domain. After the background task completes, subsequent requests to this endpoint return a `200 OK` status with
+ * the health check results in the response.
  *
- * Users must have admin or owner permissions. GitHub Apps must have the `pages:write` and `administration:write` permission to use this endpoint.
+ * Users must have admin or owner permissions. GitHub Apps must have the
+ * `pages:write` and `administration:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-dns-health-check-for-github-pages}
  * Tags: repos
  */
@@ -30980,7 +32660,8 @@ export async function reposGetPagesHealthCheck<FetcherData>(
 }
 /**
  * List repository projects
- * Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you
+ * do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#list-repository-projects}
  * Tags: projects
  */
@@ -31021,7 +32702,8 @@ export async function projectsListForRepo<FetcherData>(
 }
 /**
  * Create a repository project
- * Creates a repository project board. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * Creates a repository project board. Returns a `404 Not Found` status if projects are disabled in the repository. If you
+ * do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
  * Learn more at {@link https://docs.github.com/rest/reference/projects#create-a-repository-project}
  * Tags: projects
  */
@@ -31065,7 +32747,10 @@ export async function projectsCreateForRepo<FetcherData>(
 }
 /**
  * List pull requests
- * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro,
+ * and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+ * Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-pull-requests}
  * Tags: pulls
  */
@@ -31117,13 +32802,24 @@ export async function pullsList<FetcherData>(
 }
 /**
  * Create a pull request
- * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro,
+ * and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+ * Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+ * To open or update a pull request in a public repository, you must have write access to the head or the
+ * source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to
+ * open or update a pull request.
  *
  * You can create a new pull request.
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-pull-request}
  * Tags: pulls
  */
@@ -31354,7 +33050,8 @@ export async function reactionsListForPullRequestReviewComment<FetcherData>(
 }
 /**
  * Create reaction for a pull request review comment
- * Create a reaction to a [pull request review comment](https://docs.github.com/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment.
+ * Create a reaction to a [pull request review comment](https://docs.github.com/rest/reference/pulls#comments). A response
+ * with an HTTP `200` status means that you already added the reaction type to this pull request review comment.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#create-reaction-for-a-pull-request-review-comment}
  * Tags: reactions
  */
@@ -31398,9 +33095,11 @@ export async function reactionsCreateForPullRequestReviewComment<FetcherData>(
 }
 /**
  * Delete a pull request comment reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
+ * **Note:** You can also specify a repository by `repository_id` using the route `DELETE
+ * /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
  *
- * Delete a reaction to a [pull request review comment](https://docs.github.com/rest/reference/pulls#review-comments).
+ * Delete a reaction to a [pull request
+ * review comment](https://docs.github.com/rest/reference/pulls#review-comments).
  * Learn more at {@link https://docs.github.com/rest/reference/reactions#delete-a-pull-request-comment-reaction}
  * Tags: reactions
  */
@@ -31424,21 +33123,46 @@ export async function reactionsDeleteForPullRequestComment<FetcherData>(
 }
 /**
  * Get a pull request
- * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro,
+ * and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+ * Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
  * Lists details of a pull request by providing its number.
  *
- * When you get, [create](https://docs.github.com/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/rest/reference/pulls#update-a-pull-request) a pull request, GitHub creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+ * When you get,
+ * [create](https://docs.github.com/rest/reference/pulls/#create-a-pull-request), or
+ * [edit](https://docs.github.com/rest/reference/pulls#update-a-pull-request) a pull request, GitHub creates a merge commit
+ * to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the
+ * base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more
+ * information, see "[Checking mergeability of pull
+ * requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
  *
- * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
+ * The
+ * value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub has started a
+ * background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job
+ * finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then
+ * `merge_commit_sha` will be the SHA of the _test_ merge commit.
  *
- * The value of the `merge_commit_sha` attribute changes depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how you merged the pull request:
+ * The value of the `merge_commit_sha` attribute changes
+ * depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the
+ * SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how
+ * you merged the pull request:
  *
- * *   If merged as a [merge commit](https://help.github.com/articles/about-merge-methods-on-github/), `merge_commit_sha` represents the SHA of the merge commit.
- * *   If merged via a [squash](https://help.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits), `merge_commit_sha` represents the SHA of the squashed commit on the base branch.
- * *   If [rebased](https://help.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.
+ * *   If merged as a [merge
+ * commit](https://help.github.com/articles/about-merge-methods-on-github/), `merge_commit_sha` represents the SHA of the
+ * merge commit.
+ * *   If merged via a
+ * [squash](https://help.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits),
+ * `merge_commit_sha` represents the SHA of the squashed commit on the base branch.
+ * *   If
+ * [rebased](https://help.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits),
+ * `merge_commit_sha` represents the commit that the base branch was updated to.
  *
- * Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+ * Pass the appropriate [media
+ * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and
+ * patch formats.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#get-a-pull-request}
  * Tags: pulls
  */
@@ -31465,9 +33189,15 @@ export async function pullsGet<FetcherData>(
 }
 /**
  * Update a pull request
- * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro,
+ * and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+ * Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+ * To open or update a pull request in a public repository, you must have write access to the head or the
+ * source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to
+ * open or update a pull request.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls/#update-a-pull-request}
  * Tags: pulls
  */
@@ -31559,14 +33289,29 @@ export async function pullsListReviewComments<FetcherData>(
 }
 /**
  * Create a review comment for a pull request
+ * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an
+ * issue comment](https://docs.github.com/rest/reference/issues#create-an-issue-comment)." We recommend creating a review
+ * comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line
+ * in the pull request diff.
  *
- * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+ * You can still create a review comment using the `position` parameter. When you use
+ * `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required. For more information, see
+ * the [`comfort-fade` preview
+ * notice](https://docs.github.com/rest/reference/pulls#create-a-review-comment-for-a-pull-request-preview-notices).
  *
- * You can still create a review comment using the `position` parameter. When you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required. For more information, see the [`comfort-fade` preview notice](https://docs.github.com/rest/reference/pulls#create-a-review-comment-for-a-pull-request-preview-notices).
+ * **Note:**
+ * The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a
+ * comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the
+ * diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
  *
- * **Note:** The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
- *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This
+ * endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
@@ -31638,9 +33383,17 @@ export async function pullsCreateReviewComment<FetcherData>(
 }
 /**
  * Create a reply for a review comment
- * Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
+ * Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you
+ * are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies
+ * are not supported.
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-reply-for-a-review-comment}
  * Tags: pulls
  */
@@ -31678,7 +33431,8 @@ export async function pullsCreateReplyForReviewComment<FetcherData>(
 }
 /**
  * List commits on a pull request
- * Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/rest/reference/repos#list-commits) endpoint.
+ * Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than
+ * 250 commits, use the [List commits](https://docs.github.com/rest/reference/repos#list-commits) endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#list-commits-on-a-pull-request}
  * Tags: pulls
  */
@@ -31768,7 +33522,13 @@ export async function pullsCheckIfMerged<FetcherData>(
 }
 /**
  * Merge a pull request
- * This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#merge-a-pull-request}
  * Tags: pulls
  */
@@ -31852,7 +33612,13 @@ export async function pullsListRequestedReviewers<FetcherData>(
 }
 /**
  * Request reviewers for a pull request
- * This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#request-reviewers-for-a-pull-request}
  * Tags: pulls
  */
@@ -31959,13 +33725,27 @@ export async function pullsListReviews<FetcherData>(
 }
 /**
  * Create a review for a pull request
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  *
- * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
+ * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the
+ * response.
  *
- * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) endpoint.
+ * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in
+ * the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media
+ * type](https://docs.github.com/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull
+ * request diff, add this media type to the `Accept` header of a call to the [single pull
+ * request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) endpoint.
  *
- * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+ * The `position` value equals the
+ * number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@"
+ * line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines
+ * of whitespace and additional hunks until the beginning of a new file.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#create-a-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -32183,7 +33963,9 @@ export async function pullsListCommentsForReview<FetcherData>(
 }
 /**
  * Dismiss a review for a pull request
- * **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+ * **Note:** To dismiss a pull request review on a [protected
+ * branch](https://docs.github.com/rest/reference/repos#branches), you must be a repository administrator or be included in
+ * the list of people or teams who can dismiss pull request reviews.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#dismiss-a-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -32273,7 +34055,8 @@ export async function pullsSubmitReview<FetcherData>(
 }
 /**
  * Update a pull request branch
- * Updates the pull request branch with the latest upstream changes by merging HEAD from the base branch into the pull request branch.
+ * Updates the pull request branch with the latest upstream changes by merging HEAD from the base branch into the pull
+ * request branch.
  * Learn more at {@link https://docs.github.com/rest/reference/pulls#update-a-pull-request-branch}
  * Tags: pulls
  */
@@ -32313,7 +34096,8 @@ export async function pullsUpdateBranch<FetcherData>(
  * Get a repository README
  * Gets the preferred README for a repository.
  *
- * READMEs support [custom media types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+ * READMEs support [custom media
+ * types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-readme}
  * Tags: repos
  */
@@ -32345,7 +34129,8 @@ export async function reposGetReadme<FetcherData>(
  * Get a repository README for a directory
  * Gets the README from a repository directory.
  *
- * READMEs support [custom media types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+ * READMEs support [custom media
+ * types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-repository-directory-readme}
  * Tags: repos
  */
@@ -32376,9 +34161,12 @@ export async function reposGetReadmeInDirectory<FetcherData>(
 }
 /**
  * List releases
- * This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/rest/reference/repos#list-repository-tags).
+ * This returns a list of releases, which does not include regular Git tags that have not been associated with a release.
+ * To get a list of Git tags, use the [Repository Tags
+ * API](https://docs.github.com/rest/reference/repos#list-repository-tags).
  *
- * Information about published releases are available to everyone. Only users with push access will receive listings for draft releases.
+ * Information about published releases are
+ * available to everyone. Only users with push access will receive listings for draft releases.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-releases}
  * Tags: repos
  */
@@ -32412,7 +34200,13 @@ export async function reposListReleases<FetcherData>(
  * Create a release
  * Users with push access to the repository can create a release.
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-release}
  * Tags: repos
  */
@@ -32471,7 +34265,9 @@ export async function reposCreateRelease<FetcherData>(
 }
 /**
  * Get a release asset
- * To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response.
+ * To download the asset's binary content, set the `Accept` header of the request to
+ * [`application/octet-stream`](https://docs.github.com/rest/overview/media-types). The API will either redirect the client
+ * to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release-asset}
  * Tags: repos
  */
@@ -32561,7 +34357,9 @@ export async function reposDeleteReleaseAsset<FetcherData>(
  * Get the latest release
  * View the latest published full release for the repository.
  *
- * The latest release is the most recent non-prerelease, non-draft release, sorted by the `created_at` attribute. The `created_at` attribute is the date of the commit used for the release, and not the date when the release was drafted or published.
+ * The latest release is the most recent non-prerelease,
+ * non-draft release, sorted by the `created_at` attribute. The `created_at` attribute is the date of the commit used for
+ * the release, and not the date when the release was drafted or published.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-latest-release}
  * Tags: repos
  */
@@ -32611,7 +34409,8 @@ export async function reposGetReleaseByTag<FetcherData>(
 }
 /**
  * Get a release
- * **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia).
+ * **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a
+ * [hypermedia resource](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia).
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-a-release}
  * Tags: repos
  */
@@ -32750,24 +34549,41 @@ export async function reposListReleaseAssets<FetcherData>(
 }
 /**
  * Upload a release asset
- * This endpoint makes use of [a Hypermedia relation](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
- * the response of the [Create a release endpoint](https://docs.github.com/rest/reference/repos#create-a-release) to upload a release asset.
+ * This endpoint makes use of [a Hypermedia
+ * relation](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access.
+ * The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
+ * the
+ * response of the [Create a release endpoint](https://docs.github.com/rest/reference/repos#create-a-release) to upload a
+ * release asset.
  *
- * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
+ * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication)
+ * to make calls to this endpoint.
  *
- * Most libraries will set the required `Content-Length` header automatically. Use the required `Content-Type` header to provide the media type of the asset. For a list of media types, see [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml). For example:
+ * Most libraries will set the required `Content-Length` header automatically. Use the
+ * required `Content-Type` header to provide the media type of the asset. For a list of media types, see [Media
+ * Types](https://www.iana.org/assignments/media-types/media-types.xhtml). For example:
  *
  * `application/zip`
  *
- * GitHub expects the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the request body. Everything else about the endpoint is the same as the rest of the API. For example,
- * you'll still need to pass your authentication to be able to upload an asset.
+ * GitHub expects
+ * the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the
+ * request body. Everything else about the endpoint is the same as the rest of the API. For example,
+ * you'll still need to
+ * pass your authentication to be able to upload an asset.
  *
- * When an upstream failure occurs, you will receive a `502 Bad Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
+ * When an upstream failure occurs, you will receive a `502 Bad
+ * Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
  *
  * **Notes:**
- * *   GitHub renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/rest/reference/repos#list-assets-for-a-release)"
- * endpoint lists the renamed filenames. For more information and help, contact [GitHub Support](https://support.github.com/contact?tags=rest-api).
- * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
+ * *
+ * GitHub renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing
+ * periods. The "[List assets for a
+ * release](https://docs.github.com/rest/reference/repos#list-assets-for-a-release)"
+ * endpoint lists the renamed filenames.
+ * For more information and help, contact [GitHub Support](https://support.github.com/contact?tags=rest-api).
+ * *   If you
+ * upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file
+ * before you can re-upload the new asset.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#upload-a-release-asset}
  * Tags: repos
  */
@@ -32797,7 +34613,8 @@ export async function reposUploadReleaseAsset<FetcherData>(
 }
 /**
  * Create reaction for a release
- * Create a reaction to a [release](https://docs.github.com/rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release.
+ * Create a reaction to a [release](https://docs.github.com/rest/reference/repos#releases). A response with a `Status: 200
+ * OK` means that you already added the reaction type to this release.
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-release}
  * Tags: reactions
  */
@@ -32833,7 +34650,9 @@ export async function reactionsCreateForRelease<FetcherData>(
 }
 /**
  * List secret scanning alerts for a repository
- * Lists all secret scanning alerts for a private repository, from newest to oldest. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+ * Lists all secret scanning alerts for a private repository, from newest to oldest. To use this endpoint, you must be an
+ * administrator for the repository or organization, and you must use an access token with the `repo` scope or
+ * `security_events` scope.
  *
  * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#list-secret-scanning-alerts-for-a-repository}
@@ -32873,7 +34692,9 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
 }
 /**
  * Get a secret scanning alert
- * Gets a single secret scanning alert detected in a private repository. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+ * Gets a single secret scanning alert detected in a private repository. To use this endpoint, you must be an administrator
+ * for the repository or organization, and you must use an access token with the `repo` scope or `security_events`
+ * scope.
  *
  * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#get-a-secret-scanning-alert}
@@ -32902,7 +34723,9 @@ export async function secretScanningGetAlert<FetcherData>(
 }
 /**
  * Update a secret scanning alert
- * Updates the status of a secret scanning alert in a private repository. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+ * Updates the status of a secret scanning alert in a private repository. To use this endpoint, you must be an
+ * administrator for the repository or organization, and you must use an access token with the `repo` scope or
+ * `security_events` scope.
  *
  * GitHub Apps must have the `secret_scanning_alerts` write permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/secret-scanning#update-a-secret-scanning-alert}
@@ -32938,7 +34761,8 @@ export async function secretScanningUpdateAlert<FetcherData>(
  * List stargazers
  * Lists the people that have starred the repository.
  *
- * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+ * You can also find out _when_ stars were created by passing the
+ * following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-stargazers}
  * Tags: activity
  */
@@ -33015,7 +34839,8 @@ export async function reposGetCodeFrequencyStats<FetcherData>(
 }
 /**
  * Get the last year of commit activity
- * Returns the last year of commit activity grouped by week. The `days` array is a group of commits per day, starting on `Sunday`.
+ * Returns the last year of commit activity grouped by week. The `days` array is a group of commits per day, starting on
+ * `Sunday`.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-last-year-of-commit-activity}
  * Tags: repos
  */
@@ -33045,13 +34870,15 @@ export async function reposGetCommitActivityStats<FetcherData>(
 }
 /**
  * Get all contributor commit activity
+ * Returns the `total` number of commits authored by the contributor. In addition, the response includes a Weekly Hash
+ * (`weeks` array) with the following information:
  *
- * Returns the `total` number of commits authored by the contributor. In addition, the response includes a Weekly Hash (`weeks` array) with the following information:
- *
- * *   `w` - Start of the week, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
+ * *   `w` - Start of the week, given as a [Unix
+ * timestamp](http://en.wikipedia.org/wiki/Unix_time).
  * *   `a` - Number of additions
  * *   `d` - Number of deletions
- * *   `c` - Number of commits
+ * *   `c`
+ * - Number of commits
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-all-contributor-commit-activity}
  * Tags: repos
  */
@@ -33084,7 +34911,9 @@ export async function reposGetContributorsStats<FetcherData>(
 }
 /**
  * Get the weekly commit count
- * Returns the total commit counts for the `owner` and total commit counts in `all`. `all` is everyone combined, including the `owner` in the last 52 weeks. If you'd like to get the commit counts for non-owners, you can subtract `owner` from `all`.
+ * Returns the total commit counts for the `owner` and total commit counts in `all`. `all` is everyone combined, including
+ * the `owner` in the last 52 weeks. If you'd like to get the commit counts for non-owners, you can subtract `owner` from
+ * `all`.
  *
  * The array order is oldest week (index 0) to most recent week.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-weekly-commit-count}
@@ -33116,10 +34945,12 @@ export async function reposGetParticipationStats<FetcherData>(
  * Each array contains the day number, hour number, and number of commits:
  *
  * *   `0-6`: Sunday - Saturday
- * *   `0-23`: Hour of day
+ * *   `0-23`: Hour
+ * of day
  * *   Number of commits
  *
- * For example, `[2, 14, 25]` indicates that there were 25 total commits, during the 2:00pm hour on Tuesdays. All times are based on the time zone of individual commits.
+ * For example, `[2, 14, 25]` indicates that there were 25 total commits, during the 2:00pm
+ * hour on Tuesdays. All times are based on the time zone of individual commits.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-the-hourly-commit-count-for-each-day}
  * Tags: repos
  */
@@ -33154,7 +34985,9 @@ export async function reposGetPunchCardStats<FetcherData>(
  * Create a commit status
  * Users with push access in a repository can create commit statuses for a given SHA.
  *
- * Note: there is a limit of 1000 statuses per `sha` and `context` within a repository. Attempts to create more than 1000 statuses will result in a validation error.
+ * Note: there is a limit of 1000
+ * statuses per `sha` and `context` within a repository. Attempts to create more than 1000 statuses will result in a
+ * validation error.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-commit-status}
  * Tags: repos
  */
@@ -33260,7 +35093,9 @@ export async function activityGetRepoSubscription<FetcherData>(
 }
 /**
  * Set a repository subscription
- * If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/rest/reference/activity#delete-a-repository-subscription) completely.
+ * If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made
+ * within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's
+ * subscription](https://docs.github.com/rest/reference/activity#delete-a-repository-subscription) completely.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#set-a-repository-subscription}
  * Tags: activity
  */
@@ -33299,7 +35134,9 @@ export async function activitySetRepoSubscription<FetcherData>(
 }
 /**
  * Delete a repository subscription
- * This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/rest/reference/activity#set-a-repository-subscription).
+ * This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive
+ * notifications from a repository, [set the repository's subscription
+ * manually](https://docs.github.com/rest/reference/activity#set-a-repository-subscription).
  * Learn more at {@link https://docs.github.com/rest/reference/activity#delete-a-repository-subscription}
  * Tags: activity
  */
@@ -33351,10 +35188,13 @@ export async function reposListTags<FetcherData>(
 }
 /**
  * Download a repository archive (tar)
- * Gets a redirect URL to download a tar archive for a repository. If you omit `:ref`, the repository’s default branch (usually
- * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
+ * Gets a redirect URL to download a tar archive for a repository. If you omit `:ref`, the repository’s default branch
+ * (usually
+ * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need
+ * to use
  * the `Location` header to make a second `GET` request.
- * **Note**: For private repositories, these links are temporary and expire after five minutes.
+ * **Note**: For private repositories, these links are
+ * temporary and expire after five minutes.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#download-a-repository-archive}
  * Tags: repos
  */
@@ -33470,7 +35310,8 @@ export async function reposReplaceAllTopics<FetcherData>(
 }
 /**
  * Get repository clones
- * Get the total number of clones and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC midnight of the beginning of the day or week. Week begins on Monday.
+ * Get the total number of clones and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC
+ * midnight of the beginning of the day or week. Week begins on Monday.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-repository-clones}
  * Tags: repos
  */
@@ -33559,7 +35400,8 @@ export async function reposGetTopReferrers<FetcherData>(
 }
 /**
  * Get page views
- * Get the total number of views and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC midnight of the beginning of the day or week. Week begins on Monday.
+ * Get the total number of views and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC midnight
+ * of the beginning of the day or week. Week begins on Monday.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#get-page-views}
  * Tags: repos
  */
@@ -33586,7 +35428,10 @@ export async function reposGetViews<FetcherData>(
 }
 /**
  * Transfer a repository
- * A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://help.github.com/articles/about-repository-transfers/).
+ * A transfer request will need to be accepted by the new owner when transferring a personal repository to another user.
+ * The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the
+ * requirements to transfer personal and organization-owned repositories, see [about repository
+ * transfers](https://help.github.com/articles/about-repository-transfers/).
  * Learn more at {@link https://docs.github.com/rest/reference/repos#transfer-a-repository}
  * Tags: repos
  */
@@ -33623,7 +35468,9 @@ export async function reposTransfer<FetcherData>(
 }
 /**
  * Check if vulnerability alerts are enabled for a repository
- * Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
+ * Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin access
+ * to the repository. For more information, see "[About security alerts for vulnerable
+ * dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
  * Learn more at {@link https://docs.github.com/rest/reference/repos#check-if-vulnerability-alerts-are-enabled-for-a-repository}
  * Tags: repos
  */
@@ -33645,7 +35492,9 @@ export async function reposCheckVulnerabilityAlerts<FetcherData>(
 }
 /**
  * Enable vulnerability alerts
- * Enables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
+ * Enables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to
+ * the repository. For more information, see "[About security alerts for vulnerable
+ * dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
  * Learn more at {@link https://docs.github.com/rest/reference/repos#enable-vulnerability-alerts}
  * Tags: repos
  */
@@ -33667,7 +35516,9 @@ export async function reposEnableVulnerabilityAlerts<FetcherData>(
 }
 /**
  * Disable vulnerability alerts
- * Disables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
+ * Disables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to
+ * the repository. For more information, see "[About security alerts for vulnerable
+ * dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)".
  * Learn more at {@link https://docs.github.com/rest/reference/repos#disable-vulnerability-alerts}
  * Tags: repos
  */
@@ -33689,10 +35540,13 @@ export async function reposDisableVulnerabilityAlerts<FetcherData>(
 }
 /**
  * Download a repository archive (zip)
- * Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually
- * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
+ * Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch
+ * (usually
+ * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need
+ * to use
  * the `Location` header to make a second `GET` request.
- * **Note**: For private repositories, these links are temporary and expire after five minutes.
+ * **Note**: For private repositories, these links are
+ * temporary and expire after five minutes.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#download-a-repository-archive}
  * Tags: repos
  */
@@ -33715,13 +35569,20 @@ export async function reposDownloadZipballArchive<FetcherData>(
 }
 /**
  * Create a repository using a template
- * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+ * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to
+ * specify the repository to use as the template. The authenticated user must own or be a member of an organization that
+ * owns the repository. To check if a repository is available to use as a template, get the repository's information using
+ * the [Get a repository](https://docs.github.com/rest/reference/repos#get-a-repository) endpoint and check that the
+ * `is_template` key is `true`.
  *
  * **OAuth scope requirements**
  *
- * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+ * When using
+ * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
+ * include:
  *
- * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+ * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope
+ * to create an internal repository.
  * *   `repo` scope to create a private repository
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-using-a-template}
  * Tags: repos
@@ -33772,8 +35633,11 @@ export async function reposCreateUsingTemplate<FetcherData>(
  * Lists all public repositories in the order that they were created.
  *
  * Note:
- * - For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.
- * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
+ * - For GitHub Enterprise Server, this endpoint
+ * will only list repositories available to all users on the enterprise.
+ * - Pagination is powered exclusively by the `since`
+ * parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the
+ * URL for the next page of repositories.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-public-repositories}
  * Tags: repos
  */
@@ -33806,7 +35670,9 @@ export async function reposListPublic<FetcherData>(
 }
 /**
  * List environment secrets
- * Lists all secrets available in an environment without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Lists all secrets available in an environment without revealing their encrypted values. You must authenticate using an
+ * access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#list-environment-secrets}
  * Tags: actions
  */
@@ -33846,7 +35712,10 @@ export async function actionsListEnvironmentSecrets<FetcherData>(
 }
 /**
  * Get an environment public key
- * Get the public key for an environment, which you need to encrypt environment secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Get the public key for an environment, which you need to encrypt environment secrets. You need to encrypt a secret
+ * before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the
+ * repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-environment-public-key}
  * Tags: actions
  */
@@ -33872,7 +35741,8 @@ export async function actionsGetEnvironmentPublicKey<FetcherData>(
 }
 /**
  * Get an environment secret
- * Gets a single environment secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Gets a single environment secret without revealing its encrypted value. You must authenticate using an access token with
+ * the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#get-an-environment-secret}
  * Tags: actions
  */
@@ -33899,77 +35769,100 @@ export async function actionsGetEnvironmentSecret<FetcherData>(
 }
 /**
  * Create or update an environment secret
- * Creates or updates an environment secret with an encrypted value. Encrypt your secret using
- * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
- * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
+ * Creates or updates an environment secret with an encrypted value. Encrypt your secret
+ * using
+ * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an
+ * access
+ * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to
+ * use
  * this endpoint.
  *
  * #### Example encrypting a secret using Node.js
  *
- * Encrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.
+ * Encrypt your secret using the
+ * [tweetsodium](https://github.com/github/tweetsodium) library.
  *
  * ```
  * const sodium = require('tweetsodium');
  *
- * const key = "base64-encoded-public-key";
+ * const key =
+ * "base64-encoded-public-key";
  * const value = "plain-text-secret";
  *
- * // Convert the message and key to Uint8Array's (Buffer implements that interface)
+ * // Convert the message and key to Uint8Array's (Buffer
+ * implements that interface)
  * const messageBytes = Buffer.from(value);
  * const keyBytes = Buffer.from(key, 'base64');
  *
- * // Encrypt using LibSodium.
+ * //
+ * Encrypt using LibSodium.
  * const encryptedBytes = sodium.seal(messageBytes, keyBytes);
  *
- * // Base64 the encrypted secret
+ * // Base64 the encrypted
+ * secret
  * const encrypted = Buffer.from(encryptedBytes).toString('base64');
  *
  * console.log(encrypted);
  * ```
  *
  *
- * #### Example encrypting a secret using Python
+ * #### Example
+ * encrypting a secret using Python
  *
- * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
+ * Encrypt your secret using
+ * [pynacl](https://pynacl.readthedocs.io/en/stable/public/#nacl-public-sealedbox) with Python 3.
  *
  * ```
- * from base64 import b64encode
+ * from base64 import
+ * b64encode
  * from nacl import encoding, public
  *
  * def encrypt(public_key: str, secret_value: str) -> str:
- *   """Encrypt a Unicode string using the public key."""
- *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+ *   """Encrypt a
+ * Unicode string using the public key."""
+ *   public_key = public.PublicKey(public_key.encode("utf-8"),
+ * encoding.Base64Encoder())
  *   sealed_box = public.SealedBox(public_key)
- *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+ *   encrypted =
+ * sealed_box.encrypt(secret_value.encode("utf-8"))
  *   return b64encode(encrypted).decode("utf-8")
  * ```
  *
- * #### Example encrypting a secret using C#
+ * #### Example
+ * encrypting a secret using C#
  *
- * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
+ * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/)
+ * package.
  *
  * ```
  * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
- * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
+ * var publicKey =
+ * Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
  *
- * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
+ * var sealedPublicKeyBox =
+ * Sodium.SealedPublicKeyBox.Create(secretValue,
+ * publicKey);
  *
  * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
  * ```
  *
- * #### Example encrypting a secret using Ruby
+ * #### Example encrypting a secret using
+ * Ruby
  *
  * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
  *
  * ```ruby
- * require "rbnacl"
+ * require
+ * "rbnacl"
  * require "base64"
  *
  * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
- * public_key = RbNaCl::PublicKey.new(key)
+ * public_key =
+ * RbNaCl::PublicKey.new(key)
  *
  * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
- * encrypted_secret = box.encrypt("my_secret")
+ * encrypted_secret =
+ * box.encrypt("my_secret")
  *
  * # Print the base64 encoded secret
  * puts Base64.strict_encode64(encrypted_secret)
@@ -34009,7 +35902,8 @@ export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
 }
 /**
  * Delete an environment secret
- * Deletes a secret in an environment using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+ * Deletes a secret in an environment using the secret name. You must authenticate using an access token with the `repo`
+ * scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/actions#delete-an-environment-secret}
  * Tags: actions
  */
@@ -34068,7 +35962,9 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise<
  * Provision a SCIM enterprise group and invite users
  * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
  *
- * Provision an enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users to join the GitHub organization that the SCIM group corresponds to.
+ * Provision an
+ * enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users
+ * to join the GitHub organization that the SCIM group corresponds to.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#provision-a-scim-enterprise-group-and-invite-users}
  * Tags: enterprise-admin
  */
@@ -34144,7 +36040,11 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseGrou
  * Set SCIM information for a provisioned enterprise group
  * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
  *
- * Replaces an existing provisioned group’s information. You must provide all the information required for the group as if you were provisioning it for the first time. Any existing group information that you don't provide will be removed, including group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.
+ * Replaces an
+ * existing provisioned group’s information. You must provide all the information required for the group as if you were
+ * provisioning it for the first time. Any existing group information that you don't provide will be removed, including
+ * group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise
+ * group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-group}
  * Tags: enterprise-admin
  */
@@ -34191,7 +36091,10 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup
  * Update an attribute for a SCIM enterprise group
  * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
  *
- * Allows you to change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+ * Allows you to
+ * change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations
+ * JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on
+ * the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-group}
  * Tags: enterprise-admin
  */
@@ -34258,22 +36161,39 @@ export async function enterpriseAdminDeleteScimGroupFromEnterprise<FetcherData>(
  * List SCIM provisioned identities for an enterprise
  * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
  *
- * Retrieves a paginated list of all provisioned enterprise members, including pending invitations.
+ * Retrieves a
+ * paginated list of all provisioned enterprise members, including pending invitations.
  *
- * When a user with a SAML-provisioned external identity leaves (or is removed from) an enterprise, the account's metadata is immediately removed. However, the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub. This can happen in certain cases where an external identity associated with an organization will not match an organization member:
- *   - When a user with a SCIM-provisioned external identity is removed from an enterprise, the account's metadata is preserved to allow the user to re-join the organization in the future.
- *   - When inviting a user to join an organization, you can expect to see their external identity in the results before they accept the invitation, or if the invitation is cancelled (or never accepted).
- *   - When a user is invited over SCIM, an external identity is created that matches with the invitee's email address. However, this identity is only linked to a user account when the user accepts the invitation by going through SAML SSO.
+ * When a user with a
+ * SAML-provisioned external identity leaves (or is removed from) an enterprise, the account's metadata is immediately
+ * removed. However, the returned list of user accounts might not always match the organization or enterprise member list
+ * you see on GitHub. This can happen in certain cases where an external identity associated with an organization will not
+ * match an organization member:
+ *   - When a user with a SCIM-provisioned external identity is removed from an enterprise,
+ * the account's metadata is preserved to allow the user to re-join the organization in the future.
+ *   - When inviting a
+ * user to join an organization, you can expect to see their external identity in the results before they accept the
+ * invitation, or if the invitation is cancelled (or never accepted).
+ *   - When a user is invited over SCIM, an external
+ * identity is created that matches with the invitee's email address. However, this identity is only linked to a user
+ * account when the user accepts the invitation by going through SAML SSO.
  *
- * The returned list of external identities can include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single Sign-On (SSO) process but does not sign in to their GitHub account after completing SSO:
+ * The returned list of external identities can
+ * include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the
+ * following Single Sign-On (SSO) process but does not sign in to their GitHub account after completing SSO:
  *
- * 1. The user is granted access by the IdP and is not a member of the GitHub enterprise.
+ * 1. The user
+ * is granted access by the IdP and is not a member of the GitHub enterprise.
  *
- * 1. The user attempts to access the GitHub enterprise and initiates the SAML SSO process, and is not currently signed in to their GitHub account.
+ * 1. The user attempts to access the GitHub
+ * enterprise and initiates the SAML SSO process, and is not currently signed in to their GitHub account.
  *
- * 1. After successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in to their GitHub account:
+ * 1. After
+ * successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is
+ * prompted to sign in to their GitHub account:
  *    - If the user signs in, their GitHub account is linked to this entry.
- *    - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub enterprise, and the external identity `null` entry remains in place.
+ * - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub
+ * enterprise, and the external identity `null` entry remains in place.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#list-scim-provisioned-identities-for-an-enterprise}
  * Tags: enterprise-admin
  */
@@ -34308,9 +36228,12 @@ export async function enterpriseAdminListProvisionedIdentitiesEnterprise<
  * Provision and invite a SCIM enterprise user
  * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
  *
- * Provision enterprise membership for a user, and send organization invitation emails to the email address.
+ * Provision
+ * enterprise membership for a user, and send organization invitation emails to the email address.
  *
- * You can optionally include the groups a user will be invited to join. If you do not provide a list of `groups`, the user is provisioned for the enterprise, but no organization invitation emails will be sent.
+ * You can optionally
+ * include the groups a user will be invited to join. If you do not provide a list of `groups`, the user is provisioned for
+ * the enterprise, but no organization invitation emails will be sent.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#provision-and-invite-a-scim-enterprise-user}
  * Tags: enterprise-admin
  */
@@ -34411,11 +36334,17 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseUser
  * Set SCIM information for a provisioned enterprise user
  * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
  *
- * Replaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](#update-an-attribute-for-an-enterprise-scim-user) endpoint instead.
+ * Replaces an
+ * existing provisioned user's information. You must provide all the information required for the user as if you were
+ * provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want
+ * to only update a specific attribute, use the [Update an attribute for a SCIM
+ * user](#update-an-attribute-for-an-enterprise-scim-user) endpoint instead.
  *
- * You must at least provide the required values for the user: `userName`, `name`, and `emails`.
+ * You must at least provide the required values
+ * for the user: `userName`, `name`, and `emails`.
  *
- * **Warning:** Setting `active: false` removes the user from the enterprise, deletes the external identity, and deletes the associated `{scim_user_id}`.
+ * **Warning:** Setting `active: false` removes the user from the
+ * enterprise, deletes the external identity, and deletes the associated `{scim_user_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-user}
  * Tags: enterprise-admin
  */
@@ -34489,15 +36418,22 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser<
  * Update an attribute for a SCIM enterprise user
  * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
  *
- * Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+ * Allows you to
+ * change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations`
+ * JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more
+ * information on the SCIM operations format, see the [SCIM
+ * specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
  *
- * **Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will not work.
+ * **Note:** Complicated SCIM `path` selectors that
+ * include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will
+ * not work.
  *
- * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it removes the user from the enterprise, deletes the external identity, and deletes the associated `:scim_user_id`.
+ * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it
+ * removes the user from the enterprise, deletes the external identity, and deletes the associated `:scim_user_id`.
  *
  * ```
  * {
- *   "Operations":[{
+ * "Operations":[{
  *     "op":"replace",
  *     "value":{
  *       "active":false
@@ -34565,22 +36501,40 @@ export async function enterpriseAdminDeleteUserFromEnterprise<FetcherData>(
 }
 /**
  * List SCIM provisioned identities
- * Retrieves a paginated list of all provisioned organization members, including pending invitations. If you provide the `filter` parameter, the resources for all matching provisions members are returned.
+ * Retrieves a paginated list of all provisioned organization members, including pending invitations. If you provide the
+ * `filter` parameter, the resources for all matching provisions members are returned.
  *
- * When a user with a SAML-provisioned external identity leaves (or is removed from) an organization, the account's metadata is immediately removed. However, the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub. This can happen in certain cases where an external identity associated with an organization will not match an organization member:
- *   - When a user with a SCIM-provisioned external identity is removed from an organization, the account's metadata is preserved to allow the user to re-join the organization in the future.
- *   - When inviting a user to join an organization, you can expect to see their external identity in the results before they accept the invitation, or if the invitation is cancelled (or never accepted).
- *   - When a user is invited over SCIM, an external identity is created that matches with the invitee's email address. However, this identity is only linked to a user account when the user accepts the invitation by going through SAML SSO.
+ * When a user with a SAML-provisioned
+ * external identity leaves (or is removed from) an organization, the account's metadata is immediately removed. However,
+ * the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub.
+ * This can happen in certain cases where an external identity associated with an organization will not match an
+ * organization member:
+ *   - When a user with a SCIM-provisioned external identity is removed from an organization, the
+ * account's metadata is preserved to allow the user to re-join the organization in the future.
+ *   - When inviting a user to
+ * join an organization, you can expect to see their external identity in the results before they accept the invitation, or
+ * if the invitation is cancelled (or never accepted).
+ *   - When a user is invited over SCIM, an external identity is
+ * created that matches with the invitee's email address. However, this identity is only linked to a user account when the
+ * user accepts the invitation by going through SAML SSO.
  *
- * The returned list of external identities can include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single Sign-On (SSO) process but does not sign in to their GitHub account after completing SSO:
+ * The returned list of external identities can include an entry
+ * for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single
+ * Sign-On (SSO) process but does not sign in to their GitHub account after completing SSO:
  *
- * 1. The user is granted access by the IdP and is not a member of the GitHub organization.
+ * 1. The user is granted access
+ * by the IdP and is not a member of the GitHub organization.
  *
- * 1. The user attempts to access the GitHub organization and initiates the SAML SSO process, and is not currently signed in to their GitHub account.
+ * 1. The user attempts to access the GitHub organization and
+ * initiates the SAML SSO process, and is not currently signed in to their GitHub account.
  *
- * 1. After successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in to their GitHub account:
+ * 1. After successfully
+ * authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in
+ * to their GitHub account:
  *    - If the user signs in, their GitHub account is linked to this entry.
- *    - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub organization, and the external identity `null` entry remains in place.
+ *    - If the user does
+ * not sign in (or does not create a new account when prompted), they are not added to the GitHub organization, and the
+ * external identity `null` entry remains in place.
  * Learn more at {@link https://docs.github.com/rest/reference/scim#list-scim-provisioned-identities}
  * Tags: scim
  */
@@ -34708,11 +36662,16 @@ export async function scimGetProvisioningInformationForUser<FetcherData>(
 }
 /**
  * Update a provisioned organization membership
- * Replaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](https://docs.github.com/rest/reference/scim#update-an-attribute-for-a-scim-user) endpoint instead.
+ * Replaces an existing provisioned user's information. You must provide all the information required for the user as if
+ * you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If
+ * you want to only update a specific attribute, use the [Update an attribute for a SCIM
+ * user](https://docs.github.com/rest/reference/scim#update-an-attribute-for-a-scim-user) endpoint instead.
  *
- * You must at least provide the required values for the user: `userName`, `name`, and `emails`.
+ * You must at
+ * least provide the required values for the user: `userName`, `name`, and `emails`.
  *
- * **Warning:** Setting `active: false` removes the user from the organization, deletes the external identity, and deletes the associated `{scim_user_id}`.
+ * **Warning:** Setting `active: false`
+ * removes the user from the organization, deletes the external identity, and deletes the associated `{scim_user_id}`.
  * Learn more at {@link https://docs.github.com/rest/reference/scim#set-scim-information-for-a-provisioned-user}
  * Tags: scim
  */
@@ -34785,11 +36744,18 @@ export async function scimSetInformationForProvisionedUser<FetcherData>(
 }
 /**
  * Update an attribute for a SCIM user
- * Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+ * Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific
+ * `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and
+ * more information on the SCIM operations format, see the [SCIM
+ * specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
  *
- * **Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will not work.
+ * **Note:** Complicated SCIM `path` selectors that
+ * include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will
+ * not work.
  *
- * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it removes the user from the organization, deletes the external identity, and deletes the associated `:scim_user_id`.
+ * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it
+ * removes the user from the organization, deletes the external identity, and deletes the associated
+ * `:scim_user_id`.
  *
  * ```
  * {
@@ -34884,23 +36850,36 @@ export async function scimDeleteUserFromOrg<FetcherData>(
 }
 /**
  * Search code
- * Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * Searches for query terms inside of a file. This method returns up to 100 results [per
+ * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
  *
- * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+ * When searching for code, you can get
+ * text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For
+ * more details about how to receive highlighted search results, see [Text match
+ * metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
  *
- * For example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:
+ * For example, if you want to find the
+ * definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would
+ * look something like this:
  *
  * `q=addClass+in:file+language:js+repo:jquery/jquery`
  *
- * This query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.
+ * This query searches for the keyword
+ * `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the
+ * `jquery/jquery` repository.
  *
  * #### Considerations for code search
  *
- * Due to the complexity of searching code, there are a few restrictions on how searches are performed:
+ * Due to the complexity of searching code, there are a
+ * few restrictions on how searches are performed:
  *
- * *   Only the _default branch_ is considered. In most cases, this will be the `master` branch.
+ * *   Only the _default branch_ is considered. In most cases, this will
+ * be the `master` branch.
  * *   Only files smaller than 384 KB are searchable.
- * *   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing
+ * *   You must always include at least one
+ * search term when searching source code. For example, searching for
+ * [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while
+ * [`amazing
  * language:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-code}
  * Tags: search
@@ -34950,12 +36929,18 @@ export async function searchCode<FetcherData>(
 }
 /**
  * Search commits
- * Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per
+ * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
  *
- * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
+ * When searching for commits, you can
+ * get text match metadata for the **message** field when you provide the `text-match` media type. For more details about
+ * how to receive highlighted search results, see [Text
+ * match
  * metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
  *
- * For example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:
+ * For example, if you want to find
+ * commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would
+ * look something like this:
  *
  * `q=repo:octocat/Spoon-Knife+css`
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-commits}
@@ -35002,18 +36987,33 @@ export async function searchCommits<FetcherData>(
 }
 /**
  * Search issues and pull requests
- * Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * Find issues by state and keyword. This method returns up to 100 results [per
+ * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
  *
- * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
- * search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+ * When searching for issues, you can
+ * get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the
+ * `text-match` media type. For more details about how to receive highlighted
+ * search results, see [Text match
+ * metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
  *
- * For example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.
+ * For example, if you want to find the
+ * oldest unresolved Python bugs on Windows. Your query might look something like
+ * this.
  *
  * `q=windows+label:bug+language:python+state:open&sort=created&order=asc`
  *
- * This query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.
+ * This query searches for the keyword
+ * `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is
+ * Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the
+ * search results.
  *
- * **Note:** For [user-to-server](https://docs.github.com/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only issues or pull requests](https://docs.github.com/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
+ * **Note:** For
+ * [user-to-server](https://docs.github.com/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests)
+ * GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't
+ * include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get
+ * results for both issues and pull requests, you must send separate queries for issues and pull requests. For more
+ * information about the `is` qualifier, see "[Searching only issues or pull
+ * requests](https://docs.github.com/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-issues-and-pull-requests}
  * Tags: search
  */
@@ -35073,15 +37073,22 @@ export async function searchIssuesAndPullRequests<FetcherData>(
 }
 /**
  * Search labels
- * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per
+ * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
  *
- * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+ * When searching for labels, you can
+ * get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For
+ * more details about how to receive highlighted search results, see [Text match
+ * metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
  *
- * For example, if you want to find labels in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like this:
+ * For example, if you want to find labels
+ * in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like
+ * this:
  *
  * `q=bug+defect+enhancement&repository_id=64778136`
  *
- * The labels that best match the query appear first in the search results.
+ * The labels that best match the query appear first in the
+ * search results.
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-labels}
  * Tags: search
  */
@@ -35132,17 +37139,27 @@ export async function searchLabels<FetcherData>(
 }
 /**
  * Search repositories
- * Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * Find repositories via various criteria. This method returns up to 100 results [per
+ * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
  *
- * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+ * When searching for repositories, you
+ * can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For
+ * more details about how to receive highlighted search results, see [Text match
+ * metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
  *
- * For example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:
+ * For example, if you want to search for
+ * popular Tetris repositories written in assembly code, your query might look like
+ * this:
  *
  * `q=tetris+language:assembly&sort=stars&order=desc`
  *
- * This query searches for repositories with the word `tetris` in the name, the description, or the README. The results are limited to repositories where the primary language is assembly. The results are sorted by stars in descending order, so that the most popular repositories appear first in the search results.
+ * This query searches for repositories with the word `tetris`
+ * in the name, the description, or the README. The results are limited to repositories where the primary language is
+ * assembly. The results are sorted by stars in descending order, so that the most popular repositories appear first in the
+ * search results.
  *
- * When you include the `mercy` preview header, you can also search for multiple topics by adding more `topic:` instances. For example, your query might look like this:
+ * When you include the `mercy` preview header, you can also search for multiple topics by adding more
+ * `topic:` instances. For example, your query might look like this:
  *
  * `q=topic:ruby+topic:rails`
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-repositories}
@@ -35192,15 +37209,24 @@ export async function searchRepos<FetcherData>(
 }
 /**
  * Search topics
- * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://help.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
+ * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per
+ * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination). See "[Searching
+ * topics](https://help.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
  *
- * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+ * When searching for
+ * topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or
+ * **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted
+ * search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
  *
- * For example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:
+ * For
+ * example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query
+ * might look like this:
  *
  * `q=ruby+is:featured`
  *
- * This query searches for topics with the keyword `ruby` and limits the results to find only topics that are featured. The topics that are the best match for the query appear first in the search results.
+ * This query searches for topics with the keyword `ruby` and limits the
+ * results to find only topics that are featured. The topics that are the best match for the query appear first in the
+ * search results.
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-topics}
  * Tags: search
  */
@@ -35243,15 +37269,23 @@ export async function searchTopics<FetcherData>(
 }
 /**
  * Search users
- * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * Find users via various criteria. This method returns up to 100 results [per
+ * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
  *
- * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+ * When searching for users, you can
+ * get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media
+ * type. For more details about highlighting search results, see [Text match
+ * metadata](https://docs.github.com/rest/reference/search#text-match-metadata). For more details about how to receive
+ * highlighted search results, see [Text match
+ * metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
  *
- * For example, if you're looking for a list of popular users, you might try this query:
+ * For example, if you're looking for a list
+ * of popular users, you might try this query:
  *
  * `q=tom+repos:%3E42+followers:%3E1000`
  *
- * This query searches for users with the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.
+ * This query searches for users with
+ * the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.
  * Learn more at {@link https://docs.github.com/rest/reference/search#search-users}
  * Tags: search
  */
@@ -35299,7 +37333,9 @@ export async function searchUsers<FetcherData>(
 }
 /**
  * Get a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/rest/reference/teams#get-a-team-by-name) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the [Get a team by name](https://docs.github.com/rest/reference/teams#get-a-team-by-name)
+ * endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#get-a-team-legacy}
  * Tags: teams
@@ -35324,11 +37360,14 @@ export async function teamsGetLegacy<FetcherData>(
 }
 /**
  * Update a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/rest/reference/teams#update-a-team) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Update a team](https://docs.github.com/rest/reference/teams#update-a-team)
+ * endpoint.
  *
  * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
  *
- * **Note:** With nested teams, the `privacy` for parent teams cannot be `secret`.
+ * **Note:**
+ * With nested teams, the `privacy` for parent teams cannot be `secret`.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#update-a-team-legacy}
  * Tags: teams
@@ -35390,11 +37429,14 @@ export async function teamsUpdateLegacy<FetcherData>(
 }
 /**
  * Delete a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/rest/reference/teams#delete-a-team) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Delete a team](https://docs.github.com/rest/reference/teams#delete-a-team)
+ * endpoint.
  *
  * To delete a team, the authenticated user must be an organization owner or team maintainer.
  *
- * If you are an organization owner, deleting a parent team will delete all of its child teams as well.
+ * If you are an
+ * organization owner, deleting a parent team will delete all of its child teams as well.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#delete-a-team-legacy}
  * Tags: teams
@@ -35421,9 +37463,12 @@ export async function teamsDeleteLegacy<FetcherData>(
 }
 /**
  * List discussions (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/rest/reference/teams#list-discussions) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List discussions`](https://docs.github.com/rest/reference/teams#list-discussions)
+ * endpoint.
  *
- * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List all discussions on a team's page. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussions-legacy}
  * Tags: teams
@@ -35457,11 +37502,21 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
 }
 /**
  * Create a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/rest/reference/teams#create-a-discussion) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`Create a
+ * discussion`](https://docs.github.com/rest/reference/teams#create-a-discussion) endpoint.
  *
- * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Creates a new discussion post
+ * on a team's page. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-legacy}
  * Tags: teams
@@ -35502,9 +37557,12 @@ export async function teamsCreateDiscussionLegacy<FetcherData>(
 }
 /**
  * Get a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/rest/reference/teams#get-a-discussion) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Get a discussion](https://docs.github.com/rest/reference/teams#get-a-discussion)
+ * endpoint.
  *
- * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-legacy}
  * Tags: teams
@@ -35531,9 +37589,13 @@ export async function teamsGetDiscussionLegacy<FetcherData>(
 }
 /**
  * Update a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/rest/reference/teams#update-a-discussion) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Update a
+ * discussion](https://docs.github.com/rest/reference/teams#update-a-discussion) endpoint.
  *
- * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Edits the title and body text
+ * of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-legacy}
  * Tags: teams
@@ -35571,9 +37633,13 @@ export async function teamsUpdateDiscussionLegacy<FetcherData>(
 }
 /**
  * Delete a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/rest/reference/teams#delete-a-discussion) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`Delete a
+ * discussion`](https://docs.github.com/rest/reference/teams#delete-a-discussion) endpoint.
  *
- * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Delete a discussion from a
+ * team's page. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-legacy}
  * Tags: teams
@@ -35596,9 +37662,13 @@ export async function teamsDeleteDiscussionLegacy<FetcherData>(
 }
 /**
  * List discussion comments (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/rest/reference/teams#list-discussion-comments) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [List discussion
+ * comments](https://docs.github.com/rest/reference/teams#list-discussion-comments) endpoint.
  *
- * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List all comments on a team
+ * discussion. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-discussion-comments-legacy}
  * Tags: teams
@@ -35636,11 +37706,21 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
 }
 /**
  * Create a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/rest/reference/teams#create-a-discussion-comment) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Create a discussion
+ * comment](https://docs.github.com/rest/reference/teams#create-a-discussion-comment) endpoint.
  *
- * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Creates a new comment on a
+ * team discussion. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  *
- * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+ * This endpoint triggers
+ * [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
+ * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
+ * secondary rate
+ * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
+ * details.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-a-discussion-comment-legacy}
  * Tags: teams
@@ -35676,9 +37756,13 @@ export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
 }
 /**
  * Get a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/rest/reference/teams#get-a-discussion-comment) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Get a discussion
+ * comment](https://docs.github.com/rest/reference/teams#get-a-discussion-comment) endpoint.
  *
- * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Get a specific comment on a
+ * team discussion. OAuth access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-a-discussion-comment-legacy}
  * Tags: teams
@@ -35708,9 +37792,13 @@ export async function teamsGetDiscussionCommentLegacy<FetcherData>(
 }
 /**
  * Update a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/rest/reference/teams#update-a-discussion-comment) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Update a discussion
+ * comment](https://docs.github.com/rest/reference/teams#update-a-discussion-comment) endpoint.
  *
- * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Edits the body text of a
+ * discussion comment. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#update-a-discussion-comment-legacy}
  * Tags: teams
@@ -35747,9 +37835,13 @@ export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
 }
 /**
  * Delete a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/rest/reference/teams#delete-a-discussion-comment) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Delete a discussion
+ * comment](https://docs.github.com/rest/reference/teams#delete-a-discussion-comment) endpoint.
  *
- * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Deletes a comment on a
+ * team discussion. OAuth access tokens require the `write:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#delete-a-discussion-comment-legacy}
  * Tags: teams
@@ -35773,9 +37865,14 @@ export async function teamsDeleteDiscussionCommentLegacy<FetcherData>(
 }
 /**
  * List reactions for a team discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List reactions for a team discussion
+ * comment`](https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
  *
- * List the reactions to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List
+ * the reactions to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth
+ * access tokens require the `read:discussion`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion-comment-legacy}
  * Tags: reactions
@@ -35817,9 +37914,15 @@ export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
 }
 /**
  * Create reaction for a team discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new "[Create reaction for a team discussion
+ * comment](https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)"
+ * endpoint.
  *
- * Create a reaction to a [team discussion comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+ * Create a reaction to a [team discussion
+ * comment](https://docs.github.com/rest/reference/teams#discussion-comments). OAuth access tokens require the
+ * `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A
+ * response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion-comment-legacy}
  * Tags: reactions
@@ -35862,9 +37965,13 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy<
 }
 /**
  * List reactions for a team discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List reactions for a team
+ * discussion`](https://docs.github.com/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
  *
- * List the reactions to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List the
+ * reactions to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require
+ * the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-team-discussion-legacy}
  * Tags: reactions
@@ -35905,9 +38012,14 @@ export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
 }
 /**
  * Create reaction for a team discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`Create reaction for a team
+ * discussion`](https://docs.github.com/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
  *
- * Create a reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+ * Create a
+ * reaction to a [team discussion](https://docs.github.com/rest/reference/teams#discussions). OAuth access tokens require
+ * the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A
+ * response with an HTTP `200` status means that you already added the reaction type to this team discussion.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/reactions/#create-reaction-for-a-team-discussion-legacy}
  * Tags: reactions
@@ -35947,9 +38059,14 @@ export async function reactionsCreateForTeamDiscussionLegacy<FetcherData>(
 }
 /**
  * List pending team invitations (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List pending team invitations`](https://docs.github.com/rest/reference/teams#list-pending-team-invitations) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List pending team
+ * invitations`](https://docs.github.com/rest/reference/teams#list-pending-team-invitations) endpoint.
  *
- * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`.
+ * The return hash
+ * contains a `role` field which refers to the Organization Invitation role and will be one of the following values:
+ * `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member,
+ * the `login` field in the return hash will be `null`.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-pending-team-invitations-legacy}
  * Tags: teams
@@ -35985,7 +38102,9 @@ export async function teamsListPendingInvitationsLegacy<FetcherData>(
 }
 /**
  * List team members (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/rest/reference/teams#list-team-members) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List team members`](https://docs.github.com/rest/reference/teams#list-team-members)
+ * endpoint.
  *
  * Team members will include the members of child teams.
  * @deprecated
@@ -36022,7 +38141,9 @@ export async function teamsListMembersLegacy<FetcherData>(
  * Get team member (Legacy)
  * The "Get team member" endpoint (described below) is deprecated.
  *
- * We recommend using the [Get team membership for a user](https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
+ * We recommend using the [Get team membership for a
+ * user](https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to
+ * get both active and pending memberships.
  *
  * To list members in a team, the team must be visible to the authenticated user.
  * @deprecated
@@ -36049,15 +38170,29 @@ export async function teamsGetMemberLegacy<FetcherData>(
  * Add team member (Legacy)
  * The "Add team member" endpoint (described below) is deprecated.
  *
- * We recommend using the [Add or update team membership for a user](https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
+ * We recommend using the [Add or update team membership
+ * for a user](https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It
+ * allows you to invite new organization members to your teams.
  *
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is available for organizations using
+ * GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * To add someone to a team, the authenticated user must be an organization owner or a team maintainer in the team they're changing. The person being added to the team must be a member of the team's organization.
+ * To add someone to a team, the authenticated user must be an organization owner or a team maintainer in
+ * the team they're changing. The person being added to the team must be a member of the team's organization.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+ * **Note:**
+ * When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an
+ * error if you attempt to use the API for making changes to the team's membership. If you have access to manage group
+ * membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds
+ * and removes team members in an organization. For more information, see "[Synchronizing teams between your identity
+ * provider and
+ * GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
  *
- * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note that
+ * you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP
+ * verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-team-member-legacy}
  * Tags: teams
@@ -36084,13 +38219,25 @@ export async function teamsAddMemberLegacy<FetcherData>(
  * Remove team member (Legacy)
  * The "Remove team member" endpoint (described below) is deprecated.
  *
- * We recommend using the [Remove team membership for a user](https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
+ * We recommend using the [Remove team membership for a
+ * user](https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to
+ * remove both active and pending memberships.
  *
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is available for organizations using GitHub Enterprise
+ * Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * To remove a team member, the authenticated user must have 'admin' permissions to the team or be an owner of the org that the team is associated with. Removing a team member does not delete the user, it just removes them from the team.
+ * To remove a team member, the authenticated user must have 'admin' permissions to the team or be an owner
+ * of the org that the team is associated with. Removing a team member does not delete the user, it just removes them from
+ * the team.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+ * **Note:** When you have team synchronization set up for a team with your organization's identity provider
+ * (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have
+ * access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider,
+ * which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams
+ * between your identity provider and
+ * GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-member-legacy}
  * Tags: teams
@@ -36113,16 +38260,22 @@ export async function teamsRemoveMemberLegacy<FetcherData>(
 }
 /**
  * Get team membership for a user (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Get team membership for a
+ * user](https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user) endpoint.
  *
- * Team members will include the members of child teams.
+ * Team members will include
+ * the members of child teams.
  *
- * To get a user's membership with a team, the team must be visible to the authenticated user.
+ * To get a user's membership with a team, the team must be visible to the authenticated
+ * user.
  *
  * **Note:**
  * The response contains the `state` of the membership and the member's `role`.
  *
- * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+ * The `role` for
+ * organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a
+ * team](https://docs.github.com/rest/reference/teams#create-a-team).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#get-team-membership-for-a-user-legacy}
  * Tags: teams
@@ -36150,17 +38303,35 @@ export async function teamsGetMembershipForUserLegacy<FetcherData>(
 }
 /**
  * Add or update team membership for a user (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Add or update team membership for a
+ * user](https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
  *
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team
+ * synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * If the user is already a member of the team's organization, this endpoint will add the user to the team. To add a membership between an organization member and a team, the authenticated user must be an organization owner or a team maintainer.
+ * If the user is already a member of the team's organization, this endpoint will add the user to the team.
+ * To add a membership between an organization member and a team, the authenticated user must be an organization owner or a
+ * team maintainer.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+ * **Note:** When you have team synchronization set up for a team with your organization's identity
+ * provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you
+ * have access to manage group membership in your IdP, you can manage GitHub team membership through your identity
+ * provider, which automatically adds and removes team members in an organization. For more information, see
+ * "[Synchronizing teams between your identity provider and
+ * GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
  *
- * If the user is unaffiliated with the team's organization, this endpoint will send an invitation to the user via email. This newly-created membership will be in the "pending" state until the user accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team. To add a membership between an unaffiliated user and a team, the authenticated user must be an organization owner.
+ * If the user
+ * is unaffiliated with the team's organization, this endpoint will send an invitation to the user via email. This
+ * newly-created membership will be in the "pending" state until the user accepts the invitation, at which point the
+ * membership will transition to the "active" state and the user will be added as a member of the team. To add a membership
+ * between an unaffiliated user and a team, the authenticated user must be an organization owner.
  *
- * If the user is already a member of the team, this endpoint will update the role of the team member's role. To update the membership of a team member, the authenticated user must be an organization owner or a team maintainer.
+ * If the user is already a
+ * member of the team, this endpoint will update the role of the team member's role. To update the membership of a team
+ * member, the authenticated user must be an organization owner or a team maintainer.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy}
  * Tags: teams
@@ -36198,13 +38369,25 @@ export async function teamsAddOrUpdateMembershipForUserLegacy<FetcherData>(
 }
 /**
  * Remove team membership for a user (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Remove team membership for a
+ * user](https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
  *
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is
+ * available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
+ * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions
+ * to the team or be an owner of the organization that the team is associated with. Removing team membership does not
+ * delete the user, it just removes their membership from the team.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+ * **Note:** When you have team synchronization set up
+ * for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for
+ * making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage
+ * GitHub team membership through your identity provider, which automatically adds and removes team members in an
+ * organization. For more information, see "[Synchronizing teams between your identity provider and
+ * GitHub](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#remove-team-membership-for-a-user-legacy}
  * Tags: teams
@@ -36227,9 +38410,12 @@ export async function teamsRemoveMembershipForUserLegacy<FetcherData>(
 }
 /**
  * List team projects (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/rest/reference/teams#list-team-projects) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List team
+ * projects`](https://docs.github.com/rest/reference/teams#list-team-projects) endpoint.
  *
- * Lists the organization projects for a team.
+ * Lists the organization projects
+ * for a team.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-projects-legacy}
  * Tags: teams
@@ -36261,9 +38447,13 @@ export async function teamsListProjectsLegacy<FetcherData>(
 }
 /**
  * Check team permissions for a project (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Check team permissions for a
+ * project](https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
  *
- * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
+ * Checks whether a
+ * team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited
+ * from a parent team.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-project-legacy}
  * Tags: teams
@@ -36288,9 +38478,14 @@ export async function teamsCheckPermissionsForProjectLegacy<FetcherData>(
 }
 /**
  * Add or update team project permissions (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Add or update team project
+ * permissions](https://docs.github.com/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
  *
- * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
+ * Adds an
+ * organization project to a team. To add a project to a team or update the team's permission on a project, the
+ * authenticated user must have `admin` permissions for the project. The project and team must be part of the same
+ * organization.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-project-permissions-legacy}
  * Tags: teams
@@ -36329,9 +38524,15 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
 }
 /**
  * Remove a project from a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/rest/reference/teams#remove-a-project-from-a-team) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Remove a project from a
+ * team](https://docs.github.com/rest/reference/teams#remove-a-project-from-a-team) endpoint.
  *
- * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. **Note:** This endpoint removes the project from the team, but does not delete it.
+ * Removes an organization
+ * project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a
+ * project from a team as an organization member, the authenticated user must have `read` access to both the team and
+ * project, or `admin` access to the team or project. **Note:** This endpoint removes the project from the team, but does
+ * not delete it.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-project-from-a-team-legacy}
  * Tags: teams
@@ -36359,7 +38560,9 @@ export async function teamsRemoveProjectLegacy<FetcherData>(
 }
 /**
  * List team repositories (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/rest/reference/teams#list-team-repositories) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [List team
+ * repositories](https://docs.github.com/rest/reference/teams#list-team-repositories) endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-team-repositories-legacy}
  * Tags: teams
@@ -36395,9 +38598,14 @@ export async function teamsListReposLegacy<FetcherData>(
  * Check team permissions for a repository (Legacy)
  * **Note**: Repositories inherited through a parent team will also be checked.
  *
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
+ * **Deprecation Notice:** This endpoint
+ * route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new
+ * [Check team permissions for a
+ * repository](https://docs.github.com/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
  *
- * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+ * You can
+ * also get information about the specified repository, including what permissions the team grants on it, by passing the
+ * following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#check-team-permissions-for-a-repository-legacy}
  * Tags: teams
@@ -36425,11 +38633,19 @@ export async function teamsCheckPermissionsForRepoLegacy<FetcherData>(
 }
 /**
  * Add or update team repository permissions (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new "[Add or update team repository
+ * permissions](https://docs.github.com/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
  *
- * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
+ * To add
+ * a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to
+ * the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of
+ * a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a
+ * repository to a team that is not owned by the organization.
  *
- * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note that, if you choose not to pass any parameters, you'll
+ * need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP
+ * verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#add-or-update-team-repository-permissions-legacy}
  * Tags: teams
@@ -36470,9 +38686,14 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy<FetcherData>(
 }
 /**
  * Remove a repository from a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [Remove a repository from a
+ * team](https://docs.github.com/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
  *
- * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. NOTE: This does not delete the repository, it just removes it from the team.
+ * If the authenticated user
+ * is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository
+ * from a team as an organization member, the authenticated user must have admin access to the repository and must be able
+ * to see the team. NOTE: This does not delete the repository, it just removes it from the team.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#remove-a-repository-from-a-team-legacy}
  * Tags: teams
@@ -36496,9 +38717,14 @@ export async function teamsRemoveRepoLegacy<FetcherData>(
 }
 /**
  * List IdP groups for a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List IdP groups for a team`](https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List IdP groups for a
+ * team`](https://docs.github.com/rest/reference/teams#list-idp-groups-for-a-team) endpoint.
  *
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team synchronization is
+ * available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
  * List IdP groups connected to a team on GitHub.
  * @deprecated
@@ -36526,11 +38752,18 @@ export async function teamsListIdpGroupsForLegacy<FetcherData>(
 }
 /**
  * Create or update IdP group connections (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create or update IdP group connections`](https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`Create or update IdP group
+ * connections`](https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections) endpoint.
  *
- * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * Team
+ * synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's
+ * products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
+ * documentation.
  *
- * Creates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.
+ * Creates, updates, or removes a connection between a team and an IdP group. When adding groups to a team,
+ * you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty
+ * `groups` array will remove all connections for a team.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams#create-or-update-idp-group-connections-legacy}
  * Tags: teams
@@ -36594,7 +38827,9 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy<FetcherData>(
 }
 /**
  * List child teams (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/rest/reference/teams#list-child-teams) endpoint.
+ * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
+ * your existing code to use the new [`List child teams`](https://docs.github.com/rest/reference/teams#list-child-teams)
+ * endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reference/teams/#list-child-teams-legacy}
  * Tags: teams
@@ -36630,9 +38865,11 @@ export async function teamsListChildLegacy<FetcherData>(
 }
 /**
  * Get the authenticated user
- * If the authenticated user is authenticated through basic authentication or OAuth with the `user` scope, then the response lists public and private profile information.
+ * If the authenticated user is authenticated through basic authentication or OAuth with the `user` scope, then the
+ * response lists public and private profile information.
  *
- * If the authenticated user is authenticated through OAuth without the `user` scope, then the response lists only public profile information.
+ * If the authenticated user is authenticated through OAuth without
+ * the `user` scope, then the response lists only public profile information.
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-the-authenticated-user}
  * Tags: users
  */
@@ -36669,7 +38906,9 @@ export async function usersGetAuthenticated<FetcherData>(
 }
 /**
  * Update the authenticated user
- * **Note:** If your email is set to private and you send an `email` parameter as part of this request to update your profile, your privacy settings are still enforced: the email address will not be displayed on your public profile or via the API.
+ * **Note:** If your email is set to private and you send an `email` parameter as part of this request to update your
+ * profile, your privacy settings are still enforced: the email address will not be displayed on your public profile or via
+ * the API.
  * Learn more at {@link https://docs.github.com/rest/reference/users/#update-the-authenticated-user}
  * Tags: users
  */
@@ -36880,7 +39119,8 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated<
 }
 /**
  * List email addresses for the authenticated user
- * Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with the `user:email` scope.
+ * Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with
+ * the `user:email` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
@@ -37076,9 +39316,11 @@ export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
 }
 /**
  * Follow a user
- * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
+ * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  *
- * Following a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
+ * Following a user requires
+ * the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/users#follow-a-user}
  * Tags: users
  */
@@ -37103,7 +39345,8 @@ export async function usersFollow<FetcherData>(
 }
 /**
  * Unfollow a user
- * Unfollowing a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
+ * Unfollowing a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow`
+ * scope.
  * Learn more at {@link https://docs.github.com/rest/reference/users#unfollow-a-user}
  * Tags: users
  */
@@ -37128,7 +39371,8 @@ export async function usersUnfollow<FetcherData>(
 }
 /**
  * List GPG keys for the authenticated user
- * Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least
+ * `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-gpg-keys-for-the-authenticated-user}
  * Tags: users
  */
@@ -37160,7 +39404,9 @@ export async function usersListGpgKeysForAuthenticated<FetcherData>(
 }
 /**
  * Create a GPG key for the authenticated user
- * Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth
+ * with at least `write:gpg_key`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#create-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -37194,7 +39440,8 @@ export async function usersCreateGpgKeyForAuthenticated<FetcherData>(
 }
 /**
  * Get a GPG key for the authenticated user
- * View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at
+ * least `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -37220,7 +39467,9 @@ export async function usersGetGpgKeyForAuthenticated<FetcherData>(
 }
 /**
  * Delete a GPG key for the authenticated user
- * Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or
+ * via OAuth with at least `admin:gpg_key`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#delete-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -37248,13 +39497,19 @@ export async function usersDeleteGpgKeyForAuthenticated<FetcherData>(
 }
 /**
  * List app installations accessible to the user access token
- * Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
+ * Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or
+ * `:admin`) to access.
  *
- * You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+ * You must use a [user-to-server OAuth access
+ * token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site),
+ * created for a user who has authorized your GitHub App, to access this endpoint.
  *
- * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+ * The authenticated user has explicit
+ * permission to access repositories they own, repositories where they are a collaborator, and repositories that they can
+ * access through an organization membership.
  *
- * You can find the permissions for the installation under the `permissions` key.
+ * You can find the permissions for the installation under the `permissions`
+ * key.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-app-installations-accessible-to-the-user-access-token}
  * Tags: apps
  */
@@ -37297,13 +39552,19 @@ export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
 }
 /**
  * List repositories accessible to the user access token
- * List repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access for an installation.
+ * List repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access for an
+ * installation.
  *
- * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+ * The authenticated user has explicit permission to access repositories they own, repositories where they
+ * are a collaborator, and repositories that they can access through an organization membership.
  *
- * You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+ * You must use a
+ * [user-to-server OAuth access
+ * token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site),
+ * created for a user who has authorized your GitHub App, to access this endpoint.
  *
- * The access the user has to each repository is included in the hash under the `permissions` key.
+ * The access the user has to each
+ * repository is included in the hash under the `permissions` key.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-repositories-accessible-to-the-user-access-token}
  * Tags: apps
  */
@@ -37352,7 +39613,11 @@ export async function appsListInstallationReposForAuthenticatedUser<
  * Add a repository to an app installation
  * Add a single repository to an installation. The authenticated user must have admin access to the repository.
  *
- * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+ * You must
+ * use a personal access token (which you can create via the [command
+ * line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token) or [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to access this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#add-a-repository-to-an-app-installation}
  * Tags: apps
  */
@@ -37379,7 +39644,11 @@ export async function appsAddRepoToInstallation<FetcherData>(
  * Remove a repository from an app installation
  * Remove a single repository from an installation. The authenticated user must have admin access to the repository.
  *
- * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+ * You
+ * must use a personal access token (which you can create via the [command
+ * line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token) or [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to access this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#remove-a-repository-from-an-app-installation}
  * Tags: apps
  */
@@ -37438,7 +39707,9 @@ export async function interactionsGetRestrictionsForAuthenticatedUser<
 }
 /**
  * Set interaction restrictions for your public repositories
- * Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user.
+ * Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction
+ * limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the
+ * user.
  * Learn more at {@link https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-your-public-repositories}
  * Tags: interactions
  */
@@ -37493,10 +39764,14 @@ export async function interactionsRemoveRestrictionsForAuthenticatedUser<
  * List user account issues assigned to the authenticated user
  * List issues across owned and member repositories assigned to the authenticated user.
  *
- * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
+ * **Note**: GitHub's REST API v3
+ * considers every pull request an issue, but not every issue is a pull request. For this
+ * reason, "Issues" endpoints may
+ * return both issues and pull requests in the response. You can identify pull requests by
+ * the `pull_request` key. Be aware
+ * that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+ * request id,
+ * use the "[List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests)" endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/issues#list-user-account-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
@@ -37547,7 +39822,9 @@ export async function issuesListForAuthenticatedUser<FetcherData>(
 }
 /**
  * List public SSH keys for the authenticated user
- * Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic
+ * Auth or via OAuth with at least `read:public_key`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-ssh-keys-for-the-authenticated-user}
  * Tags: users
  */
@@ -37579,7 +39856,9 @@ export async function usersListPublicSshKeysForAuthenticated<FetcherData>(
 }
 /**
  * Create a public SSH key for the authenticated user
- * Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or
+ * OAuth with at least `write:public_key`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -37618,7 +39897,9 @@ export async function usersCreatePublicSshKeyForAuthenticated<FetcherData>(
 }
 /**
  * Get a public SSH key for the authenticated user
- * View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with
+ * at least `read:public_key`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -37644,7 +39925,9 @@ export async function usersGetPublicSshKeyForAuthenticated<FetcherData>(
 }
 /**
  * Delete a public SSH key for the authenticated user
- * Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic
+ * Auth or via OAuth with at least `admin:public_key`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/users#delete-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -37669,7 +39952,10 @@ export async function usersDeletePublicSshKeyForAuthenticated<FetcherData>(
 }
 /**
  * List subscriptions for the authenticated user
- * Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).
+ * Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access
+ * token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site),
+ * created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an
+ * [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user}
  * Tags: apps
  */
@@ -37705,7 +39991,10 @@ export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
 }
 /**
  * List subscriptions for the authenticated user (stubbed)
- * Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).
+ * Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access
+ * token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site),
+ * created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an
+ * [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user-stubbed}
  * Tags: apps
  */
@@ -37919,14 +40208,18 @@ export async function migrationsStartForAuthenticatedUser<FetcherData>(
 }
 /**
  * Get a user migration status
- * Fetches a single user migration. The response includes the `state` of the migration, which can be one of the following values:
+ * Fetches a single user migration. The response includes the `state` of the migration, which can be one of the following
+ * values:
  *
  * *   `pending` - the migration hasn't started yet.
  * *   `exporting` - the migration is in progress.
- * *   `exported` - the migration finished successfully.
+ * *
+ * `exported` - the migration finished successfully.
  * *   `failed` - the migration failed.
  *
- * Once the migration has been `exported` you can [download the migration archive](https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive).
+ * Once the migration has been
+ * `exported` you can [download the migration
+ * archive](https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive).
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#get-a-user-migration-status}
  * Tags: migrations
  */
@@ -37954,27 +40247,32 @@ export async function migrationsGetStatusForAuthenticatedUser<FetcherData>(
 }
 /**
  * Download a user migration archive
- * Fetches the URL to download the migration archive as a `tar.gz` file. Depending on the resources your repository uses, the migration archive can contain JSON files with data for these objects:
+ * Fetches the URL to download the migration archive as a `tar.gz` file. Depending on the resources your repository uses,
+ * the migration archive can contain JSON files with data for these objects:
  *
  * *   attachments
  * *   bases
- * *   commit\_comments
+ * *
+ * commit\_comments
  * *   issue\_comments
  * *   issue\_events
  * *   issues
  * *   milestones
  * *   organizations
  * *   projects
- * *   protected\_branches
+ * *
+ * protected\_branches
  * *   pull\_request\_reviews
  * *   pull\_requests
  * *   releases
  * *   repositories
  * *   review\_comments
- * *   schema
+ * *
+ * schema
  * *   users
  *
- * The archive will also contain an `attachments` directory that includes all attachment files uploaded to GitHub.com and a `repositories` directory that contains the repository's Git data.
+ * The archive will also contain an `attachments` directory that includes all attachment files uploaded
+ * to GitHub.com and a `repositories` directory that contains the repository's Git data.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive}
  * Tags: migrations
  */
@@ -37998,7 +40296,11 @@ export async function migrationsGetArchiveForAuthenticatedUser<FetcherData>(
 }
 /**
  * Delete a user migration archive
- * Deletes a previous migration archive. Downloadable migration archives are automatically deleted after seven days. Migration metadata, which is returned in the [List user migrations](https://docs.github.com/rest/reference/migrations#list-user-migrations) and [Get a user migration status](https://docs.github.com/rest/reference/migrations#get-a-user-migration-status) endpoints, will continue to be available even after an archive is deleted.
+ * Deletes a previous migration archive. Downloadable migration archives are automatically deleted after seven days.
+ * Migration metadata, which is returned in the [List user
+ * migrations](https://docs.github.com/rest/reference/migrations#list-user-migrations) and [Get a user migration
+ * status](https://docs.github.com/rest/reference/migrations#get-a-user-migration-status) endpoints, will continue to be
+ * available even after an archive is deleted.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#delete-a-user-migration-archive}
  * Tags: migrations
  */
@@ -38023,7 +40325,11 @@ export async function migrationsDeleteArchiveForAuthenticatedUser<FetcherData>(
 }
 /**
  * Unlock a user repository
- * Unlocks a repository. You can lock repositories when you [start a user migration](https://docs.github.com/rest/reference/migrations#start-a-user-migration). Once the migration is complete you can unlock each repository to begin using it again or [delete the repository](https://docs.github.com/rest/reference/repos#delete-a-repository) if you no longer need the source data. Returns a status of `404 Not Found` if the repository is not locked.
+ * Unlocks a repository. You can lock repositories when you [start a user
+ * migration](https://docs.github.com/rest/reference/migrations#start-a-user-migration). Once the migration is complete you
+ * can unlock each repository to begin using it again or [delete the
+ * repository](https://docs.github.com/rest/reference/repos#delete-a-repository) if you no longer need the source data.
+ * Returns a status of `404 Not Found` if the repository is not locked.
  * Learn more at {@link https://docs.github.com/rest/reference/migrations#unlock-a-user-repository}
  * Tags: migrations
  */
@@ -38086,7 +40392,10 @@ export async function migrationsListReposForUser<FetcherData>(
  *
  * **OAuth scope requirements**
  *
- * This only lists organizations that your authorization allows you to operate on in some way (e.g., you can list teams with `read:org` scope, you can publicize your organization membership with `user` scope, etc.). Therefore, this API requires at least `user` or `read:org` scope. OAuth requests with insufficient scope receive a `403 Forbidden` response.
+ * This only lists organizations that your
+ * authorization allows you to operate on in some way (e.g., you can list teams with `read:org` scope, you can publicize
+ * your organization membership with `user` scope, etc.). Therefore, this API requires at least `user` or `read:org` scope.
+ * OAuth requests with insufficient scope receive a `403 Forbidden` response.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user}
  * Tags: orgs
  */
@@ -38124,8 +40433,10 @@ export async function orgsListForAuthenticatedUser<FetcherData>(
  * Get a package for the authenticated user
  * Gets a specific package for a package owned by the authenticated user.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must authenticate
+ * using an access token with the `packages:read` scope.
+ * If `package_type` is not `container`, your token must also include
+ * the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-the-authenticated-user}
  * Tags: packages
  */
@@ -38155,10 +40466,13 @@ export async function packagesGetPackageForAuthenticatedUser<FetcherData>(
 }
 /**
  * Delete a package for the authenticated user
- * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
+ * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has
+ * more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scopes.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you
+ * must authenticate using an access token with the `packages:read` and `packages:delete` scopes.
+ * If `package_type` is not
+ * `container`, your token must also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-for-the-authenticated-user}
  * Tags: packages
  */
@@ -38193,10 +40507,14 @@ export async function packagesDeletePackageForAuthenticatedUser<FetcherData>(
  * Restores a package owned by the authenticated user.
  *
  * You can restore a deleted package under the following conditions:
- *   - The package was deleted within the last 30 days.
- *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+ * - The package was deleted within the last 30 days.
+ *   - The same package namespace and version is still available and not
+ * reused for a new package. If the same package namespace is not available, you will not be able to restore your package.
+ * In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's
+ * namespace first.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must authenticate using an access token with the `packages:read` and
+ * `packages:write` scopes. If `package_type` is not `container`, your token must also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-for-the-authenticated-user}
  * Tags: packages
  */
@@ -38232,8 +40550,10 @@ export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
  * Get all package versions for a package owned by the authenticated user
  * Returns all package versions for a package owned by the authenticated user.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must authenticate
+ * using an access token with the `packages:read` scope.
+ * If `package_type` is not `container`, your token must also include
+ * the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-the-authenticated-user}
  * Tags: packages
  */
@@ -38280,8 +40600,10 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
  * Get a package version for the authenticated user
  * Gets a specific package version for a package owned by the authenticated user.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must
+ * authenticate using an access token with the `packages:read` scope.
+ * If `package_type` is not `container`, your token must
+ * also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-the-authenticated-user}
  * Tags: packages
  */
@@ -38316,10 +40638,14 @@ export async function packagesGetPackageVersionForAuthenticatedUser<
 }
 /**
  * Delete a package version for the authenticated user
- * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+ * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the
+ * package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub
+ * support for further assistance.
  *
- * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:delete` scopes.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must have admin permissions in the organization and
+ * authenticate using an access token with the `packages:read` and `packages:delete` scopes.
+ * If `package_type` is not
+ * `container`, your token must also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#delete-a-package-version-for-the-authenticated-user}
  * Tags: packages
  */
@@ -38356,11 +40682,17 @@ export async function packagesDeletePackageVersionForAuthenticatedUser<
  * Restore a package version for the authenticated user
  * Restores a package version owned by the authenticated user.
  *
- * You can restore a deleted package version under the following conditions:
+ * You can restore a deleted package version under the
+ * following conditions:
  *   - The package was deleted within the last 30 days.
- *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+ *   - The same package namespace and version is
+ * still available and not reused for a new package. If the same package namespace is not available, you will not be able
+ * to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the
+ * deleted package's namespace first.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must authenticate using an access token with the
+ * `packages:read` and `packages:write` scopes. If `package_type` is not `container`, your token must also include the
+ * `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#restore-a-package-version-for-the-authenticated-user}
  * Tags: packages
  */
@@ -38435,7 +40767,10 @@ export async function projectsCreateForAuthenticatedUser<FetcherData>(
 }
 /**
  * List public email addresses for the authenticated user
- * Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope.
+ * Lists your publicly visible email address, which you can set with the [Set primary email visibility for the
+ * authenticated
+ * user](https://docs.github.com/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint.
+ * This endpoint is accessible with the `user:email` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-public-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
@@ -38469,7 +40804,9 @@ export async function usersListPublicEmailsForAuthenticated<FetcherData>(
  * List repositories for the authenticated user
  * Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
  *
- * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+ * The
+ * authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator,
+ * and repositories that they can access through an organization membership.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repositories-for-the-authenticated-user}
  * Tags: repos
  */
@@ -38524,9 +40861,12 @@ export async function reposListForAuthenticatedUser<FetcherData>(
  *
  * **OAuth scope requirements**
  *
- * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+ * When using
+ * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
+ * include:
  *
- * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+ * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope
+ * to create an internal repository.
  * *   `repo` scope to create a private repository.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#create-a-repository-for-the-authenticated-user}
  * Tags: repos
@@ -38735,7 +41075,8 @@ export async function reposDeclineInvitation<FetcherData>(
  * List repositories starred by the authenticated user
  * Lists repositories the authenticated user has starred.
  *
- * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+ * You can also find out _when_ stars were created by passing the
+ * following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-starred-by-the-authenticated-user}
  * Tags: activity
  */
@@ -38795,7 +41136,8 @@ export async function activityCheckRepoIsStarredByAuthenticatedUser<
 }
 /**
  * Star a repository for the authenticated user
- * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
+ * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
  * Learn more at {@link https://docs.github.com/rest/reference/activity#star-a-repository-for-the-authenticated-user}
  * Tags: activity
  */
@@ -38879,7 +41221,10 @@ export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
 }
 /**
  * List teams for the authenticated user
- * List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/apps/building-oauth-apps/).
+ * List all of the teams across all of the organizations to which the authenticated user belongs. This method requires
+ * `user`, `repo`, or `read:org`
+ * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via
+ * [OAuth](https://docs.github.com/apps/building-oauth-apps/).
  * Learn more at {@link https://docs.github.com/rest/reference/teams#list-teams-for-the-authenticated-user}
  * Tags: teams
  */
@@ -38910,9 +41255,12 @@ export async function teamsListForAuthenticatedUser<FetcherData>(
 }
 /**
  * List users
- * Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization accounts.
+ * Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization
+ * accounts.
  *
- * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
+ * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link
+ * header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of
+ * users.
  * Learn more at {@link https://docs.github.com/rest/reference/users#list-users}
  * Tags: users
  */
@@ -38943,11 +41291,22 @@ export async function usersList<FetcherData>(
  * Get a user
  * Provides publicly available information about someone with a GitHub account.
  *
- * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub plan information' below"
+ * GitHub Apps with the `Plan` user
+ * permission can use this endpoint to retrieve information about a user's GitHub plan. The GitHub App must be
+ * authenticated as a user. See "[Identifying and authorizing users for GitHub
+ * Apps](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details
+ * about authentication. For an example response, see 'Response with GitHub plan information' below"
  *
- * The `email` key in the following response is the publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub. For more information, see [Authentication](https://docs.github.com/rest/overview/resources-in-the-rest-api#authentication).
+ * The `email` key in
+ * the following response is the publicly visible email address from your GitHub [profile
+ * page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be
+ * “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it
+ * will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub. For more
+ * information, see [Authentication](https://docs.github.com/rest/overview/resources-in-the-rest-api#authentication).
  *
- * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/rest/reference/users#emails)".
+ * The
+ * Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more
+ * information, see "[Emails API](https://docs.github.com/rest/reference/users#emails)".
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-a-user}
  * Tags: users
  */
@@ -39220,13 +41579,17 @@ export async function usersListGpgKeysForUser<FetcherData>(
 }
 /**
  * Get contextual information for a user
- * Provides hovercard information when authenticated through basic auth or OAuth with the `repo` scope. You can find out more about someone in relation to their pull requests, issues, repositories, and organizations.
+ * Provides hovercard information when authenticated through basic auth or OAuth with the `repo` scope. You can find out
+ * more about someone in relation to their pull requests, issues, repositories, and organizations.
  *
- * The `subject_type` and `subject_id` parameters provide context for the person's hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository via cURL, it would look like this:
+ * The `subject_type` and
+ * `subject_id` parameters provide context for the person's hovercard, which returns more information than without the
+ * parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository via cURL,
+ * it would look like this:
  *
  * ```shell
  *  curl -u username:token
- *   https://api.github.com/users/octocat/hovercard?subject_type=repository&subject_id=1300192
+ * https://api.github.com/users/octocat/hovercard?subject_type=repository&subject_id=1300192
  * ```
  * Learn more at {@link https://docs.github.com/rest/reference/users#get-contextual-information-for-a-user}
  * Tags: users
@@ -39259,7 +41622,9 @@ export async function usersGetContextForUser<FetcherData>(
  * Get a user installation for the authenticated app
  * Enables an authenticated GitHub App to find the user’s installation information.
  *
- * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+ * You must use a
+ * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
+ * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reference/apps#get-a-user-installation-for-the-authenticated-app}
  * Tags: apps
  */
@@ -39312,9 +41677,14 @@ export async function usersListPublicKeysForUser<FetcherData>(
 }
 /**
  * List organizations for a user
- * List [public organization memberships](https://help.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user.
+ * List [public organization
+ * memberships](https://help.github.com/articles/publicizing-or-concealing-organization-membership) for the specified
+ * user.
  *
- * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
+ * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the
+ * organization memberships (public and private) for the authenticated user, use the [List organizations for the
+ * authenticated user](https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user) API
+ * instead.
  * Learn more at {@link https://docs.github.com/rest/reference/orgs#list-organizations-for-a-user}
  * Tags: orgs
  */
@@ -39351,8 +41721,10 @@ export async function orgsListForUser<FetcherData>(
  * Get a package for a user
  * Gets a specific package metadata for a public package owned by a user.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must authenticate
+ * using an access token with the `packages:read` scope.
+ * If `package_type` is not `container`, your token must also include
+ * the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-for-a-user}
  * Tags: packages
  */
@@ -39385,8 +41757,10 @@ export async function packagesGetPackageForUser<FetcherData>(
  * Get all package versions for a package owned by a user
  * Returns all package versions for a public package owned by a specified user.
  *
- * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * To use this endpoint, you must
+ * authenticate using an access token with the `packages:read` scope.
+ * If `package_type` is not `container`, your token must
+ * also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-a-user}
  * Tags: packages
  */
@@ -39430,8 +41804,10 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
  * Get a package version for a user
  * Gets a specific package version for a public package owned by a specified user.
  *
- * At this time, to use this endpoint, you must authenticate using an access token with the `packages:read` scope.
- * If `package_type` is not `container`, your token must also include the `repo` scope.
+ * At this time, to use this endpoint, you
+ * must authenticate using an access token with the `packages:read` scope.
+ * If `package_type` is not `container`, your token
+ * must also include the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/packages#get-a-package-version-for-a-user}
  * Tags: packages
  */
@@ -39498,7 +41874,8 @@ export async function projectsListForUser<FetcherData>(
 }
 /**
  * List events received by the authenticated user
- * These are events that you've received by watching repos and following users. If you are authenticated as the given user, you will see private events. Otherwise, you'll only see public events.
+ * These are events that you've received by watching repos and following users. If you are authenticated as the given user,
+ * you will see private events. Otherwise, you'll only see public events.
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-events-received-by-the-authenticated-user}
  * Tags: activity
  */
@@ -39557,7 +41934,8 @@ export async function activityListReceivedPublicEventsForUser<FetcherData>(
 }
 /**
  * List repositories for a user
- * Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user.
+ * Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for
+ * the specified user.
  * Learn more at {@link https://docs.github.com/rest/reference/repos#list-repositories-for-a-user}
  * Tags: repos
  */
@@ -39594,9 +41972,14 @@ export async function reposListForUser<FetcherData>(
  * Get GitHub Actions billing for a user
  * Gets the summary of the free and paid GitHub Actions minutes used.
  *
- * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+ * Paid minutes only apply to workflows in private
+ * repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any
+ * job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows
+ * runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub
+ * Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
- * Access tokens must have the `user` scope.
+ * Access
+ * tokens must have the `user` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-actions-billing-for-a-user}
  * Tags: billing
  */
@@ -39623,9 +42006,12 @@ export async function billingGetGithubActionsBillingUser<FetcherData>(
  * Get GitHub Packages billing for a user
  * Gets the free and paid storage used for GitHub Packages in gigabytes.
  *
- * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+ * Paid minutes only apply to packages stored for
+ * private repositories. For more information, see "[Managing billing for GitHub
+ * Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access tokens must have the `user` scope.
+ * Access
+ * tokens must have the `user` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-github-packages-billing-for-a-user}
  * Tags: billing
  */
@@ -39652,9 +42038,12 @@ export async function billingGetGithubPackagesBillingUser<FetcherData>(
  * Get shared storage billing for a user
  * Gets the estimated paid and estimated total storage used for GitHub Actions and Github Packages.
  *
- * Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+ * Paid minutes only
+ * apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub
+ * Packages](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access tokens must have the `user` scope.
+ * Access
+ * tokens must have the `user` scope.
  * Learn more at {@link https://docs.github.com/rest/reference/billing#get-shared-storage-billing-for-a-user}
  * Tags: billing
  */
@@ -39681,7 +42070,8 @@ export async function billingGetSharedStorageBillingUser<FetcherData>(
  * List repositories starred by a user
  * Lists repositories a user has starred.
  *
- * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+ * You can also find out _when_ stars were created by passing the following custom
+ * [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
  * Learn more at {@link https://docs.github.com/rest/reference/activity#list-repositories-starred-by-a-user}
  * Tags: activity
  */

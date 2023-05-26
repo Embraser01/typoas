@@ -1183,6 +1183,7 @@ __metadata:
     clipanion: ^3.2.0
     js-yaml: ^4.1.0
     ts-node: ^10.9.1
+    typanion: ^3.12.1
     typescript: ^5.0.4
   bin:
     cli: ./src/bin.ts
@@ -4523,7 +4524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typanion@npm:^3.8.0":
+"typanion@npm:^3.12.1, typanion@npm:^3.8.0":
   version: 3.12.1
   resolution: "typanion@npm:3.12.1"
   checksum: a2e26fa216f8a1dbd2ffbaacb75b1e2dc042a0356e9702fba05a968cad95d9f661b24e37f6c6d8c3adad2c8582c99fca4826ff26a2d07cd2ae617ea87e6187eb

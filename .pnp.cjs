@@ -1814,6 +1814,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clipanion", "virtual:8ba6f45f834c024f5b31c5cafe8fca5333c03579b4255aded97917acea776523cf7661cf9835fac36471455bbfc5e3f56401515fe2b647ea50739c28c33ceb90#npm:3.2.0"],\
             ["js-yaml", "npm:4.1.0"],\
             ["ts-node", "virtual:8ba6f45f834c024f5b31c5cafe8fca5333c03579b4255aded97917acea776523cf7661cf9835fac36471455bbfc5e3f56401515fe2b647ea50739c28c33ceb90#npm:10.9.1"],\
+            ["typanion", "npm:3.12.1"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
           ],\
           "linkType": "SOFT"\
@@ -2459,7 +2460,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typanion", "npm:3.12.1"]\
           ],\
           "packagePeers": [\
-            "@types/typanion"\
+            "@types/typanion",\
+            "typanion"\
           ],\
           "linkType": "HARD"\
         }]\

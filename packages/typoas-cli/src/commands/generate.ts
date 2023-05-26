@@ -1,4 +1,5 @@
 import { Command, Option, Usage } from 'clipanion';
+import * as t from 'typanion';
 import { writeFile } from 'fs/promises';
 import * as path from 'path';
 import { generateClient, getStringFromSourceFile } from '@typoas/generator';
@@ -41,6 +42,12 @@ export class GenerateCommand extends Command {
     description: 'Whether to add JS Doc to the generated code',
   });
 
+  wrapLinesAt = Option.String('--wrap-lines-at', {
+    validator: t.isNumber(),
+    description:
+      'Define a maximum width for JS Doc comments, 0 to disable (default: 120).',
+  });
+
   onlyTypes = Option.Boolean('--only-types', {
     description: 'Use it to only generate types in #components/schemas/',
   });
@@ -71,6 +78,7 @@ export class GenerateCommand extends Command {
       fetcherOptions: !this.noFetcherOptions,
       generateEnums: this.generateEnums,
       anyInsteadOfUnknown: this.anyInsteadOfUnknown,
+      wrapLinesAt: this.wrapLinesAt,
     });
 
     const content = getStringFromSourceFile(src);
