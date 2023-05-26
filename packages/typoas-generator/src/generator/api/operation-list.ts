@@ -33,7 +33,7 @@ export function createOperationList(
           defaultSecurityRequirements: specs.security,
         });
         if (ctx.hasJSDoc()) {
-          addJSDocToNode(opMethod, getJSDocFromOperation(op));
+          addJSDocToNode(opMethod, getJSDocFromOperation(op, ctx));
         }
         return opMethod;
       });

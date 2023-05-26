@@ -51,6 +51,7 @@ Here is a short list of supported command line options:
     -o, --output [path]            Path where to write the generated TS file
     -e,--generate-enums            Generate enums instead of literal string types where possible
     --js-doc, --no-js-doc          Whether to add JS Doc to the generated code (default: true)
+    --wrap-lines-at                Define a maximum width for JS Doc comments, 0 to disable (default: 120)
     --only-types                   Use it to only generate types in #components/schemas/
     --no-fetcher-options           Use it to disable the additional param added to every operations
     --version                      Output the version number
