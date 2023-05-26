@@ -28,18 +28,22 @@ import {
 const CONTENT_TYPE_HEADER = 'content-type';
 const EMPTY_BODY_CODES = [204, 304];
 
-export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
-  fetcher: Fetcher;
+export class Context<
+  AuthModes extends Record<string, SecurityAuthentication>,
+  FetcherData = unknown,
+> {
+  fetcher: Fetcher<FetcherData>;
   serializerOptions: SerializerOptions;
   authMethods: Partial<AuthModes>;
   resolver: TransformResolver;
   transformers: Record<string, Transform<unknown, unknown>>;
   serverConfiguration: BaseServerConfiguration;
 
-  constructor(params: ContextParams<AuthModes>) {
+  constructor(params: ContextParams<AuthModes, FetcherData>) {
     this.resolver = params.resolver;
     this.serverConfiguration = params.serverConfiguration;
-    this.fetcher = params.fetcher || new IsomorphicFetchHttpLibrary();
+    this.fetcher =
+      params.fetcher || new IsomorphicFetchHttpLibrary<FetcherData>();
     this.serializerOptions = params.serializerOptions || {};
     this.authMethods = params.authMethods;
     this.transformers = params.transformers || { date: DateTransformer };
@@ -103,8 +107,11 @@ export class Context<AuthModes extends Record<string, SecurityAuthentication>> {
   /**
    * Sends a request.
    */
-  sendRequest(request: RequestContext): Promise<ResponseContext> {
-    return this.fetcher.send(request);
+  sendRequest(
+    request: RequestContext,
+    options?: FetcherData,
+  ): Promise<ResponseContext> {
+    return this.fetcher.send(request, options);
   }
 
   /**

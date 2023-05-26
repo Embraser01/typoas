@@ -8,7 +8,11 @@ import {
 } from 'typescript';
 import { isEqual, uniqWith } from 'lodash';
 import { Context } from '../../../context';
-import { createRuntimeRefType, ExportedRef } from '../../utils/ref';
+import {
+  createRuntimeRefType,
+  ExportedRef,
+  FETCHER_DATA_NAME,
+} from '../../utils/ref';
 import {
   createSchemaTypeFromParameters,
   getParameterName,
@@ -35,9 +39,10 @@ export function createOperationDeclaration(
       'ctx',
       undefined,
       createRuntimeRefType(ExportedRef.Context, [
-        factory.createTypeReferenceNode(
-          factory.createIdentifier(AUTH_TYPE_NAME),
-        ),
+        factory.createTypeReferenceNode(AUTH_TYPE_NAME),
+        ...(ctx.hasFetcherOptions()
+          ? [factory.createTypeReferenceNode(FETCHER_DATA_NAME)]
+          : []),
       ]),
     ),
     factory.createParameterDeclaration(
@@ -78,6 +83,18 @@ export function createOperationDeclaration(
         'body',
         undefined,
         createSchemaTypeFromRequestBody(operation.requestBody, ctx),
+      ),
+    );
+  }
+
+  if (ctx.hasFetcherOptions()) {
+    parameters.push(
+      factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        'opts',
+        factory.createToken(SyntaxKind.QuestionToken),
+        factory.createTypeReferenceNode(FETCHER_DATA_NAME),
       ),
     );
   }

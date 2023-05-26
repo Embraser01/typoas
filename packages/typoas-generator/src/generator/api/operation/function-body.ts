@@ -127,7 +127,12 @@ export function createOperationBody(
                   factory.createIdentifier('sendRequest'),
                 ),
                 undefined,
-                [factory.createIdentifier('req')],
+                [
+                  factory.createIdentifier('req'),
+                  ...(ctx.hasFetcherOptions()
+                    ? [factory.createIdentifier('opts')]
+                    : []),
+                ],
               ),
             ),
           ),

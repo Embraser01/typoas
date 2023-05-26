@@ -1,11 +1,19 @@
 import { Context } from './context';
 import { SecurityAuthentication } from './auth';
 
-type ApiFunction<AuthModes extends Record<string, SecurityAuthentication>> =
+type ApiFunction<
+  AuthModes extends Record<string, SecurityAuthentication>,
+  FetcherData,
+> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  | ((ctx: Context<AuthModes>, params: any) => Promise<unknown>)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  | ((ctx: Context<AuthModes>, params: any, body: any) => Promise<unknown>);
+  | ((ctx: Context<AuthModes, FetcherData>, params: any) => Promise<unknown>)
+  | ((
+      ctx: Context<AuthModes, FetcherData>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      params: any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body: any,
+    ) => Promise<unknown>);
 
 type WithoutContext<T> = T extends (
   ctx: Context<never>,
@@ -22,22 +30,25 @@ type WithoutContext<T> = T extends (
 
 type WrapApiEndpoints<
   AuthModes extends Record<string, SecurityAuthentication>,
-> = Record<string, ApiFunction<AuthModes>>;
+  FetcherData,
+> = Record<string, ApiFunction<AuthModes, FetcherData>>;
 
 type WithoutContextObject<
-  T extends WrapApiEndpoints<AuthModes>,
+  T extends WrapApiEndpoints<AuthModes, FetcherData>,
   AuthModes extends Record<string, SecurityAuthentication>,
+  FetcherData,
 > = {
   [key in keyof T]: WithoutContext<T[key]>;
 };
 
 export function wrapApi<
-  T extends WrapApiEndpoints<AuthModes>,
+  T extends WrapApiEndpoints<AuthModes, FetcherData>,
   AuthModes extends Record<string, SecurityAuthentication>,
+  FetcherData = unknown,
 >(
   context: Context<AuthModes>,
   endpoints: T,
-): WithoutContextObject<T, AuthModes> {
+): WithoutContextObject<T, AuthModes, FetcherData> {
   const res = {};
   for (const endpoint of Object.keys(endpoints)) {
     // @ts-expect-error TS is not smart enough to infer the type of the function
@@ -45,5 +56,5 @@ export function wrapApi<
       return endpoints[endpoint](context, params, body);
     };
   }
-  return res as WithoutContextObject<T, AuthModes>;
+  return res as WithoutContextObject<T, AuthModes, FetcherData>;
 }

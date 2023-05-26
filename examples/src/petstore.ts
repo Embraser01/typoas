@@ -139,10 +139,10 @@ export function configureAuth(
       ),
   };
 }
-export function createContext(
-  params?: r.CreateContextParams<AuthMethods>,
-): r.Context<AuthMethods> {
-  return new r.Context<AuthMethods>({
+export function createContext<FetcherData>(
+  params?: r.CreateContextParams<AuthMethods, FetcherData>,
+): r.Context<AuthMethods, FetcherData> {
+  return new r.Context<AuthMethods, FetcherData>({
     resolver: new r.RefResolver({
       Order: {
         date: [[[r.TransformType.ACCESS, 'shipDate'], [r.TransformType.THIS]]],
@@ -158,10 +158,11 @@ export function createContext(
  * Update an existing pet by Id
  * Tags: pet
  */
-export async function updatePet(
-  ctx: r.Context<AuthMethods>,
+export async function updatePet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: Pet,
+  opts?: FetcherData,
 ): Promise<Pet> {
   const req = await ctx.createRequest({
     path: '/pet',
@@ -170,7 +171,7 @@ export async function updatePet(
     body,
     auth: ['petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
   });
@@ -180,10 +181,11 @@ export async function updatePet(
  * Add a new pet to the store
  * Tags: pet
  */
-export async function addPet(
-  ctx: r.Context<AuthMethods>,
+export async function addPet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: Pet,
+  opts?: FetcherData,
 ): Promise<Pet> {
   const req = await ctx.createRequest({
     path: '/pet',
@@ -192,7 +194,7 @@ export async function addPet(
     body,
     auth: ['petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
   });
@@ -202,11 +204,12 @@ export async function addPet(
  * Multiple status values can be provided with comma separated strings
  * Tags: pet
  */
-export async function findPetsByStatus(
-  ctx: r.Context<AuthMethods>,
+export async function findPetsByStatus<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     status?: 'available' | 'pending' | 'sold';
   },
+  opts?: FetcherData,
 ): Promise<Pet[]> {
   const req = await ctx.createRequest({
     path: '/pet/findByStatus',
@@ -215,7 +218,7 @@ export async function findPetsByStatus(
     queryParams: ['status'],
     auth: ['petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -229,11 +232,12 @@ export async function findPetsByStatus(
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  * Tags: pet
  */
-export async function findPetsByTags(
-  ctx: r.Context<AuthMethods>,
+export async function findPetsByTags<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     tags?: string[];
   },
+  opts?: FetcherData,
 ): Promise<Pet[]> {
   const req = await ctx.createRequest({
     path: '/pet/findByTags',
@@ -242,7 +246,7 @@ export async function findPetsByTags(
     queryParams: ['tags'],
     auth: ['petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
@@ -256,11 +260,12 @@ export async function findPetsByTags(
  * Returns a single pet
  * Tags: pet
  */
-export async function getPetById(
-  ctx: r.Context<AuthMethods>,
+export async function getPetById<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     petId: number;
   },
+  opts?: FetcherData,
 ): Promise<Pet> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
@@ -268,7 +273,7 @@ export async function getPetById(
     method: r.HttpMethod.GET,
     auth: ['api_key', 'petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
   });
@@ -277,13 +282,14 @@ export async function getPetById(
  * Updates a pet in the store with form data
  * Tags: pet
  */
-export async function updatePetWithForm(
-  ctx: r.Context<AuthMethods>,
+export async function updatePetWithForm<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     petId: number;
     name?: string;
     status?: string;
   },
+  opts?: FetcherData,
 ): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
@@ -292,19 +298,20 @@ export async function updatePetWithForm(
     queryParams: ['name', 'status'],
     auth: ['petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
  * Deletes a pet
  * Tags: pet
  */
-export async function deletePet(
-  ctx: r.Context<AuthMethods>,
+export async function deletePet<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     api_key?: string;
     petId: number;
   },
+  opts?: FetcherData,
 ): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
@@ -312,20 +319,21 @@ export async function deletePet(
     method: r.HttpMethod.DELETE,
     auth: ['petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
  * uploads an image
  * Tags: pet
  */
-export async function uploadFile(
-  ctx: r.Context<AuthMethods>,
+export async function uploadFile<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     petId: number;
     additionalMetadata?: string;
   },
   body: Blob,
+  opts?: FetcherData,
 ): Promise<ApiResponse> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}/uploadImage',
@@ -335,7 +343,7 @@ export async function uploadFile(
     queryParams: ['additionalMetadata'],
     auth: ['petstore_auth'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'ApiResponse']]] } },
   });
@@ -345,9 +353,10 @@ export async function uploadFile(
  * Returns a map of status codes to quantities
  * Tags: store
  */
-export async function getInventory(
-  ctx: r.Context<AuthMethods>,
+export async function getInventory<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<{
   [key: string]: number;
 }> {
@@ -357,7 +366,7 @@ export async function getInventory(
     method: r.HttpMethod.GET,
     auth: ['api_key'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -365,10 +374,11 @@ export async function getInventory(
  * Place a new order in the store
  * Tags: store
  */
-export async function placeOrder(
-  ctx: r.Context<AuthMethods>,
+export async function placeOrder<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: Order,
+  opts?: FetcherData,
 ): Promise<Order> {
   const req = await ctx.createRequest({
     path: '/store/order',
@@ -376,7 +386,7 @@ export async function placeOrder(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
   });
@@ -386,18 +396,19 @@ export async function placeOrder(
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions
  * Tags: store
  */
-export async function getOrderById(
-  ctx: r.Context<AuthMethods>,
+export async function getOrderById<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     orderId: number;
   },
+  opts?: FetcherData,
 ): Promise<Order> {
   const req = await ctx.createRequest({
     path: '/store/order/{orderId}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
   });
@@ -407,18 +418,19 @@ export async function getOrderById(
  * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
  * Tags: store
  */
-export async function deleteOrder(
-  ctx: r.Context<AuthMethods>,
+export async function deleteOrder<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     orderId: number;
   },
+  opts?: FetcherData,
 ): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/store/order/{orderId}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -426,10 +438,11 @@ export async function deleteOrder(
  * This can only be done by the logged in user.
  * Tags: user
  */
-export async function createUser(
-  ctx: r.Context<AuthMethods>,
+export async function createUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: User,
+  opts?: FetcherData,
 ): Promise<User> {
   const req = await ctx.createRequest({
     path: '/user',
@@ -437,7 +450,7 @@ export async function createUser(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     default: { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
   });
@@ -447,10 +460,11 @@ export async function createUser(
  * Creates list of users with given input array
  * Tags: user
  */
-export async function createUsersWithListInput(
-  ctx: r.Context<AuthMethods>,
+export async function createUsersWithListInput<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: User[],
+  opts?: FetcherData,
 ): Promise<User> {
   const req = await ctx.createRequest({
     path: '/user/createWithList',
@@ -458,7 +472,7 @@ export async function createUsersWithListInput(
     method: r.HttpMethod.POST,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
   });
@@ -467,12 +481,13 @@ export async function createUsersWithListInput(
  * Logs user into the system
  * Tags: user
  */
-export async function loginUser(
-  ctx: r.Context<AuthMethods>,
+export async function loginUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username?: string;
     password?: string;
   },
+  opts?: FetcherData,
 ): Promise<string> {
   const req = await ctx.createRequest({
     path: '/user/login',
@@ -480,41 +495,43 @@ export async function loginUser(
     method: r.HttpMethod.GET,
     queryParams: ['username', 'password'],
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
  * Logs out current logged in user session
  * Tags: user
  */
-export async function logoutUser(
-  ctx: r.Context<AuthMethods>,
+export async function logoutUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/user/logout',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
  * Get user by user name
  * Tags: user
  */
-export async function getUserByName(
-  ctx: r.Context<AuthMethods>,
+export async function getUserByName<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<User> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,
     method: r.HttpMethod.GET,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
   });
@@ -524,12 +541,13 @@ export async function getUserByName(
  * This can only be done by the logged in user.
  * Tags: user
  */
-export async function updateUser(
-  ctx: r.Context<AuthMethods>,
+export async function updateUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
   body: User,
+  opts?: FetcherData,
 ): Promise<any> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
@@ -537,7 +555,7 @@ export async function updateUser(
     method: r.HttpMethod.PUT,
     body,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }
 /**
@@ -545,17 +563,18 @@ export async function updateUser(
  * This can only be done by the logged in user.
  * Tags: user
  */
-export async function deleteUser(
-  ctx: r.Context<AuthMethods>,
+export async function deleteUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
   },
+  opts?: FetcherData,
 ): Promise<unknown> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
-  const res = await ctx.sendRequest(req);
+  const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
 }

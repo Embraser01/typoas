@@ -56,6 +56,11 @@ export class GenerateCommand extends Command {
       'Schemas will never use the unknown keyword.',
   });
 
+  noFetcherOptions = Option.Boolean('--no-fetcher-options', {
+    description:
+      'Use it to disable the additional param added to every operations.',
+  });
+
   async execute(): Promise<void> {
     const specs = await loadSpec(this.input);
 
@@ -63,6 +68,7 @@ export class GenerateCommand extends Command {
     const src = generateClient(specs, {
       jsDoc: this.jsDoc,
       onlyTypes: this.onlyTypes,
+      fetcherOptions: !this.noFetcherOptions,
       generateEnums: this.generateEnums,
       anyInsteadOfUnknown: this.anyInsteadOfUnknown,
     });

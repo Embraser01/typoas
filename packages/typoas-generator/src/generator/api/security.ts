@@ -55,9 +55,7 @@ export function createConfigureAuthFunction(
         factory.createToken(SyntaxKind.QuestionToken),
         factory.createIndexedAccessTypeNode(
           createRuntimeRefType(ExportedRef.CreateContextParams, [
-            factory.createTypeReferenceNode(
-              factory.createIdentifier(AUTH_TYPE_NAME),
-            ),
+            factory.createTypeReferenceNode(AUTH_TYPE_NAME),
           ]),
           factory.createLiteralTypeNode(
             factory.createStringLiteral('authProviders'),
