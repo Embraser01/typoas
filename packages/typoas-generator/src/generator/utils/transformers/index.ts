@@ -17,7 +17,6 @@ import {
   TransformField,
   TransformType,
 } from './leaf-transformer-base';
-import { createRuntimeRefProperty, ExportedRef } from '../ref';
 import { hasUnsupportedIdentifierChar } from '../operation-name';
 
 export function createAllSchemaTransforms(
@@ -170,12 +169,7 @@ function createFromRawTransforms(
     rawTransforms.map((transformFields) =>
       factory.createArrayLiteralExpression(
         transformFields.map(([type, data]) => {
-          const items: Expression[] = [
-            factory.createPropertyAccessExpression(
-              createRuntimeRefProperty(ExportedRef.TransformType),
-              factory.createIdentifier(type.toUpperCase()),
-            ),
-          ];
+          const items: Expression[] = [factory.createStringLiteral(type, true)];
 
           if (typeof data === 'string') {
             items.push(factory.createStringLiteral(data));

@@ -145,7 +145,7 @@ export function createContext<FetcherData>(
   return new r.Context<AuthMethods, FetcherData>({
     resolver: new r.RefResolver({
       Order: {
-        date: [[[r.TransformType.ACCESS, 'shipDate'], [r.TransformType.THIS]]],
+        date: [[['access', 'shipDate'], ['this']]],
       },
     }),
     serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
@@ -173,7 +173,7 @@ export async function updatePet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
+    '200': { transforms: { date: [[['ref', 'Pet']]] } },
   });
 }
 /**
@@ -196,7 +196,7 @@ export async function addPet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
+    '200': { transforms: { date: [[['ref', 'Pet']]] } },
   });
 }
 /**
@@ -220,11 +220,7 @@ export async function findPetsByStatus<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'Pet']]],
-      },
-    },
+    '200': { transforms: { date: [[['loop'], ['ref', 'Pet']]] } },
   });
 }
 /**
@@ -248,11 +244,7 @@ export async function findPetsByTags<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[[r.TransformType.LOOP], [r.TransformType.REF, 'Pet']]],
-      },
-    },
+    '200': { transforms: { date: [[['loop'], ['ref', 'Pet']]] } },
   });
 }
 /**
@@ -275,7 +267,7 @@ export async function getPetById<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'Pet']]] } },
+    '200': { transforms: { date: [[['ref', 'Pet']]] } },
   });
 }
 /**
@@ -345,7 +337,7 @@ export async function uploadFile<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'ApiResponse']]] } },
+    '200': { transforms: { date: [[['ref', 'ApiResponse']]] } },
   });
 }
 /**
@@ -388,7 +380,7 @@ export async function placeOrder<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
+    '200': { transforms: { date: [[['ref', 'Order']]] } },
   });
 }
 /**
@@ -410,7 +402,7 @@ export async function getOrderById<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'Order']]] } },
+    '200': { transforms: { date: [[['ref', 'Order']]] } },
   });
 }
 /**
@@ -452,7 +444,7 @@ export async function createUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    default: { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
+    default: { transforms: { date: [[['ref', 'User']]] } },
   });
 }
 /**
@@ -474,7 +466,7 @@ export async function createUsersWithListInput<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
+    '200': { transforms: { date: [[['ref', 'User']]] } },
   });
 }
 /**
@@ -533,7 +525,7 @@ export async function getUserByName<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[[r.TransformType.REF, 'User']]] } },
+    '200': { transforms: { date: [[['ref', 'User']]] } },
   });
 }
 /**

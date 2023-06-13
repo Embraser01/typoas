@@ -1,16 +1,15 @@
 import { describe, expect, it } from '@jest/globals';
 import { RefResolver } from '../resolver';
-import { TransformType } from '../transformers';
 
 describe('ref resolver', () => {
   const resolver = new RefResolver({
-    A: { date: [[[TransformType.ACCESS, 'createdAt'], [TransformType.THIS]]] },
-    'My0wn Schema.v2': { date: [[[TransformType.THIS]]] },
+    A: { date: [[['access', 'createdAt'], ['this']]] },
+    'My0wn Schema.v2': { date: [[['this']]] },
   });
 
   it('should resolve refs', () => {
     expect(resolver.getTransforms('date', 'A')).toEqual([
-      [[TransformType.ACCESS, 'createdAt'], [TransformType.THIS]],
+      [['access', 'createdAt'], ['this']],
     ]);
   });
 
@@ -24,7 +23,7 @@ describe('ref resolver', () => {
 
   it('should resolve refs with special chars', () => {
     expect(resolver.getTransforms('date', 'My0wn Schema.v2')).toEqual([
-      [[TransformType.THIS]],
+      [['this']],
     ]);
   });
 });
