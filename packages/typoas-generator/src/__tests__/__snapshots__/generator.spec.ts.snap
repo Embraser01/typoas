@@ -62,7 +62,7 @@ export function configureAuth(params?: r.CreateContextParams<AuthMethods>["authP
 export function createContext<FetcherData>(params?: r.CreateContextParams<AuthMethods, FetcherData>): r.Context<AuthMethods, FetcherData> { return new r.Context<AuthMethods, FetcherData>({
     resolver: new r.RefResolver({
         Order: {
-            date: [[[r.TransformType.ACCESS, "shipDate"], [r.TransformType.THIS]]]
+            date: [[['access', "shipDate"], ['this']]]
         }
     }),
     serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
@@ -79,7 +79,7 @@ export async function updatePet<FetcherData>(ctx: r.Context<AuthMethods, Fetcher
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "Pet"]]] } }
+        '200': { transforms: { date: [[['ref', "Pet"]]] } }
     });
 }
 export async function addPet<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: Pet, opts?: FetcherData): Promise<Pet> {
@@ -92,7 +92,7 @@ export async function addPet<FetcherData>(ctx: r.Context<AuthMethods, FetcherDat
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "Pet"]]] } }
+        '200': { transforms: { date: [[['ref', "Pet"]]] } }
     });
 }
 export async function findPetsByStatus<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -109,7 +109,7 @@ export async function findPetsByStatus<FetcherData>(ctx: r.Context<AuthMethods, 
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, "Pet"]]] } }
+        '200': { transforms: { date: [[['loop'], ['ref', "Pet"]]] } }
     });
 }
 export async function findPetsByTags<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -126,7 +126,7 @@ export async function findPetsByTags<FetcherData>(ctx: r.Context<AuthMethods, Fe
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.LOOP], [r.TransformType.REF, "Pet"]]] } }
+        '200': { transforms: { date: [[['loop'], ['ref', "Pet"]]] } }
     });
 }
 export async function getPetById<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -140,7 +140,7 @@ export async function getPetById<FetcherData>(ctx: r.Context<AuthMethods, Fetche
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "Pet"]]] } }
+        '200': { transforms: { date: [[['ref', "Pet"]]] } }
     });
 }
 export async function updatePetWithForm<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -190,7 +190,7 @@ export async function uploadFile<FetcherData>(ctx: r.Context<AuthMethods, Fetche
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "ApiResponse"]]] } }
+        '200': { transforms: { date: [[['ref', "ApiResponse"]]] } }
     });
 }
 export async function getInventory<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, opts?: FetcherData): Promise<{
@@ -214,7 +214,7 @@ export async function placeOrder<FetcherData>(ctx: r.Context<AuthMethods, Fetche
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "Order"]]] } }
+        '200': { transforms: { date: [[['ref', "Order"]]] } }
     });
 }
 export async function getOrderById<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -227,7 +227,7 @@ export async function getOrderById<FetcherData>(ctx: r.Context<AuthMethods, Fetc
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "Order"]]] } }
+        '200': { transforms: { date: [[['ref', "Order"]]] } }
     });
 }
 export async function deleteOrder<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -250,7 +250,7 @@ export async function createUser<FetcherData>(ctx: r.Context<AuthMethods, Fetche
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        'default': { transforms: { date: [[[r.TransformType.REF, "User"]]] } }
+        'default': { transforms: { date: [[['ref', "User"]]] } }
     });
 }
 export async function createUsersWithListInput<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: User[], opts?: FetcherData): Promise<User> {
@@ -262,7 +262,7 @@ export async function createUsersWithListInput<FetcherData>(ctx: r.Context<AuthM
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "User"]]] } }
+        '200': { transforms: { date: [[['ref', "User"]]] } }
     });
 }
 export async function loginUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -300,7 +300,7 @@ export async function getUserByName<FetcherData>(ctx: r.Context<AuthMethods, Fet
     });
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
-        '200': { transforms: { date: [[[r.TransformType.REF, "User"]]] } }
+        '200': { transforms: { date: [[['ref', "User"]]] } }
     });
 }
 export async function updateUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
@@ -353,7 +353,7 @@ export type AuthMethods = {};
 export function createContext<FetcherData>(params?: r.CreateContextParams<AuthMethods, FetcherData>): r.Context<AuthMethods, FetcherData> { return new r.Context<AuthMethods, FetcherData>({
     resolver: new r.RefResolver({
         Order: {
-            date: [[[r.TransformType.ACCESS, "shipDate"], [r.TransformType.THIS]]]
+            date: [[['access', "shipDate"], ['this']]]
         }
     }),
     serverConfiguration: new r.ServerConfiguration('/api/v3', {}),

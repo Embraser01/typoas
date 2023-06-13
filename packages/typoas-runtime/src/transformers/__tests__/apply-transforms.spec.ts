@@ -1,40 +1,24 @@
 import { describe, expect, it } from '@jest/globals';
 import { RefResolver } from '../../resolver';
-import { applyTransform, DateTransformer, TransformType } from '../';
+import { applyTransform, DateTransformer } from '../';
 
 describe('apply transforms', () => {
   const resolver = new RefResolver({
-    A: { date: [[[TransformType.ACCESS, 'date'], [TransformType.THIS]]] },
-    B: { date: [[[TransformType.THIS]]] },
+    A: { date: [[['access', 'date'], ['this']]] },
+    B: { date: [[['this']]] },
   });
 
   const transform = DateTransformer;
 
   it('should handle undefined', () => {
     const data = { body: undefined };
-    applyTransform(
-      resolver,
-      data,
-      'body',
-      'date',
-      transform,
-      [[TransformType.THIS]],
-      0,
-    );
+    applyTransform(resolver, data, 'body', 'date', transform, [['this']], 0);
     expect(data.body).toEqual(undefined);
   });
 
   it('should handle null', () => {
     const data = { body: null };
-    applyTransform(
-      resolver,
-      data,
-      'body',
-      'date',
-      transform,
-      [[TransformType.THIS]],
-      0,
-    );
+    applyTransform(resolver, data, 'body', 'date', transform, [['this']], 0);
     expect(data.body).toEqual(null);
   });
 
@@ -42,15 +26,7 @@ describe('apply transforms', () => {
     const date = new Date('2020-02-02');
 
     const data = { body: date.toISOString() };
-    applyTransform(
-      resolver,
-      data,
-      'body',
-      'date',
-      transform,
-      [[TransformType.THIS]],
-      0,
-    );
+    applyTransform(resolver, data, 'body', 'date', transform, [['this']], 0);
     expect(data.body).toEqual(date);
   });
 
@@ -64,7 +40,7 @@ describe('apply transforms', () => {
       'body',
       'date',
       transform,
-      [[TransformType.REF, 'B']],
+      [['ref', 'B']],
       0,
     );
     expect(data.body).toEqual(date);
@@ -80,7 +56,7 @@ describe('apply transforms', () => {
       'body',
       'date',
       transform,
-      [[TransformType.REF, 'Unknown']],
+      [['ref', 'Unknown']],
       0,
     );
     expect(data.body).toEqual(date.toISOString());
@@ -99,7 +75,7 @@ describe('apply transforms', () => {
       'body',
       'date',
       transform,
-      [[TransformType.LOOP], [TransformType.THIS]],
+      [['loop'], ['this']],
       0,
     );
     expect(data.body).toEqual([date, date, date]);
@@ -118,7 +94,7 @@ describe('apply transforms', () => {
       'body',
       'date',
       transform,
-      [[TransformType.LOOP], [TransformType.ACCESS, 'd'], [TransformType.THIS]],
+      [['loop'], ['access', 'd'], ['this']],
       0,
     );
     expect(data.body).toEqual([{ d: date }, { d: date }]);
@@ -137,7 +113,7 @@ describe('apply transforms', () => {
       'body',
       'date',
       transform,
-      [[TransformType.ENTRIES], [TransformType.THIS]],
+      [['entries'], ['this']],
       0,
     );
     expect(data.body).toEqual({ a: date, d: date });
@@ -159,11 +135,7 @@ describe('apply transforms', () => {
       'body',
       'date',
       transform,
-      [
-        [TransformType.ENTRIES],
-        [TransformType.ACCESS, 'b'],
-        [TransformType.THIS],
-      ],
+      [['entries'], ['access', 'b'], ['this']],
       0,
     );
     expect(data.body).toEqual({ a: { b: date }, d: { b: date } });
@@ -182,16 +154,7 @@ describe('apply transforms', () => {
       'body',
       'date',
       transform,
-      [
-        [TransformType.LOOP],
-        [
-          TransformType.SELECT,
-          [
-            [[TransformType.ACCESS, 'd'], [TransformType.THIS]],
-            [[TransformType.THIS]],
-          ],
-        ],
-      ],
+      [['loop'], ['select', [[['access', 'd'], ['this']], [['this']]]]],
       0,
     );
     expect(data.body).toEqual([{ d: date }, date]);

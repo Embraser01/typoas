@@ -7,7 +7,6 @@ export const FETCHER_DATA_NAME = 'FetcherData';
 export enum ExportedRef {
   HttpMethod = 'HttpMethod',
   Context = 'Context',
-  TransformType = 'TransformType',
   CreateContextParams = 'CreateContextParams',
   ServerConfiguration = 'ServerConfiguration',
   RefResolver = 'RefResolver',

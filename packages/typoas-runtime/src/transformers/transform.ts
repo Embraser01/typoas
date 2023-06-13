@@ -1,24 +1,15 @@
-export enum TransformType {
-  ACCESS = 'access',
-  THIS = 'this',
-  LOOP = 'loop',
-  ENTRIES = 'entries',
-  SELECT = 'select',
-  REF = 'ref',
-}
-
 export interface TransformResolver {
   getTransforms(type: string, ref: string): TransformField[];
 }
 
 export type TransformField = TransformLevel[];
 export type TransformLevel =
-  | [TransformType.ACCESS, string]
-  | [TransformType.THIS]
-  | [TransformType.LOOP]
-  | [TransformType.ENTRIES]
-  | [TransformType.REF, string]
-  | [TransformType.SELECT, TransformField[]];
+  | ['access', string]
+  | ['this']
+  | ['loop']
+  | ['entries']
+  | ['ref', string]
+  | ['select', TransformField[]];
 
 export type Transform<T, U> = (val: T) => U;
 
@@ -42,7 +33,7 @@ export function applyTransform<T, U>(
   const transformLevel = transformField[index];
 
   switch (transformLevel[0]) {
-    case TransformType.THIS: {
+    case 'this': {
       if (!isPlainObject(parent) && !Array.isArray(parent)) {
         return;
       }
@@ -53,7 +44,7 @@ export function applyTransform<T, U>(
       break;
     }
 
-    case TransformType.ACCESS:
+    case 'access':
       if (!isPlainObject(parent[dataKey])) {
         return;
       }
@@ -67,7 +58,7 @@ export function applyTransform<T, U>(
         index + 1,
       );
       break;
-    case TransformType.SELECT:
+    case 'select':
       for (const subTransformField of transformLevel[1]) {
         applyTransform(
           resolver,
@@ -80,7 +71,7 @@ export function applyTransform<T, U>(
         );
       }
       break;
-    case TransformType.LOOP: {
+    case 'loop': {
       if (!Array.isArray(parent[dataKey])) {
         return;
       }
@@ -98,7 +89,7 @@ export function applyTransform<T, U>(
       }
       break;
     }
-    case TransformType.ENTRIES: {
+    case 'entries': {
       if (
         !parent[dataKey] ||
         typeof parent[dataKey] !== 'object' ||
@@ -121,7 +112,7 @@ export function applyTransform<T, U>(
       break;
     }
 
-    case TransformType.REF: {
+    case 'ref': {
       const transforms = resolver.getTransforms(
         transformerName,
         transformLevel[1],
