@@ -8,7 +8,6 @@ import {
   FETCHER_DATA_NAME,
 } from '../utils/ref';
 import { AUTH_TYPE_NAME } from './security';
-import { createAllSchemaTransforms } from '../utils/transformers';
 
 export function createContextFactory(
   specs: OpenAPIObject,
@@ -49,11 +48,6 @@ export function createContextFactoryBody(
   specs: OpenAPIObject,
   ctx: Context,
 ): Block {
-  const schemasExpression = createAllSchemaTransforms(
-    specs.components?.schemas || {},
-    ctx,
-  );
-
   return factory.createBlock([
     factory.createReturnStatement(
       factory.createNewExpression(
@@ -67,14 +61,6 @@ export function createContextFactoryBody(
         [
           factory.createObjectLiteralExpression(
             [
-              factory.createPropertyAssignment(
-                factory.createIdentifier('resolver'),
-                factory.createNewExpression(
-                  createRuntimeRefProperty(ExportedRef.RefResolver),
-                  [],
-                  [schemasExpression],
-                ),
-              ),
               factory.createPropertyAssignment(
                 factory.createIdentifier('serverConfiguration'),
                 factory.createNewExpression(

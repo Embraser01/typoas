@@ -1,24 +1,18 @@
 import { describe, expect, it } from '@jest/globals';
-import { RefResolver } from '../../resolver';
-import { applyTransform, DateTransformer } from '../';
+import { applyTransform, DateTransformer, TransformField } from '../';
 
 describe('apply transforms', () => {
-  const resolver = new RefResolver({
-    A: { date: [[['access', 'date'], ['this']]] },
-    B: { date: [[['this']]] },
-  });
-
   const transform = DateTransformer;
 
   it('should handle undefined', () => {
     const data = { body: undefined };
-    applyTransform(resolver, data, 'body', 'date', transform, [['this']], 0);
+    applyTransform(data, 'body', 'date', transform, [['this']], 0);
     expect(data.body).toEqual(undefined);
   });
 
   it('should handle null', () => {
     const data = { body: null };
-    applyTransform(resolver, data, 'body', 'date', transform, [['this']], 0);
+    applyTransform(data, 'body', 'date', transform, [['this']], 0);
     expect(data.body).toEqual(null);
   });
 
@@ -26,23 +20,16 @@ describe('apply transforms', () => {
     const date = new Date('2020-02-02');
 
     const data = { body: date.toISOString() };
-    applyTransform(resolver, data, 'body', 'date', transform, [['this']], 0);
+    applyTransform(data, 'body', 'date', transform, [['this']], 0);
     expect(data.body).toEqual(date);
   });
 
   it('should handle refs', () => {
     const date = new Date('2020-02-02');
 
+    const B = (): TransformField[] => [[['this']]];
     const data = { body: date.toISOString() };
-    applyTransform(
-      resolver,
-      data,
-      'body',
-      'date',
-      transform,
-      [['ref', 'B']],
-      0,
-    );
+    applyTransform(data, 'body', 'date', transform, [['ref', B]], 0);
     expect(data.body).toEqual(date);
   });
 
@@ -50,15 +37,7 @@ describe('apply transforms', () => {
     const date = new Date('2020-02-02');
 
     const data = { body: date.toISOString() };
-    applyTransform(
-      resolver,
-      data,
-      'body',
-      'date',
-      transform,
-      [['ref', 'Unknown']],
-      0,
-    );
+    applyTransform(data, 'body', 'date', transform, [['ref', () => []]], 0);
     expect(data.body).toEqual(date.toISOString());
   });
 
@@ -69,15 +48,7 @@ describe('apply transforms', () => {
       body: [date.toISOString(), date.toISOString(), date.toISOString()],
     };
 
-    applyTransform(
-      resolver,
-      data,
-      'body',
-      'date',
-      transform,
-      [['loop'], ['this']],
-      0,
-    );
+    applyTransform(data, 'body', 'date', transform, [['loop'], ['this']], 0);
     expect(data.body).toEqual([date, date, date]);
   });
 
@@ -89,7 +60,6 @@ describe('apply transforms', () => {
     };
 
     applyTransform(
-      resolver,
       data,
       'body',
       'date',
@@ -107,15 +77,7 @@ describe('apply transforms', () => {
       body: { a: date.toISOString(), d: date.toISOString() },
     };
 
-    applyTransform(
-      resolver,
-      data,
-      'body',
-      'date',
-      transform,
-      [['entries'], ['this']],
-      0,
-    );
+    applyTransform(data, 'body', 'date', transform, [['entries'], ['this']], 0);
     expect(data.body).toEqual({ a: date, d: date });
   });
 
@@ -130,7 +92,6 @@ describe('apply transforms', () => {
     };
 
     applyTransform(
-      resolver,
       data,
       'body',
       'date',
@@ -149,7 +110,6 @@ describe('apply transforms', () => {
     };
 
     applyTransform(
-      resolver,
       data,
       'body',
       'date',

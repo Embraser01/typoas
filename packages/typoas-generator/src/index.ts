@@ -28,6 +28,7 @@ import {
 } from './generator/api/security';
 import { createOperationList } from './generator/api/operation-list';
 import { createContextFactory } from './generator/api/context-factory';
+import { createAllSchemaTransforms } from './generator/api/schemas-transformers';
 
 export function createSchemaComponents(
   schemas: Exclude<ComponentsObject['schemas'], undefined>,
@@ -97,6 +98,7 @@ export function generateClient(
       factory.createStringLiteral('@typoas/runtime', true),
     ),
   );
+  statements.push(...createAllSchemaTransforms(specs, ctx));
 
   const securitySchemes = specs.components?.securitySchemes || {};
   statements.push(createAuthMethodsType(securitySchemes, ctx));

@@ -3,6 +3,7 @@ import {
   ReferenceObject,
   SchemaObject,
 } from 'openapi3-ts/oas31';
+import { sanitizeTransformEntity } from '../operation-name';
 
 // Here we duplicate the code from runtime.
 // It only concerns:
@@ -19,6 +20,10 @@ export enum TransformType {
   REF = 'ref',
 }
 
+export enum TransformerType {
+  DATE = 'date',
+}
+
 export type TransformField = TransformLevel[];
 export type TransformLevel =
   | [TransformType.ACCESS, string]
@@ -28,16 +33,22 @@ export type TransformLevel =
   | [TransformType.REF, string]
   | [TransformType.SELECT, TransformField[]];
 
+export type IsTransformableLeafCb = (schema: SchemaObject) => boolean;
+export type SkipRefCb = (name: string, type: TransformerType) => boolean;
+
 function findTransformsInternal(
+  type: TransformerType,
   schema: SchemaObject | ReferenceObject,
   currentField: TransformField,
-  isTransformableLeaf: (schema: SchemaObject) => boolean,
+  isTransformableLeaf: IsTransformableLeafCb,
+  skipRef: SkipRefCb,
 ): TransformField[] {
   if (isReferenceObject(schema)) {
-    currentField.push([
-      TransformType.REF,
-      schema.$ref.replace(/^#\/components\/schemas\//, ''),
-    ]);
+    const name = schema.$ref.replace(/^#\/components\/schemas\//, '');
+    if (skipRef(name, type)) {
+      return [];
+    }
+    currentField.push([TransformType.REF, sanitizeTransformEntity(type, name)]);
     return [currentField];
   }
 
@@ -51,9 +62,11 @@ function findTransformsInternal(
       const currentFieldCopy = [...currentField];
       currentFieldCopy.push([TransformType.ACCESS, key]);
       return findTransformsInternal(
+        type,
         subSchema,
         currentFieldCopy,
         isTransformableLeaf,
+        skipRef,
       );
     });
   }
@@ -61,18 +74,22 @@ function findTransformsInternal(
   if (typeof schema.additionalProperties === 'object') {
     currentField.push([TransformType.ENTRIES]);
     return findTransformsInternal(
+      type,
       schema.additionalProperties,
       currentField,
       isTransformableLeaf,
+      skipRef,
     );
   }
 
   if (schema.type === 'array' && schema.items) {
     currentField.push([TransformType.LOOP]);
     return findTransformsInternal(
+      type,
       schema.items,
       currentField,
       isTransformableLeaf,
+      skipRef,
     );
   }
 
@@ -81,13 +98,19 @@ function findTransformsInternal(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const subTransforms = arr!.flatMap(
       (subSchema: SchemaObject | ReferenceObject) =>
-        findTransformsInternal(subSchema, [], isTransformableLeaf),
+        findTransformsInternal(
+          type,
+          subSchema,
+          [],
+          isTransformableLeaf,
+          skipRef,
+        ),
     );
     if (subTransforms.length) {
       currentField.push([TransformType.SELECT, subTransforms]);
-    }
-    if (currentField.length) {
-      return [currentField];
+      if (currentField.length) {
+        return [currentField];
+      }
     }
     return [];
   }
@@ -96,8 +119,10 @@ function findTransformsInternal(
 }
 
 export function findLeafTransforms(
+  type: TransformerType,
   schema: SchemaObject | ReferenceObject,
-  isTransformableLeaf: (schema: SchemaObject) => boolean,
+  isTransformableLeaf: IsTransformableLeafCb,
+  skipRef: SkipRefCb = () => false,
 ): TransformField[] {
-  return findTransformsInternal(schema, [], isTransformableLeaf);
+  return findTransformsInternal(type, schema, [], isTransformableLeaf, skipRef);
 }

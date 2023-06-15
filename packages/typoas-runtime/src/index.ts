@@ -5,6 +5,5 @@ export * from './context/types';
 export * from './exception';
 export * from './fetcher';
 export * from './transformers';
-export * from './resolver';
 export * from './utils';
 export * from './wrap-api';

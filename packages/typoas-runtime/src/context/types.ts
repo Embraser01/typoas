@@ -1,5 +1,5 @@
 import type { Fetcher, HttpMethod, SerializerOptions } from '../fetcher';
-import type { TransformField, TransformResolver } from '../transformers';
+import type { TransformEntity } from '../transformers';
 import type { AuthProvider, SecurityAuthentication } from '../auth';
 import type { Transform } from '../transformers';
 import type { BaseServerConfiguration } from '../configuration';
@@ -48,7 +48,6 @@ export type ContextParams<
   AuthModes extends Record<string, SecurityAuthentication>,
   FetcherData = unknown,
 > = {
-  resolver: TransformResolver;
   serverConfiguration: BaseServerConfiguration;
   authMethods: Partial<AuthModes>;
   fetcher?: Fetcher<FetcherData>;
@@ -76,5 +75,5 @@ export type CreateContextParams<
 >;
 
 export type ResponseHandler = {
-  transforms?: Record<string, TransformField[]>;
+  transforms?: TransformEntity;
 };

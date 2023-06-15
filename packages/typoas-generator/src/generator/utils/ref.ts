@@ -9,7 +9,7 @@ export enum ExportedRef {
   Context = 'Context',
   CreateContextParams = 'CreateContextParams',
   ServerConfiguration = 'ServerConfiguration',
-  RefResolver = 'RefResolver',
+  TransformField = 'TransformField',
   ApiKeySecurityAuthentication = 'ApiKeySecurityAuthentication',
   HttpSecurityAuthentication = 'HttpSecurityAuthentication',
   OAuth2SecurityAuthentication = 'OAuth2SecurityAuthentication',

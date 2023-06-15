@@ -120,6 +120,9 @@ export type ApiResponse = {
   type?: string;
   message?: string;
 };
+const $date_Order = (): r.TransformField[] => [
+  [['access', 'shipDate'], ['this']],
+];
 export type AuthMethods = {
   petstore_auth?: r.OAuth2SecurityAuthentication;
   api_key?: r.ApiKeySecurityAuthentication;
@@ -143,11 +146,6 @@ export function createContext<FetcherData>(
   params?: r.CreateContextParams<AuthMethods, FetcherData>,
 ): r.Context<AuthMethods, FetcherData> {
   return new r.Context<AuthMethods, FetcherData>({
-    resolver: new r.RefResolver({
-      Order: {
-        date: [[['access', 'shipDate'], ['this']]],
-      },
-    }),
     serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
     authMethods: configureAuth(params?.authProviders),
     ...params,
@@ -172,9 +170,7 @@ export async function updatePet<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'Pet']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add a new pet to the store
@@ -195,9 +191,7 @@ export async function addPet<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'Pet']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Finds Pets by status
@@ -219,9 +213,7 @@ export async function findPetsByStatus<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'Pet']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Finds Pets by tags
@@ -243,9 +235,7 @@ export async function findPetsByTags<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'Pet']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Find pet by ID
@@ -266,9 +256,7 @@ export async function getPetById<FetcherData>(
     auth: ['api_key', 'petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'Pet']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Updates a pet in the store with form data
@@ -336,9 +324,7 @@ export async function uploadFile<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'ApiResponse']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Returns pet inventories by status
@@ -380,7 +366,7 @@ export async function placeOrder<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'Order']]] } },
+    '200': { transforms: { date: [[['ref', $date_Order]]] } },
   });
 }
 /**
@@ -402,7 +388,7 @@ export async function getOrderById<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'Order']]] } },
+    '200': { transforms: { date: [[['ref', $date_Order]]] } },
   });
 }
 /**
@@ -443,9 +429,7 @@ export async function createUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    default: { transforms: { date: [[['ref', 'User']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Creates list of users with given input array
@@ -465,9 +449,7 @@ export async function createUsersWithListInput<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'User']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Logs user into the system
@@ -524,9 +506,7 @@ export async function getUserByName<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'User']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update user

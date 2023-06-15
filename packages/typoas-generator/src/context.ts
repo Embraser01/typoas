@@ -76,6 +76,9 @@ export class Context {
   links: ComponentRegistry<'links'> = new Map();
   callbacks: ComponentRegistry<'callbacks'> = new Map();
 
+  // Set of sanitized transform schemas name (e.g. $date_Pet)
+  readonly transformSchemas = new Set<string>();
+
   constructor(private opts: ContextOptions = {}) {}
 
   resolveReference<T extends ComponentType>(
