@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@typoas/runtime": "workspace:^",
-    "node-fetch": "^3.3.1"
+    "node-fetch": "^2.6.11"
   },
   "devDependencies": {
     "@types/node": "^20.2.3",
