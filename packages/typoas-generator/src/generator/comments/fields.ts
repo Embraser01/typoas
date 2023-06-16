@@ -16,10 +16,10 @@ const srcFile = factory.createSourceFile(
 );
 
 /**
- * Trim string to a maximum length.
+ * Trim string to a maximum length and replace end comments `*\/` tokens by `*\\/`.
  */
 function cleanText(text: string): string {
-  return text.trim();
+  return text.trim().replace(/\*\//g, '*\\/');
 }
 
 export function addJSDocToNode(node: Node, text: string): void {

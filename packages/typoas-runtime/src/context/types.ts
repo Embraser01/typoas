@@ -8,7 +8,8 @@ import type {
   BaseFlowConfig,
   BasicAuthConfig,
   BearerAuthConfig,
-  HttpSecurityAuthentication,
+  HttpBasicSecurityAuthentication,
+  HttpBearerSecurityAuthentication,
   OAuth2SecurityAuthentication,
 } from '../auth';
 
@@ -64,8 +65,10 @@ export type CreateContextParams<
       [key in keyof AuthModes]: AuthProvider<
         AuthModes[key] extends ApiKeySecurityAuthentication
           ? string
-          : AuthModes[key] extends HttpSecurityAuthentication
-          ? BasicAuthConfig | BearerAuthConfig
+          : AuthModes[key] extends HttpBasicSecurityAuthentication
+          ? BasicAuthConfig
+          : AuthModes[key] extends HttpBearerSecurityAuthentication
+          ? BearerAuthConfig
           : AuthModes[key] extends OAuth2SecurityAuthentication
           ? BaseFlowConfig
           : never

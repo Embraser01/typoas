@@ -371,7 +371,7 @@ export async function placeOrder<FetcherData>(
 }
 /**
  * Find purchase order by ID
- * For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions
+ * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  * Tags: store
  */
 export async function getOrderById<FetcherData>(
