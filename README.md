@@ -1,20 +1,24 @@
 # Typoas
 
+![GitHub](https://img.shields.io/github/license/embraser01/typoas)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/@typoas/runtime)
+
 Typoas is an OpenAPI 3.X generator for Typescript. It's inspired by [openapi-generator](https://openapi-generator.tech/)
 but is written in Typescript for Typescript. The generator uses the Typescript AST to generate code instead on relaying
 on templates which allows better schemas definitions and other cool stuff.
 
 Main features are:
 
-- Fully typed
-- Support for `allOf`, `oneOf` and `anyOf` schemas.
-- References `$ref` handling (with cyclic refs)
-- Uses `fetch` api (can be customized)
+- Fully typed and fully customizable
+- References `$ref` handling (including cyclic refs)
 - **Tree Shaking** out of the box
+- Support for `allOf`, `oneOf` and `anyOf` schemas.
 - Automatically convert `format: 'date-time'` to JS `Date`
 - Handle **API Key**, **HTTP Config** and **OAuth2**<sup>1</sup> auth security schemes
 - JSDoc for schemas and operations
+- Uses `fetch` api (can be customized)
 - Non JSON content type support
+- Small bundle size
 - And more...
 
 > <sup>1</sup>: OAuth2 scheme does not handle flows to retrieve an `accessToken`.
@@ -72,8 +76,6 @@ await cli.run(
     'https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.yaml',
     '-o',
     `./src/github.ts`,
-    '-n',
-    `GithubClient`,
   ],
   {
     stdin: process.stdin,
@@ -127,6 +129,31 @@ pullsList(ctx, {
   .catch((err) => console.error('Error while getting PRs', err));
 ```
 
+## Examples
+
+You can find examples in the [`examples`](./examples) folder.
+
+## Notes
+
+Here is some notes on some known issues.
+
+### External references
+
+External references are not supported. Every `$ref` must be in the spec.
+An issue is open [here](https://github.com/Embraser01/typoas/issues/37).
+
+### Parameters serialization
+
+_Typoas_ has partial support for serialization specified here: https://swagger.io/docs/specification/serialization/
+
+- It **does** support array serialization for **query**.
+- It **does NOT** support serialization for **path** parameters with `style` `label` or `matrix`.
+- It **does NOT** support serialization for **query** parameters with nested objects. It will be JSON.stringify
+- It **does NOT** support serialization for **headers** or **cookie** parameters.
+
+On query serialization, there can only be one style for a full operation. The first query param will set the style for
+the whole operation.
+
 ### Migrating from v1 to v2
 
 In v1, the whole API was generated in a single class. In V2 this was replaced by individual function
@@ -158,26 +185,6 @@ ghClient
   .then((list) => console.log('List of PRs', list))
   .catch((err) => console.error('Error while getting PRs', err));
 ```
-
-## Examples
-
-You can find examples in the [`examples`](./examples) folder.
-
-## Notes
-
-Here is some notes on some known issues.
-
-### Parameters serialization
-
-_Typoas_ has partial support for serialization specified here: https://swagger.io/docs/specification/serialization/
-
-- It **does** support array serialization for **query**.
-- It **does NOT** support serialization for **path** parameters with `style` `label` or `matrix`.
-- It **does NOT** support serialization for **query** parameters with nested objects. It will be JSON.stringify
-- It **does NOT** support serialization for **headers** or **cookie** parameters.
-
-On query serialization, there can only be one style for a full operation. The first query param will set the style for
-the whole operation.
 
 ## Contributing
 

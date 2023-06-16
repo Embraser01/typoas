@@ -4,8 +4,6 @@ import type { RequestContext } from '../fetcher';
  * Base class authentication schemes.
  */
 export interface SecurityAuthentication {
-  description?: string;
-
   /**
    * Applies the authentication scheme to the request context
    *

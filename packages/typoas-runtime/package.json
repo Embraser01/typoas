@@ -9,6 +9,7 @@
   },
   "main": "./src/index.ts",
   "module": "./lib/esm/index.js",
+  "sideEffects": false,
   "scripts": {
     "prepack": "tsc --module esnext --outDir ./lib/esm && tsc --outDir ./lib/cjs",
     "test:jest": "jest",

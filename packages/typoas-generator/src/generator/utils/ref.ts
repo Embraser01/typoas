@@ -11,7 +11,8 @@ export enum ExportedRef {
   ServerConfiguration = 'ServerConfiguration',
   TransformField = 'TransformField',
   ApiKeySecurityAuthentication = 'ApiKeySecurityAuthentication',
-  HttpSecurityAuthentication = 'HttpSecurityAuthentication',
+  HttpBasicSecurityAuthentication = 'HttpBasicSecurityAuthentication',
+  HttpBearerSecurityAuthentication = 'HttpBearerSecurityAuthentication',
   OAuth2SecurityAuthentication = 'OAuth2SecurityAuthentication',
 }
 

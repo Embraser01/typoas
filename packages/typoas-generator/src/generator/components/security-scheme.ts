@@ -37,7 +37,18 @@ export function createConfigTypeFromSecurityScheme(
     case 'apiKey':
       return createRuntimeRefType(ExportedRef.ApiKeySecurityAuthentication);
     case 'http':
-      return createRuntimeRefType(ExportedRef.HttpSecurityAuthentication);
+      if (securityScheme.scheme === 'basic') {
+        return createRuntimeRefType(
+          ExportedRef.HttpBasicSecurityAuthentication,
+        );
+      } else if (securityScheme.scheme === 'bearer') {
+        return createRuntimeRefType(
+          ExportedRef.HttpBearerSecurityAuthentication,
+        );
+      }
+      throw new Error(
+        `Unsupported security scheme '${securityScheme.scheme}' in http security type`,
+      );
     case 'oauth2':
       return createRuntimeRefType(ExportedRef.OAuth2SecurityAuthentication);
     case 'openIdConnect':
@@ -88,27 +99,23 @@ export function createRuntimeSecurityClass(
         [factory.createObjectLiteralExpression(args), authProviderExpression],
       );
     case 'http':
-      if (securityScheme.scheme) {
-        args.push(
-          factory.createPropertyAssignment(
-            'scheme',
-            factory.createStringLiteral(securityScheme.scheme, true),
-          ),
+      if (securityScheme.scheme === 'basic') {
+        return factory.createNewExpression(
+          createRuntimeRefProperty(ExportedRef.HttpBasicSecurityAuthentication),
+          undefined,
+          [authProviderExpression],
         );
       }
-      if (securityScheme.bearerFormat) {
-        args.push(
-          factory.createPropertyAssignment(
-            'bearerFormat',
-            factory.createStringLiteral(securityScheme.bearerFormat, true),
+      if (securityScheme.scheme === 'bearer') {
+        return factory.createNewExpression(
+          createRuntimeRefProperty(
+            ExportedRef.HttpBearerSecurityAuthentication,
           ),
+          undefined,
+          [authProviderExpression],
         );
       }
-      return factory.createNewExpression(
-        createRuntimeRefProperty(ExportedRef.HttpSecurityAuthentication),
-        undefined,
-        [factory.createObjectLiteralExpression(args), authProviderExpression],
-      );
+      throw new Error('Unsupported security scheme in http security type');
     case 'oauth2':
       return factory.createNewExpression(
         createRuntimeRefProperty(ExportedRef.OAuth2SecurityAuthentication),
