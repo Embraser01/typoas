@@ -1,4 +1,5 @@
 import { camelCase, snakeCase, upperFirst } from 'lodash';
+import { TransformerType } from './transformers/leaf-transformer-base';
 
 function pascalCase(str: string): string {
   return upperFirst(camelCase(str));
@@ -22,4 +23,11 @@ export function sanitizeOperationIdName(op: string): string {
 
 export function sanitizeTypeIdentifier(type: string): string {
   return pascalCase(removeUnsupportedChars(type));
+}
+
+export function sanitizeTransformEntity(
+  type: TransformerType,
+  entityName: string,
+): string {
+  return `$${type}_${pascalCase(entityName)}`;
 }

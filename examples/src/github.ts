@@ -10607,1042 +10607,752 @@ export type KeySimple = {
   id: number;
   key: string;
 };
+const $date_Integration = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_HookDeliveryItem = (): r.TransformField[] => [
+  [['access', 'delivered_at'], ['this']],
+];
+const $date_HookDelivery = (): r.TransformField[] => [
+  [['access', 'delivered_at'], ['this']],
+];
+const $date_Enterprise = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_Installation = (): r.TransformField[] => [
+  [
+    ['access', 'account'],
+    ['select', [[['ref', $date_Enterprise]]]],
+  ],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'suspended_at'], ['this']],
+];
+const $date_Repository = (): r.TransformField[] => [
+  [['access', 'pushed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_InstallationToken = (): r.TransformField[] => [
+  [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+];
+const $date_ApplicationGrant = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_Authorization = (): r.TransformField[] => [
+  [['access', 'updated_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+];
+const $date_AuthenticationToken = (): r.TransformField[] => [
+  [['access', 'expires_at'], ['this']],
+  [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+];
+const $date_Milestone = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'closed_at'], ['this']],
+  [['access', 'due_on'], ['this']],
+];
+const $date_IssueSimple = (): r.TransformField[] => [
+  [
+    ['access', 'milestone'],
+    ['select', [[['ref', $date_Milestone]]]],
+  ],
+  [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+  [['access', 'closed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'repository'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_IssueComment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_Event = (): r.TransformField[] => [
+  [
+    ['access', 'payload'],
+    ['access', 'issue'],
+    ['ref', $date_IssueSimple],
+  ],
+  [
+    ['access', 'payload'],
+    ['access', 'comment'],
+    ['ref', $date_IssueComment],
+  ],
+  [['access', 'created_at'], ['this']],
+];
+const $date_BaseGist = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_PublicUser = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'suspended_at'], ['this']],
+];
+const $date_GistHistory = (): r.TransformField[] => [
+  [['access', 'committed_at'], ['this']],
+];
+const $date_GistSimple = (): r.TransformField[] => [
+  [
+    ['access', 'forks'],
+    ['loop'],
+    ['access', 'user'],
+    ['ref', $date_PublicUser],
+  ],
+  [['access', 'forks'], ['loop'], ['access', 'created_at'], ['this']],
+  [['access', 'forks'], ['loop'], ['access', 'updated_at'], ['this']],
+  [['access', 'history'], ['loop'], ['ref', $date_GistHistory]],
+  [['access', 'fork_of'], ['access', 'created_at'], ['this']],
+  [['access', 'fork_of'], ['access', 'updated_at'], ['this']],
+];
+const $date_GistComment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_GistCommit = (): r.TransformField[] => [
+  [['access', 'committed_at'], ['this']],
+];
+const $date_Issue = (): r.TransformField[] => [
+  [
+    ['access', 'milestone'],
+    ['select', [[['ref', $date_Milestone]]]],
+  ],
+  [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+  [['access', 'closed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'repository'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_MinimalRepository = (): r.TransformField[] => [
+  [['access', 'pushed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'template_repository'],
+    ['select', [[['ref', $date_Repository]]]],
+  ],
+];
+const $date_Thread = (): r.TransformField[] => [
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+];
+const $date_ThreadSubscription = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+];
+const $date_OrganizationFull = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_OrganizationActionsSecret = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_CredentialAuthorization = (): r.TransformField[] => [
+  [['access', 'credential_authorized_at'], ['this']],
+  [['access', 'credential_accessed_at'], ['this']],
+];
+const $date_OrgHook = (): r.TransformField[] => [
+  [['access', 'updated_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+];
+const $date_InteractionLimitResponse = (): r.TransformField[] => [
+  [['access', 'expires_at'], ['this']],
+];
+const $date_Migration = (): r.TransformField[] => [
+  [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_Package = (): r.TransformField[] => [
+  [
+    ['access', 'repository'],
+    ['select', [[['ref', $date_MinimalRepository]]]],
+  ],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_PackageVersion = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'deleted_at'], ['this']],
+];
+const $date_Project = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_TeamFull = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'organization'],
+    ['ref', $date_OrganizationFull],
+  ],
+];
+const $date_TeamDiscussion = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'last_edited_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_TeamDiscussionComment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'last_edited_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_Reaction = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+];
+const $date_TeamRepository = (): r.TransformField[] => [
+  [['access', 'pushed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'template_repository'],
+    ['select', [[['ref', $date_Repository]]]],
+  ],
+];
+const $date_ProjectCard = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_ProjectColumn = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_FullRepository = (): r.TransformField[] => [
+  [['access', 'pushed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'template_repository'],
+    ['select', [[['ref', $date_Repository]]]],
+  ],
+  [
+    ['access', 'parent'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'source'],
+    ['ref', $date_Repository],
+  ],
+];
+const $date_Artifact = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'expires_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_Job = (): r.TransformField[] => [
+  [['access', 'started_at'], ['this']],
+  [['access', 'completed_at'], ['this']],
+  [['access', 'steps'], ['loop'], ['access', 'started_at'], ['this']],
+  [['access', 'steps'], ['loop'], ['access', 'completed_at'], ['this']],
+];
+const $date_SimpleCommit = (): r.TransformField[] => [
+  [['access', 'timestamp'], ['this']],
+];
+const $date_WorkflowRun = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'head_commit'],
+    ['select', [[['ref', $date_SimpleCommit]]]],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+  [
+    ['access', 'head_repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+];
+const $date_EnvironmentApprovals = (): r.TransformField[] => [
+  [['access', 'environments'], ['loop'], ['access', 'created_at'], ['this']],
+  [['access', 'environments'], ['loop'], ['access', 'updated_at'], ['this']],
+];
+const $date_PendingDeployment = (): r.TransformField[] => [
+  [['access', 'wait_timer_started_at'], ['this']],
+];
+const $date_Deployment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_ActionsSecret = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_Workflow = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'deleted_at'], ['this']],
+];
+const $date_DeploymentSimple = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_CheckRun = (): r.TransformField[] => [
+  [['access', 'started_at'], ['this']],
+  [['access', 'completed_at'], ['this']],
+  [
+    ['access', 'app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+  [
+    ['access', 'deployment'],
+    ['ref', $date_DeploymentSimple],
+  ],
+];
+const $date_CheckSuite = (): r.TransformField[] => [
+  [
+    ['access', 'app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'head_commit'],
+    ['ref', $date_SimpleCommit],
+  ],
+];
+const $date_CheckSuitePreference = (): r.TransformField[] => [
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+];
+const $date_AlertCreatedAt = (): r.TransformField[] => [[['this']]];
+const $date_CodeScanningAlertDismissedAt = (): r.TransformField[] => [
+  [['this']],
+];
+const $date_CodeScanningAlertItems = (): r.TransformField[] => [
+  [
+    ['access', 'created_at'],
+    ['ref', $date_AlertCreatedAt],
+  ],
+  [
+    ['access', 'dismissed_at'],
+    ['ref', $date_CodeScanningAlertDismissedAt],
+  ],
+];
+const $date_CodeScanningAlert = (): r.TransformField[] => [
+  [
+    ['access', 'created_at'],
+    ['ref', $date_AlertCreatedAt],
+  ],
+  [
+    ['access', 'dismissed_at'],
+    ['ref', $date_CodeScanningAlertDismissedAt],
+  ],
+];
+const $date_CodeScanningAnalysisCreatedAt = (): r.TransformField[] => [
+  [['this']],
+];
+const $date_CodeScanningAnalysis = (): r.TransformField[] => [
+  [
+    ['access', 'created_at'],
+    ['ref', $date_CodeScanningAnalysisCreatedAt],
+  ],
+];
+const $date_RepositoryInvitation = (): r.TransformField[] => [
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+  [['access', 'created_at'], ['this']],
+];
+const $date_CommitComment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_PullRequestSimple = (): r.TransformField[] => [
+  [
+    ['access', 'milestone'],
+    ['select', [[['ref', $date_Milestone]]]],
+  ],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'closed_at'], ['this']],
+  [['access', 'merged_at'], ['this']],
+  [
+    ['access', 'head'],
+    ['access', 'repo'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'base'],
+    ['access', 'repo'],
+    ['ref', $date_Repository],
+  ],
+];
+const $date_SimpleCommitStatus = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_CombinedCommitStatus = (): r.TransformField[] => [
+  [['access', 'statuses'], ['loop'], ['ref', $date_SimpleCommitStatus]],
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+];
+const $date_CommunityProfile = (): r.TransformField[] => [
+  [['access', 'updated_at'], ['this']],
+];
+const $date_DeploymentStatus = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_Environment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_GitCommit = (): r.TransformField[] => [
+  [['access', 'author'], ['access', 'date'], ['this']],
+  [['access', 'committer'], ['access', 'date'], ['this']],
+];
+const $date_Hook = (): r.TransformField[] => [
+  [['access', 'updated_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+];
+const $date_IssueEvent = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [
+    ['access', 'issue'],
+    ['ref', $date_IssueSimple],
+  ],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_LabeledIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_UnlabeledIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_AssignedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_UnassignedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_MilestonedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_DemilestonedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_RenamedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_ReviewRequestedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_ReviewRequestRemovedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_ReviewDismissedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_LockedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_AddedToProjectIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_MovedColumnInProjectIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_RemovedFromProjectIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_ConvertedNoteToIssueIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_TimelineCommentEvent = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_TimelineCrossReferencedEvent = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'source'],
+    ['access', 'issue'],
+    ['ref', $date_IssueSimple],
+  ],
+];
+const $date_TimelineCommittedEvent = (): r.TransformField[] => [
+  [['access', 'author'], ['access', 'date'], ['this']],
+  [['access', 'committer'], ['access', 'date'], ['this']],
+];
+const $date_TimelineReviewedEvent = (): r.TransformField[] => [
+  [['access', 'submitted_at'], ['this']],
+];
+const $date_PullRequestReviewComment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_TimelineLineCommentedEvent = (): r.TransformField[] => [
+  [['access', 'comments'], ['loop'], ['ref', $date_PullRequestReviewComment]],
+];
+const $date_TimelineCommitCommentedEvent = (): r.TransformField[] => [
+  [['access', 'comments'], ['loop'], ['ref', $date_CommitComment]],
+];
+const $date_TimelineAssignedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_TimelineUnassignedIssueEvent = (): r.TransformField[] => [
+  [
+    ['access', 'performed_via_github_app'],
+    ['ref', $date_Integration],
+  ],
+];
+const $date_TimelineIssueEvents = (): r.TransformField[] => [
+  [
+    [
+      'select',
+      [
+        [['ref', $date_TimelineCommentEvent]],
+        [['ref', $date_TimelineCrossReferencedEvent]],
+        [['ref', $date_TimelineCommittedEvent]],
+        [['ref', $date_TimelineReviewedEvent]],
+      ],
+    ],
+  ],
+];
+const $date_PageBuild = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_PullRequest = (): r.TransformField[] => [
+  [
+    ['access', 'milestone'],
+    ['select', [[['ref', $date_Milestone]]]],
+  ],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'closed_at'], ['this']],
+  [['access', 'merged_at'], ['this']],
+  [['access', 'head'], ['access', 'repo'], ['access', 'pushed_at'], ['this']],
+  [['access', 'head'], ['access', 'repo'], ['access', 'created_at'], ['this']],
+  [['access', 'head'], ['access', 'repo'], ['access', 'updated_at'], ['this']],
+  [['access', 'base'], ['access', 'repo'], ['access', 'pushed_at'], ['this']],
+  [['access', 'base'], ['access', 'repo'], ['access', 'created_at'], ['this']],
+  [['access', 'base'], ['access', 'repo'], ['access', 'updated_at'], ['this']],
+];
+const $date_PullRequestReview = (): r.TransformField[] => [
+  [['access', 'submitted_at'], ['this']],
+];
+const $date_ReviewComment = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_ReleaseAsset = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_Release = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'published_at'], ['this']],
+  [['access', 'assets'], ['loop'], ['ref', $date_ReleaseAsset]],
+];
+const $date_SecretScanningAlert = (): r.TransformField[] => [
+  [
+    ['access', 'created_at'],
+    ['ref', $date_AlertCreatedAt],
+  ],
+  [['access', 'resolved_at'], ['this']],
+];
+const $date_Stargazer = (): r.TransformField[] => [
+  [['access', 'starred_at'], ['this']],
+];
+const $date_RepositorySubscription = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+];
+const $date_Traffic = (): r.TransformField[] => [
+  [['access', 'timestamp'], ['this']],
+];
+const $date_CloneTraffic = (): r.TransformField[] => [
+  [['access', 'clones'], ['loop'], ['ref', $date_Traffic]],
+];
+const $date_ViewTraffic = (): r.TransformField[] => [
+  [['access', 'views'], ['loop'], ['ref', $date_Traffic]],
+];
+const $date_ScimUser = (): r.TransformField[] => [
+  [['access', 'meta'], ['access', 'created'], ['this']],
+  [['access', 'meta'], ['access', 'lastModified'], ['this']],
+];
+const $date_ScimUserList = (): r.TransformField[] => [
+  [['access', 'Resources'], ['loop'], ['ref', $date_ScimUser]],
+];
+const $date_CodeSearchResultItem = (): r.TransformField[] => [
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+  [['access', 'last_modified_at'], ['this']],
+];
+const $date_CommitSearchResultItem = (): r.TransformField[] => [
+  [['access', 'commit'], ['access', 'author'], ['access', 'date'], ['this']],
+  [
+    ['access', 'repository'],
+    ['ref', $date_MinimalRepository],
+  ],
+];
+const $date_IssueSearchResultItem = (): r.TransformField[] => [
+  [
+    ['access', 'milestone'],
+    ['select', [[['ref', $date_Milestone]]]],
+  ],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'closed_at'], ['this']],
+  [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+  [
+    ['access', 'repository'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'performed_via_github_app'],
+    ['select', [[['ref', $date_Integration]]]],
+  ],
+];
+const $date_RepoSearchResultItem = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'pushed_at'], ['this']],
+];
+const $date_TopicSearchResultItem = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_UserSearchResultItem = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'suspended_at'], ['this']],
+];
+const $date_PrivateUser = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'suspended_at'], ['this']],
+];
+const $date_GpgKey = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'expires_at'], ['this']],
+];
+const $date_Key = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+];
+const $date_UserMarketplacePurchase = (): r.TransformField[] => [
+  [['access', 'next_billing_date'], ['this']],
+  [['access', 'free_trial_ends_on'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_StarredRepository = (): r.TransformField[] => [
+  [['access', 'starred_at'], ['this']],
+  [
+    ['access', 'repo'],
+    ['ref', $date_Repository],
+  ],
+];
 export type AuthMethods = {};
 export function createContext<FetcherData>(
   params?: r.CreateContextParams<AuthMethods, FetcherData>,
 ): r.Context<AuthMethods, FetcherData> {
   return new r.Context<AuthMethods, FetcherData>({
-    resolver: new r.RefResolver({
-      integration: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'hook-delivery-item': {
-        date: [[['access', 'delivered_at'], ['this']]],
-      },
-      'hook-delivery': {
-        date: [[['access', 'delivered_at'], ['this']]],
-      },
-      enterprise: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      installation: {
-        date: [
-          [
-            ['access', 'account'],
-            ['select', [[['ref', 'enterprise']]]],
-          ],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'suspended_at'], ['this']],
-        ],
-      },
-      repository: {
-        date: [
-          [['access', 'pushed_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'installation-token': {
-        date: [[['access', 'repositories'], ['loop'], ['ref', 'repository']]],
-      },
-      'application-grant': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      authorization: {
-        date: [
-          [['access', 'updated_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-        ],
-      },
-      'authentication-token': {
-        date: [
-          [['access', 'expires_at'], ['this']],
-          [['access', 'repositories'], ['loop'], ['ref', 'repository']],
-        ],
-      },
-      milestone: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'closed_at'], ['this']],
-          [['access', 'due_on'], ['this']],
-        ],
-      },
-      'issue-simple': {
-        date: [
-          [
-            ['access', 'milestone'],
-            ['select', [[['ref', 'milestone']]]],
-          ],
-          [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
-          [['access', 'closed_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'repository'],
-            ['ref', 'repository'],
-          ],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      'issue-comment': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      event: {
-        date: [
-          [
-            ['access', 'payload'],
-            ['access', 'issue'],
-            ['ref', 'issue-simple'],
-          ],
-          [
-            ['access', 'payload'],
-            ['access', 'comment'],
-            ['ref', 'issue-comment'],
-          ],
-          [['access', 'created_at'], ['this']],
-        ],
-      },
-      'base-gist': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'public-user': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'suspended_at'], ['this']],
-        ],
-      },
-      'gist-history': {
-        date: [[['access', 'committed_at'], ['this']]],
-      },
-      'gist-simple': {
-        date: [
-          [
-            ['access', 'forks'],
-            ['loop'],
-            ['access', 'user'],
-            ['ref', 'public-user'],
-          ],
-          [['access', 'forks'], ['loop'], ['access', 'created_at'], ['this']],
-          [['access', 'forks'], ['loop'], ['access', 'updated_at'], ['this']],
-          [['access', 'history'], ['loop'], ['ref', 'gist-history']],
-          [['access', 'fork_of'], ['access', 'created_at'], ['this']],
-          [['access', 'fork_of'], ['access', 'updated_at'], ['this']],
-        ],
-      },
-      'gist-comment': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'gist-commit': {
-        date: [[['access', 'committed_at'], ['this']]],
-      },
-      issue: {
-        date: [
-          [
-            ['access', 'milestone'],
-            ['select', [[['ref', 'milestone']]]],
-          ],
-          [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
-          [['access', 'closed_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'repository'],
-            ['ref', 'repository'],
-          ],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      'minimal-repository': {
-        date: [
-          [['access', 'pushed_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'template_repository'],
-            ['select', [[['ref', 'repository']]]],
-          ],
-        ],
-      },
-      thread: {
-        date: [
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-        ],
-      },
-      'thread-subscription': {
-        date: [[['access', 'created_at'], ['this']]],
-      },
-      'organization-full': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'organization-actions-secret': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'credential-authorization': {
-        date: [
-          [['access', 'credential_authorized_at'], ['this']],
-          [['access', 'credential_accessed_at'], ['this']],
-        ],
-      },
-      'org-hook': {
-        date: [
-          [['access', 'updated_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-        ],
-      },
-      'interaction-limit-response': {
-        date: [[['access', 'expires_at'], ['this']]],
-      },
-      migration: {
-        date: [
-          [['access', 'repositories'], ['loop'], ['ref', 'repository']],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      package: {
-        date: [
-          [
-            ['access', 'repository'],
-            ['select', [[['ref', 'minimal-repository']]]],
-          ],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'package-version': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'deleted_at'], ['this']],
-        ],
-      },
-      project: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'team-full': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'organization'],
-            ['ref', 'organization-full'],
-          ],
-        ],
-      },
-      'team-discussion': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'last_edited_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'team-discussion-comment': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'last_edited_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      reaction: {
-        date: [[['access', 'created_at'], ['this']]],
-      },
-      'team-repository': {
-        date: [
-          [['access', 'pushed_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'template_repository'],
-            ['select', [[['ref', 'repository']]]],
-          ],
-        ],
-      },
-      'project-card': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'project-column': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'full-repository': {
-        date: [
-          [['access', 'pushed_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'template_repository'],
-            ['select', [[['ref', 'repository']]]],
-          ],
-          [
-            ['access', 'parent'],
-            ['ref', 'repository'],
-          ],
-          [
-            ['access', 'source'],
-            ['ref', 'repository'],
-          ],
-        ],
-      },
-      artifact: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'expires_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      job: {
-        date: [
-          [['access', 'started_at'], ['this']],
-          [['access', 'completed_at'], ['this']],
-          [['access', 'steps'], ['loop'], ['access', 'started_at'], ['this']],
-          [['access', 'steps'], ['loop'], ['access', 'completed_at'], ['this']],
-        ],
-      },
-      'simple-commit': {
-        date: [[['access', 'timestamp'], ['this']]],
-      },
-      'workflow-run': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'head_commit'],
-            ['select', [[['ref', 'simple-commit']]]],
-          ],
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-          [
-            ['access', 'head_repository'],
-            ['ref', 'minimal-repository'],
-          ],
-        ],
-      },
-      'environment-approvals': {
-        date: [
-          [
-            ['access', 'environments'],
-            ['loop'],
-            ['access', 'created_at'],
-            ['this'],
-          ],
-          [
-            ['access', 'environments'],
-            ['loop'],
-            ['access', 'updated_at'],
-            ['this'],
-          ],
-        ],
-      },
-      'pending-deployment': {
-        date: [[['access', 'wait_timer_started_at'], ['this']]],
-      },
-      deployment: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      'actions-secret': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      workflow: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'deleted_at'], ['this']],
-        ],
-      },
-      'deployment-simple': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      'check-run': {
-        date: [
-          [['access', 'started_at'], ['this']],
-          [['access', 'completed_at'], ['this']],
-          [
-            ['access', 'app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-          [
-            ['access', 'deployment'],
-            ['ref', 'deployment-simple'],
-          ],
-        ],
-      },
-      'check-suite': {
-        date: [
-          [
-            ['access', 'app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'head_commit'],
-            ['ref', 'simple-commit'],
-          ],
-        ],
-      },
-      'check-suite-preference': {
-        date: [
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-        ],
-      },
-      'alert-created-at': {
-        date: [[['this']]],
-      },
-      'code-scanning-alert-dismissed-at': {
-        date: [[['this']]],
-      },
-      'code-scanning-alert-items': {
-        date: [
-          [
-            ['access', 'created_at'],
-            ['ref', 'alert-created-at'],
-          ],
-          [
-            ['access', 'dismissed_at'],
-            ['ref', 'code-scanning-alert-dismissed-at'],
-          ],
-        ],
-      },
-      'code-scanning-alert': {
-        date: [
-          [
-            ['access', 'created_at'],
-            ['ref', 'alert-created-at'],
-          ],
-          [
-            ['access', 'dismissed_at'],
-            ['ref', 'code-scanning-alert-dismissed-at'],
-          ],
-        ],
-      },
-      'code-scanning-analysis-created-at': {
-        date: [[['this']]],
-      },
-      'code-scanning-analysis': {
-        date: [
-          [
-            ['access', 'created_at'],
-            ['ref', 'code-scanning-analysis-created-at'],
-          ],
-        ],
-      },
-      'repository-invitation': {
-        date: [
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-          [['access', 'created_at'], ['this']],
-        ],
-      },
-      'commit-comment': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'pull-request-simple': {
-        date: [
-          [
-            ['access', 'milestone'],
-            ['select', [[['ref', 'milestone']]]],
-          ],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'closed_at'], ['this']],
-          [['access', 'merged_at'], ['this']],
-          [
-            ['access', 'head'],
-            ['access', 'repo'],
-            ['ref', 'repository'],
-          ],
-          [
-            ['access', 'base'],
-            ['access', 'repo'],
-            ['ref', 'repository'],
-          ],
-        ],
-      },
-      'simple-commit-status': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'combined-commit-status': {
-        date: [
-          [['access', 'statuses'], ['loop'], ['ref', 'simple-commit-status']],
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-        ],
-      },
-      'community-profile': {
-        date: [[['access', 'updated_at'], ['this']]],
-      },
-      'deployment-status': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      environment: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'git-commit': {
-        date: [
-          [['access', 'author'], ['access', 'date'], ['this']],
-          [['access', 'committer'], ['access', 'date'], ['this']],
-        ],
-      },
-      hook: {
-        date: [
-          [['access', 'updated_at'], ['this']],
-          [['access', 'created_at'], ['this']],
-        ],
-      },
-      'issue-event': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [
-            ['access', 'issue'],
-            ['ref', 'issue-simple'],
-          ],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      'labeled-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'unlabeled-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'assigned-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'unassigned-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'milestoned-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'demilestoned-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'renamed-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'review-requested-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'review-request-removed-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'review-dismissed-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'locked-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'added-to-project-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'moved-column-in-project-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'removed-from-project-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'converted-note-to-issue-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'issue-event-for-issue': {
-        date: [
-          [
-            [
-              'select',
-              [
-                [['ref', 'labeled-issue-event']],
-                [['ref', 'unlabeled-issue-event']],
-                [['ref', 'assigned-issue-event']],
-                [['ref', 'unassigned-issue-event']],
-                [['ref', 'milestoned-issue-event']],
-                [['ref', 'demilestoned-issue-event']],
-                [['ref', 'renamed-issue-event']],
-                [['ref', 'review-requested-issue-event']],
-                [['ref', 'review-request-removed-issue-event']],
-                [['ref', 'review-dismissed-issue-event']],
-                [['ref', 'locked-issue-event']],
-                [['ref', 'added-to-project-issue-event']],
-                [['ref', 'moved-column-in-project-issue-event']],
-                [['ref', 'removed-from-project-issue-event']],
-                [['ref', 'converted-note-to-issue-issue-event']],
-              ],
-            ],
-          ],
-        ],
-      },
-      'timeline-comment-event': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'timeline-cross-referenced-event': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [
-            ['access', 'source'],
-            ['access', 'issue'],
-            ['ref', 'issue-simple'],
-          ],
-        ],
-      },
-      'timeline-committed-event': {
-        date: [
-          [['access', 'author'], ['access', 'date'], ['this']],
-          [['access', 'committer'], ['access', 'date'], ['this']],
-        ],
-      },
-      'timeline-reviewed-event': {
-        date: [[['access', 'submitted_at'], ['this']]],
-      },
-      'pull-request-review-comment': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'timeline-line-commented-event': {
-        date: [
-          [
-            ['access', 'comments'],
-            ['loop'],
-            ['ref', 'pull-request-review-comment'],
-          ],
-        ],
-      },
-      'timeline-commit-commented-event': {
-        date: [[['access', 'comments'], ['loop'], ['ref', 'commit-comment']]],
-      },
-      'timeline-assigned-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'timeline-unassigned-issue-event': {
-        date: [
-          [
-            ['access', 'performed_via_github_app'],
-            ['ref', 'integration'],
-          ],
-        ],
-      },
-      'timeline-issue-events': {
-        date: [
-          [
-            [
-              'select',
-              [
-                [['ref', 'labeled-issue-event']],
-                [['ref', 'unlabeled-issue-event']],
-                [['ref', 'milestoned-issue-event']],
-                [['ref', 'demilestoned-issue-event']],
-                [['ref', 'renamed-issue-event']],
-                [['ref', 'review-requested-issue-event']],
-                [['ref', 'review-request-removed-issue-event']],
-                [['ref', 'review-dismissed-issue-event']],
-                [['ref', 'locked-issue-event']],
-                [['ref', 'added-to-project-issue-event']],
-                [['ref', 'moved-column-in-project-issue-event']],
-                [['ref', 'removed-from-project-issue-event']],
-                [['ref', 'converted-note-to-issue-issue-event']],
-                [['ref', 'timeline-comment-event']],
-                [['ref', 'timeline-cross-referenced-event']],
-                [['ref', 'timeline-committed-event']],
-                [['ref', 'timeline-reviewed-event']],
-                [['ref', 'timeline-line-commented-event']],
-                [['ref', 'timeline-commit-commented-event']],
-                [['ref', 'timeline-assigned-issue-event']],
-                [['ref', 'timeline-unassigned-issue-event']],
-              ],
-            ],
-          ],
-        ],
-      },
-      'page-build': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'pull-request': {
-        date: [
-          [
-            ['access', 'milestone'],
-            ['select', [[['ref', 'milestone']]]],
-          ],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'closed_at'], ['this']],
-          [['access', 'merged_at'], ['this']],
-          [
-            ['access', 'head'],
-            ['access', 'repo'],
-            ['access', 'pushed_at'],
-            ['this'],
-          ],
-          [
-            ['access', 'head'],
-            ['access', 'repo'],
-            ['access', 'created_at'],
-            ['this'],
-          ],
-          [
-            ['access', 'head'],
-            ['access', 'repo'],
-            ['access', 'updated_at'],
-            ['this'],
-          ],
-          [
-            ['access', 'base'],
-            ['access', 'repo'],
-            ['access', 'pushed_at'],
-            ['this'],
-          ],
-          [
-            ['access', 'base'],
-            ['access', 'repo'],
-            ['access', 'created_at'],
-            ['this'],
-          ],
-          [
-            ['access', 'base'],
-            ['access', 'repo'],
-            ['access', 'updated_at'],
-            ['this'],
-          ],
-        ],
-      },
-      'pull-request-review': {
-        date: [[['access', 'submitted_at'], ['this']]],
-      },
-      'review-comment': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'release-asset': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      release: {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'published_at'], ['this']],
-          [['access', 'assets'], ['loop'], ['ref', 'release-asset']],
-        ],
-      },
-      'secret-scanning-alert': {
-        date: [
-          [
-            ['access', 'created_at'],
-            ['ref', 'alert-created-at'],
-          ],
-          [['access', 'resolved_at'], ['this']],
-        ],
-      },
-      stargazer: {
-        date: [[['access', 'starred_at'], ['this']]],
-      },
-      'repository-subscription': {
-        date: [[['access', 'created_at'], ['this']]],
-      },
-      traffic: {
-        date: [[['access', 'timestamp'], ['this']]],
-      },
-      'clone-traffic': {
-        date: [[['access', 'clones'], ['loop'], ['ref', 'traffic']]],
-      },
-      'view-traffic': {
-        date: [[['access', 'views'], ['loop'], ['ref', 'traffic']]],
-      },
-      'scim-user': {
-        date: [
-          [['access', 'meta'], ['access', 'created'], ['this']],
-          [['access', 'meta'], ['access', 'lastModified'], ['this']],
-        ],
-      },
-      'scim-user-list': {
-        date: [[['access', 'Resources'], ['loop'], ['ref', 'scim-user']]],
-      },
-      'code-search-result-item': {
-        date: [
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-          [['access', 'last_modified_at'], ['this']],
-        ],
-      },
-      'commit-search-result-item': {
-        date: [
-          [
-            ['access', 'commit'],
-            ['access', 'author'],
-            ['access', 'date'],
-            ['this'],
-          ],
-          [
-            ['access', 'repository'],
-            ['ref', 'minimal-repository'],
-          ],
-        ],
-      },
-      'issue-search-result-item': {
-        date: [
-          [
-            ['access', 'milestone'],
-            ['select', [[['ref', 'milestone']]]],
-          ],
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'closed_at'], ['this']],
-          [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
-          [
-            ['access', 'repository'],
-            ['ref', 'repository'],
-          ],
-          [
-            ['access', 'performed_via_github_app'],
-            ['select', [[['ref', 'integration']]]],
-          ],
-        ],
-      },
-      'repo-search-result-item': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'pushed_at'], ['this']],
-        ],
-      },
-      'topic-search-result-item': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'user-search-result-item': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'suspended_at'], ['this']],
-        ],
-      },
-      'private-user': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'updated_at'], ['this']],
-          [['access', 'suspended_at'], ['this']],
-        ],
-      },
-      'gpg-key': {
-        date: [
-          [['access', 'created_at'], ['this']],
-          [['access', 'expires_at'], ['this']],
-        ],
-      },
-      key: {
-        date: [[['access', 'created_at'], ['this']]],
-      },
-      'user-marketplace-purchase': {
-        date: [
-          [['access', 'next_billing_date'], ['this']],
-          [['access', 'free_trial_ends_on'], ['this']],
-          [['access', 'updated_at'], ['this']],
-        ],
-      },
-      'starred-repository': {
-        date: [
-          [['access', 'starred_at'], ['this']],
-          [
-            ['access', 'repo'],
-            ['ref', 'repository'],
-          ],
-        ],
-      },
-    }),
     serverConfiguration: new r.ServerConfiguration(
       'https://api.github.com',
       {},
@@ -11730,7 +11440,7 @@ export async function appsGetAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'integration']]] } },
+    '200': { transforms: { date: [[['ref', $date_Integration]]] } },
   });
 }
 /**
@@ -11768,9 +11478,9 @@ export async function appsCreateFromManifest<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['select', [[['ref', 'integration']]]]]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '201': {
+      transforms: { date: [[['select', [[['ref', $date_Integration]]]]]] },
+    },
   });
 }
 /**
@@ -11795,9 +11505,7 @@ export async function appsGetWebhookConfigForApp<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'webhook-config']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a webhook configuration for an app
@@ -11828,9 +11536,7 @@ export async function appsUpdateWebhookConfigForApp<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'webhook-config']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List deliveries for an app webhook
@@ -11859,10 +11565,8 @@ export async function appsListWebhookDeliveries<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'hook-delivery-item']]] },
+      transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
     },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -11889,9 +11593,7 @@ export async function appsGetWebhookDelivery<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'hook-delivery']]] } },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
   });
 }
 /**
@@ -11917,10 +11619,7 @@ export async function appsRedeliverWebhookDelivery<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List installations for the authenticated app
@@ -11950,7 +11649,7 @@ export async function appsListInstallations<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'installation']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Installation]]] } },
   });
 }
 /**
@@ -11979,8 +11678,7 @@ export async function appsGetInstallation<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'installation']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
   });
 }
 /**
@@ -12008,9 +11706,7 @@ export async function appsDeleteInstallation<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create an installation access token for an app
@@ -12057,11 +11753,7 @@ export async function appsCreateInstallationAccessToken<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'installation-token']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_InstallationToken]]] } },
   });
 }
 /**
@@ -12089,9 +11781,7 @@ export async function appsSuspendInstallation<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unsuspend an app installation
@@ -12116,9 +11806,7 @@ export async function appsUnsuspendInstallation<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List your grants
@@ -12160,10 +11848,9 @@ export async function oauthAuthorizationsListGrants<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'application-grant']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': {
+      transforms: { date: [[['loop'], ['ref', $date_ApplicationGrant]]] },
+    },
   });
 }
 /**
@@ -12193,9 +11880,7 @@ export async function oauthAuthorizationsGetGrant<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'application-grant']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ApplicationGrant]]] } },
   });
 }
 /**
@@ -12229,10 +11914,7 @@ export async function oauthAuthorizationsDeleteGrant<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete an app authorization
@@ -12267,9 +11949,7 @@ export async function appsDeleteAuthorization<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Revoke a grant for an application
@@ -12339,9 +12019,7 @@ export async function appsCheckToken<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12375,8 +12053,7 @@ export async function appsResetToken<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12407,9 +12084,7 @@ export async function appsDeleteToken<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a scoped access token
@@ -12467,11 +12142,7 @@ export async function appsScopeToken<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12507,9 +12178,8 @@ export async function appsCheckAuthorization<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['select', [[['ref', 'authorization']]]]]] },
+      transforms: { date: [[['select', [[['ref', $date_Authorization]]]]]] },
     },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -12544,7 +12214,7 @@ export async function appsResetAuthorization<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12606,9 +12276,7 @@ export async function appsGetBySlug<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'integration']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Integration]]] } },
   });
 }
 /**
@@ -12641,10 +12309,7 @@ export async function oauthAuthorizationsListAuthorizations<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'authorization']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12732,11 +12397,7 @@ export async function oauthAuthorizationsCreateAuthorization<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'authorization']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12822,11 +12483,8 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
-    '201': { transforms: { date: [[['ref', 'authorization']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12902,9 +12560,8 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
-    '201': { transforms: { date: [[['ref', 'authorization']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -12934,9 +12591,7 @@ export async function oauthAuthorizationsGetAuthorization<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -13007,8 +12662,7 @@ export async function oauthAuthorizationsUpdateAuthorization<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'authorization']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
   });
 }
 /**
@@ -13037,10 +12691,7 @@ export async function oauthAuthorizationsDeleteAuthorization<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get all codes of conduct
@@ -13058,9 +12709,7 @@ export async function codesOfConductGetAllCodesOfConduct<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'code-of-conduct']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a code of conduct
@@ -13080,10 +12729,7 @@ export async function codesOfConductGetConductCode<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'code-of-conduct']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get emojis
@@ -13133,11 +12779,7 @@ export async function enterpriseAdminGetGithubActionsPermissionsEnterprise<
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'actions-enterprise-permissions']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set GitHub Actions permissions for an enterprise
@@ -13202,19 +12844,7 @@ export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActio
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            ['access', 'organizations'],
-            ['loop'],
-            ['ref', 'organization-simple'],
-          ],
-        ],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set selected organizations enabled for GitHub Actions in an enterprise
@@ -13335,9 +12965,7 @@ export async function enterpriseAdminGetAllowedActionsEnterprise<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'selected-actions']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set allowed actions for an enterprise
@@ -13397,19 +13025,7 @@ export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            ['access', 'runner_groups'],
-            ['loop'],
-            ['ref', 'runner-groups-enterprise'],
-          ],
-        ],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a self-hosted runner group for an enterprise
@@ -13454,9 +13070,7 @@ export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'runner-groups-enterprise']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a self-hosted runner group for an enterprise
@@ -13483,9 +13097,7 @@ export async function enterpriseAdminGetSelfHostedRunnerGroupForEnterprise<
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'runner-groups-enterprise']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a self-hosted runner group for an enterprise
@@ -13524,9 +13136,7 @@ export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'runner-groups-enterprise']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a self-hosted runner group from an enterprise
@@ -13586,19 +13196,7 @@ export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnter
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            ['access', 'organizations'],
-            ['loop'],
-            ['ref', 'organization-simple'],
-          ],
-        ],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set organization access for a self-hosted runner group in an enterprise
@@ -13725,13 +13323,7 @@ export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'runners'], ['loop'], ['ref', 'runner']]],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set self-hosted runners in a group for an enterprise
@@ -13854,13 +13446,7 @@ export async function enterpriseAdminListSelfHostedRunnersForEnterprise<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'runners'], ['loop'], ['ref', 'runner']]],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List runner applications for an enterprise
@@ -13886,11 +13472,7 @@ export async function enterpriseAdminListRunnerApplicationsForEnterprise<
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'runner-application']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a registration token for an enterprise
@@ -13927,7 +13509,7 @@ export async function enterpriseAdminCreateRegistrationTokenForEnterprise<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'authentication-token']]] } },
+    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
   });
 }
 /**
@@ -13966,7 +13548,7 @@ export async function enterpriseAdminCreateRemoveTokenForEnterprise<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'authentication-token']]] } },
+    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
   });
 }
 /**
@@ -13994,9 +13576,7 @@ export async function enterpriseAdminGetSelfHostedRunnerForEnterprise<
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'runner']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a self-hosted runner from an enterprise
@@ -14062,9 +13642,7 @@ export async function enterpriseAdminGetAuditLog<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'audit-log-event']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get GitHub Actions billing for an enterprise
@@ -14094,9 +13672,7 @@ export async function billingGetGithubActionsBillingGhe<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get GitHub Packages billing for an enterprise
@@ -14124,9 +13700,7 @@ export async function billingGetGithubPackagesBillingGhe<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'packages-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get shared storage billing for an enterprise
@@ -14154,9 +13728,7 @@ export async function billingGetSharedStorageBillingGhe<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'combined-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List public events
@@ -14181,8 +13753,7 @@ export async function activityListPublicEvents<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -14222,9 +13793,7 @@ export async function activityGetFeeds<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'feed']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List gists for the authenticated user
@@ -14249,8 +13818,7 @@ export async function gistsList<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'base-gist']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
   });
 }
 /**
@@ -14300,10 +13868,7 @@ export async function gistsCreate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'gist-simple']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_GistSimple]]] } },
   });
 }
 /**
@@ -14333,9 +13898,7 @@ export async function gistsListPublic<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'base-gist']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
   });
 }
 /**
@@ -14361,9 +13924,7 @@ export async function gistsListStarred<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'base-gist']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
   });
 }
 /**
@@ -14385,8 +13946,7 @@ export async function gistsGet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'gist-simple']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
   });
 }
 /**
@@ -14412,9 +13972,7 @@ export async function gistsUpdate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'gist-simple']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
   });
 }
 /**
@@ -14435,10 +13993,7 @@ export async function gistsDelete<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List gist comments
@@ -14462,9 +14017,7 @@ export async function gistsListComments<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'gist-comment']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_GistComment]]] } },
   });
 }
 /**
@@ -14494,9 +14047,7 @@ export async function gistsCreateComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'gist-comment']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_GistComment]]] } },
   });
 }
 /**
@@ -14519,8 +14070,7 @@ export async function gistsGetComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'gist-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_GistComment]]] } },
   });
 }
 /**
@@ -14551,8 +14101,7 @@ export async function gistsUpdateComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'gist-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_GistComment]]] } },
   });
 }
 /**
@@ -14574,10 +14123,7 @@ export async function gistsDeleteComment<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List gist commits
@@ -14601,9 +14147,7 @@ export async function gistsListCommits<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'gist-commit']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_GistCommit]]] } },
   });
 }
 /**
@@ -14628,9 +14172,7 @@ export async function gistsListForks<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'gist-simple']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_GistSimple]]] } },
   });
 }
 /**
@@ -14653,10 +14195,7 @@ export async function gistsFork<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'base-gist']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_BaseGist]]] } },
   });
 }
 /**
@@ -14677,9 +14216,7 @@ export async function gistsCheckIsStarred<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Star a gist
@@ -14701,10 +14238,7 @@ export async function gistsStar<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unstar a gist
@@ -14724,10 +14258,7 @@ export async function gistsUnstar<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a gist revision
@@ -14749,10 +14280,7 @@ export async function gistsGetRevision<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'gist-simple']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
   });
 }
 /**
@@ -14796,9 +14324,7 @@ export async function gitignoreGetTemplate<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'gitignore-template']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repositories accessible to the app installation
@@ -14838,11 +14364,11 @@ export async function appsListReposAccessibleToInstallation<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'repositories'], ['loop'], ['ref', 'repository']]],
+        date: [
+          [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+        ],
       },
     },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -14940,9 +14466,7 @@ export async function issuesList<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'issue']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
   });
 }
 /**
@@ -14966,9 +14490,7 @@ export async function licensesGetAllCommonlyUsed<FetcherData>(
     queryParams: ['featured', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'license-simple']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a license
@@ -14988,11 +14510,7 @@ export async function licensesGet<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'license']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Render a Markdown document
@@ -15079,11 +14597,7 @@ export async function appsGetSubscriptionPlanForAccount<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'marketplace-purchase']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List plans
@@ -15112,13 +14626,7 @@ export async function appsListPlans<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'marketplace-listing-plan']]] },
-    },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List accounts for a plan
@@ -15153,14 +14661,7 @@ export async function appsListAccountsForPlan<FetcherData>(
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'marketplace-purchase']]] },
-    },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a subscription plan for an account (stubbed)
@@ -15189,10 +14690,7 @@ export async function appsGetSubscriptionPlanForAccountStubbed<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'marketplace-purchase']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List plans (stubbed)
@@ -15221,12 +14719,7 @@ export async function appsListPlansStubbed<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'marketplace-listing-plan']]] },
-    },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List accounts for a plan (stubbed)
@@ -15261,12 +14754,7 @@ export async function appsListAccountsForPlanStubbed<FetcherData>(
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'marketplace-purchase']]] },
-    },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get GitHub meta information
@@ -15290,9 +14778,7 @@ export async function metaGet<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'api-overview']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List public events for a network of repositories
@@ -15317,10 +14803,7 @@ export async function activityListPublicEventsForRepoNetwork<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -15358,10 +14841,7 @@ export async function activityListNotificationsForAuthenticatedUser<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'thread']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Thread]]] } },
   });
 }
 /**
@@ -15403,10 +14883,7 @@ export async function activityMarkNotificationsAsRead<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a thread
@@ -15427,9 +14904,7 @@ export async function activityGetThread<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'thread']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Thread]]] } },
   });
 }
 /**
@@ -15450,9 +14925,7 @@ export async function activityMarkThreadAsRead<FetcherData>(
     method: r.HttpMethod.PATCH,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a thread subscription for the authenticated user
@@ -15481,9 +14954,7 @@ export async function activityGetThreadSubscriptionForAuthenticatedUser<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'thread-subscription']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ThreadSubscription]]] } },
   });
 }
 /**
@@ -15522,9 +14993,7 @@ export async function activitySetThreadSubscription<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'thread-subscription']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ThreadSubscription]]] } },
   });
 }
 /**
@@ -15550,10 +15019,7 @@ export async function activityDeleteThreadSubscription<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get Octocat
@@ -15603,11 +15069,7 @@ export async function orgsList<FetcherData>(
     queryParams: ['since', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'organization-simple']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an organization
@@ -15638,8 +15100,7 @@ export async function orgsGet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'organization-full']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_OrganizationFull]]] } },
   });
 }
 /**
@@ -15781,23 +15242,7 @@ export async function orgsUpdate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'organization-full']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': {
-      transforms: {
-        date: [
-          [
-            [
-              'select',
-              [
-                [['ref', 'validation-error']],
-                [['ref', 'validation-error-simple']],
-              ],
-            ],
-          ],
-        ],
-      },
-    },
+    '200': { transforms: { date: [[['ref', $date_OrganizationFull]]] } },
   });
 }
 /**
@@ -15825,11 +15270,7 @@ export async function actionsGetGithubActionsPermissionsOrganization<
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'actions-organization-permissions']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set GitHub Actions permissions for an organization
@@ -15903,7 +15344,9 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'repositories'], ['loop'], ['ref', 'repository']]],
+        date: [
+          [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+        ],
       },
     },
   });
@@ -16031,9 +15474,7 @@ export async function actionsGetAllowedActionsOrganization<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'selected-actions']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set allowed actions for an organization
@@ -16103,15 +15544,7 @@ export async function actionsListSelfHostedRunnerGroupsForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'runner_groups'], ['loop'], ['ref', 'runner-groups-org']],
-        ],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a self-hosted runner group for an organization
@@ -16160,9 +15593,7 @@ export async function actionsCreateSelfHostedRunnerGroupForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'runner-groups-org']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a self-hosted runner group for an organization
@@ -16191,9 +15622,7 @@ export async function actionsGetSelfHostedRunnerGroupForOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'runner-groups-org']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a self-hosted runner group for an organization
@@ -16233,9 +15662,7 @@ export async function actionsUpdateSelfHostedRunnerGroupForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'runner-groups-org']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a self-hosted runner group from an organization
@@ -16305,7 +15732,11 @@ export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg<
     '200': {
       transforms: {
         date: [
-          [['access', 'repositories'], ['loop'], ['ref', 'minimal-repository']],
+          [
+            ['access', 'repositories'],
+            ['loop'],
+            ['ref', $date_MinimalRepository],
+          ],
         ],
       },
     },
@@ -16453,13 +15884,7 @@ export async function actionsListSelfHostedRunnersInGroupForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'runners'], ['loop'], ['ref', 'runner']]],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set self-hosted runners in a group for an organization
@@ -16588,13 +16013,7 @@ export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'runners'], ['loop'], ['ref', 'runner']]],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List runner applications for an organization
@@ -16618,11 +16037,7 @@ export async function actionsListRunnerApplicationsForOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'runner-application']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a registration token for an organization
@@ -16657,7 +16072,7 @@ export async function actionsCreateRegistrationTokenForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'authentication-token']]] } },
+    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
   });
 }
 /**
@@ -16694,7 +16109,7 @@ export async function actionsCreateRemoveTokenForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'authentication-token']]] } },
+    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
   });
 }
 /**
@@ -16720,9 +16135,7 @@ export async function actionsGetSelfHostedRunnerForOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'runner']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a self-hosted runner from an organization
@@ -16784,7 +16197,7 @@ export async function actionsListOrgSecrets<FetcherData>(
           [
             ['access', 'secrets'],
             ['loop'],
-            ['ref', 'organization-actions-secret'],
+            ['ref', $date_OrganizationActionsSecret],
           ],
         ],
       },
@@ -16812,9 +16225,7 @@ export async function actionsGetOrgPublicKey<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-public-key']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an organization secret
@@ -16839,7 +16250,9 @@ export async function actionsGetOrgSecret<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'organization-actions-secret']]] } },
+    '200': {
+      transforms: { date: [[['ref', $date_OrganizationActionsSecret]]] },
+    },
   });
 }
 /**
@@ -16981,9 +16394,7 @@ export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'empty-object']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete an organization secret
@@ -17041,7 +16452,11 @@ export async function actionsListSelectedReposForOrgSecret<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'repositories'], ['loop'], ['ref', 'minimal-repository']],
+          [
+            ['access', 'repositories'],
+            ['loop'],
+            ['ref', $date_MinimalRepository],
+          ],
         ],
       },
     },
@@ -17174,9 +16589,7 @@ export async function orgsGetAuditLog<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'audit-log-event']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List users blocked by an organization
@@ -17197,9 +16610,7 @@ export async function orgsListBlockedUsers<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check if a user is blocked by an organization
@@ -17220,9 +16631,7 @@ export async function orgsCheckBlockedUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Block a user from an organization
@@ -17243,9 +16652,7 @@ export async function orgsBlockUser<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unblock a user from an organization
@@ -17296,7 +16703,9 @@ export async function orgsListSamlSsoAuthorizations<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'credential-authorization']]] },
+      transforms: {
+        date: [[['loop'], ['ref', $date_CredentialAuthorization]]],
+      },
     },
   });
 }
@@ -17326,9 +16735,7 @@ export async function orgsRemoveSamlSsoAuthorization<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List public organization events
@@ -17352,7 +16759,7 @@ export async function activityListPublicOrgEvents<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -17378,12 +16785,7 @@ export async function orgsListFailedInvitations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'organization-invitation']]] },
-    },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization webhooks
@@ -17407,8 +16809,7 @@ export async function orgsListWebhooks<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'org-hook']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_OrgHook]]] } },
   });
 }
 /**
@@ -17468,9 +16869,7 @@ export async function orgsCreateWebhook<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'org-hook']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_OrgHook]]] } },
   });
 }
 /**
@@ -17495,8 +16894,7 @@ export async function orgsGetWebhook<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'org-hook']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_OrgHook]]] } },
   });
 }
 /**
@@ -17552,9 +16950,7 @@ export async function orgsUpdateWebhook<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'org-hook']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_OrgHook]]] } },
   });
 }
 /**
@@ -17576,9 +16972,7 @@ export async function orgsDeleteWebhook<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a webhook configuration for an organization
@@ -17604,9 +16998,7 @@ export async function orgsGetWebhookConfigForOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'webhook-config']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a webhook configuration for an organization
@@ -17640,9 +17032,7 @@ export async function orgsUpdateWebhookConfigForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'webhook-config']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List deliveries for an organization webhook
@@ -17669,10 +17059,8 @@ export async function orgsListWebhookDeliveries<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'hook-delivery-item']]] },
+      transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
     },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -17697,9 +17085,7 @@ export async function orgsGetWebhookDelivery<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'hook-delivery']]] } },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
   });
 }
 /**
@@ -17723,10 +17109,7 @@ export async function orgsRedeliverWebhookDelivery<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Ping an organization webhook
@@ -17748,9 +17131,7 @@ export async function orgsPingWebhook<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an organization installation for the authenticated app
@@ -17776,7 +17157,7 @@ export async function appsGetOrgInstallation<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'installation']]] } },
+    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
   });
 }
 /**
@@ -17809,7 +17190,7 @@ export async function orgsListAppInstallations<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'installations'], ['loop'], ['ref', 'installation']],
+          [['access', 'installations'], ['loop'], ['ref', $date_Installation]],
         ],
       },
     },
@@ -17838,7 +17219,7 @@ export async function interactionsGetRestrictionsForOrg<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['select', [[['ref', 'interaction-limit-response']]]]]],
+        date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
       },
     },
   });
@@ -17867,8 +17248,9 @@ export async function interactionsSetRestrictionsForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'interaction-limit-response']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': {
+      transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+    },
   });
 }
 /**
@@ -17917,12 +17299,7 @@ export async function orgsListPendingInvitations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'organization-invitation']]] },
-    },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create an organization invitation
@@ -17975,11 +17352,7 @@ export async function orgsCreateInvitation<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'organization-invitation']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Cancel an organization invitation
@@ -18005,10 +17378,7 @@ export async function orgsCancelInvitation<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization invitation teams
@@ -18034,10 +17404,7 @@ export async function orgsListInvitationTeams<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization issues assigned to the authenticated user
@@ -18092,8 +17459,7 @@ export async function issuesListForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'issue']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
   });
 }
 /**
@@ -18121,10 +17487,7 @@ export async function orgsListMembers<FetcherData>(
     queryParams: ['filter', 'role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check organization membership for a user
@@ -18169,9 +17532,7 @@ export async function orgsRemoveMember<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get organization membership for a user
@@ -18194,11 +17555,7 @@ export async function orgsGetMembershipForUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'org-membership']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set organization membership for a user
@@ -18247,11 +17604,7 @@ export async function orgsSetMembershipForUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'org-membership']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove organization membership for a user
@@ -18278,10 +17631,7 @@ export async function orgsRemoveMembershipForUser<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization migrations
@@ -18307,7 +17657,7 @@ export async function migrationsListForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'migration']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Migration]]] } },
   });
 }
 /**
@@ -18346,9 +17696,7 @@ export async function migrationsStartForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'migration']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Migration]]] } },
   });
 }
 /**
@@ -18383,8 +17731,7 @@ export async function migrationsGetStatusForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'migration']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Migration]]] } },
   });
 }
 /**
@@ -18407,9 +17754,7 @@ export async function migrationsDownloadArchiveForOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete an organization migration archive
@@ -18431,9 +17776,7 @@ export async function migrationsDeleteArchiveForOrg<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unlock an organization repository
@@ -18458,9 +17801,7 @@ export async function migrationsUnlockRepoForOrg<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repositories in an organization migration
@@ -18487,9 +17828,8 @@ export async function migrationsListReposForOrg<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -18515,9 +17855,7 @@ export async function orgsListOutsideCollaborators<FetcherData>(
     queryParams: ['filter', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Convert an organization member to outside collaborator
@@ -18542,9 +17880,7 @@ export async function orgsConvertMemberToOutsideCollaborator<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove outside collaborator from an organization
@@ -18600,7 +17936,7 @@ export async function packagesGetPackageForOrganization<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'package']]] } },
+    '200': { transforms: { date: [[['ref', $date_Package]]] } },
   });
 }
 /**
@@ -18638,11 +17974,7 @@ export async function packagesDeletePackageForOrg<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Restore a package for an organization
@@ -18688,11 +18020,7 @@ export async function packagesRestorePackageForOrg<FetcherData>(
     queryParams: ['token'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get all package versions for a package owned by an organization
@@ -18733,10 +18061,9 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'package-version']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': {
+      transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+    },
   });
 }
 /**
@@ -18772,7 +18099,7 @@ export async function packagesGetPackageVersionForOrganization<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'package-version']]] } },
+    '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
   });
 }
 /**
@@ -18812,11 +18139,7 @@ export async function packagesDeletePackageVersionForOrg<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Restore package version for an organization
@@ -18861,11 +18184,7 @@ export async function packagesRestorePackageVersionForOrg<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organization projects
@@ -18892,8 +18211,7 @@ export async function projectsListForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'project']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
   });
 }
 /**
@@ -18928,12 +18246,7 @@ export async function projectsCreateForOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'project']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '201': { transforms: { date: [[['ref', $date_Project]]] } },
   });
 }
 /**
@@ -18958,9 +18271,7 @@ export async function orgsListPublicMembers<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check public organization membership for a user
@@ -19007,9 +18318,7 @@ export async function orgsSetPublicMembershipForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove public organization membership for the authenticated user
@@ -19068,7 +18377,7 @@ export async function reposListForOrg<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
   });
 }
@@ -19185,9 +18494,7 @@ export async function reposCreateInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'repository']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
   });
 }
 /**
@@ -19218,9 +18525,7 @@ export async function billingGetGithubActionsBillingOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get GitHub Packages billing for an organization
@@ -19248,9 +18553,7 @@ export async function billingGetGithubPackagesBillingOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'packages-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get shared storage billing for an organization
@@ -19278,9 +18581,7 @@ export async function billingGetSharedStorageBillingOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'combined-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List IdP groups for an organization
@@ -19315,9 +18616,7 @@ export async function teamsListIdpGroupsForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'group-mapping']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List teams
@@ -19341,10 +18640,7 @@ export async function teamsList<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a team
@@ -19416,9 +18712,7 @@ export async function teamsCreate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'team-full']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
   });
 }
 /**
@@ -19445,8 +18739,7 @@ export async function teamsGetByName<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-full']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
   });
 }
 /**
@@ -19505,7 +18798,7 @@ export async function teamsUpdateInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'team-full']]] } },
+    '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
   });
 }
 /**
@@ -19566,7 +18859,9 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team-discussion']]] } },
+    '200': {
+      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussion]]] },
+    },
   });
 }
 /**
@@ -19617,7 +18912,7 @@ export async function teamsCreateDiscussionInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'team-discussion']]] } },
+    '201': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
   });
 }
 /**
@@ -19647,7 +18942,7 @@ export async function teamsGetDiscussionInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
   });
 }
 /**
@@ -19689,7 +18984,7 @@ export async function teamsUpdateDiscussionInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
   });
 }
 /**
@@ -19752,7 +19047,7 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'team-discussion-comment']]] },
+      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussionComment]]] },
     },
   });
 }
@@ -19797,7 +19092,7 @@ export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'team-discussion-comment']]] } },
+    '201': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
   });
 }
 /**
@@ -19828,7 +19123,7 @@ export async function teamsGetDiscussionCommentInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion-comment']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
   });
 }
 /**
@@ -19866,7 +19161,7 @@ export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion-comment']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
   });
 }
 /**
@@ -19939,7 +19234,7 @@ export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -19987,8 +19282,8 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'reaction']]] } },
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
+    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -20062,7 +19357,7 @@ export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -20109,8 +19404,8 @@ export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'reaction']]] } },
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
+    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -20170,11 +19465,7 @@ export async function teamsListPendingInvitationsInOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'organization-invitation']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List team members
@@ -20203,9 +19494,7 @@ export async function teamsListMembersInOrg<FetcherData>(
     queryParams: ['role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get team membership for a user
@@ -20241,9 +19530,7 @@ export async function teamsGetMembershipForUserInOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-membership']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add or update team membership for a user
@@ -20302,9 +19589,7 @@ export async function teamsAddOrUpdateMembershipForUserInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-membership']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove team membership for a user
@@ -20372,9 +19657,7 @@ export async function teamsListProjectsInOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team-project']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check team permissions for a project
@@ -20401,9 +19684,7 @@ export async function teamsCheckPermissionsForProjectInOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-project']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add or update team project permissions
@@ -20501,7 +19782,7 @@ export async function teamsListReposInOrg<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
   });
 }
@@ -20540,7 +19821,7 @@ export async function teamsCheckPermissionsForRepoInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-repository']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamRepository]]] } },
   });
 }
 /**
@@ -20651,9 +19932,7 @@ export async function teamsListIdpGroupsInOrg<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'group-mapping']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create or update IdP group connections
@@ -20704,9 +19983,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'group-mapping']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List child teams
@@ -20734,9 +20011,7 @@ export async function teamsListChildInOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a project card
@@ -20757,10 +20032,7 @@ export async function projectsGetCard<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'project-card']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
   });
 }
 /**
@@ -20794,11 +20066,7 @@ export async function projectsUpdateCard<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'project-card']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
   });
 }
 /**
@@ -20819,10 +20087,7 @@ export async function projectsDeleteCard<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Move a project card
@@ -20855,10 +20120,7 @@ export async function projectsMoveCard<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a project column
@@ -20879,10 +20141,7 @@ export async function projectsGetColumn<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'project-column']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
   });
 }
 /**
@@ -20912,9 +20171,7 @@ export async function projectsUpdateColumn<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'project-column']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
   });
 }
 /**
@@ -20935,10 +20192,7 @@ export async function projectsDeleteColumn<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List project cards
@@ -20963,9 +20217,7 @@ export async function projectsListCards<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'project-card']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_ProjectCard]]] } },
   });
 }
 /**
@@ -21008,24 +20260,7 @@ export async function projectsCreateCard<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'project-card']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': {
-      transforms: {
-        date: [
-          [
-            [
-              'select',
-              [
-                [['ref', 'validation-error']],
-                [['ref', 'validation-error-simple']],
-              ],
-            ],
-          ],
-        ],
-      },
-    },
+    '201': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
   });
 }
 /**
@@ -21054,11 +20289,7 @@ export async function projectsMoveColumn<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a project
@@ -21081,9 +20312,7 @@ export async function projectsGet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'project']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Project]]] } },
   });
 }
 /**
@@ -21133,10 +20362,7 @@ export async function projectsUpdate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'project']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_Project]]] } },
   });
 }
 /**
@@ -21158,11 +20384,7 @@ export async function projectsDelete<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List project collaborators
@@ -21190,13 +20412,7 @@ export async function projectsListCollaborators<FetcherData>(
     queryParams: ['affiliation', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add project collaborator
@@ -21228,12 +20444,7 @@ export async function projectsAddCollaborator<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove user as a collaborator
@@ -21256,12 +20467,7 @@ export async function projectsRemoveCollaborator<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get project permission for a user
@@ -21285,15 +20491,7 @@ export async function projectsGetPermissionForUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'repository-collaborator-permission']]] },
-    },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List project columns
@@ -21317,9 +20515,7 @@ export async function projectsListColumns<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'project-column']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_ProjectColumn]]] } },
   });
 }
 /**
@@ -21349,10 +20545,7 @@ export async function projectsCreateColumn<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'project-column']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '201': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
   });
 }
 /**
@@ -21376,10 +20569,7 @@ export async function rateLimitGet<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'rate-limit-overview']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a reaction (Legacy)
@@ -21408,11 +20598,7 @@ export async function reactionsDeleteLegacy<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a repository
@@ -21440,10 +20626,7 @@ export async function reposGet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'full-repository']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_FullRepository]]] } },
   });
 }
 /**
@@ -21565,11 +20748,7 @@ export async function reposUpdate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'full-repository']]] } },
-    '307': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_FullRepository]]] } },
   });
 }
 /**
@@ -21597,10 +20776,7 @@ export async function reposDelete<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '307': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List artifacts for a repository
@@ -21633,7 +20809,7 @@ export async function actionsListArtifactsForRepo<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'artifacts'], ['loop'], ['ref', 'artifact']]],
+        date: [[['access', 'artifacts'], ['loop'], ['ref', $date_Artifact]]],
       },
     },
   });
@@ -21662,7 +20838,7 @@ export async function actionsGetArtifact<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'artifact']]] } },
+    '200': { transforms: { date: [[['ref', $date_Artifact]]] } },
   });
 }
 /**
@@ -21743,7 +20919,7 @@ export async function actionsGetJobForWorkflowRun<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'job']]] } },
+    '200': { transforms: { date: [[['ref', $date_Job]]] } },
   });
 }
 /**
@@ -21800,11 +20976,7 @@ export async function actionsGetGithubActionsPermissionsRepository<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'actions-repository-permissions']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set GitHub Actions permissions for a repository
@@ -21866,9 +21038,7 @@ export async function actionsGetAllowedActionsRepository<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'selected-actions']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set allowed actions for a repository
@@ -21934,13 +21104,7 @@ export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'runners'], ['loop'], ['ref', 'runner']]],
-      },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List runner applications for a repository
@@ -21965,11 +21129,7 @@ export async function actionsListRunnerApplicationsForRepo<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'runner-application']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a registration token for a repository
@@ -22004,7 +21164,7 @@ export async function actionsCreateRegistrationTokenForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'authentication-token']]] } },
+    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
   });
 }
 /**
@@ -22040,7 +21200,7 @@ export async function actionsCreateRemoveTokenForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'authentication-token']]] } },
+    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
   });
 }
 /**
@@ -22068,9 +21228,7 @@ export async function actionsGetSelfHostedRunnerForRepo<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'runner']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a self-hosted runner from a repository
@@ -22162,7 +21320,7 @@ export async function actionsListWorkflowRunsForRepo<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'workflow_runs'], ['loop'], ['ref', 'workflow-run']],
+          [['access', 'workflow_runs'], ['loop'], ['ref', $date_WorkflowRun]],
         ],
       },
     },
@@ -22192,7 +21350,7 @@ export async function actionsGetWorkflowRun<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'workflow-run']]] } },
+    '200': { transforms: { date: [[['ref', $date_WorkflowRun]]] } },
   });
 }
 /**
@@ -22246,7 +21404,7 @@ export async function actionsGetReviewsForRun<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'environment-approvals']]] },
+      transforms: { date: [[['loop'], ['ref', $date_EnvironmentApprovals]]] },
     },
   });
 }
@@ -22277,11 +21435,7 @@ export async function actionsApproveWorkflowRun<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'empty-object']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List workflow run artifacts
@@ -22315,7 +21469,7 @@ export async function actionsListWorkflowRunArtifacts<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'artifacts'], ['loop'], ['ref', 'artifact']]],
+        date: [[['access', 'artifacts'], ['loop'], ['ref', $date_Artifact]]],
       },
     },
   });
@@ -22377,7 +21531,9 @@ export async function actionsListJobsForWorkflowRun<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['access', 'jobs'], ['loop'], ['ref', 'job']]] },
+      transforms: {
+        date: [[['access', 'jobs'], ['loop'], ['ref', $date_Job]]],
+      },
     },
   });
 }
@@ -22461,7 +21617,7 @@ export async function actionsGetPendingDeploymentsForRun<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'pending-deployment']]] },
+      transforms: { date: [[['loop'], ['ref', $date_PendingDeployment]]] },
     },
   });
 }
@@ -22512,7 +21668,7 @@ export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'deployment']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Deployment]]] } },
   });
 }
 /**
@@ -22569,9 +21725,7 @@ export async function actionsGetWorkflowRunUsage<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'workflow-run-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository secrets
@@ -22604,7 +21758,7 @@ export async function actionsListRepoSecrets<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'secrets'], ['loop'], ['ref', 'actions-secret']]],
+        date: [[['access', 'secrets'], ['loop'], ['ref', $date_ActionsSecret]]],
       },
     },
   });
@@ -22631,9 +21785,7 @@ export async function actionsGetRepoPublicKey<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-public-key']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a repository secret
@@ -22658,7 +21810,7 @@ export async function actionsGetRepoSecret<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-secret']]] } },
+    '200': { transforms: { date: [[['ref', $date_ActionsSecret]]] } },
   });
 }
 /**
@@ -22847,7 +21999,7 @@ export async function actionsListRepoWorkflows<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'workflows'], ['loop'], ['ref', 'workflow']]],
+        date: [[['access', 'workflows'], ['loop'], ['ref', $date_Workflow]]],
       },
     },
   });
@@ -22876,7 +22028,7 @@ export async function actionsGetWorkflow<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'workflow']]] } },
+    '200': { transforms: { date: [[['ref', $date_Workflow]]] } },
   });
 }
 /**
@@ -23043,7 +22195,7 @@ export async function actionsListWorkflowRuns<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'workflow_runs'], ['loop'], ['ref', 'workflow-run']],
+          [['access', 'workflow_runs'], ['loop'], ['ref', $date_WorkflowRun]],
         ],
       },
     },
@@ -23080,9 +22232,7 @@ export async function actionsGetWorkflowUsage<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'workflow-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List assignees
@@ -23109,10 +22259,7 @@ export async function issuesListAssignees<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check if a user can be assigned
@@ -23140,9 +22287,7 @@ export async function issuesCheckUserCanBeAssigned<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List all autolinks of a repository
@@ -23169,9 +22314,7 @@ export async function reposListAutolinks<FetcherData>(
     queryParams: ['page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'autolink']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create an autolink reference for a repository
@@ -23204,10 +22347,7 @@ export async function reposCreateAutolink<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'autolink']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an autolink reference of a repository
@@ -23233,10 +22373,7 @@ export async function reposGetAutolink<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'autolink']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete an autolink reference from a repository
@@ -23262,9 +22399,7 @@ export async function reposDeleteAutolink<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Enable automated security fixes
@@ -23337,10 +22472,7 @@ export async function reposListBranches<FetcherData>(
     queryParams: ['protected', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'short-branch']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a branch
@@ -23362,11 +22494,7 @@ export async function reposGetBranch<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'branch-with-protection']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get branch protection
@@ -23392,10 +22520,7 @@ export async function reposGetBranchProtection<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'branch-protection']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update branch protection
@@ -23512,12 +22637,7 @@ export async function reposUpdateBranchProtection<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'protected-branch']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete branch protection
@@ -23543,9 +22663,7 @@ export async function reposDeleteBranchProtection<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get admin branch protection
@@ -23571,11 +22689,7 @@ export async function reposGetAdminBranchProtection<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'protected-branch-admin-enforced']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set admin branch protection
@@ -23604,11 +22718,7 @@ export async function reposSetAdminBranchProtection<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'protected-branch-admin-enforced']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete admin branch protection
@@ -23637,9 +22747,7 @@ export async function reposDeleteAdminBranchProtection<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get pull request review protection
@@ -23665,11 +22773,7 @@ export async function reposGetPullRequestReviewProtection<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'protected-branch-pull-request-review']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update pull request review protection
@@ -23729,12 +22833,7 @@ export async function reposUpdatePullRequestReviewProtection<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'protected-branch-pull-request-review']]] },
-    },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete pull request review protection
@@ -23760,9 +22859,7 @@ export async function reposDeletePullRequestReviewProtection<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get commit signature protection
@@ -23796,12 +22893,7 @@ export async function reposGetCommitSignatureProtection<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'protected-branch-admin-enforced']]] },
-    },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create commit signature protection
@@ -23830,12 +22922,7 @@ export async function reposCreateCommitSignatureProtection<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'protected-branch-admin-enforced']]] },
-    },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete commit signature protection
@@ -23865,9 +22952,7 @@ export async function reposDeleteCommitSignatureProtection<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get status checks protection
@@ -23893,10 +22978,7 @@ export async function reposGetStatusChecksProtection<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'status-check-policy']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update status check protection
@@ -23936,11 +23018,7 @@ export async function reposUpdateStatusCheckProtection<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'status-check-policy']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove status check protection
@@ -23992,9 +23070,7 @@ export async function reposGetAllStatusCheckContexts<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add status check contexts
@@ -24029,11 +23105,7 @@ export async function reposAddStatusCheckContexts<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set status check contexts
@@ -24068,10 +23140,7 @@ export async function reposSetStatusCheckContexts<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove status check contexts
@@ -24106,10 +23175,7 @@ export async function reposRemoveStatusCheckContexts<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get access restrictions
@@ -24140,10 +23206,7 @@ export async function reposGetAccessRestrictions<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'branch-restriction-policy']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete access restrictions
@@ -24201,8 +23264,7 @@ export async function reposGetAppsWithAccessToProtectedBranch<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'integration']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
   });
 }
 /**
@@ -24251,8 +23313,7 @@ export async function reposAddAppAccessRestrictions<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'integration']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
   });
 }
 /**
@@ -24302,8 +23363,7 @@ export async function reposSetAppAccessRestrictions<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'integration']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
   });
 }
 /**
@@ -24352,8 +23412,7 @@ export async function reposRemoveAppAccessRestrictions<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'integration']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
   });
 }
 /**
@@ -24382,10 +23441,7 @@ export async function reposGetTeamsWithAccessToProtectedBranch<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add team access restrictions
@@ -24431,10 +23487,7 @@ export async function reposAddTeamAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set team access restrictions
@@ -24481,10 +23534,7 @@ export async function reposSetTeamAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove team access restrictions
@@ -24530,10 +23580,7 @@ export async function reposRemoveTeamAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get users with access to the protected branch
@@ -24561,10 +23608,7 @@ export async function reposGetUsersWithAccessToProtectedBranch<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add user access restrictions
@@ -24610,10 +23654,7 @@ export async function reposAddUserAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set user access restrictions
@@ -24659,10 +23700,7 @@ export async function reposSetUserAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove user access restrictions
@@ -24708,10 +23746,7 @@ export async function reposRemoveUserAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Rename a branch
@@ -24761,12 +23796,7 @@ export async function reposRenameBranch<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'branch-with-protection']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a check run
@@ -24799,7 +23829,7 @@ export async function checksCreate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'check-run']]] } },
+    '201': { transforms: { date: [[['ref', $date_CheckRun]]] } },
   });
 }
 /**
@@ -24830,7 +23860,7 @@ export async function checksGet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'check-run']]] } },
+    '200': { transforms: { date: [[['ref', $date_CheckRun]]] } },
   });
 }
 /**
@@ -24861,7 +23891,7 @@ export async function checksUpdate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'check-run']]] } },
+    '200': { transforms: { date: [[['ref', $date_CheckRun]]] } },
   });
 }
 /**
@@ -24890,9 +23920,7 @@ export async function checksListAnnotations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'check-annotation']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a check suite
@@ -24930,8 +23958,8 @@ export async function checksCreateSuite<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'check-suite']]] } },
-    '201': { transforms: { date: [[['ref', 'check-suite']]] } },
+    '200': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
+    '201': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
   });
 }
 /**
@@ -24975,7 +24003,7 @@ export async function checksSetSuitesPreferences<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'check-suite-preference']]] } },
+    '200': { transforms: { date: [[['ref', $date_CheckSuitePreference]]] } },
   });
 }
 /**
@@ -25006,7 +24034,7 @@ export async function checksGetSuite<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'check-suite']]] } },
+    '200': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
   });
 }
 /**
@@ -25048,7 +24076,7 @@ export async function checksListForSuite<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'check_runs'], ['loop'], ['ref', 'check-run']]],
+        date: [[['access', 'check_runs'], ['loop'], ['ref', $date_CheckRun]]],
       },
     },
   });
@@ -25122,10 +24150,8 @@ export async function codeScanningListAlertsForRepo<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'code-scanning-alert-items']]] },
+      transforms: { date: [[['loop'], ['ref', $date_CodeScanningAlertItems]]] },
     },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -25157,9 +24183,7 @@ export async function codeScanningGetAlert<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'code-scanning-alert']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_CodeScanningAlert]]] } },
   });
 }
 /**
@@ -25190,9 +24214,7 @@ export async function codeScanningUpdateAlert<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'code-scanning-alert']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_CodeScanningAlert]]] } },
   });
 }
 /**
@@ -25221,15 +24243,7 @@ export async function codeScanningListAlertInstances<FetcherData>(
     queryParams: ['page', 'per_page', 'ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['loop'], ['ref', 'code-scanning-alert-instance']]],
-      },
-    },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List code scanning analyses for a repository
@@ -25289,10 +24303,8 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'code-scanning-analysis']]] },
+      transforms: { date: [[['loop'], ['ref', $date_CodeScanningAnalysis]]] },
     },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -25346,9 +24358,7 @@ export async function codeScanningGetAnalysis<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'code-scanning-analysis']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_CodeScanningAnalysis]]] } },
   });
 }
 /**
@@ -25463,14 +24473,7 @@ export async function codeScanningDeleteAnalysis<FetcherData>(
     queryParams: ['confirm_delete'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'code-scanning-analysis-deletion']]] },
-    },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Upload an analysis as SARIF data
@@ -25544,13 +24547,7 @@ export async function codeScanningUploadSarif<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '202': {
-      transforms: { date: [[['ref', 'code-scanning-sarifs-receipt']]] },
-    },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get information about a SARIF upload
@@ -25577,10 +24574,7 @@ export async function codeScanningGetSarif<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'code-scanning-sarifs-status']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository collaborators
@@ -25611,10 +24605,7 @@ export async function reposListCollaborators<FetcherData>(
     queryParams: ['affiliation', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'collaborator']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check if a user is a repository collaborator
@@ -25708,9 +24699,7 @@ export async function reposAddCollaborator<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'repository-invitation']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_RepositoryInvitation]]] } },
   });
 }
 /**
@@ -25757,12 +24746,7 @@ export async function reposGetCollaboratorPermissionLevel<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'repository-collaborator-permission']]] },
-    },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List commit comments for a repository
@@ -25792,7 +24776,7 @@ export async function reposListCommitCommentsForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'commit-comment']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_CommitComment]]] } },
   });
 }
 /**
@@ -25816,8 +24800,7 @@ export async function reposGetCommitComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'commit-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_CommitComment]]] } },
   });
 }
 /**
@@ -25848,8 +24831,7 @@ export async function reposUpdateCommitComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'commit-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_CommitComment]]] } },
   });
 }
 /**
@@ -25872,9 +24854,7 @@ export async function reposDeleteCommitComment<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List reactions for a commit comment
@@ -25910,8 +24890,7 @@ export async function reactionsListForCommitComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -25952,9 +24931,8 @@ export async function reactionsCreateForCommitComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'reaction']]] } },
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -26065,13 +25043,7 @@ export async function reposListCommits<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'commit']]] } },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '500': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List branches for HEAD commit
@@ -26100,10 +25072,7 @@ export async function reposListBranchesForHeadCommit<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'branch-short']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List commit comments
@@ -26130,7 +25099,7 @@ export async function reposListCommentsForCommit<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'commit-comment']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_CommitComment]]] } },
   });
 }
 /**
@@ -26182,9 +25151,7 @@ export async function reposCreateCommitComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'commit-comment']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_CommitComment]]] } },
   });
 }
 /**
@@ -26217,7 +25184,7 @@ export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'pull-request-simple']]] },
+      transforms: { date: [[['loop'], ['ref', $date_PullRequestSimple]]] },
     },
   });
 }
@@ -26306,12 +25273,7 @@ export async function reposGetCommit<FetcherData>(
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'commit']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-    '500': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List check runs for a Git reference
@@ -26360,7 +25322,7 @@ export async function checksListForRef<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'check_runs'], ['loop'], ['ref', 'check-run']]],
+        date: [[['access', 'check_runs'], ['loop'], ['ref', $date_CheckRun]]],
       },
     },
   });
@@ -26403,7 +25365,9 @@ export async function checksListSuitesForRef<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'check_suites'], ['loop'], ['ref', 'check-suite']]],
+        date: [
+          [['access', 'check_suites'], ['loop'], ['ref', $date_CheckSuite]],
+        ],
       },
     },
   });
@@ -26446,8 +25410,7 @@ export async function reposGetCombinedStatusForRef<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'combined-commit-status']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_CombinedCommitStatus]]] } },
   });
 }
 /**
@@ -26478,10 +25441,7 @@ export async function reposListCommitStatusesForRef<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'status']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the code of conduct for a repository
@@ -26507,9 +25467,7 @@ export async function codesOfConductGetForRepo<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'code-of-conduct']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get community profile metrics
@@ -26548,7 +25506,7 @@ export async function reposGetCommunityProfileMetrics<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'community-profile']]] } },
+    '200': { transforms: { date: [[['ref', $date_CommunityProfile]]] } },
   });
 }
 /**
@@ -26646,11 +25604,7 @@ export async function reposCompareCommits<FetcherData>(
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'commit-comparison']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '500': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a content attachment
@@ -26697,15 +25651,7 @@ export async function appsCreateContentAttachment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', 'content-reference-attachment']]] },
-    },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get repository content
@@ -26782,27 +25728,7 @@ export async function reposGetContent<FetcherData>(
     queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            [
-              'select',
-              [
-                [['ref', 'content-directory']],
-                [['ref', 'content-file']],
-                [['ref', 'content-symlink']],
-                [['ref', 'content-submodule']],
-              ],
-            ],
-          ],
-        ],
-      },
-    },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create or update file contents
@@ -26878,13 +25804,7 @@ export async function reposCreateOrUpdateFileContents<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'file-commit']]] } },
-    '201': { transforms: { date: [[['ref', 'file-commit']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a file
@@ -26958,12 +25878,7 @@ export async function reposDeleteFile<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'file-commit']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository contributors
@@ -26996,11 +25911,7 @@ export async function reposListContributors<FetcherData>(
     queryParams: ['anon', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'contributor']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List deployments
@@ -27030,7 +25941,7 @@ export async function reposListDeployments<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'deployment']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Deployment]]] } },
   });
 }
 /**
@@ -27173,8 +26084,7 @@ export async function reposCreateDeployment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'deployment']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Deployment]]] } },
   });
 }
 /**
@@ -27198,8 +26108,7 @@ export async function reposGetDeployment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'deployment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Deployment]]] } },
   });
 }
 /**
@@ -27235,10 +26144,7 @@ export async function reposDeleteDeployment<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List deployment statuses
@@ -27265,8 +26171,9 @@ export async function reposListDeploymentStatuses<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'deployment-status']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': {
+      transforms: { date: [[['loop'], ['ref', $date_DeploymentStatus]]] },
+    },
   });
 }
 /**
@@ -27337,8 +26244,7 @@ export async function reposCreateDeploymentStatus<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'deployment-status']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_DeploymentStatus]]] } },
   });
 }
 /**
@@ -27364,8 +26270,7 @@ export async function reposGetDeploymentStatus<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'deployment-status']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_DeploymentStatus]]] } },
   });
 }
 /**
@@ -27421,9 +26326,7 @@ export async function reposCreateDispatchEvent<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get all environments
@@ -27459,7 +26362,9 @@ export async function reposGetAllEnvironments<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'environments'], ['loop'], ['ref', 'environment']]],
+        date: [
+          [['access', 'environments'], ['loop'], ['ref', $date_Environment]],
+        ],
       },
     },
   });
@@ -27487,7 +26392,7 @@ export async function reposGetEnvironment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'environment']]] } },
+    '200': { transforms: { date: [[['ref', $date_Environment]]] } },
   });
 }
 /**
@@ -27543,8 +26448,7 @@ export async function reposCreateOrUpdateEnvironment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'environment']]] } },
-    '422': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Environment]]] } },
   });
 }
 /**
@@ -27593,7 +26497,7 @@ export async function activityListRepoEvents<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -27621,9 +26525,8 @@ export async function reposListForks<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -27658,11 +26561,7 @@ export async function reposCreateFork<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '202': { transforms: { date: [[['ref', 'full-repository']]] } },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '202': { transforms: { date: [[['ref', $date_FullRepository]]] } },
   });
 }
 /**
@@ -27696,13 +26595,7 @@ export async function gitCreateBlob<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'short-blob']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a blob
@@ -27728,12 +26621,7 @@ export async function gitGetBlob<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'blob']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a commit
@@ -27856,9 +26744,7 @@ export async function gitCreateCommit<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'git-commit']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_GitCommit]]] } },
   });
 }
 /**
@@ -27930,8 +26816,7 @@ export async function gitGetCommit<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'git-commit']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_GitCommit]]] } },
   });
 }
 /**
@@ -27973,9 +26858,7 @@ export async function gitListMatchingRefs<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'git-ref']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a reference
@@ -28005,10 +26888,7 @@ export async function gitGetRef<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'git-ref']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a reference
@@ -28046,10 +26926,7 @@ export async function gitCreateRef<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'git-ref']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a reference
@@ -28082,10 +26959,7 @@ export async function gitUpdateRef<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'git-ref']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a reference
@@ -28107,9 +26981,7 @@ export async function gitDeleteRef<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a tag object
@@ -28217,10 +27089,7 @@ export async function gitCreateTag<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'git-tag']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a tag
@@ -28287,10 +27156,7 @@ export async function gitGetTag<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'git-tag']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a tree
@@ -28356,12 +27222,7 @@ export async function gitCreateTree<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'git-tree']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a tree
@@ -28390,11 +27251,7 @@ export async function gitGetTree<FetcherData>(
     queryParams: ['recursive'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'git-tree']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository webhooks
@@ -28419,8 +27276,7 @@ export async function reposListWebhooks<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'hook']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Hook]]] } },
   });
 }
 /**
@@ -28483,10 +27339,7 @@ export async function reposCreateWebhook<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'hook']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Hook]]] } },
   });
 }
 /**
@@ -28512,8 +27365,7 @@ export async function reposGetWebhook<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'hook']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Hook]]] } },
   });
 }
 /**
@@ -28582,9 +27434,7 @@ export async function reposUpdateWebhook<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'hook']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Hook]]] } },
   });
 }
 /**
@@ -28607,9 +27457,7 @@ export async function reposDeleteWebhook<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a webhook configuration for a repository
@@ -28636,9 +27484,7 @@ export async function reposGetWebhookConfigForRepo<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'webhook-config']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a webhook configuration for a repository
@@ -28673,9 +27519,7 @@ export async function reposUpdateWebhookConfigForRepo<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'webhook-config']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List deliveries for a repository webhook
@@ -28703,10 +27547,8 @@ export async function reposListWebhookDeliveries<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'hook-delivery-item']]] },
+      transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
     },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -28732,9 +27574,7 @@ export async function reposGetWebhookDelivery<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'hook-delivery']]] } },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
   });
 }
 /**
@@ -28759,10 +27599,7 @@ export async function reposRedeliverWebhookDelivery<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Ping a repository webhook
@@ -28785,9 +27622,7 @@ export async function reposPingWebhook<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Test the push repository webhook
@@ -28814,9 +27649,7 @@ export async function reposTestPushWebhook<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an import status
@@ -28905,10 +27738,7 @@ export async function migrationsGetImportStatus<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'import']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Start an import
@@ -28953,11 +27783,7 @@ export async function migrationsStartImport<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'import']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update an import
@@ -29000,9 +27826,7 @@ export async function migrationsUpdateImport<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'import']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Cancel an import
@@ -29055,10 +27879,7 @@ export async function migrationsGetCommitAuthors<FetcherData>(
     queryParams: ['since'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'porter-author']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Map a commit author
@@ -29093,11 +27914,7 @@ export async function migrationsMapCommitAuthor<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'porter-author']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get large files
@@ -29119,9 +27936,7 @@ export async function migrationsGetLargeFiles<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'porter-large-file']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update Git LFS preference
@@ -29152,10 +27967,7 @@ export async function migrationsSetLfsPreference<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'import']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a repository installation for the authenticated app
@@ -29183,9 +27995,7 @@ export async function appsGetRepoInstallation<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'installation']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
   });
 }
 /**
@@ -29212,7 +28022,7 @@ export async function interactionsGetRestrictionsForRepo<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['select', [[['ref', 'interaction-limit-response']]]]]],
+        date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
       },
     },
   });
@@ -29243,7 +28053,9 @@ export async function interactionsSetRestrictionsForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'interaction-limit-response']]] } },
+    '200': {
+      transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+    },
   });
 }
 /**
@@ -29297,7 +28109,7 @@ export async function reposListInvitations<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'repository-invitation']]] },
+      transforms: { date: [[['loop'], ['ref', $date_RepositoryInvitation]]] },
     },
   });
 }
@@ -29329,7 +28141,7 @@ export async function reposUpdateInvitation<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'repository-invitation']]] } },
+    '200': { transforms: { date: [[['ref', $date_RepositoryInvitation]]] } },
   });
 }
 /**
@@ -29408,10 +28220,7 @@ export async function issuesListForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'issue-simple']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueSimple]]] } },
   });
 }
 /**
@@ -29477,11 +28286,7 @@ export async function issuesCreate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'issue']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Issue]]] } },
   });
 }
 /**
@@ -29511,9 +28316,7 @@ export async function issuesListCommentsForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'issue-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueComment]]] } },
   });
 }
 /**
@@ -29537,8 +28340,7 @@ export async function issuesGetComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'issue-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_IssueComment]]] } },
   });
 }
 /**
@@ -29569,8 +28371,7 @@ export async function issuesUpdateComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'issue-comment']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_IssueComment]]] } },
   });
 }
 /**
@@ -29629,8 +28430,7 @@ export async function reactionsListForIssueComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -29671,9 +28471,8 @@ export async function reactionsCreateForIssueComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'reaction']]] } },
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -29727,8 +28526,7 @@ export async function issuesListEventsForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'issue-event']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueEvent]]] } },
   });
 }
 /**
@@ -29752,10 +28550,7 @@ export async function issuesGetEvent<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'issue-event']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_IssueEvent]]] } },
   });
 }
 /**
@@ -29801,10 +28596,7 @@ export async function issuesGet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'issue']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Issue]]] } },
   });
 }
 /**
@@ -29865,12 +28657,7 @@ export async function issuesUpdate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'issue']]] } },
-    '301': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Issue]]] } },
   });
 }
 /**
@@ -29902,7 +28689,7 @@ export async function issuesAddAssignees<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'issue-simple']]] } },
+    '201': { transforms: { date: [[['ref', $date_IssueSimple]]] } },
   });
 }
 /**
@@ -29934,7 +28721,7 @@ export async function issuesRemoveAssignees<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'issue-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_IssueSimple]]] } },
   });
 }
 /**
@@ -29963,9 +28750,7 @@ export async function issuesListComments<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'issue-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueComment]]] } },
   });
 }
 /**
@@ -30003,11 +28788,7 @@ export async function issuesCreateComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'issue-comment']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_IssueComment]]] } },
   });
 }
 /**
@@ -30033,12 +28814,7 @@ export async function issuesListEvents<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'issue-event-for-issue']]] },
-    },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List labels for an issue
@@ -30063,10 +28839,7 @@ export async function issuesListLabelsOnIssue<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'label']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add labels to an issue
@@ -30106,11 +28879,7 @@ export async function issuesAddLabels<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'label']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set labels for an issue
@@ -30151,11 +28920,7 @@ export async function issuesSetLabels<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'label']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove all labels from an issue
@@ -30177,9 +28942,7 @@ export async function issuesRemoveAllLabels<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a label from an issue
@@ -30204,11 +28967,7 @@ export async function issuesRemoveLabel<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'label']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Lock an issue
@@ -30246,12 +29005,7 @@ export async function issuesLock<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unlock an issue
@@ -30274,10 +29028,7 @@ export async function issuesUnlock<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List reactions for an issue
@@ -30313,9 +29064,7 @@ export async function reactionsListForIssue<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -30356,9 +29105,8 @@ export async function reactionsCreateForIssue<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'reaction']]] } },
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -30414,10 +29162,8 @@ export async function issuesListEventsForTimeline<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'timeline-issue-events']]] },
+      transforms: { date: [[['loop'], ['ref', $date_TimelineIssueEvents]]] },
     },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -30442,9 +29188,7 @@ export async function reposListDeployKeys<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'deploy-key']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a deploy key
@@ -30483,10 +29227,7 @@ export async function reposCreateDeployKey<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'deploy-key']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a deploy key
@@ -30508,10 +29249,7 @@ export async function reposGetDeployKey<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'deploy-key']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a deploy key
@@ -30558,10 +29296,7 @@ export async function issuesListLabelsForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'label']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a label
@@ -30597,11 +29332,7 @@ export async function issuesCreateLabel<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'label']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a label
@@ -30623,10 +29354,7 @@ export async function issuesGetLabel<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'label']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a label
@@ -30663,9 +29391,7 @@ export async function issuesUpdateLabel<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'label']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a label
@@ -30710,9 +29436,7 @@ export async function reposListLanguages<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'language']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the license for a repository
@@ -30739,9 +29463,7 @@ export async function licensesGetForRepo<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'license-content']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Merge a branch
@@ -30777,11 +29499,7 @@ export async function reposMerge<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'commit']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List milestones
@@ -30809,8 +29527,7 @@ export async function issuesListMilestones<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'milestone']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Milestone]]] } },
   });
 }
 /**
@@ -30853,9 +29570,7 @@ export async function issuesCreateMilestone<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'milestone']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Milestone]]] } },
   });
 }
 /**
@@ -30879,8 +29594,7 @@ export async function issuesGetMilestone<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'milestone']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Milestone]]] } },
   });
 }
 /**
@@ -30924,7 +29638,7 @@ export async function issuesUpdateMilestone<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'milestone']]] } },
+    '200': { transforms: { date: [[['ref', $date_Milestone]]] } },
   });
 }
 /**
@@ -30947,9 +29661,7 @@ export async function issuesDeleteMilestone<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List labels for issues in a milestone
@@ -30974,9 +29686,7 @@ export async function issuesListLabelsForMilestone<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'label']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository notifications for the authenticated user
@@ -31015,7 +29725,7 @@ export async function activityListRepoNotificationsForAuthenticatedUser<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'thread']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Thread]]] } },
   });
 }
 /**
@@ -31077,10 +29787,7 @@ export async function reposGetPages<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'page']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a GitHub Pages site
@@ -31120,11 +29827,7 @@ export async function reposCreatePagesSite<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'page']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update information about a GitHub Pages site
@@ -31149,10 +29852,7 @@ export async function reposUpdateInformationAboutPagesSite<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a GitHub Pages site
@@ -31173,10 +29873,7 @@ export async function reposDeletePagesSite<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List GitHub Pages builds
@@ -31201,7 +29898,7 @@ export async function reposListPagesBuilds<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'page-build']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_PageBuild]]] } },
   });
 }
 /**
@@ -31230,9 +29927,7 @@ export async function reposRequestPagesBuild<FetcherData>(
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'page-build-status']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get latest Pages build
@@ -31254,7 +29949,7 @@ export async function reposGetLatestPagesBuild<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'page-build']]] } },
+    '200': { transforms: { date: [[['ref', $date_PageBuild]]] } },
   });
 }
 /**
@@ -31278,7 +29973,7 @@ export async function reposGetPagesBuild<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'page-build']]] } },
+    '200': { transforms: { date: [[['ref', $date_PageBuild]]] } },
   });
 }
 /**
@@ -31309,11 +30004,7 @@ export async function reposGetPagesHealthCheck<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pages-health-check']]] } },
-    '202': { transforms: { date: [[['ref', 'empty-object']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repository projects
@@ -31341,12 +30032,7 @@ export async function projectsListForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'project']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
   });
 }
 /**
@@ -31382,12 +30068,7 @@ export async function projectsCreateForRepo<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'project']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '410': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '201': { transforms: { date: [[['ref', $date_Project]]] } },
   });
 }
 /**
@@ -31431,9 +30112,8 @@ export async function pullsList<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'pull-request-simple']]] },
+      transforms: { date: [[['loop'], ['ref', $date_PullRequestSimple]]] },
     },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -31505,9 +30185,7 @@ export async function pullsCreate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'pull-request']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_PullRequest]]] } },
   });
 }
 /**
@@ -31539,7 +30217,7 @@ export async function pullsListReviewCommentsForRepo<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['loop'], ['ref', 'pull-request-review-comment']]],
+        date: [[['loop'], ['ref', $date_PullRequestReviewComment]]],
       },
     },
   });
@@ -31566,8 +30244,9 @@ export async function pullsGetReviewComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': {
+      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+    },
   });
 }
 /**
@@ -31599,7 +30278,9 @@ export async function pullsUpdateReviewComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review-comment']]] } },
+    '200': {
+      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+    },
   });
 }
 /**
@@ -31623,9 +30304,7 @@ export async function pullsDeleteReviewComment<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List reactions for a pull request review comment
@@ -31661,8 +30340,7 @@ export async function reactionsListForPullRequestReviewComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -31703,9 +30381,8 @@ export async function reactionsCreateForPullRequestReviewComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'reaction']]] } },
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -31797,9 +30474,7 @@ export async function pullsGet<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '500': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequest]]] } },
   });
 }
 /**
@@ -31855,9 +30530,7 @@ export async function pullsUpdate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequest]]] } },
   });
 }
 /**
@@ -31890,7 +30563,7 @@ export async function pullsListReviewComments<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['loop'], ['ref', 'pull-request-review-comment']]],
+        date: [[['loop'], ['ref', $date_PullRequestReviewComment]]],
       },
     },
   });
@@ -31978,9 +30651,9 @@ export async function pullsCreateReviewComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'pull-request-review-comment']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': {
+      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+    },
   });
 }
 /**
@@ -32023,8 +30696,9 @@ export async function pullsCreateReplyForReviewComment<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'pull-request-review-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '201': {
+      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+    },
   });
 }
 /**
@@ -32052,9 +30726,7 @@ export async function pullsListCommits<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'commit']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List pull requests files
@@ -32080,11 +30752,7 @@ export async function pullsListFiles<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'diff-entry']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-    '500': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check if a pull request has been merged
@@ -32154,12 +30822,7 @@ export async function pullsMerge<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-merge-result']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List requested reviewers for a pull request
@@ -32184,9 +30847,7 @@ export async function pullsListRequestedReviewers<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review-request']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Request reviewers for a pull request
@@ -32218,8 +30879,7 @@ export async function pullsRequestReviewers<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'pull-request-simple']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_PullRequestSimple]]] } },
   });
 }
 /**
@@ -32254,8 +30914,7 @@ export async function pullsRemoveRequestedReviewers<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-simple']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequestSimple]]] } },
   });
 }
 /**
@@ -32284,7 +30943,7 @@ export async function pullsListReviews<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'pull-request-review']]] },
+      transforms: { date: [[['loop'], ['ref', $date_PullRequestReview]]] },
     },
   });
 }
@@ -32378,9 +31037,7 @@ export async function pullsCreateReview<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
   });
 }
 /**
@@ -32405,8 +31062,7 @@ export async function pullsGetReview<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
   });
 }
 /**
@@ -32439,8 +31095,7 @@ export async function pullsUpdateReview<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
   });
 }
 /**
@@ -32465,9 +31120,7 @@ export async function pullsDeletePendingReview<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
   });
 }
 /**
@@ -32496,8 +31149,7 @@ export async function pullsListCommentsForReview<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'review-comment']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_ReviewComment]]] } },
   });
 }
 /**
@@ -32536,9 +31188,7 @@ export async function pullsDismissReview<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
   });
 }
 /**
@@ -32574,10 +31224,7 @@ export async function pullsSubmitReview<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'pull-request-review']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
   });
 }
 /**
@@ -32612,10 +31259,7 @@ export async function pullsUpdateBranch<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a repository README
@@ -32642,11 +31286,7 @@ export async function reposGetReadme<FetcherData>(
     queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'content-file']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a repository README for a directory
@@ -32674,11 +31314,7 @@ export async function reposGetReadmeInDirectory<FetcherData>(
     queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'content-file']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List releases
@@ -32709,8 +31345,7 @@ export async function reposListReleases<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'release']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Release]]] } },
   });
 }
 /**
@@ -32773,9 +31408,7 @@ export async function reposCreateRelease<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'release']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Release]]] } },
   });
 }
 /**
@@ -32802,8 +31435,7 @@ export async function reposGetReleaseAsset<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'release-asset']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
   });
 }
 /**
@@ -32843,7 +31475,7 @@ export async function reposUpdateReleaseAsset<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'release-asset']]] } },
+    '200': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
   });
 }
 /**
@@ -32893,7 +31525,7 @@ export async function reposGetLatestRelease<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'release']]] } },
+    '200': { transforms: { date: [[['ref', $date_Release]]] } },
   });
 }
 /**
@@ -32918,8 +31550,7 @@ export async function reposGetReleaseByTag<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'release']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Release]]] } },
   });
 }
 /**
@@ -32945,8 +31576,7 @@ export async function reposGetRelease<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'release']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Release]]] } },
   });
 }
 /**
@@ -33002,8 +31632,7 @@ export async function reposUpdateRelease<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'release']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Release]]] } },
   });
 }
 /**
@@ -33053,7 +31682,7 @@ export async function reposListReleaseAssets<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'release-asset']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_ReleaseAsset]]] } },
   });
 }
 /**
@@ -33117,7 +31746,7 @@ export async function reposUploadReleaseAsset<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'release-asset']]] } },
+    '201': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
   });
 }
 /**
@@ -33150,9 +31779,8 @@ export async function reactionsCreateForRelease<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'reaction']]] } },
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -33186,7 +31814,7 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'secret-scanning-alert']]] },
+      transforms: { date: [[['loop'], ['ref', $date_SecretScanningAlert]]] },
     },
   });
 }
@@ -33216,7 +31844,7 @@ export async function secretScanningGetAlert<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'secret-scanning-alert']]] } },
+    '200': { transforms: { date: [[['ref', $date_SecretScanningAlert]]] } },
   });
 }
 /**
@@ -33250,7 +31878,7 @@ export async function secretScanningUpdateAlert<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'secret-scanning-alert']]] } },
+    '200': { transforms: { date: [[['ref', $date_SecretScanningAlert]]] } },
   });
 }
 /**
@@ -33282,20 +31910,9 @@ export async function activityListStargazersForRepo<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [
-          [
-            [
-              'select',
-              [
-                [['loop'], ['ref', 'simple-user']],
-                [['loop'], ['ref', 'stargazer']],
-              ],
-            ],
-          ],
-        ],
+        date: [[['select', [[['loop'], ['ref', $date_Stargazer]]]]]],
       },
     },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -33318,11 +31935,7 @@ export async function reposGetCodeFrequencyStats<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'code-frequency-stat']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the last year of commit activity
@@ -33345,9 +31958,7 @@ export async function reposGetCommitActivityStats<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'commit-activity']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get all contributor commit activity
@@ -33377,11 +31988,7 @@ export async function reposGetContributorsStats<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'contributor-activity']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the weekly commit count
@@ -33407,10 +32014,7 @@ export async function reposGetParticipationStats<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'participation-stats']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the hourly commit count for each day
@@ -33440,11 +32044,7 @@ export async function reposGetPunchCardStats<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'code-frequency-stat']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a commit status
@@ -33493,9 +32093,7 @@ export async function reposCreateCommitStatus<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'status']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List watchers
@@ -33520,9 +32118,7 @@ export async function activityListWatchersForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a repository subscription
@@ -33544,8 +32140,7 @@ export async function activityGetRepoSubscription<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'repository-subscription']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_RepositorySubscription]]] } },
   });
 }
 /**
@@ -33582,7 +32177,7 @@ export async function activitySetRepoSubscription<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'repository-subscription']]] } },
+    '200': { transforms: { date: [[['ref', $date_RepositorySubscription]]] } },
   });
 }
 /**
@@ -33631,9 +32226,7 @@ export async function reposListTags<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'tag']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Download a repository archive (tar)
@@ -33686,9 +32279,7 @@ export async function reposListTeams<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get all repository topics
@@ -33712,10 +32303,7 @@ export async function reposGetAllTopics<FetcherData>(
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'topic']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Replace all repository topics
@@ -33743,11 +32331,7 @@ export async function reposReplaceAllTopics<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'topic']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get repository clones
@@ -33773,8 +32357,7 @@ export async function reposGetClones<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'clone-traffic']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_CloneTraffic]]] } },
   });
 }
 /**
@@ -33797,10 +32380,7 @@ export async function reposGetTopPaths<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'content-traffic']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get top referral sources
@@ -33822,10 +32402,7 @@ export async function reposGetTopReferrers<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'referrer-traffic']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get page views
@@ -33851,8 +32428,7 @@ export async function reposGetViews<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'view-traffic']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_ViewTraffic]]] } },
   });
 }
 /**
@@ -33890,7 +32466,7 @@ export async function reposTransfer<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '202': { transforms: { date: [[['ref', 'minimal-repository']]] } },
+    '202': { transforms: { date: [[['ref', $date_MinimalRepository]]] } },
   });
 }
 /**
@@ -34052,7 +32628,7 @@ export async function reposCreateUsingTemplate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'repository']]] } },
+    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
   });
 }
 /**
@@ -34084,9 +32660,8 @@ export async function reposListPublic<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -34120,7 +32695,7 @@ export async function actionsListEnvironmentSecrets<FetcherData>(
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'secrets'], ['loop'], ['ref', 'actions-secret']]],
+        date: [[['access', 'secrets'], ['loop'], ['ref', $date_ActionsSecret]]],
       },
     },
   });
@@ -34148,9 +32723,7 @@ export async function actionsGetEnvironmentPublicKey<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-public-key']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an environment secret
@@ -34175,7 +32748,7 @@ export async function actionsGetEnvironmentSecret<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-secret']]] } },
+    '200': { transforms: { date: [[['ref', $date_ActionsSecret]]] } },
   });
 }
 /**
@@ -34307,9 +32880,7 @@ export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'empty-object']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete an environment secret
@@ -34361,9 +32932,7 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise<
     queryParams: ['startIndex', 'count', 'filter', 'excludedAttributes'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-group-list-enterprise']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Provision a SCIM enterprise group and invite users
@@ -34407,9 +32976,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseGroup<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'scim-enterprise-group']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get SCIM provisioning information for an enterprise group
@@ -34435,9 +33002,7 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseGrou
     queryParams: ['excludedAttributes'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-enterprise-group']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set SCIM information for a provisioned enterprise group
@@ -34484,9 +33049,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-enterprise-group']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update an attribute for a SCIM enterprise group
@@ -34530,9 +33093,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseGroup<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-enterprise-group']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a SCIM group from an enterprise
@@ -34615,9 +33176,7 @@ export async function enterpriseAdminListProvisionedIdentitiesEnterprise<
     queryParams: ['startIndex', 'count', 'filter'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-user-list-enterprise']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Provision and invite a SCIM enterprise user
@@ -34691,9 +33250,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseUser<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'scim-enterprise-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get SCIM provisioning information for an enterprise user
@@ -34717,9 +33274,7 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseUser
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-enterprise-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set SCIM information for a provisioned enterprise user
@@ -34799,9 +33354,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-enterprise-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update an attribute for a SCIM enterprise user
@@ -34860,9 +33413,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseUser<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'scim-enterprise-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a SCIM user from an enterprise
@@ -34942,11 +33493,7 @@ export async function scimListProvisionedIdentities<FetcherData>(
     queryParams: ['startIndex', 'count', 'filter'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '400': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '403': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '404': { transforms: { date: [[['ref', 'scim-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Provision and invite a SCIM user
@@ -35015,13 +33562,7 @@ export async function scimProvisionAndInviteUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '400': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '403': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '404': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '409': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '500': { transforms: { date: [[['ref', 'scim-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get SCIM provisioning information for a user
@@ -35042,10 +33583,7 @@ export async function scimGetProvisioningInformationForUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '404': { transforms: { date: [[['ref', 'scim-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update a provisioned organization membership
@@ -35124,10 +33662,7 @@ export async function scimSetInformationForProvisionedUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '404': { transforms: { date: [[['ref', 'scim-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update an attribute for a SCIM user
@@ -35204,12 +33739,7 @@ export async function scimUpdateAttributeForUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '400': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '403': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '404': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '429': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a SCIM user from an organization
@@ -35230,10 +33760,7 @@ export async function scimDeleteUserFromOrg<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'scim-error']]] } },
-    '404': { transforms: { date: [[['ref', 'scim-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Search code
@@ -35300,12 +33827,10 @@ export async function searchCode<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'items'], ['loop'], ['ref', 'code-search-result-item']],
+          [['access', 'items'], ['loop'], ['ref', $date_CodeSearchResultItem]],
         ],
       },
     },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -35356,7 +33881,11 @@ export async function searchCommits<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'items'], ['loop'], ['ref', 'commit-search-result-item']],
+          [
+            ['access', 'items'],
+            ['loop'],
+            ['ref', $date_CommitSearchResultItem],
+          ],
         ],
       },
     },
@@ -35434,12 +33963,10 @@ export async function searchIssuesAndPullRequests<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'items'], ['loop'], ['ref', 'issue-search-result-item']],
+          [['access', 'items'], ['loop'], ['ref', $date_IssueSearchResultItem]],
         ],
       },
     },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -35489,18 +34016,7 @@ export async function searchLabels<FetcherData>(
     queryParams: ['repository_id', 'q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'items'], ['loop'], ['ref', 'label-search-result-item']],
-        ],
-      },
-    },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Search repositories
@@ -35559,11 +34075,10 @@ export async function searchRepos<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'items'], ['loop'], ['ref', 'repo-search-result-item']],
+          [['access', 'items'], ['loop'], ['ref', $date_RepoSearchResultItem]],
         ],
       },
     },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -35616,7 +34131,7 @@ export async function searchTopics<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'items'], ['loop'], ['ref', 'topic-search-result-item']],
+          [['access', 'items'], ['loop'], ['ref', $date_TopicSearchResultItem]],
         ],
       },
     },
@@ -35673,11 +34188,10 @@ export async function searchUsers<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'items'], ['loop'], ['ref', 'user-search-result-item']],
+          [['access', 'items'], ['loop'], ['ref', $date_UserSearchResultItem]],
         ],
       },
     },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
   });
 }
 /**
@@ -35703,8 +34217,7 @@ export async function teamsGetLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-full']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
   });
 }
 /**
@@ -35767,11 +34280,8 @@ export async function teamsUpdateLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-full']]] } },
-    '201': { transforms: { date: [[['ref', 'team-full']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
+    '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
   });
 }
 /**
@@ -35801,10 +34311,7 @@ export async function teamsDeleteLegacy<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List discussions (Legacy)
@@ -35836,7 +34343,9 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team-discussion']]] } },
+    '200': {
+      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussion]]] },
+    },
   });
 }
 /**
@@ -35889,7 +34398,7 @@ export async function teamsCreateDiscussionLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'team-discussion']]] } },
+    '201': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
   });
 }
 /**
@@ -35919,7 +34428,7 @@ export async function teamsGetDiscussionLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
   });
 }
 /**
@@ -35961,7 +34470,7 @@ export async function teamsUpdateDiscussionLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
   });
 }
 /**
@@ -36026,7 +34535,7 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'team-discussion-comment']]] },
+      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussionComment]]] },
     },
   });
 }
@@ -36073,7 +34582,7 @@ export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'team-discussion-comment']]] } },
+    '201': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
   });
 }
 /**
@@ -36105,7 +34614,7 @@ export async function teamsGetDiscussionCommentLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion-comment']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
   });
 }
 /**
@@ -36144,7 +34653,7 @@ export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-discussion-comment']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
   });
 }
 /**
@@ -36219,7 +34728,7 @@ export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -36270,7 +34779,7 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -36313,7 +34822,7 @@ export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'reaction']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -36360,7 +34869,7 @@ export async function reactionsCreateForTeamDiscussionLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'reaction']]] } },
+    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
   });
 }
 /**
@@ -36393,11 +34902,7 @@ export async function teamsListPendingInvitationsLegacy<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'organization-invitation']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List team members (Legacy)
@@ -36427,10 +34932,7 @@ export async function teamsListMembersLegacy<FetcherData>(
     queryParams: ['role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get team member (Legacy)
@@ -36506,9 +35008,7 @@ export async function teamsAddMemberLegacy<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove team member (Legacy)
@@ -36589,10 +35089,7 @@ export async function teamsGetMembershipForUserLegacy<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-membership']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add or update team membership for a user (Legacy)
@@ -36653,10 +35150,7 @@ export async function teamsAddOrUpdateMembershipForUserLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-membership']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove team membership for a user (Legacy)
@@ -36727,10 +35221,7 @@ export async function teamsListProjectsLegacy<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team-project']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check team permissions for a project (Legacy)
@@ -36759,9 +35250,7 @@ export async function teamsCheckPermissionsForProjectLegacy<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-project']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add or update team project permissions (Legacy)
@@ -36802,10 +35291,7 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a project from a team (Legacy)
@@ -36836,10 +35322,7 @@ export async function teamsRemoveProjectLegacy<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List team repositories (Legacy)
@@ -36868,9 +35351,8 @@ export async function teamsListReposLegacy<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -36905,7 +35387,7 @@ export async function teamsCheckPermissionsForRepoLegacy<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'team-repository']]] } },
+    '200': { transforms: { date: [[['ref', $date_TeamRepository]]] } },
   });
 }
 /**
@@ -36954,10 +35436,7 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a repository from a team (Legacy)
@@ -37019,11 +35498,7 @@ export async function teamsListIdpGroupsForLegacy<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'group-mapping']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create or update IdP group connections (Legacy)
@@ -37092,11 +35567,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'group-mapping']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List child teams (Legacy)
@@ -37123,12 +35594,7 @@ export async function teamsListChildLegacy<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get the authenticated user
@@ -37155,12 +35621,15 @@ export async function usersGetAuthenticated<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['select', [[['ref', 'private-user']], [['ref', 'public-user']]]]],
+          [
+            [
+              'select',
+              [[['ref', $date_PrivateUser]], [['ref', $date_PublicUser]]],
+            ],
+          ],
         ],
       },
     },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -37224,11 +35693,7 @@ export async function usersUpdateAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'private-user']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_PrivateUser]]] } },
   });
 }
 /**
@@ -37248,12 +35713,7 @@ export async function usersListBlockedByAuthenticated<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check if a user is blocked by the authenticated user
@@ -37273,11 +35733,7 @@ export async function usersCheckBlocked<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Block a user
@@ -37297,12 +35753,7 @@ export async function usersBlock<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unblock a user
@@ -37322,11 +35773,7 @@ export async function usersUnblock<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Set primary email visibility for the authenticated user
@@ -37354,13 +35801,7 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'email']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List email addresses for the authenticated user
@@ -37384,12 +35825,7 @@ export async function usersListEmailsForAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'email']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Add an email address for the authenticated user
@@ -37419,13 +35855,7 @@ export async function usersAddEmailForAuthenticated<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['loop'], ['ref', 'email']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete an email address for the authenticated user
@@ -37454,12 +35884,7 @@ export async function usersDeleteEmailForAuthenticated<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List followers of the authenticated user
@@ -37482,11 +35907,7 @@ export async function usersListFollowersForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List the people the authenticated user follows
@@ -37509,11 +35930,7 @@ export async function usersListFollowedByAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check if a person is followed by the authenticated user
@@ -37533,11 +35950,7 @@ export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Follow a user
@@ -37562,11 +35975,7 @@ export async function usersFollow<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unfollow a user
@@ -37588,11 +35997,7 @@ export async function usersUnfollow<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List GPG keys for the authenticated user
@@ -37617,10 +36022,7 @@ export async function usersListGpgKeysForAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'gpg-key']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_GpgKey]]] } },
   });
 }
 /**
@@ -37650,11 +36052,7 @@ export async function usersCreateGpgKeyForAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'gpg-key']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_GpgKey]]] } },
   });
 }
 /**
@@ -37678,10 +36076,7 @@ export async function usersGetGpgKeyForAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'gpg-key']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_GpgKey]]] } },
   });
 }
 /**
@@ -37705,12 +36100,7 @@ export async function usersDeleteGpgKeyForAuthenticated<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List app installations accessible to the user access token
@@ -37755,12 +36145,10 @@ export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['access', 'installations'], ['loop'], ['ref', 'installation']],
+          [['access', 'installations'], ['loop'], ['ref', $date_Installation]],
         ],
       },
     },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -37809,11 +36197,11 @@ export async function appsListInstallationReposForAuthenticatedUser<
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['access', 'repositories'], ['loop'], ['ref', 'repository']]],
+        date: [
+          [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+        ],
       },
     },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -37842,10 +36230,7 @@ export async function appsAddRepoToInstallation<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Remove a repository from an app installation
@@ -37873,10 +36258,7 @@ export async function appsRemoveRepoFromInstallation<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get interaction restrictions for your public repositories
@@ -37900,7 +36282,7 @@ export async function interactionsGetRestrictionsForAuthenticatedUser<
   return ctx.handleResponse(res, {
     '200': {
       transforms: {
-        date: [[['select', [[['ref', 'interaction-limit-response']]]]]],
+        date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
       },
     },
   });
@@ -37929,8 +36311,9 @@ export async function interactionsSetRestrictionsForAuthenticatedUser<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'interaction-limit-response']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': {
+      transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+    },
   });
 }
 /**
@@ -38006,8 +36389,7 @@ export async function issuesListForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'issue']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
   });
 }
 /**
@@ -38034,10 +36416,7 @@ export async function usersListPublicSshKeysForAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'key']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Key]]] } },
   });
 }
 /**
@@ -38072,11 +36451,7 @@ export async function usersCreatePublicSshKeyForAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'key']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Key]]] } },
   });
 }
 /**
@@ -38101,10 +36476,7 @@ export async function usersGetPublicSshKeyForAuthenticated<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'key']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Key]]] } },
   });
 }
 /**
@@ -38128,11 +36500,7 @@ export async function usersDeletePublicSshKeyForAuthenticated<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List subscriptions for the authenticated user
@@ -38160,10 +36528,10 @@ export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'user-marketplace-purchase']]] },
+      transforms: {
+        date: [[['loop'], ['ref', $date_UserMarketplacePurchase]]],
+      },
     },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -38194,9 +36562,10 @@ export async function appsListSubscriptionsForAuthenticatedUserStubbed<
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'user-marketplace-purchase']]] },
+      transforms: {
+        date: [[['loop'], ['ref', $date_UserMarketplacePurchase]]],
+      },
     },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -38220,12 +36589,7 @@ export async function orgsListMembershipsForAuthenticatedUser<FetcherData>(
     queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'org-membership']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get an organization membership for the authenticated user
@@ -38245,11 +36609,7 @@ export async function orgsGetMembershipForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'org-membership']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Update an organization membership for the authenticated user
@@ -38276,12 +36636,7 @@ export async function orgsUpdateMembershipForAuthenticatedUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'org-membership']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List user migrations
@@ -38305,9 +36660,7 @@ export async function migrationsListForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'migration']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Migration]]] } },
   });
 }
 /**
@@ -38350,10 +36703,7 @@ export async function migrationsStartForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'migration']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Migration]]] } },
   });
 }
 /**
@@ -38389,10 +36739,7 @@ export async function migrationsGetStatusForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'migration']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['ref', $date_Migration]]] } },
   });
 }
 /**
@@ -38439,10 +36786,7 @@ export async function migrationsGetArchiveForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Delete a user migration archive
@@ -38467,11 +36811,7 @@ export async function migrationsDeleteArchiveForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unlock a user repository
@@ -38497,11 +36837,7 @@ export async function migrationsUnlockRepoForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repositories for a user migration
@@ -38527,9 +36863,8 @@ export async function migrationsListReposForUser<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -38560,13 +36895,7 @@ export async function orgsListForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'organization-simple']]] },
-    },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a package for the authenticated user
@@ -38600,7 +36929,7 @@ export async function packagesGetPackageForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'package']]] } },
+    '200': { transforms: { date: [[['ref', $date_Package]]] } },
   });
 }
 /**
@@ -38635,11 +36964,7 @@ export async function packagesDeletePackageForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Restore a package for the authenticated user
@@ -38679,11 +37004,7 @@ export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
     queryParams: ['token'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get all package versions for a package owned by the authenticated user
@@ -38723,10 +37044,9 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'package-version']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': {
+      transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+    },
   });
 }
 /**
@@ -38764,7 +37084,7 @@ export async function packagesGetPackageVersionForAuthenticatedUser<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'package-version']]] } },
+    '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
   });
 }
 /**
@@ -38803,11 +37123,7 @@ export async function packagesDeletePackageVersionForAuthenticatedUser<
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Restore a package version for the authenticated user
@@ -38850,11 +37166,7 @@ export async function packagesRestorePackageVersionForAuthenticatedUser<
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Create a user project
@@ -38886,10 +37198,7 @@ export async function projectsCreateForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'project']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error-simple']]] } },
+    '201': { transforms: { date: [[['ref', $date_Project]]] } },
   });
 }
 /**
@@ -38916,12 +37225,7 @@ export async function usersListPublicEmailsForAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'email']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repositories for the authenticated user
@@ -38966,10 +37270,7 @@ export async function reposListForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'repository']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Repository]]] } },
   });
 }
 /**
@@ -39093,12 +37394,7 @@ export async function reposCreateForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', 'repository']]] } },
-    '400': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
   });
 }
 /**
@@ -39124,11 +37420,8 @@ export async function reposListInvitationsForAuthenticatedUser<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'repository-invitation']]] },
+      transforms: { date: [[['loop'], ['ref', $date_RepositoryInvitation]]] },
     },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -39149,11 +37442,7 @@ export async function reposAcceptInvitation<FetcherData>(
     method: r.HttpMethod.PATCH,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Decline a repository invitation
@@ -39173,11 +37462,7 @@ export async function reposDeclineInvitation<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '409': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repositories starred by the authenticated user
@@ -39206,9 +37491,7 @@ export async function activityListReposStarredByAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'repository']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Repository]]] } },
   });
 }
 /**
@@ -39232,11 +37515,7 @@ export async function activityCheckRepoIsStarredByAuthenticatedUser<
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Star a repository for the authenticated user
@@ -39259,11 +37538,7 @@ export async function activityStarRepoForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Unstar a repository for the authenticated user
@@ -39284,11 +37559,7 @@ export async function activityUnstarRepoForAuthenticatedUser<FetcherData>(
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repositories watched by the authenticated user
@@ -39313,10 +37584,8 @@ export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -39344,9 +37613,7 @@ export async function teamsListForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'team-full']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_TeamFull]]] } },
   });
 }
 /**
@@ -39375,9 +37642,7 @@ export async function usersList<FetcherData>(
     queryParams: ['since', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a user
@@ -39419,11 +37684,15 @@ export async function usersGetByUsername<FetcherData>(
     '200': {
       transforms: {
         date: [
-          [['select', [[['ref', 'private-user']], [['ref', 'public-user']]]]],
+          [
+            [
+              'select',
+              [[['ref', $date_PrivateUser]], [['ref', $date_PublicUser]]],
+            ],
+          ],
         ],
       },
     },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
   });
 }
 /**
@@ -39449,7 +37718,7 @@ export async function activityListEventsForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -39476,7 +37745,7 @@ export async function activityListOrgEventsForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -39501,7 +37770,7 @@ export async function activityListPublicEventsForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -39526,9 +37795,7 @@ export async function usersListFollowersForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List the people a user follows
@@ -39552,9 +37819,7 @@ export async function usersListFollowingForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'simple-user']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Check if a user follows another user
@@ -39601,8 +37866,7 @@ export async function gistsListForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'base-gist']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
   });
 }
 /**
@@ -39628,7 +37892,7 @@ export async function usersListGpgKeysForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'gpg-key']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_GpgKey]]] } },
   });
 }
 /**
@@ -39664,11 +37928,7 @@ export async function usersGetContextForUser<FetcherData>(
     queryParams: ['subject_type', 'subject_id'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'hovercard']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a user installation for the authenticated app
@@ -39694,7 +37954,7 @@ export async function appsGetUserInstallation<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'installation']]] } },
+    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
   });
 }
 /**
@@ -39719,9 +37979,7 @@ export async function usersListPublicKeysForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'key-simple']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List organizations for a user
@@ -39752,11 +38010,7 @@ export async function orgsListForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', 'organization-simple']]] },
-    },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get a package for a user
@@ -39791,7 +38045,7 @@ export async function packagesGetPackageForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'package']]] } },
+    '200': { transforms: { date: [[['ref', $date_Package]]] } },
   });
 }
 /**
@@ -39829,10 +38083,9 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'package-version']]] } },
-    '401': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '403': { transforms: { date: [[['ref', 'basic-error']]] } },
-    '404': { transforms: { date: [[['ref', 'basic-error']]] } },
+    '200': {
+      transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+    },
   });
 }
 /**
@@ -39869,7 +38122,7 @@ export async function packagesGetPackageVersionForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'package-version']]] } },
+    '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
   });
 }
 /**
@@ -39895,8 +38148,7 @@ export async function projectsListForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'project']]] } },
-    '422': { transforms: { date: [[['ref', 'validation-error']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
   });
 }
 /**
@@ -39923,7 +38175,7 @@ export async function activityListReceivedEventsForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -39948,7 +38200,7 @@ export async function activityListReceivedPublicEventsForUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', 'event']]] } },
+    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
   });
 }
 /**
@@ -39979,7 +38231,7 @@ export async function reposListForUser<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
   });
 }
@@ -40011,9 +38263,7 @@ export async function billingGetGithubActionsBillingUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'actions-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get GitHub Packages billing for a user
@@ -40041,9 +38291,7 @@ export async function billingGetGithubPackagesBillingUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'packages-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * Get shared storage billing for a user
@@ -40071,9 +38319,7 @@ export async function billingGetSharedStorageBillingUser<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', 'combined-billing-usage']]] } },
-  });
+  return ctx.handleResponse(res, {});
 }
 /**
  * List repositories starred by a user
@@ -40110,8 +38356,8 @@ export async function activityListReposStarredByUser<FetcherData>(
             [
               'select',
               [
-                [['loop'], ['ref', 'starred-repository']],
-                [['loop'], ['ref', 'repository']],
+                [['loop'], ['ref', $date_StarredRepository]],
+                [['loop'], ['ref', $date_Repository]],
               ],
             ],
           ],
@@ -40144,7 +38390,7 @@ export async function activityListReposWatchedByUser<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
     '200': {
-      transforms: { date: [[['loop'], ['ref', 'minimal-repository']]] },
+      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
   });
 }

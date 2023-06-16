@@ -6,7 +6,7 @@ import type {
 import type { SecurityAuthentication } from '../auth';
 import type { BaseServerConfiguration } from '../configuration';
 import { ApiException } from '../exception';
-import { applyTransform, Transform, TransformResolver } from '../transformers';
+import { applyTransform, Transform } from '../transformers';
 import { DateTransformer } from '../transformers';
 import {
   Fetcher,
@@ -35,12 +35,10 @@ export class Context<
   fetcher: Fetcher<FetcherData>;
   serializerOptions: SerializerOptions;
   authMethods: Partial<AuthModes>;
-  resolver: TransformResolver;
   transformers: Record<string, Transform<unknown, unknown>>;
   serverConfiguration: BaseServerConfiguration;
 
   constructor(params: ContextParams<AuthModes, FetcherData>) {
-    this.resolver = params.resolver;
     this.serverConfiguration = params.serverConfiguration;
     this.fetcher =
       params.fetcher || new IsomorphicFetchHttpLibrary<FetcherData>();
@@ -150,7 +148,6 @@ export class Context<
             if (transforms) {
               for (const transform of transforms) {
                 applyTransform(
-                  this.resolver,
                   { body },
                   'body',
                   key,

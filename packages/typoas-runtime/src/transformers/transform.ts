@@ -1,14 +1,11 @@
-export interface TransformResolver {
-  getTransforms(type: string, ref: string): TransformField[];
-}
-
+export type TransformEntity = Record<string, TransformField[]>;
 export type TransformField = TransformLevel[];
 export type TransformLevel =
   | ['access', string]
   | ['this']
   | ['loop']
   | ['entries']
-  | ['ref', string]
+  | ['ref', () => TransformField[]]
   | ['select', TransformField[]];
 
 export type Transform<T, U> = (val: T) => U;
@@ -22,7 +19,6 @@ function isPlainObject(value: unknown): value is object {
 }
 
 export function applyTransform<T, U>(
-  resolver: TransformResolver,
   parent: Record<string, unknown>,
   dataKey: string | number,
   transformerName: string,
@@ -49,7 +45,6 @@ export function applyTransform<T, U>(
         return;
       }
       applyTransform(
-        resolver,
         parent[dataKey] as Record<string, unknown>,
         transformLevel[1],
         transformerName,
@@ -61,7 +56,6 @@ export function applyTransform<T, U>(
     case 'select':
       for (const subTransformField of transformLevel[1]) {
         applyTransform(
-          resolver,
           parent,
           dataKey,
           transformerName,
@@ -78,7 +72,6 @@ export function applyTransform<T, U>(
       const cast = parent[dataKey] as unknown[];
       for (let i = 0; i < cast.length; i += 1) {
         applyTransform(
-          resolver,
           cast as Record<number, unknown>,
           i,
           transformerName,
@@ -100,7 +93,6 @@ export function applyTransform<T, U>(
       const cast = parent[dataKey] as Record<string | number, unknown>;
       for (const key of Object.keys(cast)) {
         applyTransform(
-          resolver,
           cast as Record<number, unknown>,
           key,
           transformerName,
@@ -111,15 +103,9 @@ export function applyTransform<T, U>(
       }
       break;
     }
-
     case 'ref': {
-      const transforms = resolver.getTransforms(
-        transformerName,
-        transformLevel[1],
-      );
-      for (const subTransformField of transforms) {
+      for (const subTransformField of transformLevel[1]()) {
         applyTransform(
-          resolver,
           parent,
           dataKey,
           transformerName,

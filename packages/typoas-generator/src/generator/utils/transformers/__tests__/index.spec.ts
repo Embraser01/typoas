@@ -1,75 +1,76 @@
 import { describe, expect, it } from '@jest/globals';
 import { getSchemaTransforms } from '../index';
-import { TransformType } from '../leaf-transformer-base';
+import { TransformerType, TransformType } from '../leaf-transformer-base';
 
 describe('getSchemaTransforms', () => {
   it('should handle simple date', () => {
     expect(
-      getSchemaTransforms({ type: 'string', format: 'date-time' }),
-    ).toEqual({ date: [[[TransformType.THIS]]] });
+      getSchemaTransforms(TransformerType.DATE, {
+        type: 'string',
+        format: 'date-time',
+      }),
+    ).toEqual([[[TransformType.THIS]]]);
   });
 
   it('should handle simple objects', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         type: 'object',
         properties: { a: { type: 'string', format: 'date-time' } },
       }),
-    ).toEqual({ date: [[[TransformType.ACCESS, 'a'], [TransformType.THIS]]] });
+    ).toEqual([[[TransformType.ACCESS, 'a'], [TransformType.THIS]]]);
   });
 
   it('should handle array of objects', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         type: 'array',
         items: { type: 'string', format: 'date-time' },
       }),
-    ).toEqual({ date: [[[TransformType.LOOP], [TransformType.THIS]]] });
+    ).toEqual([[[TransformType.LOOP], [TransformType.THIS]]]);
   });
 
   it('should handle additionalProperties', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         type: 'object',
         additionalProperties: { type: 'string', format: 'date-time' },
       }),
-    ).toEqual({ date: [[[TransformType.ENTRIES], [TransformType.THIS]]] });
+    ).toEqual([[[TransformType.ENTRIES], [TransformType.THIS]]]);
   });
 
   it('should handle deep additionalProperties', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         type: 'object',
         additionalProperties: {
           type: 'object',
           properties: { a: { type: 'string', format: 'date-time' } },
         },
       }),
-    ).toEqual({
-      date: [
-        [
-          [TransformType.ENTRIES],
-          [TransformType.ACCESS, 'a'],
-          [TransformType.THIS],
-        ],
+    ).toEqual([
+      [
+        [TransformType.ENTRIES],
+        [TransformType.ACCESS, 'a'],
+        [TransformType.THIS],
       ],
-    });
+    ]);
   });
 
   it('should not generate anything if oneOf does not have transforms', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         oneOf: [
           { type: 'string', format: 'password' },
           { type: 'string', format: 'byte' },
         ],
       }),
-    ).toEqual({});
+    ).toEqual([]);
   });
 
   it('should handle anyOf ', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         anyOf: [
           { type: 'string', format: 'date-time' },
           {
@@ -78,24 +79,22 @@ describe('getSchemaTransforms', () => {
           },
         ],
       }),
-    ).toEqual({
-      date: [
+    ).toEqual([
+      [
         [
+          TransformType.SELECT,
           [
-            TransformType.SELECT,
-            [
-              [[TransformType.THIS]],
-              [[TransformType.ACCESS, 'd'], [TransformType.THIS]],
-            ],
+            [[TransformType.THIS]],
+            [[TransformType.ACCESS, 'd'], [TransformType.THIS]],
           ],
         ],
       ],
-    });
+    ]);
   });
 
   it('should handle allOf ', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         allOf: [
           { type: 'string', format: 'date-time' },
           {
@@ -104,24 +103,22 @@ describe('getSchemaTransforms', () => {
           },
         ],
       }),
-    ).toEqual({
-      date: [
+    ).toEqual([
+      [
         [
+          TransformType.SELECT,
           [
-            TransformType.SELECT,
-            [
-              [[TransformType.THIS]],
-              [[TransformType.ACCESS, 'd'], [TransformType.THIS]],
-            ],
+            [[TransformType.THIS]],
+            [[TransformType.ACCESS, 'd'], [TransformType.THIS]],
           ],
         ],
       ],
-    });
+    ]);
   });
 
   it('should handle oneOf ', () => {
     expect(
-      getSchemaTransforms({
+      getSchemaTransforms(TransformerType.DATE, {
         oneOf: [
           { type: 'string', format: 'date-time' },
           {
@@ -130,18 +127,16 @@ describe('getSchemaTransforms', () => {
           },
         ],
       }),
-    ).toEqual({
-      date: [
+    ).toEqual([
+      [
         [
+          TransformType.SELECT,
           [
-            TransformType.SELECT,
-            [
-              [[TransformType.THIS]],
-              [[TransformType.ACCESS, 'd'], [TransformType.THIS]],
-            ],
+            [[TransformType.THIS]],
+            [[TransformType.ACCESS, 'd'], [TransformType.THIS]],
           ],
         ],
       ],
-    });
+    ]);
   });
 });
