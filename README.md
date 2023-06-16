@@ -1,5 +1,8 @@
 # Typoas
 
+![npm](https://img.shields.io/npm/v/@typoas/cli?label=cli%40npm)
+![npm](https://img.shields.io/npm/v/@typoas/generator?label=generator%40npm)
+![npm](https://img.shields.io/npm/v/@typoas/runtime?label=runtime%40npm)
 ![GitHub](https://img.shields.io/github/license/embraser01/typoas)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@typoas/runtime)
 
