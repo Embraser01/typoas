@@ -1,5 +1,11 @@
 # CHANGELOG.md
 
+## 3.0.1 - 2023-06-28
+
+### **Minor Changes**
+
+- Do not add content-type header when formdata or blob body ([#41](https://github.com/Embraser01/typoas/pull/41))
+
 ## 3.0.0 - 2023-06-16
 
 ### **Major Changes**
