@@ -70,3 +70,7 @@ export function isBlob(data: unknown): data is Blob {
 export function isFormData(data: unknown): data is FormData {
   return data?.constructor.name === 'FormData';
 }
+
+export function isURLSearchParams(data: unknown): data is URLSearchParams {
+  return data?.constructor.name === 'URLSearchParams';
+}

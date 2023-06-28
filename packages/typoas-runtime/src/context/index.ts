@@ -21,6 +21,7 @@ import {
   isCodeInRange,
   isFormData,
   isHttpStatusValid,
+  isURLSearchParams,
   serializeHeader,
   serializeParameter,
 } from '../utils';
@@ -75,19 +76,19 @@ export class Context<
       }
     }
     if (options.body !== undefined) {
-      if (isBlob(options.body)) {
-        requestContext.setHeaderParam(CONTENT_TYPE_HEADER, options.body.type);
-        requestContext.setBody(options.body);
-      } else if (isFormData(options.body)) {
-        requestContext.setHeaderParam(
-          CONTENT_TYPE_HEADER,
-          'multipart/form-data',
-        );
+      // Some body types should not have content-type header
+      // as it is set automatically by the browser
+      // https://fetch.spec.whatwg.org/#concept-bodyinit-extract
+      if (
+        isBlob(options.body) ||
+        isFormData(options.body) ||
+        isURLSearchParams(options.body)
+      ) {
         requestContext.setBody(options.body);
       } else {
         requestContext.setHeaderParam(
           CONTENT_TYPE_HEADER,
-          'application/json;charset=UTF-8',
+          options.contentType || 'application/json;charset=UTF-8',
         );
         requestContext.setBody(JSON.stringify(options.body));
       }

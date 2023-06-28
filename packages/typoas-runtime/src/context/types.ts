@@ -43,6 +43,12 @@ export type CreateRequestParams = {
    * Name of the auth modes to be used.
    */
   auth?: string[];
+  /**
+   * Content type of the request.
+   * If not provided, it will set to application/json.
+   * If body is a FormData, Blob or URLSearchParams, it will not be set.
+   */
+  contentType?: string;
 };
 
 export type ContextParams<
