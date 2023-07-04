@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 3.1.0 - 2023-07-04
+
+### **Minor Changes**
+
+- Allow BearerAuthConfig to override prefix name
+- Fix generator when a `securityScheme` had special chars
+
 ## 3.0.1 - 2023-06-28
 
 ### **Minor Changes**
