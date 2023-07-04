@@ -78,7 +78,7 @@ export function createConfigureAuthFunction(
                     ? factory.createElementAccessChain(
                         factory.createIdentifier('params'),
                         factory.createToken(SyntaxKind.QuestionDotToken),
-                        factory.createStringLiteral('jwt'),
+                        factory.createStringLiteral(name),
                       )
                     : factory.createPropertyAccessChain(
                         factory.createIdentifier('params'),
