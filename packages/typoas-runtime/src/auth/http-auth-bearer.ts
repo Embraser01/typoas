@@ -1,7 +1,7 @@
 import type { AuthProvider, SecurityAuthentication } from './base';
 import type { RequestContext } from '../fetcher';
 
-export type BearerAuthConfig = string;
+export type BearerAuthConfig = string | { token: string; prefixName?: string };
 
 export class HttpBearerSecurityAuthentication
   implements SecurityAuthentication
@@ -11,7 +11,11 @@ export class HttpBearerSecurityAuthentication
   async applySecurityAuthentication(context: RequestContext): Promise<void> {
     if (!this.provider) return;
 
-    const token = await this.provider.getConfig();
-    return context.setHeaderParam('Authorization', `Bearer ${token}`);
+    const res = await this.provider.getConfig();
+    const token = typeof res === 'string' ? res : res.token;
+    const prefix =
+      typeof res === 'string' ? 'Bearer' : res.prefixName || 'Bearer';
+
+    return context.setHeaderParam('Authorization', `${prefix} ${token}`);
   }
 }
