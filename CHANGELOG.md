@@ -1,6 +1,8 @@
 # CHANGELOG.md
 
-## 3.1.0 - 2023-07-04
+## 3.1.1 - 2023-07-04
+
+> Version 3.1.0 is broken, please upgrade to 3.1.1
 
 ### **Minor Changes**
 
