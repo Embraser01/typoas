@@ -122,7 +122,7 @@ if (!globalThis.fetch) {
   // @ts-ignore
   globalThis.fetch = fetch;
 }
-const ctx = createGithubContext();
+const ctx = createContext();
 
 pullsList(ctx, {
   repo: 'typoas',
@@ -173,7 +173,7 @@ if (!globalThis.fetch) {
   // @ts-ignore
   globalThis.fetch = fetch;
 }
-const ctx = createGithubContext();
+const ctx = createContext();
 const ghClient = wrapApi(ctx, {
   pullsList,
   issuesList,
