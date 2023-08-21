@@ -139,6 +139,7 @@ export type AccountBusinessProfile = {
    * [The merchant category code for the account](https://stripe.com/docs/connect/setting-mcc). MCCs are used to classify businesses based on the goods or services they provide.
    */
   mcc?: string | null;
+  monthly_estimated_revenue?: AccountMonthlyEstimatedRevenue;
   /**
    * The customer-facing business name.
    */
@@ -510,6 +511,19 @@ export type AccountLink = {
   url: string;
 };
 /**
+ * AccountMonthlyEstimatedRevenue
+ */
+export type AccountMonthlyEstimatedRevenue = {
+  /**
+   * A non-negative integer representing how much to charge in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
+   */
+  amount: number;
+  /**
+   * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+   */
+  currency: string;
+};
+/**
  * AccountPaymentsSettings
  */
 export type AccountPaymentsSettings = {
@@ -612,10 +626,12 @@ export type AccountRequirementsError = {
     | 'invalid_street_address'
     | 'invalid_tos_acceptance'
     | 'invalid_value_other'
+    | 'verification_directors_mismatch'
     | 'verification_document_address_mismatch'
     | 'verification_document_address_missing'
     | 'verification_document_corrupt'
     | 'verification_document_country_not_supported'
+    | 'verification_document_directors_mismatch'
     | 'verification_document_dob_mismatch'
     | 'verification_document_duplicate_type'
     | 'verification_document_expired'
@@ -641,6 +657,7 @@ export type AccountRequirementsError = {
     | 'verification_document_photo_mismatch'
     | 'verification_document_too_large'
     | 'verification_document_type_not_supported'
+    | 'verification_extraneous_directors'
     | 'verification_failed_address_match'
     | 'verification_failed_business_iec_number'
     | 'verification_failed_document_match'
@@ -652,6 +669,7 @@ export type AccountRequirementsError = {
     | 'verification_failed_residential_address'
     | 'verification_failed_tax_id_match'
     | 'verification_failed_tax_id_not_issued'
+    | 'verification_missing_directors'
     | 'verification_missing_executives'
     | 'verification_missing_owners'
     | 'verification_requires_additional_memorandum_of_associations';
@@ -873,11 +891,11 @@ export type ApplicationFee = {
    */
   account: string | Account;
   /**
-   * Amount earned, in %s.
+   * Amount earned, in cents (or local equivalent).
    */
   amount: number;
   /**
-   * Amount in %s refunded (can be less than the amount attribute on the fee if a partial refund was issued)
+   * Amount in cents (or local equivalent) refunded (can be less than the amount attribute on the fee if a partial refund was issued)
    */
   amount_refunded: number;
   /**
@@ -1040,7 +1058,7 @@ export type Balance = {
    */
   object: 'balance';
   /**
-   * Funds that are not yet available in the balance, due to the 7-day rolling pay cycle. The pending balance for each currency, and for each payment type, can be found in the `source_types` property.
+   * Funds that are not yet available in the balance. The pending balance for each currency, and for each payment type, can be found in the `source_types` property.
    */
   pending: BalanceAmount[];
 };
@@ -1093,7 +1111,7 @@ export type BalanceDetail = {
  */
 export type BalanceTransaction = {
   /**
-   * Gross amount of the transaction, in %s.
+   * Gross amount of the transaction, in cents (or local equivalent).
    */
   amount: number;
   /**
@@ -1117,11 +1135,11 @@ export type BalanceTransaction = {
    */
   exchange_rate?: number | null;
   /**
-   * Fees (in %s) paid for this transaction.
+   * Fees (in cents (or local equivalent)) paid for this transaction.
    */
   fee: number;
   /**
-   * Detailed breakdown of fees (in %s) paid for this transaction.
+   * Detailed breakdown of fees (in cents (or local equivalent)) paid for this transaction.
    */
   fee_details: Fee[];
   /**
@@ -1129,7 +1147,7 @@ export type BalanceTransaction = {
    */
   id: string;
   /**
-   * Net amount of the transaction, in %s.
+   * Net amount of the transaction, in cents (or local equivalent).
    */
   net: number;
   /**
@@ -1169,7 +1187,7 @@ export type BalanceTransaction = {
    */
   status: string;
   /**
-   * Transaction type: `adjustment`, `advance`, `advance_funding`, `anticipation_repayment`, `application_fee`, `application_fee_refund`, `charge`, `connect_collection_transfer`, `contribution`, `issuing_authorization_hold`, `issuing_authorization_release`, `issuing_dispute`, `issuing_transaction`, `payment`, `payment_failure_refund`, `payment_refund`, `payout`, `payout_cancel`, `payout_failure`, `refund`, `refund_failure`, `reserve_transaction`, `reserved_funds`, `stripe_fee`, `stripe_fx_fee`, `tax_fee`, `topup`, `topup_reversal`, `transfer`, `transfer_cancel`, `transfer_failure`, or `transfer_refund`. [Learn more](https://stripe.com/docs/reports/balance-transaction-types) about balance transaction types and what they represent. If you are looking to classify transactions for accounting purposes, you might want to consider `reporting_category` instead.
+   * Transaction type: `adjustment`, `advance`, `advance_funding`, `anticipation_repayment`, `application_fee`, `application_fee_refund`, `charge`, `connect_collection_transfer`, `contribution`, `issuing_authorization_hold`, `issuing_authorization_release`, `issuing_dispute`, `issuing_transaction`, `payment`, `payment_failure_refund`, `payment_refund`, `payment_reversal`, `payout`, `payout_cancel`, `payout_failure`, `refund`, `refund_failure`, `reserve_transaction`, `reserved_funds`, `stripe_fee`, `stripe_fx_fee`, `tax_fee`, `topup`, `topup_reversal`, `transfer`, `transfer_cancel`, `transfer_failure`, or `transfer_refund`. [Learn more](https://stripe.com/docs/reports/balance-transaction-types) about balance transaction types and what they represent. If you are looking to classify transactions for accounting purposes, you might want to consider `reporting_category` instead.
    */
   type:
     | 'adjustment'
@@ -1188,6 +1206,7 @@ export type BalanceTransaction = {
     | 'payment'
     | 'payment_failure_refund'
     | 'payment_refund'
+    | 'payment_reversal'
     | 'payout'
     | 'payout_cancel'
     | 'payout_failure'
@@ -1848,11 +1867,11 @@ export type Charge = {
    */
   amount: number;
   /**
-   * Amount in %s captured (can be less than the amount attribute on the charge if a partial capture was made).
+   * Amount in cents (or local equivalent) captured (can be less than the amount attribute on the charge if a partial capture was made).
    */
   amount_captured: number;
   /**
-   * Amount in %s refunded (can be less than the amount attribute on the charge if a partial refund was issued).
+   * Amount in cents (or local equivalent) refunded (can be less than the amount attribute on the charge if a partial refund was issued).
    */
   amount_refunded: number;
   /**
@@ -2857,7 +2876,7 @@ export type CheckoutUsBankAccountPaymentMethodOptions = {
  */
 export type ConnectCollectionTransfer = {
   /**
-   * Amount transferred, in %s.
+   * Amount transferred, in cents (or local equivalent).
    */
   amount: number;
   /**
@@ -3004,7 +3023,7 @@ export type Coupon = {
    */
   object: 'coupon';
   /**
-   * Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a %s100 invoice %s50 instead.
+   * Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.
    */
   percent_off?: number | null;
   /**
@@ -3046,7 +3065,7 @@ export type CouponCurrencyOption = {
  */
 export type CreditNote = {
   /**
-   * The integer amount in %s representing the total amount of the credit note, including tax.
+   * The integer amount in cents (or local equivalent) representing the total amount of the credit note, including tax.
    */
   amount: number;
   /**
@@ -3070,13 +3089,17 @@ export type CreditNote = {
    */
   customer_balance_transaction?: (string | CustomerBalanceTransaction) | null;
   /**
-   * The integer amount in %s representing the total amount of discount that was credited.
+   * The integer amount in cents (or local equivalent) representing the total amount of discount that was credited.
    */
   discount_amount: number;
   /**
    * The aggregate amounts calculated per discount for all line items.
    */
   discount_amounts: DiscountsResourceDiscountAmount[];
+  /**
+   * The date when this credit note is in effect. Same as `created` unless overwritten. When defined, this value replaces the system-generated 'Date of issue' printed on the credit note PDF.
+   */
+  effective_at?: number | null;
   /**
    * Unique identifier for the object.
    */
@@ -3156,11 +3179,11 @@ export type CreditNote = {
    */
   status: 'issued' | 'void';
   /**
-   * The integer amount in %s representing the amount of the credit note, excluding exclusive tax and invoice level discounts.
+   * The integer amount in cents (or local equivalent) representing the amount of the credit note, excluding exclusive tax and invoice level discounts.
    */
   subtotal: number;
   /**
-   * The integer amount in %s representing the amount of the credit note, excluding all tax and invoice level discounts.
+   * The integer amount in cents (or local equivalent) representing the amount of the credit note, excluding all tax and invoice level discounts.
    */
   subtotal_excluding_tax?: number | null;
   /**
@@ -3168,11 +3191,11 @@ export type CreditNote = {
    */
   tax_amounts: CreditNoteTaxAmount[];
   /**
-   * The integer amount in %s representing the total amount of the credit note, including tax and all discount.
+   * The integer amount in cents (or local equivalent) representing the total amount of the credit note, including tax and all discount.
    */
   total: number;
   /**
-   * The integer amount in %s representing the total amount of the credit note, excluding tax, but including discounts.
+   * The integer amount in cents (or local equivalent) representing the total amount of the credit note, excluding tax, but including discounts.
    */
   total_excluding_tax?: number | null;
   /**
@@ -3186,14 +3209,15 @@ export type CreditNote = {
 };
 /**
  * CreditNoteLineItem
+ * The credit note line item object
  */
 export type CreditNoteLineItem = {
   /**
-   * The integer amount in %s representing the gross amount being credited for this line item, excluding (exclusive) tax and discounts.
+   * The integer amount in cents (or local equivalent) representing the gross amount being credited for this line item, excluding (exclusive) tax and discounts.
    */
   amount: number;
   /**
-   * The integer amount in %s representing the amount being credited for this line item, excluding all tax and discounts.
+   * The integer amount in cents (or local equivalent) representing the amount being credited for this line item, excluding all tax and discounts.
    */
   amount_excluding_tax?: number | null;
   /**
@@ -3201,7 +3225,7 @@ export type CreditNoteLineItem = {
    */
   description?: string | null;
   /**
-   * The integer amount in %s representing the discount being credited for this line item.
+   * The integer amount in cents (or local equivalent) representing the discount being credited for this line item.
    */
   discount_amount: number;
   /**
@@ -3249,7 +3273,7 @@ export type CreditNoteLineItem = {
    */
   unit_amount_decimal?: string | null;
   /**
-   * The amount in %s representing the unit amount being credited for this line item, excluding all tax and discounts.
+   * The amount in cents (or local equivalent) representing the unit amount being credited for this line item, excluding all tax and discounts.
    */
   unit_amount_excluding_tax?: string | null;
 };
@@ -3258,7 +3282,7 @@ export type CreditNoteLineItem = {
  */
 export type CreditNoteTaxAmount = {
   /**
-   * The amount, in %s, of the tax.
+   * The amount, in cents (or local equivalent), of the tax.
    */
   amount: number;
   /**
@@ -3292,7 +3316,7 @@ export type CreditNoteTaxAmount = {
       )
     | null;
   /**
-   * The amount on which tax is calculated, in %s.
+   * The amount on which tax is calculated, in cents (or local equivalent).
    */
   taxable_amount?: number | null;
 };
@@ -3313,11 +3337,11 @@ export type CurrencyOption = {
    */
   tiers?: PriceTier[];
   /**
-   * The unit amount in %s to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
+   * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
    */
   unit_amount?: number | null;
   /**
-   * The unit amount in %s to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
+   * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
    */
   unit_amount_decimal?: string | null;
 };
@@ -3543,6 +3567,20 @@ export type CustomerBalanceCustomerBalanceSettings = {
   using_merchant_default: boolean;
 };
 /**
+ * CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft
+ */
+export type CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft =
+  {
+    /**
+     * The [Balance Transaction](docs/api/balance_transactions/object) that corresponds to funds taken out of your Stripe balance.
+     */
+    balance_transaction: string | BalanceTransaction;
+    /**
+     * The [Cash Balance Transaction](https://stripe.com/docs/api/cash_balance_transactions/object) that brought the customer balance negative, triggering the clawback of funds.
+     */
+    linked_transaction: string | CustomerCashBalanceTransaction;
+  };
+/**
  * CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction
  */
 export type CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction =
@@ -3753,6 +3791,7 @@ export type CustomerBalanceTransaction = {
  * to payments, and refunds to the customer.
  */
 export type CustomerCashBalanceTransaction = {
+  adjusted_for_overdraft?: CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft;
   applied_to_payment?: CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction;
   /**
    * Time at which the object was created. Measured in seconds since the Unix epoch.
@@ -3789,9 +3828,10 @@ export type CustomerCashBalanceTransaction = {
   object: 'customer_cash_balance_transaction';
   refunded_from_payment?: CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransaction;
   /**
-   * The type of the cash balance transaction. One of `applied_to_payment`, `unapplied_from_payment`, `refunded_from_payment`, `funded`, `return_initiated`, or `return_canceled`. New types may be added in future. See [Customer Balance](https://stripe.com/docs/payments/customer-balance#types) to learn more about these types.
+   * The type of the cash balance transaction. New types may be added in future. See [Customer Balance](https://stripe.com/docs/payments/customer-balance#types) to learn more about these types.
    */
   type:
+    | 'adjusted_for_overdraft'
     | 'applied_to_payment'
     | 'funded'
     | 'funding_reversed'
@@ -4338,7 +4378,7 @@ export type Discount = {
  */
 export type DiscountsResourceDiscountAmount = {
   /**
-   * The amount, in %s, of the discount.
+   * The amount, in cents (or local equivalent), of the discount.
    */
   amount: number;
   /**
@@ -4405,15 +4445,15 @@ export type Dispute = {
    * ID of the PaymentIntent that was disputed.
    */
   payment_intent?: (string | PaymentIntent) | null;
+  payment_method_details?: DisputePaymentMethodDetails;
   /**
    * Reason given by cardholder for dispute. Possible values are `bank_cannot_process`, `check_returned`, `credit_not_processed`, `customer_initiated`, `debit_not_authorized`, `duplicate`, `fraudulent`, `general`, `incorrect_account_details`, `insufficient_funds`, `product_not_received`, `product_unacceptable`, `subscription_canceled`, or `unrecognized`. Read more about [dispute reasons](https://stripe.com/docs/disputes/categories).
    */
   reason: string;
   /**
-   * Current status of dispute. Possible values are `warning_needs_response`, `warning_under_review`, `warning_closed`, `needs_response`, `under_review`, `charge_refunded`, `won`, or `lost`.
+   * Current status of dispute. Possible values are `warning_needs_response`, `warning_under_review`, `warning_closed`, `needs_response`, `under_review`, `won`, or `lost`.
    */
   status:
-    | 'charge_refunded'
     | 'lost'
     | 'needs_response'
     | 'under_review'
@@ -4555,6 +4595,32 @@ export type DisputeEvidenceDetails = {
    * The number of times evidence has been submitted. Typically, you may only submit evidence once.
    */
   submission_count: number;
+};
+/**
+ * DisputePaymentMethodDetails
+ */
+export type DisputePaymentMethodDetails = {
+  /**
+   * Card specific dispute details.
+   */
+  card?: DisputePaymentMethodDetailsCard | null;
+  /**
+   * Payment method type.
+   */
+  type: 'card';
+};
+/**
+ * DisputePaymentMethodDetailsCard
+ */
+export type DisputePaymentMethodDetailsCard = {
+  /**
+   * Card brand. Can be `amex`, `diners`, `discover`, `eftpos_au`, `jcb`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+   */
+  brand: string;
+  /**
+   * The card network's specific dispute reason code, which maps to one of Stripe's primary dispute categories to simplify response guidance. The [Network code map](https://stripe.com/docs/disputes/categories#network-code-map) lists all available dispute reason codes by network.
+   */
+  network_reason_code?: string | null;
 };
 /**
  * EmailSent
@@ -4765,7 +4831,7 @@ export type Fee = {
  */
 export type FeeRefund = {
   /**
-   * Amount, in %s.
+   * Amount, in cents (or local equivalent).
    */
   amount: number;
   /**
@@ -5031,6 +5097,7 @@ export type FinancialConnectionsAccount = {
 };
 /**
  * BankConnectionsResourceOwner
+ * Describes an owner of an account.
  */
 export type FinancialConnectionsAccountOwner = {
   /**
@@ -5952,11 +6019,11 @@ export type Invoice = {
    */
   amount_due: number;
   /**
-   * The amount, in %s, that was paid.
+   * The amount, in cents (or local equivalent), that was paid.
    */
   amount_paid: number;
   /**
-   * The difference between amount_due and amount_paid, in %s.
+   * The difference between amount_due and amount_paid, in cents (or local equivalent).
    */
   amount_remaining: number;
   /**
@@ -5968,7 +6035,7 @@ export type Invoice = {
    */
   application?: (string | Application | DeletedApplication) | null;
   /**
-   * The fee in %s that will be applied to the invoice and transferred to the application owner's Stripe account when the invoice is paid.
+   * The fee in cents (or local equivalent) that will be applied to the invoice and transferred to the application owner's Stripe account when the invoice is paid.
    */
   application_fee_amount?: number | null;
   /**
@@ -6080,6 +6147,10 @@ export type Invoice = {
    * The date on which payment for this invoice is due. This value will be `null` for invoices where `collection_method=charge_automatically`.
    */
   due_date?: number | null;
+  /**
+   * The date when this invoice is in effect. Same as `finalized_at` unless overwritten. When defined, this value replaces the system-generated 'Date of issue' printed on the invoice PDF and receipt.
+   */
+  effective_at?: number | null;
   /**
    * Ending customer balance after the invoice is finalized. Invoices are finalized approximately an hour after successful webhook delivery or when payment collection is attempted for the invoice. If the invoice has not been finalized yet, this will be null.
    */
@@ -6227,6 +6298,10 @@ export type Invoice = {
    */
   subscription?: (string | Subscription) | null;
   /**
+   * Details about the subscription that created this invoice.
+   */
+  subscription_details?: SubscriptionDetailsData | null;
+  /**
    * Only set for upcoming invoices that preview prorations. The time used to calculate prorations.
    */
   subscription_proration_date?: number;
@@ -6235,7 +6310,7 @@ export type Invoice = {
    */
   subtotal: number;
   /**
-   * The integer amount in %s representing the subtotal of the invoice before any invoice level discount or tax is applied. Item discounts are already incorporated
+   * The integer amount in cents (or local equivalent) representing the subtotal of the invoice before any invoice level discount or tax is applied. Item discounts are already incorporated
    */
   subtotal_excluding_tax?: number | null;
   /**
@@ -6256,7 +6331,7 @@ export type Invoice = {
    */
   total_discount_amounts?: DiscountsResourceDiscountAmount[] | null;
   /**
-   * The integer amount in %s representing the total amount of the invoice including all discounts but excluding all tax.
+   * The integer amount in cents (or local equivalent) representing the total amount of the invoice including all discounts but excluding all tax.
    */
   total_excluding_tax?: number | null;
   /**
@@ -6450,15 +6525,6 @@ export type InvoiceSettingCustomerSetting = {
   rendering_options?: InvoiceSettingRenderingOptions | null;
 };
 /**
- * InvoiceSettingPhaseSetting
- */
-export type InvoiceSettingPhaseSetting = {
-  /**
-   * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
-   */
-  days_until_due?: number | null;
-};
-/**
  * InvoiceSettingQuoteSetting
  */
 export type InvoiceSettingQuoteSetting = {
@@ -6477,6 +6543,15 @@ export type InvoiceSettingRenderingOptions = {
   amount_tax_display?: string | null;
 };
 /**
+ * InvoiceSettingSubscriptionSchedulePhaseSetting
+ */
+export type InvoiceSettingSubscriptionSchedulePhaseSetting = {
+  /**
+   * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+   */
+  days_until_due?: number | null;
+};
+/**
  * InvoiceSettingSubscriptionScheduleSetting
  */
 export type InvoiceSettingSubscriptionScheduleSetting = {
@@ -6490,7 +6565,7 @@ export type InvoiceSettingSubscriptionScheduleSetting = {
  */
 export type InvoiceTaxAmount = {
   /**
-   * The amount, in %s, of the tax.
+   * The amount, in cents (or local equivalent), of the tax.
    */
   amount: number;
   /**
@@ -6524,7 +6599,7 @@ export type InvoiceTaxAmount = {
       )
     | null;
   /**
-   * The amount on which tax is calculated, in %s.
+   * The amount on which tax is calculated, in cents (or local equivalent).
    */
   taxable_amount?: number | null;
 };
@@ -6546,7 +6621,7 @@ export type InvoiceThresholdReason = {
  */
 export type InvoiceTransferData = {
   /**
-   * The amount in %s that will be transferred to the destination account when the invoice is paid. By default, the entire amount is transferred to the destination.
+   * The amount in cents (or local equivalent) that will be transferred to the destination account when the invoice is paid. By default, the entire amount is transferred to the destination.
    */
   amount?: number | null;
   /**
@@ -6747,13 +6822,16 @@ export type InvoicesPaymentSettings = {
  */
 export type InvoicesResourceInvoiceTaxId = {
   /**
-   * The type of the tax ID, one of `eu_vat`, `br_cnpj`, `br_cpf`, `eu_oss_vat`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
    */
   type:
+    | 'ad_nrt'
     | 'ae_trn'
+    | 'ar_cuit'
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
     | 'ca_bn'
@@ -6764,6 +6842,11 @@ export type InvoicesResourceInvoiceTaxId = {
     | 'ca_qst'
     | 'ch_vat'
     | 'cl_tin'
+    | 'cn_tin'
+    | 'co_nit'
+    | 'cr_tin'
+    | 'do_rcn'
+    | 'ec_ruc'
     | 'eg_tin'
     | 'es_cif'
     | 'eu_oss_vat'
@@ -6788,19 +6871,26 @@ export type InvoicesResourceInvoiceTaxId = {
     | 'my_sst'
     | 'no_vat'
     | 'nz_gst'
+    | 'pe_ruc'
     | 'ph_tin'
+    | 'ro_tin'
+    | 'rs_pib'
     | 'ru_inn'
     | 'ru_kpp'
     | 'sa_vat'
     | 'sg_gst'
     | 'sg_uen'
     | 'si_tin'
+    | 'sv_nit'
     | 'th_vat'
     | 'tr_tin'
     | 'tw_vat'
     | 'ua_vat'
     | 'unknown'
     | 'us_ein'
+    | 'uy_ruc'
+    | 've_rif'
+    | 'vn_tin'
     | 'za_vat';
   /**
    * The value of the tax ID.
@@ -10159,6 +10249,7 @@ export type LegalEntityCompany = {
     | 'government_instrumentality'
     | 'governmental_unit'
     | 'incorporated_non_profit'
+    | 'incorporated_partnership'
     | 'limited_liability_partnership'
     | 'llc'
     | 'multi_member_llc'
@@ -10173,7 +10264,8 @@ export type LegalEntityCompany = {
     | 'sole_proprietorship'
     | 'tax_exempt_government_instrumentality'
     | 'unincorporated_association'
-    | 'unincorporated_non_profit';
+    | 'unincorporated_non_profit'
+    | 'unincorporated_partnership';
   /**
    * Whether the company's business ID number was provided.
    */
@@ -10333,11 +10425,11 @@ export type LegalEntityUboDeclaration = {
  */
 export type LineItem = {
   /**
-   * The amount, in %s.
+   * The amount, in cents (or local equivalent).
    */
   amount: number;
   /**
-   * The integer amount in %s representing the amount for this line item, excluding all tax and discounts.
+   * The integer amount in cents (or local equivalent) representing the amount for this line item, excluding all tax and discounts.
    */
   amount_excluding_tax?: number | null;
   /**
@@ -10420,7 +10512,7 @@ export type LineItem = {
    */
   type: 'invoiceitem' | 'subscription';
   /**
-   * The amount in %s representing the unit amount for this line item, excluding all tax and discounts.
+   * The amount in cents (or local equivalent) representing the unit amount for this line item, excluding all tax and discounts.
    */
   unit_amount_excluding_tax?: string | null;
 };
@@ -10449,8 +10541,6 @@ export type LineItemsTaxAmount = {
   taxability_reason?:
     | (
         | 'customer_exempt'
-        | 'excluded_territory'
-        | 'jurisdiction_unsupported'
         | 'not_collecting'
         | 'not_subject_to_tax'
         | 'not_supported'
@@ -10464,12 +10554,11 @@ export type LineItemsTaxAmount = {
         | 'reverse_charge'
         | 'standard_rated'
         | 'taxable_basis_reduced'
-        | 'vat_exempt'
         | 'zero_rated'
       )
     | null;
   /**
-   * The amount on which tax is calculated, in %s.
+   * The amount on which tax is calculated, in cents (or local equivalent).
    */
   taxable_amount?: number | null;
 };
@@ -10528,6 +10617,10 @@ export type Mandate = {
    * String representing the object's type. Objects of the same type share the same value.
    */
   object: 'mandate';
+  /**
+   * The account (if any) for which the mandate is intended.
+   */
+  on_behalf_of?: string;
   /**
    * ID of the payment method associated with this mandate.
    */
@@ -10591,20 +10684,6 @@ export type MandateBacsDebit = {
   url: string;
 };
 /**
- * mandate_blik
- */
-export type MandateBlik = {
-  /**
-   * Date at which the mandate expires.
-   */
-  expires_after?: number | null;
-  off_session?: MandateOptionsOffSessionDetailsBlik;
-  /**
-   * Type of the mandate.
-   */
-  type?: ('off_session' | 'on_session') | null;
-};
-/**
  * mandate_cashapp
  */
 export type MandateCashapp = any;
@@ -10617,34 +10696,12 @@ export type MandateLink = any;
  */
 export type MandateMultiUse = any;
 /**
- * mandate_options_off_session_details_blik
- */
-export type MandateOptionsOffSessionDetailsBlik = {
-  /**
-   * Amount of each recurring payment.
-   */
-  amount?: number | null;
-  /**
-   * Currency of each recurring payment.
-   */
-  currency?: string | null;
-  /**
-   * Frequency interval of each recurring payment.
-   */
-  interval?: ('day' | 'month' | 'week' | 'year') | null;
-  /**
-   * Frequency indicator of each recurring payment.
-   */
-  interval_count?: number | null;
-};
-/**
  * mandate_payment_method_details
  */
 export type MandatePaymentMethodDetails = {
   acss_debit?: MandateAcssDebit;
   au_becs_debit?: MandateAuBecsDebit;
   bacs_debit?: MandateBacsDebit;
-  blik?: MandateBlik;
   card?: CardMandatePaymentMethodDetails;
   cashapp?: MandateCashapp;
   link?: MandateLink;
@@ -10898,6 +10955,12 @@ export type PaymentFlowsAmountDetailsResourceTip = {
  */
 export type PaymentFlowsAutomaticPaymentMethodsPaymentIntent = {
   /**
+   * Controls whether this PaymentIntent will accept redirect-based payment methods.
+   *
+   * Redirect-based payment methods may require your customer to be redirected to a payment method's app or site for authentication or additional steps. To [confirm](https://stripe.com/docs/api/payment_intents/confirm) this PaymentIntent, you may be required to provide a `return_url` to redirect customers back to your site after they authenticate or complete the payment.
+   */
+  allow_redirects?: 'always' | 'never';
+  /**
    * Automatically calculates compatible payment methods
    */
   enabled: boolean;
@@ -10906,6 +10969,12 @@ export type PaymentFlowsAutomaticPaymentMethodsPaymentIntent = {
  * PaymentFlowsAutomaticPaymentMethodsSetupIntent
  */
 export type PaymentFlowsAutomaticPaymentMethodsSetupIntent = {
+  /**
+   * Controls whether this SetupIntent will accept redirect-based payment methods.
+   *
+   * Redirect-based payment methods may require your customer to be redirected to a payment method's app or site for authentication or additional steps. To [confirm](https://stripe.com/docs/api/setup_intents/confirm) this SetupIntent, you may be required to provide a `return_url` to redirect customers back to your site after they authenticate or complete the setup.
+   */
+  allow_redirects?: 'always' | 'never';
   /**
    * Automatically calculates compatible payment methods
    */
@@ -11709,9 +11778,7 @@ export type PaymentIntentPaymentMethodOptionsAuBecsDebit = {
 /**
  * payment_intent_payment_method_options_blik
  */
-export type PaymentIntentPaymentMethodOptionsBlik = {
-  mandate_options?: PaymentIntentPaymentMethodOptionsMandateOptionsBlik;
-};
+export type PaymentIntentPaymentMethodOptionsBlik = any;
 /**
  * payment_intent_payment_method_options_card
  */
@@ -11791,10 +11858,6 @@ export type PaymentIntentPaymentMethodOptionsLink = {
    */
   capture_method?: 'manual';
   /**
-   * Token used for persistent Link logins.
-   */
-  persistent_token?: string | null;
-  /**
    * Indicates that you intend to make future payments with this PaymentIntent's payment method.
    *
    * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
@@ -11825,20 +11888,6 @@ export type PaymentIntentPaymentMethodOptionsMandateOptionsAcssDebit = {
   transaction_type?: ('business' | 'personal') | null;
 };
 /**
- * payment_intent_payment_method_options_mandate_options_blik
- */
-export type PaymentIntentPaymentMethodOptionsMandateOptionsBlik = {
-  /**
-   * Date at which the mandate expires.
-   */
-  expires_after?: number | null;
-  off_session?: MandateOptionsOffSessionDetailsBlik;
-  /**
-   * Type of the mandate.
-   */
-  type?: ('off_session' | 'on_session') | null;
-};
-/**
  * payment_intent_payment_method_options_mandate_options_sepa_debit
  */
 export type PaymentIntentPaymentMethodOptionsMandateOptionsSepaDebit = any;
@@ -11861,6 +11910,10 @@ export type PaymentIntentPaymentMethodOptionsSepaDebit = {
  */
 export type PaymentIntentPaymentMethodOptionsUsBankAccount = {
   financial_connections?: LinkedAccountOptionsUsBankAccount;
+  /**
+   * Preferred transaction settlement speed
+   */
+  preferred_settlement_speed?: 'fastest' | 'standard';
   /**
    * Indicates that you intend to make future payments with this PaymentIntent's payment method.
    *
@@ -11942,7 +11995,7 @@ export type PaymentLink = {
    */
   application_fee_amount?: number | null;
   /**
-   * This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account.
+   * This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.
    */
   application_fee_percent?: number | null;
   automatic_tax: PaymentLinksResourceAutomaticTax;
@@ -12150,9 +12203,17 @@ export type PaymentLinksResourceCustomFields = {
   key: string;
   label: PaymentLinksResourceCustomFieldsLabel;
   /**
+   * Configuration for `type=numeric` fields.
+   */
+  numeric?: PaymentLinksResourceCustomFieldsNumeric | null;
+  /**
    * Whether the customer is required to complete the field before completing the Checkout Session. Defaults to `false`.
    */
   optional: boolean;
+  /**
+   * Configuration for `type=text` fields.
+   */
+  text?: PaymentLinksResourceCustomFieldsText | null;
   /**
    * The type of the field.
    */
@@ -12192,6 +12253,32 @@ export type PaymentLinksResourceCustomFieldsLabel = {
    * The type of the label.
    */
   type: 'custom';
+};
+/**
+ * PaymentLinksResourceCustomFieldsNumeric
+ */
+export type PaymentLinksResourceCustomFieldsNumeric = {
+  /**
+   * The maximum character length constraint for the customer's input.
+   */
+  maximum_length?: number | null;
+  /**
+   * The minimum character length requirement for the customer's input.
+   */
+  minimum_length?: number | null;
+};
+/**
+ * PaymentLinksResourceCustomFieldsText
+ */
+export type PaymentLinksResourceCustomFieldsText = {
+  /**
+   * The maximum character length constraint for the customer's input.
+   */
+  maximum_length?: number | null;
+  /**
+   * The minimum character length requirement for the customer's input.
+   */
+  minimum_length?: number | null;
 };
 /**
  * PaymentLinksResourceCustomText
@@ -12568,7 +12655,7 @@ export type PaymentLinksResourceTaxIdCollection = {
  */
 export type PaymentLinksResourceTransferData = {
   /**
-   * The amount in %s that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+   * The amount in cents (or local equivalent) that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
    */
   amount?: number | null;
   /**
@@ -13168,6 +13255,10 @@ export type PaymentMethodDetailsAffirm = any;
  */
 export type PaymentMethodDetailsAfterpayClearpay = {
   /**
+   * The Afterpay order ID associated with this payment intent.
+   */
+  order_id?: string | null;
+  /**
    * Order identifier shown to the merchant in Afterpay’s online portal.
    */
   reference?: string | null;
@@ -13325,7 +13416,7 @@ export type PaymentMethodDetailsCard = {
   /**
    * Populated if this transaction used 3D Secure authentication.
    */
-  three_d_secure?: ThreeDSecureDetails | null;
+  three_d_secure?: ThreeDSecureDetailsCharge | null;
   /**
    * If this Card is part of a card wallet, this contains the details of the card wallet.
    */
@@ -14403,10 +14494,6 @@ export type PaymentMethodLink = {
    * Account owner's email address.
    */
   email?: string | null;
-  /**
-   * Token used for persistent Link logins.
-   */
-  persistent_token?: string;
 };
 /**
  * payment_method_options_affirm
@@ -15705,13 +15792,16 @@ export type PaymentPagesCheckoutSessionShippingOption = {
  */
 export type PaymentPagesCheckoutSessionTaxId = {
   /**
-   * The type of the tax ID, one of `eu_vat`, `br_cnpj`, `br_cpf`, `eu_oss_vat`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
    */
   type:
+    | 'ad_nrt'
     | 'ae_trn'
+    | 'ar_cuit'
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
     | 'ca_bn'
@@ -15722,6 +15812,11 @@ export type PaymentPagesCheckoutSessionTaxId = {
     | 'ca_qst'
     | 'ch_vat'
     | 'cl_tin'
+    | 'cn_tin'
+    | 'co_nit'
+    | 'cr_tin'
+    | 'do_rcn'
+    | 'ec_ruc'
     | 'eg_tin'
     | 'es_cif'
     | 'eu_oss_vat'
@@ -15746,19 +15841,26 @@ export type PaymentPagesCheckoutSessionTaxId = {
     | 'my_sst'
     | 'no_vat'
     | 'nz_gst'
+    | 'pe_ruc'
     | 'ph_tin'
+    | 'ro_tin'
+    | 'rs_pib'
     | 'ru_inn'
     | 'ru_kpp'
     | 'sa_vat'
     | 'sg_gst'
     | 'sg_uen'
     | 'si_tin'
+    | 'sv_nit'
     | 'th_vat'
     | 'tr_tin'
     | 'tw_vat'
     | 'ua_vat'
     | 'unknown'
     | 'us_ein'
+    | 'uy_ruc'
+    | 've_rif'
+    | 'vn_tin'
     | 'za_vat';
   /**
    * The value of the tax ID.
@@ -15822,7 +15924,7 @@ export type PaymentSource = Account | BankAccount | Card | Source;
  */
 export type Payout = {
   /**
-   * Amount (in %s) to be transferred to your bank account or debit card.
+   * Amount (in cents (or local equivalent)) to be transferred to your bank account or debit card.
    */
   amount: number;
   /**
@@ -15949,7 +16051,7 @@ export type Period = {
  * This is an object representing a person associated with a Stripe account.
  *
  * A platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.
- * See the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform pre-filling and account onboarding steps.
+ * See the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform prefilling and account onboarding steps.
  *
  * Related guide: [Handling identity verification with the API](https://stripe.com/docs/connect/identity-verification-api#person-information)
  */
@@ -16158,11 +16260,11 @@ export type Plan = {
    */
   aggregate_usage?: ('last_during_period' | 'last_ever' | 'max' | 'sum') | null;
   /**
-   * The unit amount in %s to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
+   * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
    */
   amount?: number | null;
   /**
-   * The unit amount in %s to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
+   * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
    */
   amount_decimal?: string | null;
   /**
@@ -16663,11 +16765,11 @@ export type Price = {
    */
   type: 'one_time' | 'recurring';
   /**
-   * The unit amount in %s to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
+   * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
    */
   unit_amount?: number | null;
   /**
-   * The unit amount in %s to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
+   * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
    */
   unit_amount_decimal?: string | null;
 };
@@ -16889,7 +16991,7 @@ export type Quote = {
    */
   application_fee_amount?: number | null;
   /**
-   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account. Only applicable if there are line items with recurring prices on the quote.
+   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account. Only applicable if there are line items with recurring prices on the quote.
    */
   application_fee_percent?: number | null;
   automatic_tax: QuotesResourceAutomaticTax;
@@ -17146,11 +17248,11 @@ export type QuotesResourceTotalDetailsResourceBreakdown = {
  */
 export type QuotesResourceTransferData = {
   /**
-   * The amount in %s that will be transferred to the destination account when the invoice is paid. By default, the entire amount is transferred to the destination.
+   * The amount in cents (or local equivalent) that will be transferred to the destination account when the invoice is paid. By default, the entire amount is transferred to the destination.
    */
   amount?: number | null;
   /**
-   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount will be transferred to the destination.
+   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount will be transferred to the destination.
    */
   amount_percent?: number | null;
   /**
@@ -17259,7 +17361,7 @@ export type RadarValueList = {
    */
   id: string;
   /**
-   * The type of items in the value list. One of `card_fingerprint`, `card_bin`, `email`, `ip_address`, `country`, `string`, `case_sensitive_string`, or `customer_id`.
+   * The type of items in the value list. One of `card_fingerprint`, `us_bank_account_fingerprint`, `sepa_debit_fingerprint`, `card_bin`, `email`, `ip_address`, `country`, `string`, `case_sensitive_string`, or `customer_id`.
    */
   item_type:
     | 'card_bin'
@@ -17269,7 +17371,9 @@ export type RadarValueList = {
     | 'customer_id'
     | 'email'
     | 'ip_address'
-    | 'string';
+    | 'sepa_debit_fingerprint'
+    | 'string'
+    | 'us_bank_account_fingerprint';
   /**
    * RadarListListItemList
    * List of items contained within this value list.
@@ -17447,7 +17551,7 @@ export type Recurring = {
  */
 export type Refund = {
   /**
-   * Amount, in %s.
+   * Amount, in cents (or local equivalent).
    */
   amount: number;
   /**
@@ -17925,7 +18029,6 @@ export type SetupAttemptPaymentMethodDetails = {
   au_becs_debit?: SetupAttemptPaymentMethodDetailsAuBecsDebit;
   bacs_debit?: SetupAttemptPaymentMethodDetailsBacsDebit;
   bancontact?: SetupAttemptPaymentMethodDetailsBancontact;
-  blik?: SetupAttemptPaymentMethodDetailsBlik;
   boleto?: SetupAttemptPaymentMethodDetailsBoleto;
   card?: SetupAttemptPaymentMethodDetailsCard;
   card_present?: SetupAttemptPaymentMethodDetailsCardPresent;
@@ -17993,10 +18096,6 @@ export type SetupAttemptPaymentMethodDetailsBancontact = {
    */
   verified_name?: string | null;
 };
-/**
- * setup_attempt_payment_method_details_blik
- */
-export type SetupAttemptPaymentMethodDetailsBlik = any;
 /**
  * setup_attempt_payment_method_details_boleto
  */
@@ -18237,7 +18336,7 @@ export type SetupIntent = {
    */
   attach_to_self?: boolean;
   /**
-   * Settings for automatic payment methods compatible with this Setup Intent
+   * Settings for dynamic payment methods compatible with this Setup Intent
    */
   automatic_payment_methods?: PaymentFlowsAutomaticPaymentMethodsSetupIntent | null;
   /**
@@ -18396,9 +18495,6 @@ export type SetupIntentPaymentMethodOptions = {
   acss_debit?:
     | SetupIntentPaymentMethodOptionsAcssDebit
     | SetupIntentTypeSpecificPaymentMethodOptionsClient;
-  blik?:
-    | SetupIntentPaymentMethodOptionsBlik
-    | SetupIntentTypeSpecificPaymentMethodOptionsClient;
   card?: SetupIntentPaymentMethodOptionsCard;
   link?:
     | SetupIntentPaymentMethodOptionsLink
@@ -18426,12 +18522,6 @@ export type SetupIntentPaymentMethodOptionsAcssDebit = {
    * Bank account verification method.
    */
   verification_method?: 'automatic' | 'instant' | 'microdeposits';
-};
-/**
- * setup_intent_payment_method_options_blik
- */
-export type SetupIntentPaymentMethodOptionsBlik = {
-  mandate_options?: SetupIntentPaymentMethodOptionsMandateOptionsBlik;
 };
 /**
  * setup_intent_payment_method_options_card
@@ -18512,12 +18602,7 @@ export type SetupIntentPaymentMethodOptionsCardMandateOptions = {
 /**
  * setup_intent_payment_method_options_link
  */
-export type SetupIntentPaymentMethodOptionsLink = {
-  /**
-   * Token used for persistent Link logins.
-   */
-  persistent_token?: string | null;
-};
+export type SetupIntentPaymentMethodOptionsLink = any;
 /**
  * setup_intent_payment_method_options_mandate_options_acss_debit
  */
@@ -18542,20 +18627,6 @@ export type SetupIntentPaymentMethodOptionsMandateOptionsAcssDebit = {
    * Transaction type of the mandate.
    */
   transaction_type?: ('business' | 'personal') | null;
-};
-/**
- * setup_intent_payment_method_options_mandate_options_blik
- */
-export type SetupIntentPaymentMethodOptionsMandateOptionsBlik = {
-  /**
-   * Date at which the mandate expires.
-   */
-  expires_after?: number | null;
-  off_session?: MandateOptionsOffSessionDetailsBlik;
-  /**
-   * Type of the mandate.
-   */
-  type?: ('off_session' | 'on_session') | null;
 };
 /**
  * setup_intent_payment_method_options_mandate_options_sepa_debit
@@ -18619,9 +18690,8 @@ export type Shipping = {
 };
 /**
  * ShippingRate
- * Shipping rates describe the price of shipping presented to your customers and can be
- * applied to [Checkout Sessions](https://stripe.com/docs/payments/checkout/shipping)
- * and [Orders](https://stripe.com/docs/orders/shipping) to collect shipping costs.
+ * Shipping rates describe the price of shipping presented to your customers and
+ * applied to a purchase. For more information, see [Charge for shipping](https://stripe.com/docs/payments/during-payment/charge-shipping).
  */
 export type ShippingRate = {
   /**
@@ -19463,7 +19533,7 @@ export type Subscription = {
    */
   application?: (string | Application | DeletedApplication) | null;
   /**
-   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account.
+   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.
    */
   application_fee_percent?: number | null;
   automatic_tax: SubscriptionAutomaticTax;
@@ -19630,7 +19700,7 @@ export type Subscription = {
    *
    * A subscription that is currently in a trial period is `trialing` and moves to `active` when the trial period is over.
    *
-   * If subscription `collection_method=charge_automatically` it becomes `past_due` when payment to renew it fails and `canceled` or `unpaid` (depending on your subscriptions settings) when Stripe has exhausted all payment retry attempts.
+   * If subscription `collection_method=charge_automatically`, it becomes `past_due` when payment is required but cannot be paid (due to failed payment or awaiting additional user actions). Once Stripe has exhausted all payment retry attempts, the subscription will become `canceled` or `unpaid` (depending on your subscriptions settings).
    *
    * If subscription `collection_method=send_invoice` it becomes `past_due` when its invoice is not paid by the due date, and `canceled` or `unpaid` if it is still not paid by an additional deadline after that. Note that when a subscription has a status of `unpaid`, no subsequent invoices will be attempted (invoices will be created, but then immediately automatically closed). After receiving updated payment information from a customer, you may choose to reopen and pay their closed invoices.
    */
@@ -19685,6 +19755,17 @@ export type SubscriptionBillingThresholds = {
    * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
    */
   reset_billing_cycle_anchor?: boolean | null;
+};
+/**
+ * SubscriptionDetailsData
+ */
+export type SubscriptionDetailsData = {
+  /**
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that will reflect the metadata of the subscription at the time of invoice creation. *Note: This attribute is populated only for invoices created on or after June 29, 2023.*
+   */
+  metadata?: {
+    [key: string]: string;
+  } | null;
 };
 /**
  * SubscriptionItem
@@ -19926,7 +20007,7 @@ export type SubscriptionSchedulePhaseConfiguration = {
    */
   add_invoice_items: SubscriptionScheduleAddInvoiceItem[];
   /**
-   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account during this phase of the schedule.
+   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account during this phase of the schedule.
    */
   application_fee_percent?: number | null;
   automatic_tax?: SchedulesPhaseAutomaticTax;
@@ -19969,7 +20050,7 @@ export type SubscriptionSchedulePhaseConfiguration = {
   /**
    * The invoice settings applicable during this phase.
    */
-  invoice_settings?: InvoiceSettingPhaseSetting | null;
+  invoice_settings?: InvoiceSettingSubscriptionSchedulePhaseSetting | null;
   /**
    * Subscription items to configure the subscription to during this phase of the subscription schedule.
    */
@@ -20006,7 +20087,7 @@ export type SubscriptionSchedulePhaseConfiguration = {
  */
 export type SubscriptionSchedulesResourceDefaultSettings = {
   /**
-   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account during this phase of the schedule.
+   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account during this phase of the schedule.
    */
   application_fee_percent?: number | null;
   automatic_tax?: SubscriptionSchedulesResourceDefaultSettingsAutomaticTax;
@@ -20057,7 +20138,7 @@ export type SubscriptionSchedulesResourceDefaultSettingsAutomaticTax = {
  */
 export type SubscriptionTransferData = {
   /**
-   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+   * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
    */
   amount_percent?: number | null;
   /**
@@ -20300,7 +20381,7 @@ export type TaxCalculationLineItem = {
    */
   object: 'tax.calculation_line_item';
   /**
-   * A Product ID.
+   * The ID of an existing [Product](https://stripe.com/docs/api/products/object).
    */
   product?: string | null;
   /**
@@ -20323,6 +20404,32 @@ export type TaxCalculationLineItem = {
    * The [tax code](https://stripe.com/docs/tax/tax-categories) ID used for this resource.
    */
   tax_code: string;
+};
+/**
+ * TaxProductResourceTaxSettings
+ * You can use Tax `Settings` to manage configurations used by Stripe Tax calculations.
+ *
+ * Related guide: [Using the Settings API](https://stripe.com/docs/tax/settings-api)
+ */
+export type TaxSettings = {
+  defaults: TaxProductResourceTaxSettingsDefaults;
+  /**
+   * The place where your business is located.
+   */
+  head_office?: TaxProductResourceTaxSettingsHeadOffice | null;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'tax.settings';
+  /**
+   * The `active` status indicates you have all required settings to calculate tax. A status can transition out of `active` when new required settings are introduced.
+   */
+  status: 'active' | 'pending';
+  status_details: TaxProductResourceTaxSettingsStatusDetails;
 };
 /**
  * TaxProductResourceTaxTransaction
@@ -20436,6 +20543,10 @@ export type TaxTransactionLineItem = {
    */
   object: 'tax.transaction_line_item';
   /**
+   * The ID of an existing [Product](https://stripe.com/docs/api/products/object).
+   */
+  product?: string | null;
+  /**
    * The number of units of the item being purchased. For reversals, this is the quantity reversed.
    */
   quantity: number;
@@ -20540,13 +20651,16 @@ export type TaxId = {
    */
   object: 'tax_id';
   /**
-   * Type of the tax ID, one of `ae_trn`, `au_abn`, `au_arn`, `bg_uic`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `eg_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `nz_gst`, `ph_tin`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `th_vat`, `tr_tin`, `tw_vat`, `ua_vat`, `us_ein`, or `za_vat`. Note that some legacy tax IDs have type `unknown`
+   * Type of the tax ID, one of `ad_nrt`, `ae_trn`, `ar_cuit`, `au_abn`, `au_arn`, `bg_uic`, `bo_tin`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `nz_gst`, `pe_ruc`, `ph_tin`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sv_nit`, `th_vat`, `tr_tin`, `tw_vat`, `ua_vat`, `us_ein`, `uy_ruc`, `ve_rif`, `vn_tin`, or `za_vat`. Note that some legacy tax IDs have type `unknown`
    */
   type:
+    | 'ad_nrt'
     | 'ae_trn'
+    | 'ar_cuit'
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
     | 'ca_bn'
@@ -20557,6 +20671,11 @@ export type TaxId = {
     | 'ca_qst'
     | 'ch_vat'
     | 'cl_tin'
+    | 'cn_tin'
+    | 'co_nit'
+    | 'cr_tin'
+    | 'do_rcn'
+    | 'ec_ruc'
     | 'eg_tin'
     | 'es_cif'
     | 'eu_oss_vat'
@@ -20581,19 +20700,26 @@ export type TaxId = {
     | 'my_sst'
     | 'no_vat'
     | 'nz_gst'
+    | 'pe_ruc'
     | 'ph_tin'
+    | 'ro_tin'
+    | 'rs_pib'
     | 'ru_inn'
     | 'ru_kpp'
     | 'sa_vat'
     | 'sg_gst'
     | 'sg_uen'
     | 'si_tin'
+    | 'sv_nit'
     | 'th_vat'
     | 'tr_tin'
     | 'tw_vat'
     | 'ua_vat'
     | 'unknown'
     | 'us_ein'
+    | 'uy_ruc'
+    | 've_rif'
+    | 'vn_tin'
     | 'za_vat';
   /**
    * Value of the tax ID.
@@ -20651,13 +20777,16 @@ export type TaxProductResourceCustomerDetails = {
  */
 export type TaxProductResourceCustomerDetailsResourceTaxId = {
   /**
-   * The type of the tax ID, one of `eu_vat`, `br_cnpj`, `br_cpf`, `eu_oss_vat`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
    */
   type:
+    | 'ad_nrt'
     | 'ae_trn'
+    | 'ar_cuit'
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
     | 'ca_bn'
@@ -20668,6 +20797,11 @@ export type TaxProductResourceCustomerDetailsResourceTaxId = {
     | 'ca_qst'
     | 'ch_vat'
     | 'cl_tin'
+    | 'cn_tin'
+    | 'co_nit'
+    | 'cr_tin'
+    | 'do_rcn'
+    | 'ec_ruc'
     | 'eg_tin'
     | 'es_cif'
     | 'eu_oss_vat'
@@ -20692,19 +20826,26 @@ export type TaxProductResourceCustomerDetailsResourceTaxId = {
     | 'my_sst'
     | 'no_vat'
     | 'nz_gst'
+    | 'pe_ruc'
     | 'ph_tin'
+    | 'ro_tin'
+    | 'rs_pib'
     | 'ru_inn'
     | 'ru_kpp'
     | 'sa_vat'
     | 'sg_gst'
     | 'sg_uen'
     | 'si_tin'
+    | 'sv_nit'
     | 'th_vat'
     | 'tr_tin'
     | 'tw_vat'
     | 'ua_vat'
     | 'unknown'
     | 'us_ein'
+    | 'uy_ruc'
+    | 've_rif'
+    | 'vn_tin'
     | 'za_vat';
   /**
    * The value of the tax ID.
@@ -20789,6 +20930,8 @@ export type TaxProductResourceLineItemTaxRateDetails = {
    * The tax type, such as `vat` or `sales_tax`.
    */
   tax_type:
+    | 'amusement_tax'
+    | 'communications_tax'
     | 'gst'
     | 'hst'
     | 'igst'
@@ -20879,7 +21022,7 @@ export type TaxProductResourceTaxCalculationShippingCost = {
    */
   amount_tax: number;
   /**
-   * The ID of an existing [ShippingRate](https://stripe.com/docs/api/shipping_rates/object)
+   * The ID of an existing [ShippingRate](https://stripe.com/docs/api/shipping_rates/object).
    */
   shipping_rate?: string;
   /**
@@ -20916,6 +21059,8 @@ export type TaxProductResourceTaxRateDetails = {
    */
   tax_type?:
     | (
+        | 'amusement_tax'
+        | 'communications_tax'
         | 'gst'
         | 'hst'
         | 'igst'
@@ -20928,6 +21073,45 @@ export type TaxProductResourceTaxRateDetails = {
         | 'vat'
       )
     | null;
+};
+/**
+ * TaxProductResourceTaxSettingsDefaults
+ */
+export type TaxProductResourceTaxSettingsDefaults = {
+  /**
+   * Default [tax behavior](https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#tax-behavior) used to specify whether the price is considered inclusive of taxes or exclusive of taxes. If the item's price has a tax behavior set, it will take precedence over the default tax behavior.
+   */
+  tax_behavior?: ('exclusive' | 'inclusive' | 'inferred_by_currency') | null;
+  /**
+   * Default [tax code](https://stripe.com/docs/tax/tax-categories) used to classify your products and prices.
+   */
+  tax_code?: string | null;
+};
+/**
+ * TaxProductResourceTaxSettingsHeadOffice
+ */
+export type TaxProductResourceTaxSettingsHeadOffice = {
+  address: Address;
+};
+/**
+ * TaxProductResourceTaxSettingsStatusDetails
+ */
+export type TaxProductResourceTaxSettingsStatusDetails = {
+  active?: TaxProductResourceTaxSettingsStatusDetailsResourceActive;
+  pending?: TaxProductResourceTaxSettingsStatusDetailsResourcePending;
+};
+/**
+ * TaxProductResourceTaxSettingsStatusDetailsResourceActive
+ */
+export type TaxProductResourceTaxSettingsStatusDetailsResourceActive = any;
+/**
+ * TaxProductResourceTaxSettingsStatusDetailsResourcePending
+ */
+export type TaxProductResourceTaxSettingsStatusDetailsResourcePending = {
+  /**
+   * The list of missing fields that are required to perform calculations. It includes the entry `head_office` when the status is `pending`. It is recommended to set the optional values even if they aren't listed as required for calculating taxes. Calculations can fail if missing fields aren't explicitly provided on every call.
+   */
+  missing_fields?: string[] | null;
 };
 /**
  * TaxProductResourceTaxTransactionLineItemResourceReversal
@@ -20959,6 +21143,10 @@ export type TaxProductResourceTaxTransactionShippingCost = {
    * The amount of tax calculated for shipping, in integer cents.
    */
   amount_tax: number;
+  /**
+   * The ID of an existing [ShippingRate](https://stripe.com/docs/api/shipping_rates/object).
+   */
+  shipping_rate?: string;
   /**
    * Specifies whether the `amount` includes taxes. If `tax_behavior=inclusive`, then the amount includes taxes.
    */
@@ -20996,7 +21184,9 @@ export type TaxRate = {
    */
   display_name: string;
   /**
-   * Actual/effective tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true, this percentage does not include the statutory tax rate of non-taxable jurisdictions.
+   * Actual/effective tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true,
+   * this percentage reflects the rate actually used to calculate tax based on the product's taxability
+   * and whether the user is registered to collect taxes in the corresponding jurisdiction.
    */
   effective_percentage?: number | null;
   /**
@@ -21049,6 +21239,7 @@ export type TaxRate = {
         | 'qst'
         | 'rst'
         | 'sales_tax'
+        | 'service_tax'
         | 'vat'
       )
     | null;
@@ -21306,6 +21497,11 @@ export type TerminalReaderReaderResourceProcessPaymentIntentAction = {
   process_config?: TerminalReaderReaderResourceProcessConfig;
 };
 /**
+ * TerminalReaderReaderResourceProcessSetupConfig
+ * Represents a per-setup override of a reader configuration
+ */
+export type TerminalReaderReaderResourceProcessSetupConfig = any;
+/**
  * TerminalReaderReaderResourceProcessSetupIntentAction
  * Represents a reader action to process a setup intent
  */
@@ -21314,6 +21510,7 @@ export type TerminalReaderReaderResourceProcessSetupIntentAction = {
    * ID of a card PaymentMethod generated from the card_present PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
    */
   generated_card?: string;
+  process_config?: TerminalReaderReaderResourceProcessSetupConfig;
   /**
    * Most recent SetupIntent processed by the reader.
    */
@@ -21457,6 +21654,48 @@ export type TestHelpersTestClock = {
  * three_d_secure_details
  */
 export type ThreeDSecureDetails = {
+  /**
+   * For authenticated transactions: how the customer was authenticated by
+   * the issuing bank.
+   */
+  authentication_flow?: ('challenge' | 'frictionless') | null;
+  /**
+   * Indicates the outcome of 3D Secure authentication.
+   */
+  result?:
+    | (
+        | 'attempt_acknowledged'
+        | 'authenticated'
+        | 'exempted'
+        | 'failed'
+        | 'not_supported'
+        | 'processing_error'
+      )
+    | null;
+  /**
+   * Additional information about why 3D Secure succeeded or failed based
+   * on the `result`.
+   */
+  result_reason?:
+    | (
+        | 'abandoned'
+        | 'bypassed'
+        | 'canceled'
+        | 'card_not_enrolled'
+        | 'network_not_supported'
+        | 'protocol_error'
+        | 'rejected'
+      )
+    | null;
+  /**
+   * The version of 3D Secure that was used.
+   */
+  version?: ('1.0.2' | '2.1.0' | '2.2.0') | null;
+};
+/**
+ * three_d_secure_details_charge
+ */
+export type ThreeDSecureDetailsCharge = {
   /**
    * For authenticated transactions: how the customer was authenticated by
    * the issuing bank.
@@ -21650,11 +21889,11 @@ export type Topup = {
  */
 export type Transfer = {
   /**
-   * Amount in %s to be transferred.
+   * Amount in cents (or local equivalent) to be transferred.
    */
   amount: number;
   /**
-   * Amount in %s reversed (can be less than the amount attribute on the transfer if a partial reversal was issued).
+   * Amount in cents (or local equivalent) reversed (can be less than the amount attribute on the transfer if a partial reversal was issued).
    */
   amount_reversed: number;
   /**
@@ -21771,7 +22010,7 @@ export type TransferData = {
  */
 export type TransferReversal = {
   /**
-   * Amount, in %s.
+   * Amount, in cents (or local equivalent).
    */
   amount: number;
   /**
@@ -22682,6 +22921,24 @@ export type TreasuryFinancialAccountsResourceAbaRecord = {
   routing_number: string;
 };
 /**
+ * TreasuryFinancialAccountsResourceAbaToggleSettings
+ * Toggle settings for enabling/disabling the ABA address feature
+ */
+export type TreasuryFinancialAccountsResourceAbaToggleSettings = {
+  /**
+   * Whether the FinancialAccount should have the Feature.
+   */
+  requested: boolean;
+  /**
+   * Whether the Feature is operational.
+   */
+  status: 'active' | 'pending' | 'restricted';
+  /**
+   * Additional details; includes at least one entry when the status is not `active`.
+   */
+  status_details: TreasuryFinancialAccountsResourceTogglesSettingStatusDetails[];
+};
+/**
  * TreasuryFinancialAccountsResourceAchToggleSettings
  * Toggle settings for enabling/disabling an ACH specific feature
  */
@@ -22752,7 +23009,7 @@ export type TreasuryFinancialAccountsResourceFinancialAddress = {
  * Settings related to Financial Addresses features on a Financial Account
  */
 export type TreasuryFinancialAccountsResourceFinancialAddressesFeatures = {
-  aba?: TreasuryFinancialAccountsResourceToggleSettings;
+  aba?: TreasuryFinancialAccountsResourceAbaToggleSettings;
 };
 /**
  * TreasuryFinancialAccountsResourceInboundTransfers
@@ -23525,10 +23782,10 @@ export async function getAccounts<FetcherData>(
  *
  * <p>If
  * you’ve already collected information for your connected accounts, you <a
- * href="/docs/connect/best-practices#onboarding">can pre-fill that information</a> when
+ * href="/docs/connect/best-practices#onboarding">can prefill that information</a> when
  * creating the account. Connect
- * Onboarding won’t ask for the pre-filled information during account onboarding.
- * You can pre-fill any information on the
+ * Onboarding won’t ask for the prefilled information during account onboarding.
+ * You can prefill any information on the
  * account.</p>
  */
 export async function postAccounts<FetcherData>(
@@ -23555,8 +23812,8 @@ export async function postAccounts<FetcherData>(
  * Express accounts created using live-mode keys can only be deleted once all balances are zero.</p>
  *
  * <p>If you want to
- * delete your own account, use the <a href="https://dashboard.stripe.com/account">account information tab in your account
- * settings</a> instead.</p>
+ * delete your own account, use the <a href="https://dashboard.stripe.com/settings/account">account information tab in your
+ * account settings</a> instead.</p>
  */
 export async function deleteAccountsAccount<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -23614,7 +23871,7 @@ export async function getAccountsAccount<FetcherData>(
  * below.</p>
  *
  * <p>To update your own account, use the <a
- * href="https://dashboard.stripe.com/account">Dashboard</a>. Refer to our
+ * href="https://dashboard.stripe.com/settings/account">Dashboard</a>. Refer to our
  * <a
  * href="/docs/connect/updating-accounts">Connect</a> documentation to learn more about updating accounts.</p>
  */
@@ -25960,6 +26217,7 @@ export async function getCreditNotesPreview<FetcherData>(
   params: {
     amount?: number;
     credit_amount?: number;
+    effective_at?: number;
     expand?: string[];
     invoice: string;
     lines?: {
@@ -25999,6 +26257,7 @@ export async function getCreditNotesPreview<FetcherData>(
     queryParams: [
       'amount',
       'credit_amount',
+      'effective_at',
       'expand',
       'invoice',
       'lines',
@@ -26024,6 +26283,7 @@ export async function getCreditNotesPreviewLines<FetcherData>(
   params: {
     amount?: number;
     credit_amount?: number;
+    effective_at?: number;
     ending_before?: string;
     expand?: string[];
     invoice: string;
@@ -26083,6 +26343,7 @@ export async function getCreditNotesPreviewLines<FetcherData>(
     queryParams: [
       'amount',
       'credit_amount',
+      'effective_at',
       'ending_before',
       'expand',
       'invoice',
@@ -29018,10 +29279,13 @@ export async function getInvoicesUpcoming<FetcherData>(
       tax_exempt?: '' | 'exempt' | 'none' | 'reverse';
       tax_ids?: {
         type:
+          | 'ad_nrt'
           | 'ae_trn'
+          | 'ar_cuit'
           | 'au_abn'
           | 'au_arn'
           | 'bg_uic'
+          | 'bo_tin'
           | 'br_cnpj'
           | 'br_cpf'
           | 'ca_bn'
@@ -29032,6 +29296,11 @@ export async function getInvoicesUpcoming<FetcherData>(
           | 'ca_qst'
           | 'ch_vat'
           | 'cl_tin'
+          | 'cn_tin'
+          | 'co_nit'
+          | 'cr_tin'
+          | 'do_rcn'
+          | 'ec_ruc'
           | 'eg_tin'
           | 'es_cif'
           | 'eu_oss_vat'
@@ -29056,18 +29325,25 @@ export async function getInvoicesUpcoming<FetcherData>(
           | 'my_sst'
           | 'no_vat'
           | 'nz_gst'
+          | 'pe_ruc'
           | 'ph_tin'
+          | 'ro_tin'
+          | 'rs_pib'
           | 'ru_inn'
           | 'ru_kpp'
           | 'sa_vat'
           | 'sg_gst'
           | 'sg_uen'
           | 'si_tin'
+          | 'sv_nit'
           | 'th_vat'
           | 'tr_tin'
           | 'tw_vat'
           | 'ua_vat'
           | 'us_ein'
+          | 'uy_ruc'
+          | 've_rif'
+          | 'vn_tin'
           | 'za_vat';
         value: string;
       }[];
@@ -29261,10 +29537,13 @@ export async function getInvoicesUpcomingLines<FetcherData>(
       tax_exempt?: '' | 'exempt' | 'none' | 'reverse';
       tax_ids?: {
         type:
+          | 'ad_nrt'
           | 'ae_trn'
+          | 'ar_cuit'
           | 'au_abn'
           | 'au_arn'
           | 'bg_uic'
+          | 'bo_tin'
           | 'br_cnpj'
           | 'br_cpf'
           | 'ca_bn'
@@ -29275,6 +29554,11 @@ export async function getInvoicesUpcomingLines<FetcherData>(
           | 'ca_qst'
           | 'ch_vat'
           | 'cl_tin'
+          | 'cn_tin'
+          | 'co_nit'
+          | 'cr_tin'
+          | 'do_rcn'
+          | 'ec_ruc'
           | 'eg_tin'
           | 'es_cif'
           | 'eu_oss_vat'
@@ -29299,18 +29583,25 @@ export async function getInvoicesUpcomingLines<FetcherData>(
           | 'my_sst'
           | 'no_vat'
           | 'nz_gst'
+          | 'pe_ruc'
           | 'ph_tin'
+          | 'ro_tin'
+          | 'rs_pib'
           | 'ru_inn'
           | 'ru_kpp'
           | 'sa_vat'
           | 'sg_gst'
           | 'sg_uen'
           | 'si_tin'
+          | 'sv_nit'
           | 'th_vat'
           | 'tr_tin'
           | 'tw_vat'
           | 'ua_vat'
           | 'us_ein'
+          | 'uy_ruc'
+          | 've_rif'
+          | 'vn_tin'
           | 'za_vat';
         value: string;
       }[];
@@ -34434,6 +34725,9 @@ export async function postSubscriptionSchedulesScheduleRelease<FetcherData>(
 export async function getSubscriptions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
+    automatic_tax?: {
+      enabled: boolean;
+    };
     collection_method?: 'charge_automatically' | 'send_invoice';
     created?:
       | {
@@ -34501,6 +34795,7 @@ export async function getSubscriptions<FetcherData>(
     method: r.HttpMethod.GET,
     body,
     queryParams: [
+      'automatic_tax',
       'collection_method',
       'created',
       'current_period_end',
@@ -34777,6 +35072,48 @@ export async function getTaxCalculationsCalculationLineItems<FetcherData>(
     method: r.HttpMethod.GET,
     body,
     queryParams: ['ending_before', 'expand', 'limit', 'starting_after'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Retrieves Tax <code>Settings</code> for a merchant.</p>
+ */
+export async function getTaxSettings<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<TaxSettings> {
+  const req = await ctx.createRequest({
+    path: '/v1/tax/settings',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Updates Tax <code>Settings</code> parameters used in tax calculations. All parameters are editable but none can be
+ * removed once set.</p>
+ */
+export async function postTaxSettings<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<TaxSettings> {
+  const req = await ctx.createRequest({
+    path: '/v1/tax/settings',
+    params,
+    method: r.HttpMethod.POST,
+    body,
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);

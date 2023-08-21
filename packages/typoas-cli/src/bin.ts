@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Cli } from 'clipanion';
 import cli from './index';
 
