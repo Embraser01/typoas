@@ -34,7 +34,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Enable corepack
-        run: corepack enable
+        run: corepack enable && yarn set version latest
 
       - name: Run E2E - Petstore 3 - with ${{matrix.manager}}
         run: ${{matrix.manager}} @typoas/cli generate -i https://petstore3.swagger.io/api/v3/openapi.json -o test.ts
