@@ -120,6 +120,25 @@ describe('create type from schema', () => {
     expect(getStringFromNode(node)).toMatchSnapshot();
   });
 
+  it('should handle objects with special named properties', () => {
+    const schema: SchemaObject = {
+      type: 'object',
+      required: ['a'],
+      properties: {
+        '^Test^': { type: 'string' },
+        await: { type: 'string' },
+        b: { type: 'number' },
+        ʱ: { type: 'number' },
+        _1: { type: 'number' },
+        1: { type: 'number' },
+        'page[number]': { type: 'number' },
+      },
+    };
+
+    const node = createTypeFromSchema(schema, new Context());
+    expect(getStringFromNode(node)).toMatchSnapshot();
+  });
+
   describe('with complex object', () => {
     it('should create nested objects', () => {
       const schema: SchemaObject = {
