@@ -18,7 +18,7 @@ import {
   getParameterName,
   isParameterRequired,
 } from '../../components/parameters';
-import { hasUnsupportedIdentifierChar } from '../../utils/operation-name';
+import { isInvalidES6IdentifierName } from '../../utils/operation-name';
 import { createSchemaTypeFromRequestBody } from '../../components/request-bodies';
 import { GlobalParameters } from './types';
 import { createSchemaTypeFromResponse } from '../../components/responses';
@@ -61,7 +61,7 @@ export function createOperationDeclaration(
 
             return factory.createPropertySignature(
               undefined,
-              hasUnsupportedIdentifierChar(name)
+              isInvalidES6IdentifierName(name)
                 ? factory.createStringLiteral(name, true)
                 : factory.createIdentifier(name),
               isParameterRequired(p, ctx)

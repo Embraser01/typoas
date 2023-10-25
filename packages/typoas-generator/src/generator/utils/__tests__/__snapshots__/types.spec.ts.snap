@@ -14,6 +14,18 @@ exports[`create type from schema should handle object schema without properties 
 }"
 `;
 
+exports[`create type from schema should handle objects with special named properties 1`] = `
+"{
+    '1'?: number;
+    '^Test^'?: string;
+    await?: string;
+    b?: number;
+    ʱ?: number;
+    _1?: number;
+    'page[number]'?: number;
+}"
+`;
+
 exports[`create type from schema should handle primitive boolean enums 1`] = `"true"`;
 
 exports[`create type from schema should handle primitive boolean schema 1`] = `"boolean"`;

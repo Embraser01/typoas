@@ -11,7 +11,7 @@ import {
   createConfigTypeFromSecurityScheme,
   createRuntimeSecurityClass,
 } from '../components/security-scheme';
-import { hasUnsupportedIdentifierChar } from '../utils/operation-name';
+import { isInvalidES6IdentifierName } from '../utils/operation-name';
 
 export const AUTH_TYPE_NAME = 'AuthMethods';
 
@@ -27,7 +27,7 @@ export function createAuthMethodsType(
       Object.entries(securitySchemes).map(([name, sec]) =>
         factory.createPropertySignature(
           undefined,
-          hasUnsupportedIdentifierChar(name)
+          isInvalidES6IdentifierName(name)
             ? factory.createStringLiteral(name, true)
             : factory.createIdentifier(name),
           factory.createToken(SyntaxKind.QuestionToken),
@@ -70,11 +70,11 @@ export function createConfigureAuthFunction(
           factory.createObjectLiteralExpression(
             Object.entries(securitySchemes).map(([name, sec]) =>
               factory.createPropertyAssignment(
-                hasUnsupportedIdentifierChar(name)
+                isInvalidES6IdentifierName(name)
                   ? factory.createStringLiteral(name, true)
                   : factory.createIdentifier(name),
                 factory.createLogicalAnd(
-                  hasUnsupportedIdentifierChar(name)
+                  isInvalidES6IdentifierName(name)
                     ? factory.createElementAccessChain(
                         factory.createIdentifier('params'),
                         factory.createToken(SyntaxKind.QuestionDotToken),
@@ -87,7 +87,7 @@ export function createConfigureAuthFunction(
                       ),
                   createRuntimeSecurityClass(
                     sec,
-                    hasUnsupportedIdentifierChar(name)
+                    isInvalidES6IdentifierName(name)
                       ? factory.createElementAccessExpression(
                           factory.createIdentifier('params'),
                           factory.createStringLiteral(name),

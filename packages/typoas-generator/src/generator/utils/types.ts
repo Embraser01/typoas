@@ -10,7 +10,7 @@ import { Context } from '../../context';
 import { addJSDocToNode } from '../comments/fields';
 import { getJSDocFromSchema } from '../comments/schema';
 import {
-  hasUnsupportedIdentifierChar,
+  isInvalidES6IdentifierName,
   sanitizeTypeIdentifier,
 } from './operation-name';
 import { TYPOAS_BLOB_TYPE_KEY } from './content-type';
@@ -111,7 +111,7 @@ export function createTypeFromSchema(
             Object.entries(schema.properties!).map(([key, val]) => {
               const field = factory.createPropertySignature(
                 undefined,
-                hasUnsupportedIdentifierChar(key)
+                isInvalidES6IdentifierName(key)
                   ? factory.createStringLiteral(key, true)
                   : factory.createIdentifier(key),
                 schema.required?.includes(key)
