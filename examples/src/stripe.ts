@@ -465,7 +465,7 @@ export type AccountFutureRequirements = {
    */
   currently_due?: string[] | null;
   /**
-   * This is typed as a string for consistency with `requirements.disabled_reason`, but it safe to assume `future_requirements.disabled_reason` is empty because fields in `future_requirements` will never disable the account.
+   * This is typed as a string for consistency with `requirements.disabled_reason`.
    */
   disabled_reason?: string | null;
   /**
@@ -490,7 +490,7 @@ export type AccountFutureRequirements = {
  * Account Links are the means by which a Connect platform grants a connected account permission to access
  * Stripe-hosted applications, such as Connect Onboarding.
  *
- * Related guide: [Connect Onboarding](https://stripe.com/docs/connect/connect-onboarding)
+ * Related guide: [Connect Onboarding](https://stripe.com/docs/connect/custom/hosted-onboarding)
  */
 export type AccountLink = {
   /**
@@ -579,7 +579,7 @@ export type AccountRequirements = {
    */
   currently_due?: string[] | null;
   /**
-   * If the account is disabled, this string describes why. Can be `requirements.past_due`, `requirements.pending_verification`, `listed`, `platform_paused`, `rejected.fraud`, `rejected.listed`, `rejected.terms_of_service`, `rejected.other`, `under_review`, or `other`.
+   * If the account is disabled, this string describes why. [Learn more about handling verification issues](https://stripe.com/docs/connect/handling-api-verification). Can be `action_required.requested_capabilities`, `requirements.past_due`, `requirements.pending_verification`, `listed`, `platform_paused`, `rejected.fraud`, `rejected.incomplete_verification`, `rejected.listed`, `rejected.other`, `rejected.terms_of_service`, `under_review`, or `other`.
    */
   disabled_reason?: string | null;
   /**
@@ -621,10 +621,43 @@ export type AccountRequirementsError = {
    */
   code:
     | 'invalid_address_city_state_postal_code'
+    | 'invalid_address_highway_contract_box'
+    | 'invalid_address_private_mailbox'
+    | 'invalid_business_profile_name'
+    | 'invalid_business_profile_name_denylisted'
+    | 'invalid_company_name_denylisted'
+    | 'invalid_dob_age_over_maximum'
     | 'invalid_dob_age_under_18'
+    | 'invalid_dob_age_under_minimum'
+    | 'invalid_product_description_length'
+    | 'invalid_product_description_url_match'
     | 'invalid_representative_country'
+    | 'invalid_statement_descriptor_business_mismatch'
+    | 'invalid_statement_descriptor_denylisted'
+    | 'invalid_statement_descriptor_length'
+    | 'invalid_statement_descriptor_prefix_denylisted'
+    | 'invalid_statement_descriptor_prefix_mismatch'
     | 'invalid_street_address'
+    | 'invalid_tax_id'
+    | 'invalid_tax_id_format'
     | 'invalid_tos_acceptance'
+    | 'invalid_url_denylisted'
+    | 'invalid_url_format'
+    | 'invalid_url_web_presence_detected'
+    | 'invalid_url_website_business_information_mismatch'
+    | 'invalid_url_website_empty'
+    | 'invalid_url_website_inaccessible'
+    | 'invalid_url_website_inaccessible_geoblocked'
+    | 'invalid_url_website_inaccessible_password_protected'
+    | 'invalid_url_website_incomplete'
+    | 'invalid_url_website_incomplete_cancellation_policy'
+    | 'invalid_url_website_incomplete_customer_service_details'
+    | 'invalid_url_website_incomplete_legal_restrictions'
+    | 'invalid_url_website_incomplete_refund_policy'
+    | 'invalid_url_website_incomplete_return_policy'
+    | 'invalid_url_website_incomplete_terms_and_conditions'
+    | 'invalid_url_website_incomplete_under_construction'
+    | 'invalid_url_website_other'
     | 'invalid_value_other'
     | 'verification_directors_mismatch'
     | 'verification_document_address_mismatch'
@@ -690,6 +723,43 @@ export type AccountSepaDebitPaymentsSettings = {
    * SEPA creditor identifier that identifies the company making the payment.
    */
   creditor_id?: string;
+};
+/**
+ * ConnectEmbeddedMethodAccountSessionCreateMethodAccountSession
+ * An AccountSession allows a Connect platform to grant access to a connected account in Connect embedded components.
+ *
+ * We recommend that you create an AccountSession each time you need to display an embedded component
+ * to your user. Do not save AccountSessions to your database as they expire relatively
+ * quickly, and cannot be used more than once.
+ *
+ * Related guide: [Connect embedded components](https://stripe.com/docs/connect/get-started-connect-embedded-components)
+ */
+export type AccountSession = {
+  /**
+   * The ID of the account the AccountSession was created for
+   */
+  account: string;
+  /**
+   * The client secret of this AccountSession. Used on the client to set up secure access to the given `account`.
+   *
+   * The client secret can be used to provide access to `account` from your frontend. It should not be stored, logged, or exposed to anyone other than the connected account. Make sure that you have TLS enabled on any page that includes the client secret.
+   *
+   * Refer to our docs to [setup Connect embedded components](https://stripe.com/docs/connect/get-started-connect-embedded-components) and learn about how `client_secret` should be handled.
+   */
+  client_secret: string;
+  components: ConnectEmbeddedAccountSessionCreateComponents;
+  /**
+   * The timestamp at which this AccountSession will expire.
+   */
+  expires_at: number;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'account_session';
 };
 /**
  * AccountSettings
@@ -831,7 +901,7 @@ export type ApiErrors = {
   request_log_url?: string;
   setup_intent?: SetupIntent;
   /**
-   * The source object for errors returned on a request involving a source.
+   * The [source object](https://stripe.com/docs/api/sources/object) for errors returned on a request involving a source.
    */
   source?: BankAccount | Card | Source;
   /**
@@ -1037,15 +1107,15 @@ export type AutomaticTax = {
  */
 export type Balance = {
   /**
-   * Funds that are available to be transferred or paid out, whether automatically by Stripe or explicitly via the [Transfers API](https://stripe.com/docs/api#transfers) or [Payouts API](https://stripe.com/docs/api#payouts). The available balance for each currency and payment type can be found in the `source_types` property.
+   * Available funds that you can transfer or pay out automatically by Stripe or explicitly through the [Transfers API](https://stripe.com/docs/api#transfers) or [Payouts API](https://stripe.com/docs/api#payouts). You can find the available balance for each currency and payment type in the `source_types` property.
    */
   available: BalanceAmount[];
   /**
-   * Funds held due to negative balances on connected Custom accounts. The connect reserve balance for each currency and payment type can be found in the `source_types` property.
+   * Funds held due to negative balances on connected Custom accounts. You can find the connect reserve balance for each currency and payment type in the `source_types` property.
    */
   connect_reserved?: BalanceAmount[];
   /**
-   * Funds that can be paid out using Instant Payouts.
+   * Funds that you can pay out using Instant Payouts.
    */
   instant_available?: BalanceAmount[];
   issuing?: BalanceDetail;
@@ -1058,7 +1128,7 @@ export type Balance = {
    */
   object: 'balance';
   /**
-   * Funds that are not yet available in the balance. The pending balance for each currency, and for each payment type, can be found in the `source_types` property.
+   * Funds that aren't available in the balance yet. You can find the pending balance for each currency and each payment type in the `source_types` property.
    */
   pending: BalanceAmount[];
 };
@@ -1105,17 +1175,17 @@ export type BalanceDetail = {
 /**
  * BalanceTransaction
  * Balance transactions represent funds moving through your Stripe account.
- * They're created for every type of transaction that comes into or flows out of your Stripe account balance.
+ * Stripe creates them for every type of transaction that enters or leaves your Stripe account balance.
  *
  * Related guide: [Balance transaction types](https://stripe.com/docs/reports/balance-transaction-types)
  */
 export type BalanceTransaction = {
   /**
-   * Gross amount of the transaction, in cents (or local equivalent).
+   * Gross amount of this transaction (in cents (or local equivalent)). A positive value represents funds charged to another party, and a negative value represents funds sent to another party.
    */
   amount: number;
   /**
-   * The date the transaction's net funds will become available in the Stripe balance.
+   * The date that the transaction's net funds become available in the Stripe balance.
    */
   available_on: number;
   /**
@@ -1131,11 +1201,11 @@ export type BalanceTransaction = {
    */
   description?: string | null;
   /**
-   * The exchange rate used, if applicable, for this transaction. Specifically, if money was converted from currency A to currency B, then the `amount` in currency A, times `exchange_rate`, would be the `amount` in currency B. For example, suppose you charged a customer 10.00 EUR. Then the PaymentIntent's `amount` would be `1000` and `currency` would be `eur`. Suppose this was converted into 12.34 USD in your Stripe account. Then the BalanceTransaction's `amount` would be `1234`, `currency` would be `usd`, and `exchange_rate` would be `1.234`.
+   * If applicable, this transaction uses an exchange rate. If money converts from currency A to currency B, then the `amount` in currency A, multipled by the `exchange_rate`, equals the `amount` in currency B. For example, if you charge a customer 10.00 EUR, the PaymentIntent's `amount` is `1000` and `currency` is `eur`. If this converts to 12.34 USD in your Stripe account, the BalanceTransaction's `amount` is `1234`, its `currency` is `usd`, and the `exchange_rate` is `1.234`.
    */
   exchange_rate?: number | null;
   /**
-   * Fees (in cents (or local equivalent)) paid for this transaction.
+   * Fees (in cents (or local equivalent)) paid for this transaction. Represented as a positive integer when assessed.
    */
   fee: number;
   /**
@@ -1147,7 +1217,7 @@ export type BalanceTransaction = {
    */
   id: string;
   /**
-   * Net amount of the transaction, in cents (or local equivalent).
+   * Net impact to a Stripe balance (in cents (or local equivalent)). A positive value represents incrementing a Stripe balance, and a negative value decrementing a Stripe balance. You can calculate the net impact of a transaction on a balance by `amount` - `fee`
    */
   net: number;
   /**
@@ -1155,11 +1225,11 @@ export type BalanceTransaction = {
    */
   object: 'balance_transaction';
   /**
-   * [Learn more](https://stripe.com/docs/reports/reporting-categories) about how reporting categories can help you understand balance transactions from an accounting perspective.
+   * Learn more about how [reporting categories](https://stripe.com/docs/reports/reporting-categories) can help you understand balance transactions from an accounting perspective.
    */
   reporting_category: string;
   /**
-   * The Stripe object to which this transaction is related.
+   * This transaction relates to the Stripe object.
    */
   source?:
     | (
@@ -1167,6 +1237,7 @@ export type BalanceTransaction = {
         | ApplicationFee
         | Charge
         | ConnectCollectionTransfer
+        | CustomerCashBalanceTransaction
         | Dispute
         | FeeRefund
         | IssuingAuthorization
@@ -1183,11 +1254,11 @@ export type BalanceTransaction = {
       )
     | null;
   /**
-   * If the transaction's net funds are available in the Stripe balance yet. Either `available` or `pending`.
+   * The transaction's net funds status in the Stripe balance, which are either `available` or `pending`.
    */
   status: string;
   /**
-   * Transaction type: `adjustment`, `advance`, `advance_funding`, `anticipation_repayment`, `application_fee`, `application_fee_refund`, `charge`, `connect_collection_transfer`, `contribution`, `issuing_authorization_hold`, `issuing_authorization_release`, `issuing_dispute`, `issuing_transaction`, `payment`, `payment_failure_refund`, `payment_refund`, `payment_reversal`, `payout`, `payout_cancel`, `payout_failure`, `refund`, `refund_failure`, `reserve_transaction`, `reserved_funds`, `stripe_fee`, `stripe_fx_fee`, `tax_fee`, `topup`, `topup_reversal`, `transfer`, `transfer_cancel`, `transfer_failure`, or `transfer_refund`. [Learn more](https://stripe.com/docs/reports/balance-transaction-types) about balance transaction types and what they represent. If you are looking to classify transactions for accounting purposes, you might want to consider `reporting_category` instead.
+   * Transaction type: `adjustment`, `advance`, `advance_funding`, `anticipation_repayment`, `application_fee`, `application_fee_refund`, `charge`, `connect_collection_transfer`, `contribution`, `issuing_authorization_hold`, `issuing_authorization_release`, `issuing_dispute`, `issuing_transaction`, `obligation_inbound`, `obligation_outbound`, `obligation_reversal_inbound`, `obligation_reversal_outbound`, `obligation_payout`, `obligation_payout_failure`, `payment`, `payment_failure_refund`, `payment_refund`, `payment_reversal`, `payout`, `payout_cancel`, `payout_failure`, `refund`, `refund_failure`, `reserve_transaction`, `reserved_funds`, `stripe_fee`, `stripe_fx_fee`, `tax_fee`, `topup`, `topup_reversal`, `transfer`, `transfer_cancel`, `transfer_failure`, or `transfer_refund`. Learn more about [balance transaction types and what they represent](https://stripe.com/docs/reports/balance-transaction-types). To classify transactions for accounting purposes, consider `reporting_category` instead.
    */
   type:
     | 'adjustment'
@@ -1203,6 +1274,12 @@ export type BalanceTransaction = {
     | 'issuing_authorization_release'
     | 'issuing_dispute'
     | 'issuing_transaction'
+    | 'obligation_inbound'
+    | 'obligation_outbound'
+    | 'obligation_payout'
+    | 'obligation_payout_failure'
+    | 'obligation_reversal_inbound'
+    | 'obligation_reversal_outbound'
     | 'payment'
     | 'payment_failure_refund'
     | 'payment_refund'
@@ -1280,7 +1357,7 @@ export type BankAccount = {
    */
   fingerprint?: string | null;
   /**
-   * Information about upcoming new requirements for the bank account, including what information needs to be collected.
+   * Information about the [upcoming new requirements for the bank account](https://stripe.com/docs/connect/custom-accounts/future-requirements), including what information needs to be collected, and by when.
    */
   future_requirements?: ExternalAccountRequirements | null;
   /**
@@ -1613,11 +1690,11 @@ export type BillingPortalSession = {
  */
 export type CancellationDetails = {
   /**
-   * Additional comments about why the user canceled the subscription, if the subscription was cancelled explicitly by the user.
+   * Additional comments about why the user canceled the subscription, if the subscription was canceled explicitly by the user.
    */
   comment?: string | null;
   /**
-   * The customer submitted reason for why they cancelled, if the subscription was cancelled explicitly by the user.
+   * The customer submitted reason for why they canceled, if the subscription was canceled explicitly by the user.
    */
   feedback?:
     | (
@@ -1632,7 +1709,7 @@ export type CancellationDetails = {
       )
     | null;
   /**
-   * Why this subscription was cancelled.
+   * Why this subscription was canceled.
    */
   reason?:
     | ('cancellation_requested' | 'payment_disputed' | 'payment_failed')
@@ -1760,7 +1837,7 @@ export type Card = {
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
@@ -2166,6 +2243,10 @@ export type CheckoutSession = {
    */
   client_reference_id?: string | null;
   /**
+   * Client secret to be used when initializing Stripe.js embedded checkout.
+   */
+  client_secret?: string | null;
+  /**
    * Results of `consent_collection` for this session.
    */
   consent?: PaymentPagesCheckoutSessionConsent | null;
@@ -2192,7 +2273,7 @@ export type CheckoutSession = {
   custom_text: PaymentPagesCheckoutSessionCustomText;
   /**
    * The ID of the customer for this Session.
-   * For Checkout Sessions in `payment` or `subscription` mode, Checkout
+   * For Checkout Sessions in `subscription` mode or Checkout Sessions with `customer_creation` set as `always` in `payment` mode, Checkout
    * will create a new customer object based on information provided
    * during the payment flow unless an existing customer was provided when
    * the Session was created.
@@ -2331,6 +2412,10 @@ export type CheckoutSession = {
    */
   payment_method_collection?: ('always' | 'if_required') | null;
   /**
+   * Information about the payment method configuration used for this Checkout session if using dynamic payment methods.
+   */
+  payment_method_configuration_details?: PaymentMethodConfigBizPaymentMethodConfigurationDetails | null;
+  /**
    * Payment-method-specific configuration for the PaymentIntent or SetupIntent of this CheckoutSession.
    */
   payment_method_options?: CheckoutSessionPaymentMethodOptions | null;
@@ -2349,6 +2434,14 @@ export type CheckoutSession = {
    * The ID of the original expired Checkout Session that triggered the recovery flow.
    */
   recovered_from?: string | null;
+  /**
+   * Applies to Checkout Sessions with `ui_mode: embedded`. By default, Stripe will always redirect to your return_url after a successful confirmation. If you set `redirect_on_completion: 'if_required'`, then we will only redirect if your user chooses a redirect-based payment method.
+   */
+  redirect_on_completion?: 'always' | 'if_required' | 'never';
+  /**
+   * Applies to Checkout Sessions with `ui_mode: embedded`. The URL to redirect your customer back to after they authenticate or cancel their payment on the payment method's app or site.
+   */
+  return_url?: string;
   /**
    * The ID of the SetupIntent for Checkout Sessions in `setup` mode.
    */
@@ -2394,6 +2487,10 @@ export type CheckoutSession = {
    * Tax and discount details for the computed total amount.
    */
   total_details?: PaymentPagesCheckoutSessionTotalDetails | null;
+  /**
+   * The UI mode of the Session. Can be `hosted` (default) or `embedded`.
+   */
+  ui_mode?: ('embedded' | 'hosted') | null;
   /**
    * The URL to the Checkout Session. Redirect customers to this URL to take them to Checkout. If you’re using [Custom Domains](https://stripe.com/docs/payments/checkout/custom-domains), the URL will use your subdomain. Otherwise, it’ll use `checkout.stripe.com.`
    * This value is only present when the session is active.
@@ -2901,6 +2998,21 @@ export type ConnectCollectionTransfer = {
   object: 'connect_collection_transfer';
 };
 /**
+ * ConnectEmbeddedAccountSessionCreateComponents
+ */
+export type ConnectEmbeddedAccountSessionCreateComponents = {
+  account_onboarding: ConnectEmbeddedBaseConfigClaim;
+};
+/**
+ * ConnectEmbeddedBaseConfigClaim
+ */
+export type ConnectEmbeddedBaseConfigClaim = {
+  /**
+   * Whether the embedded component is enabled.
+   */
+  enabled: boolean;
+};
+/**
  * CountrySpec
  * Stripe needs to collect certain pieces of information about each account
  * created. These requirements can differ depending on the account's country. The
@@ -3364,7 +3476,7 @@ export type CustomUnitAmount = {
 };
 /**
  * Customer
- * This object represents a customer of your business. It lets you create recurring charges and track payments that belong to the same customer.
+ * This object represents a customer of your business. Use it to create recurring charges and track payments that belong to the same customer.
  *
  * Related guide: [Save a card during payment](https://stripe.com/docs/payments/save-during-payment)
  */
@@ -3374,11 +3486,11 @@ export type Customer = {
    */
   address?: Address | null;
   /**
-   * Current balance, if any, being stored on the customer. If negative, the customer has credit to apply to their next invoice. If positive, the customer has an amount owed that will be added to their next invoice. The balance does not refer to any unpaid invoices; it solely takes into account amounts that have yet to be successfully applied to any invoice. This balance is only taken into account as invoices are finalized.
+   * The current balance, if any, that's stored on the customer. If negative, the customer has credit to apply to their next invoice. If positive, the customer has an amount owed that's added to their next invoice. The balance only considers amounts that Stripe hasn't successfully applied to any invoice. It doesn't reflect unpaid invoices. This balance is only taken into account after invoices finalize.
    */
   balance?: number;
   /**
-   * The current funds being held by Stripe on behalf of the customer. These funds can be applied towards payment intents with source "cash_balance". The settings[reconciliation_mode] field describes whether these funds are applied to such payment intents manually or automatically.
+   * The current funds being held by Stripe on behalf of the customer. You can apply these funds towards payment intents when the source is "cash_balance". The `settings[reconciliation_mode]` field describes if these funds apply to these payment intents manually or automatically.
    */
   cash_balance?: CashBalance | null;
   /**
@@ -3392,13 +3504,15 @@ export type Customer = {
   /**
    * ID of the default payment source for the customer.
    *
-   * If you are using payment methods created via the PaymentMethods API, see the [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) field instead.
+   * If you use payment methods created through the PaymentMethods API, see the [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) field instead.
    */
   default_source?: (string | BankAccount | Card | Source) | null;
   /**
-   * When the customer's latest invoice is billed by charging automatically, `delinquent` is `true` if the invoice's latest charge failed. When the customer's latest invoice is billed by sending an invoice, `delinquent` is `true` if the invoice isn't paid by its due date.
+   * Tracks the most recent state change on any invoice belonging to the customer. Paying an invoice or marking it uncollectible via the API will set this field to false. An automatic payment failure or passing the `invoice.due_date` will set this field to `true`.
    *
-   * If an invoice is marked uncollectible by [dunning](https://stripe.com/docs/billing/automatic-collection), `delinquent` doesn't get reset to `false`.
+   * If an invoice becomes uncollectible by [dunning](https://stripe.com/docs/billing/automatic-collection), `delinquent` doesn't reset to `false`.
+   *
+   * If you care whether the customer has paid their most recent subscription invoice, use `subscription.status` instead. Paying or marking uncollectible any customer invoice regardless of whether it is the latest invoice for a subscription will always set this field to `false`.
    */
   delinquent?: boolean | null;
   /**
@@ -3418,7 +3532,7 @@ export type Customer = {
    */
   id: string;
   /**
-   * The current multi-currency balances, if any, being stored on the customer. If positive in a currency, the customer has a credit to apply to their next invoice denominated in that currency. If negative, the customer has an amount owed that will be added to their next invoice denominated in that currency. These balances do not refer to any unpaid invoices. They solely track amounts that have yet to be successfully applied to any invoice. A balance in a particular currency is only applied to any invoice as an invoice in that currency is finalized.
+   * The current multi-currency balances, if any, that's stored on the customer. If positive in a currency, the customer has a credit to apply to their next invoice denominated in that currency. If negative, the customer has an amount owed that's added to their next invoice denominated in that currency. These balances don't apply to unpaid invoices. They solely track amounts that Stripe hasn't successfully applied to any invoice. Stripe only applies a balance in a specific currency to an invoice after that invoice (which is in the same currency) finalizes.
    */
   invoice_credit_balance?: {
     [key: string]: number;
@@ -3443,7 +3557,7 @@ export type Customer = {
    */
   name?: string | null;
   /**
-   * The suffix of the customer's next invoice number, e.g., 0001.
+   * The suffix of the customer's next invoice number (for example, 0001).
    */
   next_invoice_sequence?: number;
   /**
@@ -3508,7 +3622,7 @@ export type Customer = {
   };
   tax?: CustomerTax;
   /**
-   * Describes the customer's tax exemption status. One of `none`, `exempt`, or `reverse`. When set to `reverse`, invoice and receipt PDFs include the text **"Reverse charge"**.
+   * Describes the customer's tax exemption status, which is `none`, `exempt`, or `reverse`. When set to `reverse`, invoice and receipt PDFs include the following text: **"Reverse charge"**.
    */
   tax_exempt?: ('exempt' | 'none' | 'reverse') | null;
   /**
@@ -3534,7 +3648,7 @@ export type Customer = {
     url: string;
   };
   /**
-   * ID of the test clock this customer belongs to.
+   * ID of the test clock that this customer belongs to.
    */
   test_clock?: (string | TestHelpersTestClock) | null;
 };
@@ -3543,13 +3657,13 @@ export type Customer = {
  */
 export type CustomerAcceptance = {
   /**
-   * The time at which the customer accepted the Mandate.
+   * The time that the customer accepts the mandate.
    */
   accepted_at?: number | null;
   offline?: OfflineAcceptance;
   online?: OnlineAcceptance;
   /**
-   * The type of customer acceptance information included with the Mandate. One of `online` or `offline`.
+   * The mandate includes the type of customer acceptance information, such as: `online` or `offline`.
    */
   type: 'offline' | 'online';
 };
@@ -3572,7 +3686,7 @@ export type CustomerBalanceCustomerBalanceSettings = {
 export type CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft =
   {
     /**
-     * The [Balance Transaction](docs/api/balance_transactions/object) that corresponds to funds taken out of your Stripe balance.
+     * The [Balance Transaction](https://stripe.com/docs/api/balance_transactions/object) that corresponds to funds taken out of your Stripe balance.
      */
     balance_transaction: string | BalanceTransaction;
     /**
@@ -4389,16 +4503,14 @@ export type DiscountsResourceDiscountAmount = {
 /**
  * Dispute
  * A dispute occurs when a customer questions your charge with their card issuer.
- * When this happens, you're given the opportunity to respond to the dispute with
- * evidence that shows that the charge is legitimate. You can find more
- * information about the dispute process in our [Disputes and
- * Fraud](/docs/disputes) documentation.
+ * When this happens, you have the opportunity to respond to the dispute with
+ * evidence that shows that the charge is legitimate.
  *
  * Related guide: [Disputes and fraud](https://stripe.com/docs/disputes)
  */
 export type Dispute = {
   /**
-   * Disputed amount. Usually the amount of the charge, but can differ (usually because of currency fluctuation or because only part of the order is disputed).
+   * Disputed amount. Usually the amount of the charge, but it can differ (usually because of currency fluctuation or because only part of the order is disputed).
    */
   amount: number;
   /**
@@ -4406,7 +4518,7 @@ export type Dispute = {
    */
   balance_transactions: BalanceTransaction[];
   /**
-   * ID of the charge that was disputed.
+   * ID of the charge that's disputed.
    */
   charge: string | Charge;
   /**
@@ -4424,7 +4536,7 @@ export type Dispute = {
    */
   id: string;
   /**
-   * If true, it is still possible to refund the disputed payment. Once the payment has been fully refunded, no further funds will be withdrawn from your Stripe account as a result of this dispute.
+   * If true, it's still possible to refund the disputed payment. After the payment has been fully refunded, no further funds are withdrawn from your Stripe account as a result of this dispute.
    */
   is_charge_refundable: boolean;
   /**
@@ -4442,12 +4554,12 @@ export type Dispute = {
    */
   object: 'dispute';
   /**
-   * ID of the PaymentIntent that was disputed.
+   * ID of the PaymentIntent that's disputed.
    */
   payment_intent?: (string | PaymentIntent) | null;
   payment_method_details?: DisputePaymentMethodDetails;
   /**
-   * Reason given by cardholder for dispute. Possible values are `bank_cannot_process`, `check_returned`, `credit_not_processed`, `customer_initiated`, `debit_not_authorized`, `duplicate`, `fraudulent`, `general`, `incorrect_account_details`, `insufficient_funds`, `product_not_received`, `product_unacceptable`, `subscription_canceled`, or `unrecognized`. Read more about [dispute reasons](https://stripe.com/docs/disputes/categories).
+   * Reason given by cardholder for dispute. Possible values are `bank_cannot_process`, `check_returned`, `credit_not_processed`, `customer_initiated`, `debit_not_authorized`, `duplicate`, `fraudulent`, `general`, `incorrect_account_details`, `insufficient_funds`, `product_not_received`, `product_unacceptable`, `subscription_canceled`, or `unrecognized`. Learn more about [dispute reasons](https://stripe.com/docs/disputes/categories).
    */
   reason: string;
   /**
@@ -4675,40 +4787,41 @@ export type Error = {
  * Events are our way of letting you know when something interesting happens in
  * your account. When an interesting event occurs, we create a new `Event`
  * object. For example, when a charge succeeds, we create a `charge.succeeded`
- * event; and when an invoice payment attempt fails, we create an
- * `invoice.payment_failed` event. Note that many API requests may cause multiple
- * events to be created. For example, if you create a new subscription for a
- * customer, you will receive both a `customer.subscription.created` event and a
+ * event, and when an invoice payment attempt fails, we create an
+ * `invoice.payment_failed` event. Certain API requests might create multiple
+ * events. For example, if you create a new subscription for a
+ * customer, you receive both a `customer.subscription.created` event and a
  * `charge.succeeded` event.
  *
- * Events occur when the state of another API resource changes. The state of that
- * resource at the time of the change is embedded in the event's data field. For
- * example, a `charge.succeeded` event will contain a charge, and an
- * `invoice.payment_failed` event will contain an invoice.
+ * Events occur when the state of another API resource changes. The event's data
+ * field embeds the resource's state at the time of the change. For
+ * example, a `charge.succeeded` event contains a charge, and an
+ * `invoice.payment_failed` event contains an invoice.
  *
  * As with other API resources, you can use endpoints to retrieve an
  * [individual event](https://stripe.com/docs/api#retrieve_event) or a [list of events](https://stripe.com/docs/api#list_events)
  * from the API. We also have a separate
  * [webhooks](http://en.wikipedia.org/wiki/Webhook) system for sending the
- * `Event` objects directly to an endpoint on your server. Webhooks are managed
- * in your
- * [account settings](https://dashboard.stripe.com/account/webhooks),
- * and our [Using Webhooks](https://stripe.com/docs/webhooks) guide will help you get set up.
+ * `Event` objects directly to an endpoint on your server. You can manage
+ * webhooks in your
+ * [account settings](https://dashboard.stripe.com/account/webhooks). Learn how
+ * to [listen for events]
+ * (/docs/webhooks) so that your integration can automatically trigger reactions.
  *
- * When using [Connect](https://stripe.com/docs/connect), you can also receive notifications of
- * events that occur in connected accounts. For these events, there will be an
+ * When using [Connect](https://stripe.com/docs/connect), you can also receive event notifications
+ * that occur in connected accounts. For these events, there's an
  * additional `account` attribute in the received `Event` object.
  *
- * **NOTE:** Right now, access to events through the [Retrieve Event API](https://stripe.com/docs/api#retrieve_event) is
- * guaranteed only for 30 days.
+ * We only guarantee access to events through the [Retrieve Event API](https://stripe.com/docs/api#retrieve_event)
+ * for 30 days.
  */
 export type Event = {
   /**
-   * The connected account that originated the event.
+   * The connected account that originates the event.
    */
   account?: string;
   /**
-   * The Stripe API version used to render `data`. *Note: This property is populated only for events on or after October 31, 2014*.
+   * The Stripe API version used to render `data`. This property is populated only for events on or after October 31, 2014.
    */
   api_version?: string | null;
   /**
@@ -4729,15 +4842,15 @@ export type Event = {
    */
   object: 'event';
   /**
-   * Number of webhooks that have yet to be successfully delivered (i.e., to return a 20x response) to the URLs you've specified.
+   * Number of webhooks that haven't been successfully delivered (for example, to return a 20x response) to the URLs you specify.
    */
   pending_webhooks: number;
   /**
-   * Information on the API request that instigated the event.
+   * Information on the API request that triggers the event.
    */
   request?: NotificationEventRequest | null;
   /**
-   * Description of the event (e.g., `invoice.created` or `charge.refunded`).
+   * Description of the event (for example, `invoice.created` or `charge.refunded`).
    */
   type: string;
 };
@@ -4867,10 +4980,10 @@ export type FeeRefund = {
 };
 /**
  * File
- * This is an object representing a file hosted on Stripe's servers. The
- * file may have been uploaded by yourself using the [create file](https://stripe.com/docs/api#create_file)
- * request (for example, when uploading dispute evidence) or it may have
- * been created by Stripe (for example, the results of a [Sigma scheduled
+ * This object represents files hosted on Stripe's servers. You can upload
+ * files with the [create file](https://stripe.com/docs/api#create_file) request
+ * (for example, when uploading dispute evidence). Stripe also
+ * creates files independetly (for example, the results of a [Sigma scheduled
  * query](#scheduled_queries)).
  *
  * Related guide: [File upload guide](https://stripe.com/docs/file-upload)
@@ -4881,11 +4994,11 @@ export type File = {
    */
   created: number;
   /**
-   * The time at which the file expires and is no longer available in epoch seconds.
+   * The file expires and isn't available at this time in epoch seconds.
    */
   expires_at?: number | null;
   /**
-   * A filename for the file, suitable for saving to a filesystem.
+   * The suitable name for saving the file to a filesystem.
    */
   filename?: string | null;
   /**
@@ -4893,7 +5006,7 @@ export type File = {
    */
   id: string;
   /**
-   * FileFileLinkList
+   * FileResourceFileLinkList
    * A list of [file links](https://stripe.com/docs/api#file_links) that point at this file.
    */
   links?: {
@@ -4938,26 +5051,26 @@ export type File = {
     | 'tax_document_user_upload'
     | 'terminal_reader_splashscreen';
   /**
-   * The size in bytes of the file object.
+   * The size of the file object in bytes.
    */
   size: number;
   /**
-   * A user friendly title for the document.
+   * A suitable title for the document.
    */
   title?: string | null;
   /**
-   * The type of the file returned (e.g., `csv`, `pdf`, `jpg`, or `png`).
+   * The returned file type (for example, `csv`, `pdf`, `jpg`, or `png`).
    */
   type?: string | null;
   /**
-   * The URL from which the file can be downloaded using your live secret API key.
+   * Use your live secret API key to download the file from this URL.
    */
   url?: string | null;
 };
 /**
  * FileLink
  * To share the contents of a `File` object with non-Stripe users, you can
- * create a `FileLink`. `FileLink`s contain a URL that can be used to
+ * create a `FileLink`. `FileLink`s contain a URL that you can use to
  * retrieve the contents of the file without authentication.
  */
 export type FileLink = {
@@ -4966,11 +5079,11 @@ export type FileLink = {
    */
   created: number;
   /**
-   * Whether this link is already expired.
+   * Returns if the link is already expired.
    */
   expired: boolean;
   /**
-   * Time at which the link expires.
+   * Time that the link expires.
    */
   expires_at?: number | null;
   /**
@@ -5225,6 +5338,10 @@ export type FinancialConnectionsSession = {
    * Permissions requested for accounts collected during this session.
    */
   permissions: ('balances' | 'ownership' | 'payment_method' | 'transactions')[];
+  /**
+   * Data features requested to be retrieved upon account creation.
+   */
+  prefetch?: ('balances' | 'ownership')[] | null;
   /**
    * For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
    */
@@ -6052,7 +6169,15 @@ export type Invoice = {
   auto_advance?: boolean;
   automatic_tax: AutomaticTax;
   /**
-   * Indicates the reason why the invoice was created. `subscription_cycle` indicates an invoice created by a subscription advancing into a new period. `subscription_create` indicates an invoice created due to creating a subscription. `subscription_update` indicates an invoice created due to updating a subscription. `subscription` is set for all old invoices to indicate either a change to a subscription or a period advancement. `manual` is set for all invoices unrelated to a subscription (for example: created via the invoice editor). The `upcoming` value is reserved for simulated invoices per the upcoming invoice endpoint. `subscription_threshold` indicates an invoice created due to a billing threshold being reached.
+   * Indicates the reason why the invoice was created.
+   *
+   * * `manual`: Unrelated to a subscription, for example, created via the invoice editor.
+   * * `subscription`: No longer in use. Applies to subscriptions from before May 2018 where no distinction was made between updates, cycles, and thresholds.
+   * * `subscription_create`: A new subscription was created.
+   * * `subscription_cycle`: A subscription advanced into a new period.
+   * * `subscription_threshold`: A subscription reached a billing threshold.
+   * * `subscription_update`: A subscription was updated.
+   * * `upcoming`: Reserved for simulated invoices, per the upcoming invoice endpoint.
    */
   billing_reason?:
     | (
@@ -6269,9 +6394,9 @@ export type Invoice = {
    */
   receipt_number?: string | null;
   /**
-   * Options for invoice PDF rendering.
+   * The rendering-related settings that control how the invoice is displayed on customer-facing surfaces such as PDF and Hosted Invoice Page.
    */
-  rendering_options?: InvoiceSettingRenderingOptions | null;
+  rendering?: InvoicesInvoiceRendering | null;
   /**
    * The details of the cost of shipping, including the ShippingRate applied on the invoice.
    */
@@ -6489,6 +6614,19 @@ export type InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptions = {
    * The list of permissions to request. The `payment_method` permission must be included.
    */
   permissions?: ('balances' | 'payment_method' | 'transactions')[];
+  /**
+   * Data features requested to be retrieved upon account creation.
+   */
+  prefetch?: 'balances'[] | null;
+};
+/**
+ * InvoiceRenderingPdf
+ */
+export type InvoiceRenderingPdf = {
+  /**
+   * Page size of invoice pdf. Options include a4, letter, and auto. If set to auto, page size will be switched to a4 or letter based on customer locale.
+   */
+  page_size?: ('a4' | 'auto' | 'letter') | null;
 };
 /**
  * InvoiceSettingCustomField
@@ -6744,6 +6882,19 @@ export type InvoicesFromInvoice = {
    * The invoice that was cloned.
    */
   invoice: string | Invoice;
+};
+/**
+ * InvoicesInvoiceRendering
+ */
+export type InvoicesInvoiceRendering = {
+  /**
+   * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+   */
+  amount_tax_display?: string | null;
+  /**
+   * Invoice pdf rendering options
+   */
+  pdf?: InvoiceRenderingPdf | null;
 };
 /**
  * InvoicesPaymentMethodOptions
@@ -7056,6 +7207,10 @@ export type IssuingAuthorization = {
    */
   status: 'closed' | 'pending' | 'reversed';
   /**
+   * [Token](https://stripe.com/docs/api/issuing/tokens/object) object used for this authorization. If a network token was not used for this authorization, this field will be null.
+   */
+  token?: (string | IssuingToken) | null;
+  /**
    * List of [transactions](https://stripe.com/docs/api/issuing/transactions) associated with this authorization.
    */
   transactions: IssuingTransaction[];
@@ -7360,6 +7515,57 @@ export type IssuingSettlement = {
   transaction_volume: number;
 };
 /**
+ * IssuingNetworkToken
+ * An issuing token object is created when an issued card is added to a digital wallet. As a [card issuer](https://stripe.com/docs/issuing), you can [view and manage these tokens](https://stripe.com/docs/issuing/controls/token-management) through Stripe.
+ */
+export type IssuingToken = {
+  /**
+   * Card associated with this token.
+   */
+  card: string | IssuingCard;
+  /**
+   * Time at which the object was created. Measured in seconds since the Unix epoch.
+   */
+  created: number;
+  /**
+   * The hashed ID derived from the device ID from the card network associated with the token
+   */
+  device_fingerprint?: string | null;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * The last four digits of the token.
+   */
+  last4?: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * The token service provider / card network associated with the token.
+   */
+  network: 'mastercard' | 'visa';
+  network_data?: IssuingNetworkTokenNetworkData;
+  /**
+   * Time at which the token was last updated by the card network. Measured in seconds since the Unix epoch.
+   */
+  network_updated_at: number;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'issuing.token';
+  /**
+   * The usage state of the token.
+   */
+  status: 'active' | 'deleted' | 'requested' | 'suspended';
+  /**
+   * The digital wallet for this token, if one was used.
+   */
+  wallet_provider?: 'apple_pay' | 'google_pay' | 'samsung_pay';
+};
+/**
  * IssuingTransaction
  * Any use of an [issued card](https://stripe.com/docs/issuing) that results in funds entering or leaving
  * your Stripe account, such as a completed purchase or refund, is represented by an Issuing
@@ -7436,6 +7642,10 @@ export type IssuingTransaction = {
    */
   purchase_details?: IssuingTransactionPurchaseDetails | null;
   /**
+   * [Token](https://stripe.com/docs/api/issuing/tokens/object) object used for this transaction. If a network token was not used for this transaction, this field will be null.
+   */
+  token?: (string | IssuingToken) | null;
+  /**
    * [Treasury](https://stripe.com/docs/api/treasury) details related to this transaction if it was created on a [FinancialAccount](/docs/api/treasury/financial_accounts
    */
   treasury?: IssuingTransactionTreasury | null;
@@ -7456,6 +7666,10 @@ export type IssuingAuthorizationAmountDetails = {
    * The fee charged by the ATM for the cash withdrawal.
    */
   atm_fee?: number | null;
+  /**
+   * The amount of cash requested by the cardholder.
+   */
+  cashback_amount?: number | null;
 };
 /**
  * IssuingAuthorizationMerchantData
@@ -7553,6 +7767,10 @@ export type IssuingAuthorizationRequest = {
    */
   approved: boolean;
   /**
+   * A code created by Stripe which is shared with the merchant to validate the authorization. This field will be populated if the authorization message was approved. The code typically starts with the letter "S", followed by a six-digit number. For example, "S498162". Please note that the code is not guaranteed to be unique across authorizations.
+   */
+  authorization_code?: string | null;
+  /**
    * Time at which the object was created. Measured in seconds since the Unix epoch.
    */
   created: number;
@@ -7628,6 +7846,10 @@ export type IssuingAuthorizationVerificationData = {
    * Whether the cardholder provided an expiry date and if it matched Stripe’s record.
    */
   expiry_check: 'match' | 'mismatch' | 'not_provided';
+  /**
+   * The postal code submitted as part of the authorization used for postal code verification.
+   */
+  postal_code?: string | null;
 };
 /**
  * IssuingCardApplePay
@@ -8306,7 +8528,7 @@ export type IssuingCardShipping = {
    */
   name: string;
   /**
-   * The phone number of the receiver of the bulk shipment. This phone number will be provided to the shipping company, who might use it to contact the receiver in case of delivery issues.
+   * The phone number of the receiver of the shipment. Our courier partners will use this number to contact you in the event of card delivery issues. For individual shipments to the EU/UK, if this field is empty, we will provide them with the phone number provided when the cardholder was initially created.
    */
   phone_number?: string | null;
   /**
@@ -9978,6 +10200,174 @@ export type IssuingDisputeTreasury = {
   received_debit: string;
 };
 /**
+ * IssuingNetworkTokenAddress
+ */
+export type IssuingNetworkTokenAddress = {
+  /**
+   * The street address of the cardholder tokenizing the card.
+   */
+  line1: string;
+  /**
+   * The postal code of the cardholder tokenizing the card.
+   */
+  postal_code: string;
+};
+/**
+ * IssuingNetworkTokenDevice
+ */
+export type IssuingNetworkTokenDevice = {
+  /**
+   * An obfuscated ID derived from the device ID.
+   */
+  device_fingerprint?: string;
+  /**
+   * The IP address of the device at provisioning time.
+   */
+  ip_address?: string;
+  /**
+   * The geographic latitude/longitude coordinates of the device at provisioning time. The format is [+-]decimal/[+-]decimal.
+   */
+  location?: string;
+  /**
+   * The name of the device used for tokenization.
+   */
+  name?: string;
+  /**
+   * The phone number of the device used for tokenization.
+   */
+  phone_number?: string;
+  /**
+   * The type of device used for tokenization.
+   */
+  type?: 'other' | 'phone' | 'watch';
+};
+/**
+ * IssuingNetworkTokenMastercard
+ */
+export type IssuingNetworkTokenMastercard = {
+  /**
+   * A unique reference ID from MasterCard to represent the card account number.
+   */
+  card_reference_id?: string;
+  /**
+   * The network-unique identifier for the token.
+   */
+  token_reference_id: string;
+  /**
+   * The ID of the entity requesting tokenization, specific to MasterCard.
+   */
+  token_requestor_id: string;
+  /**
+   * The name of the entity requesting tokenization, if known. This is directly provided from MasterCard.
+   */
+  token_requestor_name?: string;
+};
+/**
+ * IssuingNetworkTokenNetworkData
+ */
+export type IssuingNetworkTokenNetworkData = {
+  device?: IssuingNetworkTokenDevice;
+  mastercard?: IssuingNetworkTokenMastercard;
+  /**
+   * The network that the token is associated with. An additional hash is included with a name matching this value, containing tokenization data specific to the card network.
+   */
+  type: 'mastercard' | 'visa';
+  visa?: IssuingNetworkTokenVisa;
+  wallet_provider?: IssuingNetworkTokenWalletProvider;
+};
+/**
+ * IssuingNetworkTokenVisa
+ */
+export type IssuingNetworkTokenVisa = {
+  /**
+   * A unique reference ID from Visa to represent the card account number.
+   */
+  card_reference_id: string;
+  /**
+   * The network-unique identifier for the token.
+   */
+  token_reference_id: string;
+  /**
+   * The ID of the entity requesting tokenization, specific to Visa.
+   */
+  token_requestor_id: string;
+  /**
+   * Degree of risk associated with the token between `01` and `99`, with higher number indicating higher risk. A `00` value indicates the token was not scored by Visa.
+   */
+  token_risk_score?: string;
+};
+/**
+ * IssuingNetworkTokenWalletProvider
+ */
+export type IssuingNetworkTokenWalletProvider = {
+  /**
+   * The wallet provider-given account ID of the digital wallet the token belongs to.
+   */
+  account_id?: string;
+  /**
+   * An evaluation on the trustworthiness of the wallet account between 1 and 5. A higher score indicates more trustworthy.
+   */
+  account_trust_score?: number;
+  /**
+   * The method used for tokenizing a card.
+   */
+  card_number_source?: 'app' | 'manual' | 'on_file' | 'other';
+  cardholder_address?: IssuingNetworkTokenAddress;
+  /**
+   * The name of the cardholder tokenizing the card.
+   */
+  cardholder_name?: string;
+  /**
+   * An evaluation on the trustworthiness of the device. A higher score indicates more trustworthy.
+   */
+  device_trust_score?: number;
+  /**
+   * The hashed email address of the cardholder's account with the wallet provider.
+   */
+  hashed_account_email_address?: string;
+  /**
+   * The reasons for suggested tokenization given by the card network.
+   */
+  reason_codes?: (
+    | 'account_card_too_new'
+    | 'account_recently_changed'
+    | 'account_too_new'
+    | 'account_too_new_since_launch'
+    | 'additional_device'
+    | 'data_expired'
+    | 'defer_id_v_decision'
+    | 'device_recently_lost'
+    | 'good_activity_history'
+    | 'has_suspended_tokens'
+    | 'high_risk'
+    | 'inactive_account'
+    | 'long_account_tenure'
+    | 'low_account_score'
+    | 'low_device_score'
+    | 'low_phone_number_score'
+    | 'network_service_error'
+    | 'outside_home_territory'
+    | 'provisioning_cardholder_mismatch'
+    | 'provisioning_device_and_cardholder_mismatch'
+    | 'provisioning_device_mismatch'
+    | 'same_device_no_prior_authentication'
+    | 'same_device_successful_prior_authentication'
+    | 'software_update'
+    | 'suspicious_activity'
+    | 'too_many_different_cardholders'
+    | 'too_many_recent_attempts'
+    | 'too_many_recent_tokens'
+  )[];
+  /**
+   * The recommendation on responding to the tokenization request.
+   */
+  suggested_decision?: 'approve' | 'decline' | 'require_auth';
+  /**
+   * The version of the standard for mapping reason codes followed by the wallet provider.
+   */
+  suggested_decision_version?: string;
+};
+/**
  * IssuingTransactionAmountDetails
  */
 export type IssuingTransactionAmountDetails = {
@@ -9985,6 +10375,10 @@ export type IssuingTransactionAmountDetails = {
    * The fee charged by the ATM for the cash withdrawal.
    */
   atm_fee?: number | null;
+  /**
+   * The amount of cash requested by the cardholder.
+   */
+  cashback_amount?: number | null;
 };
 /**
  * IssuingTransactionFlightData
@@ -10576,6 +10970,10 @@ export type LinkedAccountOptionsUsBankAccount = {
     | 'transactions'
   )[];
   /**
+   * Data features requested to be retrieved upon account creation.
+   */
+  prefetch?: 'balances'[] | null;
+  /**
    * For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
    */
   return_url?: string;
@@ -10600,7 +10998,7 @@ export type LoginLink = {
 };
 /**
  * Mandate
- * A Mandate is a record of the permission a customer has given you to debit their payment method.
+ * A Mandate is a record of the permission that your customer gives you to debit their payment method.
  */
 export type Mandate = {
   customer_acceptance: CustomerAcceptance;
@@ -10618,7 +11016,7 @@ export type Mandate = {
    */
   object: 'mandate';
   /**
-   * The account (if any) for which the mandate is intended.
+   * The account (if any) that the mandate is intended for.
    */
   on_behalf_of?: string;
   /**
@@ -10628,7 +11026,7 @@ export type Mandate = {
   payment_method_details: MandatePaymentMethodDetails;
   single_use?: MandateSingleUse;
   /**
-   * The status of the mandate, which indicates whether it can be used to initiate a payment.
+   * The mandate status indicates whether or not you can use it to initiate a payment.
    */
   status: 'active' | 'inactive' | 'pending';
   /**
@@ -10708,7 +11106,7 @@ export type MandatePaymentMethodDetails = {
   paypal?: MandatePaypal;
   sepa_debit?: MandateSepaDebit;
   /**
-   * The type of the payment method associated with this mandate. An additional hash is included on `payment_method_details` with a name matching this value. It contains mandate information specific to the payment method.
+   * This mandate corresponds with a specific payment method type. The `payment_method_details` includes an additional hash with the same name and contains mandate information that's specific to that payment method.
    */
   type: string;
   us_bank_account?: MandateUsBankAccount;
@@ -10744,11 +11142,11 @@ export type MandateSepaDebit = {
  */
 export type MandateSingleUse = {
   /**
-   * On a single use mandate, the amount of the payment.
+   * The amount of the payment on a single use mandate.
    */
   amount: number;
   /**
-   * On a single use mandate, the currency of the payment.
+   * The currency of the payment on a single use mandate.
    */
   currency: string;
 };
@@ -10804,11 +11202,11 @@ export type OfflineAcceptance = any;
  */
 export type OnlineAcceptance = {
   /**
-   * The IP address from which the Mandate was accepted by the customer.
+   * The customer accepts the mandate from this IP address.
    */
   ip_address?: string | null;
   /**
-   * The user agent of the browser from which the Mandate was accepted by the customer.
+   * The customer accepts the mandate using the user agent of the browser.
    */
   user_agent?: string | null;
 };
@@ -11009,6 +11407,50 @@ export type PaymentFlowsPrivatePaymentMethodsAlipayDetails = {
   transaction_id?: string | null;
 };
 /**
+ * PaymentFlowsPrivatePaymentMethodsCardDetailsAPIResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorization
+ */
+export type PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorization =
+  {
+    /**
+     * Indicates whether or not the capture window is extended beyond the standard authorization.
+     */
+    status: 'disabled' | 'enabled';
+  };
+/**
+ * PaymentFlowsPrivatePaymentMethodsCardDetailsAPIResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorization
+ */
+export type PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorization =
+  {
+    /**
+     * Indicates whether or not the incremental authorization feature is supported.
+     */
+    status: 'available' | 'unavailable';
+  };
+/**
+ * PaymentFlowsPrivatePaymentMethodsCardDetailsAPIResourceEnterpriseFeaturesOvercaptureOvercapture
+ */
+export type PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesOvercaptureOvercapture =
+  {
+    /**
+     * The maximum amount that can be captured.
+     */
+    maximum_amount_capturable: number;
+    /**
+     * Indicates whether or not the authorized amount can be over-captured.
+     */
+    status: 'available' | 'unavailable';
+  };
+/**
+ * PaymentFlowsPrivatePaymentMethodsCardDetailsAPIResourceMulticapture
+ */
+export type PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceMulticapture =
+  {
+    /**
+     * Indicates whether or not multiple captures are supported.
+     */
+    status: 'available' | 'unavailable';
+  };
+/**
  * PaymentFlowsPrivatePaymentMethodsKlarnaDOB
  */
 export type PaymentFlowsPrivatePaymentMethodsKlarnaDob = {
@@ -11050,7 +11492,7 @@ export type PaymentIntent = {
   amount_capturable?: number;
   amount_details?: PaymentFlowsAmountDetails;
   /**
-   * Amount that was collected by this PaymentIntent.
+   * Amount that this PaymentIntent collects.
    */
   amount_received?: number;
   /**
@@ -11129,7 +11571,7 @@ export type PaymentIntent = {
    */
   last_payment_error?: ApiErrors | null;
   /**
-   * The latest charge created by this payment intent.
+   * The latest charge created by this PaymentIntent.
    */
   latest_charge?: (string | Charge) | null;
   /**
@@ -11137,7 +11579,7 @@ export type PaymentIntent = {
    */
   livemode: boolean;
   /**
-   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. For more information, see the [documentation](https://stripe.com/docs/payments/payment-intents/creating-payment-intents#storing-information-in-metadata).
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Learn more about [storing information in metadata](https://stripe.com/docs/payments/payment-intents/creating-payment-intents#storing-information-in-metadata).
    */
   metadata?: {
     [key: string]: string;
@@ -11158,6 +11600,10 @@ export type PaymentIntent = {
    * ID of the payment method used in this PaymentIntent.
    */
   payment_method?: (string | PaymentMethod) | null;
+  /**
+   * Information about the payment method configuration used for this PaymentIntent.
+   */
+  payment_method_configuration_details?: PaymentMethodConfigBizPaymentMethodConfigurationDetails | null;
   /**
    * Payment-method-specific configuration for this PaymentIntent.
    */
@@ -11210,11 +11656,11 @@ export type PaymentIntent = {
     | 'requires_payment_method'
     | 'succeeded';
   /**
-   * The data with which to automatically create a Transfer when the payment is finalized. See the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts) for details.
+   * The data that automatically creates a Transfer after the payment finalizes. Learn more about the [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts).
    */
   transfer_data?: TransferData | null;
   /**
-   * A string that identifies the resulting payment as part of a group. See the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts) for details.
+   * A string that identifies the resulting payment as part of a group. Learn more about the [use case for connected accounts](https://stripe.com/docs/connect/separate-charges-and-transfers).
    */
   transfer_group?: string | null;
 };
@@ -11816,6 +12262,22 @@ export type PaymentIntentPaymentMethodOptionsCard = {
       )
     | null;
   /**
+   * Request ability to [capture beyond the standard authorization validity window](https://stripe.com/docs/payments/extended-authorization) for this PaymentIntent.
+   */
+  request_extended_authorization?: 'if_available' | 'never';
+  /**
+   * Request ability to [increment](https://stripe.com/docs/payments/incremental-authorization) for this PaymentIntent.
+   */
+  request_incremental_authorization?: 'if_available' | 'never';
+  /**
+   * Request ability to make [multiple captures](https://stripe.com/docs/payments/multicapture) for this PaymentIntent.
+   */
+  request_multicapture?: 'if_available' | 'never';
+  /**
+   * Request ability to [overcapture](https://stripe.com/docs/payments/overcapture) for this PaymentIntent.
+   */
+  request_overcapture?: 'if_available' | 'never';
+  /**
    * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Permitted values include: `automatic` or `any`. If not provided, defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
    */
   request_three_d_secure?: ('any' | 'automatic' | 'challenge_only') | null;
@@ -11990,6 +12452,10 @@ export type PaymentLink = {
    * Whether user redeemable promotion codes are enabled.
    */
   allow_promotion_codes: boolean;
+  /**
+   * The ID of the Connect application that created the Payment Link.
+   */
+  application?: (string | Application | DeletedApplication) | null;
   /**
    * The amount of the application fee (if any) that will be requested to be applied to the payment and transferred to the application owner's Stripe account.
    */
@@ -12193,27 +12659,18 @@ export type PaymentLinksResourceConsentCollection = {
  * PaymentLinksResourceCustomFields
  */
 export type PaymentLinksResourceCustomFields = {
-  /**
-   * Configuration for `type=dropdown` fields.
-   */
-  dropdown?: PaymentLinksResourceCustomFieldsDropdown | null;
+  dropdown?: PaymentLinksResourceCustomFieldsDropdown;
   /**
    * String of your choice that your integration can use to reconcile this field. Must be unique to this field, alphanumeric, and up to 200 characters.
    */
   key: string;
   label: PaymentLinksResourceCustomFieldsLabel;
-  /**
-   * Configuration for `type=numeric` fields.
-   */
-  numeric?: PaymentLinksResourceCustomFieldsNumeric | null;
+  numeric?: PaymentLinksResourceCustomFieldsNumeric;
   /**
    * Whether the customer is required to complete the field before completing the Checkout Session. Defaults to `false`.
    */
   optional: boolean;
-  /**
-   * Configuration for `type=text` fields.
-   */
-  text?: PaymentLinksResourceCustomFieldsText | null;
+  text?: PaymentLinksResourceCustomFieldsText;
   /**
    * The type of the field.
    */
@@ -12292,13 +12749,17 @@ export type PaymentLinksResourceCustomText = {
    * Custom text that should be displayed alongside the payment confirmation button.
    */
   submit?: PaymentLinksResourceCustomTextPosition | null;
+  /**
+   * Custom text that should be displayed in place of the default terms of service agreement text.
+   */
+  terms_of_service_acceptance?: PaymentLinksResourceCustomTextPosition | null;
 };
 /**
  * PaymentLinksResourceCustomTextPosition
  */
 export type PaymentLinksResourceCustomTextPosition = {
   /**
-   * Text may be up to 1000 characters in length.
+   * Text may be up to 1200 characters in length.
    */
   message: string;
 };
@@ -12355,9 +12816,23 @@ export type PaymentLinksResourcePaymentIntentData = {
    */
   capture_method?: ('automatic' | 'automatic_async' | 'manual') | null;
   /**
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that will set metadata on [Payment Intents](https://stripe.com/docs/api/payment_intents) generated from this payment link.
+   */
+  metadata: {
+    [key: string]: string;
+  };
+  /**
    * Indicates that you intend to make future payments with the payment method collected during checkout.
    */
   setup_future_usage?: ('off_session' | 'on_session') | null;
+  /**
+   * Extra information about the payment. This will appear on your customer's statement when this payment succeeds in creating a charge.
+   */
+  statement_descriptor?: string | null;
+  /**
+   * Provides information about the charge that customers see on their statements. Concatenated with the prefix (shortened descriptor) or statement descriptor that's set on the account to form the complete statement descriptor. Maximum 22 characters for the concatenated descriptor.
+   */
+  statement_descriptor_suffix?: string | null;
 };
 /**
  * PaymentLinksResourcePhoneNumberCollection
@@ -12633,9 +13108,15 @@ export type PaymentLinksResourceShippingOption = {
  */
 export type PaymentLinksResourceSubscriptionData = {
   /**
-   * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+   * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
    */
   description?: string | null;
+  /**
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that will set metadata on [Subscriptions](https://stripe.com/docs/api/subscriptions) generated from this payment link.
+   */
+  metadata: {
+    [key: string]: string;
+  };
   /**
    * Integer representing the number of trial period days before the customer is charged for the first time.
    */
@@ -12882,7 +13363,7 @@ export type PaymentMethodCard = {
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
@@ -12971,7 +13452,7 @@ export type PaymentMethodCardPresent = {
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
@@ -13113,6 +13594,134 @@ export type PaymentMethodCashapp = {
    * A public identifier for buyers using Cash App.
    */
   cashtag?: string | null;
+};
+/**
+ * PaymentMethodConfigBizPaymentMethodConfigurationDetails
+ */
+export type PaymentMethodConfigBizPaymentMethodConfigurationDetails = {
+  /**
+   * ID of the payment method configuration used.
+   */
+  id: string;
+  /**
+   * ID of the parent payment method configuration used.
+   */
+  parent?: string | null;
+};
+/**
+ * PaymentMethodConfigResourceDisplayPreference
+ */
+export type PaymentMethodConfigResourceDisplayPreference = {
+  /**
+   * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+   */
+  overridable?: boolean | null;
+  /**
+   * The account's display preference.
+   */
+  preference: 'none' | 'off' | 'on';
+  /**
+   * The effective display preference value.
+   */
+  value: 'off' | 'on';
+};
+/**
+ * PaymentMethodConfigResourcePaymentMethodProperties
+ */
+export type PaymentMethodConfigResourcePaymentMethodProperties = {
+  /**
+   * Whether this payment method may be offered at checkout. True if `display_preference` is `on` and the payment method's capability is active.
+   */
+  available: boolean;
+  display_preference: PaymentMethodConfigResourceDisplayPreference;
+};
+/**
+ * PaymentMethodConfigResourcePaymentMethodConfiguration
+ * PaymentMethodConfigurations control which payment methods are displayed to your customers when you don't explicitly specify payment method types. You can have multiple configurations with different sets of payment methods for different scenarios.
+ *
+ * There are two types of PaymentMethodConfigurations. Which is used depends on the [charge type](https://stripe.com/docs/connect/charges):
+ *
+ * **Direct** configurations apply to payments created on your account, including Connect destination charges, Connect separate charges and transfers, and payments not involving Connect.
+ *
+ * **Child** configurations apply to payments created on your connected accounts using direct charges, and charges with the on_behalf_of parameter.
+ *
+ * Child configurations have a `parent` that sets default values and controls which settings connected accounts may override. You can specify a parent ID at payment time, and Stripe will automatically resolve the connected account’s associated child configuration. Parent configurations are [managed in the dashboard](https://dashboard.stripe.com/settings/payment_methods/connected_accounts) and are not available in this API.
+ *
+ * Related guides:
+ * - [Payment Method Configurations API](https://stripe.com/docs/connect/payment-method-configurations)
+ * - [Multiple configurations on dynamic payment methods](https://stripe.com/docs/payments/multiple-payment-method-configs)
+ * - [Multiple configurations for your Connect accounts](https://stripe.com/docs/connect/multiple-payment-method-configurations)
+ */
+export type PaymentMethodConfiguration = {
+  acss_debit?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * Whether the configuration can be used for new payments.
+   */
+  active: boolean;
+  affirm?: PaymentMethodConfigResourcePaymentMethodProperties;
+  afterpay_clearpay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  alipay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  apple_pay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * For child configs, the Connect application associated with the configuration.
+   */
+  application?: string | null;
+  au_becs_debit?: PaymentMethodConfigResourcePaymentMethodProperties;
+  bacs_debit?: PaymentMethodConfigResourcePaymentMethodProperties;
+  bancontact?: PaymentMethodConfigResourcePaymentMethodProperties;
+  blik?: PaymentMethodConfigResourcePaymentMethodProperties;
+  boleto?: PaymentMethodConfigResourcePaymentMethodProperties;
+  card?: PaymentMethodConfigResourcePaymentMethodProperties;
+  cartes_bancaires?: PaymentMethodConfigResourcePaymentMethodProperties;
+  cashapp?: PaymentMethodConfigResourcePaymentMethodProperties;
+  eps?: PaymentMethodConfigResourcePaymentMethodProperties;
+  fpx?: PaymentMethodConfigResourcePaymentMethodProperties;
+  giropay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  google_pay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  grabpay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  id_bank_transfer?: PaymentMethodConfigResourcePaymentMethodProperties;
+  ideal?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * The default configuration is used whenever a payment method configuration is not specified.
+   */
+  is_default: boolean;
+  jcb?: PaymentMethodConfigResourcePaymentMethodProperties;
+  klarna?: PaymentMethodConfigResourcePaymentMethodProperties;
+  konbini?: PaymentMethodConfigResourcePaymentMethodProperties;
+  link?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  multibanco?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * The configuration's name.
+   */
+  name: string;
+  netbanking?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'payment_method_configuration';
+  oxxo?: PaymentMethodConfigResourcePaymentMethodProperties;
+  p24?: PaymentMethodConfigResourcePaymentMethodProperties;
+  /**
+   * For child configs, the configuration's parent configuration.
+   */
+  parent?: string | null;
+  pay_by_bank?: PaymentMethodConfigResourcePaymentMethodProperties;
+  paynow?: PaymentMethodConfigResourcePaymentMethodProperties;
+  paypal?: PaymentMethodConfigResourcePaymentMethodProperties;
+  promptpay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  sepa_debit?: PaymentMethodConfigResourcePaymentMethodProperties;
+  sofort?: PaymentMethodConfigResourcePaymentMethodProperties;
+  upi?: PaymentMethodConfigResourcePaymentMethodProperties;
+  us_bank_account?: PaymentMethodConfigResourcePaymentMethodProperties;
+  wechat_pay?: PaymentMethodConfigResourcePaymentMethodProperties;
 };
 /**
  * payment_method_customer_balance
@@ -13362,6 +13971,10 @@ export type PaymentMethodDetailsBoleto = {
  */
 export type PaymentMethodDetailsCard = {
   /**
+   * The authorized amount.
+   */
+  amount_authorized?: number | null;
+  /**
    * Card brand. Can be `amex`, `diners`, `discover`, `eftpos_au`, `jcb`, `mastercard`, `unionpay`, `visa`, or `unknown`.
    */
   brand?: string | null;
@@ -13381,16 +13994,18 @@ export type PaymentMethodDetailsCard = {
    * Four-digit number representing the card's expiration year.
    */
   exp_year: number;
+  extended_authorization?: PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorization;
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
    * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
    */
   funding?: string | null;
+  incremental_authorization?: PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorization;
   /**
    * Installment details for this payment (Mexico only).
    *
@@ -13405,6 +14020,7 @@ export type PaymentMethodDetailsCard = {
    * ID of the mandate used to make this payment or created by it.
    */
   mandate?: string | null;
+  multicapture?: PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceMulticapture;
   /**
    * Identifies which network this charge was processed on. Can be `amex`, `cartes_bancaires`, `diners`, `discover`, `eftpos_au`, `interac`, `jcb`, `mastercard`, `unionpay`, `visa`, or `unknown`.
    */
@@ -13413,6 +14029,7 @@ export type PaymentMethodDetailsCard = {
    * If this card has network token credentials, this contains the details of the network token credentials.
    */
   network_token?: PaymentMethodDetailsCardNetworkToken | null;
+  overcapture?: PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesOvercaptureOvercapture;
   /**
    * Populated if this transaction used 3D Secure authentication.
    */
@@ -13514,7 +14131,7 @@ export type PaymentMethodDetailsCardPresent = {
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
@@ -13823,7 +14440,7 @@ export type PaymentMethodDetailsGrabpay = {
  */
 export type PaymentMethodDetailsIdeal = {
   /**
-   * The customer's bank. Can be one of `abn_amro`, `asn_bank`, `bunq`, `handelsbanken`, `ing`, `knab`, `moneyou`, `rabobank`, `regiobank`, `revolut`, `sns_bank`, `triodos_bank`, `van_lanschot`, or `yoursafe`.
+   * The customer's bank. Can be one of `abn_amro`, `asn_bank`, `bunq`, `handelsbanken`, `ing`, `knab`, `moneyou`, `n26`, `rabobank`, `regiobank`, `revolut`, `sns_bank`, `triodos_bank`, `van_lanschot`, or `yoursafe`.
    */
   bank?:
     | (
@@ -13834,6 +14451,7 @@ export type PaymentMethodDetailsIdeal = {
         | 'ing'
         | 'knab'
         | 'moneyou'
+        | 'n26'
         | 'rabobank'
         | 'regiobank'
         | 'revolut'
@@ -13857,6 +14475,7 @@ export type PaymentMethodDetailsIdeal = {
         | 'INGBNL2A'
         | 'KNABNL2H'
         | 'MOYONL21'
+        | 'NTSBDEB1'
         | 'RABONL2U'
         | 'RBRBNL21'
         | 'REVOIE23'
@@ -13914,7 +14533,7 @@ export type PaymentMethodDetailsInteracPresent = {
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
@@ -14288,6 +14907,64 @@ export type PaymentMethodDetailsWechatPay = {
  */
 export type PaymentMethodDetailsZip = any;
 /**
+ * PaymentMethodDomainResourcePaymentMethodDomain
+ * A payment method domain represents a web domain that you have registered with Stripe.
+ * Stripe Elements use registered payment method domains to control where certain payment methods are shown.
+ *
+ * Related guides: [Payment method domains](https://stripe.com/docs/payments/payment-methods/pmd-registration).
+ */
+export type PaymentMethodDomain = {
+  apple_pay: PaymentMethodDomainResourcePaymentMethodStatus;
+  /**
+   * Time at which the object was created. Measured in seconds since the Unix epoch.
+   */
+  created: number;
+  /**
+   * The domain name that this payment method domain object represents.
+   */
+  domain_name: string;
+  /**
+   * Whether this payment method domain is enabled. If the domain is not enabled, payment methods that require a payment method domain will not appear in Elements.
+   */
+  enabled: boolean;
+  google_pay: PaymentMethodDomainResourcePaymentMethodStatus;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  link: PaymentMethodDomainResourcePaymentMethodStatus;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'payment_method_domain';
+  paypal: PaymentMethodDomainResourcePaymentMethodStatus;
+};
+/**
+ * PaymentMethodDomainResourcePaymentMethodStatus
+ * Indicates the status of a specific payment method on a payment method domain.
+ */
+export type PaymentMethodDomainResourcePaymentMethodStatus = {
+  /**
+   * The status of the payment method on the domain.
+   */
+  status: 'active' | 'inactive';
+  status_details?: PaymentMethodDomainResourcePaymentMethodStatusDetails;
+};
+/**
+ * PaymentMethodDomainResourcePaymentMethodStatusDetails
+ * Contains additional details about the status of a payment method for a specific payment method domain.
+ */
+export type PaymentMethodDomainResourcePaymentMethodStatusDetails = {
+  /**
+   * The error message associated with the status of the payment method on the domain.
+   */
+  error_message: string;
+};
+/**
  * payment_method_eps
  */
 export type PaymentMethodEps = {
@@ -14371,7 +15048,7 @@ export type PaymentMethodGrabpay = any;
  */
 export type PaymentMethodIdeal = {
   /**
-   * The customer's bank, if provided. Can be one of `abn_amro`, `asn_bank`, `bunq`, `handelsbanken`, `ing`, `knab`, `moneyou`, `rabobank`, `regiobank`, `revolut`, `sns_bank`, `triodos_bank`, `van_lanschot`, or `yoursafe`.
+   * The customer's bank, if provided. Can be one of `abn_amro`, `asn_bank`, `bunq`, `handelsbanken`, `ing`, `knab`, `moneyou`, `n26`, `rabobank`, `regiobank`, `revolut`, `sns_bank`, `triodos_bank`, `van_lanschot`, or `yoursafe`.
    */
   bank?:
     | (
@@ -14382,6 +15059,7 @@ export type PaymentMethodIdeal = {
         | 'ing'
         | 'knab'
         | 'moneyou'
+        | 'n26'
         | 'rabobank'
         | 'regiobank'
         | 'revolut'
@@ -14405,6 +15083,7 @@ export type PaymentMethodIdeal = {
         | 'INGBNL2A'
         | 'KNABNL2H'
         | 'MOYONL21'
+        | 'NTSBDEB1'
         | 'RABONL2U'
         | 'RBRBNL21'
         | 'REVOIE23'
@@ -14441,7 +15120,7 @@ export type PaymentMethodInteracPresent = {
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
@@ -14525,8 +15204,8 @@ export type PaymentMethodOptionsAfterpayClearpay = {
    */
   capture_method?: 'manual';
   /**
-   * Order identifier shown to the customer in Afterpay’s online portal. We recommend using a value that helps you answer any questions a customer might have about
-   * the payment. The identifier is limited to 128 characters and may contain only letters, digits, underscores, backslashes and dashes.
+   * An internal identifier or reference that this payment corresponds to. You must limit the identifier to 128 characters, and it can only contain letters, numbers, underscores, backslashes, and dashes.
+   * This field differs from the statement descriptor and item name.
    */
   reference?: string | null;
   /**
@@ -15300,27 +15979,18 @@ export type PaymentPagesCheckoutSessionCurrencyConversion = {
  * PaymentPagesCheckoutSessionCustomFields
  */
 export type PaymentPagesCheckoutSessionCustomFields = {
-  /**
-   * Configuration for `type=dropdown` fields.
-   */
-  dropdown?: PaymentPagesCheckoutSessionCustomFieldsDropdown | null;
+  dropdown?: PaymentPagesCheckoutSessionCustomFieldsDropdown;
   /**
    * String of your choice that your integration can use to reconcile this field. Must be unique to this field, alphanumeric, and up to 200 characters.
    */
   key: string;
   label: PaymentPagesCheckoutSessionCustomFieldsLabel;
-  /**
-   * Configuration for `type=numeric` fields.
-   */
-  numeric?: PaymentPagesCheckoutSessionCustomFieldsNumeric | null;
+  numeric?: PaymentPagesCheckoutSessionCustomFieldsNumeric;
   /**
    * Whether the customer is required to complete the field before completing the Checkout Session. Defaults to `false`.
    */
   optional: boolean;
-  /**
-   * Configuration for `type=text` fields.
-   */
-  text?: PaymentPagesCheckoutSessionCustomFieldsText | null;
+  text?: PaymentPagesCheckoutSessionCustomFieldsText;
   /**
    * The type of the field.
    */
@@ -15411,13 +16081,17 @@ export type PaymentPagesCheckoutSessionCustomText = {
    * Custom text that should be displayed alongside the payment confirmation button.
    */
   submit?: PaymentPagesCheckoutSessionCustomTextPosition | null;
+  /**
+   * Custom text that should be displayed in place of the default terms of service agreement text.
+   */
+  terms_of_service_acceptance?: PaymentPagesCheckoutSessionCustomTextPosition | null;
 };
 /**
  * PaymentPagesCheckoutSessionCustomTextPosition
  */
 export type PaymentPagesCheckoutSessionCustomTextPosition = {
   /**
-   * Text may be up to 1000 characters in length.
+   * Text may be up to 1200 characters in length.
    */
   message: string;
 };
@@ -15916,7 +16590,7 @@ export type PaymentSource = Account | BankAccount | Card | Source;
  * A `Payout` object is created when you receive funds from Stripe, or when you
  * initiate a payout to either a bank account or debit card of a [connected
  * Stripe account](/docs/connect/bank-debit-card-payouts). You can retrieve individual payouts,
- * as well as list all payouts. Payouts are made on [varying
+ * and list all payouts. Payouts are made on [varying
  * schedules](/docs/connect/manage-payout-schedule), depending on your country and
  * industry.
  *
@@ -15924,15 +16598,15 @@ export type PaymentSource = Account | BankAccount | Card | Source;
  */
 export type Payout = {
   /**
-   * Amount (in cents (or local equivalent)) to be transferred to your bank account or debit card.
+   * The amount (in cents (or local equivalent)) that transfers to your bank account or debit card.
    */
   amount: number;
   /**
-   * Date the payout is expected to arrive in the bank. This factors in delays like weekends or bank holidays.
+   * Date that you can expect the payout to arrive in the bank. This factors in delays to account for weekends or bank holidays.
    */
   arrival_date: number;
   /**
-   * Returns `true` if the payout was created by an [automated payout schedule](https://stripe.com/docs/payouts#payout-schedule), and `false` if it was [requested manually](https://stripe.com/docs/payouts#manual-payouts).
+   * Returns `true` if the payout is created by an [automated payout schedule](https://stripe.com/docs/payouts#payout-schedule) and `false` if it's [requested manually](https://stripe.com/docs/payouts#manual-payouts).
    */
   automatic: boolean;
   /**
@@ -15952,21 +16626,21 @@ export type Payout = {
    */
   description?: string | null;
   /**
-   * ID of the bank account or card the payout was sent to.
+   * ID of the bank account or card the payout is sent to.
    */
   destination?:
     | (string | BankAccount | Card | DeletedBankAccount | DeletedCard)
     | null;
   /**
-   * If the payout failed or was canceled, this will be the ID of the balance transaction that reversed the initial balance transaction, and puts the funds from the failed payout back in your balance.
+   * If the payout fails or cancels, this is the ID of the balance transaction that reverses the initial balance transaction and returns the funds from the failed payout back in your balance.
    */
   failure_balance_transaction?: (string | BalanceTransaction) | null;
   /**
-   * Error code explaining reason for payout failure if available. See [Types of payout failures](https://stripe.com/docs/api#payout_failures) for a list of failure codes.
+   * Error code that provides a reason for a payout failure, if available. View our [list of failure codes](https://stripe.com/docs/api#payout_failures).
    */
   failure_code?: string | null;
   /**
-   * Message to user further explaining reason for payout failure if available.
+   * Message that provides the reason for a payout failure, if available.
    */
   failure_message?: string | null;
   /**
@@ -15984,7 +16658,7 @@ export type Payout = {
     [key: string]: string;
   } | null;
   /**
-   * The method used to send this payout, which can be `standard` or `instant`. `instant` is only supported for payouts to debit cards. (See [Instant payouts for marketplaces](https://stripe.com/blog/instant-payouts-for-marketplaces) for more information.)
+   * The method used to send this payout, which can be `standard` or `instant`. `instant` is supported for payouts to debit cards and bank accounts in certain countries. Learn more about [bank support for Instant Payouts](https://stripe.com/docs/payouts/instant-payouts-banks).
    */
   method: string;
   /**
@@ -15996,23 +16670,23 @@ export type Payout = {
    */
   original_payout?: (string | Payout) | null;
   /**
-   * If `completed`, the [Balance Transactions API](https://stripe.com/docs/api/balance_transactions/list#balance_transaction_list-payout) may be used to list all Balance Transactions that were paid out in this payout.
+   * If `completed`, you can use the [Balance Transactions API](https://stripe.com/docs/api/balance_transactions/list#balance_transaction_list-payout) to list all balance transactions that are paid out in this payout.
    */
   reconciliation_status: 'completed' | 'in_progress' | 'not_applicable';
   /**
-   * If the payout was reversed, this is the ID of the payout that reverses this payout.
+   * If the payout reverses, this is the ID of the payout that reverses this payout.
    */
   reversed_by?: (string | Payout) | null;
   /**
-   * The source balance this payout came from. One of `card`, `fpx`, or `bank_account`.
+   * The source balance this payout came from, which can be one of the following: `card`, `fpx`, or `bank_account`.
    */
   source_type: string;
   /**
-   * Extra information about a payout to be displayed on the user's bank statement.
+   * Extra information about a payout that displays on the user's bank statement.
    */
   statement_descriptor?: string | null;
   /**
-   * Current status of the payout: `paid`, `pending`, `in_transit`, `canceled` or `failed`. A payout is `pending` until it is submitted to the bank, when it becomes `in_transit`. The status then changes to `paid` if the transaction goes through, or to `failed` or `canceled` (within 5 business days). Some failed payouts may initially show as `paid` but then change to `failed`.
+   * Current status of the payout: `paid`, `pending`, `in_transit`, `canceled` or `failed`. A payout is `pending` until it's submitted to the bank, when it becomes `in_transit`. The status changes to `paid` if the transaction succeeds, or to `failed` or `canceled` (within 5 business days). Some payouts that fail might initially show as `paid`, then change to `failed`.
    */
   status: string;
   /**
@@ -16053,13 +16727,14 @@ export type Period = {
  * A platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.
  * See the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform prefilling and account onboarding steps.
  *
- * Related guide: [Handling identity verification with the API](https://stripe.com/docs/connect/identity-verification-api#person-information)
+ * Related guide: [Handling identity verification with the API](https://stripe.com/docs/connect/handling-api-verification#person-information)
  */
 export type Person = {
   /**
    * The account the person is associated with.
    */
   account: string;
+  additional_tos_acceptances?: PersonAdditionalTosAcceptances;
   address?: Address;
   address_kana?: LegalEntityJapanAddress | null;
   address_kanji?: LegalEntityJapanAddress | null;
@@ -16098,7 +16773,7 @@ export type Person = {
    */
   id: string;
   /**
-   * Whether the person's `id_number` was provided.
+   * Whether the person's `id_number` was provided. True if either the full ID number was provided or if only the required part of the ID number was provided (ex. last four of an individual's SSN for the US indicated by `ssn_last_4_provided`).
    */
   id_number_provided?: boolean;
   /**
@@ -16153,6 +16828,29 @@ export type Person = {
   verification?: LegalEntityPersonVerification;
 };
 /**
+ * PersonAdditionalTOSAcceptance
+ */
+export type PersonAdditionalTosAcceptance = {
+  /**
+   * The Unix timestamp marking when the legal guardian accepted the service agreement.
+   */
+  date?: number | null;
+  /**
+   * The IP address from which the legal guardian accepted the service agreement.
+   */
+  ip?: string | null;
+  /**
+   * The user agent of the browser from which the legal guardian accepted the service agreement.
+   */
+  user_agent?: string | null;
+};
+/**
+ * PersonAdditionalTOSAcceptances
+ */
+export type PersonAdditionalTosAcceptances = {
+  account: PersonAdditionalTosAcceptance;
+};
+/**
  * PersonFutureRequirements
  */
 export type PersonFutureRequirements = {
@@ -16193,6 +16891,10 @@ export type PersonRelationship = {
    * Whether the person has significant responsibility to control, manage, or direct the organization.
    */
   executive?: boolean | null;
+  /**
+   * Whether the person is the legal guardian of the account's representative.
+   */
+  legal_guardian?: boolean | null;
   /**
    * Whether the person is an owner of the account’s legal entity.
    */
@@ -16451,6 +17153,15 @@ export type PortalFlowsAfterCompletionRedirect = {
   return_url: string;
 };
 /**
+ * PortalFlowsCouponOffer
+ */
+export type PortalFlowsCouponOffer = {
+  /**
+   * The ID of the coupon to be offered.
+   */
+  coupon: string;
+};
+/**
  * PortalFlowsFlow
  */
 export type PortalFlowsFlow = {
@@ -16498,6 +17209,10 @@ export type PortalFlowsFlowAfterCompletion = {
  */
 export type PortalFlowsFlowSubscriptionCancel = {
   /**
+   * Specify a retention strategy to be used in the cancellation flow.
+   */
+  retention?: PortalFlowsRetention | null;
+  /**
    * The ID of the subscription to be canceled.
    */
   subscription: string;
@@ -16529,6 +17244,19 @@ export type PortalFlowsFlowSubscriptionUpdateConfirm = {
   subscription: string;
 };
 /**
+ * PortalFlowsRetention
+ */
+export type PortalFlowsRetention = {
+  /**
+   * Configuration when `retention.type=coupon_offer`.
+   */
+  coupon_offer?: PortalFlowsCouponOffer | null;
+  /**
+   * Type of retention strategy that will be used.
+   */
+  type: 'coupon_offer';
+};
+/**
  * PortalFlowsSubscriptionUpdateConfirmDiscount
  */
 export type PortalFlowsSubscriptionUpdateConfirmDiscount = {
@@ -16550,7 +17278,7 @@ export type PortalFlowsSubscriptionUpdateConfirmItem = {
    */
   id?: string | null;
   /**
-   * The price the customer should subscribe to through this flow. The price must also be included in the configuration's [`features.subscription_update.products`](docs/api/customer_portal/configuration#portal_configuration_object-features-subscription_update-products).
+   * The price the customer should subscribe to through this flow. The price must also be included in the configuration's [`features.subscription_update.products`](https://stripe.com/docs/api/customer_portal/configuration#portal_configuration_object-features-subscription_update-products).
    */
   price?: string | null;
   /**
@@ -16827,6 +17555,10 @@ export type Product = {
    */
   description?: string | null;
   /**
+   * A list of up to 15 features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).
+   */
+  features: ProductFeature[];
+  /**
    * Unique identifier for the object.
    */
   id: string;
@@ -16880,6 +17612,15 @@ export type Product = {
    * A URL of a publicly-accessible webpage for this product.
    */
   url?: string | null;
+};
+/**
+ * ProductFeature
+ */
+export type ProductFeature = {
+  /**
+   * The feature's name. Up to 80 characters long.
+   */
+  name: string;
 };
 /**
  * PromotionCode
@@ -17200,7 +17941,7 @@ export type QuotesResourceStatusTransitions = {
  */
 export type QuotesResourceSubscriptionDataSubscriptionData = {
   /**
-   * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+   * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
    */
   description?: string | null;
   /**
@@ -17543,9 +18284,9 @@ export type Recurring = {
 };
 /**
  * Refund
- * `Refund` objects allow you to refund a charge that has previously been created
- * but not yet refunded. Funds will be refunded to the credit or debit card that
- * was originally charged.
+ * Refund objects allow you to refund a previously created charge that isn't
+ * refunded yet. Funds are refunded to the credit or debit card that's
+ * initially charged.
  *
  * Related guide: [Refunds](https://stripe.com/docs/refunds)
  */
@@ -17559,7 +18300,7 @@ export type Refund = {
    */
   balance_transaction?: (string | BalanceTransaction) | null;
   /**
-   * ID of the charge that was refunded.
+   * ID of the charge that's refunded.
    */
   charge?: (string | Charge) | null;
   /**
@@ -17571,15 +18312,15 @@ export type Refund = {
    */
   currency: string;
   /**
-   * An arbitrary string attached to the object. Often useful for displaying to users. (Available on non-card refunds only)
+   * An arbitrary string attached to the object. You can use this for displaying to users (available on non-card refunds only).
    */
   description?: string;
   /**
-   * If the refund failed, this balance transaction describes the adjustment made on your account balance that reverses the initial balance transaction.
+   * After the refund fails, this balance transaction describes the adjustment made on your account balance that reverses the initial balance transaction.
    */
   failure_balance_transaction?: string | BalanceTransaction;
   /**
-   * If the refund failed, the reason for refund failure if known. Possible values are `lost_or_stolen_card`, `expired_or_canceled_card`, `charge_for_pending_refund_disputed`, `insufficient_funds`, `declined`, `merchant_request` or `unknown`.
+   * Provides the reason for the refund failure. Possible values are: `lost_or_stolen_card`, `expired_or_canceled_card`, `charge_for_pending_refund_disputed`, `insufficient_funds`, `declined`, `merchant_request`, or `unknown`.
    */
   failure_reason?: string;
   /**
@@ -17587,7 +18328,7 @@ export type Refund = {
    */
   id: string;
   /**
-   * For payment methods without native refund support (e.g., Konbini, PromptPay), email for the customer to receive refund instructions.
+   * For payment methods without native refund support (for example, Konbini, PromptPay), provide an email address for the customer to receive refund instructions.
    */
   instructions_email?: string;
   /**
@@ -17602,11 +18343,11 @@ export type Refund = {
    */
   object: 'refund';
   /**
-   * ID of the PaymentIntent that was refunded.
+   * ID of the PaymentIntent that's refunded.
    */
   payment_intent?: (string | PaymentIntent) | null;
   /**
-   * Reason for the refund, either user-provided (`duplicate`, `fraudulent`, or `requested_by_customer`) or generated by Stripe internally (`expired_uncaptured_charge`).
+   * Reason for the refund, which is either user-provided (`duplicate`, `fraudulent`, or `requested_by_customer`) or generated by Stripe internally (`expired_uncaptured_charge`).
    */
   reason?:
     | (
@@ -17621,15 +18362,15 @@ export type Refund = {
    */
   receipt_number?: string | null;
   /**
-   * The transfer reversal that is associated with the refund. Only present if the charge came from another Stripe account. See the Connect documentation for details.
+   * The transfer reversal that's associated with the refund. Only present if the charge came from another Stripe account.
    */
   source_transfer_reversal?: (string | TransferReversal) | null;
   /**
-   * Status of the refund. For credit card refunds, this can be `pending`, `succeeded`, or `failed`. For other types of refunds, it can be `pending`, `requires_action`, `succeeded`, `failed`, or `canceled`. Refer to our [refunds](https://stripe.com/docs/refunds#failed-refunds) documentation for more details.
+   * Status of the refund. For credit card refunds, this can be `pending`, `succeeded`, or `failed`. For other types of refunds, it can be `pending`, `requires_action`, `succeeded`, `failed`, or `canceled`. Learn more about [failed refunds](https://stripe.com/docs/refunds#failed-refunds).
    */
   status?: string | null;
   /**
-   * If the accompanying transfer was reversed, the transfer reversal object. Only applicable if the charge was created using the destination parameter.
+   * This refers to the transfer reversal object if the accompanying transfer reverses. This is only applicable if the charge was created using the destination parameter.
    */
   transfer_reversal?: (string | TransferReversal) | null;
 };
@@ -17954,7 +18695,7 @@ export type SepaDebitGeneratedFrom = {
 /**
  * PaymentFlowsSetupIntentSetupAttempt
  * A SetupAttempt describes one attempted confirmation of a SetupIntent,
- * whether that confirmation was successful or unsuccessful. You can use
+ * whether that confirmation is successful or unsuccessful. You can use
  * SetupAttempts to inspect details of a specific attempt at setting up a
  * payment method using a SetupIntent.
  */
@@ -18111,7 +18852,7 @@ export type SetupAttemptPaymentMethodDetailsCard = {
   /**
    * Check results by Card networks on Card address and CVC at the time of authorization
    */
-  checks?: PaymentMethodDetailsCardChecks | null;
+  checks?: SetupAttemptPaymentMethodDetailsCardChecks | null;
   /**
    * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
    */
@@ -18127,7 +18868,7 @@ export type SetupAttemptPaymentMethodDetailsCard = {
   /**
    * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
    *
-   * *Starting May 1, 2021, card fingerprint in India for Connect will change to allow two fingerprints for the same card --- one for India and one for the rest of the world.*
+   * *As of May 1, 2021, card fingerprint in India for Connect changed to allow two fingerprints for the same card---one for India and one for the rest of the world.*
    */
   fingerprint?: string | null;
   /**
@@ -18150,6 +18891,23 @@ export type SetupAttemptPaymentMethodDetailsCard = {
    * If this Card is part of a card wallet, this contains the details of the card wallet.
    */
   wallet?: SetupAttemptPaymentMethodDetailsCardWallet | null;
+};
+/**
+ * setup_attempt_payment_method_details_card_checks
+ */
+export type SetupAttemptPaymentMethodDetailsCardChecks = {
+  /**
+   * If a address line1 was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+   */
+  address_line1_check?: string | null;
+  /**
+   * If a address postal code was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+   */
+  address_postal_code_check?: string | null;
+  /**
+   * If a CVC was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+   */
+  cvc_check?: string | null;
 };
 /**
  * setup_attempt_payment_method_details_card_present
@@ -18180,7 +18938,7 @@ export type SetupAttemptPaymentMethodDetailsCashapp = any;
  */
 export type SetupAttemptPaymentMethodDetailsIdeal = {
   /**
-   * The customer's bank. Can be one of `abn_amro`, `asn_bank`, `bunq`, `handelsbanken`, `ing`, `knab`, `moneyou`, `rabobank`, `regiobank`, `revolut`, `sns_bank`, `triodos_bank`, `van_lanschot`, or `yoursafe`.
+   * The customer's bank. Can be one of `abn_amro`, `asn_bank`, `bunq`, `handelsbanken`, `ing`, `knab`, `moneyou`, `n26`, `rabobank`, `regiobank`, `revolut`, `sns_bank`, `triodos_bank`, `van_lanschot`, or `yoursafe`.
    */
   bank?:
     | (
@@ -18191,6 +18949,7 @@ export type SetupAttemptPaymentMethodDetailsIdeal = {
         | 'ing'
         | 'knab'
         | 'moneyou'
+        | 'n26'
         | 'rabobank'
         | 'regiobank'
         | 'revolut'
@@ -18214,6 +18973,7 @@ export type SetupAttemptPaymentMethodDetailsIdeal = {
         | 'INGBNL2A'
         | 'KNABNL2H'
         | 'MOYONL21'
+        | 'NTSBDEB1'
         | 'RABONL2U'
         | 'RBRBNL21'
         | 'REVOIE23'
@@ -18302,25 +19062,24 @@ export type SetupAttemptPaymentMethodDetailsUsBankAccount = any;
 /**
  * SetupIntent
  * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
- * For example, you could use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+ * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
  * Later, you can use [PaymentIntents](https://stripe.com/docs/api#payment_intents) to drive the payment flow.
  *
- * Create a SetupIntent as soon as you're ready to collect your customer's payment credentials.
- * Do not maintain long-lived, unconfirmed SetupIntents as they may no longer be valid.
- * The SetupIntent then transitions through multiple [statuses](https://stripe.com/docs/payments/intents#intent-statuses) as it guides
+ * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+ * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+ * The SetupIntent transitions through multiple [statuses](https://stripe.com/docs/payments/intents#intent-statuses) as it guides
  * you through the setup process.
  *
  * Successful SetupIntents result in payment credentials that are optimized for future payments.
- * For example, cardholders in [certain regions](/guides/strong-customer-authentication) may need to be run through
- * [Strong Customer Authentication](https://stripe.com/docs/strong-customer-authentication) at the time of payment method collection
- * in order to streamline later [off-session payments](https://stripe.com/docs/payments/setup-intents).
- * If the SetupIntent is used with a [Customer](https://stripe.com/docs/api#setup_intent_object-customer), upon success,
- * it will automatically attach the resulting payment method to that Customer.
+ * For example, cardholders in [certain regions](/guides/strong-customer-authentication) might need to be run through
+ * [Strong Customer Authentication](https://stripe.com/docs/strong-customer-authentication) during payment method collection
+ * to streamline later [off-session payments](https://stripe.com/docs/payments/setup-intents).
+ * If you use the SetupIntent with a [Customer](https://stripe.com/docs/api#setup_intent_object-customer),
+ * it automatically attaches the resulting payment method to that Customer after successful setup.
  * We recommend using SetupIntents or [setup_future_usage](https://stripe.com/docs/api#payment_intent_object-setup_future_usage) on
- * PaymentIntents to save payment methods in order to prevent saving invalid or unoptimized payment methods.
+ * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
  *
- * By using SetupIntents, you ensure that your customers experience the minimum set of required friction,
- * even as regulations change over time.
+ * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
  *
  * Related guide: [Setup Intents API](https://stripe.com/docs/payments/setup-intents)
  */
@@ -18414,7 +19173,11 @@ export type SetupIntent = {
    */
   payment_method?: (string | PaymentMethod) | null;
   /**
-   * Payment-method-specific configuration for this SetupIntent.
+   * Information about the payment method configuration used for this Setup Intent.
+   */
+  payment_method_configuration_details?: PaymentMethodConfigBizPaymentMethodConfigurationDetails | null;
+  /**
+   * Payment method-specific configuration for this SetupIntent.
    */
   payment_method_options?: SetupIntentPaymentMethodOptions | null;
   /**
@@ -19602,7 +20365,7 @@ export type Subscription = {
    */
   default_tax_rates?: TaxRate[] | null;
   /**
-   * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces.
+   * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
    */
   description?: string | null;
   /**
@@ -20040,7 +20803,7 @@ export type SubscriptionSchedulePhaseConfiguration = {
    */
   default_tax_rates?: TaxRate[] | null;
   /**
-   * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+   * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
    */
   description?: string | null;
   /**
@@ -20108,7 +20871,7 @@ export type SubscriptionSchedulesResourceDefaultSettings = {
    */
   default_payment_method?: (string | PaymentMethod) | null;
   /**
-   * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+   * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
    */
   description?: string | null;
   /**
@@ -20620,10 +21383,10 @@ export type TaxDeductedAtSource = {
 };
 /**
  * tax_id
- * You can add one or multiple tax IDs to a [customer](https://stripe.com/docs/api/customers).
- * A customer's tax IDs are displayed on invoices and credit notes issued for the customer.
+ * You can add one or multiple tax IDs to a [customer](https://stripe.com/docs/api/customers) or account.
+ * Customer and account tax IDs get displayed on related invoices and credit notes.
  *
- * Related guide: [Customer tax identification numbers](https://stripe.com/docs/billing/taxes/tax-ids)
+ * Related guides: [Customer tax identification numbers](https://stripe.com/docs/billing/taxes/tax-ids), [Account tax IDs](https://stripe.com/docs/invoicing/connect#account-tax-ids)
  */
 export type TaxId = {
   /**
@@ -21266,6 +22029,7 @@ export type TerminalConfiguration = {
    * String representing the object's type. Objects of the same type share the same value.
    */
   object: 'terminal.configuration';
+  offline?: TerminalConfigurationConfigurationResourceOfflineConfig;
   tipping?: TerminalConfigurationConfigurationResourceTipping;
   verifone_p400?: TerminalConfigurationConfigurationResourceDeviceTypeSpecificConfig;
 };
@@ -21415,6 +22179,15 @@ export type TerminalConfigurationConfigurationResourceDeviceTypeSpecificConfig =
      */
     splashscreen?: string | File;
   };
+/**
+ * TerminalConfigurationConfigurationResourceOfflineConfig
+ */
+export type TerminalConfigurationConfigurationResourceOfflineConfig = {
+  /**
+   * Determines whether to allow transactions to be collected while reader is offline. Defaults to false.
+   */
+  enabled?: boolean | null;
+};
 /**
  * TerminalConfigurationConfigurationResourceTipping
  */
@@ -21748,21 +22521,21 @@ export type ThreeDSecureUsage = {
  * Tokenization is the process Stripe uses to collect sensitive card or bank
  * account details, or personally identifiable information (PII), directly from
  * your customers in a secure manner. A token representing this information is
- * returned to your server to use. You should use our
+ * returned to your server to use. Use our
  * [recommended payments integrations](https://stripe.com/docs/payments) to perform this process
- * client-side. This ensures that no sensitive card data touches your server,
+ * on the client-side. This guarantees that no sensitive card data touches your server,
  * and allows your integration to operate in a PCI-compliant way.
  *
- * If you cannot use client-side tokenization, you can also create tokens using
- * the API with either your publishable or secret API key. Keep in mind that if
- * your integration uses this method, you are responsible for any PCI compliance
- * that may be required, and you must keep your secret API key safe. Unlike with
- * client-side tokenization, your customer's information is not sent directly to
- * Stripe, so we cannot determine how it is handled or stored.
+ * If you can't use client-side tokenization, you can also create tokens using
+ * the API with either your publishable or secret API key. If
+ * your integration uses this method, you're responsible for any PCI compliance
+ * that it might require, and you must keep your secret API key safe. Unlike with
+ * client-side tokenization, your customer's information isn't sent directly to
+ * Stripe, so we can't determine how it's handled or stored.
  *
- * Tokens cannot be stored or used more than once. To store card or bank account
- * information for later use, you can create [Customer](https://stripe.com/docs/api#customers)
- * objects or [Custom accounts](https://stripe.com/docs/api#external_accounts). Note that
+ * You can't store or use tokens more than once. To store card or bank account
+ * information for later use, create [Customer](https://stripe.com/docs/api#customers)
+ * objects or [Custom accounts](https://stripe.com/docs/api#external_accounts).
  * [Radar](https://stripe.com/docs/radar), our integrated solution for automatic fraud protection,
  * performs best with integrations that use client-side tokenization.
  */
@@ -21770,7 +22543,7 @@ export type Token = {
   bank_account?: BankAccount;
   card?: Card;
   /**
-   * IP address of the client that generated the token.
+   * IP address of the client that generates the token.
    */
   client_ip?: string | null;
   /**
@@ -21794,7 +22567,7 @@ export type Token = {
    */
   type: string;
   /**
-   * Whether this token has already been used (tokens can be used only once).
+   * Determines if you have already used this token (you can only use tokens once).
    */
   used: boolean;
 };
@@ -21986,8 +22759,8 @@ export type TransferData = {
    */
   amount?: number;
   /**
-   * The account (if any) the payment will be attributed to for tax
-   * reporting, and where funds from the payment will be transferred to upon
+   * The account (if any) that the payment is attributed to for tax
+   * reporting, and where funds from the payment are transferred to after
    * payment success.
    */
   destination: string | Account;
@@ -23164,7 +23937,7 @@ export type TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetail
      */
     ip_address?: string | null;
     /**
-     * `true`` if the OutboundPayment creation request is being made on behalf of an end user by a platform. Otherwise, `false`.
+     * `true` if the OutboundPayment creation request is being made on behalf of an end user by a platform. Otherwise, `false`.
      */
     present: boolean;
   };
@@ -23722,6 +24495,26 @@ export async function postAccountLinks<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
+ * <p>Creates a AccountSession object that includes a single-use token that the platform can use on their front-end to
+ * grant client-side API access.</p>
+ */
+export async function postAccountSessions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<AccountSession> {
+  const req = await ctx.createRequest({
+    path: '/v1/account_sessions',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
  * <p>Returns a list of accounts connected to your platform via <a href="/docs/connect">Connect</a>. If you’re not a
  * platform, the list is empty.</p>
  */
@@ -24050,7 +24843,8 @@ export async function getAccountsAccountCapabilitiesCapability<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Updates an existing Account Capability.</p>
+ * <p>Updates an existing Account Capability. Request or remove a capability by updating its <code>requested</code>
+ * parameter.</p>
  */
 export async function postAccountsAccountCapabilitiesCapability<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -24081,6 +24875,7 @@ export async function getAccountsAccountExternalAccounts<FetcherData>(
     ending_before?: string;
     expand?: string[];
     limit?: number;
+    object?: 'bank_account' | 'card';
     starting_after?: string;
   },
   body: any,
@@ -24108,7 +24903,13 @@ export async function getAccountsAccountExternalAccounts<FetcherData>(
     params,
     method: r.HttpMethod.GET,
     body,
-    queryParams: ['ending_before', 'expand', 'limit', 'starting_after'],
+    queryParams: [
+      'ending_before',
+      'expand',
+      'limit',
+      'object',
+      'starting_after',
+    ],
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -24247,6 +25048,7 @@ export async function getAccountsAccountPeople<FetcherData>(
     relationship?: {
       director?: boolean;
       executive?: boolean;
+      legal_guardian?: boolean;
       owner?: boolean;
       representative?: boolean;
     };
@@ -24391,6 +25193,7 @@ export async function getAccountsAccountPersons<FetcherData>(
     relationship?: {
       director?: boolean;
       executive?: boolean;
+      legal_guardian?: boolean;
       owner?: boolean;
       representative?: boolean;
     };
@@ -25595,22 +26398,21 @@ export async function postChargesChargeDisputeClose<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create
- * it.</p>
+ * <p>When you create a new refund, you must specify either a Charge or a PaymentIntent object.</p>
  *
- * <p>Creating a new refund will refund a charge that has previously been created but not yet refunded.
- * Funds will
- * be refunded to the credit or debit card that was originally charged.</p>
+ * <p>This action refunds
+ * a previously created charge that’s not refunded yet.
+ * Funds are refunded to the credit or debit card that’s originally
+ * charged.</p>
  *
- * <p>You can optionally refund only part of a
- * charge.
- * You can do so multiple times, until the entire charge has been refunded.</p>
+ * <p>You can optionally refund only part of a charge.
+ * You can repeat this until the entire charge is
+ * refunded.</p>
  *
- * <p>Once entirely refunded, a
- * charge can’t be refunded again.
- * This method will raise an error when called on an already-refunded charge,
- * or when
- * trying to refund more money than is left on a charge.</p>
+ * <p>After you entirely refund a charge, you can’t refund it again.
+ * This method raises an error when it’s
+ * called on an already-refunded charge,
+ * or when you attempt to refund more money than is left on a charge.</p>
  */
 export async function postChargesChargeRefund<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -25676,7 +26478,22 @@ export async function getChargesChargeRefunds<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Create a refund.</p>
+ * <p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create
+ * it.</p>
+ *
+ * <p>Creating a new refund will refund a charge that has previously been created but not yet refunded.
+ * Funds will
+ * be refunded to the credit or debit card that was originally charged.</p>
+ *
+ * <p>You can optionally refund only part of a
+ * charge.
+ * You can do so multiple times, until the entire charge has been refunded.</p>
+ *
+ * <p>Once entirely refunded, a
+ * charge can’t be refunded again.
+ * This method will raise an error when called on an already-refunded charge,
+ * or when
+ * trying to refund more money than is left on a charge.</p>
  */
 export async function postChargesChargeRefunds<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -27790,7 +28607,7 @@ export async function getCustomersCustomerTaxIds<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Creates a new <code>TaxID</code> object for a customer.</p>
+ * <p>Creates a new <code>tax_id</code> object for a customer.</p>
  */
 export async function postCustomersCustomerTaxIds<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -27811,7 +28628,7 @@ export async function postCustomersCustomerTaxIds<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Deletes an existing <code>TaxID</code> object.</p>
+ * <p>Deletes an existing <code>tax_id</code> object.</p>
  */
 export async function deleteCustomersCustomerTaxIdsId<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -27833,7 +28650,7 @@ export async function deleteCustomersCustomerTaxIdsId<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Retrieves the <code>TaxID</code> object with the given identifier.</p>
+ * <p>Retrieves the <code>tax_id</code> object with the given identifier.</p>
  */
 export async function getCustomersCustomerTaxIdsId<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -28301,8 +29118,8 @@ export async function postFileLinksLink<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Returns a list of the files that your account has access to. The files are returned sorted by creation date, with the
- * most recently created files appearing first.</p>
+ * <p>Returns a list of the files that your account has access to. Stripe sorts and returns the files by their creation
+ * dates, placing the most recently created files at the top.</p>
  */
 export async function getFiles<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -28372,11 +29189,11 @@ export async function getFiles<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>To upload a file to Stripe, you’ll need to send a request of type <code>multipart/form-data</code>. The request
- * should contain the file you would like to upload, as well as the parameters for creating a file.</p>
+ * <p>To upload a file to Stripe, you need to send a request of type <code>multipart/form-data</code>. Include the file you
+ * want to upload in the request, and the parameters for creating a file.</p>
  *
- * <p>All of Stripe’s
- * officially supported Client libraries should have support for sending <code>multipart/form-data</code>.</p>
+ * <p>All of Stripe’s officially supported
+ * Client libraries support sending <code>multipart/form-data</code>.</p>
  */
 export async function postFiles<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -28395,9 +29212,8 @@ export async function postFiles<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Retrieves the details of an existing file object. Supply the unique file ID from a file, and Stripe will return the
- * corresponding file object. To access file contents, see the <a href="/docs/file-upload#download-file-contents">File
- * Upload Guide</a>.</p>
+ * <p>Retrieves the details of an existing file object. After you supply a unique file ID, Stripe returns the corresponding
+ * file object. Learn how to <a href="/docs/file-upload#download-file-contents">access file contents</a>.</p>
  */
 export async function getFilesFile<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -30113,11 +30929,11 @@ export async function postIssuingAuthorizationsAuthorization<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Approves a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window
- * of the <a href="/docs/issuing/controls/real-time-authorizations">real-time authorization</a> flow.
- * You can also respond
- * directly to the webhook request to approve an authorization (preferred). More details can be found <a
- * href="/docs/issuing/controls/real-time-authorizations#authorization-handling">here</a>.</p>
+ * <p>[Deprecated] Approves a pending Issuing <code>Authorization</code> object. This request should be made within the
+ * timeout window of the <a href="/docs/issuing/controls/real-time-authorizations">real-time authorization</a> flow.
+ * This
+ * method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond
+ * directly to the webhook request to approve an authorization</a>.</p>
  */
 export async function postIssuingAuthorizationsAuthorizationApprove<
   FetcherData,
@@ -30140,11 +30956,11 @@ export async function postIssuingAuthorizationsAuthorizationApprove<
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Declines a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window
- * of the <a href="/docs/issuing/controls/real-time-authorizations">real time authorization</a> flow.
- * You can also respond
- * directly to the webhook request to decline an authorization (preferred). More details can be found <a
- * href="/docs/issuing/controls/real-time-authorizations#authorization-handling">here</a>.</p>
+ * <p>[Deprecated] Declines a pending Issuing <code>Authorization</code> object. This request should be made within the
+ * timeout window of the <a href="/docs/issuing/controls/real-time-authorizations">real time authorization</a> flow.
+ * This
+ * method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond
+ * directly to the webhook request to decline an authorization</a>.</p>
  */
 export async function postIssuingAuthorizationsAuthorizationDecline<
   FetcherData,
@@ -30671,6 +31487,107 @@ export async function postIssuingSettlementsSettlement<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
+ * <p>Lists all Issuing <code>Token</code> objects for a given card.</p>
+ */
+export async function getIssuingTokens<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    card: string;
+    created?:
+      | {
+          gt?: number;
+          gte?: number;
+          lt?: number;
+          lte?: number;
+        }
+      | number;
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    starting_after?: string;
+    status?: 'active' | 'deleted' | 'requested' | 'suspended';
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<{
+  data: IssuingToken[];
+  /**
+   * True if this list has another page of items after this one that can be fetched.
+   */
+  has_more: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+   */
+  object: 'list';
+  /**
+   * The URL where this list can be accessed.
+   */
+  url: string;
+}> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/tokens',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'card',
+      'created',
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+      'status',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Retrieves an Issuing <code>Token</code> object.</p>
+ */
+export async function getIssuingTokensToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    token: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingToken> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/tokens/{token}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Attempts to update the specified Issuing <code>Token</code> object to the status specified.</p>
+ */
+export async function postIssuingTokensToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    token: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingToken> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/tokens/{token}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
  * <p>Returns a list of Issuing <code>Transaction</code> objects. The objects are sorted in descending order by creation
  * date, with the most recently created object appearing first.</p>
  */
@@ -31071,17 +31988,17 @@ export async function getPaymentIntents<FetcherData>(
  *
  * <p>After the PaymentIntent is created, attach a payment method and <a
  * href="/docs/api/payment_intents/confirm">confirm</a>
- * to continue the payment. You can read more about the different
- * payment flows
- * available via the Payment Intents API <a href="/docs/payments/payment-intents">here</a>.</p>
+ * to continue the payment. Learn more about <a
+ * href="/docs/payments/payment-intents">the available payment flows
+ * with the Payment Intents API</a>.</p>
  *
- * <p>When
- * <code>confirm=true</code> is used during creation, it is equivalent to creating
- * and confirming the PaymentIntent in the
- * same call. You may use any parameters
- * available in the <a href="/docs/api/payment_intents/confirm">confirm API</a> when
- * <code>confirm=true</code>
- * is supplied.</p>
+ * <p>When you use
+ * <code>confirm=true</code> during creation, it’s equivalent to creating
+ * and confirming the PaymentIntent in the same
+ * call. You can use any parameters
+ * available in the <a href="/docs/api/payment_intents/confirm">confirm API</a> when you
+ * supply
+ * <code>confirm=true</code>.</p>
  */
 export async function postPaymentIntents<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31147,11 +32064,11 @@ export async function getPaymentIntentsSearch<FetcherData>(
 /**
  * <p>Retrieves the details of a PaymentIntent that has previously been created. </p>
  *
- * <p>Client-side retrieval using a
- * publishable key is allowed when the <code>client_secret</code> is provided in the query string. </p>
+ * <p>You can retrieve a PaymentIntent
+ * client-side using a publishable key when the <code>client_secret</code> is in the query string. </p>
  *
- * <p>When retrieved
- * with a publishable key, only a subset of properties will be returned. Please refer to the <a
+ * <p>If you retrieve
+ * a PaymentIntent with a publishable key, it only returns a subset of properties. Refer to the <a
  * href="#payment_intent_object">payment intent</a> object reference for more details.</p>
  */
 export async function getPaymentIntentsIntent<FetcherData>(
@@ -31179,12 +32096,12 @@ export async function getPaymentIntentsIntent<FetcherData>(
  * <p>Updates properties on a PaymentIntent object without confirming.</p>
  *
  * <p>Depending on which properties you update,
- * you may need to confirm the
- * PaymentIntent again. For example, updating the <code>payment_method</code> will
- * always
- * require you to confirm the PaymentIntent again. If you prefer to
- * update and confirm at the same time, we recommend
- * updating properties via
+ * you might need to confirm the
+ * PaymentIntent again. For example, updating the <code>payment_method</code>
+ * always requires
+ * you to confirm the PaymentIntent again. If you prefer to
+ * update and confirm at the same time, we recommend updating
+ * properties through
  * the <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>
  */
 export async function postPaymentIntentsIntent<FetcherData>(
@@ -31206,7 +32123,7 @@ export async function postPaymentIntentsIntent<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Manually reconcile the remaining amount for a customer_balance PaymentIntent.</p>
+ * <p>Manually reconcile the remaining amount for a <code>customer_balance</code> PaymentIntent.</p>
  */
 export async function postPaymentIntentsIntentApplyCustomerBalance<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31227,16 +32144,16 @@ export async function postPaymentIntentsIntentApplyCustomerBalance<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>A PaymentIntent object can be canceled when it is in one of these statuses: <code>requires_payment_method</code>,
+ * <p>You can cancel a PaymentIntent object when it’s in one of these statuses: <code>requires_payment_method</code>,
  * <code>requires_capture</code>, <code>requires_confirmation</code>, <code>requires_action</code> or, <a
  * href="/docs/payments/intents">in rare cases</a>, <code>processing</code>. </p>
  *
- * <p>Once canceled, no additional charges
- * will be made by the PaymentIntent and any operations on the PaymentIntent will fail with an error. For PaymentIntents
- * with a <code>status</code> of <code>requires_capture</code>, the remaining <code>amount_capturable</code> will
- * automatically be refunded. </p>
+ * <p>After it’s canceled, no additional
+ * charges are made by the PaymentIntent and any operations on the PaymentIntent fail with an error. For PaymentIntents
+ * with a <code>status</code> of <code>requires_capture</code>, the remaining <code>amount_capturable</code> is
+ * automatically refunded. </p>
  *
- * <p>You cannot cancel the PaymentIntent for a Checkout Session. <a
+ * <p>You can’t cancel the PaymentIntent for a Checkout Session. <a
  * href="/docs/api/checkout/sessions/expire">Expire the Checkout Session</a> instead.</p>
  */
 export async function postPaymentIntentsIntentCancel<FetcherData>(
@@ -31261,8 +32178,8 @@ export async function postPaymentIntentsIntentCancel<FetcherData>(
  * <p>Capture the funds of an existing uncaptured PaymentIntent when its status is
  * <code>requires_capture</code>.</p>
  *
- * <p>Uncaptured PaymentIntents will be canceled a set number of days after they are
- * created (7 by default).</p>
+ * <p>Uncaptured PaymentIntents are cancelled a set number of days (7 by default) after
+ * their creation.</p>
  *
  * <p>Learn more about <a href="/docs/payments/capture-later">separate authorization and
  * capture</a>.</p>
@@ -31354,27 +32271,27 @@ export async function postPaymentIntentsIntentConfirm<FetcherData>(
  *
  * <p>Incremental authorizations attempt to increase the authorized amount on
  * your customer’s
- * card to the new, higher <code>amount</code> provided. As with the
- * initial authorization, incremental authorizations may
- * be declined. A
+ * card to the new, higher <code>amount</code> provided. Similar to the
+ * initial authorization, incremental authorizations
+ * can be declined. A
  * single PaymentIntent can call this endpoint multiple times to further
  * increase the authorized
  * amount.</p>
  *
- * <p>If the incremental authorization succeeds, the PaymentIntent object is
- * returned with the updated
+ * <p>If the incremental authorization succeeds, the PaymentIntent object
+ * returns with the updated
  * <a
  * href="/docs/api/payment_intents/object#payment_intent_object-amount">amount</a>.
  * If the incremental authorization fails,
  * a
- * <a href="/docs/error-codes#card-declined">card_declined</a> error is returned, and no
+ * <a href="/docs/error-codes#card-declined">card_declined</a> error returns, and no other
  * fields on the PaymentIntent or
- * Charge are updated. The PaymentIntent
+ * Charge update. The PaymentIntent
  * object remains capturable for the previously authorized amount.</p>
  *
  * <p>Each
  * PaymentIntent can have a maximum of 10 incremental authorization attempts, including declines.
- * Once captured, a
+ * After it’s captured, a
  * PaymentIntent can no longer be incremented.</p>
  *
  * <p>Learn more about <a
@@ -31569,6 +32486,250 @@ export async function getPaymentLinksPaymentLinkLineItems<FetcherData>(
     method: r.HttpMethod.GET,
     body,
     queryParams: ['ending_before', 'expand', 'limit', 'starting_after'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>List payment method configurations</p>
+ */
+export async function getPaymentMethodConfigurations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    application?: string | '';
+    expand?: string[];
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<{
+  data: PaymentMethodConfiguration[];
+  /**
+   * True if this list has another page of items after this one that can be fetched.
+   */
+  has_more: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+   */
+  object: 'list';
+  /**
+   * The URL where this list can be accessed.
+   */
+  url: string;
+}> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_configurations',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['application', 'expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Creates a payment method configuration</p>
+ */
+export async function postPaymentMethodConfigurations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<PaymentMethodConfiguration> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_configurations',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Retrieve payment method configuration</p>
+ */
+export async function getPaymentMethodConfigurationsConfiguration<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    configuration: string;
+    expand?: string[];
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<PaymentMethodConfiguration> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_configurations/{configuration}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Update payment method configuration</p>
+ */
+export async function postPaymentMethodConfigurationsConfiguration<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    configuration: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<PaymentMethodConfiguration> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_configurations/{configuration}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Lists the details of existing payment method domains.</p>
+ */
+export async function getPaymentMethodDomains<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    domain_name?: string;
+    enabled?: boolean;
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    starting_after?: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<{
+  data: PaymentMethodDomain[];
+  /**
+   * True if this list has another page of items after this one that can be fetched.
+   */
+  has_more: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+   */
+  object: 'list';
+  /**
+   * The URL where this list can be accessed.
+   */
+  url: string;
+}> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_domains',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'domain_name',
+      'enabled',
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Creates a payment method domain.</p>
+ */
+export async function postPaymentMethodDomains<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<PaymentMethodDomain> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_domains',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Retrieves the details of an existing payment method domain.</p>
+ */
+export async function getPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    payment_method_domain: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<PaymentMethodDomain> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_domains/{payment_method_domain}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Updates an existing payment method domain.</p>
+ */
+export async function postPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    payment_method_domain: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<PaymentMethodDomain> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_domains/{payment_method_domain}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Some payment methods such as Apple Pay require additional steps to verify a domain. If the requirements weren’t
+ * satisfied when the domain was created, the payment method will be inactive on the domain.
+ * The payment method doesn’t
+ * appear in Elements for this domain until it is active.</p>
+ *
+ * <p>To activate a payment method on an existing payment
+ * method domain, complete the required validation steps specific to the payment method, and then validate the payment
+ * method domain with this endpoint.</p>
+ *
+ * <p>Related guides: <a
+ * href="/docs/payments/payment-methods/pmd-registration">Payment method domains</a>.</p>
+ */
+export async function postPaymentMethodDomainsPaymentMethodDomainValidate<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    payment_method_domain: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<PaymentMethodDomain> {
+  const req = await ctx.createRequest({
+    path: '/v1/payment_method_domains/{payment_method_domain}/validate',
+    params,
+    method: r.HttpMethod.POST,
+    body,
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -31791,8 +32952,8 @@ export async function postPaymentMethodsPaymentMethodDetach<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Returns a list of existing payouts sent to third-party bank accounts or that Stripe has sent you. The payouts are
- * returned in sorted order, with the most recently created payouts appearing first.</p>
+ * <p>Returns a list of existing payouts sent to third-party bank accounts or payouts that Stripe sent to you. The payouts
+ * return in sorted order, with the most recently created payouts appearing first.</p>
  */
 export async function getPayouts<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31858,16 +33019,16 @@ export async function getPayouts<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>To send funds to your own bank account, you create a new payout object. Your <a href="#balance">Stripe balance</a>
- * must be able to cover the payout amount, or you’ll receive an “Insufficient Funds” error.</p>
+ * <p>To send funds to your own bank account, create a new payout object. Your <a href="#balance">Stripe balance</a> must
+ * cover the payout amount. If it doesn’t, you receive an “Insufficient Funds” error.</p>
  *
- * <p>If your API key is in
- * test mode, money won’t actually be sent, though everything else will occur as if in live mode.</p>
+ * <p>If your API key is in test
+ * mode, money won’t actually be sent, though every other action occurs as if you’re in live mode.</p>
  *
- * <p>If you are
- * creating a manual payout on a Stripe account that uses multiple payment source types, you’ll need to specify the source
- * type balance that the payout should draw from. The <a href="#balance_object">balance object</a> details available and
- * pending amounts by source type.</p>
+ * <p>If you create a
+ * manual payout on a Stripe account that uses multiple payment source types, you need to specify the source type balance
+ * that the payout draws from. The <a href="#balance_object">balance object</a> details available and pending amounts by
+ * source type.</p>
  */
 export async function postPayouts<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31887,7 +33048,7 @@ export async function postPayouts<FetcherData>(
 }
 /**
  * <p>Retrieves the details of an existing payout. Supply the unique payout ID from either a payout creation request or the
- * payout list, and Stripe will return the corresponding payout information.</p>
+ * payout list. Stripe returns the corresponding payout information.</p>
  */
 export async function getPayoutsPayout<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31910,8 +33071,8 @@ export async function getPayoutsPayout<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Updates the specified payout by setting the values of the parameters passed. Any parameters not provided will be left
- * unchanged. This request accepts only the metadata as arguments.</p>
+ * <p>Updates the specified payout by setting the values of the parameters you pass. We don’t change parameters that you
+ * don’t provide. This request only accepts the metadata as arguments.</p>
  */
 export async function postPayoutsPayout<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31932,8 +33093,8 @@ export async function postPayoutsPayout<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>A previously created payout can be canceled if it has not yet been paid out. Funds will be refunded to your available
- * balance. You may not cancel automatic Stripe payouts.</p>
+ * <p>You can cancel a previously created payout if it hasn’t been paid out yet. Stripe refunds the funds to your available
+ * balance. You can’t cancel automatic Stripe payouts.</p>
  */
 export async function postPayoutsPayoutCancel<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31954,13 +33115,13 @@ export async function postPayoutsPayoutCancel<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Reverses a payout by debiting the destination bank account. Only payouts for connected accounts to US bank accounts
- * may be reversed at this time. If the payout is in the <code>pending</code> status, <code>/v1/payouts/:id/cancel</code>
- * should be used instead.</p>
+ * <p>Reverses a payout by debiting the destination bank account. At this time, you can only reverse payouts for connected
+ * accounts to US bank accounts. If the payout is in the <code>pending</code> status, use
+ * <code>/v1/payouts/:id/cancel</code> instead.</p>
  *
- * <p>By requesting a reversal via <code>/v1/payouts/:id/reverse</code>, you confirm that the
- * authorized signatory of the selected bank account has authorized the debit on the bank account and that no other
- * authorization is required.</p>
+ * <p>By requesting a reversal through
+ * <code>/v1/payouts/:id/reverse</code>, you confirm that the authorized signatory of the selected bank account authorizes
+ * the debit on the bank account and that no other authorization is required.</p>
  */
 export async function postPayoutsPayoutReverse<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -33259,9 +34420,8 @@ export async function postRadarValueListsValueList<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Returns a list of all refunds you’ve previously created. The refunds are returned in sorted order, with the most
- * recent refunds appearing first. For convenience, the 10 most recent refunds are always available by default on the
- * charge object.</p>
+ * <p>Returns a list of all refunds you created. We return the refunds in sorted order, with the most recent refunds
+ * appearing first The 10 most recent refunds are always available by default on the Charge object.</p>
  */
 export async function getRefunds<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -33318,7 +34478,22 @@ export async function getRefunds<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Create a refund.</p>
+ * <p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create
+ * it.</p>
+ *
+ * <p>Creating a new refund will refund a charge that has previously been created but not yet refunded.
+ * Funds will
+ * be refunded to the credit or debit card that was originally charged.</p>
+ *
+ * <p>You can optionally refund only part of a
+ * charge.
+ * You can do so multiple times, until the entire charge has been refunded.</p>
+ *
+ * <p>Once entirely refunded, a
+ * charge can’t be refunded again.
+ * This method will raise an error when called on an already-refunded charge,
+ * or when
+ * trying to refund more money than is left on a charge.</p>
  */
 export async function postRefunds<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -33360,8 +34535,8 @@ export async function getRefundsRefund<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Updates the specified refund by setting the values of the parameters passed. Any parameters not provided will be left
- * unchanged.</p>
+ * <p>Updates the refund that you specify by setting the values of the passed parameters. Any parameters that you don’t
+ * provide remain unchanged.</p>
  *
  * <p>This request only accepts <code>metadata</code> as an argument.</p>
  */
@@ -33386,8 +34561,8 @@ export async function postRefundsRefund<FetcherData>(
 /**
  * <p>Cancels a refund with a status of <code>requires_action</code>.</p>
  *
- * <p>Refunds in other states cannot be canceled,
- * and only refunds for payment methods that require customer action will enter the <code>requires_action</code> state.</p>
+ * <p>You can’t cancel refunds in other states.
+ * Only refunds for payment methods that require customer action can enter the <code>requires_action</code> state.</p>
  */
 export async function postRefundsRefundCancel<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -33662,7 +34837,7 @@ export async function postReviewsReviewApprove<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Returns a list of SetupAttempts associated with a provided SetupIntent.</p>
+ * <p>Returns a list of SetupAttempts that associate with a provided SetupIntent.</p>
  */
 export async function getSetupAttempts<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -33778,9 +34953,9 @@ export async function getSetupIntents<FetcherData>(
 /**
  * <p>Creates a SetupIntent object.</p>
  *
- * <p>After the SetupIntent is created, attach a payment method and <a
+ * <p>After you create the SetupIntent, attach a payment method and <a
  * href="/docs/api/setup_intents/confirm">confirm</a>
- * to collect any required permissions to charge the payment method
+ * it to collect any required permissions to charge the payment method
  * later.</p>
  */
 export async function postSetupIntents<FetcherData>(
@@ -33852,11 +35027,11 @@ export async function postSetupIntentsIntent<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>A SetupIntent object can be canceled when it is in one of these statuses: <code>requires_payment_method</code>,
+ * <p>You can cancel a SetupIntent object when it’s in one of these statuses: <code>requires_payment_method</code>,
  * <code>requires_confirmation</code>, or <code>requires_action</code>. </p>
  *
- * <p>Once canceled, setup is abandoned and any
- * operations on the SetupIntent will fail with an error.</p>
+ * <p>After you cancel it, setup is abandoned
+ * and any operations on the SetupIntent fail with an error.</p>
  */
 export async function postSetupIntentsIntentCancel<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -34946,9 +36121,50 @@ export async function getSubscriptionsSubscriptionExposedId<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Updates an existing subscription on a customer to match the specified parameters. When changing plans or quantities,
- * we will optionally prorate the price we charge next month to make up for any price changes. To preview how the proration
- * will be calculated, use the <a href="#upcoming_invoice">upcoming invoice</a> endpoint.</p>
+ * <p>Updates an existing subscription to match the specified parameters.
+ * When changing prices or quantities, we optionally
+ * prorate the price we charge next month to make up for any price changes.
+ * To preview how the proration is calculated, use
+ * the <a href="/docs/api/invoices/upcoming">upcoming invoice</a> endpoint.</p>
+ *
+ * <p>By default, we prorate subscription
+ * changes. For example, if a customer signs up on May 1 for a <currency>100</currency> price, they’ll be billed
+ * <currency>100</currency> immediately. If on May 15 they switch to a <currency>200</currency> price, then on June 1
+ * they’ll be billed <currency>250</currency> (<currency>200</currency> for a renewal of her subscription, plus a
+ * <currency>50</currency> prorating adjustment for half of the previous month’s <currency>100</currency> difference).
+ * Similarly, a downgrade generates a credit that is applied to the next invoice. We also prorate when you make quantity
+ * changes.</p>
+ *
+ * <p>Switching prices does not normally change the billing date or generate an immediate charge
+ * unless:</p>
+ *
+ * <ul>
+ * <li>The billing interval is changed (for example, from monthly to yearly).</li>
+ * <li>The subscription
+ * moves from free to paid, or paid to free.</li>
+ * <li>A trial starts or ends.</li>
+ * </ul>
+ *
+ * <p>In these cases, we apply a
+ * credit for the unused time on the previous price, immediately charge the customer using the new price, and reset the
+ * billing date.</p>
+ *
+ * <p>If you want to charge for an upgrade immediately, pass <code>proration_behavior</code> as
+ * <code>always_invoice</code> to create prorations, automatically invoice the customer for those proration adjustments,
+ * and attempt to collect payment. If you pass <code>create_prorations</code>, the prorations are created but not
+ * automatically invoiced. If you want to bill the customer for the prorations before the subscription’s renewal date, you
+ * need to manually <a href="/docs/api/invoices/create">invoice the customer</a>.</p>
+ *
+ * <p>If you don’t want to prorate, set
+ * the <code>proration_behavior</code> option to <code>none</code>. With this option, the customer is billed
+ * <currency>100</currency> on May 1 and <currency>200</currency> on June 1. Similarly, if you set
+ * <code>proration_behavior</code> to <code>none</code> when switching between different billing intervals (for example,
+ * from monthly to yearly), we don’t generate any credits for the old subscription’s unused time. We still reset the
+ * billing date and bill immediately for the new subscription.</p>
+ *
+ * <p>Updating the quantity on a subscription many times
+ * in an hour may result in <a href="/docs/rate-limits">rate limiting</a>. If you need to bill for a frequently changing
+ * quantity, consider integrating <a href="/docs/billing/subscriptions/usage-based">usage-based billing</a> instead.</p>
  */
 export async function postSubscriptionsSubscriptionExposedId<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -35701,6 +36917,7 @@ export async function getTerminalReaders<FetcherData>(
     expand?: string[];
     limit?: number;
     location?: string;
+    serial_number?: string;
     starting_after?: string;
     status?: 'offline' | 'online';
   },
@@ -35735,6 +36952,7 @@ export async function getTerminalReaders<FetcherData>(
       'expand',
       'limit',
       'location',
+      'serial_number',
       'starting_after',
       'status',
     ],
@@ -35959,6 +37177,117 @@ export async function postTestHelpersCustomersCustomerFundCashBalance<
   return ctx.handleResponse(res, {});
 }
 /**
+ * <p>Create a test-mode authorization.</p>
+ */
+export async function postTestHelpersIssuingAuthorizations<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingAuthorization> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/authorizations',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Capture a test-mode authorization.</p>
+ */
+export async function postTestHelpersIssuingAuthorizationsAuthorizationCapture<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    authorization: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingAuthorization> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/authorizations/{authorization}/capture',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Expire a test-mode Authorization.</p>
+ */
+export async function postTestHelpersIssuingAuthorizationsAuthorizationExpire<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    authorization: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingAuthorization> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/authorizations/{authorization}/expire',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Increment a test-mode Authorization.</p>
+ */
+export async function postTestHelpersIssuingAuthorizationsAuthorizationIncrement<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    authorization: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingAuthorization> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/authorizations/{authorization}/increment',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Reverse a test-mode Authorization.</p>
+ */
+export async function postTestHelpersIssuingAuthorizationsAuthorizationReverse<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    authorization: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingAuthorization> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/authorizations/{authorization}/reverse',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>delivered</code>.</p>
  */
 export async function postTestHelpersIssuingCardsCardShippingDeliver<
@@ -36038,6 +37367,71 @@ export async function postTestHelpersIssuingCardsCardShippingShip<FetcherData>(
 ): Promise<IssuingCard> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/cards/{card}/shipping/ship',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Allows the user to capture an arbitrary amount, also known as a forced capture.</p>
+ */
+export async function postTestHelpersIssuingTransactionsCreateForceCapture<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingTransaction> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/transactions/create_force_capture',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Allows the user to refund an arbitrary amount, also known as a unlinked refund.</p>
+ */
+export async function postTestHelpersIssuingTransactionsCreateUnlinkedRefund<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingTransaction> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/transactions/create_unlinked_refund',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Refund a test-mode Transaction.</p>
+ */
+export async function postTestHelpersIssuingTransactionsTransactionRefund<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    transaction: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<IssuingTransaction> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/transactions/{transaction}/refund',
     params,
     method: r.HttpMethod.POST,
     body,
@@ -36473,9 +37867,9 @@ export async function postTestHelpersTreasuryReceivedDebits<FetcherData>(
 }
 /**
  * <p>Creates a single-use token that represents a bank account’s details.
- * This token can be used with any API method in
- * place of a bank account dictionary. This token can be used only once, by attaching it to a <a href="#accounts">Custom
- * account</a>.</p>
+ * You can use this token with any API method in
+ * place of a bank account dictionary. You can only use this token once. To do so, attach it to a <a
+ * href="#accounts">Custom account</a>.</p>
  */
 export async function postTokens<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,

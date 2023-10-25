@@ -1,5 +1,23 @@
 # CHANGELOG.md
 
+## 3.1.5 - 2023-10-25
+
+> Only the generator and cli were published, the runtime is still at 3.1.3
+
+### **Minor Changes**
+
+- Handle most of quoted property name issues [#47](https://github.com/Embraser01/typoas/issues/47)
+
+## 3.1.4 - 2023-08-21
+
+> Only the generator and cli were published, the runtime is still at 3.1.3
+
+> Version 3.1.2 and 3.1.3 are broken, please upgrade to 3.1.4
+
+### **Minor Changes**
+
+- Fixes usage of the cli with npx (cf. [#45](https://github.com/Embraser01/typoas/issues/45), [#34](https://github.com/Embraser01/typoas/issues/34))
+
 ## 3.1.1 - 2023-07-04
 
 > Version 3.1.0 is broken, please upgrade to 3.1.1
