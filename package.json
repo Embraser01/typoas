@@ -8,17 +8,17 @@
   "scripts": {
     "test:lint": "prettier . -c",
     "test:eslint": "eslint --max-warnings 0 .",
-    "test:types": "yarn workspaces foreach -ptv run test:types",
-    "test:jest": "yarn workspaces foreach -ptv run test:jest"
+    "test:types": "yarn workspaces foreach -Aptv run test:types",
+    "test:jest": "yarn workspaces foreach -Aptv run test:jest"
   },
   "dependencies": {
     "@types/node": "^20.2.3",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "@typescript-eslint/parser": "^5.59.7",
-    "eslint": "^8.41.0",
-    "eslint-plugin-jest": "^27.2.1",
-    "prettier": "^2.8.8",
-    "typescript": "^5.0.4"
+    "eslint": "^8.56.0",
+    "eslint-plugin-jest": "^27.6.3",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
   },
-  "packageManager": "yarn@3.5.1"
+  "packageManager": "yarn@4.0.2"
 }

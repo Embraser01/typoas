@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 18
 
+      - name: Yarn install
+        run: yarn
+
       - name: Prettier
         run: yarn test:lint
 
