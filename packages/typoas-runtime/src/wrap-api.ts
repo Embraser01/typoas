@@ -21,12 +21,12 @@ type WithoutContext<T> = T extends (
 ) => Promise<infer R>
   ? (params: P) => Promise<R>
   : T extends (
-      ctx: Context<never>,
-      params: infer P,
-      body: infer B,
-    ) => Promise<infer R>
-  ? (params: P, body: B) => Promise<R>
-  : never;
+        ctx: Context<never>,
+        params: infer P,
+        body: infer B,
+      ) => Promise<infer R>
+    ? (params: P, body: B) => Promise<R>
+    : never;
 
 type WrapApiEndpoints<
   AuthModes extends Record<string, SecurityAuthentication>,

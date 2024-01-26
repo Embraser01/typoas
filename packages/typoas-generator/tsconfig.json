@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "declaration": true,
     "lib": ["ES2019"],
-    "outDir": "lib"
+    "outDir": "lib",
   },
-  "exclude": ["node_modules", "lib"]
+  "exclude": ["node_modules", "lib"],
 }

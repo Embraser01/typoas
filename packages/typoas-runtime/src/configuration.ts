@@ -13,7 +13,10 @@ export interface BaseServerConfiguration {
 export class ServerConfiguration<T extends Record<string, string>>
   implements BaseServerConfiguration
 {
-  public constructor(private url: string, private variableConfiguration: T) {}
+  public constructor(
+    private url: string,
+    private variableConfiguration: T,
+  ) {}
 
   /**
    * Sets the value of the variables of this server.

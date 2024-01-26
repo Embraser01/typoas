@@ -72,12 +72,12 @@ export type CreateContextParams<
         AuthModes[key] extends ApiKeySecurityAuthentication
           ? string
           : AuthModes[key] extends HttpBasicSecurityAuthentication
-          ? BasicAuthConfig
-          : AuthModes[key] extends HttpBearerSecurityAuthentication
-          ? BearerAuthConfig
-          : AuthModes[key] extends OAuth2SecurityAuthentication
-          ? BaseFlowConfig
-          : never
+            ? BasicAuthConfig
+            : AuthModes[key] extends HttpBearerSecurityAuthentication
+              ? BearerAuthConfig
+              : AuthModes[key] extends OAuth2SecurityAuthentication
+                ? BaseFlowConfig
+                : never
       >;
     };
   }

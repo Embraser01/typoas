@@ -14,8 +14,8 @@
     "@types/node": "^20.2.3",
     "@types/node-fetch": "^2.6.4",
     "@typoas/cli": "workspace:^",
-    "prettier": "^2.8.8",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "prettier": "^3.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

@@ -777,9 +777,17 @@ export type AppPermissions = {
    */
   checks?: 'read' | 'write';
   /**
+   * The level of permission to grant the access token to create, edit, delete, and list Codespaces.
+   */
+  codespaces?: 'read' | 'write';
+  /**
    * The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges.
    */
   contents?: 'read' | 'write';
+  /**
+   * The leve of permission to grant the access token to manage Dependabot secrets.
+   */
+  dependabot_secrets?: 'read' | 'write';
   /**
    * The level of permission to grant the access token for deployments and deployment statuses.
    */
@@ -808,6 +816,10 @@ export type AppPermissions = {
    * The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges.
    */
   pull_requests?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to view and edit custom properties for a repository, when allowed by the property.
+   */
+  repository_custom_properties?: 'read' | 'write';
   /**
    * The level of permission to grant the access token to manage the post-receive hooks for a repository.
    */
@@ -853,13 +865,29 @@ export type AppPermissions = {
    */
   organization_administration?: 'read' | 'write';
   /**
-   * The level of permission to grant the access token for custom repository roles management. This property is in beta and is subject to change.
+   * The level of permission to grant the access token for custom repository roles management.
    */
   organization_custom_roles?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for custom organization roles management.
+   */
+  organization_custom_org_roles?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token for custom property management.
+   */
+  organization_custom_properties?: 'read' | 'write' | 'admin';
+  /**
+   * The level of permission to grant the access token for managing access to GitHub Copilot for members of an organization with a Copilot Business subscription. This property is in beta and is subject to change.
+   */
+  organization_copilot_seat_management?: 'write';
   /**
    * The level of permission to grant the access token to view and manage announcement banners for an organization.
    */
   organization_announcement_banners?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to view events triggered by an activity in an organization.
+   */
+  organization_events?: 'read';
   /**
    * The level of permission to grant the access token to manage the post-receive hooks for an organization.
    */
@@ -900,6 +928,34 @@ export type AppPermissions = {
    * The level of permission to grant the access token to manage team discussions and related comments.
    */
   team_discussions?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage the email addresses belonging to a user.
+   */
+  email_addresses?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage the followers belonging to a user.
+   */
+  followers?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage git SSH keys.
+   */
+  git_ssh_keys?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to view and manage GPG keys belonging to a user.
+   */
+  gpg_keys?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to view and manage interaction limits on a repository.
+   */
+  interaction_limits?: 'read' | 'write';
+  /**
+   * The level of permission to grant the access token to manage the profile settings belonging to a user.
+   */
+  profile?: 'write';
+  /**
+   * The level of permission to grant the access token to list and manage repositories a user is starring.
+   */
+  starring?: 'read' | 'write';
 };
 /**
  * Installation
@@ -1231,7 +1287,7 @@ export type Repository = {
    */
   watchers_count: number;
   /**
-   * The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+   * The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
    * @example 108
    */
   size: number;
@@ -2038,7 +2094,7 @@ export type CodeOfConduct = {
    */
   url: string;
   /**
-   * @example "# Contributor Covenant Code of Conduct\n\n## Our Pledge\n\nIn the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.\n\n## Our Standards\n\nExamples of behavior that contributes to creating a positive environment include:\n\n* Using welcoming and inclusive language\n* Being respectful of differing viewpoints and experiences\n* Gracefully accepting constructive criticism\n* Focusing on what is best for the community\n* Showing empathy towards other community members\n\nExamples of unacceptable behavior by participants include:\n\n* The use of sexualized language or imagery and unwelcome sexual attention or advances\n* Trolling, insulting/derogatory comments, and personal or political attacks\n* Public or private harassment\n* Publishing others' private information, such as a physical or electronic address, without explicit permission\n* Other conduct which could reasonably be considered inappropriate in a professional setting\n\n## Our Responsibilities\n\nProject maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response\n                  to any instances of unacceptable behavior.\n\nProject maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.\n\n## Scope\n\nThis Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address,\n                  posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.\n\n## Enforcement\n\nInstances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [EMAIL]. The project team will review and investigate all complaints, and will respond in a way that it deems appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.\n\nProject maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.\n\n## Attribution\n\nThis Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [http://contributor-covenant.org/version/1/4][version]\n\n[homepage]: http://contributor-covenant.org\n[version]: http://contributor-covenant.org/version/1/4/\n"
+   * @example "# Contributor Covenant Code of Conduct\n\n## Our Pledge\n\nIn the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.\n\n## Our Standards\n\nExamples of behavior that contributes to creating a positive environment include:\n\n* Using welcoming and inclusive language\n* Being respectful of differing viewpoints and experiences\n* Gracefully accepting constructive criticism\n* Focusing on what is best for the community\n* Showing empathy towards other community members\n\nExamples of unacceptable behavior by participants include:\n\n* The use of sexualized language or imagery and unwelcome sexual attention or advances\n* Trolling, insulting/derogatory comments, and personal or political attacks\n* Public or private harassment\n* Publishing others' private information, such as a physical or electronic address, without explicit permission\n* Other conduct which could reasonably be considered inappropriate in a professional setting\n\n## Our Responsibilities\n\nProject maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response\n                  to any instances of unacceptable behavior.\n\nProject maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.\n\n## Scope\n\nThis Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address,\n                  posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.\n\n## Enforcement\n\nInstances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [EMAIL]. The project team will review and investigate all complaints, and will respond in a way that it deems appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.\n\nProject maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.\n\n## Attribution\n\nThis Code of Conduct is adapted from the [Contributor Covenant](http://contributor-covenant.org), version 1.4, available at [http://contributor-covenant.org/version/1/4](http://contributor-covenant.org/version/1/4/).\n"
    */
   body?: string;
   html_url: string | null;
@@ -2542,6 +2598,10 @@ export type OrganizationSecretScanningAlert = {
    * The comment that was optionally added when this alert was closed
    */
   resolution_comment?: string | null;
+  /**
+   * The token status as of the latest validity check.
+   */
+  validity?: 'active' | 'inactive' | 'unknown';
 };
 /**
  * Actor
@@ -3529,6 +3589,7 @@ export type ApiOverview = {
     codespaces?: string[];
     copilot?: string[];
     packages?: string[];
+    actions?: string[];
   };
 };
 export type SecurityAndAnalysis = {
@@ -3742,7 +3803,7 @@ export type MinimalRepository = {
   stargazers_count?: number;
   watchers_count?: number;
   /**
-   * The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+   * The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
    */
   size?: number;
   default_branch?: string;
@@ -4492,7 +4553,7 @@ export type CodeScanningAlertDismissedReason =
  * The dismissal comment associated with the dismissal of the alert.
  */
 export type CodeScanningAlertDismissedComment = string | null;
-export type CodeScanningAlertRule = {
+export type CodeScanningAlertRuleSummary = {
   /**
    * A unique identifier for the rule used to detect the alert.
    */
@@ -4501,6 +4562,10 @@ export type CodeScanningAlertRule = {
    * The name of the rule used to detect the alert.
    */
   name?: string;
+  /**
+   * A set of tags applicable for the rule.
+   */
+  tags?: string[] | null;
   /**
    * The severity of the alert.
    */
@@ -4513,22 +4578,6 @@ export type CodeScanningAlertRule = {
    * A short description of the rule used to detect the alert.
    */
   description?: string;
-  /**
-   * description of the rule used to detect the alert.
-   */
-  full_description?: string;
-  /**
-   * A set of tags applicable for the rule.
-   */
-  tags?: string[] | null;
-  /**
-   * Detailed documentation for the rule as GitHub Flavored Markdown.
-   */
-  help?: string | null;
-  /**
-   * A link to the documentation for the rule used to detect the alert.
-   */
-  help_uri?: string | null;
 };
 /**
  * The version of the tool used to generate the code scanning analysis.
@@ -4540,8 +4589,8 @@ export type CodeScanningAnalysisTool = {
   guid?: CodeScanningAnalysisToolGuid;
 };
 /**
- * The full Git reference, formatted as `refs/heads/<branch name>`,
- * `refs/pull/<number>/merge`, or `refs/pull/<number>/head`.
+ * The Git reference, formatted as `refs/pull/<number>/merge`, `refs/pull/<number>/head`,
+ * `refs/heads/<branch name>` or simply `<branch name>`.
  */
 export type CodeScanningRef = string;
 /**
@@ -4603,7 +4652,7 @@ export type CodeScanningOrganizationAlertItems = {
   dismissed_at: AlertDismissedAt;
   dismissed_reason: CodeScanningAlertDismissedReason;
   dismissed_comment?: CodeScanningAlertDismissedComment;
-  rule: CodeScanningAlertRule;
+  rule: CodeScanningAlertRuleSummary;
   tool: CodeScanningAnalysisTool;
   most_recent_instance: CodeScanningAlertInstance;
   repository: SimpleRepository;
@@ -4881,8 +4930,8 @@ export type CodespacesPublicKey = {
   created_at?: string;
 };
 /**
- * Copilot for Business Seat Breakdown
- * The breakdown of Copilot for Business seats for the organization.
+ * Copilot Business Seat Breakdown
+ * The breakdown of Copilot Business seats for the organization.
  */
 export type CopilotSeatBreakdown = {
   /**
@@ -4911,8 +4960,8 @@ export type CopilotSeatBreakdown = {
   inactive_this_cycle?: number;
 };
 /**
- * Copilot for Business Organization Details
- * Information about the seat breakdown and policies set for an organization with a Copilot for Business subscription.
+ * Copilot Business Organization Details
+ * Information about the seat breakdown and policies set for an organization with a Copilot Business subscription.
  */
 export type CopilotOrganizationDetails = {
   seat_breakdown: CopilotSeatBreakdown;
@@ -5106,8 +5155,8 @@ export type Organization = {
   };
 };
 /**
- * Copilot for Business Seat Detail
- * Information about a Copilot for Business seat assignment for a user, team, or organization.
+ * Copilot Business Seat Detail
+ * Information about a Copilot Business seat assignment for a user, team, or organization.
  */
 export type CopilotSeatDetails = {
   /**
@@ -5367,7 +5416,7 @@ export type NullableMinimalRepository = {
   stargazers_count?: number;
   watchers_count?: number;
   /**
-   * The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+   * The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
    */
   size?: number;
   default_branch?: string;
@@ -5682,6 +5731,45 @@ export type Migration = {
   exclude?: string[];
 };
 /**
+ * Organization Fine-Grained Permission
+ * A fine-grained permission that protects organization resources.
+ */
+export type OrganizationFineGrainedPermission = {
+  name: string;
+  description: string;
+};
+/**
+ * Organization Role
+ * Organization roles
+ */
+export type OrganizationRole = {
+  /**
+   * The unique identifier of the role.
+   */
+  id: number;
+  /**
+   * The name of the role.
+   */
+  name: string;
+  /**
+   * A short description about who this role is for or what permissions it grants.
+   */
+  description?: string | null;
+  /**
+   * A list of permissions included in this role.
+   */
+  permissions: string[];
+  organization: NullableSimpleUser;
+  /**
+   * The date and time the role was created.
+   */
+  created_at: Date;
+  /**
+   * The date and time the role was last updated.
+   */
+  updated_at: Date;
+};
+/**
  * Package Version
  * A version of a software package
  */
@@ -5951,6 +6039,11 @@ export type OrgCustomProperty = {
    * Ordered list of allowed values of the property
    */
   allowed_values?: string[] | null;
+  /**
+   * Who can edit the values of the property
+   * @example "org_actors"
+   */
+  values_editable_by?: ('org_actors' | 'org_and_repo_actors') | null;
 };
 /**
  * Custom Property Value
@@ -5964,7 +6057,7 @@ export type CustomPropertyValue = {
   /**
    * The value assigned to the property
    */
-  value: string | null;
+  value: (string | string[]) | null;
 };
 /**
  * Organization Repository Custom Property Values
@@ -5987,6 +6080,939 @@ export type OrgRepoCustomPropertyValues = {
    * List of custom property names and associated values
    */
   properties: CustomPropertyValue[];
+};
+/**
+ * Repository
+ * A repository on GitHub.
+ */
+export type NullableRepository = {
+  /**
+   * Unique identifier of the repository
+   * @example 42
+   */
+  id: number;
+  /**
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+   */
+  node_id: string;
+  /**
+   * The name of the repository.
+   * @example "Team Environment"
+   */
+  name: string;
+  /**
+   * @example "octocat/Hello-World"
+   */
+  full_name: string;
+  license: NullableLicenseSimple;
+  organization?: NullableSimpleUser;
+  forks: number;
+  permissions?: {
+    admin: boolean;
+    pull: boolean;
+    triage?: boolean;
+    push: boolean;
+    maintain?: boolean;
+  };
+  owner: SimpleUser;
+  /**
+   * Whether the repository is private or public.
+   */
+  private: boolean;
+  /**
+   * @example "https://github.com/octocat/Hello-World"
+   */
+  html_url: string;
+  /**
+   * @example "This your first repo!"
+   */
+  description: string | null;
+  fork: boolean;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World"
+   */
+  url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+   */
+  archive_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+   */
+  assignees_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+   */
+  blobs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+   */
+  branches_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+   */
+  collaborators_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+   */
+  comments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+   */
+  commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+   */
+  compare_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+   */
+  contents_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
+   */
+  contributors_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
+   */
+  deployments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
+   */
+  downloads_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/events"
+   */
+  events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
+   */
+  forks_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+   */
+  git_commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+   */
+  git_refs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+   */
+  git_tags_url: string;
+  /**
+   * @example "git:github.com/octocat/Hello-World.git"
+   */
+  git_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+   */
+  issue_comment_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+   */
+  issue_events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+   */
+  issues_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+   */
+  keys_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+   */
+  labels_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
+   */
+  languages_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
+   */
+  merges_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+   */
+  milestones_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+   */
+  notifications_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+   */
+  pulls_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+   */
+  releases_url: string;
+  /**
+   * @example "git@github.com:octocat/Hello-World.git"
+   */
+  ssh_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
+   */
+  stargazers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+   */
+  statuses_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
+   */
+  subscribers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
+   */
+  subscription_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
+   */
+  tags_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
+   */
+  teams_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
+   */
+  trees_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World.git"
+   */
+  clone_url: string;
+  /**
+   * @example "git:git.example.com/octocat/Hello-World"
+   */
+  mirror_url: string | null;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
+   */
+  hooks_url: string;
+  /**
+   * @example "https://svn.github.com/octocat/Hello-World"
+   */
+  svn_url: string;
+  /**
+   * @example "https://github.com"
+   */
+  homepage: string | null;
+  language: string | null;
+  /**
+   * @example 9
+   */
+  forks_count: number;
+  /**
+   * @example 80
+   */
+  stargazers_count: number;
+  /**
+   * @example 80
+   */
+  watchers_count: number;
+  /**
+   * The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
+   * @example 108
+   */
+  size: number;
+  /**
+   * The default branch of the repository.
+   * @example "master"
+   */
+  default_branch: string;
+  open_issues_count: number;
+  /**
+   * Whether this repository acts as a template that can be used to generate new repositories.
+   * @example true
+   */
+  is_template?: boolean;
+  topics?: string[];
+  /**
+   * Whether issues are enabled.
+   * @example true
+   * @defaultValue true
+   */
+  has_issues: boolean;
+  /**
+   * Whether projects are enabled.
+   * @example true
+   * @defaultValue true
+   */
+  has_projects: boolean;
+  /**
+   * Whether the wiki is enabled.
+   * @example true
+   * @defaultValue true
+   */
+  has_wiki: boolean;
+  has_pages: boolean;
+  /**
+   * Whether downloads are enabled.
+   * @example true
+   * @defaultValue true
+   * @deprecated
+   */
+  has_downloads: boolean;
+  /**
+   * Whether discussions are enabled.
+   * @example true
+   */
+  has_discussions?: boolean;
+  /**
+   * Whether the repository is archived.
+   */
+  archived: boolean;
+  /**
+   * Returns whether or not this repository disabled.
+   */
+  disabled: boolean;
+  /**
+   * The repository visibility: public, private, or internal.
+   * @defaultValue "public"
+   */
+  visibility?: string;
+  /**
+   * @example "2011-01-26T19:06:43Z"
+   */
+  pushed_at: Date | null;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   */
+  created_at: Date | null;
+  /**
+   * @example "2011-01-26T19:14:43Z"
+   */
+  updated_at: Date | null;
+  /**
+   * Whether to allow rebase merges for pull requests.
+   * @example true
+   * @defaultValue true
+   */
+  allow_rebase_merge?: boolean;
+  template_repository?: {
+    id?: number;
+    node_id?: string;
+    name?: string;
+    full_name?: string;
+    owner?: {
+      login?: string;
+      id?: number;
+      node_id?: string;
+      avatar_url?: string;
+      gravatar_id?: string;
+      url?: string;
+      html_url?: string;
+      followers_url?: string;
+      following_url?: string;
+      gists_url?: string;
+      starred_url?: string;
+      subscriptions_url?: string;
+      organizations_url?: string;
+      repos_url?: string;
+      events_url?: string;
+      received_events_url?: string;
+      type?: string;
+      site_admin?: boolean;
+    };
+    private?: boolean;
+    html_url?: string;
+    description?: string;
+    fork?: boolean;
+    url?: string;
+    archive_url?: string;
+    assignees_url?: string;
+    blobs_url?: string;
+    branches_url?: string;
+    collaborators_url?: string;
+    comments_url?: string;
+    commits_url?: string;
+    compare_url?: string;
+    contents_url?: string;
+    contributors_url?: string;
+    deployments_url?: string;
+    downloads_url?: string;
+    events_url?: string;
+    forks_url?: string;
+    git_commits_url?: string;
+    git_refs_url?: string;
+    git_tags_url?: string;
+    git_url?: string;
+    issue_comment_url?: string;
+    issue_events_url?: string;
+    issues_url?: string;
+    keys_url?: string;
+    labels_url?: string;
+    languages_url?: string;
+    merges_url?: string;
+    milestones_url?: string;
+    notifications_url?: string;
+    pulls_url?: string;
+    releases_url?: string;
+    ssh_url?: string;
+    stargazers_url?: string;
+    statuses_url?: string;
+    subscribers_url?: string;
+    subscription_url?: string;
+    tags_url?: string;
+    teams_url?: string;
+    trees_url?: string;
+    clone_url?: string;
+    mirror_url?: string;
+    hooks_url?: string;
+    svn_url?: string;
+    homepage?: string;
+    language?: string;
+    forks_count?: number;
+    stargazers_count?: number;
+    watchers_count?: number;
+    size?: number;
+    default_branch?: string;
+    open_issues_count?: number;
+    is_template?: boolean;
+    topics?: string[];
+    has_issues?: boolean;
+    has_projects?: boolean;
+    has_wiki?: boolean;
+    has_pages?: boolean;
+    has_downloads?: boolean;
+    archived?: boolean;
+    disabled?: boolean;
+    visibility?: string;
+    pushed_at?: string;
+    created_at?: string;
+    updated_at?: string;
+    permissions?: {
+      admin?: boolean;
+      maintain?: boolean;
+      push?: boolean;
+      triage?: boolean;
+      pull?: boolean;
+    };
+    allow_rebase_merge?: boolean;
+    temp_clone_token?: string;
+    allow_squash_merge?: boolean;
+    allow_auto_merge?: boolean;
+    delete_branch_on_merge?: boolean;
+    allow_update_branch?: boolean;
+    use_squash_pr_title_as_default?: boolean;
+    /**
+     * The default value for a squash merge commit title:
+     *
+     * - `PR_TITLE` - default to the pull request's title.
+     * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+     */
+    squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
+    /**
+     * The default value for a squash merge commit message:
+     *
+     * - `PR_BODY` - default to the pull request's body.
+     * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+     * - `BLANK` - default to a blank commit message.
+     */
+    squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
+    /**
+     * The default value for a merge commit title.
+     *
+     * - `PR_TITLE` - default to the pull request's title.
+     * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+     */
+    merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
+    /**
+     * The default value for a merge commit message.
+     *
+     * - `PR_TITLE` - default to the pull request's title.
+     * - `PR_BODY` - default to the pull request's body.
+     * - `BLANK` - default to a blank commit message.
+     */
+    merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
+    allow_merge_commit?: boolean;
+    subscribers_count?: number;
+    network_count?: number;
+  } | null;
+  temp_clone_token?: string;
+  /**
+   * Whether to allow squash merges for pull requests.
+   * @example true
+   * @defaultValue true
+   */
+  allow_squash_merge?: boolean;
+  /**
+   * Whether to allow Auto-merge to be used on pull requests.
+   */
+  allow_auto_merge?: boolean;
+  /**
+   * Whether to delete head branches when pull requests are merged
+   */
+  delete_branch_on_merge?: boolean;
+  /**
+   * Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.
+   */
+  allow_update_branch?: boolean;
+  /**
+   * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+   * @deprecated
+   */
+  use_squash_pr_title_as_default?: boolean;
+  /**
+   * The default value for a squash merge commit title:
+   *
+   * - `PR_TITLE` - default to the pull request's title.
+   * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+   */
+  squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
+  /**
+   * The default value for a squash merge commit message:
+   *
+   * - `PR_BODY` - default to the pull request's body.
+   * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+   * - `BLANK` - default to a blank commit message.
+   */
+  squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
+  /**
+   * The default value for a merge commit title.
+   *
+   * - `PR_TITLE` - default to the pull request's title.
+   * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+   */
+  merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
+  /**
+   * The default value for a merge commit message.
+   *
+   * - `PR_TITLE` - default to the pull request's title.
+   * - `PR_BODY` - default to the pull request's body.
+   * - `BLANK` - default to a blank commit message.
+   */
+  merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
+  /**
+   * Whether to allow merge commits for pull requests.
+   * @example true
+   * @defaultValue true
+   */
+  allow_merge_commit?: boolean;
+  /**
+   * Whether to allow forking this repo
+   */
+  allow_forking?: boolean;
+  /**
+   * Whether to require contributors to sign off on web-based commits
+   */
+  web_commit_signoff_required?: boolean;
+  subscribers_count?: number;
+  network_count?: number;
+  open_issues: number;
+  watchers: number;
+  master_branch?: string;
+  /**
+   * @example "\"2020-07-09T00:17:42Z\""
+   */
+  starred_at?: string;
+  /**
+   * Whether anonymous git access is enabled for this repository
+   */
+  anonymous_access_enabled?: boolean;
+} | null;
+/**
+ * Code Of Conduct Simple
+ * Code of Conduct Simple
+ */
+export type CodeOfConductSimple = {
+  /**
+   * @example "https://api.github.com/repos/github/docs/community/code_of_conduct"
+   */
+  url: string;
+  /**
+   * @example "citizen_code_of_conduct"
+   */
+  key: string;
+  /**
+   * @example "Citizen Code of Conduct"
+   */
+  name: string;
+  /**
+   * @example "https://github.com/github/docs/blob/main/CODE_OF_CONDUCT.md"
+   */
+  html_url: string | null;
+};
+/**
+ * Full Repository
+ * Full Repository
+ */
+export type FullRepository = {
+  /**
+   * @example 1296269
+   */
+  id: number;
+  /**
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+   */
+  node_id: string;
+  /**
+   * @example "Hello-World"
+   */
+  name: string;
+  /**
+   * @example "octocat/Hello-World"
+   */
+  full_name: string;
+  owner: SimpleUser;
+  private: boolean;
+  /**
+   * @example "https://github.com/octocat/Hello-World"
+   */
+  html_url: string;
+  /**
+   * @example "This your first repo!"
+   */
+  description: string | null;
+  fork: boolean;
+  /**
+   * @example "https://api.github.com/repos/octocat/Hello-World"
+   */
+  url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+   */
+  archive_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+   */
+  assignees_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+   */
+  blobs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+   */
+  branches_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+   */
+  collaborators_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+   */
+  comments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+   */
+  commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+   */
+  compare_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+   */
+  contents_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
+   */
+  contributors_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
+   */
+  deployments_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
+   */
+  downloads_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/events"
+   */
+  events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
+   */
+  forks_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+   */
+  git_commits_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+   */
+  git_refs_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+   */
+  git_tags_url: string;
+  /**
+   * @example "git:github.com/octocat/Hello-World.git"
+   */
+  git_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+   */
+  issue_comment_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+   */
+  issue_events_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+   */
+  issues_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+   */
+  keys_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+   */
+  labels_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
+   */
+  languages_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
+   */
+  merges_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+   */
+  milestones_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+   */
+  notifications_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+   */
+  pulls_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+   */
+  releases_url: string;
+  /**
+   * @example "git@github.com:octocat/Hello-World.git"
+   */
+  ssh_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
+   */
+  stargazers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+   */
+  statuses_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
+   */
+  subscribers_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
+   */
+  subscription_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
+   */
+  tags_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
+   */
+  teams_url: string;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
+   */
+  trees_url: string;
+  /**
+   * @example "https://github.com/octocat/Hello-World.git"
+   */
+  clone_url: string;
+  /**
+   * @example "git:git.example.com/octocat/Hello-World"
+   */
+  mirror_url: string | null;
+  /**
+   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
+   */
+  hooks_url: string;
+  /**
+   * @example "https://svn.github.com/octocat/Hello-World"
+   */
+  svn_url: string;
+  /**
+   * @example "https://github.com"
+   */
+  homepage: string | null;
+  language: string | null;
+  /**
+   * @example 9
+   */
+  forks_count: number;
+  /**
+   * @example 80
+   */
+  stargazers_count: number;
+  /**
+   * @example 80
+   */
+  watchers_count: number;
+  /**
+   * The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
+   * @example 108
+   */
+  size: number;
+  /**
+   * @example "master"
+   */
+  default_branch: string;
+  open_issues_count: number;
+  /**
+   * @example true
+   */
+  is_template?: boolean;
+  /**
+   * @example
+   * [
+   *   "octocat",
+   *   "atom",
+   *   "electron",
+   *   "API"
+   * ]
+   */
+  topics?: string[];
+  /**
+   * @example true
+   */
+  has_issues: boolean;
+  /**
+   * @example true
+   */
+  has_projects: boolean;
+  /**
+   * @example true
+   */
+  has_wiki: boolean;
+  has_pages: boolean;
+  /**
+   * @example true
+   */
+  has_downloads?: boolean;
+  /**
+   * @example true
+   */
+  has_discussions: boolean;
+  archived: boolean;
+  /**
+   * Returns whether or not this repository disabled.
+   */
+  disabled: boolean;
+  /**
+   * The repository visibility: public, private, or internal.
+   * @example "public"
+   */
+  visibility?: string;
+  /**
+   * @example "2011-01-26T19:06:43Z"
+   */
+  pushed_at: Date;
+  /**
+   * @example "2011-01-26T19:01:12Z"
+   */
+  created_at: Date;
+  /**
+   * @example "2011-01-26T19:14:43Z"
+   */
+  updated_at: Date;
+  permissions?: {
+    admin: boolean;
+    maintain?: boolean;
+    push: boolean;
+    triage?: boolean;
+    pull: boolean;
+  };
+  /**
+   * @example true
+   */
+  allow_rebase_merge?: boolean;
+  template_repository?: NullableRepository;
+  temp_clone_token?: string | null;
+  /**
+   * @example true
+   */
+  allow_squash_merge?: boolean;
+  allow_auto_merge?: boolean;
+  delete_branch_on_merge?: boolean;
+  /**
+   * @example true
+   */
+  allow_merge_commit?: boolean;
+  /**
+   * @example true
+   */
+  allow_update_branch?: boolean;
+  use_squash_pr_title_as_default?: boolean;
+  /**
+   * The default value for a squash merge commit title:
+   *
+   * - `PR_TITLE` - default to the pull request's title.
+   * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+   * @example "PR_TITLE"
+   */
+  squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
+  /**
+   * The default value for a squash merge commit message:
+   *
+   * - `PR_BODY` - default to the pull request's body.
+   * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+   * - `BLANK` - default to a blank commit message.
+   * @example "PR_BODY"
+   */
+  squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
+  /**
+   * The default value for a merge commit title.
+   *
+   *   - `PR_TITLE` - default to the pull request's title.
+   *   - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+   * @example "PR_TITLE"
+   */
+  merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
+  /**
+   * The default value for a merge commit message.
+   *
+   * - `PR_TITLE` - default to the pull request's title.
+   * - `PR_BODY` - default to the pull request's body.
+   * - `BLANK` - default to a blank commit message.
+   * @example "PR_BODY"
+   */
+  merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
+  /**
+   * @example true
+   */
+  allow_forking?: boolean;
+  web_commit_signoff_required?: boolean;
+  /**
+   * @example 42
+   */
+  subscribers_count: number;
+  network_count: number;
+  license: NullableLicenseSimple;
+  organization?: NullableSimpleUser;
+  parent?: Repository;
+  source?: Repository;
+  forks: number;
+  master_branch?: string;
+  open_issues: number;
+  watchers: number;
+  /**
+   * Whether anonymous git access is allowed.
+   * @defaultValue true
+   */
+  anonymous_access_enabled?: boolean;
+  code_of_conduct?: CodeOfConductSimple;
+  security_and_analysis?: SecurityAndAnalysis;
+  /**
+   * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+   */
+  custom_properties?: {
+    [key: string]: any;
+  };
 };
 /**
  * The enforcement level of the ruleset. `evaluate` allows admins to test rules before enforcing them. Admins can view insights on the Rule Insights page (`evaluate` is only available with GitHub Enterprise).
@@ -6107,7 +7133,7 @@ export type RepositoryRuleRequiredLinearHistory = {
 };
 /**
  * required_deployments
- * Choose which environments must be successfully deployed to before refs can be merged into a branch that matches this rule.
+ * Choose which environments must be successfully deployed to before refs can be pushed into a ref that matches this rule.
  */
 export type RepositoryRuleRequiredDeployments = {
   type: 'required_deployments';
@@ -6170,7 +7196,7 @@ export type RepositoryRuleParamsStatusCheckConfiguration = {
 };
 /**
  * required_status_checks
- * Choose which status checks must pass before branches can be merged into a branch that matches this rule. When enabled, commits must first be pushed to another branch, then merged or pushed directly to a ref that matches this rule after status checks have passed.
+ * Choose which status checks must pass before the ref is updated. When enabled, commits must first be pushed to another ref where the checks pass.
  */
 export type RepositoryRuleRequiredStatusChecks = {
   type: 'required_status_checks';
@@ -6422,7 +7448,7 @@ export type RepositoryRuleset = {
       href?: string;
     };
   };
-  conditions?: RepositoryRulesetConditions | OrgRulesetConditions;
+  conditions?: (RepositoryRulesetConditions | OrgRulesetConditions) | null;
   rules?: RepositoryRule[];
   created_at?: Date;
   updated_at?: Date;
@@ -6489,11 +7515,11 @@ export type RuleSuite = {
   /**
    * The number that identifies the user.
    */
-  actor_id?: number;
+  actor_id?: number | null;
   /**
    * The handle for the GitHub user account.
    */
-  actor_name?: string;
+  actor_name?: string | null;
   /**
    * The first commit sha before the push evaluation.
    */
@@ -7219,7 +8245,7 @@ export type TeamDiscussion = {
    */
   pinned: boolean;
   /**
-   * Whether or not this discussion should be restricted to team members and organization administrators.
+   * Whether or not this discussion should be restricted to team members and organization owners.
    * @example true
    */
   private: boolean;
@@ -7375,539 +8401,6 @@ export type TeamProject = {
     admin: boolean;
   };
 };
-/**
- * Repository
- * A repository on GitHub.
- */
-export type NullableRepository = {
-  /**
-   * Unique identifier of the repository
-   * @example 42
-   */
-  id: number;
-  /**
-   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
-   */
-  node_id: string;
-  /**
-   * The name of the repository.
-   * @example "Team Environment"
-   */
-  name: string;
-  /**
-   * @example "octocat/Hello-World"
-   */
-  full_name: string;
-  license: NullableLicenseSimple;
-  organization?: NullableSimpleUser;
-  forks: number;
-  permissions?: {
-    admin: boolean;
-    pull: boolean;
-    triage?: boolean;
-    push: boolean;
-    maintain?: boolean;
-  };
-  owner: SimpleUser;
-  /**
-   * Whether the repository is private or public.
-   */
-  private: boolean;
-  /**
-   * @example "https://github.com/octocat/Hello-World"
-   */
-  html_url: string;
-  /**
-   * @example "This your first repo!"
-   */
-  description: string | null;
-  fork: boolean;
-  /**
-   * @example "https://api.github.com/repos/octocat/Hello-World"
-   */
-  url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
-   */
-  archive_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
-   */
-  assignees_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
-   */
-  blobs_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
-   */
-  branches_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
-   */
-  collaborators_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
-   */
-  comments_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
-   */
-  commits_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
-   */
-  compare_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
-   */
-  contents_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
-   */
-  contributors_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
-   */
-  deployments_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
-   */
-  downloads_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/events"
-   */
-  events_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
-   */
-  forks_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
-   */
-  git_commits_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
-   */
-  git_refs_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
-   */
-  git_tags_url: string;
-  /**
-   * @example "git:github.com/octocat/Hello-World.git"
-   */
-  git_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
-   */
-  issue_comment_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
-   */
-  issue_events_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
-   */
-  issues_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
-   */
-  keys_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
-   */
-  labels_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
-   */
-  languages_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
-   */
-  merges_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
-   */
-  milestones_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
-   */
-  notifications_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
-   */
-  pulls_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
-   */
-  releases_url: string;
-  /**
-   * @example "git@github.com:octocat/Hello-World.git"
-   */
-  ssh_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
-   */
-  stargazers_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
-   */
-  statuses_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
-   */
-  subscribers_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
-   */
-  subscription_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
-   */
-  tags_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
-   */
-  teams_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
-   */
-  trees_url: string;
-  /**
-   * @example "https://github.com/octocat/Hello-World.git"
-   */
-  clone_url: string;
-  /**
-   * @example "git:git.example.com/octocat/Hello-World"
-   */
-  mirror_url: string | null;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
-   */
-  hooks_url: string;
-  /**
-   * @example "https://svn.github.com/octocat/Hello-World"
-   */
-  svn_url: string;
-  /**
-   * @example "https://github.com"
-   */
-  homepage: string | null;
-  language: string | null;
-  /**
-   * @example 9
-   */
-  forks_count: number;
-  /**
-   * @example 80
-   */
-  stargazers_count: number;
-  /**
-   * @example 80
-   */
-  watchers_count: number;
-  /**
-   * The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
-   * @example 108
-   */
-  size: number;
-  /**
-   * The default branch of the repository.
-   * @example "master"
-   */
-  default_branch: string;
-  open_issues_count: number;
-  /**
-   * Whether this repository acts as a template that can be used to generate new repositories.
-   * @example true
-   */
-  is_template?: boolean;
-  topics?: string[];
-  /**
-   * Whether issues are enabled.
-   * @example true
-   * @defaultValue true
-   */
-  has_issues: boolean;
-  /**
-   * Whether projects are enabled.
-   * @example true
-   * @defaultValue true
-   */
-  has_projects: boolean;
-  /**
-   * Whether the wiki is enabled.
-   * @example true
-   * @defaultValue true
-   */
-  has_wiki: boolean;
-  has_pages: boolean;
-  /**
-   * Whether downloads are enabled.
-   * @example true
-   * @defaultValue true
-   * @deprecated
-   */
-  has_downloads: boolean;
-  /**
-   * Whether discussions are enabled.
-   * @example true
-   */
-  has_discussions?: boolean;
-  /**
-   * Whether the repository is archived.
-   */
-  archived: boolean;
-  /**
-   * Returns whether or not this repository disabled.
-   */
-  disabled: boolean;
-  /**
-   * The repository visibility: public, private, or internal.
-   * @defaultValue "public"
-   */
-  visibility?: string;
-  /**
-   * @example "2011-01-26T19:06:43Z"
-   */
-  pushed_at: Date | null;
-  /**
-   * @example "2011-01-26T19:01:12Z"
-   */
-  created_at: Date | null;
-  /**
-   * @example "2011-01-26T19:14:43Z"
-   */
-  updated_at: Date | null;
-  /**
-   * Whether to allow rebase merges for pull requests.
-   * @example true
-   * @defaultValue true
-   */
-  allow_rebase_merge?: boolean;
-  template_repository?: {
-    id?: number;
-    node_id?: string;
-    name?: string;
-    full_name?: string;
-    owner?: {
-      login?: string;
-      id?: number;
-      node_id?: string;
-      avatar_url?: string;
-      gravatar_id?: string;
-      url?: string;
-      html_url?: string;
-      followers_url?: string;
-      following_url?: string;
-      gists_url?: string;
-      starred_url?: string;
-      subscriptions_url?: string;
-      organizations_url?: string;
-      repos_url?: string;
-      events_url?: string;
-      received_events_url?: string;
-      type?: string;
-      site_admin?: boolean;
-    };
-    private?: boolean;
-    html_url?: string;
-    description?: string;
-    fork?: boolean;
-    url?: string;
-    archive_url?: string;
-    assignees_url?: string;
-    blobs_url?: string;
-    branches_url?: string;
-    collaborators_url?: string;
-    comments_url?: string;
-    commits_url?: string;
-    compare_url?: string;
-    contents_url?: string;
-    contributors_url?: string;
-    deployments_url?: string;
-    downloads_url?: string;
-    events_url?: string;
-    forks_url?: string;
-    git_commits_url?: string;
-    git_refs_url?: string;
-    git_tags_url?: string;
-    git_url?: string;
-    issue_comment_url?: string;
-    issue_events_url?: string;
-    issues_url?: string;
-    keys_url?: string;
-    labels_url?: string;
-    languages_url?: string;
-    merges_url?: string;
-    milestones_url?: string;
-    notifications_url?: string;
-    pulls_url?: string;
-    releases_url?: string;
-    ssh_url?: string;
-    stargazers_url?: string;
-    statuses_url?: string;
-    subscribers_url?: string;
-    subscription_url?: string;
-    tags_url?: string;
-    teams_url?: string;
-    trees_url?: string;
-    clone_url?: string;
-    mirror_url?: string;
-    hooks_url?: string;
-    svn_url?: string;
-    homepage?: string;
-    language?: string;
-    forks_count?: number;
-    stargazers_count?: number;
-    watchers_count?: number;
-    size?: number;
-    default_branch?: string;
-    open_issues_count?: number;
-    is_template?: boolean;
-    topics?: string[];
-    has_issues?: boolean;
-    has_projects?: boolean;
-    has_wiki?: boolean;
-    has_pages?: boolean;
-    has_downloads?: boolean;
-    archived?: boolean;
-    disabled?: boolean;
-    visibility?: string;
-    pushed_at?: string;
-    created_at?: string;
-    updated_at?: string;
-    permissions?: {
-      admin?: boolean;
-      maintain?: boolean;
-      push?: boolean;
-      triage?: boolean;
-      pull?: boolean;
-    };
-    allow_rebase_merge?: boolean;
-    temp_clone_token?: string;
-    allow_squash_merge?: boolean;
-    allow_auto_merge?: boolean;
-    delete_branch_on_merge?: boolean;
-    allow_update_branch?: boolean;
-    use_squash_pr_title_as_default?: boolean;
-    /**
-     * The default value for a squash merge commit title:
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
-     */
-    squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
-    /**
-     * The default value for a squash merge commit message:
-     *
-     * - `PR_BODY` - default to the pull request's body.
-     * - `COMMIT_MESSAGES` - default to the branch's commit messages.
-     * - `BLANK` - default to a blank commit message.
-     */
-    squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
-    /**
-     * The default value for a merge commit title.
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
-     */
-    merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
-    /**
-     * The default value for a merge commit message.
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `PR_BODY` - default to the pull request's body.
-     * - `BLANK` - default to a blank commit message.
-     */
-    merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
-    allow_merge_commit?: boolean;
-    subscribers_count?: number;
-    network_count?: number;
-  } | null;
-  temp_clone_token?: string;
-  /**
-   * Whether to allow squash merges for pull requests.
-   * @example true
-   * @defaultValue true
-   */
-  allow_squash_merge?: boolean;
-  /**
-   * Whether to allow Auto-merge to be used on pull requests.
-   */
-  allow_auto_merge?: boolean;
-  /**
-   * Whether to delete head branches when pull requests are merged
-   */
-  delete_branch_on_merge?: boolean;
-  /**
-   * Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.
-   */
-  allow_update_branch?: boolean;
-  /**
-   * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
-   * @deprecated
-   */
-  use_squash_pr_title_as_default?: boolean;
-  /**
-   * The default value for a squash merge commit title:
-   *
-   * - `PR_TITLE` - default to the pull request's title.
-   * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
-   */
-  squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
-  /**
-   * The default value for a squash merge commit message:
-   *
-   * - `PR_BODY` - default to the pull request's body.
-   * - `COMMIT_MESSAGES` - default to the branch's commit messages.
-   * - `BLANK` - default to a blank commit message.
-   */
-  squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
-  /**
-   * The default value for a merge commit title.
-   *
-   * - `PR_TITLE` - default to the pull request's title.
-   * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
-   */
-  merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
-  /**
-   * The default value for a merge commit message.
-   *
-   * - `PR_TITLE` - default to the pull request's title.
-   * - `PR_BODY` - default to the pull request's body.
-   * - `BLANK` - default to a blank commit message.
-   */
-  merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
-  /**
-   * Whether to allow merge commits for pull requests.
-   * @example true
-   * @defaultValue true
-   */
-  allow_merge_commit?: boolean;
-  /**
-   * Whether to allow forking this repo
-   */
-  allow_forking?: boolean;
-  /**
-   * Whether to require contributors to sign off on web-based commits
-   */
-  web_commit_signoff_required?: boolean;
-  subscribers_count?: number;
-  network_count?: number;
-  open_issues: number;
-  watchers: number;
-  master_branch?: string;
-  /**
-   * @example "\"2020-07-09T00:17:42Z\""
-   */
-  starred_at?: string;
-  /**
-   * Whether anonymous git access is enabled for this repository
-   */
-  anonymous_access_enabled?: boolean;
-} | null;
 /**
  * Team Repository
  * A team's access to a repository.
@@ -8215,7 +8708,6 @@ export type TeamRepository = {
    * @defaultValue true
    */
   allow_rebase_merge?: boolean;
-  template_repository?: NullableRepository;
   temp_clone_token?: string;
   /**
    * Whether to allow squash merges for pull requests.
@@ -8376,400 +8868,6 @@ export type RateLimitOverview = {
     dependency_snapshots?: RateLimit;
   };
   rate: RateLimit;
-};
-/**
- * Code Of Conduct Simple
- * Code of Conduct Simple
- */
-export type CodeOfConductSimple = {
-  /**
-   * @example "https://api.github.com/repos/github/docs/community/code_of_conduct"
-   */
-  url: string;
-  /**
-   * @example "citizen_code_of_conduct"
-   */
-  key: string;
-  /**
-   * @example "Citizen Code of Conduct"
-   */
-  name: string;
-  /**
-   * @example "https://github.com/github/docs/blob/main/CODE_OF_CONDUCT.md"
-   */
-  html_url: string | null;
-};
-/**
- * Full Repository
- * Full Repository
- */
-export type FullRepository = {
-  /**
-   * @example 1296269
-   */
-  id: number;
-  /**
-   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
-   */
-  node_id: string;
-  /**
-   * @example "Hello-World"
-   */
-  name: string;
-  /**
-   * @example "octocat/Hello-World"
-   */
-  full_name: string;
-  owner: SimpleUser;
-  private: boolean;
-  /**
-   * @example "https://github.com/octocat/Hello-World"
-   */
-  html_url: string;
-  /**
-   * @example "This your first repo!"
-   */
-  description: string | null;
-  fork: boolean;
-  /**
-   * @example "https://api.github.com/repos/octocat/Hello-World"
-   */
-  url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
-   */
-  archive_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
-   */
-  assignees_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
-   */
-  blobs_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
-   */
-  branches_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
-   */
-  collaborators_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
-   */
-  comments_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
-   */
-  commits_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
-   */
-  compare_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
-   */
-  contents_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/contributors"
-   */
-  contributors_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/deployments"
-   */
-  deployments_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/downloads"
-   */
-  downloads_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/events"
-   */
-  events_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/forks"
-   */
-  forks_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
-   */
-  git_commits_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
-   */
-  git_refs_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
-   */
-  git_tags_url: string;
-  /**
-   * @example "git:github.com/octocat/Hello-World.git"
-   */
-  git_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
-   */
-  issue_comment_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
-   */
-  issue_events_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
-   */
-  issues_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
-   */
-  keys_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
-   */
-  labels_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/languages"
-   */
-  languages_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/merges"
-   */
-  merges_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
-   */
-  milestones_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
-   */
-  notifications_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
-   */
-  pulls_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
-   */
-  releases_url: string;
-  /**
-   * @example "git@github.com:octocat/Hello-World.git"
-   */
-  ssh_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/stargazers"
-   */
-  stargazers_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
-   */
-  statuses_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/subscribers"
-   */
-  subscribers_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/subscription"
-   */
-  subscription_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/tags"
-   */
-  tags_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/teams"
-   */
-  teams_url: string;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
-   */
-  trees_url: string;
-  /**
-   * @example "https://github.com/octocat/Hello-World.git"
-   */
-  clone_url: string;
-  /**
-   * @example "git:git.example.com/octocat/Hello-World"
-   */
-  mirror_url: string | null;
-  /**
-   * @example "http://api.github.com/repos/octocat/Hello-World/hooks"
-   */
-  hooks_url: string;
-  /**
-   * @example "https://svn.github.com/octocat/Hello-World"
-   */
-  svn_url: string;
-  /**
-   * @example "https://github.com"
-   */
-  homepage: string | null;
-  language: string | null;
-  /**
-   * @example 9
-   */
-  forks_count: number;
-  /**
-   * @example 80
-   */
-  stargazers_count: number;
-  /**
-   * @example 80
-   */
-  watchers_count: number;
-  /**
-   * The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
-   * @example 108
-   */
-  size: number;
-  /**
-   * @example "master"
-   */
-  default_branch: string;
-  open_issues_count: number;
-  /**
-   * @example true
-   */
-  is_template?: boolean;
-  /**
-   * @example
-   * [
-   *   "octocat",
-   *   "atom",
-   *   "electron",
-   *   "API"
-   * ]
-   */
-  topics?: string[];
-  /**
-   * @example true
-   */
-  has_issues: boolean;
-  /**
-   * @example true
-   */
-  has_projects: boolean;
-  /**
-   * @example true
-   */
-  has_wiki: boolean;
-  has_pages: boolean;
-  /**
-   * @example true
-   */
-  has_downloads?: boolean;
-  /**
-   * @example true
-   */
-  has_discussions: boolean;
-  archived: boolean;
-  /**
-   * Returns whether or not this repository disabled.
-   */
-  disabled: boolean;
-  /**
-   * The repository visibility: public, private, or internal.
-   * @example "public"
-   */
-  visibility?: string;
-  /**
-   * @example "2011-01-26T19:06:43Z"
-   */
-  pushed_at: Date;
-  /**
-   * @example "2011-01-26T19:01:12Z"
-   */
-  created_at: Date;
-  /**
-   * @example "2011-01-26T19:14:43Z"
-   */
-  updated_at: Date;
-  permissions?: {
-    admin: boolean;
-    maintain?: boolean;
-    push: boolean;
-    triage?: boolean;
-    pull: boolean;
-  };
-  /**
-   * @example true
-   */
-  allow_rebase_merge?: boolean;
-  template_repository?: NullableRepository;
-  temp_clone_token?: string | null;
-  /**
-   * @example true
-   */
-  allow_squash_merge?: boolean;
-  allow_auto_merge?: boolean;
-  delete_branch_on_merge?: boolean;
-  /**
-   * @example true
-   */
-  allow_merge_commit?: boolean;
-  /**
-   * @example true
-   */
-  allow_update_branch?: boolean;
-  use_squash_pr_title_as_default?: boolean;
-  /**
-   * The default value for a squash merge commit title:
-   *
-   * - `PR_TITLE` - default to the pull request's title.
-   * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
-   * @example "PR_TITLE"
-   */
-  squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
-  /**
-   * The default value for a squash merge commit message:
-   *
-   * - `PR_BODY` - default to the pull request's body.
-   * - `COMMIT_MESSAGES` - default to the branch's commit messages.
-   * - `BLANK` - default to a blank commit message.
-   * @example "PR_BODY"
-   */
-  squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
-  /**
-   * The default value for a merge commit title.
-   *
-   *   - `PR_TITLE` - default to the pull request's title.
-   *   - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
-   * @example "PR_TITLE"
-   */
-  merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
-  /**
-   * The default value for a merge commit message.
-   *
-   * - `PR_TITLE` - default to the pull request's title.
-   * - `PR_BODY` - default to the pull request's body.
-   * - `BLANK` - default to a blank commit message.
-   * @example "PR_BODY"
-   */
-  merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
-  /**
-   * @example true
-   */
-  allow_forking?: boolean;
-  web_commit_signoff_required?: boolean;
-  /**
-   * @example 42
-   */
-  subscribers_count: number;
-  network_count: number;
-  license: NullableLicenseSimple;
-  organization?: NullableSimpleUser;
-  parent?: Repository;
-  source?: Repository;
-  forks: number;
-  master_branch?: string;
-  open_issues: number;
-  watchers: number;
-  /**
-   * Whether anonymous git access is allowed.
-   * @defaultValue true
-   */
-  anonymous_access_enabled?: boolean;
-  code_of_conduct?: CodeOfConductSimple;
-  security_and_analysis?: SecurityAndAnalysis;
 };
 /**
  * Artifact
@@ -9102,7 +9200,7 @@ export type ActionsWorkflowAccessToRepository = {
    * Defines the level of access that workflows outside of the repository have to actions and reusable workflows within the
    * repository.
    *
-   * `none` means the access is only possible from workflows in this repository. `user` level access allows sharing across user owned private repos only. `organization` level access allows sharing across the organization.
+   * `none` means the access is only possible from workflows in this repository. `user` level access allows sharing across user owned private repositories only. `organization` level access allows sharing across the organization.
    */
   access_level: 'none' | 'user' | 'organization';
 };
@@ -10646,28 +10744,6 @@ export type CheckSuitePreference = {
   };
   repository: MinimalRepository;
 };
-export type CodeScanningAlertRuleSummary = {
-  /**
-   * A unique identifier for the rule used to detect the alert.
-   */
-  id?: string | null;
-  /**
-   * The name of the rule used to detect the alert.
-   */
-  name?: string;
-  /**
-   * A set of tags applicable for the rule.
-   */
-  tags?: string[] | null;
-  /**
-   * The severity of the alert.
-   */
-  severity?: ('none' | 'note' | 'warning' | 'error') | null;
-  /**
-   * A short description of the rule used to detect the alert.
-   */
-  description?: string;
-};
 export type CodeScanningAlertItems = {
   number: AlertNumber;
   created_at: AlertCreatedAt;
@@ -10684,6 +10760,44 @@ export type CodeScanningAlertItems = {
   rule: CodeScanningAlertRuleSummary;
   tool: CodeScanningAnalysisTool;
   most_recent_instance: CodeScanningAlertInstance;
+};
+export type CodeScanningAlertRule = {
+  /**
+   * A unique identifier for the rule used to detect the alert.
+   */
+  id?: string | null;
+  /**
+   * The name of the rule used to detect the alert.
+   */
+  name?: string;
+  /**
+   * The severity of the alert.
+   */
+  severity?: ('none' | 'note' | 'warning' | 'error') | null;
+  /**
+   * The security severity of the alert.
+   */
+  security_severity_level?: ('low' | 'medium' | 'high' | 'critical') | null;
+  /**
+   * A short description of the rule used to detect the alert.
+   */
+  description?: string;
+  /**
+   * description of the rule used to detect the alert.
+   */
+  full_description?: string;
+  /**
+   * A set of tags applicable for the rule.
+   */
+  tags?: string[] | null;
+  /**
+   * Detailed documentation for the rule as GitHub Flavored Markdown.
+   */
+  help?: string | null;
+  /**
+   * A link to the documentation for the rule used to detect the alert.
+   */
+  help_uri?: string | null;
 };
 export type CodeScanningAlert = {
   number: AlertNumber;
@@ -10862,9 +10976,9 @@ export type CodeScanningDefaultSetup = {
  */
 export type CodeScanningDefaultSetupUpdate = {
   /**
-   * Whether code scanning default setup has been configured or not.
+   * The desired state of code scanning default setup.
    */
-  state: 'configured' | 'not-configured';
+  state?: 'configured' | 'not-configured';
   /**
    * CodeQL query suite to be used.
    */
@@ -10897,6 +11011,12 @@ export type CodeScanningDefaultSetupUpdateResponse = {
    */
   run_url?: string;
 };
+/**
+ * The full Git reference, formatted as `refs/heads/<branch name>`,
+ * `refs/tags/<tag>`, `refs/pull/<number>/merge`, or `refs/pull/<number>/head`.
+ * @example "refs/heads/main"
+ */
+export type CodeScanningRefFull = string;
 /**
  * A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see "[SARIF support for code scanning](https://docs.github.com/code-security/secure-coding/sarif-support-for-code-scanning)."
  */
@@ -12746,36 +12866,7 @@ export type Hook = {
    * ]
    */
   events: string[];
-  config: {
-    /**
-     * @example "\"foo@bar.com\""
-     */
-    email?: string;
-    /**
-     * @example "\"foo\""
-     */
-    password?: string;
-    /**
-     * @example "\"roomer\""
-     */
-    room?: string;
-    /**
-     * @example "\"foo\""
-     */
-    subdomain?: string;
-    url?: WebhookConfigUrl;
-    insecure_ssl?: WebhookConfigInsecureSsl;
-    content_type?: WebhookConfigContentType;
-    /**
-     * @example "\"sha256\""
-     */
-    digest?: string;
-    secret?: WebhookConfigSecret;
-    /**
-     * @example "\"abc\""
-     */
-    token?: string;
-  };
+  config: WebhookConfig;
   /**
    * @example "2011-09-06T20:39:23Z"
    */
@@ -14102,7 +14193,7 @@ export type PageBuildStatus = {
 export type PageDeployment = {
   /**
    * The URI to monitor GitHub Pages deployment status.
-   * @example "https://api.github.com/repos/github/hello-world/pages/deployments/4fd754f7e594640989b406850d0bc8f06a121251/status"
+   * @example "https://api.github.com/repos/github/hello-world/pages/deployments/4fd754f7e594640989b406850d0bc8f06a121251"
    */
   status_url: string;
   /**
@@ -14115,6 +14206,26 @@ export type PageDeployment = {
    * @example "monalisa-1231a2312sa32-23sda74.drafts.github.io"
    */
   preview_url?: string;
+};
+/**
+ * GitHub Pages deployment status
+ */
+export type PagesDeploymentStatus = {
+  /**
+   * The current status of the deployment.
+   */
+  status?:
+    | 'deployment_in_progress'
+    | 'syncing_files'
+    | 'finished_file_sync'
+    | 'updating_pages'
+    | 'purging_cdn'
+    | 'deployment_cancelled'
+    | 'deployment_failed'
+    | 'deployment_content_failed'
+    | 'deployment_attempt_error'
+    | 'deployment_lost'
+    | 'succeed';
 };
 /**
  * Pages Health Check Status
@@ -14972,6 +15083,10 @@ export type SecretScanningAlert = {
    * The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
    */
   push_protection_bypassed_at?: Date | null;
+  /**
+   * The token status as of the latest validity check.
+   */
+  validity?: 'active' | 'inactive' | 'unknown';
 };
 /**
  * An optional comment when closing an alert. Cannot be updated or deleted. Must be `null` when changing `state` to `open`.
@@ -15051,17 +15166,117 @@ export type SecretScanningLocationIssueComment = {
    */
   issue_comment_url: string;
 };
+/**
+ * Represents a 'discussion_title' secret scanning location type. This location type shows that a secret was detected in the title of a discussion.
+ */
+export type SecretScanningLocationDiscussionTitle = {
+  /**
+   * The URL to the discussion where the secret was detected.
+   * @example "https://github.com/community/community/discussions/39082"
+   */
+  discussion_title_url: string;
+};
+/**
+ * Represents a 'discussion_body' secret scanning location type. This location type shows that a secret was detected in the body of a discussion.
+ */
+export type SecretScanningLocationDiscussionBody = {
+  /**
+   * The URL to the discussion where the secret was detected.
+   * @example "https://github.com/community/community/discussions/39082#discussion-4566270"
+   */
+  discussion_body_url: string;
+};
+/**
+ * Represents a 'discussion_comment' secret scanning location type. This location type shows that a secret was detected in a comment on a discussion.
+ */
+export type SecretScanningLocationDiscussionComment = {
+  /**
+   * The API URL to get the discussion comment where the secret was detected.
+   * @example "https://github.com/community/community/discussions/39082#discussioncomment-4158232"
+   */
+  discussion_comment_url: string;
+};
+/**
+ * Represents a 'pull_request_title' secret scanning location type. This location type shows that a secret was detected in the title of a pull request.
+ */
+export type SecretScanningLocationPullRequestTitle = {
+  /**
+   * The API URL to get the pull request where the secret was detected.
+   * @example "https://api.github.com/repos/octocat/Hello-World/pull/2846"
+   */
+  pull_request_title_url: string;
+};
+/**
+ * Represents a 'pull_request_body' secret scanning location type. This location type shows that a secret was detected in the body of a pull request.
+ */
+export type SecretScanningLocationPullRequestBody = {
+  /**
+   * The API URL to get the pull request where the secret was detected.
+   * @example "https://api.github.com/repos/octocat/Hello-World/pull/2846"
+   */
+  pull_request_body_url: string;
+};
+/**
+ * Represents a 'pull_request_comment' secret scanning location type. This location type shows that a secret was detected in a comment on a pull request.
+ */
+export type SecretScanningLocationPullRequestComment = {
+  /**
+   * The API URL to get the pull request comment where the secret was detected.
+   * @example "https://api.github.com/repos/octocat/Hello-World/issues/comments/1081119451"
+   */
+  pull_request_comment_url: string;
+};
+/**
+ * Represents a 'pull_request_review' secret scanning location type. This location type shows that a secret was detected in a review on a pull request.
+ */
+export type SecretScanningLocationPullRequestReview = {
+  /**
+   * The API URL to get the pull request review where the secret was detected.
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/2846/reviews/80"
+   */
+  pull_request_review_url: string;
+};
+/**
+ * Represents a 'pull_request_review_comment' secret scanning location type. This location type shows that a secret was detected in a review comment on a pull request.
+ */
+export type SecretScanningLocationPullRequestReviewComment = {
+  /**
+   * The API URL to get the pull request review comment where the secret was detected.
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/comments/12"
+   */
+  pull_request_review_comment_url: string;
+};
 export type SecretScanningLocation = {
   /**
-   * The location type. Because secrets may be found in different types of resources (ie. code, comments, issues), this field identifies the type of resource where the secret was found.
+   * The location type. Because secrets may be found in different types of resources (ie. code, comments, issues, pull requests, discussions), this field identifies the type of resource where the secret was found.
    * @example "commit"
    */
-  type: 'commit' | 'issue_title' | 'issue_body' | 'issue_comment';
+  type:
+    | 'commit'
+    | 'issue_title'
+    | 'issue_body'
+    | 'issue_comment'
+    | 'discussion_title'
+    | 'discussion_body'
+    | 'discussion_comment'
+    | 'pull_request_title'
+    | 'pull_request_body'
+    | 'pull_request_comment'
+    | 'pull_request_review'
+    | 'pull_request_review_comment';
   details:
     | SecretScanningLocationCommit
     | SecretScanningLocationIssueTitle
     | SecretScanningLocationIssueBody
-    | SecretScanningLocationIssueComment;
+    | SecretScanningLocationIssueComment
+    | SecretScanningLocationDiscussionTitle
+    | SecretScanningLocationDiscussionBody
+    | SecretScanningLocationDiscussionComment
+    | SecretScanningLocationPullRequestTitle
+    | SecretScanningLocationPullRequestBody
+    | SecretScanningLocationPullRequestComment
+    | SecretScanningLocationPullRequestReview
+    | SecretScanningLocationPullRequestReviewComment;
 };
 export type RepositoryAdvisoryCreate = {
   /**
@@ -15127,6 +15342,10 @@ export type RepositoryAdvisoryCreate = {
    * The CVSS vector that calculates the severity of the advisory. You must choose between setting this field or `severity`.
    */
   cvss_vector_string?: string | null;
+  /**
+   * Whether to create a temporary private fork of the repository to collaborate on a fix.
+   */
+  start_private_fork?: boolean;
 };
 export type PrivateVulnerabilityReportCreate = {
   /**
@@ -15178,6 +15397,10 @@ export type PrivateVulnerabilityReportCreate = {
    * The CVSS vector that calculates the severity of the advisory. You must choose between setting this field or `severity`.
    */
   cvss_vector_string?: string | null;
+  /**
+   * Whether to create a temporary private fork of the repository to collaborate on a fix.
+   */
+  start_private_fork?: boolean;
 };
 export type RepositoryAdvisoryUpdate = {
   /**
@@ -16810,7 +17033,7 @@ export type RepositoryWebhooks = {
    */
   watchers_count: number;
   /**
-   * The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+   * The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
    * @example 108
    */
   size: number;
@@ -16826,6 +17049,12 @@ export type RepositoryWebhooks = {
    */
   is_template?: boolean;
   topics?: string[];
+  /**
+   * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+   */
+  custom_properties?: {
+    [key: string]: any;
+  };
   /**
    * Whether issues are enabled.
    * @example true
@@ -17713,7 +17942,7 @@ export type NullableRepositoryWebhooks = {
    */
   watchers_count: number;
   /**
-   * The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+   * The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
    * @example 108
    */
   size: number;
@@ -17729,6 +17958,12 @@ export type NullableRepositoryWebhooks = {
    */
   is_template?: boolean;
   topics?: string[];
+  /**
+   * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+   */
+  custom_properties?: {
+    [key: string]: any;
+  };
   /**
    * Whether issues are enabled.
    * @example true
@@ -18212,6 +18447,10 @@ export type SecretScanningAlertWebhook = {
    * The type of secret that secret scanning detected.
    */
   secret_type?: string;
+  /**
+   * The token status as of the latest validity check.
+   */
+  validity?: 'active' | 'inactive' | 'unknown';
   /**
    * Whether push protection was bypassed for the detected secret.
    */
@@ -20258,6 +20497,63 @@ export type WebhookCreate = {
   ref_type: 'tag' | 'branch';
   repository: RepositoryWebhooks;
   sender: SimpleUserWebhooks;
+};
+/**
+ * custom property created event
+ */
+export type WebhookCustomPropertyCreated = {
+  action: 'created';
+  definition: OrgCustomProperty;
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  organization: OrganizationSimpleWebhooks;
+  sender?: SimpleUserWebhooks;
+};
+/**
+ * custom property deleted event
+ */
+export type WebhookCustomPropertyDeleted = {
+  action: 'deleted';
+  definition: {
+    /**
+     * The name of the property that was deleted.
+     */
+    property_name: string;
+  };
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  organization: OrganizationSimpleWebhooks;
+  sender?: SimpleUserWebhooks;
+};
+/**
+ * custom property updated event
+ */
+export type WebhookCustomPropertyUpdated = {
+  action: 'updated';
+  definition: OrgCustomProperty;
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  organization: OrganizationSimpleWebhooks;
+  sender?: SimpleUserWebhooks;
+};
+/**
+ * Custom property values updated event
+ */
+export type WebhookCustomPropertyValuesUpdated = {
+  action: 'updated';
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  repository: RepositoryWebhooks;
+  organization: OrganizationSimpleWebhooks;
+  sender?: SimpleUserWebhooks;
+  /**
+   * The new custom property values for the repository.
+   */
+  new_property_values: CustomPropertyValue[];
+  /**
+   * The old custom property values for the repository.
+   */
+  old_property_values: CustomPropertyValue[];
 };
 /**
  * delete event
@@ -23551,6 +23847,12 @@ export type WebhookFork = {
     contributors_url: string;
     created_at: number | Date;
     /**
+     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
+    /**
      * The default branch of the repository.
      */
     default_branch: string;
@@ -23807,10 +24109,6 @@ export type WebhookFork = {
  */
 export type WebhookGithubAppAuthorizationRevoked = {
   action: 'revoked';
-  enterprise?: EnterpriseWebhooks;
-  installation?: SimpleInstallation;
-  organization?: OrganizationSimpleWebhooks;
-  repository?: RepositoryWebhooks;
   sender: SimpleUserWebhooks;
 };
 /**
@@ -29898,6 +30196,12 @@ export type WebhookIssuesOpened = {
       contributors_url: string;
       created_at: number | Date;
       /**
+       * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+       */
+      custom_properties?: {
+        [key: string]: any;
+      };
+      /**
        * The default branch of the repository.
        */
       default_branch: string;
@@ -31649,6 +31953,12 @@ export type WebhookIssuesTransferred = {
       contents_url: string;
       contributors_url: string;
       created_at: number | Date;
+      /**
+       * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+       */
+      custom_properties?: {
+        [key: string]: any;
+      };
       /**
        * The default branch of the repository.
        */
@@ -63817,6 +64127,12 @@ export type WebhookPush = {
     contributors_url: string;
     created_at: number | Date;
     /**
+     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
+    /**
      * The default branch of the repository.
      */
     default_branch: string;
@@ -66037,6 +66353,18 @@ export type WebhookSecretScanningAlertRevoked = {
   sender?: SimpleUserWebhooks;
 };
 /**
+ * secret_scanning_alert validated event
+ */
+export type WebhookSecretScanningAlertValidated = {
+  action: 'validated';
+  alert: SecretScanningAlertWebhook;
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  repository: RepositoryWebhooks;
+  sender?: SimpleUserWebhooks;
+};
+/**
  * security_advisory published event
  */
 export type WebhookSecurityAdvisoryPublished = {
@@ -67199,6 +67527,12 @@ export type WebhookTeamAddedToRepository = {
     contributors_url: string;
     created_at: number | Date;
     /**
+     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
+    /**
      * The default branch of the repository.
      */
     default_branch: string;
@@ -67468,6 +67802,12 @@ export type WebhookTeamCreated = {
     contributors_url: string;
     created_at: number | Date;
     /**
+     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
+    /**
      * The default branch of the repository.
      */
     default_branch: string;
@@ -67736,6 +68076,12 @@ export type WebhookTeamDeleted = {
     contents_url: string;
     contributors_url: string;
     created_at: number | Date;
+    /**
+     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
     /**
      * The default branch of the repository.
      */
@@ -68053,6 +68399,12 @@ export type WebhookTeamEdited = {
     contributors_url: string;
     created_at: number | Date;
     /**
+     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
+    /**
      * The default branch of the repository.
      */
     default_branch: string;
@@ -68321,6 +68673,12 @@ export type WebhookTeamRemovedFromRepository = {
     contents_url: string;
     contributors_url: string;
     created_at: number | Date;
+    /**
+     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
     /**
      * The default branch of the repository.
      */
@@ -70771,6 +71129,10 @@ const $date_Migration = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
 ];
+const $date_OrganizationRole = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
 const $date_PackageVersion = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
@@ -70779,6 +71141,28 @@ const $date_PackageVersion = (): r.TransformField[] => [
 const $date_Project = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
+];
+const $date_NullableRepository = (): r.TransformField[] => [
+  [['access', 'pushed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_FullRepository = (): r.TransformField[] => [
+  [['access', 'pushed_at'], ['this']],
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'template_repository'],
+    ['ref', $date_NullableRepository],
+  ],
+  [
+    ['access', 'parent'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'source'],
+    ['ref', $date_Repository],
+  ],
 ];
 const $date_RepositoryRuleset = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -70823,19 +71207,10 @@ const $date_TeamDiscussionComment = (): r.TransformField[] => [
 const $date_Reaction = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
 ];
-const $date_NullableRepository = (): r.TransformField[] => [
-  [['access', 'pushed_at'], ['this']],
-  [['access', 'created_at'], ['this']],
-  [['access', 'updated_at'], ['this']],
-];
 const $date_TeamRepository = (): r.TransformField[] => [
   [['access', 'pushed_at'], ['this']],
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
-  [
-    ['access', 'template_repository'],
-    ['ref', $date_NullableRepository],
-  ],
 ];
 const $date_ProjectCard = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -70844,23 +71219,6 @@ const $date_ProjectCard = (): r.TransformField[] => [
 const $date_ProjectColumn = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
-];
-const $date_FullRepository = (): r.TransformField[] => [
-  [['access', 'pushed_at'], ['this']],
-  [['access', 'created_at'], ['this']],
-  [['access', 'updated_at'], ['this']],
-  [
-    ['access', 'template_repository'],
-    ['ref', $date_NullableRepository],
-  ],
-  [
-    ['access', 'parent'],
-    ['ref', $date_Repository],
-  ],
-  [
-    ['access', 'source'],
-    ['ref', $date_Repository],
-  ],
 ];
 const $date_Artifact = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -71887,6 +72245,34 @@ const $date_WebhookCreate = (): r.TransformField[] => [
     ['ref', $date_RepositoryWebhooks],
   ],
 ];
+const $date_WebhookCustomPropertyCreated = (): r.TransformField[] => [
+  [
+    ['access', 'enterprise'],
+    ['ref', $date_EnterpriseWebhooks],
+  ],
+];
+const $date_WebhookCustomPropertyDeleted = (): r.TransformField[] => [
+  [
+    ['access', 'enterprise'],
+    ['ref', $date_EnterpriseWebhooks],
+  ],
+];
+const $date_WebhookCustomPropertyUpdated = (): r.TransformField[] => [
+  [
+    ['access', 'enterprise'],
+    ['ref', $date_EnterpriseWebhooks],
+  ],
+];
+const $date_WebhookCustomPropertyValuesUpdated = (): r.TransformField[] => [
+  [
+    ['access', 'enterprise'],
+    ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
 const $date_WebhookDelete = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
@@ -72403,16 +72789,6 @@ const $date_WebhookFork = (): r.TransformField[] => [
         [['access', 'updated_at'], ['this']],
       ],
     ],
-  ],
-  [
-    ['access', 'repository'],
-    ['ref', $date_RepositoryWebhooks],
-  ],
-];
-const $date_WebhookGithubAppAuthorizationRevoked = (): r.TransformField[] => [
-  [
-    ['access', 'enterprise'],
-    ['ref', $date_EnterpriseWebhooks],
   ],
   [
     ['access', 'repository'],
@@ -76893,6 +77269,20 @@ const $date_WebhookSecretScanningAlertRevoked = (): r.TransformField[] => [
     ['ref', $date_RepositoryWebhooks],
   ],
 ];
+const $date_WebhookSecretScanningAlertValidated = (): r.TransformField[] => [
+  [
+    ['access', 'alert'],
+    ['ref', $date_SecretScanningAlertWebhook],
+  ],
+  [
+    ['access', 'enterprise'],
+    ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
 const $date_WebhookSecurityAdvisoryPublished = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
@@ -78388,6 +78778,7 @@ export async function secretScanningListAlertsForEnterprise<FetcherData>(
     per_page?: number;
     before?: string;
     after?: string;
+    validity?: string;
   },
   opts?: FetcherData,
 ): Promise<OrganizationSecretScanningAlert[]> {
@@ -78404,6 +78795,7 @@ export async function secretScanningListAlertsForEnterprise<FetcherData>(
       'per_page',
       'before',
       'after',
+      'validity',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -78448,18 +78840,18 @@ export async function activityListPublicEvents<FetcherData>(
  *
  * *   **Timeline**: The GitHub global public timeline
  * *
- * **User**: The public timeline for any user, using [URI
- * template](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia)
- * *   **Current user public**: The
- * public timeline for the authenticated user
- * *   **Current user**: The private timeline for the authenticated user
+ * **User**: The public timeline for any user, using `uri_template`. For more information, see
+ * "[Hypermedia](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
  * *
- * **Current user actor**: The private timeline for activity created by the authenticated user
- * *   **Current user
- * organizations**: The private timeline for the organizations the authenticated user is a member of.
- * *   **Security
- * advisories**: A collection of public announcements that provide information about security-related vulnerabilities in
- * software on GitHub.
+ * **Current user public**: The public timeline for the authenticated user
+ * *   **Current user**: The private timeline for
+ * the authenticated user
+ * *   **Current user actor**: The private timeline for activity created by the authenticated user
+ * *
+ * **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
+ * *
+ * **Security advisories**: A collection of public announcements that provide information about security-related
+ * vulnerabilities in software on GitHub.
  *
  * **Note**: Private feeds are only returned when [authenticating via Basic
  * Auth](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs
@@ -78561,8 +78953,8 @@ export async function gistsCreate<FetcherData>(
  * List public gists sorted by most recently updated to least recently updated.
  *
  * Note: With
- * [pagination](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000
- * gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
+ * [pagination](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api), you can fetch up to 3000 gists. For
+ * example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
  * Learn more at {@link https://docs.github.com/rest/gists/gists#list-public-gists}
  * Tags: gists
  */
@@ -78614,6 +79006,16 @@ export async function gistsListStarred<FetcherData>(
 }
 /**
  * Get a gist
+ * Gets a specified gist.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific
+ * media type.
+ * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your
+ * gist contains any invalid UTF-8 sequences.
  * Learn more at {@link https://docs.github.com/rest/gists/gists#get-a-gist}
  * Tags: gists
  */
@@ -78636,10 +79038,22 @@ export async function gistsGet<FetcherData>(
 }
 /**
  * Update a gist
- * Allows you to update a gist's description and to update, delete, or rename gist files. Files from the previous version
- * of the gist that aren't explicitly changed during an edit are unchanged.
+ * Allows you to update a gist's description and to update, delete, or rename gist files. Files
+ * from the previous version
+ * of the gist that aren't explicitly changed during an edit
+ * are unchanged.
+ *
  * At least one of `description` or `files` is
  * required.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific
+ * media type.
+ * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your
+ * gist contains any invalid UTF-8 sequences.
  * Learn more at {@link https://docs.github.com/rest/gists/gists#update-a-gist}
  * Tags: gists
  */
@@ -78716,6 +79130,16 @@ export async function gistsDelete<FetcherData>(
 }
 /**
  * List gist comments
+ * Lists the comments on a gist.
+ *
+ * This endpoint supports the following custom media types. For more information, see
+ * "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific
+ * media type.
+ * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your
+ * gist contains any invalid UTF-8 sequences.
  * Learn more at {@link https://docs.github.com/rest/gists/comments#list-gist-comments}
  * Tags: gists
  */
@@ -78741,6 +79165,16 @@ export async function gistsListComments<FetcherData>(
 }
 /**
  * Create a gist comment
+ * Creates a comment on a gist.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific
+ * media type.
+ * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your
+ * gist contains any invalid UTF-8 sequences.
  * Learn more at {@link https://docs.github.com/rest/gists/comments#create-a-gist-comment}
  * Tags: gists
  */
@@ -78771,6 +79205,16 @@ export async function gistsCreateComment<FetcherData>(
 }
 /**
  * Get a gist comment
+ * Gets a comment on a gist.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific
+ * media type.
+ * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your
+ * gist contains any invalid UTF-8 sequences.
  * Learn more at {@link https://docs.github.com/rest/gists/comments#get-a-gist-comment}
  * Tags: gists
  */
@@ -78794,6 +79238,16 @@ export async function gistsGetComment<FetcherData>(
 }
 /**
  * Update a gist comment
+ * Updates a comment on a gist.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific
+ * media type.
+ * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your
+ * gist contains any invalid UTF-8 sequences.
  * Learn more at {@link https://docs.github.com/rest/gists/comments#update-a-gist-comment}
  * Tags: gists
  */
@@ -78939,7 +79393,7 @@ export async function gistsCheckIsStarred<FetcherData>(
 /**
  * Star a gist
  * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
- * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  * Learn more at {@link https://docs.github.com/rest/gists/gists#star-a-gist}
  * Tags: gists
  */
@@ -78980,6 +79434,16 @@ export async function gistsUnstar<FetcherData>(
 }
 /**
  * Get a gist revision
+ * Gets a specified gist revision.
+ *
+ * This endpoint supports the following custom media types. For more information, see
+ * "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific
+ * media type.
+ * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your
+ * gist contains any invalid UTF-8 sequences.
  * Learn more at {@link https://docs.github.com/rest/gists/gists#get-a-gist-revision}
  * Tags: gists
  */
@@ -79023,9 +79487,13 @@ export async function gitignoreGetAllTemplates<FetcherData>(
 }
 /**
  * Get a gitignore template
- * The API also allows fetching the source of a single template.
- * Use the raw [media
- * type](https://docs.github.com/rest/overview/media-types/) to get the raw contents.
+ * Get the content of a gitignore template.
+ *
+ * This endpoint supports the following custom media types. For more information,
+ * see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw .gitignore contents.
  * Learn more at {@link https://docs.github.com/rest/gitignore/gitignore#get-a-gitignore-template}
  * Tags: gitignore
  */
@@ -79127,15 +79595,28 @@ export async function appsRevokeInstallationAccessToken<FetcherData>(
  * not
  * necessarily assigned to you.
  *
- *
- * **Note**: GitHub's REST API considers every pull request an issue, but not every
- * issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull requests in the response.
- * You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull request returned from
- * "Issues" endpoints will be an _issue id_. To find out the pull
+ * **Note**: GitHub's REST API considers every pull request an issue, but not every issue
+ * is a pull request. For this
+ * reason, "Issues" endpoints may return both issues and pull requests in the response. You can
+ * identify pull requests by
+ * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues"
+ * endpoints will be an _issue id_. To find out the pull
  * request id, use the "[List pull
  * requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
@@ -79653,6 +80134,28 @@ export async function activityMarkThreadAsRead<FetcherData>(
     path: '/notifications/threads/{thread_id}',
     params,
     method: r.HttpMethod.PATCH,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Mark a thread as done
+ * Marks a thread as "done." Marking a thread as "done" is equivalent to marking a notification in your notification inbox
+ * on GitHub as done: https://github.com/notifications.
+ * Learn more at {@link https://docs.github.com/rest/activity/notifications#mark-a-thread-as-done}
+ * Tags: activity
+ */
+export async function activityMarkThreadAsDone<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    thread_id: number;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/notifications/threads/{thread_id}',
+    params,
+    method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
@@ -81772,10 +82275,7 @@ export async function orgsUnblockUser<FetcherData>(
  * use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with
  * the `repo` scope or `security_events` scope.
  *
- * For public repositories, you may instead use the `public_repo`
- * scope.
- *
- * GitHub Apps must have the `security_events` read permission to use this endpoint.
+ * For public repositories, you may instead use the `public_repo` scope.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization}
  * Tags: code-scanning
  */
@@ -81827,7 +82327,7 @@ export async function codeScanningListAlertsForOrg<FetcherData>(
  * Lists the codespaces associated to a specified organization.
  *
  * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
+ * `admin:org` scope or the `Organization codespaces` read permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-the-organization}
  * Tags: codespaces
  */
@@ -81866,7 +82366,7 @@ export async function codespacesListInOrganization<FetcherData>(
  * Sets which users can access codespaces in an organization. This is synonymous with granting or revoking codespaces
  * access permissions for users according to the visibility.
  * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
+ * `admin:org` scope or the `Organization codespaces settings` write permission to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces}
  * Tags: codespaces
@@ -81912,7 +82412,8 @@ export async function codespacesSetCodespacesAccess<FetcherData>(
  * codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)."
  *
  * You
- * must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * must authenticate using an access token with the `admin:org` scope or the `Organization codespaces settings` write
+ * permission to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#add-users-to-codespaces-access-for-an-organization}
  * Tags: codespaces
@@ -81950,7 +82451,8 @@ export async function codespacesSetCodespacesAccessUsers<FetcherData>(
  * codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)."
  *
  * You
- * must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * must authenticate using an access token with the `admin:org` scope or the `Organization codespaces settings` write
+ * permission to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#remove-users-from-codespaces-access-for-an-organization}
  * Tags: codespaces
@@ -81979,9 +82481,9 @@ export async function codespacesDeleteCodespacesAccessUsers<FetcherData>(
 }
 /**
  * List organization secrets
- * Lists all Codespaces secrets available at the organization-level without revealing their encrypted values.
- * You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * Lists all Codespaces development environment secrets available at the organization-level without revealing their
+ * encrypted values.
+ * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#list-organization-secrets}
  * Tags: codespaces
  */
@@ -82039,9 +82541,9 @@ export async function codespacesGetOrgPublicKey<FetcherData>(
 }
 /**
  * Get an organization secret
- * Gets an organization secret without revealing its encrypted value.
- * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
+ * Gets an organization development environment secret without revealing its encrypted value.
+ * You must authenticate using
+ * an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-secret}
  * Tags: codespaces
  */
@@ -82065,7 +82567,7 @@ export async function codespacesGetOrgSecret<FetcherData>(
 }
 /**
  * Create or update an organization secret
- * Creates or updates an organization secret with an encrypted value. Encrypt your secret
+ * Creates or updates an organization development environment secret with an encrypted value. Encrypt your secret
  * using
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
@@ -82113,8 +82615,8 @@ export async function codespacesCreateOrUpdateOrgSecret<FetcherData>(
 }
 /**
  * Delete an organization secret
- * Deletes an organization secret using the secret name. You must authenticate using an access token with the `admin:org`
- * scope to use this endpoint.
+ * Deletes an organization development environment secret using the secret name. You must authenticate using an access
+ * token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#delete-an-organization-secret}
  * Tags: codespaces
  */
@@ -82177,8 +82679,8 @@ export async function codespacesListSelectedReposForOrgSecret<FetcherData>(
 }
 /**
  * Set selected repositories for an organization secret
- * Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`.
- * The visibility is set when you [Create or update an organization
+ * Replaces all repositories for an organization development environment secret when the `visibility` for repository access
+ * is set to `selected`. The visibility is set when you [Create or update an organization
  * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret). You must
  * authenticate using an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#set-selected-repositories-for-an-organization-secret}
@@ -82209,8 +82711,8 @@ export async function codespacesSetSelectedReposForOrgSecret<FetcherData>(
 }
 /**
  * Add selected repository to an organization secret
- * Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The
- * visibility is set when you [Create or update an organization
+ * Adds a repository to an organization development environment secret when the `visibility` for repository access is set
+ * to `selected`. The visibility is set when you [Create or update an organization
  * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret). You must
  * authenticate using an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#add-selected-repository-to-an-organization-secret}
@@ -82235,8 +82737,8 @@ export async function codespacesAddSelectedRepoToOrgSecret<FetcherData>(
 }
 /**
  * Remove selected repository from an organization secret
- * Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The
- * visibility is set when you [Create or update an organization
+ * Removes a repository from an organization development environment secret when the `visibility` for repository access is
+ * set to `selected`. The visibility is set when you [Create or update an organization
  * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret). You must
  * authenticate using an access token with the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#remove-selected-repository-from-an-organization-secret}
@@ -82260,22 +82762,21 @@ export async function codespacesRemoveSelectedRepoFromOrgSecret<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Get Copilot for Business seat information and settings for an organization
+ * Get Copilot Business seat information and settings for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Gets information about an organization's Copilot for
- * Business subscription, including seat breakdown
+ * Gets information about an organization's Copilot Business
+ * subscription, including seat breakdown
  * and code matching policies. To configure these settings, go to your
  * organization's settings on GitHub.com.
- * For more information, see "[Configuring GitHub Copilot settings in your
- * organization](https://docs.github.com/copilot/configuring-github-copilot/configuring-github-copilot-settings-in-your-organization)".
+ * For more information, see "[Managing policies for Copilot Business in your
+ * organization](https://docs.github.com/copilot/managing-copilot-business/managing-policies-for-copilot-business-in-your-organization)".
  *
  * Only
- * organization owners and members with admin permissions can configure and view details about the organization's Copilot
- * for Business subscription. You must
- * authenticate using an access token with the `manage_billing:copilot` scope to use
- * this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-for-business#get-copilot-for-business-seat-information-and-settings-for-an-organization}
+ * organization owners can configure and view details about the organization's Copilot Business subscription. You
+ * must
+ * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#get-copilot-business-seat-information-and-settings-for-an-organization}
  * Tags: copilot
  */
 export async function copilotGetCopilotOrganizationDetails<FetcherData>(
@@ -82294,18 +82795,17 @@ export async function copilotGetCopilotOrganizationDetails<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * List all Copilot for Business seat assignments for an organization
+ * List all Copilot Business seat assignments for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Lists all Copilot for Business seat assignments for an
+ * Lists all Copilot Business seat assignments for an
  * organization that are currently being billed (either active or pending cancellation at the start of the next billing
  * cycle).
  *
- * Only organization owners and members with admin permissions can configure and view details about the
- * organization's Copilot for Business subscription. You must
- * authenticate using an access token with the
- * `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-for-business#list-all-copilot-for-business-seat-assignments-for-an-organization}
+ * Only organization owners can configure and view details about the organization's Copilot Business subscription.
+ * You must
+ * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#list-all-copilot-business-seat-assignments-for-an-organization}
  * Tags: copilot
  */
 export async function copilotListCopilotSeats<FetcherData>(
@@ -82341,28 +82841,27 @@ export async function copilotListCopilotSeats<FetcherData>(
   });
 }
 /**
- * Add teams to the Copilot for Business subscription for an organization
+ * Add teams to the Copilot Business subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- *  Purchases a GitHub Copilot for Business seat for all
- * users within each specified team.
- *  The organization will be billed accordingly. For more information about Copilot for
- * Business pricing, see "[About billing for GitHub Copilot for
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-for-business)".
- * Only organization owners and members with admin permissions can configure GitHub Copilot in their organization. You
- * must
- *  authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
+ *  Purchases a GitHub Copilot Business seat for all users
+ * within each specified team.
+ *  The organization will be billed accordingly. For more information about Copilot Business
+ * pricing, see "[Pricing for GitHub Copilot
+ * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)".
+ * Only organization owners can configure GitHub Copilot in their organization. You must
+ *  authenticate using an access
+ * token with the `manage_billing:copilot` scope to use this endpoint.
  *
- *  In order for an
- * admin to use this endpoint, the organization must have a Copilot for Business subscription and a configured suggestion
- * matching policy.
- *  For more information about setting up a Copilot for Business subscription, see "[Setting up a Copilot
- * for Business subscription for your
- * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise#setting-up-a-copilot-for-business-subscription-for-your-organization)".
+ *  In order for an admin to use this endpoint, the
+ * organization must have a Copilot Business subscription and a configured suggestion matching policy.
+ *  For more
+ * information about setting up a Copilot Business subscription, see "[Setting up a Copilot Business subscription for your
+ * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise#setting-up-a-copilot-business-subscription-for-your-organization)".
  * For more information about setting a suggestion matching policy, see "[Configuring suggestion matching policies for
  * GitHub Copilot in your
- * organization](https://docs.github.com/copilot/configuring-github-copilot/configuring-github-copilot-settings-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-for-business#add-teams-to-the-copilot-for-business-subscription-for-an-organization}
+ * organization](https://docs.github.com/copilot/managing-copilot-business/managing-policies-for-copilot-business-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#add-teams-to-the-copilot-business-subscription-for-an-organization}
  * Tags: copilot
  */
 export async function copilotAddCopilotForBusinessSeatsForTeams<FetcherData>(
@@ -82390,28 +82889,28 @@ export async function copilotAddCopilotForBusinessSeatsForTeams<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Remove teams from the Copilot for Business subscription for an organization
+ * Remove teams from the Copilot Business subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Cancels the Copilot for Business seat assignment for all
+ * Cancels the Copilot Business seat assignment for all
  * members of each team specified.
  * This will cause the members of the specified team(s) to lose access to GitHub Copilot at
  * the end of the current billing cycle, and the organization will not be billed further for those users.
  *
  * For more
- * information about Copilot for Business pricing, see "[About billing for GitHub Copilot for
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-for-business)".
+ * information about Copilot Business pricing, see "[Pricing for GitHub Copilot
+ * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)".
  *
  * For
- * more information about disabling access to Copilot for Business, see "[Disabling access to GitHub Copilot for specific
- * users in your
- * organization](https://docs.github.com/copilot/configuring-github-copilot/configuring-github-copilot-settings-in-your-organization#disabling-access-to-github-copilot-for-specific-users-in-your-organization)".
+ * more information about disabling access to Copilot Business, see "[Revoking access to GitHub Copilot for specific users
+ * in your
+ * organization](https://docs.github.com/copilot/managing-copilot-business/managing-access-for-copilot-business-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
  *
  * Only
- * organization owners and members with admin permissions can configure GitHub Copilot in their organization. You
- * must
- * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-for-business#remove-teams-from-the-copilot-for-business-subscription-for-an-organization}
+ * organization owners can configure GitHub Copilot in their organization. You must
+ * authenticate using an access token with
+ * the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#remove-teams-from-the-copilot-business-subscription-for-an-organization}
  * Tags: copilot
  */
 export async function copilotCancelCopilotSeatAssignmentForTeams<FetcherData>(
@@ -82439,31 +82938,30 @@ export async function copilotCancelCopilotSeatAssignmentForTeams<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Add users to the Copilot for Business subscription for an organization
+ * Add users to the Copilot Business subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Purchases a GitHub Copilot for Business seat for each user
+ * Purchases a GitHub Copilot Business seat for each user
  * specified.
- * The organization will be billed accordingly. For more information about Copilot for Business pricing, see
- * "[About billing for GitHub Copilot for
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-for-business)".
+ * The organization will be billed accordingly. For more information about Copilot Business pricing, see
+ * "[Pricing for GitHub Copilot
+ * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)".
  *
  * Only
- * organization owners and members with admin permissions can configure GitHub Copilot in their organization. You
- * must
- * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
+ * organization owners can configure GitHub Copilot in their organization. You must
+ * authenticate using an access token with
+ * the `manage_billing:copilot` scope to use this endpoint.
  *
- * In order for an
- * admin to use this endpoint, the organization must have a Copilot for Business subscription and a configured suggestion
- * matching policy.
- * For more information about setting up a Copilot for Business subscription, see "[Setting up a Copilot
- * for Business subscription for your
- * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise#setting-up-a-copilot-for-business-subscription-for-your-organization)".
+ * In order for an admin to use this endpoint, the organization
+ * must have a Copilot Business subscription and a configured suggestion matching policy.
+ * For more information about
+ * setting up a Copilot Business subscription, see "[Setting up a Copilot Business subscription for your
+ * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise#setting-up-a-copilot-business-subscription-for-your-organization)".
  * For
  * more information about setting a suggestion matching policy, see "[Configuring suggestion matching policies for GitHub
  * Copilot in your
- * organization](https://docs.github.com/copilot/configuring-github-copilot/configuring-github-copilot-settings-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-for-business#add-users-to-the-copilot-for-business-subscription-for-an-organization}
+ * organization](https://docs.github.com/copilot/managing-copilot-business/managing-policies-for-copilot-business-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#add-users-to-the-copilot-business-subscription-for-an-organization}
  * Tags: copilot
  */
 export async function copilotAddCopilotForBusinessSeatsForUsers<FetcherData>(
@@ -82491,28 +82989,28 @@ export async function copilotAddCopilotForBusinessSeatsForUsers<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Remove users from the Copilot for Business subscription for an organization
+ * Remove users from the Copilot Business subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Cancels the Copilot for Business seat assignment for each
- * user specified.
- * This will cause the specified users to lose access to GitHub Copilot at the end of the current billing
- * cycle, and the organization will not be billed further for those users.
+ * Cancels the Copilot Business seat assignment for each user
+ * specified.
+ * This will cause the specified users to lose access to GitHub Copilot at the end of the current billing cycle,
+ * and the organization will not be billed further for those users.
  *
- * For more information about Copilot for Business
- * pricing, see "[About billing for GitHub Copilot for
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-for-business)"
+ * For more information about Copilot Business pricing,
+ * see "[Pricing for GitHub Copilot
+ * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)"
  *
  * For
- * more information about disabling access to Copilot for Business, see "[Disabling access to GitHub Copilot for specific
- * users in your
- * organization](https://docs.github.com/copilot/configuring-github-copilot/configuring-github-copilot-settings-in-your-organization#disabling-access-to-github-copilot-for-specific-users-in-your-organization)".
+ * more information about disabling access to Copilot Business, see "[Revoking access to GitHub Copilot for specific users
+ * in your
+ * organization](https://docs.github.com/copilot/managing-copilot-business/managing-access-for-copilot-business-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
  *
  * Only
- * organization owners and members with admin permissions can configure GitHub Copilot in their organization. You
- * must
- * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-for-business#remove-users-from-the-copilot-for-business-subscription-for-an-organization}
+ * organization owners can configure GitHub Copilot in their organization. You must
+ * authenticate using an access token with
+ * the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#remove-users-from-the-copilot-business-subscription-for-an-organization}
  * Tags: copilot
  */
 export async function copilotCancelCopilotSeatAssignmentForUsers<FetcherData>(
@@ -83503,11 +84001,10 @@ export async function orgsListPendingInvitations<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/orgs/members#create-an-organization-invitation}
  * Tags: orgs
  */
@@ -83530,9 +84027,10 @@ export async function orgsCreateInvitation<FetcherData>(
      *  * `admin` - Organization owners with full administrative rights to the organization and complete access to all repositories and teams.
      *  * `direct_member` - Non-owner organization members with ability to see other members and join teams by invitation.
      *  * `billing_manager` - Non-owner organization members with ability to manage the billing settings of your organization.
+     *  * `reinstate` - The previous role assigned to the invitee before they were removed from your organization. Can be one of the roles listed above. Only works if the invitee was previously part of your organization.
      * @defaultValue "direct_member"
      */
-    role?: 'admin' | 'direct_member' | 'billing_manager';
+    role?: 'admin' | 'direct_member' | 'billing_manager' | 'reinstate';
     /**
      * Specify IDs for the teams you want to invite new members to.
      */
@@ -83613,6 +84111,20 @@ export async function orgsListInvitationTeams<FetcherData>(
  * pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
  * request id, use the "[List
  * pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+ *
+ * This endpoint supports the
+ * following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-organization-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
@@ -83734,7 +84246,7 @@ export async function orgsRemoveMember<FetcherData>(
  * Lists the codespaces that a member of an organization has for repositories in that organization.
  *
  * You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint.
+ * using an access token with the `admin:org` scope or the `Organization codespaces` read permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-a-user-in-organization}
  * Tags: codespaces
  */
@@ -83773,8 +84285,12 @@ export async function codespacesGetCodespacesForUserInOrg<FetcherData>(
  * Delete a codespace from the organization
  * Deletes a user's codespace.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this
- * endpoint.
+ * To use this endpoint you must authenticate using one of the following methods:
+ *
+ * - An access
+ * token with the `admin:org` scope
+ * - An access token with write permissions for `Codespaces` on the specific repository
+ * and write permissions for `Organization codespaces`
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#delete-a-codespace-from-the-organization}
  * Tags: codespaces
  */
@@ -83799,7 +84315,12 @@ export async function codespacesDeleteFromOrganization<FetcherData>(
  * Stop a codespace for an organization user
  * Stops a user's codespace.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * To use this endpoint you must authenticate using one of the following methods:
+ *
+ * - An access
+ * token with the `admin:org` scope
+ * - An access token with write permissions for `Codespaces lifecycle admin` on the
+ * specific repository and write permissions for `Organization codespaces`
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#stop-a-codespace-for-an-organization-user}
  * Tags: codespaces
  */
@@ -83823,16 +84344,16 @@ export async function codespacesStopInOrganization<FetcherData>(
   });
 }
 /**
- * Get Copilot for Business seat assignment details for a user
+ * Get Copilot Business seat assignment details for a user
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Gets the GitHub Copilot for Business seat assignment
- * details for a member of an organization who currently has access to GitHub Copilot.
+ * Gets the GitHub Copilot Business seat assignment details
+ * for a member of an organization who currently has access to GitHub Copilot.
  *
- * Organization owners and members
- * with admin permissions can view GitHub Copilot seat assignment details for members in their organization. You must
- * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-for-business#get-copilot-for-business-seat-assignment-details-for-a-user}
+ * Organization owners can view GitHub Copilot
+ * seat assignment details for members in their organization. You must authenticate using an access token with the
+ * `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#get-copilot-business-seat-assignment-details-for-a-user}
  * Tags: copilot
  */
 export async function copilotGetCopilotSeatDetailsForUser<FetcherData>(
@@ -84181,6 +84702,546 @@ export async function migrationsListReposForOrg<FetcherData>(
       transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
     },
   });
+}
+/**
+ * List organization fine-grained permissions for an organization
+ * Lists the fine-grained permissions that can be used in custom organization roles for an organization. For more
+ * information, see "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * To
+ * list the fine-grained permissions that can be used in custom repository roles for an organization, see "[List repository
+ * fine-grained permissions for an
+ * organization](https://docs.github.com/rest/orgs/organization-roles#list-repository-fine-grained-permissions-for-an-organization)."
+ *
+ * To
+ * use this endpoint, the authenticated user must be one of:
+ *
+ * - An administrator for the organization.
+ * - A user, or a user
+ * on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+ *
+ * The
+ * authenticated user needs an access token with `admin:org` scope or a fine-grained personal access token with the
+ * `organization_custom_roles:read` permission to use this endpoint.
+ * GitHub Apps must have the
+ * `organization_custom_org_roles:read` organization permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-organization-fine-grained-permissions-for-an-organization}
+ * Tags: orgs
+ */
+export async function orgsListOrganizationFineGrainedPermissions<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<OrganizationFineGrainedPermission[]> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-fine-grained-permissions',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Get all organization roles for an organization
+ * Lists the organization roles available in this organization.
+ *
+ * To use this endpoint, the authenticated user must be one
+ * of:
+ *
+ * - An administrator for the organization.
+ * - A user, or a user on a team, with the fine-grained permissions of
+ * `read_organization_custom_org_role` in the organization.
+ *
+ * The authenticated user needs an access token with `admin:org`
+ * scope or a fine-grained personal access token with the `organization_custom_roles:read` permission to use this
+ * endpoint.
+ * GitHub Apps must have the `organization_custom_org_roles:read` organization permission to use this
+ * endpoint.
+ *
+ * For more information on organization roles, see "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#get-all-organization-roles-for-an-organization}
+ * Tags: orgs
+ */
+export async function orgsListOrgRoles<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<{
+  /**
+   * The total number of organization roles available to the organization.
+   */
+  total_count?: number;
+  /**
+   * The list of organization roles available to the organization.
+   */
+  roles?: OrganizationRole[];
+}> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {
+    '200': {
+      transforms: {
+        date: [
+          [['access', 'roles'], ['loop'], ['ref', $date_OrganizationRole]],
+        ],
+      },
+    },
+  });
+}
+/**
+ * Create a custom organization role
+ * Creates a custom organization role that can be assigned to users and teams, granting them specific permissions over the
+ * organization.
+ *
+ * To use this endpoint, the authenticated user must be one of:
+ *
+ * - An administrator for the organization.
+ * -
+ * A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the
+ * organization.
+ *
+ * The authenticated user needs an access token with `admin:org` scope or a fine-grained personal access
+ * token with the `organization_custom_roles:write` permission to use this endpoint.
+ * GitHub Apps must have the
+ * `organization_custom_org_roles:write` organization permission to use this endpoint.
+ *
+ * For more information on custom
+ * organization roles, see "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#create-a-custom-organization-role}
+ * Tags: orgs
+ */
+export async function orgsCreateCustomOrganizationRole<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * The name of the custom role.
+     */
+    name: string;
+    /**
+     * A short description about the intended usage of this role or what permissions it grants.
+     */
+    description?: string;
+    /**
+     * A list of additional permissions included in this role.
+     */
+    permissions: string[];
+  },
+  opts?: FetcherData,
+): Promise<OrganizationRole> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {
+    '201': { transforms: { date: [[['ref', $date_OrganizationRole]]] } },
+  });
+}
+/**
+ * Remove all organization roles for a team
+ * Removes all assigned organization roles from a team.
+ *
+ * To use this endpoint, you must be an administrator for the
+ * organization, and you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `members:write`
+ * organization permission to use this endpoint.
+ *
+ * For more information on organization roles, see "[Managing people's
+ * access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-team}
+ * Tags: orgs
+ */
+export async function orgsRevokeAllOrgRolesTeam<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    team_slug: string;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/teams/{team_slug}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Assign an organization role to a team
+ * Assigns an organization role to a team in an organization.
+ * To use this endpoint, you must be an administrator for the
+ * organization, and you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `members`
+ * organization read-write permission to use this endpoint.
+ *
+ * For more information on organization roles, see "[Managing
+ * people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-team}
+ * Tags: orgs
+ */
+export async function orgsAssignTeamToOrgRole<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    team_slug: string;
+    role_id: number;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/teams/{team_slug}/{role_id}',
+    params,
+    method: r.HttpMethod.PUT,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Remove an organization role from a team
+ * Removes an organization role from a team.
+ *
+ * To use this endpoint, you must be an administrator for the organization, and
+ * you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `members:write` organization
+ * permission to use this endpoint.
+ *
+ * For more information on organization roles, see "[Managing people's access to your
+ * organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-team}
+ * Tags: orgs
+ */
+export async function orgsRevokeOrgRoleTeam<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    team_slug: string;
+    role_id: number;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/teams/{team_slug}/{role_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Remove all organization roles for a user
+ * Revokes all assigned organization roles from a user.
+ *
+ * To use this endpoint, you must be an administrator for the
+ * organization, and you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `members:write`
+ * organization permission to use this endpoint.
+ *
+ * For more information on organization roles, see "[Managing people's
+ * access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-user}
+ * Tags: orgs
+ */
+export async function orgsRevokeAllOrgRolesUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    username: string;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/users/{username}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Assign an organization role to a user
+ * Assigns an organization role to a member of an organization.
+ * To use this endpoint, you must be an administrator for the
+ * organization, and you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `members`
+ * organization read-write permission to use this endpoint.
+ *
+ * For more information on organization roles, see "[Managing
+ * people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-user}
+ * Tags: orgs
+ */
+export async function orgsAssignUserToOrgRole<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    username: string;
+    role_id: number;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/users/{username}/{role_id}',
+    params,
+    method: r.HttpMethod.PUT,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Remove an organization role from a user
+ * Remove an organization role from a user.
+ *
+ * To use this endpoint, you must be an administrator for the organization, and
+ * you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `members:write` organization
+ * permission to use this endpoint.
+ *
+ * For more information on organization roles, see "[Managing people's access to your
+ * organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-user}
+ * Tags: orgs
+ */
+export async function orgsRevokeOrgRoleUser<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    username: string;
+    role_id: number;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/users/{username}/{role_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Get an organization role
+ * Gets an organization role that is available to this organization.
+ *
+ * To use this endpoint, the authenticated user must be
+ * one of:
+ *
+ * - An administrator for the organization.
+ * - A user, or a user on a team, with the fine-grained permissions of
+ * `read_organization_custom_org_role` in the organization.
+ *
+ * The authenticated user needs an access token with `admin:org`
+ * scope or a fine-grained personal access token with the `organization_custom_roles:read` permission to use this
+ * endpoint.
+ * GitHub Apps must have the `organization_custom_org_roles:read` organization permission to use this
+ * endpoint.
+ *
+ * For more information on organization roles, see "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#get-an-organization-role}
+ * Tags: orgs
+ */
+export async function orgsGetOrgRole<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    role_id: number;
+  },
+  opts?: FetcherData,
+): Promise<OrganizationRole> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/{role_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {
+    '200': { transforms: { date: [[['ref', $date_OrganizationRole]]] } },
+  });
+}
+/**
+ * Update a custom organization role
+ * Updates an existing custom organization role. Permission changes will apply to all assignees.
+ *
+ * To use this endpoint, the
+ * authenticated user must be one of:
+ *
+ * - An administrator for the organization.
+ * - A user, or a user on a team, with the
+ * fine-grained permissions of `write_organization_custom_org_role` in the organization.
+ *
+ * The authenticated user needs an
+ * access token with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write`
+ * permission to use this endpoint.
+ * GitHub Apps must have the `organization_custom_org_roles:write` organization permission
+ * to use this endpoint.
+ *
+ * For more information on custom organization roles, see "[Managing people's access to your
+ * organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#update-a-custom-organization-role}
+ * Tags: orgs
+ */
+export async function orgsPatchCustomOrganizationRole<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    role_id: number;
+  },
+  body: {
+    /**
+     * The name of the custom role.
+     */
+    name?: string;
+    /**
+     * A short description about the intended usage of this role or what permissions it grants.
+     */
+    description?: string;
+    /**
+     * A list of additional permissions included in this role.
+     */
+    permissions?: string[];
+  },
+  opts?: FetcherData,
+): Promise<OrganizationRole> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/{role_id}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {
+    '200': { transforms: { date: [[['ref', $date_OrganizationRole]]] } },
+  });
+}
+/**
+ * Delete a custom organization role.
+ * Deletes a custom organization role.
+ *
+ * To use this endpoint, the authenticated user must be one of:
+ *
+ * - An administrator
+ * for the organization.
+ * - A user, or a user on a team, with the fine-grained permissions of
+ * `write_organization_custom_org_role` in the organization.
+ *
+ * The authenticated user needs an access token with `admin:org`
+ * scope or a fine-grained personal access token with the `organization_custom_roles:write` permission to use this
+ * endpoint.
+ * GitHub Apps must have the `organization_custom_org_roles:write` organization permission to use this
+ * endpoint.
+ *
+ * For more information on custom organization roles, see "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#delete-a-custom-organization-role}
+ * Tags: orgs
+ */
+export async function orgsDeleteCustomOrganizationRole<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    role_id: number;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/{role_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * List teams that are assigned to an organization role
+ * Lists the teams that are assigned to an organization role.
+ *
+ * To use this endpoint, you must be an administrator for the
+ * organization, and you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have the `members`
+ * organization read permission to use this endpoint.
+ *
+ * For more information on organization roles, see "[Managing people's
+ * access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-teams-that-are-assigned-to-an-organization-role}
+ * Tags: orgs
+ */
+export async function orgsListOrgRoleTeams<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    role_id: number;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<Team[]> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/{role_id}/teams',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * List users that are assigned to an organization role
+ * Lists organization members that are assigned to an organization role.
+ *
+ * To use this endpoint, you must be an
+ * administrator for the organization, and you must use an access token with the `admin:org` scope.
+ * GitHub Apps must have
+ * the `members` organization read permission to use this endpoint.
+ *
+ * For more information on organization roles, see
+ * "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-users-that-are-assigned-to-an-organization-role}
+ * Tags: orgs
+ */
+export async function orgsListOrgRoleUsers<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    role_id: number;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<SimpleUser[]> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/organization-roles/{role_id}/users',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
 }
 /**
  * List outside collaborators for an organization
@@ -84989,8 +86050,11 @@ export async function projectsCreateForOrg<FetcherData>(
 /**
  * Get all custom properties for an organization
  * Gets all custom properties defined for an organization.
- * You must be an organization owner to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/properties#get-all-custom-properties-for-an-organization}
+ * Organization members can read these properties.
+ *
+ * GitHub Apps
+ * must have the `organization_custom_properties:read` organization permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization}
  * Tags: orgs
  */
 export async function orgsGetAllCustomProperties<FetcherData>(
@@ -85011,9 +86075,16 @@ export async function orgsGetAllCustomProperties<FetcherData>(
 /**
  * Create or update custom properties for an organization
  * Creates new or updates existing custom properties defined for an organization in a batch.
- * Only organization owners (or
- * users with the proper permissions granted by them) can update these properties
- * Learn more at {@link https://docs.github.com/rest/orgs/properties#create-or-update-custom-properties-for-an-organization}
+ *
+ * To use this endpoint, the
+ * authenticated user must be one of:
+ *   - An administrator for the organization.
+ *   - A user, or a user on a team, with the
+ * fine-grained permission of `custom_properties_org_definitions_manager` in the organization.
+ *
+ * GitHub Apps must have the
+ * `organization_custom_properties:admin` organization permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization}
  * Tags: orgs
  */
 export async function orgsCreateOrUpdateCustomProperties<FetcherData>(
@@ -85041,8 +86112,11 @@ export async function orgsCreateOrUpdateCustomProperties<FetcherData>(
 /**
  * Get a custom property for an organization
  * Gets a custom property that is defined for an organization.
- * You must be an organization owner to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/properties#get-a-custom-property-for-an-organization}
+ * Organization members can read these properties.
+ *
+ * GitHub Apps
+ * must have the `organization_custom_properties:read` organization permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#get-a-custom-property-for-an-organization}
  * Tags: orgs
  */
 export async function orgsGetCustomProperty<FetcherData>(
@@ -85064,9 +86138,16 @@ export async function orgsGetCustomProperty<FetcherData>(
 /**
  * Create or update a custom property for an organization
  * Creates a new or updates an existing custom property that is defined for an organization.
- * You must be an organization
- * owner to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/properties#create-or-update-a-custom-property-for-an-organization}
+ *
+ * To use this endpoint, the
+ * authenticated user must be one of:
+ * - An administrator for the organization.
+ * - A user, or a user on a team, with the
+ * fine-grained permission of `custom_properties_org_definitions_manager` in the organization.
+ *
+ * GitHub Apps must have the
+ * `organization_custom_properties:admin` organization permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization}
  * Tags: orgs
  */
 export async function orgsCreateOrUpdateCustomProperty<FetcherData>(
@@ -85112,8 +86193,16 @@ export async function orgsCreateOrUpdateCustomProperty<FetcherData>(
 /**
  * Remove a custom property for an organization
  * Removes a custom property that is defined for an organization.
- * You must be an organization owner to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/properties#remove-a-custom-property-for-an-organization}
+ *
+ * To use this endpoint, the authenticated user must be one
+ * of:
+ *   - An administrator for the organization.
+ *   - A user, or a user on a team, with the fine-grained permission of
+ * `custom_properties_org_definitions_manager` in the organization.
+ *
+ * GitHub Apps must have the
+ * `organization_custom_properties:admin` organization permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization}
  * Tags: orgs
  */
 export async function orgsRemoveCustomProperty<FetcherData>(
@@ -85137,7 +86226,10 @@ export async function orgsRemoveCustomProperty<FetcherData>(
  * Lists organization repositories with all of their custom property values.
  * Organization members can read these
  * properties.
- * Learn more at {@link https://docs.github.com/rest/orgs/properties#list-custom-property-values-for-organization-repositories}
+ *
+ * GitHub Apps must have the `organization_custom_properties:read` organization permission to use this
+ * endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#list-custom-property-values-for-organization-repositories}
  * Tags: orgs
  */
 export async function orgsListCustomPropertiesValuesForRepos<FetcherData>(
@@ -85146,6 +86238,7 @@ export async function orgsListCustomPropertiesValuesForRepos<FetcherData>(
     org: string;
     per_page?: number;
     page?: number;
+    repository_query?: string;
   },
   opts?: FetcherData,
 ): Promise<OrgRepoCustomPropertyValues[]> {
@@ -85153,7 +86246,7 @@ export async function orgsListCustomPropertiesValuesForRepos<FetcherData>(
     path: '/orgs/{org}/properties/values',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['per_page', 'page', 'repository_query'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
@@ -85170,9 +86263,15 @@ export async function orgsListCustomPropertiesValuesForRepos<FetcherData>(
  * Using a value of `null` for a custom property will remove or
  * 'unset' the property value from the repository.
  *
- * Only organization owners (or users with the proper permissions granted
- * by them) can update these properties
- * Learn more at {@link https://docs.github.com/rest/orgs/properties#create-or-update-custom-property-values-for-organization-repositories}
+ * To use this endpoint, the authenticated user must be one of:
+ *   - An
+ * administrator for the organization.
+ *   - A user, or a user on a team, with the fine-grained permission of
+ * `custom_properties_org_values_editor` in the organization.
+ *
+ * GitHub Apps must have the
+ * `organization_custom_properties:write` organization permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories}
  * Tags: orgs
  */
 export async function orgsCreateOrUpdateCustomPropertiesValuesForRepos<
@@ -85255,7 +86354,7 @@ export async function orgsCheckPublicMembershipForUser<FetcherData>(
  *
  * Note that
  * you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP
- * verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  * Learn more at {@link https://docs.github.com/rest/orgs/members#set-public-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
@@ -85347,9 +86446,9 @@ export async function reposListForOrg<FetcherData>(
  * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
  * include:
  *
- * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope
- * to create an internal repository.
- * *   `repo` scope to create a private repository
+ * *   `public_repo` scope or `repo` scope to create a public repository
+ * *   `repo` scope to create a private
+ * repository
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-an-organization-repository}
  * Tags: repos
  */
@@ -85478,9 +86577,15 @@ export async function reposCreateInOrg<FetcherData>(
      * - `BLANK` - default to a blank commit message.
      */
     merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
+    /**
+     * The custom properties for the new repository. The keys are the custom property names, and the values are the corresponding custom property values.
+     */
+    custom_properties?: {
+      [key: string]: any;
+    };
   },
   opts?: FetcherData,
-): Promise<Repository> {
+): Promise<FullRepository> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/repos',
     params,
@@ -85489,7 +86594,7 @@ export async function reposCreateInOrg<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
+    '201': { transforms: { date: [[['ref', $date_FullRepository]]] } },
   });
 }
 /**
@@ -85748,6 +86853,7 @@ export async function secretScanningListAlertsForOrg<FetcherData>(
     per_page?: number;
     before?: string;
     after?: string;
+    validity?: string;
   },
   opts?: FetcherData,
 ): Promise<OrganizationSecretScanningAlert[]> {
@@ -85765,6 +86871,7 @@ export async function secretScanningListAlertsForOrg<FetcherData>(
       'per_page',
       'before',
       'after',
+      'validity',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -86254,14 +87361,13 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST
- * /organizations/{org_id}/team/{team_id}/discussions`.
+ * **Note:** You can also specify a team
+ * by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#create-a-discussion}
  * Tags: teams
  */
@@ -86441,13 +87547,13 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST
+ * **Note:** You can also specify a team
+ * by `org_id` and `team_id` using the route `POST
  * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment}
  * Tags: teams
@@ -87089,7 +88195,7 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg<FetcherData>(
   },
   body: {
     /**
-     * The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     permission?: 'read' | 'write' | 'admin';
   } | null,
@@ -87175,10 +88281,14 @@ export async function teamsListReposInOrg<FetcherData>(
  * type](https://docs.github.com/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept
  * header.
  *
- * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response
- * status.
+ * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET
+ * If
+ * the repository is private, you must have at least `read` permission for that repository, and your token must have the
+ * `repo` or `admin:org` scope. Otherwise, you will receive a `404 Not Found` response status.
+ *
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository}
  * Tags: teams
@@ -87210,10 +88320,10 @@ export async function teamsCheckPermissionsForRepoInOrg<FetcherData>(
  * direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt
  * to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any
  * parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
- * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `PUT
+ * **Note:** You can
+ * also specify a team by `org_id` and `team_id` using the route `PUT
  * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  *
  * For more information about the permission levels, see
@@ -89387,11 +90497,11 @@ export async function actionsRemoveCustomLabelFromSelfHostedRunnerForRepo<
  * List workflow runs for a repository
  * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information
  * about using parameters, see
- * [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+ * [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
  *
- * Anyone with read access to
- * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
- * GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone with read access
+ * to the repository can use this endpoint. If the repository is private you must use an access token with the `repo`
+ * scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-repository}
  * Tags: actions
  */
@@ -89647,7 +90757,7 @@ export async function actionsGetWorkflowRunAttempt<FetcherData>(
  * Lists jobs for a specific workflow run attempt. Anyone with read access to the repository can use this endpoint. If the
  * repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
  * permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using
- * parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+ * parameters, see [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run-attempt}
  * Tags: actions
  */
@@ -89813,7 +90923,7 @@ export async function actionsForceCancelWorkflowRun<FetcherData>(
  * Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is
  * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use
  * this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see
- * [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+ * [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run}
  * Tags: actions
  */
@@ -90603,10 +91713,11 @@ export async function actionsEnableWorkflow<FetcherData>(
  * List workflow runs for a workflow
  * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could
  * use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see
- * [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters).
+ * [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
  *
- * Anyone with read access to
- * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+ * Anyone with read access
+ * to the repository can use this endpoint. If the repository is private you must use an access token with the `repo`
+ * scope.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-workflow}
  * Tags: actions
  */
@@ -92377,7 +93488,8 @@ export async function reposRemoveUserAccessRestrictions<FetcherData>(
  *
  * *
  * Users must have admin or owner permissions.
- * * GitHub Apps must have the `administration:write` repository permission.
+ * * GitHub Apps must have the `contents:write` and `administration:write`
+ * repository permissions.
  * Learn more at {@link https://docs.github.com/rest/branches/branches#rename-a-branch}
  * Tags: repos
  */
@@ -92407,15 +93519,18 @@ export async function reposRenameBranch<FetcherData>(
 }
 /**
  * Create a check run
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
- * to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * Creates a new check run for a specific commit in a repository.
  *
- * Creates a new check run
- * for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to create check runs.
+ * To create a check run, you must use a GitHub App with
+ * the `checks:write` permission. OAuth apps and authenticated users are not able to create a check suite.
  *
- * In
- * a check suite, GitHub limits the number of check runs with the same name to 1000. Once these check runs exceed 1000,
- * GitHub will start to automatically delete older check runs.
+ * In a check
+ * suite, GitHub limits the number of check runs with the same name to 1000. Once these check runs exceed 1000, GitHub will
+ * start to automatically delete older check runs.
+ *
+ * **Note:** The Checks API only looks for pushes in the repository where
+ * the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an
+ * empty `pull_requests` array.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#create-a-check-run}
  * Tags: checks
  */
@@ -92441,13 +93556,15 @@ export async function checksCreate<FetcherData>(
 }
 /**
  * Get a check run
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
- * to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * Gets a single check run using its `id`.
  *
- * Gets a single check run
- * using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public
- * repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a
- * private repository.
+ * GitHub Apps must have the `checks:read` permission on a private repository or
+ * pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to
+ * get check runs in a private repository.
+ *
+ * **Note:** The Checks API only looks for pushes in the repository where the
+ * check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty
+ * `pull_requests` array.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#get-a-check-run}
  * Tags: checks
  */
@@ -92472,12 +93589,14 @@ export async function checksGet<FetcherData>(
 }
 /**
  * Update a check run
- * Updates a check run for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to
- * edit check runs.
+ * Updates a check run for a specific commit in a repository.
  *
- * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite
- * or check run were created. Pushes to a branch in a forked repository are not detected and return an empty
- * `pull_requests` array.
+ * To update a check run, you must use a GitHub App with the
+ * `checks:write` permission. OAuth apps and authenticated users are not able to update a check run.
+ *
+ * **Note:** The
+ * endpoints to manage checks only look for pushes in the repository where the check suite or check run were created.
+ * Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#update-a-check-run}
  * Tags: checks
  */
@@ -92504,9 +93623,15 @@ export async function checksUpdate<FetcherData>(
 }
 /**
  * List check run annotations
- * Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a
- * private repository or pull access to a public repository to get annotations for a check run. OAuth apps and
- * authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
+ * Lists annotations for a check run using the annotation `id`.
+ *
+ * GitHub Apps
+ * must have the `checks:read` permission on a
+ * private repository or pull access to
+ * a public repository to get annotations for a check run. OAuth apps and
+ * authenticated
+ * users must have the `repo` scope to get annotations for a check run in a private
+ * repository.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-run-annotations}
  * Tags: checks
  */
@@ -92537,10 +93662,11 @@ export async function checksListAnnotations<FetcherData>(
  * `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
  *
  * To
- * rerequest a check run, your GitHub App must have the `checks:read` permission on a private repository or pull access to
- * a public repository.
+ * rerequest a check run, you must use a GitHub App with the `checks:read` permission on a private repository or pull
+ * access to a public repository. OAuth apps and authenticated users are not able to rerequest a check run.
  *
- * For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow
+ * For more
+ * information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow
  * run](https://docs.github.com/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)".
  * Learn more at {@link https://docs.github.com/rest/checks/runs#rerequest-a-check-run}
  * Tags: checks
@@ -92564,15 +93690,18 @@ export async function checksRerequestRun<FetcherData>(
 }
 /**
  * Create a check suite
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
- * to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
- * `head_branch`.
- *
- * By default, check suites are automatically created when you create a [check
+ * Creates a check suite manually. By default, check suites are automatically created when you create a [check
  * run](https://docs.github.com/rest/checks/runs). You only need to use this endpoint for manually creating check suites
  * when you've disabled automatic creation using "[Update repository preferences for check
- * suites](https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites)". Your GitHub App
- * must have the `checks:write` permission to create check suites.
+ * suites](https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites)".
+ *
+ * To create a check
+ * suite, you must use a GitHub App with the `checks:write` permission. OAuth apps and authenticated users are not able to
+ * create a check suite.
+ *
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check
+ * run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array
+ * and a `null` value for `head_branch`.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#create-a-check-suite}
  * Tags: checks
  */
@@ -92606,7 +93735,8 @@ export async function checksCreateSuite<FetcherData>(
  * Update repository preferences for check suites
  * Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each
  * time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a
- * check suite](https://docs.github.com/rest/checks/suites#create-a-check-suite). You must have admin permissions in the
+ * check suite](https://docs.github.com/rest/checks/suites#create-a-check-suite).
+ * You must have admin permissions in the
  * repository to set preferences for check suites.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites}
  * Tags: checks
@@ -92648,13 +93778,15 @@ export async function checksSetSuitesPreferences<FetcherData>(
 }
 /**
  * Get a check suite
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes
- * to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
- * `head_branch`.
+ * Gets a single check suite using its `id`.
  *
- * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a
- * private repository or pull access to a public repository to get check suites. OAuth apps and authenticated users must
- * have the `repo` scope to get check suites in a private repository.
+ * GitHub Apps must have the `checks:read` permission on a private repository or
+ * pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to
+ * get check suites in a private repository.
+ *
+ * **Note:** The Checks API only looks for pushes in the repository where the
+ * check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty
+ * `pull_requests` array and a `null` value for `head_branch`.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#get-a-check-suite}
  * Tags: checks
  */
@@ -92679,7 +93811,9 @@ export async function checksGetSuite<FetcherData>(
 }
 /**
  * List check runs in a check suite
- * Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private
+ * Lists check runs for a check suite using its `id`.
+ *
+ * GitHub Apps must have the `checks:read` permission on a private
  * repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the
  * `repo` scope to get check runs in a private repository.
  *
@@ -92728,8 +93862,9 @@ export async function checksListForSuite<FetcherData>(
  * `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is
  * cleared.
  *
- * To rerequest a check suite, your GitHub App must have the `checks:write` permission on a private repository or
- * pull access to a public repository.
+ * To rerequest a check suite, you must use a GitHub App with the `checks:write` permission on a private
+ * repository or pull access to a public repository. OAuth apps and authenticated users are not able to rerequest a check
+ * suite.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#rerequest-a-check-suite}
  * Tags: checks
  */
@@ -92757,15 +93892,11 @@ export async function checksRerequestSuite<FetcherData>(
  * To use this endpoint, you must use an access token with the `security_events` scope or, for
  * alerts from public repositories only, an access token with the `public_repo` scope.
  *
- * GitHub Apps must have the
- * `security_events` read
- * permission to use this endpoint.
- *
- * The response includes a `most_recent_instance` object.
- * This
- * provides details of the most recent instance of this alert
- * for the default branch (or for the specified Git reference if
- * you used `ref` in the request).
+ * The response includes a
+ * `most_recent_instance` object.
+ * This provides details of the most recent instance of this alert
+ * for the default branch
+ * (or for the specified Git reference if you used `ref` in the request).
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-a-repository}
  * Tags: code-scanning
  */
@@ -92812,8 +93943,8 @@ export async function codeScanningListAlertsForRepo<FetcherData>(
 /**
  * Get a code scanning alert
  * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint
- * with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub
- * Apps must have the `security_events` read permission to use this endpoint.
+ * with private repositories, the `public_repo` scope also grants permission to read security events on public repositories
+ * only.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -92840,7 +93971,7 @@ export async function codeScanningGetAlert<FetcherData>(
  * Update a code scanning alert
  * Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use
  * this endpoint with private repositories. You can also use tokens with the `public_repo` scope for public repositories
- * only. GitHub Apps must have the `security_events` write permission to use this endpoint.
+ * only.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -92873,10 +94004,9 @@ export async function codeScanningUpdateAlert<FetcherData>(
  * List instances of a code scanning alert
  * Lists all instances of the specified code scanning alert.
  * You must use an access token with the `security_events` scope
- * to use this endpoint with private repos,
- * the `public_repo` scope also grants permission to read security events on
- * public repos only.
- * GitHub Apps must have the `security_events` read permission to use this endpoint.
+ * to use this endpoint with private repositories,
+ * the `public_repo` scope also grants permission to read security events
+ * on public repositories only.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-instances-of-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -92918,16 +94048,14 @@ export async function codeScanningListAlertInstances<FetcherData>(
  * and `0` is returned in this field.
  *
  * You must use an access
- * token with the `security_events` scope to use this endpoint with private repos,
- * the `public_repo` scope also grants
- * permission to read security events on public repos only.
- * GitHub Apps must have the `security_events` read permission to
- * use this endpoint.
+ * token with the `security_events` scope to use this endpoint with private repositories,
+ * the `public_repo` scope also
+ * grants permission to read security events on public repositories only.
  *
  * **Deprecation notice**:
- * The `tool_name` field is deprecated and will, in future, not be included in
- * the response for this endpoint. The example response reflects this change. The tool name can now be found inside the
- * `tool` field.
+ * The `tool_name` field is
+ * deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this
+ * change. The tool name can now be found inside the `tool` field.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
  */
@@ -92972,32 +94100,34 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
 /**
  * Get a code scanning analysis for a repository
  * Gets a specified code scanning analysis for a repository.
- * You must use an access token with the `security_events` scope
- * to use this endpoint with private repos,
- * the `public_repo` scope also grants permission to read security events on
- * public repos only.
- * GitHub Apps must have the `security_events` read permission to use this endpoint.
  *
- * The default JSON
- * response contains fields that describe the analysis.
- * This includes the Git reference and commit SHA to which the
- * analysis relates,
- * the datetime of the analysis, the name of the code scanning tool,
+ * You must use an access token with the `security_events` scope
+ * to use this endpoint with private repositories,
+ * the `public_repo` scope also grants permission to read security events
+ * on public repositories only.
+ *
+ * The default JSON response contains fields that describe the analysis.
+ * This includes the
+ * Git reference and commit SHA to which the analysis relates,
+ * the datetime of the analysis, the name of the code scanning
+ * tool,
  * and the number of alerts.
  *
- * The
- * `rules_count` field in the default response give the number of rules
- * that were run in the analysis.
- * For very old
- * analyses this data is not available,
+ * The `rules_count` field in the default response give the number of rules
+ * that were run
+ * in the analysis.
+ * For very old analyses this data is not available,
  * and `0` is returned in this field.
  *
- * If you use the Accept header
- * `application/sarif+json`,
- * the response contains the analysis data that was uploaded.
- * This is formatted as
- * [SARIF version
- * 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+ * This endpoint
+ * supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/sarif+json`**: Instead of returning a summary of the analysis, this endpoint returns a subset of the
+ * analysis data that was uploaded. The data is formatted as [SARIF version
+ * 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html). It also returns additional data such
+ * as the `github/alertNumber` and `github/alertUrl` properties.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository}
  * Tags: code-scanning
  */
@@ -93144,7 +94274,6 @@ export async function codeScanningDeleteAnalysis<FetcherData>(
  * with the `security_events` scope.
  * For public repositories, you can use tokens with the `security_events` or
  * `public_repo` scope.
- * GitHub Apps must have the `contents` read permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-codeql-databases-for-a-repository}
  * Tags: code-scanning
  */
@@ -93187,8 +94316,6 @@ export async function codeScanningListCodeqlDatabases<FetcherData>(
  * repositories, you must use an access token with the `security_events` scope.
  * For public repositories, you can use tokens
  * with the `security_events` or `public_repo` scope.
- * GitHub Apps must have the `contents` read permission to use this
- * endpoint.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-codeql-database-for-a-repository}
  * Tags: code-scanning
  */
@@ -93217,9 +94344,8 @@ export async function codeScanningGetCodeqlDatabase<FetcherData>(
  * Get a code scanning default setup configuration
  * Gets a code scanning default setup configuration.
  * You must use an access token with the `repo` scope to use this
- * endpoint with private repos or the `public_repo`
- * scope for public repos. GitHub Apps must have the `repo` write
- * permission to use this endpoint.
+ * endpoint with private repositories or the `public_repo`
+ * scope for public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-default-setup-configuration}
  * Tags: code-scanning
  */
@@ -93247,9 +94373,8 @@ export async function codeScanningGetDefaultSetup<FetcherData>(
  * Update a code scanning default setup configuration
  * Updates a code scanning default setup configuration.
  * You must use an access token with the `repo` scope to use this
- * endpoint with private repos or the `public_repo`
- * scope for public repos. GitHub Apps must have the `repo` write
- * permission to use this endpoint.
+ * endpoint with private repositories or the `public_repo`
+ * scope for public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-default-setup-configuration}
  * Tags: code-scanning
  */
@@ -93296,14 +94421,14 @@ export async function codeScanningUpdateDefaultSetup<FetcherData>(
  * ```
  * gzip -c analysis-data.sarif | base64 -w0
  * ```
- * <br>
- * SARIF upload supports a maximum
- * number of entries per the following data objects, and an analysis will be rejected if any of these objects is above its
- * maximum value. For some objects, there are additional values over which the entries will be ignored while keeping the
- * most important entries whenever applicable.
- * To get the most out of your analysis when it includes data above the
- * supported limits, try to optimize the analysis configuration. For example, for the CodeQL tool, identify and remove the
- * most noisy queries. For more information, see "[SARIF results exceed one or more
+ *
+ * SARIF upload supports a maximum number of
+ * entries per the following data objects, and an analysis will be rejected if any of these objects is above its maximum
+ * value. For some objects, there are additional values over which the entries will be ignored while keeping the most
+ * important entries whenever applicable.
+ * To get the most out of your analysis when it includes data above the supported
+ * limits, try to optimize the analysis configuration. For example, for the CodeQL tool, identify and remove the most noisy
+ * queries. For more information, see "[SARIF results exceed one or more
  * limits](https://docs.github.com/code-security/code-scanning/troubleshooting-sarif/results-exceed-limit)."
  *
  *
@@ -93346,7 +94471,7 @@ export async function codeScanningUploadSarif<FetcherData>(
   },
   body: {
     commit_sha: CodeScanningAnalysisCommitSha;
-    ref: CodeScanningRef;
+    ref: CodeScanningRefFull;
     sarif: CodeScanningAnalysisSarifFile;
     /**
      * The base directory used in the analysis, as it appears in the SARIF file.
@@ -93384,9 +94509,8 @@ export async function codeScanningUploadSarif<FetcherData>(
  * Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you
  * can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a
  * repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access
- * token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants
- * permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to
- * use this endpoint.
+ * token with the `security_events` scope to use this endpoint with private repositories, the `public_repo` scope also
+ * grants permission to read security events on public repositories only.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload}
  * Tags: code-scanning
  */
@@ -93444,8 +94568,13 @@ export async function reposCodeownersErrors<FetcherData>(
  * You must authenticate using an
  * access token with the `codespace` scope to use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces`
- * repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be
+ * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have read access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#list-codespaces-in-a-repository-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -93486,8 +94615,13 @@ export async function codespacesListInRepositoryForAuthenticatedUser<
  * You must authenticate using an access
  * token with the `codespace` scope to use this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces`
- * repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be
+ * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-in-a-repository}
  * Tags: codespaces
  */
@@ -93644,8 +94778,13 @@ export async function codespacesRepoMachinesForAuthenticatedUser<FetcherData>(
  * You must authenticate using an
  * access token with the `codespace` scope to use this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces`
- * repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be
+ * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#get-default-attributes-for-a-codespace}
  * Tags: codespaces
  */
@@ -93683,8 +94822,14 @@ export async function codespacesPreFlightWithRepoForAuthenticatedUser<
  *
  * You must authenticate using an access token with the `codespace` scope to use this endpoint.
  *
- * GitHub Apps must
- * have write access to the `codespaces` repository permission to use this endpoint.
+ * To use this
+ * endpoint with GitHub Apps:
+ *
+ * - The app must be authenticated on behalf of the user. For more information, see
+ * "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#check-if-permissions-defined-by-a-devcontainer-have-been-accepted-by-the-authenticated-user}
  * Tags: codespaces
  */
@@ -93709,9 +94854,9 @@ export async function codespacesCheckPermissionsForDevcontainer<FetcherData>(
 }
 /**
  * List repository secrets
- * Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an
- * access token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the `codespaces_secrets`
- * repository permission to use this endpoint.
+ * Lists all development environment secrets available in a repository without revealing their encrypted values. You must
+ * authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the
+ * `codespaces_secrets` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#list-repository-secrets}
  * Tags: codespaces
  */
@@ -93776,9 +94921,9 @@ export async function codespacesGetRepoPublicKey<FetcherData>(
 }
 /**
  * Get a repository secret
- * Gets a single repository secret without revealing its encrypted value. You must authenticate using an access token with
- * the `repo` scope to use this endpoint. GitHub Apps must have write access to the `codespaces_secrets` repository
- * permission to use this endpoint.
+ * Gets a single repository development environment secret without revealing its encrypted value. You must authenticate
+ * using an access token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the
+ * `codespaces_secrets` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-secret}
  * Tags: codespaces
  */
@@ -93803,7 +94948,7 @@ export async function codespacesGetRepoSecret<FetcherData>(
 }
 /**
  * Create or update a repository secret
- * Creates or updates a repository secret with an encrypted value. Encrypt your secret
+ * Creates or updates a repository development environment secret with an encrypted value. Encrypt your secret
  * using
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
@@ -93846,9 +94991,9 @@ export async function codespacesCreateOrUpdateRepoSecret<FetcherData>(
 }
 /**
  * Delete a repository secret
- * Deletes a secret in a repository using the secret name. You must authenticate using an access token with the `repo`
- * scope to use this endpoint. GitHub Apps must have write access to the `codespaces_secrets` repository permission to use
- * this endpoint.
+ * Deletes a development environment secret in a repository using the secret name. You must authenticate using an access
+ * token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the `codespaces_secrets`
+ * repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#delete-a-repository-secret}
  * Tags: codespaces
  */
@@ -93947,14 +95092,13 @@ export async function reposCheckCollaborator<FetcherData>(
  * Add a repository collaborator
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * Adding an outside collaborator may be restricted by enterprise administrators. For more information, see
- * "[Enforcing repository management policies in your
+ * Adding an outside collaborator may be
+ * restricted by enterprise administrators. For more information, see "[Enforcing repository management policies in your
  * enterprise](https://docs.github.com/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)."
  *
  * For
@@ -93970,11 +95114,11 @@ export async function reposCheckCollaborator<FetcherData>(
  *
  * Note that, if you choose not to pass
  * any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
- * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  *
- * The invitee will receive a
- * notification that they have been invited to the repository, which they must accept or decline. They may do this via the
- * notifications page, the email they receive, or by using the
+ * The invitee will
+ * receive a notification that they have been invited to the repository, which they must accept or decline. They may do
+ * this via the notifications page, the email they receive, or by using the
  * [API](https://docs.github.com/rest/collaborators/invitations).
  *
  * **Updating an existing collaborator's permission
@@ -94108,11 +95252,22 @@ export async function reposGetCollaboratorPermissionLevel<FetcherData>(
 }
 /**
  * List commit comments for a repository
- * Commit Comments use [these custom media types](https://docs.github.com/rest/overview/media-types). You can read more
- * about the use of media types in the API [here](https://docs.github.com/rest/overview/media-types/).
+ * Lists the commit comments for a specified repository. Comments are ordered by ascending ID.
  *
- * Comments are
- * ordered by ascending ID.
+ * This endpoint supports the
+ * following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/commits/comments#list-commit-comments-for-a-repository}
  * Tags: repos
  */
@@ -94139,6 +95294,21 @@ export async function reposListCommitCommentsForRepo<FetcherData>(
 }
 /**
  * Get a commit comment
+ * Gets a specified commit comment.
+ *
+ * This endpoint supports the following custom media types. For more information, see
+ * "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/commits/comments#get-a-commit-comment}
  * Tags: repos
  */
@@ -94163,6 +95333,22 @@ export async function reposGetCommitComment<FetcherData>(
 }
 /**
  * Update a commit comment
+ * Updates the contents of a specified commit comment.
+ *
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/commits/comments#update-a-commit-comment}
  * Tags: repos
  */
@@ -94436,7 +95622,22 @@ export async function reposListBranchesForHeadCommit<FetcherData>(
 }
 /**
  * List commit comments
- * Use the `:commit_sha` to specify the commit that will have its comments listed.
+ * Lists the comments for a specified commit.
+ *
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/commits/comments#list-commit-comments}
  * Tags: repos
  */
@@ -94468,11 +95669,25 @@ export async function reposListCommentsForCommit<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/commits/comments#create-a-commit-comment}
  * Tags: repos
  */
@@ -94557,38 +95772,39 @@ export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
  * headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the
  * only changes are to the file listing.
  *
- * You can pass the appropriate [media
- * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff`
- * and `patch` formats. Diffs with binary data will have no `patch` property.
+ * This endpoint supports the following custom media types. For more information,
+ * see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
- * To return only the SHA-1 hash of the commit
- * reference, you can provide the `sha` custom [media
- * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept`
- * header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's
- * SHA-1 hash by providing the local SHA-1 reference as the ETag.
+ * -
+ * **`application/vnd.github.diff`**: Returns the diff of the commit.
+ * - **`application/vnd.github.patch`**: Returns the
+ * patch of the commit. Diffs with binary data will have no `patch` property.
+ * - **`application/vnd.github.sha`**: Returns
+ * the commit's SHA-1 hash. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local
+ * reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
  *
  * **Signature verification object**
  *
- * The response will
- * include a `verification` object that describes the result of verifying the commit's signature. The following fields are
- * included in the `verification` object:
+ * The
+ * response will include a `verification` object that describes the result of verifying the commit's signature. The
+ * following fields are included in the `verification` object:
  *
  * | Name | Type | Description |
- * | ---- | ---- | ----------- |
- * | `verified` |
- * `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` | `string` |
- * The reason for verified value. Possible values and their meanings are enumerated in table below. |
- * | `signature` |
- * `string` | The signature that was extracted from the commit. |
- * | `payload` | `string` | The value that was signed.
+ * | ---- | ---- | -----------
  * |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+ * |
+ * `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below.
+ * |
+ * | `signature` | `string` | The signature that was extracted from the commit. |
+ * | `payload` | `string` | The value that
+ * was signed. |
  *
  * These are the possible values for `reason` in the `verification` object:
  *
  * | Value | Description |
- * | ----- |
- * ----------- |
+ * | -----
+ * | ----------- |
  * | `expired_key` | The key that made the signature is expired. |
  * | `not_signing_key` | The "signing" flag
  * is not among the usage flags in the GPG key that made the signature. |
@@ -94637,7 +95853,9 @@ export async function reposGetCommit<FetcherData>(
 }
 /**
  * List check runs for a Git reference
- * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the
+ * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name.
+ *
+ * GitHub Apps must have the
  * `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and
  * authenticated users must have the `repo` scope to get check runs in a private repository.
  *
@@ -94696,7 +95914,9 @@ export async function checksListForRef<FetcherData>(
 }
 /**
  * List check suites for a Git reference
- * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the
+ * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name.
+ *
+ * GitHub Apps must have the
  * `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps
  * and authenticated users must have the `repo` scope to get check suites in a private repository.
  *
@@ -94858,79 +96078,86 @@ export async function reposGetCommunityProfileMetrics<FetcherData>(
  * This
  * endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The
  * `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in
- * chronological order. You can pass the appropriate [media
- * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and
- * patch formats.
+ * chronological order.
  *
- * The API response includes details about the files that were changed between the two commits. This
- * includes the status of the change (if a file was added, removed, modified, or renamed), and details of the change
- * itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the
- * file, and files with a `modified` status have a `patch` field showing the changes made to the file.
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
- * When calling this
- * endpoint without any paging parameter (`per_page` or `page`), the returned list is limited to 250 commits, and the last
- * commit in the list is the most recent of the entire comparison.
+ * -
+ * **`application/vnd.github.diff`**: Returns the diff of the commit.
+ * - **`application/vnd.github.patch`**: Returns the
+ * patch of the commit. Diffs with binary data will have no `patch` property.
+ *
+ * The API response includes details about the
+ * files that were changed between the two commits. This includes the status of the change (if a file was added, removed,
+ * modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a
+ * `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch`
+ * field showing the changes made to the file.
+ *
+ * When calling this endpoint without any paging parameter (`per_page` or
+ * `page`), the returned list is limited to 250 commits, and the last commit in the list is the most recent of the entire
+ * comparison.
  *
  * **Working with large comparisons**
  *
- * To process a
- * response with a large number of commits, use a query parameter (`per_page` or `page`) to paginate the results. When
- * using pagination:
+ * To process a response with a large number of commits, use a query
+ * parameter (`per_page` or `page`) to paginate the results. When using pagination:
  *
- * - The list of changed files is only shown on the first page of results, but it includes all changed
- * files for the entire comparison.
- * - The results are returned in chronological order, but the last commit in the returned
- * list may not be the most recent one in the entire set if there are more pages of results.
+ * - The list of changed files is only
+ * shown on the first page of results, but it includes all changed files for the entire comparison.
+ * - The results are
+ * returned in chronological order, but the last commit in the returned list may not be the most recent one in the entire
+ * set if there are more pages of results.
  *
- * For more information on
- * working with pagination, see "[Using pagination in the REST
- * API](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api)."
+ * For more information on working with pagination, see "[Using pagination in the
+ * REST API](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api)."
  *
- * **Signature verification object**
+ * **Signature verification
+ * object**
  *
- * The
- * response will include a `verification` object that describes the result of verifying the commit's signature. The
- * `verification` object includes the following fields:
+ * The response will include a `verification` object that describes the result of verifying the commit's
+ * signature. The `verification` object includes the following fields:
  *
  * | Name | Type | Description |
- * | ---- | ---- | ----------- |
+ * | ---- | ---- |
+ * ----------- |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified.
  * |
- * `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * | `reason` |
- * `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
- * |
- * `signature` | `string` | The signature that was extracted from the commit. |
- * | `payload` | `string` | The value that was
- * signed. |
+ * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table
+ * below. |
+ * | `signature` | `string` | The signature that was extracted from the commit. |
+ * | `payload` | `string` | The
+ * value that was signed. |
  *
  * These are the possible values for `reason` in the `verification` object:
  *
- * | Value | Description |
- * | ----- |
- * ----------- |
+ * | Value |
+ * Description |
+ * | ----- | ----------- |
  * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag
- * is not among the usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error
- * communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service
- * is currently unavailable. |
- * | `unsigned` | The object does not include a signature. |
- * | `unknown_signature_type` | A
- * non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in
- * the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the
- * email address is not verified on their account. |
- * | `bad_email` | The `committer` email address in the commit is not
- * included in the identities of the PGP key that made the signature. |
- * | `unknown_key` | The key that made the signature
- * has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature.
  * |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the
+ * `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * |
+ * `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
+ * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on their account. |
+ * |
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
  * signature. |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+ * |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/commits/commits#compare-two-commits}
  * Tags: repos
  */
@@ -94956,68 +96183,57 @@ export async function reposCompareCommits<FetcherData>(
 }
 /**
  * Get repository content
- * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you
- * omit
- * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what
- * the API response includes for directories.
+ * Gets the contents of a file or directory in a repository. Specify the file path or directory with the `path` parameter.
+ * If you omit the `path` parameter, you will receive the contents of the repository's root directory.
  *
- * Files and symlinks support [a custom media
- * type](https://docs.github.com/rest/overview/media-types) for
- * retrieving the raw content or rendered HTML (when
- * supported). All content types support [a custom media
- * type](https://docs.github.com/rest/overview/media-types) to ensure
- * the content is returned in a consistent
- * object format.
+ * This endpoint
+ * supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw file contents for files and symlinks.
+ * -
+ * **`application/vnd.github.html+json`**: Returns the file contents in HTML. Markup languages are rendered to HTML using
+ * GitHub's open-source [Markup library](https://github.com/github/markup).
+ * - **`application/vnd.github.object+json`**:
+ * Returns the contents in a consistent object format regardless of the content type. For example, instead of an array of
+ * objects for a directory, the response will be an object with an `entries` attribute containing the array of objects.
+ *
+ * If
+ * the content is a directory, the response will be an array of objects, one object for each item in the directory. When
+ * listing the contents of a directory, submodules have their "type" specified as "file". Logically, the value _should_ be
+ * "submodule". This behavior exists [for backwards compatibility purposes](https://git.io/v1YCW). In the next major
+ * version of the API, the type will be returned as "submodule".
+ *
+ * If the content is a symlink and the symlink's target is a
+ * normal file in the repository, then the API responds with the content of the file. Otherwise, the API responds with an
+ * object describing the symlink itself.
+ *
+ * If the content is a submodule, the `submodule_git_url` field identifies the
+ * location of the submodule repository, and the `sha` identifies a specific commit within the submodule repository. Git
+ * uses the given URL when cloning the submodule repository, and checks out the submodule at that specific commit. If the
+ * submodule repository is not hosted on github.com, the Git URLs (`git_url` and `_links["git"]`) and the github.com URLs
+ * (`html_url` and `_links["html"]`) will have null values.
  *
  * **Notes**:
- * *   To get a repository's contents recursively, you
+ *
+ * - To get a repository's contents recursively, you
  * can [recursively get the tree](https://docs.github.com/rest/git/trees#get-a-tree).
- * *   This API has an upper limit of
- * 1,000 files for a directory. If you need to retrieve more files, use the [Git
- * Trees
+ * - This API has an upper limit of
+ * 1,000 files for a directory. If you need to retrieve
+ * more files, use the [Git Trees
  * API](https://docs.github.com/rest/git/trees#get-a-tree).
- *  *  Download URLs expire and are meant to be used just
- * once. To ensure the download URL does not expire, please use the contents API to obtain a fresh download URL for each
- * download.
- *  Size limits:
+ * - Download URLs expire and are meant to be used just once. To
+ * ensure the download URL does not expire, please use the contents API to obtain a fresh download URL for each download.
+ * -
  * If the requested file's size is:
- * * 1 MB or smaller: All features of this endpoint are
- * supported.
- * * Between 1-100 MB: Only the `raw` or `object` [custom media
- * types](https://docs.github.com/rest/repos/contents#custom-media-types-for-repository-contents) are supported. Both will
- * work as normal, except that when using the `object` media type, the `content` field will be an empty string and the
- * `encoding` field will be `"none"`. To get the contents of these larger files, use the `raw` media type.
- *  * Greater than
- * 100 MB: This endpoint is not supported.
- *
- *  If the content is a directory:
- * The response will be an array of objects, one
- * object for each item in the directory.
- * When listing the contents of a directory, submodules have their "type" specified
- * as "file". Logically, the value
- * _should_ be "submodule". This behavior exists in API v3 [for backwards compatibility
- * purposes](https://git.io/v1YCW).
- * In the next major version of the API, the type will be returned as "submodule".
- *
- *  If
- * the content is a symlink:
- * If the requested `:path` points to a symlink, and the symlink's target is a normal file in
- * the repository, then the
- * API responds with the content of the file (in the format shown in the example. Otherwise, the
- * API responds with an object
- * describing the symlink itself.
- *
- *  If the content is a submodule:
- * The `submodule_git_url`
- * identifies the location of the submodule repository, and the `sha` identifies a specific
- * commit within the submodule
- * repository. Git uses the given URL when cloning the submodule repository, and checks out
- * the submodule at that specific
- * commit.
- *
- * If the submodule repository is not hosted on github.com, the Git URLs (`git_url` and `_links["git"]`) and
- * the
- * github.com URLs (`html_url` and `_links["html"]`) will have null values.
+ *   - 1 MB or smaller: All features of this endpoint are supported.
+ *   - Between 1-100 MB:
+ * Only the `raw` or `object` custom media types are supported. Both will work as normal, except that when using the
+ * `object` media type, the `content` field will be an empty
+ * string and the `encoding` field will be `"none"`. To get the
+ * contents of these larger files, use the `raw` media type.
+ *   - Greater than 100 MB: This endpoint is not supported.
  * Learn more at {@link https://docs.github.com/rest/repos/contents#get-repository-content}
  * Tags: repos
  */
@@ -96669,8 +97885,17 @@ export async function gitCreateBlob<FetcherData>(
  * Get a blob
  * The `content` in the response will always be Base64 encoded.
  *
- * _Note_: This API supports blobs up to 100 megabytes in
- * size.
+ * This endpoint supports the following custom media types.
+ * For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw blob data.
+ * - **`application/vnd.github+json`**: Returns a JSON
+ * representation of the blob with `content` as a base64 encoded string. This is the default if no media type is
+ * specified.
+ *
+ * **Note** This endpoint supports blobs up to 100 megabytes in size.
  * Learn more at {@link https://docs.github.com/rest/git/blobs#get-a-blob}
  * Tags: git
  */
@@ -97377,14 +98602,6 @@ export async function reposCreateWebhook<FetcherData>(
       content_type?: WebhookConfigContentType;
       secret?: WebhookConfigSecret;
       insecure_ssl?: WebhookConfigInsecureSsl;
-      /**
-       * @example "\"abc\""
-       */
-      token?: string;
-      /**
-       * @example "\"sha256\""
-       */
-      digest?: string;
     };
     /**
      * Determines what [events](https://docs.github.com/webhooks/event-payloads) the hook is triggered for.
@@ -97456,23 +98673,7 @@ export async function reposUpdateWebhook<FetcherData>(
     hook_id: number;
   },
   body: {
-    /**
-     * Key/value pairs to provide settings for this webhook.
-     */
-    config?: {
-      url: WebhookConfigUrl;
-      content_type?: WebhookConfigContentType;
-      secret?: WebhookConfigSecret;
-      insecure_ssl?: WebhookConfigInsecureSsl;
-      /**
-       * @example "\"bar@example.com\""
-       */
-      address?: string;
-      /**
-       * @example "\"The Serious Room\""
-       */
-      room?: string;
-    };
+    config?: WebhookConfig;
     /**
      * Determines what [events](https://docs.github.com/webhooks/event-payloads) the hook is triggered for. This replaces the entire array of events.
      * @defaultValue
@@ -98309,6 +99510,20 @@ export async function reposDeleteInvitation<FetcherData>(
  * request returned from "Issues" endpoints will be an _issue id_. To find out the pull
  * request id, use the "[List pull
  * requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-repository-issues}
  * Tags: issues
  */
@@ -98362,11 +99577,25 @@ export async function issuesListForRepo<FetcherData>(
  * This endpoint
  * triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/issues#create-an-issue}
  * Tags: issues
  */
@@ -98426,6 +99655,20 @@ export async function issuesCreate<FetcherData>(
  * but not every issue is a pull request.
  *
  * By default, issue comments are ordered by ascending ID.
+ *
+ * This endpoint supports
+ * the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/comments#list-issue-comments-for-a-repository}
  * Tags: issues
  */
@@ -98457,6 +99700,19 @@ export async function issuesListCommentsForRepo<FetcherData>(
  * Get an issue comment
  * You can use the REST API to get comments on issues and pull requests. Every pull request is an issue, but not every
  * issue is a pull request.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/comments#get-an-issue-comment}
  * Tags: issues
  */
@@ -98483,6 +99739,19 @@ export async function issuesGetComment<FetcherData>(
  * Update an issue comment
  * You can use the REST API to update comments on issues and pull requests. Every pull request is an issue, but not every
  * issue is a pull request.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/comments#update-an-issue-comment}
  * Tags: issues
  */
@@ -98698,7 +99967,7 @@ export async function issuesGetEvent<FetcherData>(
 /**
  * Get an issue
  * The API returns a [`301 Moved Permanently`
- * status](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue
+ * status](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api#follow-redirects) if the issue
  * was
  * [transferred](https://docs.github.com/articles/transferring-an-issue-to-another-repository/) to another repository.
  * If
@@ -98717,7 +99986,21 @@ export async function issuesGetEvent<FetcherData>(
  * the `pull_request` key. Be
  * aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the
  * pull
- * request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+ * request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)"
+ * endpoint.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/issues#get-an-issue}
  * Tags: issues
  */
@@ -98743,6 +100026,20 @@ export async function issuesGet<FetcherData>(
 /**
  * Update an issue
  * Issue owners and users with push access can edit an issue.
+ *
+ * This endpoint supports the following custom media types. For
+ * more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/issues#update-an-issue}
  * Tags: issues
  */
@@ -98905,6 +100202,20 @@ export async function issuesCheckUserCanBeAssignedToIssue<FetcherData>(
  * issue is a pull request.
  *
  * Issue comments are ordered by ascending ID.
+ *
+ * This endpoint supports the following custom media
+ * types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/comments#list-issue-comments}
  * Tags: issues
  */
@@ -98940,13 +100251,24 @@ export async function issuesListComments<FetcherData>(
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating
  * content too quickly using this endpoint may result in secondary rate limiting.
- * See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)"
- * and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)"
- * for
- * details.
+ * For more information, see "[Rate limits
+ * for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and "[Best
+ * practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * This
+ * endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/comments#create-an-issue-comment}
  * Tags: issues
  */
@@ -99164,7 +100486,7 @@ export async function issuesRemoveLabel<FetcherData>(
  *
  * Note that, if you choose not to pass any
  * parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
- * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  * Learn more at {@link https://docs.github.com/rest/issues/issues#lock-an-issue}
  * Tags: issues
  */
@@ -99638,10 +100960,15 @@ export async function reposListLanguages<FetcherData>(
  * Get the license for a repository
  * This method returns the contents of the repository's license file, if one is detected.
  *
- * Similar to [Get repository
- * content](https://docs.github.com/rest/repos/contents#get-repository-content), this method also supports [custom media
- * types](https://docs.github.com/rest/overview/media-types) for retrieving the raw license content or rendered license
- * HTML.
+ * This endpoint supports the
+ * following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw contents of the license.
+ * -
+ * **`application/vnd.github.html+json`**: Returns the license contents in HTML. Markup languages are rendered to HTML
+ * using GitHub's open-source [Markup library](https://github.com/github/markup).
  * Learn more at {@link https://docs.github.com/rest/licenses/licenses#get-the-license-for-a-repository}
  * Tags: licenses
  */
@@ -100242,9 +101569,13 @@ export async function reposCreatePagesDeployment<FetcherData>(
   },
   body: {
     /**
-     * The URL of an artifact that contains the .zip or .tar of static assets to deploy. The artifact belongs to the repository.
+     * The ID of an artifact that contains the .zip or .tar of static assets to deploy. The artifact belongs to the repository. Either `artifact_id` or `artifact_url` are required.
      */
-    artifact_url: string;
+    artifact_id?: number;
+    /**
+     * The URL of an artifact that contains the .zip or .tar of static assets to deploy. The artifact belongs to the repository. Either `artifact_id` or `artifact_url` are required.
+     */
+    artifact_url?: string;
     /**
      * The target environment for this GitHub Pages deployment.
      * @defaultValue "github-pages"
@@ -100263,10 +101594,62 @@ export async function reposCreatePagesDeployment<FetcherData>(
   opts?: FetcherData,
 ): Promise<PageDeployment> {
   const req = await ctx.createRequest({
-    path: '/repos/{owner}/{repo}/pages/deployment',
+    path: '/repos/{owner}/{repo}/pages/deployments',
     params,
     method: r.HttpMethod.POST,
     body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Get the status of a GitHub Pages deployment
+ * Gets the current status of a GitHub Pages deployment.
+ *
+ * Users must have read permission for the GitHub Pages site. GitHub
+ * Apps must have the `pages:read` permission.
+ * Learn more at {@link https://docs.github.com/rest/pages/pages#get-the-status-of-a-github-pages-deployment}
+ * Tags: repos
+ */
+export async function reposGetPagesDeployment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    pages_deployment_id: number | string;
+  },
+  opts?: FetcherData,
+): Promise<PagesDeploymentStatus> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * Cancel a GitHub Pages deployment
+ * Cancels a GitHub Pages deployment.
+ *
+ * Users must have write permissions for the GitHub Pages site. GitHub Apps must have
+ * the `pages:write` permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/pages/pages#cancel-a-github-pages-deployment}
+ * Tags: repos
+ */
+export async function reposCancelPagesDeployment<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    pages_deployment_id: number | string;
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}/cancel',
+    params,
+    method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
@@ -100421,7 +101804,9 @@ export async function projectsCreateForRepo<FetcherData>(
  * Gets all custom property values that are set for a repository.
  * Users with read access to the repository can use this
  * endpoint.
- * Learn more at {@link https://docs.github.com/rest/repos/properties#get-all-custom-property-values-for-a-repository}
+ *
+ * GitHub Apps must have the `metadata:read` repository permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/repos/custom-properties#get-all-custom-property-values-for-a-repository}
  * Tags: repos
  */
 export async function reposGetCustomPropertiesValues<FetcherData>(
@@ -100441,11 +101826,74 @@ export async function reposGetCustomPropertiesValues<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
+ * Create or update custom property values for a repository
+ * Create new or update existing custom property values for a repository.
+ * Using a value of `null` for a custom property
+ * will remove or 'unset' the property value from the repository.
+ *
+ * Repository admins and other users with the
+ * repository-level "edit custom property values" fine-grained permission can use this endpoint.
+ *
+ * GitHub Apps must have the
+ * `repository_custom_properties:write` permission to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository}
+ * Tags: repos
+ */
+export async function reposCreateOrUpdateCustomPropertiesValues<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+  },
+  body: {
+    /**
+     * A list of custom property names and associated values to apply to the repositories.
+     */
+    properties: CustomPropertyValue[];
+  },
+  opts?: FetcherData,
+): Promise<any> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/properties/values',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
  * List pull requests
- * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro,
- * and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+ * Lists pull requests in a specified repository.
+ *
+ * Draft pull requests are available in public repositories with
+ * GitHub
+ * Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing
+ * plans, and in public and
+ * private repositories with GitHub Team and GitHub Enterprise
  * Cloud. For more information, see [GitHub's
- * products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+ * products](https://docs.github.com/github/getting-started-with-github/githubs-products)
+ * in the GitHub Help
+ * documentation.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * -
+ * **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git
+ * documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/).
+ * Include the repository name and pull request ID in your message.
+ * - **`application/vnd.github.patch`**: For more
+ * information, see "[git-format-patch](https://git-scm.com/docs/git-format-patch)" in the Git documentation.
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#list-pull-requests}
  * Tags: pulls
  */
@@ -100499,10 +101947,28 @@ export async function pullsList<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * -
+ * **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git
+ * documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/).
+ * Include the repository name and pull request ID in your message.
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#create-a-pull-request}
  * Tags: pulls
  */
@@ -100563,7 +102029,23 @@ export async function pullsCreate<FetcherData>(
 }
 /**
  * List review comments in a repository
- * Lists review comments for all pull requests in a repository. By default, review comments are in ascending order by ID.
+ * Lists review comments for all pull requests in a repository. By default,
+ * review comments are in ascending order by
+ * ID.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#list-review-comments-in-a-repository}
  * Tags: pulls
  */
@@ -100597,7 +102079,22 @@ export async function pullsListReviewCommentsForRepo<FetcherData>(
 }
 /**
  * Get a review comment for a pull request
- * Provides details for a review comment.
+ * Provides details for a specified review comment.
+ *
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#get-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
@@ -100624,7 +102121,22 @@ export async function pullsGetReviewComment<FetcherData>(
 }
 /**
  * Update a review comment for a pull request
- * Enables you to edit a review comment.
+ * Edits the content of a specified review comment.
+ *
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#update-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
@@ -100830,6 +102342,23 @@ export async function reactionsDeleteForPullRequestComment<FetcherData>(
  * Pass the appropriate [media
  * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and
  * patch formats.
+ *
+ * This endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * -
+ * **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git
+ * documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/).
+ * Include the repository name and pull request ID in your message.
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#get-a-pull-request}
  * Tags: pulls
  */
@@ -100863,6 +102392,23 @@ export async function pullsGet<FetcherData>(
  * To open or update a pull request in a public repository, you must have write access to the head or the
  * source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to
  * open or update a pull request.
+ *
+ * This endpoint supports the following custom media types. For more information, see
+ * "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * -
+ * **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git
+ * documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/).
+ * Include the repository name and pull request ID in your message.
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#update-a-pull-request}
  * Tags: pulls
  */
@@ -100915,8 +102461,13 @@ export async function pullsUpdate<FetcherData>(
  * You must authenticate using an
  * access token with the `codespace` scope to use this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces`
- * repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be
+ * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-from-a-pull-request}
  * Tags: codespaces
  */
@@ -100985,7 +102536,23 @@ export async function codespacesCreateWithPrForAuthenticatedUser<FetcherData>(
 }
 /**
  * List review comments on a pull request
- * Lists all review comments for a pull request. By default, review comments are in ascending order by ID.
+ * Lists all review comments for a specified pull request. By default, review comments
+ * are in ascending order by ID.
+ *
+ * This
+ * endpoint supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#list-review-comments-on-a-pull-request}
  * Tags: pulls
  */
@@ -101020,26 +102587,38 @@ export async function pullsListReviewComments<FetcherData>(
 }
 /**
  * Create a review comment for a pull request
- * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an
- * issue comment](https://docs.github.com/rest/issues/comments#create-an-issue-comment)." We recommend creating a review
- * comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line
- * in the pull request diff.
+ * Creates a review comment on the diff of a specified pull request. To add a regular comment to a pull request timeline,
+ * see "[Create an issue comment](https://docs.github.com/rest/issues/comments#create-an-issue-comment)."
  *
- * The `position` parameter is deprecated. If you use `position`, the `line`, `side`,
- * `start_line`, and `start_side` parameters are not required.
+ * If your comment
+ * applies to more than one line in the pull request diff, you should use the parameters `line`, `side`, and optionally
+ * `start_line` and `start_side` in your request.
  *
- * **Note:** The position value equals the number of lines
- * down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is
- * position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of
- * whitespace and additional hunks until the beginning of a new file.
+ * The `position` parameter is deprecated. If you use `position`, the
+ * `line`, `side`, `start_line`, and `start_side` parameters are not required.
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#create-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
@@ -101064,7 +102643,7 @@ export async function pullsCreateReviewComment<FetcherData>(
      */
     path: string;
     /**
-     * **This parameter is deprecated. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note above.
+     * **This parameter is deprecated. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
      * @deprecated
      */
     position?: number;
@@ -101117,11 +102696,26 @@ export async function pullsCreateReviewComment<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#create-a-reply-for-a-review-comment}
  * Tags: pulls
  */
@@ -101156,8 +102750,28 @@ export async function pullsCreateReplyForReviewComment<FetcherData>(
 }
 /**
  * List commits on a pull request
- * Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than
- * 250 commits, use the [List commits](https://docs.github.com/rest/commits/commits#list-commits) endpoint.
+ * Lists a maximum of 250 commits for a pull request. To receive a complete
+ * commit list for pull requests with more than
+ * 250 commits, use the [List commits](https://docs.github.com/rest/commits/commits#list-commits)
+ * endpoint.
+ *
+ * This endpoint
+ * supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * -
+ * **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git
+ * documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/).
+ * Include the repository name and pull request ID in your message.
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#list-commits-on-a-pull-request}
  * Tags: pulls
  */
@@ -101183,7 +102797,29 @@ export async function pullsListCommits<FetcherData>(
 }
 /**
  * List pull requests files
- * **Note:** Responses include a maximum of 3000 files. The paginated response returns 30 files per page by default.
+ * Lists the files in a specified pull request.
+ *
+ * **Note:** Responses include a maximum of 3000 files. The paginated
+ * response
+ * returns 30 files per page by default.
+ *
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * -
+ * **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git
+ * documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/).
+ * Include the repository name and pull request ID in your message.
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#list-pull-requests-files}
  * Tags: pulls
  */
@@ -101236,11 +102872,9 @@ export async function pullsCheckIfMerged<FetcherData>(
  * Merges a pull request into the base branch.
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#merge-a-pull-request}
  * Tags: pulls
  */
@@ -101310,11 +102944,9 @@ export async function pullsListRequestedReviewers<FetcherData>(
  * Requests reviews for a pull request from a given set of users and/or teams.
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/pulls/review-requests#request-reviewers-for-a-pull-request}
  * Tags: pulls
  */
@@ -101377,7 +103009,22 @@ export async function pullsRemoveRequestedReviewers<FetcherData>(
 }
 /**
  * List reviews for a pull request
- * The list of reviews returns in chronological order.
+ * Lists all reviews for a specified pull request. The list of reviews returns in chronological order.
+ *
+ * This endpoint
+ * supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request}
  * Tags: pulls
  */
@@ -101407,30 +103054,45 @@ export async function pullsListReviews<FetcherData>(
 }
 /**
  * Create a review for a pull request
+ * Creates a review on a specified pull request.
+ *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the
- * `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter
- * blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull
+ * Pull request reviews created in the
+ * `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a
+ * pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING`
+ * review, see "[Submit a review for a pull
  * request](https://docs.github.com/rest/pulls/reviews#submit-a-review-for-a-pull-request)."
  *
  * **Note:** To comment on a
- * specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API offers
- * the `application/vnd.github.v3.diff` [media
- * type](https://docs.github.com/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull
- * request diff, add this media type to the `Accept` header of a call to the [single pull
+ * specific line in a file, you need to first determine the position of that line in the diff. To see a pull request diff,
+ * add the `application/vnd.github.v3.diff` media type to the `Accept` header of a call to the [Get a pull
  * request](https://docs.github.com/rest/pulls/pulls#get-a-pull-request) endpoint.
  *
  * The `position` value equals the number
  * of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line
  * is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of
  * whitespace and additional hunks until the beginning of a new file.
+ *
+ * This endpoint supports the following custom media
+ * types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -101463,7 +103125,7 @@ export async function pullsCreateReview<FetcherData>(
        */
       path: string;
       /**
-       * The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note below.
+       * The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
        */
       position?: number;
       /**
@@ -101504,6 +103166,21 @@ export async function pullsCreateReview<FetcherData>(
 /**
  * Get a review for a pull request
  * Retrieves a pull request review by its ID.
+ *
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#get-a-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -101529,7 +103206,22 @@ export async function pullsGetReview<FetcherData>(
 }
 /**
  * Update a review for a pull request
- * Update the review summary comment with new text.
+ * Updates the contents of a specified review summary comment.
+ *
+ * This endpoint supports the following custom media types.
+ * For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#update-a-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -101563,6 +103255,21 @@ export async function pullsUpdateReview<FetcherData>(
 /**
  * Delete a pending review for a pull request
  * Deletes a pull request review that has not been submitted. Submitted reviews cannot be deleted.
+ *
+ * This endpoint supports
+ * the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#delete-a-pending-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -101588,7 +103295,22 @@ export async function pullsDeletePendingReview<FetcherData>(
 }
 /**
  * List comments for a pull request review
- * List comments for a specific pull request review.
+ * Lists comments for a specific pull request review.
+ *
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#list-comments-for-a-pull-request-review}
  * Tags: pulls
  */
@@ -101617,9 +103339,28 @@ export async function pullsListCommentsForReview<FetcherData>(
 }
 /**
  * Dismiss a review for a pull request
+ * Dismisses a specified review on a pull request.
+ *
  * **Note:** To dismiss a pull request review on a [protected
- * branch](https://docs.github.com/rest/branches/branch-protection), you must be a repository administrator or be included
- * in the list of people or teams who can dismiss pull request reviews.
+ * branch](https://docs.github.com/rest/branches/branch-protection),
+ * you must be a repository administrator or be included
+ * in the list of people or teams
+ * who can dismiss pull request reviews.
+ *
+ * This endpoint supports the following custom media
+ * types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#dismiss-a-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -101659,6 +103400,21 @@ export async function pullsDismissReview<FetcherData>(
  * Submits a pending review for a pull request. For more information about creating a pending review for a pull request,
  * see "[Create a review for a pull
  * request](https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request)."
+ *
+ * This endpoint supports the
+ * following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This
+ * is the default if you do not pass any specific media type.
+ * - **`application/vnd.github-commitcomment.text+json`**:
+ * Returns a text only representation of the markdown body. Response will include `body_text`.
+ * -
+ * **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will
+ * include `body_html`.
+ * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML
+ * representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#submit-a-review-for-a-pull-request}
  * Tags: pulls
  */
@@ -101731,8 +103487,15 @@ export async function pullsUpdateBranch<FetcherData>(
  * Get a repository README
  * Gets the preferred README for a repository.
  *
- * READMEs support [custom media
- * types](https://docs.github.com/rest/overview/media-types) for retrieving the raw content or rendered HTML.
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media
+ * type.
+ * - **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using
+ * GitHub's open-source [Markup library](https://github.com/github/markup).
  * Learn more at {@link https://docs.github.com/rest/repos/contents#get-a-repository-readme}
  * Tags: repos
  */
@@ -101758,8 +103521,15 @@ export async function reposGetReadme<FetcherData>(
  * Get a repository README for a directory
  * Gets the README from a repository directory.
  *
- * READMEs support [custom media
- * types](https://docs.github.com/rest/overview/media-types) for retrieving the raw content or rendered HTML.
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media
+ * type.
+ * - **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using
+ * GitHub's open-source [Markup library](https://github.com/github/markup).
  * Learn more at {@link https://docs.github.com/rest/repos/contents#get-a-repository-readme-for-a-directory}
  * Tags: repos
  */
@@ -101820,11 +103590,9 @@ export async function reposListReleases<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/releases/releases#create-a-release}
  * Tags: repos
  */
@@ -102074,8 +103842,13 @@ export async function reposGetReleaseByTag<FetcherData>(
 }
 /**
  * Get a release
- * **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a
- * [hypermedia resource](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia).
+ * Gets a public release with the specified release ID.
+ *
+ * **Note:** This returns an `upload_url` key corresponding to the
+ * endpoint
+ * for uploading release assets. This key is a hypermedia resource. For more information, see
+ * "[Getting started
+ * with the REST API](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
  * Learn more at {@link https://docs.github.com/rest/releases/releases#get-a-release}
  * Tags: repos
  */
@@ -102211,18 +103984,19 @@ export async function reposListReleaseAssets<FetcherData>(
 }
 /**
  * Upload a release asset
- * This endpoint makes use of [a Hypermedia
- * relation](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access.
- * The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
- * the
- * response of the [Create a release endpoint](https://docs.github.com/rest/releases/releases#create-a-release) to upload a
- * release asset.
+ * This endpoint makes use of a [Hypermedia
+ * relation](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia) to determine
+ * which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url`
+ * returned in
+ * the response of the [Create a release
+ * endpoint](https://docs.github.com/rest/releases/releases#create-a-release) to upload a release asset.
  *
- * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication)
- * to make calls to this endpoint.
+ * You need to use
+ * an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this
+ * endpoint.
  *
- * Most libraries will set the required `Content-Length` header automatically. Use the
- * required `Content-Type` header to provide the media type of the asset. For a list of media types, see [Media
+ * Most libraries will set the required `Content-Length` header automatically. Use the required `Content-Type`
+ * header to provide the media type of the asset. For a list of media types, see [Media
  * Types](https://www.iana.org/assignments/media-types/media-types.xhtml). For example:
  *
  * `application/zip`
@@ -102663,6 +104437,7 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
     per_page?: number;
     before?: string;
     after?: string;
+    validity?: string;
   },
   opts?: FetcherData,
 ): Promise<SecretScanningAlert[]> {
@@ -102680,6 +104455,7 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
       'per_page',
       'before',
       'after',
+      'validity',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -103002,12 +104778,43 @@ export async function securityAdvisoriesCreateRepositoryAdvisoryCveRequest<
   return ctx.handleResponse(res, {});
 }
 /**
+ * Create a temporary private fork
+ * Create a temporary private fork to collaborate on fixing a security vulnerability in your repository.
+ *
+ * **Note**: Forking
+ * a repository happens asynchronously. You may have to wait up to 5 minutes before you can access the fork.
+ * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#create-a-temporary-private-fork}
+ * Tags: security-advisories
+ */
+export async function securityAdvisoriesCreateFork<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    ghsa_id: string;
+  },
+  opts?: FetcherData,
+): Promise<FullRepository> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/security-advisories/{ghsa_id}/forks',
+    params,
+    method: r.HttpMethod.POST,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {
+    '202': { transforms: { date: [[['ref', $date_FullRepository]]] } },
+  });
+}
+/**
  * List stargazers
  * Lists the people that have starred the repository.
  *
- * You can also find out _when_ stars were created by passing the
- * following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
- * `application/vnd.github.star+json`.
+ * This endpoint supports the following custom media types. For more
+ * information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
  * Learn more at {@link https://docs.github.com/rest/activity/starring#list-stargazers}
  * Tags: activity
  */
@@ -103039,6 +104846,11 @@ export async function activityListStargazersForRepo<FetcherData>(
 /**
  * Get the weekly commit activity
  * Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
+ *
+ * **Note:** This endpoint
+ * can only be used for repositories with fewer than 10,000 commits. If the repository contains
+ * 10,000 or more commits, a
+ * 422 status code will be returned.
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-the-weekly-commit-activity}
  * Tags: repos
  */
@@ -103087,11 +104899,14 @@ export async function reposGetCommitActivityStats<FetcherData>(
  * (`weeks` array) with the following information:
  *
  * *   `w` - Start of the week, given as a [Unix
- * timestamp](http://en.wikipedia.org/wiki/Unix_time).
+ * timestamp](https://en.wikipedia.org/wiki/Unix_time).
  * *   `a` - Number of additions
  * *   `d` - Number of deletions
  * *   `c`
  * - Number of commits
+ *
+ * **Note:** This endpoint will return `0` values for all addition and deletion counts in repositories
+ * with 10,000 or more commits.
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-all-contributor-commit-activity}
  * Tags: repos
  */
@@ -103812,9 +105627,9 @@ export async function reposDownloadZipballArchive<FetcherData>(
  * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
  * include:
  *
- * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope
- * to create an internal repository.
- * *   `repo` scope to create a private repository
+ * *   `public_repo` scope or `repo` scope to create a public repository
+ * *   `repo` scope to create a private
+ * repository
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-using-a-template}
  * Tags: repos
  */
@@ -103847,7 +105662,7 @@ export async function reposCreateUsingTemplate<FetcherData>(
     private?: boolean;
   },
   opts?: FetcherData,
-): Promise<Repository> {
+): Promise<FullRepository> {
   const req = await ctx.createRequest({
     path: '/repos/{template_owner}/{template_repo}/generate',
     params,
@@ -103856,7 +105671,7 @@ export async function reposCreateUsingTemplate<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
+    '201': { transforms: { date: [[['ref', $date_FullRepository]]] } },
   });
 }
 /**
@@ -104256,11 +106071,11 @@ export async function actionsDeleteEnvironmentVariable<FetcherData>(
 /**
  * Search code
  * Searches for query terms inside of a file. This method returns up to 100 results [per
- * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
  *
- * When searching for code, you can get
- * text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For
- * more details about how to receive highlighted search results, see [Text match
+ * When searching for code, you can get text
+ * match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more
+ * details about how to receive highlighted search results, see [Text match
  * metadata](https://docs.github.com/rest/search/search#text-match-metadata).
  *
  * For example, if you want to find the
@@ -104330,11 +106145,11 @@ export async function searchCode<FetcherData>(
 /**
  * Search commits
  * Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per
- * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
  *
- * When searching for commits, you can
- * get text match metadata for the **message** field when you provide the `text-match` media type. For more details about
- * how to receive highlighted search results, see [Text
+ * When searching for commits, you can get
+ * text match metadata for the **message** field when you provide the `text-match` media type. For more details about how
+ * to receive highlighted search results, see [Text
  * match
  * metadata](https://docs.github.com/rest/search/search#text-match-metadata).
  *
@@ -104388,10 +106203,10 @@ export async function searchCommits<FetcherData>(
 /**
  * Search issues and pull requests
  * Find issues by state and keyword. This method returns up to 100 results [per
- * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
  *
- * When searching for issues, you can
- * get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the
+ * When searching for issues, you can get
+ * text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the
  * `text-match` media type. For more details about how to receive highlighted
  * search results, see [Text match
  * metadata](https://docs.github.com/rest/search/search#text-match-metadata).
@@ -104465,10 +106280,10 @@ export async function searchIssuesAndPullRequests<FetcherData>(
 /**
  * Search labels
  * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per
- * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
  *
- * When searching for labels, you can
- * get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For
+ * When searching for labels, you can get
+ * text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For
  * more details about how to receive highlighted search results, see [Text match
  * metadata](https://docs.github.com/rest/search/search#text-match-metadata).
  *
@@ -104514,11 +106329,11 @@ export async function searchLabels<FetcherData>(
 /**
  * Search repositories
  * Find repositories via various criteria. This method returns up to 100 results [per
- * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
  *
- * When searching for repositories, you
- * can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For
- * more details about how to receive highlighted search results, see [Text match
+ * When searching for repositories, you can
+ * get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more
+ * details about how to receive highlighted search results, see [Text match
  * metadata](https://docs.github.com/rest/search/search#text-match-metadata).
  *
  * For example, if you want to search for
@@ -104572,7 +106387,7 @@ export async function searchRepos<FetcherData>(
 /**
  * Search topics
  * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per
- * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination). See "[Searching
+ * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api). See "[Searching
  * topics](https://docs.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
  *
  * When searching for
@@ -104627,11 +106442,11 @@ export async function searchTopics<FetcherData>(
 /**
  * Search users
  * Find users via various criteria. This method returns up to 100 results [per
- * page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
+ * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
  *
- * When searching for users, you can
- * get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match`
- * media type. For more details about highlighting search results, see [Text match
+ * When searching for users, you can get text
+ * match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type.
+ * For more details about highlighting search results, see [Text match
  * metadata](https://docs.github.com/rest/search/search#text-match-metadata). For more details about how to receive
  * highlighted search results, see [Text match
  * metadata](https://docs.github.com/rest/search/search#text-match-metadata).
@@ -104856,11 +106671,9 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#create-a-discussion-legacy}
  * Tags: teams
@@ -105047,11 +106860,9 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate
- * limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with
- * secondary rate
- * limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for
- * details.
+ * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
+ * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment-legacy}
  * Tags: teams
@@ -105487,7 +107298,7 @@ export async function teamsGetMemberLegacy<FetcherData>(
  *
  * Note that
  * you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP
- * verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/members#add-team-member-legacy}
  * Tags: teams
@@ -105769,7 +107580,7 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
   },
   body: {
     /**
-     * The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     permission?: 'read' | 'write' | 'admin';
   },
@@ -105894,7 +107705,7 @@ export async function teamsCheckPermissionsForRepoLegacy<FetcherData>(
  *
  * Note that, if you choose not to pass any parameters, you'll
  * need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP
- * verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-repository-permissions-legacy}
  * Tags: teams
@@ -106175,7 +107986,13 @@ export async function usersUnblock<FetcherData>(
  * You must authenticate using an access token with the `codespace` scope to
  * use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces` repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be authenticated on behalf of the user. For
+ * more information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have read access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#list-codespaces-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106219,7 +108036,13 @@ export async function codespacesListForAuthenticatedUser<FetcherData>(
  * You must authenticate using an access token with the `codespace` scope to use this
  * endpoint.
  *
- * GitHub Apps must have write access to the `codespaces` repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be authenticated on behalf of the user. For more
+ * information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106332,15 +108155,15 @@ export async function codespacesCreateForAuthenticatedUser<FetcherData>(
 }
 /**
  * List secrets for the authenticated user
- * Lists all secrets available for a user's Codespaces without revealing their
- * encrypted values.
+ * Lists all development environment secrets available for a user's codespaces without revealing their
+ * encrypted
+ * values.
  *
- * You must authenticate
- * using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces
- * access to use this endpoint.
+ * You must authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this
+ * endpoint. User must have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces_user_secrets` user permission to use
- * this endpoint.
+ * GitHub Apps must have read access to the
+ * `codespaces_user_secrets` user permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#list-secrets-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106400,14 +108223,14 @@ export async function codespacesGetPublicKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * Get a secret for the authenticated user
- * Gets a secret available to a user's codespaces without revealing its encrypted value.
+ * Gets a development environment secret available to a user's codespaces without revealing its encrypted value.
  *
- * You must authenticate using an
- * access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to
- * use this endpoint.
+ * You must
+ * authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must
+ * have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces_user_secrets` user permission to use this
- * endpoint.
+ * GitHub Apps must have read access to the `codespaces_user_secrets` user
+ * permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#get-a-secret-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106430,7 +108253,7 @@ export async function codespacesGetSecretForAuthenticatedUser<FetcherData>(
 }
 /**
  * Create or update a secret for the authenticated user
- * Creates or updates a secret for a user's codespace with an encrypted value. Encrypt your secret
+ * Creates or updates a development environment secret for a user's codespace with an encrypted value. Encrypt your secret
  * using
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
@@ -106478,14 +108301,14 @@ export async function codespacesCreateOrUpdateSecretForAuthenticatedUser<
 }
 /**
  * Delete a secret for the authenticated user
- * Deletes a secret from a user's codespaces using the secret name. Deleting the secret will remove access from all
- * codespaces that were allowed to access the secret.
+ * Deletes a development environment secret from a user's codespaces using the secret name. Deleting the secret will remove
+ * access from all codespaces that were allowed to access the secret.
  *
- * You must authenticate using an access token with the `codespace` or
- * `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use this endpoint.
+ * You must authenticate using an access token with the
+ * `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use this
+ * endpoint.
  *
- * GitHub Apps must
- * have write access to the `codespaces_user_secrets` user permission to use this endpoint.
+ * GitHub Apps must have write access to the `codespaces_user_secrets` user permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#delete-a-secret-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106506,14 +108329,15 @@ export async function codespacesDeleteSecretForAuthenticatedUser<FetcherData>(
 }
 /**
  * List selected repositories for a user secret
- * List the repositories that have been granted the ability to use a user's codespace secret.
+ * List the repositories that have been granted the ability to use a user's development environment secret.
  *
- * You must authenticate using
- * an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access
- * to use this endpoint.
+ * You must
+ * authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must
+ * have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces_user_secrets` user permission and write
- * access to the `codespaces_secrets` repository permission on all referenced repositories to use this endpoint.
+ * GitHub Apps must have read access to the `codespaces_user_secrets` user
+ * permission and write access to the `codespaces_secrets` repository permission on all referenced repositories to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#list-selected-repositories-for-a-user-secret}
  * Tags: codespaces
  */
@@ -106551,14 +108375,14 @@ export async function codespacesListRepositoriesForSecretForAuthenticatedUser<
 }
 /**
  * Set selected repositories for a user secret
- * Select the repositories that will use a user's codespace secret.
+ * Select the repositories that will use a user's development environment secret.
  *
- * You must authenticate using an access token with the
- * `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use this
- * endpoint.
+ * You must authenticate using an access
+ * token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use
+ * this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces_user_secrets` user permission and write access to the
- * `codespaces_secrets` repository permission on all referenced repositories to use this endpoint.
+ * GitHub Apps must have write access to the `codespaces_user_secrets` user permission and write access to
+ * the `codespaces_secrets` repository permission on all referenced repositories to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#set-selected-repositories-for-a-user-secret}
  * Tags: codespaces
  */
@@ -106588,12 +108412,12 @@ export async function codespacesSetRepositoriesForSecretForAuthenticatedUser<
 }
 /**
  * Add a selected repository to a user secret
- * Adds a repository to the selected repositories for a user's codespace secret.
- * You must authenticate using an access
- * token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use
- * this endpoint.
- * GitHub Apps must have write access to the `codespaces_user_secrets` user permission and write access to
- * the `codespaces_secrets` repository permission on the referenced repository to use this endpoint.
+ * Adds a repository to the selected repositories for a user's development environment secret.
+ * You must authenticate using
+ * an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access
+ * to use this endpoint.
+ * GitHub Apps must have write access to the `codespaces_user_secrets` user permission and write
+ * access to the `codespaces_secrets` repository permission on the referenced repository to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#add-a-selected-repository-to-a-user-secret}
  * Tags: codespaces
  */
@@ -106617,11 +108441,12 @@ export async function codespacesAddRepositoryForSecretForAuthenticatedUser<
 }
 /**
  * Remove a selected repository from a user secret
- * Removes a repository from the selected repositories for a user's codespace secret.
- * You must authenticate using an access
- * token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use
+ * Removes a repository from the selected repositories for a user's development environment secret.
+ * You must authenticate
+ * using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces
+ * access to use this endpoint.
+ * GitHub Apps must have write access to the `codespaces_user_secrets` user permission to use
  * this endpoint.
- * GitHub Apps must have write access to the `codespaces_user_secrets` user permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#remove-a-selected-repository-from-a-user-secret}
  * Tags: codespaces
  */
@@ -106650,7 +108475,13 @@ export async function codespacesRemoveRepositoryForSecretForAuthenticatedUser<
  * You must authenticate using an access token with the `codespace` scope to
  * use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces` repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be authenticated on behalf of the user. For
+ * more information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have read access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#get-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106681,8 +108512,14 @@ export async function codespacesGetForAuthenticatedUser<FetcherData>(
  *
  * You must authenticate using an access token with the `codespace` scope to use this endpoint.
  *
- * GitHub Apps must
- * have write access to the `codespaces` repository permission to use this endpoint.
+ * To use this
+ * endpoint with GitHub Apps:
+ *
+ * - The app must be authenticated on behalf of the user. For more information, see
+ * "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#update-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106725,7 +108562,13 @@ export async function codespacesUpdateForAuthenticatedUser<FetcherData>(
  * You must authenticate using an access token with the `codespace` scope to use this
  * endpoint.
  *
- * GitHub Apps must have write access to the `codespaces` repository permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be authenticated on behalf of the user. For more
+ * information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#delete-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -106857,8 +108700,13 @@ export async function codespacesCodespaceMachinesForAuthenticatedUser<
  * You must authenticate using a personal access token
  * with the `codespace` scope to use this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces` repository
- * permission to use this endpoint.
+ * To use this endpoint with GitHub Apps:
+ *
+ * - The app must be
+ * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
+ * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
+ * -
+ * The app must have write access to the `codespaces` repository permission.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-repository-from-an-unpublished-codespace}
  * Tags: codespaces
  */
@@ -107156,10 +109004,10 @@ export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
 /**
  * Follow a user
  * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
- * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * "[HTTP verbs](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  *
- * Following a user requires
- * the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
+ * Following a user
+ * requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
  * Learn more at {@link https://docs.github.com/rest/users/followers#follow-a-user}
  * Tags: users
  */
@@ -107558,6 +109406,20 @@ export async function interactionsRemoveRestrictionsForAuthenticatedUser<
  * that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
  * request id,
  * use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+ *
+ * This endpoint
+ * supports the following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-user-account-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
@@ -108577,9 +110439,9 @@ export async function reposListForAuthenticatedUser<FetcherData>(
  * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
  * include:
  *
- * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope
- * to create an internal repository.
- * *   `repo` scope to create a private repository.
+ * *   `public_repo` scope or `repo` scope to create a public repository
+ * *   `repo` scope to create a private
+ * repository
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user}
  * Tags: repos
  */
@@ -108714,7 +110576,7 @@ export async function reposCreateForAuthenticatedUser<FetcherData>(
     is_template?: boolean;
   },
   opts?: FetcherData,
-): Promise<Repository | any> {
+): Promise<FullRepository | any> {
   const req = await ctx.createRequest({
     path: '/user/repos',
     params,
@@ -108723,7 +110585,7 @@ export async function reposCreateForAuthenticatedUser<FetcherData>(
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
+    '201': { transforms: { date: [[['ref', $date_FullRepository]]] } },
   });
 }
 /**
@@ -108988,9 +110850,12 @@ export async function usersDeleteSshSigningKeyForAuthenticatedUser<FetcherData>(
  * List repositories starred by the authenticated user
  * Lists repositories the authenticated user has starred.
  *
- * You can also find out _when_ stars were created by passing the
- * following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
- * `application/vnd.github.star+json`.
+ * This endpoint supports the following custom media types. For
+ * more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
  * Learn more at {@link https://docs.github.com/rest/activity/starring#list-repositories-starred-by-the-authenticated-user}
  * Tags: activity
  */
@@ -109042,7 +110907,7 @@ export async function activityCheckRepoIsStarredByAuthenticatedUser<
 /**
  * Star a repository for the authenticated user
  * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
- * "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
+ * "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  * Learn more at {@link https://docs.github.com/rest/activity/starring#star-a-repository-for-the-authenticated-user}
  * Tags: activity
  */
@@ -109186,10 +111051,11 @@ export async function usersList<FetcherData>(
  * page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be
  * “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it
  * will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub. For more
- * information, see [Authentication](https://docs.github.com/rest/overview/resources-in-the-rest-api#authentication).
+ * information, see
+ * [Authentication](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#authentication).
  *
- * The
- * Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more
+ * The Emails API
+ * enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more
  * information, see "[Emails API](https://docs.github.com/rest/users/emails)".
  * Learn more at {@link https://docs.github.com/rest/users/users#get-a-user}
  * Tags: users
@@ -109937,8 +111803,8 @@ export async function projectsListForUser<FetcherData>(
 }
 /**
  * List events received by the authenticated user
- * These are events that you've received by watching repos and following users. If you are authenticated as the given user,
- * you will see private events. Otherwise, you'll only see public events.
+ * These are events that you've received by watching repositories and following users. If you are authenticated as the
+ * given user, you will see private events. Otherwise, you'll only see public events.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-events-received-by-the-authenticated-user}
  * Tags: activity
  */
@@ -109989,8 +111855,7 @@ export async function activityListReceivedPublicEventsForUser<FetcherData>(
 }
 /**
  * List repositories for a user
- * Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for
- * the specified user.
+ * Lists public repositories for the specified user.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repositories-for-a-user}
  * Tags: repos
  */
@@ -110159,9 +112024,11 @@ export async function usersListSshSigningKeysForUser<FetcherData>(
  * List repositories starred by a user
  * Lists repositories a user has starred.
  *
- * You can also find out _when_ stars were created by passing the following custom
- * [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
- * `application/vnd.github.star+json`.
+ * This endpoint supports the following custom media types. For more information,
+ * see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
  * Learn more at {@link https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user}
  * Tags: activity
  */

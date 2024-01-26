@@ -36,20 +36,20 @@ export type ComponentContextFromName<T extends ComponentType> =
   T extends 'schemas'
     ? ComponentContext<SchemaObject>
     : T extends 'responses'
-    ? ComponentContext<ResponseObject>
-    : T extends 'parameters'
-    ? ComponentContext<ParameterObject>
-    : T extends 'examples'
-    ? ComponentContext<ExampleObject>
-    : T extends 'requestBodies'
-    ? ComponentContext<RequestBodyObject>
-    : T extends 'headers'
-    ? ComponentContext<HeaderObject>
-    : T extends 'securitySchemes'
-    ? ComponentContext<SecuritySchemeObject>
-    : T extends 'links'
-    ? ComponentContext<LinkObject>
-    : ComponentContext<CallbackObject>;
+      ? ComponentContext<ResponseObject>
+      : T extends 'parameters'
+        ? ComponentContext<ParameterObject>
+        : T extends 'examples'
+          ? ComponentContext<ExampleObject>
+          : T extends 'requestBodies'
+            ? ComponentContext<RequestBodyObject>
+            : T extends 'headers'
+              ? ComponentContext<HeaderObject>
+              : T extends 'securitySchemes'
+                ? ComponentContext<SecuritySchemeObject>
+                : T extends 'links'
+                  ? ComponentContext<LinkObject>
+                  : ComponentContext<CallbackObject>;
 
 export type ComponentRegistry<T extends ComponentType> = Map<
   string,
