@@ -69,19 +69,22 @@ export type CreateContextParams<
   Omit<ContextParams<AuthModes, FetcherData>, 'authMethods'> & {
     authProviders: {
       [key in keyof AuthModes]: AuthProvider<
-        AuthModes[key] extends ApiKeySecurityAuthentication
-          ? string
-          : AuthModes[key] extends HttpBasicSecurityAuthentication
-            ? BasicAuthConfig
-            : AuthModes[key] extends HttpBearerSecurityAuthentication
-              ? BearerAuthConfig
-              : AuthModes[key] extends OAuth2SecurityAuthentication
-                ? BaseFlowConfig
-                : never
+        AuthProviderConfig<AuthModes[key]>
       >;
     };
   }
 >;
+
+export type AuthProviderConfig<T extends SecurityAuthentication> =
+  T extends ApiKeySecurityAuthentication
+    ? string
+    : T extends HttpBasicSecurityAuthentication
+      ? BasicAuthConfig
+      : T extends HttpBearerSecurityAuthentication
+        ? BearerAuthConfig
+        : T extends OAuth2SecurityAuthentication
+          ? BaseFlowConfig
+          : never;
 
 export type ResponseHandler = {
   transforms?: TransformEntity;
