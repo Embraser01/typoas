@@ -1,6 +1,9 @@
 # CHANGELOG.md
 
+## 3.1.7 - 2024-02-23
 ## 3.1.6 - 2024-02-23
+
+> Only the runtime was published, the generator and cli are still at 3.1.5
 
 - Allow null return value in AuthProvider.getConfig() [#50](https://github.com/Embraser01/typoas/pull/50)
 
