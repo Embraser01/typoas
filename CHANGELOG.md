@@ -1,6 +1,6 @@
 # CHANGELOG.md
 
-## Unreleased
+## 3.1.6 - 2024-02-23
 
 - Allow null return value in AuthProvider.getConfig() [#50](https://github.com/Embraser01/typoas/pull/50)
 
