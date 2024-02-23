@@ -1,5 +1,15 @@
 # CHANGELOG.md
 
+## Unreleased
+
+- Allow null return value in AuthProvider.getConfig() [#50](https://github.com/Embraser01/typoas/pull/50)
+
+## 3.1.2 - 2024-01-26
+
+> Only the runtime was published, the generator and cli are still at 3.1.5
+
+- Fix AuthProviders configuration [#44](https://github.com/Embraser01/typoas/issues/44)
+
 ## 3.1.5 - 2023-10-25
 
 > Only the generator and cli were published, the runtime is still at 3.1.3

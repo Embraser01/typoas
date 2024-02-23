@@ -44,7 +44,13 @@ export class OAuth2SecurityAuthentication implements SecurityAuthentication {
 
   async applySecurityAuthentication(context: RequestContext): Promise<void> {
     if (!this.provider) return;
-    const { accessToken, tokenType } = await this.provider.getConfig();
+
+    const res = await this.provider.getConfig();
+    if (res === null) {
+      return;
+    }
+
+    const { accessToken, tokenType } = res;
     return context.setHeaderParam(
       'Authorization',
       `${tokenType || 'Bearer'} ${accessToken}`,

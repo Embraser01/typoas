@@ -12,6 +12,10 @@ export class HttpBearerSecurityAuthentication
     if (!this.provider) return;
 
     const res = await this.provider.getConfig();
+    if (res === null) {
+      return;
+    }
+
     const token = typeof res === 'string' ? res : res.token;
     const prefix =
       typeof res === 'string' ? 'Bearer' : res.prefixName || 'Bearer';
