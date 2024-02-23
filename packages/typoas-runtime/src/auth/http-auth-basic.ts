@@ -9,7 +9,12 @@ export class HttpBasicSecurityAuthentication implements SecurityAuthentication {
   async applySecurityAuthentication(context: RequestContext): Promise<void> {
     if (!this.provider) return;
 
-    const { username, password } = await this.provider.getConfig();
+    const res = await this.provider.getConfig();
+    if (res === null) {
+      return;
+    }
+
+    const { username, password } = res;
     const base64 = btoa(`${username}:${password}`);
     return context.setHeaderParam('Authorization', `Basic ${base64}`);
   }

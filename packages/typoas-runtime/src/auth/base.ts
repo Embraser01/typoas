@@ -13,5 +13,5 @@ export interface SecurityAuthentication {
 }
 
 export interface AuthProvider<T> {
-  getConfig(): Promise<T> | T;
+  getConfig(): Promise<T> | T | null;
 }

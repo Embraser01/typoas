@@ -22,7 +22,12 @@ export class ApiKeySecurityAuthentication implements SecurityAuthentication {
 
   async applySecurityAuthentication(context: RequestContext): Promise<void> {
     if (!this.provider) return;
+
     const apiToken = await this.provider.getConfig();
+    if (apiToken === null) {
+      return;
+    }
+
     switch (this.in) {
       case 'query':
         return context.setQueryParam(this.name, apiToken);
