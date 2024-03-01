@@ -4,17 +4,15 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "test:types": "tsc --noEmit",
-    "generate": "ts-node scripts/generate.ts && prettier -w src/"
+    "generate": "ts-node scripts/generate.ts"
   },
   "dependencies": {
-    "@typoas/runtime": "workspace:^",
-    "node-fetch": "^2.6.11"
+    "@typoas/runtime": "workspace:^"
   },
   "devDependencies": {
-    "@types/node": "^20.2.3",
-    "@types/node-fetch": "^2.6.4",
+    "@types/node": "^20.11.24",
     "@typoas/cli": "workspace:^",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

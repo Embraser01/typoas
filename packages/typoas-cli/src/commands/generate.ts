@@ -2,6 +2,7 @@ import { Command, Option, Usage } from 'clipanion';
 import * as t from 'typanion';
 import { writeFile } from 'fs/promises';
 import * as path from 'path';
+import { format, resolveConfig } from 'prettier';
 import { generateClient, getStringFromSourceFile } from '@typoas/generator';
 import { loadSpec } from '../utils/load-spec';
 
@@ -36,6 +37,10 @@ export class GenerateCommand extends Command {
   name = Option.String('-n,--name', {
     hidden: true,
     description: "Deprecated, name isn't used anymore",
+  });
+
+  prettier = Option.Boolean('-p,--prettier', {
+    description: 'If set, the generated file will be formatted with Prettier',
   });
 
   jsDoc = Option.Boolean('--js-doc', {
@@ -81,9 +86,14 @@ export class GenerateCommand extends Command {
       wrapLinesAt: this.wrapLinesAt,
     });
 
-    const content = getStringFromSourceFile(src);
+    let content = getStringFromSourceFile(src);
 
     const outputPath = path.resolve(process.cwd(), this.output);
+    if (this.prettier) {
+      const options = await resolveConfig(outputPath);
+      content = await format(content, { ...options, parser: 'typescript' });
+    }
+
     await writeFile(outputPath, content);
     this.context.stdout.write(
       `Info: ${specs.info.title} was generated at '${outputPath}'\n`,

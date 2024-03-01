@@ -16,5 +16,5 @@ export function getSuccessResponses(
   if (operation.responses.default && successResponses.length === 0) {
     return [operation.responses.default];
   }
-  return successResponses.map((k) => operation.responses[k]);
+  return successResponses.map((k) => operation.responses![k]);
 }

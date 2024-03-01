@@ -6,7 +6,7 @@
     "target": "ES2018",
     "declaration": true,
     "lib": ["ES2018", "DOM"],
-    "outDir": "lib/cjs",
+    "outDir": "lib/cjs"
   },
-  "exclude": ["node_modules", "lib"],
+  "exclude": ["node_modules", "lib"]
 }

@@ -113,15 +113,9 @@ writeFileSync('./src/client.ts', data, 'utf8');
 Once the file is generated you'll be able to use it like this:
 
 ```typescript
-import fetch from 'node-fetch';
 import { ServerConfiguration } from '@typoas/runtime';
 import { createContext, pullsList } from './client';
 
-// Inject fetch polyfill into NodeJS env.
-if (!globalThis.fetch) {
-  // @ts-ignore
-  globalThis.fetch = fetch;
-}
 const ctx = createContext();
 
 pullsList(ctx, {
@@ -131,6 +125,8 @@ pullsList(ctx, {
   .then((list) => console.log('List of PRs', list))
   .catch((err) => console.error('Error while getting PRs', err));
 ```
+
+> The default `fetch` implementation is used (included in Node.js >= 18.0.0). You can always override the default fetch implementation in `createContext`
 
 ## Examples
 
@@ -164,15 +160,9 @@ which allow [Tree Shaking](https://webpack.js.org/guides/tree-shaking/). To get 
 you can use `wrapApi` helper:
 
 ```typescript
-import fetch from 'node-fetch';
 import { ServerConfiguration, wrapApi } from '@typoas/runtime';
 import { createContext, pullsList, issuesList } from './client';
 
-// Inject fetch polyfill into NodeJS env.
-if (!globalThis.fetch) {
-  // @ts-ignore
-  globalThis.fetch = fetch;
-}
 const ctx = createContext();
 const ghClient = wrapApi(ctx, {
   pullsList,

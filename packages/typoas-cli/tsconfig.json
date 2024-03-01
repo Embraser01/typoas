@@ -6,7 +6,7 @@
     "declaration": true,
     "lib": ["ES2019"],
     "outDir": "lib",
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "lib"],
+  "exclude": ["node_modules", "lib"]
 }

@@ -4,7 +4,7 @@
     "module": "commonjs",
     "target": "ES2019",
     "sourceMap": true,
-    "lib": ["ES2019", "DOM"],
+    "lib": ["ES2019", "DOM"]
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

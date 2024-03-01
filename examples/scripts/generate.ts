@@ -29,7 +29,15 @@ async function run() {
 
   for (const sample of samples) {
     await cli.run(
-      ['generate', '-i', sample.input, '-o', `./src/${sample.output}.ts`, '-e'],
+      [
+        'generate',
+        '-i',
+        sample.input,
+        '-o',
+        `./src/${sample.output}.ts`,
+        '-e',
+        '-p',
+      ],
       context,
     );
   }
