@@ -39,5 +39,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: TypeeScript
+      - name: Yarn install
+        run: yarn
+
+      - name: TypeScript
         run: yarn test:types

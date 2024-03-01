@@ -326,6 +326,10 @@ export type AccountCapabilities = {
    */
   sofort_payments?: 'active' | 'inactive' | 'pending';
   /**
+   * The status of the Swish capability of the account, or whether the account can directly process Swish payments.
+   */
+  swish_payments?: 'active' | 'inactive' | 'pending';
+  /**
    * The status of the tax reporting 1099-K (US) capability of the account.
    */
   tax_reporting_us_1099_k?: 'active' | 'inactive' | 'pending';
@@ -516,6 +520,15 @@ export type AccountFutureRequirements = {
    * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`.
    */
   pending_verification?: string[] | null;
+};
+/**
+ * AccountInvoicesSettings
+ */
+export type AccountInvoicesSettings = {
+  /**
+   * The list of default Account Tax IDs to automatically include on invoices. Account Tax IDs get added when an invoice is finalized.
+   */
+  default_account_tax_ids?: (string | TaxId)[] | null;
 };
 /**
  * AccountLink
@@ -802,6 +815,7 @@ export type AccountSettings = {
   card_issuing?: AccountCardIssuingSettings;
   card_payments: AccountCardPaymentsSettings;
   dashboard: AccountDashboardSettings;
+  invoices?: AccountInvoicesSettings;
   payments: AccountPaymentsSettings;
   payouts?: AccountPayoutSettings;
   sepa_debit_payments?: AccountSepaDebitPaymentsSettings;
@@ -1440,7 +1454,7 @@ export type BankAccount = {
   /**
    * For bank accounts, possible values are `new`, `validated`, `verified`, `verification_failed`, or `errored`. A bank account that hasn't had any activity or validation performed is `new`. If Stripe can determine that the bank account exists, its status will be `validated`. Note that there often isn’t enough information to know (e.g., for smaller credit unions), and the validation is not always run. If customer bank account verification has succeeded, the bank account status will be `verified`. If the verification failed for any reason, such as microdeposit failure, the status will be `verification_failed`. If a payout sent to this bank account fails, we'll set the status to `errored` and will not continue to send [scheduled payouts](https://stripe.com/docs/payouts#payout-schedule) until the bank details are updated.
    *
-   * For external accounts, possible values are `new`, `errored` and `verification_failed`. If a payouts fails, the status is set to `errored` and scheduled payouts are stopped until account details are updated. In India, if we can't [verify the owner of the bank account](https://support.stripe.com/questions/bank-account-ownership-verification), we'll set the status to `verification_failed`. Other validations aren't run against external accounts because they're only used for payouts. This means the other statuses don't apply.
+   * For external accounts, possible values are `new`, `errored` and `verification_failed`. If a payout fails, the status is set to `errored` and scheduled payouts are stopped until account details are updated. In the US and India, if we can't [verify the owner of the bank account](https://support.stripe.com/questions/bank-account-ownership-verification), we'll set the status to `verification_failed`. Other validations aren't run against external accounts because they're only used for payouts. This means the other statuses don't apply.
    */
   status: string;
 };
@@ -1951,6 +1965,7 @@ export type Card = {
    * Cardholder name.
    */
   name?: string | null;
+  networks?: TokenCardNetworks;
   /**
    * String representing the object's type. Objects of the same type share the same value.
    */
@@ -2318,7 +2333,7 @@ export type CheckoutSession = {
   amount_total?: number | null;
   automatic_tax: PaymentPagesCheckoutSessionAutomaticTax;
   /**
-   * Describes whether Checkout should collect the customer's billing address.
+   * Describes whether Checkout should collect the customer's billing address. Defaults to `auto`.
    */
   billing_address_collection?: ('auto' | 'required') | null;
   /**
@@ -2373,7 +2388,7 @@ export type CheckoutSession = {
    */
   customer_creation?: ('always' | 'if_required') | null;
   /**
-   * The customer details including the customer's tax exempt status and the customer's tax IDs. Only the customer's email is present on Sessions in `setup` mode.
+   * The customer details including the customer's tax exempt status and the customer's tax IDs. Customer's address details are not present on Sessions in `setup` mode.
    */
   customer_details?: PaymentPagesCheckoutSessionCustomerDetails | null;
   /**
@@ -2497,7 +2512,7 @@ export type CheckoutSession = {
    */
   payment_link?: (string | PaymentLink) | null;
   /**
-   * Configure whether a Checkout Session should collect a payment method.
+   * Configure whether a Checkout Session should collect a payment method. Defaults to `always`.
    */
   payment_method_collection?: ('always' | 'if_required') | null;
   /**
@@ -2524,7 +2539,7 @@ export type CheckoutSession = {
    */
   recovered_from?: string | null;
   /**
-   * Applies to Checkout Sessions with `ui_mode: embedded`. By default, Stripe will always redirect to your return_url after a successful confirmation. If you set `redirect_on_completion: 'if_required'`, then we will only redirect if your user chooses a redirect-based payment method.
+   * This parameter applies to `ui_mode: embedded`. Learn more about the [redirect behavior](https://stripe.com/docs/payments/checkout/custom-redirect-behavior) of embedded sessions. Defaults to `always`.
    */
   redirect_on_completion?: 'always' | 'if_required' | 'never';
   /**
@@ -2558,8 +2573,7 @@ export type CheckoutSession = {
   /**
    * Describes the type of transaction being performed by Checkout in order to customize
    * relevant text on the page, such as the submit button. `submit_type` can only be
-   * specified on Checkout Sessions in `payment` mode, but not Checkout Sessions
-   * in `subscription` or `setup` mode. Possible values are `auto`, `pay`, `book`, `donate`. If blank or `auto`, `pay` is used.
+   * specified on Checkout Sessions in `payment` mode. If blank or `auto`, `pay` is used.
    */
   submit_type?: ('auto' | 'book' | 'donate' | 'pay') | null;
   /**
@@ -2577,7 +2591,7 @@ export type CheckoutSession = {
    */
   total_details?: PaymentPagesCheckoutSessionTotalDetails | null;
   /**
-   * The UI mode of the Session. Can be `hosted` (default) or `embedded`.
+   * The UI mode of the Session. Defaults to `hosted`.
    */
   ui_mode?: ('embedded' | 'hosted') | null;
   /**
@@ -3055,6 +3069,7 @@ export type CheckoutSessionPaymentMethodOptions = {
   revolut_pay?: CheckoutRevolutPayPaymentMethodOptions;
   sepa_debit?: CheckoutSepaDebitPaymentMethodOptions;
   sofort?: CheckoutSofortPaymentMethodOptions;
+  swish?: CheckoutSwishPaymentMethodOptions;
   us_bank_account?: CheckoutUsBankAccountPaymentMethodOptions;
 };
 /**
@@ -3069,6 +3084,15 @@ export type CheckoutSofortPaymentMethodOptions = {
    * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
    */
   setup_future_usage?: 'none';
+};
+/**
+ * CheckoutSwishPaymentMethodOptions
+ */
+export type CheckoutSwishPaymentMethodOptions = {
+  /**
+   * The order reference that will be displayed to customers in the Swish application. Defaults to the `id` of the Payment Intent.
+   */
+  reference?: string | null;
 };
 /**
  * CheckoutUsBankAccountPaymentMethodOptions
@@ -3734,7 +3758,7 @@ export type CreditNote = {
   /**
    * The details of the cost of shipping, including the ShippingRate applied to the invoice.
    */
-  shipping_cost?: InvoicesShippingCost | null;
+  shipping_cost?: InvoicesResourceShippingCost | null;
   /**
    * Status of this credit note, one of `issued` or `void`. Learn more about [voiding credit notes](https://stripe.com/docs/billing/invoices/credit-notes#voiding).
    */
@@ -5472,7 +5496,7 @@ export type Fee = {
    */
   description?: string | null;
   /**
-   * Type of the fee, one of: `application_fee`, `stripe_fee` or `tax`.
+   * Type of the fee, one of: `application_fee`, `payment_method_passthrough_fee`, `stripe_fee` or `tax`.
    */
   type: string;
 };
@@ -6367,7 +6391,7 @@ export type GelatoIdNumberReport = {
    */
   first_name?: string | null;
   /**
-   * ID number.
+   * ID number. When `id_number_type` is `us_ssn`, only the last 4 digits are present.
    */
   id_number?: string | null;
   /**
@@ -6585,6 +6609,10 @@ export type GelatoVerifiedOutputs = {
  */
 export type IdentityVerificationReport = {
   /**
+   * A string to reference this user. This can be a customer ID, a session ID, or similar, and can be used to reconcile this verification with your internal systems.
+   */
+  client_reference_id?: string | null;
+  /**
    * Time at which the object was created. Measured in seconds since the Unix epoch.
    */
   created: number;
@@ -6607,7 +6635,7 @@ export type IdentityVerificationReport = {
   /**
    * Type of report.
    */
-  type?: 'document' | 'id_number';
+  type: 'document' | 'id_number';
   /**
    * ID of the VerificationSession that created this report.
    */
@@ -6628,6 +6656,10 @@ export type IdentityVerificationReport = {
  * Related guide: [The Verification Sessions API](https://stripe.com/docs/identity/verification-sessions)
  */
 export type IdentityVerificationSession = {
+  /**
+   * A string to reference this user. This can be a customer ID, a session ID, or similar, and can be used to reconcile this verification with your internal systems.
+   */
+  client_reference_id?: string | null;
   /**
    * The short-lived client secret used by Stripe.js to [show a verification modal](https://stripe.com/docs/js/identity/modal) inside your app. This client secret expires after 24 hours and can only be used once. Don’t store it, log it, embed it in a URL, or expose it to anyone other than the user. Make sure that you have TLS enabled on any page that includes the client secret. Refer to our docs on [passing the client secret to the frontend](https://stripe.com/docs/identity/verification-sessions#client-secret) to learn more.
    */
@@ -6677,7 +6709,7 @@ export type IdentityVerificationSession = {
   /**
    * The type of [verification check](https://stripe.com/docs/identity/verification-checks) to be performed.
    */
-  type?: ('document' | 'id_number') | null;
+  type: 'document' | 'id_number';
   /**
    * The short-lived URL that you use to redirect a user to Stripe to submit their identity information. This URL expires after 48 hours and can only be used once. Don’t store it, log it, send it in emails or expose it to anyone other than the user. Refer to our docs on [verifying identity documents](https://stripe.com/docs/identity/verify-identity-documents?platform=web&type=redirect) to learn how to redirect users to Stripe.
    */
@@ -6935,7 +6967,7 @@ export type Invoice = {
   /**
    * Details of the invoice that was cloned. See the [revision documentation](https://stripe.com/docs/invoicing/invoice-revisions) for more details.
    */
-  from_invoice?: InvoicesFromInvoice | null;
+  from_invoice?: InvoicesResourceFromInvoice | null;
   /**
    * The URL for the hosted invoice page, which allows customers to view and pay an invoice. If the invoice has not been finalized yet, this will be null.
    */
@@ -7045,11 +7077,11 @@ export type Invoice = {
   /**
    * The rendering-related settings that control how the invoice is displayed on customer-facing surfaces such as PDF and Hosted Invoice Page.
    */
-  rendering?: InvoicesInvoiceRendering | null;
+  rendering?: InvoicesResourceInvoiceRendering | null;
   /**
    * The details of the cost of shipping, including the ShippingRate applied on the invoice.
    */
-  shipping_cost?: InvoicesShippingCost | null;
+  shipping_cost?: InvoicesResourceShippingCost | null;
   /**
    * Shipping details for the invoice. The Invoice PDF will use the `shipping_details` value if it is set, otherwise the PDF will render the shipping address from the customer.
    */
@@ -7066,7 +7098,7 @@ export type Invoice = {
    * The status of the invoice, one of `draft`, `open`, `paid`, `uncollectible`, or `void`. [Learn more](https://stripe.com/docs/billing/invoices/workflow#workflow-overview)
    */
   status?: ('draft' | 'open' | 'paid' | 'uncollectible' | 'void') | null;
-  status_transitions: InvoicesStatusTransitions;
+  status_transitions: InvoicesResourceStatusTransitions;
   /**
    * The subscription that this invoice was prepared for, if any.
    */
@@ -7207,7 +7239,7 @@ export type InvoicePaymentMethodOptionsBancontact = {
 export type InvoicePaymentMethodOptionsCard = {
   installments?: InvoiceInstallmentsCard;
   /**
-   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
    */
   request_three_d_secure?: ('any' | 'automatic' | 'challenge') | null;
 };
@@ -7335,6 +7367,10 @@ export type InvoiceSettingRenderingOptions = {
  */
 export type InvoiceSettingSubscriptionSchedulePhaseSetting = {
   /**
+   * The account tax IDs associated with this phase of the subscription schedule. Will be set on invoices generated by this phase of the subscription schedule.
+   */
+  account_tax_ids?: (string | TaxId | DeletedTaxId)[] | null;
+  /**
    * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
    */
   days_until_due?: number | null;
@@ -7347,6 +7383,10 @@ export type InvoiceSettingSubscriptionSchedulePhaseSetting = {
  * InvoiceSettingSubscriptionScheduleSetting
  */
 export type InvoiceSettingSubscriptionScheduleSetting = {
+  /**
+   * The account tax IDs associated with the subscription schedule. Will be set on invoices generated by the subscription schedule.
+   */
+  account_tax_ids?: (string | TaxId | DeletedTaxId)[] | null;
   /**
    * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
    */
@@ -7526,32 +7566,6 @@ export type Invoiceitem = {
   unit_amount_decimal?: string | null;
 };
 /**
- * InvoicesFromInvoice
- */
-export type InvoicesFromInvoice = {
-  /**
-   * The relation between this invoice and the cloned invoice
-   */
-  action: string;
-  /**
-   * The invoice that was cloned.
-   */
-  invoice: string | Invoice;
-};
-/**
- * InvoicesInvoiceRendering
- */
-export type InvoicesInvoiceRendering = {
-  /**
-   * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
-   */
-  amount_tax_display?: string | null;
-  /**
-   * Invoice pdf rendering options
-   */
-  pdf?: InvoiceRenderingPdf | null;
-};
-/**
  * InvoicesPaymentMethodOptions
  */
 export type InvoicesPaymentMethodOptions = {
@@ -7626,11 +7640,37 @@ export type InvoicesPaymentSettings = {
     | null;
 };
 /**
+ * InvoicesResourceFromInvoice
+ */
+export type InvoicesResourceFromInvoice = {
+  /**
+   * The relation between this invoice and the cloned invoice
+   */
+  action: string;
+  /**
+   * The invoice that was cloned.
+   */
+  invoice: string | Invoice;
+};
+/**
+ * InvoicesResourceInvoiceRendering
+ */
+export type InvoicesResourceInvoiceRendering = {
+  /**
+   * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+   */
+  amount_tax_display?: string | null;
+  /**
+   * Invoice pdf rendering options
+   */
+  pdf?: InvoiceRenderingPdf | null;
+};
+/**
  * InvoicesResourceInvoiceTaxID
  */
 export type InvoicesResourceInvoiceTaxId = {
   /**
-   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
    */
   type:
     | 'ad_nrt'
@@ -7678,6 +7718,7 @@ export type InvoicesResourceInvoiceTaxId = {
     | 'my_itn'
     | 'my_sst'
     | 'no_vat'
+    | 'no_voec'
     | 'nz_gst'
     | 'pe_ruc'
     | 'ph_tin'
@@ -7728,9 +7769,9 @@ export type InvoicesResourceLineItemsProrationDetails = {
   credited_items?: InvoicesResourceLineItemsCreditedItems | null;
 };
 /**
- * InvoicesShippingCost
+ * InvoicesResourceShippingCost
  */
-export type InvoicesShippingCost = {
+export type InvoicesResourceShippingCost = {
   /**
    * Total shipping cost before any taxes are applied.
    */
@@ -7753,9 +7794,9 @@ export type InvoicesShippingCost = {
   taxes?: LineItemsTaxAmount[];
 };
 /**
- * InvoicesStatusTransitions
+ * InvoicesResourceStatusTransitions
  */
-export type InvoicesStatusTransitions = {
+export type InvoicesResourceStatusTransitions = {
   /**
    * The time that the invoice draft was finalized.
    */
@@ -11584,6 +11625,10 @@ export type LineItem = {
    */
   id: string;
   /**
+   * The ID of the invoice that contains this line item.
+   */
+  invoice?: string | null;
+  /**
    * The ID of the [invoice item](https://stripe.com/docs/api/invoiceitems) associated with this line item if any.
    */
   invoice_item?: string | Invoiceitem;
@@ -11913,7 +11958,7 @@ export type Networks = {
    */
   available: string[];
   /**
-   * The preferred network for the card.
+   * The preferred network for co-branded cards. Can be `cartes_bancaires`, `mastercard`, `visa` or `invalid_preference` if requested network is not valid for the card.
    */
   preferred?: string | null;
 };
@@ -12438,6 +12483,7 @@ export type PaymentIntentNextAction = {
   pix_display_qr_code?: PaymentIntentNextActionPixDisplayQrCode;
   promptpay_display_qr_code?: PaymentIntentNextActionPromptpayDisplayQrCode;
   redirect_to_url?: PaymentIntentNextActionRedirectToUrl;
+  swish_handle_redirect_or_display_qr_code?: PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode;
   /**
    * Type of the next action to perform, one of `redirect_to_url`, `use_stripe_sdk`, `alipay_handle_redirect`, `oxxo_display_details`, or `verify_with_microdeposits`.
    */
@@ -12756,6 +12802,33 @@ export type PaymentIntentNextActionRedirectToUrl = {
   url?: string | null;
 };
 /**
+ * PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode
+ */
+export type PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode = {
+  /**
+   * The URL to the hosted Swish instructions page, which allows customers to view the QR code.
+   */
+  hosted_instructions_url?: string;
+  qr_code?: PaymentIntentNextActionSwishQrCode;
+};
+/**
+ * PaymentIntentNextActionSwishQRCode
+ */
+export type PaymentIntentNextActionSwishQrCode = {
+  /**
+   * The raw data string used to generate QR code, it should be used together with QR code library.
+   */
+  data?: string;
+  /**
+   * The image_url_png string used to render QR code
+   */
+  image_url_png?: string;
+  /**
+   * The image_url_svg string used to render QR code
+   */
+  image_url_svg?: string;
+};
+/**
  * PaymentIntentNextActionVerifyWithMicrodeposits
  */
 export type PaymentIntentNextActionVerifyWithMicrodeposits = {
@@ -12936,6 +13009,9 @@ export type PaymentIntentPaymentMethodOptions = {
   sofort?:
     | PaymentMethodOptionsSofort
     | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
+  swish?:
+    | PaymentIntentPaymentMethodOptionsSwish
+    | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
   us_bank_account?:
     | PaymentIntentPaymentMethodOptionsUsBankAccount
     | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
@@ -12980,7 +13056,16 @@ export type PaymentIntentPaymentMethodOptionsAuBecsDebit = {
 /**
  * payment_intent_payment_method_options_blik
  */
-export type PaymentIntentPaymentMethodOptionsBlik = any;
+export type PaymentIntentPaymentMethodOptionsBlik = {
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none';
+};
 /**
  * payment_intent_payment_method_options_card
  */
@@ -13034,9 +13119,13 @@ export type PaymentIntentPaymentMethodOptionsCard = {
    */
   request_overcapture?: 'if_available' | 'never';
   /**
-   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
    */
   request_three_d_secure?: ('any' | 'automatic' | 'challenge') | null;
+  /**
+   * When enabled, using a card that is attached to a customer will require the CVC to be provided again (i.e. using the cvc_token parameter).
+   */
+  require_cvc_recollection?: boolean;
   /**
    * Indicates that you intend to make future payments with this PaymentIntent's payment method.
    *
@@ -13124,6 +13213,23 @@ export type PaymentIntentPaymentMethodOptionsSepaDebit = {
   setup_future_usage?: 'none' | 'off_session' | 'on_session';
 };
 /**
+ * payment_intent_payment_method_options_swish
+ */
+export type PaymentIntentPaymentMethodOptionsSwish = {
+  /**
+   * The order ID displayed in the Swish app after the payment is authorized.
+   */
+  reference?: string | null;
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none';
+};
+/**
  * payment_intent_payment_method_options_us_bank_account
  */
 export type PaymentIntentPaymentMethodOptionsUsBankAccount = {
@@ -13179,6 +13285,10 @@ export type PaymentIntentTypeSpecificPaymentMethodOptionsClient = {
   capture_method?: 'manual' | 'manual_preferred';
   installments?: PaymentFlowsInstallmentOptions;
   /**
+   * When enabled, using a card that is attached to a customer will require the CVC to be provided again (i.e. using the cvc_token parameter).
+   */
+  require_cvc_recollection?: boolean;
+  /**
    * Indicates that you intend to make future payments with this PaymentIntent's payment method.
    *
    * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
@@ -13223,7 +13333,7 @@ export type PaymentLink = {
   application_fee_percent?: number | null;
   automatic_tax: PaymentLinksResourceAutomaticTax;
   /**
-   * Configuration for collecting the customer's billing address.
+   * Configuration for collecting the customer's billing address. Defaults to `auto`.
    */
   billing_address_collection: 'auto' | 'required';
   /**
@@ -13300,7 +13410,7 @@ export type PaymentLink = {
    */
   payment_intent_data?: PaymentLinksResourcePaymentIntentData | null;
   /**
-   * Configuration for collecting a payment method during checkout.
+   * Configuration for collecting a payment method during checkout. Defaults to `always`.
    */
   payment_method_collection: 'always' | 'if_required';
   /**
@@ -13334,6 +13444,7 @@ export type PaymentLink = {
         | 'promptpay'
         | 'sepa_debit'
         | 'sofort'
+        | 'swish'
         | 'us_bank_account'
         | 'wechat_pay'
       )[]
@@ -14042,6 +14153,7 @@ export type PaymentMethod = {
   revolut_pay?: PaymentMethodRevolutPay;
   sepa_debit?: PaymentMethodSepaDebit;
   sofort?: PaymentMethodSofort;
+  swish?: PaymentMethodSwish;
   /**
    * The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
    */
@@ -14077,6 +14189,7 @@ export type PaymentMethod = {
     | 'revolut_pay'
     | 'sepa_debit'
     | 'sofort'
+    | 'swish'
     | 'us_bank_account'
     | 'wechat_pay'
     | 'zip';
@@ -14184,6 +14297,10 @@ export type PaymentMethodCard = {
    * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
    */
   country?: string | null;
+  /**
+   * The brand to use when displaying the card, this accounts for customer's brand choice on dual-branded cards. Can be `american_express`, `cartes_bancaires`, `diners_club`, `discover`, `eftpos_australia`, `interac`, `jcb`, `mastercard`, `union_pay`, `visa`, or `other` and may contain more values in the future.
+   */
+  display_brand?: string | null;
   /**
    * Two-digit number representing the card's expiration month.
    */
@@ -14595,6 +14712,7 @@ export type PaymentMethodDetails = {
   sepa_debit?: PaymentMethodDetailsSepaDebit;
   sofort?: PaymentMethodDetailsSofort;
   stripe_account?: PaymentMethodDetailsStripeAccount;
+  swish?: PaymentMethodDetailsSwish;
   /**
    * The type of transaction-specific details of the payment method used in the payment, one of `ach_credit_transfer`, `ach_debit`, `acss_debit`, `alipay`, `au_becs_debit`, `bancontact`, `card`, `card_present`, `eps`, `giropay`, `ideal`, `klarna`, `multibanco`, `p24`, `sepa_debit`, `sofort`, `stripe_account`, or `wechat`.
    * An additional hash is included on `payment_method_details` with a name matching this value.
@@ -15533,7 +15651,7 @@ export type PaymentMethodDetailsOxxo = {
  */
 export type PaymentMethodDetailsP24 = {
   /**
-   * The customer's bank. Can be one of `ing`, `citi_handlowy`, `tmobile_usbugi_bankowe`, `plus_bank`, `etransfer_pocztowy24`, `banki_spbdzielcze`, `bank_nowy_bfg_sa`, `getin_bank`, `blik`, `noble_pay`, `ideabank`, `envelobank`, `santander_przelew24`, `nest_przelew`, `mbank_mtransfer`, `inteligo`, `pbac_z_ipko`, `bnp_paribas`, `credit_agricole`, `toyota_bank`, `bank_pekao_sa`, `volkswagen_bank`, `bank_millennium`, `alior_bank`, or `boz`.
+   * The customer's bank. Can be one of `ing`, `citi_handlowy`, `tmobile_usbugi_bankowe`, `plus_bank`, `etransfer_pocztowy24`, `banki_spbdzielcze`, `bank_nowy_bfg_sa`, `getin_bank`, `velobank`, `blik`, `noble_pay`, `ideabank`, `envelobank`, `santander_przelew24`, `nest_przelew`, `mbank_mtransfer`, `inteligo`, `pbac_z_ipko`, `bnp_paribas`, `credit_agricole`, `toyota_bank`, `bank_pekao_sa`, `volkswagen_bank`, `bank_millennium`, `alior_bank`, or `boz`.
    */
   bank?:
     | (
@@ -15561,6 +15679,7 @@ export type PaymentMethodDetailsP24 = {
         | 'santander_przelew24'
         | 'tmobile_usbugi_bankowe'
         | 'toyota_bank'
+        | 'velobank'
         | 'volkswagen_bank'
       )
     | null;
@@ -15709,6 +15828,23 @@ export type PaymentMethodDetailsSofort = {
  * payment_method_details_stripe_account
  */
 export type PaymentMethodDetailsStripeAccount = any;
+/**
+ * payment_method_details_swish
+ */
+export type PaymentMethodDetailsSwish = {
+  /**
+   * Uniquely identifies the payer's Swish account. You can use this attribute to check whether two Swish transactions were paid for by the same payer
+   */
+  fingerprint?: string | null;
+  /**
+   * Payer bank reference number for the payment
+   */
+  payment_reference?: string | null;
+  /**
+   * The last four digits of the Swish account phone number
+   */
+  verified_phone_last4?: string | null;
+};
 /**
  * payment_method_details_us_bank_account
  */
@@ -16588,6 +16724,7 @@ export type PaymentMethodP24 = {
         | 'santander_przelew24'
         | 'tmobile_usbugi_bankowe'
         | 'toyota_bank'
+        | 'velobank'
         | 'volkswagen_bank'
       )
     | null;
@@ -16660,6 +16797,10 @@ export type PaymentMethodSofort = {
    */
   country?: string | null;
 };
+/**
+ * payment_method_swish
+ */
+export type PaymentMethodSwish = any;
 /**
  * payment_method_us_bank_account
  */
@@ -17365,7 +17506,7 @@ export type PaymentPagesCheckoutSessionShippingOption = {
  */
 export type PaymentPagesCheckoutSessionTaxId = {
   /**
-   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
    */
   type:
     | 'ad_nrt'
@@ -17413,6 +17554,7 @@ export type PaymentPagesCheckoutSessionTaxId = {
     | 'my_itn'
     | 'my_sst'
     | 'no_vat'
+    | 'no_voec'
     | 'nz_gst'
     | 'pe_ruc'
     | 'ph_tin'
@@ -18284,7 +18426,7 @@ export type PortalSubscriptionUpdate = {
    */
   products?: PortalSubscriptionUpdateProduct[] | null;
   /**
-   * Determines how to handle prorations resulting from subscription updates. Valid values are `none`, `create_prorations`, and `always_invoice`.
+   * Determines how to handle prorations resulting from subscription updates. Valid values are `none`, `create_prorations`, and `always_invoice`. Defaults to a value of `none` if you don't set it during creation.
    */
   proration_behavior: 'always_invoice' | 'create_prorations' | 'none';
 };
@@ -19308,6 +19450,7 @@ export type RefundDestinationDetails = {
   pix?: DestinationDetailsUnimplemented;
   revolut?: DestinationDetailsUnimplemented;
   sofort?: DestinationDetailsUnimplemented;
+  swish?: RefundDestinationDetailsGeneric;
   th_bank_transfer?: RefundDestinationDetailsGeneric;
   /**
    * The type of transaction-specific details of the payment method used in the refund (e.g., `card`). An additional hash is included on `destination_details` with a name matching this value. It contains information specific to the refund transaction.
@@ -20296,7 +20439,7 @@ export type SetupIntentPaymentMethodOptionsCard = {
       )
     | null;
   /**
-   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
    */
   request_three_d_secure?: ('any' | 'automatic' | 'challenge') | null;
 };
@@ -21597,7 +21740,7 @@ export type SubscriptionPaymentMethodOptionsCard = {
       )
     | null;
   /**
-   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
    */
   request_three_d_secure?: ('any' | 'automatic' | 'challenge') | null;
 };
@@ -22144,11 +22287,11 @@ export type TaxCalculation = {
  */
 export type TaxCalculationLineItem = {
   /**
-   * The line item amount in integer cents. If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
+   * The line item amount in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
    */
   amount: number;
   /**
-   * The amount of tax calculated for this line item, in integer cents.
+   * The amount of tax calculated for this line item, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   amount_tax: number;
   /**
@@ -22343,11 +22486,11 @@ export type TaxTransaction = {
  */
 export type TaxTransactionLineItem = {
   /**
-   * The line item amount in integer cents. If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
+   * The line item amount in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
    */
   amount: number;
   /**
-   * The amount of tax calculated for this line item, in integer cents.
+   * The amount of tax calculated for this line item, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   amount_tax: number;
   /**
@@ -22445,6 +22588,27 @@ export type TaxDeductedAtSource = {
   tax_deduction_account_number: string;
 };
 /**
+ * TaxIDsOwner
+ */
+export type TaxIDsOwner = {
+  /**
+   * The account being referenced when `type` is `account`.
+   */
+  account?: string | Account;
+  /**
+   * The Connect Application being referenced when `type` is `application`.
+   */
+  application?: string | Application;
+  /**
+   * The customer being referenced when `type` is `customer`.
+   */
+  customer?: string | Customer;
+  /**
+   * Type of owner referenced.
+   */
+  type: 'account' | 'application' | 'customer' | 'self';
+};
+/**
  * tax_id
  * You can add one or multiple tax IDs to a [customer](https://stripe.com/docs/api/customers) or account.
  * Customer and account tax IDs get displayed on related invoices and credit notes.
@@ -22477,7 +22641,11 @@ export type TaxId = {
    */
   object: 'tax_id';
   /**
-   * Type of the tax ID, one of `ad_nrt`, `ae_trn`, `ar_cuit`, `au_abn`, `au_arn`, `bg_uic`, `bo_tin`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `nz_gst`, `pe_ruc`, `ph_tin`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sv_nit`, `th_vat`, `tr_tin`, `tw_vat`, `ua_vat`, `us_ein`, `uy_ruc`, `ve_rif`, `vn_tin`, or `za_vat`. Note that some legacy tax IDs have type `unknown`
+   * The account or customer the tax ID belongs to.
+   */
+  owner?: TaxIDsOwner | null;
+  /**
+   * Type of the tax ID, one of `ad_nrt`, `ae_trn`, `ar_cuit`, `au_abn`, `au_arn`, `bg_uic`, `bo_tin`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `no_voec`, `nz_gst`, `pe_ruc`, `ph_tin`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sv_nit`, `th_vat`, `tr_tin`, `tw_vat`, `ua_vat`, `us_ein`, `uy_ruc`, `ve_rif`, `vn_tin`, or `za_vat`. Note that some legacy tax IDs have type `unknown`
    */
   type:
     | 'ad_nrt'
@@ -22525,6 +22693,7 @@ export type TaxId = {
     | 'my_itn'
     | 'my_sst'
     | 'no_vat'
+    | 'no_voec'
     | 'nz_gst'
     | 'pe_ruc'
     | 'ph_tin'
@@ -22750,7 +22919,7 @@ export type TaxProductResourceCustomerDetails = {
  */
 export type TaxProductResourceCustomerDetailsResourceTaxId = {
   /**
-   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
    */
   type:
     | 'ad_nrt'
@@ -22798,6 +22967,7 @@ export type TaxProductResourceCustomerDetailsResourceTaxId = {
     | 'my_itn'
     | 'my_sst'
     | 'no_vat'
+    | 'no_voec'
     | 'nz_gst'
     | 'pe_ruc'
     | 'ph_tin'
@@ -22851,7 +23021,7 @@ export type TaxProductResourceJurisdiction = {
  */
 export type TaxProductResourceLineItemTaxBreakdown = {
   /**
-   * The amount of tax, in integer cents.
+   * The amount of tax, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   amount: number;
   jurisdiction: TaxProductResourceJurisdiction;
@@ -22883,7 +23053,7 @@ export type TaxProductResourceLineItemTaxBreakdown = {
     | 'taxable_basis_reduced'
     | 'zero_rated';
   /**
-   * The amount on which tax is calculated, in integer cents.
+   * The amount on which tax is calculated, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   taxable_amount: number;
 };
@@ -22950,7 +23120,7 @@ export type TaxProductResourcePostalAddress = {
  */
 export type TaxProductResourceTaxBreakdown = {
   /**
-   * The amount of tax, in integer cents.
+   * The amount of tax, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   amount: number;
   /**
@@ -22978,7 +23148,7 @@ export type TaxProductResourceTaxBreakdown = {
     | 'taxable_basis_reduced'
     | 'zero_rated';
   /**
-   * The amount on which tax is calculated, in integer cents.
+   * The amount on which tax is calculated, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   taxable_amount: number;
 };
@@ -22987,11 +23157,11 @@ export type TaxProductResourceTaxBreakdown = {
  */
 export type TaxProductResourceTaxCalculationShippingCost = {
   /**
-   * The shipping amount in integer cents. If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
+   * The shipping amount in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
    */
   amount: number;
   /**
-   * The amount of tax calculated for shipping, in integer cents.
+   * The amount of tax calculated for shipping, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   amount_tax: number;
   /**
@@ -23109,11 +23279,11 @@ export type TaxProductResourceTaxTransactionResourceReversal = {
  */
 export type TaxProductResourceTaxTransactionShippingCost = {
   /**
-   * The shipping amount in integer cents. If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
+   * The shipping amount in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). If `tax_behavior=inclusive`, then this amount includes taxes. Otherwise, taxes were calculated on top of this amount.
    */
   amount: number;
   /**
-   * The amount of tax calculated for shipping, in integer cents.
+   * The amount of tax calculated for shipping, in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
    */
   amount_tax: number;
   /**
@@ -23175,6 +23345,12 @@ export type TaxRate = {
    */
   jurisdiction?: string | null;
   /**
+   * The level of the jurisdiction that imposes this tax rate. Will be `null` for manually defined tax rates.
+   */
+  jurisdiction_level?:
+    | ('city' | 'country' | 'county' | 'district' | 'multiple' | 'state')
+    | null;
+  /**
    * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
    */
   livemode: boolean;
@@ -23212,7 +23388,6 @@ export type TaxRate = {
         | 'qst'
         | 'rst'
         | 'sales_tax'
-        | 'service_tax'
         | 'vat'
       )
     | null;
@@ -23360,7 +23535,7 @@ export type TerminalReader = {
   /**
    * The networking status of the reader.
    */
-  status?: string | null;
+  status?: ('offline' | 'online') | null;
 };
 /**
  * TerminalConfigurationConfigurationResourceCurrencySpecificConfig
@@ -23463,6 +23638,10 @@ export type TerminalReaderReaderResourceLineItem = {
  */
 export type TerminalReaderReaderResourceProcessConfig = {
   /**
+   * Enable customer initiated cancellation when processing this payment.
+   */
+  enable_customer_cancellation?: boolean;
+  /**
    * Override showing a tipping selection screen on this transaction.
    */
   skip_tipping?: boolean;
@@ -23483,7 +23662,12 @@ export type TerminalReaderReaderResourceProcessPaymentIntentAction = {
  * TerminalReaderReaderResourceProcessSetupConfig
  * Represents a per-setup override of a reader configuration
  */
-export type TerminalReaderReaderResourceProcessSetupConfig = any;
+export type TerminalReaderReaderResourceProcessSetupConfig = {
+  /**
+   * Enable customer initiated cancellation when processing this SetupIntent.
+   */
+  enable_customer_cancellation?: boolean;
+};
 /**
  * TerminalReaderReaderResourceProcessSetupIntentAction
  * Represents a reader action to process a setup intent
@@ -23564,10 +23748,21 @@ export type TerminalReaderReaderResourceRefundPaymentAction = {
    * Boolean indicating whether the application fee should be refunded when refunding this charge. If a full charge refund is given, the full application fee will be refunded. Otherwise, the application fee will be refunded in an amount proportional to the amount of the charge refunded. An application fee can be refunded only by the application that created the charge.
    */
   refund_application_fee?: boolean;
+  refund_payment_config?: TerminalReaderReaderResourceRefundPaymentConfig;
   /**
    * Boolean indicating whether the transfer should be reversed when refunding this charge. The transfer will be reversed proportionally to the amount being refunded (either the entire or partial amount). A transfer can be reversed only by the application that created the charge.
    */
   reverse_transfer?: boolean;
+};
+/**
+ * TerminalReaderReaderResourceRefundPaymentConfig
+ * Represents a per-transaction override of a reader configuration
+ */
+export type TerminalReaderReaderResourceRefundPaymentConfig = {
+  /**
+   * Enable customer initiated cancellation when refunding this payment.
+   */
+  enable_customer_cancellation?: boolean;
 };
 /**
  * TerminalReaderReaderResourceSetReaderDisplayAction
@@ -23809,6 +24004,15 @@ export type Token = {
    * Determines if you have already used this token (you can only use tokens once).
    */
   used: boolean;
+};
+/**
+ * token_card_networks
+ */
+export type TokenCardNetworks = {
+  /**
+   * The preferred network for co-branded cards. Can be `cartes_bancaires`, `mastercard`, `visa` or `invalid_preference` if requested network is not valid for the card.
+   */
+  preferred?: string | null;
 };
 /**
  * Topup
@@ -28169,161 +28373,6 @@ export async function getClimateProductsProduct<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * <p>Lists all Climate order objects. The orders are returned sorted by creation date, with the
- * most recently created
- * orders appearing first.</p>
- */
-export async function getClimateReservations<FetcherData>(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    ending_before?: string;
-    expand?: string[];
-    limit?: number;
-    starting_after?: string;
-  },
-  body: any,
-  opts?: FetcherData,
-): Promise<{
-  data: ClimateOrder[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
-  const req = await ctx.createRequest({
-    path: '/v1/climate/reservations',
-    params,
-    method: r.HttpMethod.GET,
-    body,
-    queryParams: ['ending_before', 'expand', 'limit', 'starting_after'],
-    auth: ['basicAuth', 'bearerAuth'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
-}
-/**
- * <p>Creates a Climate order object for a given Climate product. The order will be processed immediately
- * after creation
- * and payment will be deducted your Stripe balance.</p>
- */
-export async function postClimateReservations<FetcherData>(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {},
-  body: any,
-  opts?: FetcherData,
-): Promise<ClimateOrder> {
-  const req = await ctx.createRequest({
-    path: '/v1/climate/reservations',
-    params,
-    method: r.HttpMethod.POST,
-    body,
-    auth: ['basicAuth', 'bearerAuth'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
-}
-/**
- * <p>Retrieves the details of a Climate order object with the given ID.</p>
- */
-export async function getClimateReservationsOrder<FetcherData>(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    expand?: string[];
-    order: string;
-  },
-  body: any,
-  opts?: FetcherData,
-): Promise<ClimateOrder> {
-  const req = await ctx.createRequest({
-    path: '/v1/climate/reservations/{order}',
-    params,
-    method: r.HttpMethod.GET,
-    body,
-    queryParams: ['expand'],
-    auth: ['basicAuth', 'bearerAuth'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
-}
-/**
- * <p>Updates the specified order by setting the values of the parameters passed.</p>
- */
-export async function postClimateReservationsOrder<FetcherData>(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    order: string;
-  },
-  body: any,
-  opts?: FetcherData,
-): Promise<ClimateOrder> {
-  const req = await ctx.createRequest({
-    path: '/v1/climate/reservations/{order}',
-    params,
-    method: r.HttpMethod.POST,
-    body,
-    auth: ['basicAuth', 'bearerAuth'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
-}
-/**
- * <p>Cancels a Climate order. You can cancel an order within 30 days of creation. Stripe refunds the
- * reservation
- * <code>amount_subtotal</code>, but not the <code>amount_fees</code> for user-triggered cancellations. Frontier
- * might
- * cancel reservations if suppliers fail to deliver. If Frontier cancels the reservation, Stripe
- * provides 90 days advance
- * notice and refunds the <code>amount_total</code>.</p>
- */
-export async function postClimateReservationsOrderCancel<FetcherData>(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    order: string;
-  },
-  body: any,
-  opts?: FetcherData,
-): Promise<ClimateOrder> {
-  const req = await ctx.createRequest({
-    path: '/v1/climate/reservations/{order}/cancel',
-    params,
-    method: r.HttpMethod.POST,
-    body,
-    auth: ['basicAuth', 'bearerAuth'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
-}
-/**
- * <p>Confirms a Climate order. When you confirm your order, we immediately deduct the funds from your
- * Stripe balance.</p>
- */
-export async function postClimateReservationsOrderConfirm<FetcherData>(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    order: string;
-  },
-  body: any,
-  opts?: FetcherData,
-): Promise<ClimateOrder> {
-  const req = await ctx.createRequest({
-    path: '/v1/climate/reservations/{order}/confirm',
-    params,
-    method: r.HttpMethod.POST,
-    body,
-    auth: ['basicAuth', 'bearerAuth'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
-}
-/**
  * <p>Lists all available Climate supplier objects.</p>
  */
 export async function getClimateSuppliers<FetcherData>(
@@ -29828,6 +29877,7 @@ export async function getCustomersCustomerPaymentMethods<FetcherData>(
       | 'revolut_pay'
       | 'sepa_debit'
       | 'sofort'
+      | 'swish'
       | 'us_bank_account'
       | 'wechat_pay'
       | 'zip';
@@ -31286,6 +31336,7 @@ export async function getFinancialConnectionsTransactionsTransaction<
 export async function getIdentityVerificationReports<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
+    client_reference_id?: string;
     created?:
       | {
           gt?: number;
@@ -31324,6 +31375,7 @@ export async function getIdentityVerificationReports<FetcherData>(
     method: r.HttpMethod.GET,
     body,
     queryParams: [
+      'client_reference_id',
       'created',
       'ending_before',
       'expand',
@@ -31366,6 +31418,7 @@ export async function getIdentityVerificationReportsReport<FetcherData>(
 export async function getIdentityVerificationSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
+    client_reference_id?: string;
     created?:
       | {
           gt?: number;
@@ -31403,6 +31456,7 @@ export async function getIdentityVerificationSessions<FetcherData>(
     method: r.HttpMethod.GET,
     body,
     queryParams: [
+      'client_reference_id',
       'created',
       'ending_before',
       'expand',
@@ -31975,6 +32029,7 @@ export async function getInvoicesUpcoming<FetcherData>(
           | 'my_itn'
           | 'my_sst'
           | 'no_vat'
+          | 'no_voec'
           | 'nz_gst'
           | 'pe_ruc'
           | 'ph_tin'
@@ -32249,6 +32304,7 @@ export async function getInvoicesUpcomingLines<FetcherData>(
           | 'my_itn'
           | 'my_sst'
           | 'no_vat'
+          | 'no_voec'
           | 'nz_gst'
           | 'pe_ruc'
           | 'ph_tin'
@@ -32822,6 +32878,7 @@ export async function postIssuingAuthorizationsAuthorization<FetcherData>(
  * This
  * method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond
  * directly to the webhook request to approve an authorization</a>.</p>
+ * @deprecated
  */
 export async function postIssuingAuthorizationsAuthorizationApprove<
   FetcherData,
@@ -32849,6 +32906,7 @@ export async function postIssuingAuthorizationsAuthorizationApprove<
  * This
  * method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond
  * directly to the webhook request to decline an authorization</a>.</p>
+ * @deprecated
  */
 export async function postIssuingAuthorizationsAuthorizationDecline<
   FetcherData,
@@ -34125,9 +34183,7 @@ export async function postPaymentIntentsIntentCapture<FetcherData>(
  * after those actions are completed. Your server needs to then
  * explicitly re-confirm the PaymentIntent to initiate
  * the next payment
- * attempt. Read the <a href="/docs/payments/payment-intents/web-manual">expanded documentation</a>
- * to
- * learn more about manual confirmation.</p>
+ * attempt.</p>
  */
 export async function postPaymentIntentsIntentConfirm<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -34666,6 +34722,7 @@ export async function getPaymentMethods<FetcherData>(
       | 'revolut_pay'
       | 'sepa_debit'
       | 'sofort'
+      | 'swish'
       | 'us_bank_account'
       | 'wechat_pay'
       | 'zip';
@@ -38515,6 +38572,122 @@ export async function getTaxCodesId<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
+ * <p>Returns a list of tax IDs.</p>
+ */
+export async function getTaxIds<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    owner?: {
+      account?: string;
+      customer?: string;
+      type: 'account' | 'application' | 'customer' | 'self';
+    };
+    starting_after?: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<{
+  /**
+   * Details about each object.
+   */
+  data: TaxId[];
+  /**
+   * True if this list has another page of items after this one that can be fetched.
+   */
+  has_more: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+   */
+  object: 'list';
+  /**
+   * The URL where this list can be accessed.
+   */
+  url: string;
+}> {
+  const req = await ctx.createRequest({
+    path: '/v1/tax_ids',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'ending_before',
+      'expand',
+      'limit',
+      'owner',
+      'starting_after',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Creates a new account or customer <code>tax_id</code> object.</p>
+ */
+export async function postTaxIds<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: any,
+  opts?: FetcherData,
+): Promise<TaxId> {
+  const req = await ctx.createRequest({
+    path: '/v1/tax_ids',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Deletes an existing account or customer <code>tax_id</code> object.</p>
+ */
+export async function deleteTaxIdsId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    id: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<DeletedTaxId> {
+  const req = await ctx.createRequest({
+    path: '/v1/tax_ids/{id}',
+    params,
+    method: r.HttpMethod.DELETE,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
+ * <p>Retrieves an account or customer <code>tax_id</code> object.</p>
+ */
+export async function getTaxIdsId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    id: string;
+  },
+  body: any,
+  opts?: FetcherData,
+): Promise<TaxId> {
+  const req = await ctx.createRequest({
+    path: '/v1/tax_ids/{id}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {});
+}
+/**
  * <p>Returns a list of your tax rates. Tax rates are returned sorted by creation date, with the most recently created tax
  * rates appearing first.</p>
  */
@@ -40804,6 +40977,14 @@ export async function postTreasuryInboundTransfersInboundTransferCancel<
 export async function getTreasuryOutboundPayments<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
+    created?:
+      | {
+          gt?: number;
+          gte?: number;
+          lt?: number;
+          lte?: number;
+        }
+      | number;
     customer?: string;
     ending_before?: string;
     expand?: string[];
@@ -40838,6 +41019,7 @@ export async function getTreasuryOutboundPayments<FetcherData>(
     method: r.HttpMethod.GET,
     body,
     queryParams: [
+      'created',
       'customer',
       'ending_before',
       'expand',

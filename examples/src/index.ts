@@ -1,16 +1,9 @@
-import fetch from 'node-fetch';
 import { ServerConfiguration, wrapApi } from '@typoas/runtime';
 import { pullsList, createContext as createGithubContext } from './github';
 import {
   findPetsByStatus,
   createContext as createPetstoreContext,
 } from './petstore';
-
-if (!globalThis.fetch) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  globalThis.fetch = fetch;
-}
 
 const petstoreCtx = createPetstoreContext({
   serverConfiguration: new ServerConfiguration(

@@ -20,11 +20,12 @@
     "@typoas/generator": "workspace:^",
     "clipanion": "^4.0.0-rc.3",
     "js-yaml": "^4.1.0",
+    "prettier": "^3.2.5",
     "typanion": "^3.14.0"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.5",
-    "@types/node": "^20.2.3",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },

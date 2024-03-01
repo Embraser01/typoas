@@ -1078,7 +1078,6 @@ export type Repository = {
    */
   full_name: string;
   license: NullableLicenseSimple;
-  organization?: NullableSimpleUser;
   forks: number;
   permissions?: {
     admin: boolean;
@@ -1365,146 +1364,6 @@ export type Repository = {
    * @defaultValue true
    */
   allow_rebase_merge?: boolean;
-  template_repository?: {
-    id?: number;
-    node_id?: string;
-    name?: string;
-    full_name?: string;
-    owner?: {
-      login?: string;
-      id?: number;
-      node_id?: string;
-      avatar_url?: string;
-      gravatar_id?: string;
-      url?: string;
-      html_url?: string;
-      followers_url?: string;
-      following_url?: string;
-      gists_url?: string;
-      starred_url?: string;
-      subscriptions_url?: string;
-      organizations_url?: string;
-      repos_url?: string;
-      events_url?: string;
-      received_events_url?: string;
-      type?: string;
-      site_admin?: boolean;
-    };
-    private?: boolean;
-    html_url?: string;
-    description?: string;
-    fork?: boolean;
-    url?: string;
-    archive_url?: string;
-    assignees_url?: string;
-    blobs_url?: string;
-    branches_url?: string;
-    collaborators_url?: string;
-    comments_url?: string;
-    commits_url?: string;
-    compare_url?: string;
-    contents_url?: string;
-    contributors_url?: string;
-    deployments_url?: string;
-    downloads_url?: string;
-    events_url?: string;
-    forks_url?: string;
-    git_commits_url?: string;
-    git_refs_url?: string;
-    git_tags_url?: string;
-    git_url?: string;
-    issue_comment_url?: string;
-    issue_events_url?: string;
-    issues_url?: string;
-    keys_url?: string;
-    labels_url?: string;
-    languages_url?: string;
-    merges_url?: string;
-    milestones_url?: string;
-    notifications_url?: string;
-    pulls_url?: string;
-    releases_url?: string;
-    ssh_url?: string;
-    stargazers_url?: string;
-    statuses_url?: string;
-    subscribers_url?: string;
-    subscription_url?: string;
-    tags_url?: string;
-    teams_url?: string;
-    trees_url?: string;
-    clone_url?: string;
-    mirror_url?: string;
-    hooks_url?: string;
-    svn_url?: string;
-    homepage?: string;
-    language?: string;
-    forks_count?: number;
-    stargazers_count?: number;
-    watchers_count?: number;
-    size?: number;
-    default_branch?: string;
-    open_issues_count?: number;
-    is_template?: boolean;
-    topics?: string[];
-    has_issues?: boolean;
-    has_projects?: boolean;
-    has_wiki?: boolean;
-    has_pages?: boolean;
-    has_downloads?: boolean;
-    archived?: boolean;
-    disabled?: boolean;
-    visibility?: string;
-    pushed_at?: string;
-    created_at?: string;
-    updated_at?: string;
-    permissions?: {
-      admin?: boolean;
-      maintain?: boolean;
-      push?: boolean;
-      triage?: boolean;
-      pull?: boolean;
-    };
-    allow_rebase_merge?: boolean;
-    temp_clone_token?: string;
-    allow_squash_merge?: boolean;
-    allow_auto_merge?: boolean;
-    delete_branch_on_merge?: boolean;
-    allow_update_branch?: boolean;
-    use_squash_pr_title_as_default?: boolean;
-    /**
-     * The default value for a squash merge commit title:
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
-     */
-    squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
-    /**
-     * The default value for a squash merge commit message:
-     *
-     * - `PR_BODY` - default to the pull request's body.
-     * - `COMMIT_MESSAGES` - default to the branch's commit messages.
-     * - `BLANK` - default to a blank commit message.
-     */
-    squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
-    /**
-     * The default value for a merge commit title.
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
-     */
-    merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
-    /**
-     * The default value for a merge commit message.
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `PR_BODY` - default to the pull request's body.
-     * - `BLANK` - default to a blank commit message.
-     */
-    merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
-    allow_merge_commit?: boolean;
-    subscribers_count?: number;
-    network_count?: number;
-  } | null;
   temp_clone_token?: string;
   /**
    * Whether to allow squash merges for pull requests.
@@ -1573,8 +1432,6 @@ export type Repository = {
    * Whether to require contributors to sign off on web-based commits
    */
   web_commit_signoff_required?: boolean;
-  subscribers_count?: number;
-  network_count?: number;
   open_issues: number;
   watchers: number;
   master_branch?: string;
@@ -4972,7 +4829,15 @@ export type CopilotOrganizationDetails = {
   /**
    * The organization policy for allowing or disallowing organization members to use Copilot Chat within their editor.
    */
-  copilot_chat?: 'enabled' | 'disabled' | 'unconfigured';
+  ide_chat?: 'enabled' | 'disabled' | 'unconfigured';
+  /**
+   * The organization policy for allowing or disallowing organization members to use Copilot features within github.com.
+   */
+  platform_chat?: 'enabled' | 'disabled' | 'unconfigured';
+  /**
+   * The organization policy for allowing or disallowing organization members to use Copilot within their CLI.
+   */
+  cli?: 'enabled' | 'disabled' | 'unconfigured';
   /**
    * The mode of assigning new seats.
    */
@@ -6036,7 +5901,8 @@ export type OrgCustomProperty = {
    */
   description?: string | null;
   /**
-   * Ordered list of allowed values of the property
+   * An ordered list of the allowed values of the property.
+   * The property can have up to 200 allowed values.
    */
   allowed_values?: string[] | null;
   /**
@@ -6105,7 +5971,6 @@ export type NullableRepository = {
    */
   full_name: string;
   license: NullableLicenseSimple;
-  organization?: NullableSimpleUser;
   forks: number;
   permissions?: {
     admin: boolean;
@@ -6392,146 +6257,6 @@ export type NullableRepository = {
    * @defaultValue true
    */
   allow_rebase_merge?: boolean;
-  template_repository?: {
-    id?: number;
-    node_id?: string;
-    name?: string;
-    full_name?: string;
-    owner?: {
-      login?: string;
-      id?: number;
-      node_id?: string;
-      avatar_url?: string;
-      gravatar_id?: string;
-      url?: string;
-      html_url?: string;
-      followers_url?: string;
-      following_url?: string;
-      gists_url?: string;
-      starred_url?: string;
-      subscriptions_url?: string;
-      organizations_url?: string;
-      repos_url?: string;
-      events_url?: string;
-      received_events_url?: string;
-      type?: string;
-      site_admin?: boolean;
-    };
-    private?: boolean;
-    html_url?: string;
-    description?: string;
-    fork?: boolean;
-    url?: string;
-    archive_url?: string;
-    assignees_url?: string;
-    blobs_url?: string;
-    branches_url?: string;
-    collaborators_url?: string;
-    comments_url?: string;
-    commits_url?: string;
-    compare_url?: string;
-    contents_url?: string;
-    contributors_url?: string;
-    deployments_url?: string;
-    downloads_url?: string;
-    events_url?: string;
-    forks_url?: string;
-    git_commits_url?: string;
-    git_refs_url?: string;
-    git_tags_url?: string;
-    git_url?: string;
-    issue_comment_url?: string;
-    issue_events_url?: string;
-    issues_url?: string;
-    keys_url?: string;
-    labels_url?: string;
-    languages_url?: string;
-    merges_url?: string;
-    milestones_url?: string;
-    notifications_url?: string;
-    pulls_url?: string;
-    releases_url?: string;
-    ssh_url?: string;
-    stargazers_url?: string;
-    statuses_url?: string;
-    subscribers_url?: string;
-    subscription_url?: string;
-    tags_url?: string;
-    teams_url?: string;
-    trees_url?: string;
-    clone_url?: string;
-    mirror_url?: string;
-    hooks_url?: string;
-    svn_url?: string;
-    homepage?: string;
-    language?: string;
-    forks_count?: number;
-    stargazers_count?: number;
-    watchers_count?: number;
-    size?: number;
-    default_branch?: string;
-    open_issues_count?: number;
-    is_template?: boolean;
-    topics?: string[];
-    has_issues?: boolean;
-    has_projects?: boolean;
-    has_wiki?: boolean;
-    has_pages?: boolean;
-    has_downloads?: boolean;
-    archived?: boolean;
-    disabled?: boolean;
-    visibility?: string;
-    pushed_at?: string;
-    created_at?: string;
-    updated_at?: string;
-    permissions?: {
-      admin?: boolean;
-      maintain?: boolean;
-      push?: boolean;
-      triage?: boolean;
-      pull?: boolean;
-    };
-    allow_rebase_merge?: boolean;
-    temp_clone_token?: string;
-    allow_squash_merge?: boolean;
-    allow_auto_merge?: boolean;
-    delete_branch_on_merge?: boolean;
-    allow_update_branch?: boolean;
-    use_squash_pr_title_as_default?: boolean;
-    /**
-     * The default value for a squash merge commit title:
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
-     */
-    squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
-    /**
-     * The default value for a squash merge commit message:
-     *
-     * - `PR_BODY` - default to the pull request's body.
-     * - `COMMIT_MESSAGES` - default to the branch's commit messages.
-     * - `BLANK` - default to a blank commit message.
-     */
-    squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
-    /**
-     * The default value for a merge commit title.
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
-     */
-    merge_commit_title?: 'PR_TITLE' | 'MERGE_MESSAGE';
-    /**
-     * The default value for a merge commit message.
-     *
-     * - `PR_TITLE` - default to the pull request's title.
-     * - `PR_BODY` - default to the pull request's body.
-     * - `BLANK` - default to a blank commit message.
-     */
-    merge_commit_message?: 'PR_BODY' | 'PR_TITLE' | 'BLANK';
-    allow_merge_commit?: boolean;
-    subscribers_count?: number;
-    network_count?: number;
-  } | null;
   temp_clone_token?: string;
   /**
    * Whether to allow squash merges for pull requests.
@@ -6600,8 +6325,6 @@ export type NullableRepository = {
    * Whether to require contributors to sign off on web-based commits
    */
   web_commit_signoff_required?: boolean;
-  subscribers_count?: number;
-  network_count?: number;
   open_issues: number;
   watchers: number;
   master_branch?: string;
@@ -7089,6 +6812,36 @@ export type RepositoryRulesetConditionsRepositoryIdTarget = {
   };
 };
 /**
+ * Repository ruleset property targeting definition
+ * Parameters for a targeting a repository property
+ */
+export type RepositoryRulesetConditionsRepositoryPropertySpec = {
+  /**
+   * The name of the repository property to target
+   */
+  name: string;
+  /**
+   * The values to match for the repository property
+   */
+  property_values: string[];
+};
+/**
+ * Repository ruleset conditions for repository properties
+ * Parameters for a repository property condition
+ */
+export type RepositoryRulesetConditionsRepositoryPropertyTarget = {
+  repository_property: {
+    /**
+     * The repository properties and values to include. All of these properties must match for the condition to pass.
+     */
+    include?: RepositoryRulesetConditionsRepositoryPropertySpec[];
+    /**
+     * The repository properties and values to exclude. The condition will not pass if any of these properties match.
+     */
+    exclude?: RepositoryRulesetConditionsRepositoryPropertySpec[];
+  };
+};
+/**
  * Organization ruleset conditions
  * Conditions for an organization ruleset. The conditions object should contain both `repository_name` and `ref_name` properties or both `repository_id` and `ref_name` properties.
  */
@@ -7096,7 +6849,9 @@ export type OrgRulesetConditions =
   | (RepositoryRulesetConditions &
       RepositoryRulesetConditionsRepositoryNameTarget)
   | (RepositoryRulesetConditions &
-      RepositoryRulesetConditionsRepositoryIdTarget);
+      RepositoryRulesetConditionsRepositoryIdTarget)
+  | (RepositoryRulesetConditions &
+      RepositoryRulesetConditionsRepositoryPropertyTarget);
 /**
  * creation
  * Only allow users with bypass permission to create matching refs.
@@ -7342,6 +7097,20 @@ export type RepositoryRuleTagNamePattern = {
      */
     pattern: string;
   };
+};
+/**
+ * RestrictedCommits
+ * Restricted commit
+ */
+export type RepositoryRuleParamsRestrictedCommits = {
+  /**
+   * Full or abbreviated commit hash to reject
+   */
+  oid: string;
+  /**
+   * Reason for restriction
+   */
+  reason?: string;
 };
 /**
  * WorkflowFileReference
@@ -14191,6 +13960,10 @@ export type PageBuildStatus = {
  * The GitHub Pages deployment status.
  */
 export type PageDeployment = {
+  /**
+   * The ID of the GitHub Pages deployment. This is the Git SHA of the deployed commit.
+   */
+  id: number | string;
   /**
    * The URI to monitor GitHub Pages deployment status.
    * @example "https://api.github.com/repos/github/hello-world/pages/deployments/4fd754f7e594640989b406850d0bc8f06a121251"
@@ -63924,11 +63697,11 @@ export type WebhookPush = {
    */
   before: string;
   /**
-   * An array of commit objects describing the pushed commits. (Pushed commits are all commits that are included in the `compare` between the `before` commit and the `after` commit.) The array includes a maximum of 20 commits. If necessary, you can use the [Commits API](https://docs.github.com/rest/commits) to fetch additional commits. This limit is applied to timeline events only and isn't applied to webhook deliveries.
+   * An array of commit objects describing the pushed commits. (Pushed commits are all commits that are included in the `compare` between the `before` commit and the `after` commit.) The array includes a maximum of 2048 commits. If necessary, you can use the [Commits API](https://docs.github.com/rest/commits) to fetch additional commits.
    */
   commits: {
     /**
-     * An array of files added in the commit.
+     * An array of files added in the commit. A maximum of 3000 changed files will be reported per commit.
      */
     added?: string[];
     /**
@@ -63967,11 +63740,11 @@ export type WebhookPush = {
      */
     message: string;
     /**
-     * An array of files modified by the commit.
+     * An array of files modified by the commit. A maximum of 3000 changed files will be reported per commit.
      */
     modified?: string[];
     /**
-     * An array of files removed in the commit.
+     * An array of files removed in the commit. A maximum of 3000 changed files will be reported per commit.
      */
     removed?: string[];
     /**
@@ -78067,11 +77840,11 @@ export async function appsListInstallationRequestsForAuthenticatedApp<
 }
 /**
  * List installations for the authenticated app
+ * The permissions the installation has are included under the `permissions` key.
+ *
  * You must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint.
- *
- * The permissions the installation has are included under the `permissions` key.
  * Learn more at {@link https://docs.github.com/rest/apps/apps#list-installations-for-the-authenticated-app}
  * Tags: apps
  */
@@ -78155,9 +77928,26 @@ export async function appsDeleteInstallation<FetcherData>(
  * Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's
  * installation on an organization or individual account. Installation tokens expire one hour from the time you create
  * them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation
- * token. By default the installation token has access to all repositories that the installation can access. To restrict
- * the access to specific repositories, you can provide the `repository_ids` when creating the token. When you omit
- * `repository_ids`, the response does not contain the `repositories` key.
+ * token. By default the installation token has access to all repositories that the installation can access.
+ *
+ * Optionally,
+ * you can use the `repositories` or `repository_ids` body parameters to specify individual repositories that the
+ * installation access token can access. If you don't use `repositories` or `repository_ids` to grant access to specific
+ * repositories, the installation access token will have access to all repositories that the installation was granted
+ * access to. The installation access token cannot be granted access to repositories that the installation was not granted
+ * access to. Up to 500 repositories can be listed in this manner.
+ *
+ * Optionally, use the `permissions` body parameter to
+ * specify the permissions that the installation access token should have. If `permissions` is not specified, the
+ * installation access token will have all of the permissions that were granted to the app. The installation access token
+ * cannot be granted permissions that the app was not granted.
+ *
+ * When using the repository or permission parameters to
+ * reduce the access of the token, the complexity of the token is increased due to both the number of permissions in the
+ * request and the number of repositories the token will have access to. If the complexity is too large, the token will
+ * fail to be issued. If this occurs, the error message will indicate the maximum number of repositories that should be
+ * requested. For the average application requesting 8 permissions, this limit is around 5000 repositories. With fewer
+ * permissions requested, more repositories are supported.
  *
  * You must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
@@ -78388,11 +78178,19 @@ export async function appsDeleteToken<FetcherData>(
 }
 /**
  * Create a scoped access token
- * Use a non-scoped user access token to create a repository scoped and/or permission scoped user access token. You can
- * specify which repositories the token can access and which permissions are granted to the token. You must use [Basic
- * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
- * this endpoint, using the `client_id` and `client_secret` of the GitHub App as the username and password. Invalid tokens
- * will return `404 NOT FOUND`.
+ * Use a non-scoped user access token to create a repository-scoped and/or permission-scoped user access token. You can
+ * specify
+ * which repositories the token can access and which permissions are granted to the
+ * token.
+ *
+ * Invalid tokens will
+ * return `404 NOT FOUND`.
+ *
+ * You must use [Basic
+ * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)
+ * when accessing
+ * this endpoint, using the `client_id` and `client_secret` of the GitHub App
+ * as the username and password.
  * Learn more at {@link https://docs.github.com/rest/apps/apps#create-a-scoped-access-token}
  * Tags: apps
  */
@@ -78448,13 +78246,6 @@ export async function appsScopeToken<FetcherData>(
  * Get an app
  * **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for
  * your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
- *
- * If the GitHub App you specify is public, you can
- * access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a
- * [personal access token](https://docs.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an
- * [installation access
- * token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation)
- * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-an-app}
  * Tags: apps
  */
@@ -78698,13 +78489,17 @@ export async function emojisGet<FetcherData>(
 /**
  * List Dependabot alerts for an enterprise
  * Lists Dependabot alerts for repositories that are owned by the specified enterprise.
- * To use this endpoint, you must be a
- * member of the enterprise, and you must use an
- * access token with the `repo` scope or `security_events` scope.
- * Alerts are
- * only returned for organizations in the enterprise for which you are an organization owner or a security manager. For
- * more information about security managers, see "[Managing security managers in your
+ *
+ * The authenticated user must be a
+ * member of the enterprise to use this endpoint.
+ *
+ * Alerts are only returned for organizations in the enterprise for which
+ * you are an organization owner or a security manager. For more information about security managers, see "[Managing
+ * security managers in your
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-an-enterprise}
  * Tags: dependabot
  */
@@ -78758,11 +78553,16 @@ export async function dependabotListAlertsForEnterprise<FetcherData>(
 /**
  * List secret scanning alerts for an enterprise
  * Lists secret scanning alerts for eligible repositories in an enterprise, from newest to oldest.
- * To use this endpoint,
- * you must be a member of the enterprise, and you must use an access token with the `repo` scope or `security_events`
- * scope. Alerts are only returned for organizations in the enterprise for which you are an organization owner or a
- * [security
+ *
+ * Alerts are only
+ * returned for organizations in the enterprise for which the authenticated user is an organization owner or a [security
  * manager](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).
+ *
+ * The
+ * authenticated user must be a member of the enterprise in order to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `repo` scope or `security_events` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-enterprise}
  * Tags: secret-scanning
  */
@@ -79515,10 +79315,6 @@ export async function gitignoreGetTemplate<FetcherData>(
 /**
  * List repositories accessible to the app installation
  * List repositories that an app installation can access.
- *
- * You must use an [installation access
- * token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation)
- * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-app-installation}
  * Tags: apps
  */
@@ -79566,11 +79362,6 @@ export async function appsListReposAccessibleToInstallation<FetcherData>(
  * installation token must have a new installation token to work. You can create a new token using the "[Create an
  * installation access token for an
  * app](https://docs.github.com/rest/apps/apps#create-an-installation-access-token-for-an-app)" endpoint.
- *
- * You must use an
- * [installation access
- * token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation)
- * to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#revoke-an-installation-access-token}
  * Tags: apps
  */
@@ -80306,16 +80097,20 @@ export async function orgsList<FetcherData>(
 }
 /**
  * Get an organization
- * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org`
- * scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing
- * managers, and outside collaborators to enable [two-factor
+ * Gets information about an organization.
+ *
+ * When the value of `two_factor_requirement_enabled` is `true`, the organization
+ * requires all members, billing managers, and outside collaborators to enable [two-factor
  * authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
  *
- * GitHub
- * Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's
- * GitHub plan. See "[Authenticating with GitHub
- * Apps](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example
- * response, see 'Response with GitHub plan information' below."
+ * To see the
+ * full details about an organization, the authenticated user must be an organization owner.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to see the full details about an organization.
+ *
+ * To see information
+ * about an organization's GitHub plan, GitHub Apps need the `Organization plan` permission.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#get-an-organization}
  * Tags: orgs
  */
@@ -80345,9 +80140,13 @@ export async function orgsGet<FetcherData>(
  * more information, see the [blog
  * post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
  *
- * Enables an authenticated
- * organization owner with the `admin:org` scope or the `repo` scope to update the organization's profile and member
- * privileges.
+ * Updates the organization's profile
+ * and member privileges.
+ *
+ * The authenticated user must be an organization owner to use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:org` or `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#update-an-organization}
  * Tags: orgs
  */
@@ -80551,9 +80350,9 @@ export async function orgsDelete<FetcherData>(
  * Gets the total GitHub Actions cache usage for an organization.
  * The data fetched using this API is refreshed
  * approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.
- * You
- * must authenticate using an access token with the `read:org` scope to use this endpoint. GitHub Apps must have the
- * `organization_admistration:read` permission to use this endpoint.
+ *
+ * OAuth
+ * tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/cache#get-github-actions-cache-usage-for-an-organization}
  * Tags: actions
  */
@@ -80578,8 +80377,8 @@ export async function actionsGetActionsCacheUsageForOrg<FetcherData>(
  * The data fetched using this API is
  * refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get
  * updated.
- * You must authenticate using an access token with the `read:org` scope to use this endpoint. GitHub Apps must
- * have the `organization_admistration:read` permission to use this endpoint.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/cache#list-repositories-with-github-actions-cache-usage-for-an-organization}
  * Tags: actions
  */
@@ -80607,10 +80406,9 @@ export async function actionsGetActionsCacheUsageByRepoForOrg<FetcherData>(
 /**
  * Get the customization template for an OIDC subject claim for an organization
  * Gets the customization template for an OpenID Connect (OIDC) subject claim.
- * You must authenticate using an access token
- * with the `read:org` scope to use this endpoint.
- * GitHub Apps must have the `organization_administration:write` permission
- * to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#get-the-customization-template-for-an-oidc-subject-claim-for-an-organization}
  * Tags: oidc
  */
@@ -80632,10 +80430,9 @@ export async function oidcGetOidcCustomSubTemplateForOrg<FetcherData>(
 /**
  * Set the customization template for an OIDC subject claim for an organization
  * Creates or updates the customization template for an OpenID Connect (OIDC) subject claim.
- * You must authenticate using an
- * access token with the `write:org` scope to use this endpoint.
- * GitHub Apps must have the `admin:org` permission to use
- * this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `write:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#set-the-customization-template-for-an-oidc-subject-claim-for-an-organization}
  * Tags: oidc
  */
@@ -80661,8 +80458,7 @@ export async function oidcUpdateOidcCustomSubTemplateForOrg<FetcherData>(
  * Gets the GitHub Actions permissions policy for repositories and allowed actions and reusable workflows in an
  * organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps
- * must have the `administration` organization permission to use this API.
+ * OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-github-actions-permissions-for-an-organization}
  * Tags: actions
  */
@@ -80688,8 +80484,7 @@ export async function actionsGetGithubActionsPermissionsOrganization<
  * Sets the GitHub Actions permissions policy for repositories and allowed actions and reusable workflows in an
  * organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps
- * must have the `administration` organization permission to use this API.
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-github-actions-permissions-for-an-organization}
  * Tags: actions
  */
@@ -80721,9 +80516,8 @@ export async function actionsSetGithubActionsPermissionsOrganization<
  * organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see
  * "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
- * `administration` organization permission to use this API.
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#list-selected-repositories-enabled-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -80764,9 +80558,9 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
  * the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information,
  * see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You
- * must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
- * `administration` organization permission to use this API.
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-selected-repositories-enabled-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -80801,9 +80595,8 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
  * For more information, see "[Set GitHub Actions permissions for an
  * organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must authenticate using an access token with
- * the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use
- * this API.
+ * OAuth tokens and personal access tokens (classic)
+ * need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#enable-a-selected-repository-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -80832,9 +80625,8 @@ export async function actionsEnableSelectedRepositoryGithubActionsOrganization<
  * more information, see "[Set GitHub Actions permissions for an
  * organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must authenticate using an access token with
- * the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use
- * this API.
+ * OAuth tokens and personal access tokens (classic)
+ * need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#disable-a-selected-repository-for-github-actions-in-an-organization}
  * Tags: actions
  */
@@ -80860,11 +80652,10 @@ export async function actionsDisableSelectedRepositoryGithubActionsOrganization<
  * Get allowed actions and reusable workflows for an organization
  * Gets the selected actions and reusable workflows that are allowed in an organization. To use this endpoint, the
  * organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set
- * GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization).""
+ * GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
- * `administration` organization permission to use this API.
+ * OAuth tokens and
+ * personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-allowed-actions-and-reusable-workflows-for-an-organization}
  * Tags: actions
  */
@@ -80889,9 +80680,8 @@ export async function actionsGetAllowedActionsOrganization<FetcherData>(
  * permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions
  * permissions for an organization](#set-github-actions-permissions-for-an-organization)."
  *
- * You must authenticate using an
- * access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization
- * permission to use this API.
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-allowed-actions-and-reusable-workflows-for-an-organization}
  * Tags: actions
  */
@@ -80921,9 +80711,8 @@ export async function actionsSetAllowedActionsOrganization<FetcherData>(
  * of the GITHUB_TOKEN for your
  * organization](https://docs.github.com/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#setting-the-permissions-of-the-github_token-for-your-organization)."
  *
- * You
- * must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
- * `administration` organization permission to use this API.
+ * OAuth
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-default-workflow-permissions-for-an-organization}
  * Tags: actions
  */
@@ -80953,9 +80742,8 @@ export async function actionsGetGithubActionsDefaultWorkflowPermissionsOrganizat
  * GITHUB_TOKEN for your
  * organization](https://docs.github.com/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#setting-the-permissions-of-the-github_token-for-your-organization)."
  *
- * You
- * must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
- * `administration` organization permission to use this API.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-default-workflow-permissions-for-an-organization}
  * Tags: actions
  */
@@ -80982,14 +80770,11 @@ export async function actionsSetGithubActionsDefaultWorkflowPermissionsOrganizat
  * List self-hosted runners for an organization
  * Lists all self-hosted runners configured in an organization.
  *
- * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the `repo`
- * scope.
- * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners`
- * permission for organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the
+ * organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to
+ * use this endpoint. If the repository is private, the `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-an-organization}
  * Tags: actions
  */
@@ -81019,14 +80804,11 @@ export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
  * List runner applications for an organization
  * Lists binaries for the runner application that you can download and run.
  *
- * You must authenticate using an access token
- * with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the
- * `repo` scope.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
  * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
+ * to use this endpoint.  If the repository is private, the `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-runner-applications-for-an-organization}
  * Tags: actions
  */
@@ -81049,14 +80831,12 @@ export async function actionsListRunnerApplicationsForOrg<FetcherData>(
  * Create configuration for a just-in-time runner for an organization
  * Generates a configuration that can be passed to the runner application at startup.
  *
- * You must authenticate using an
- * access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token
- * with the `repo` scope.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * The authenticated user must have
+ * admin access to the organization.
+ *
+ * OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use
+ * this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization}
  * Tags: actions
  */
@@ -81105,24 +80885,20 @@ export async function actionsGenerateRunnerJitconfigForOrg<FetcherData>(
  * Create a registration token for an organization
  * Returns a token that you can pass to the `config` script. The token expires after one hour.
  *
- * You must authenticate using
- * an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access
- * token with the `repo` scope.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these
- * endpoints.
- *
- * Example using registration token:
- *
- * Configure your self-hosted runner, replacing `TOKEN` with the
- * registration token provided by this endpoint.
+ * For example, you can
+ * replace `TOKEN` in the following example with the registration token provided by this endpoint to configure your
+ * self-hosted runner:
  *
  * ```
  * ./config.sh --url https://github.com/octo-org --token TOKEN
  * ```
+ *
+ * Authenticated users must have
+ * admin access to the organization to use this endpoint.
+ *
+ * OAuth tokens and personal access tokens (classic) need
+ * the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization}
  * Tags: actions
  */
@@ -81148,25 +80924,19 @@ export async function actionsCreateRegistrationTokenForOrg<FetcherData>(
  * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token
  * expires after one hour.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If
- * the repository is private, you must use an access token with the `repo` scope.
- * GitHub Apps must have the
- * `administration` permission for repositories and the `organization_self_hosted_runners` permission for
- * organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
- *
- * Example using remove token:
- *
- * To remove your
- * self-hosted runner from an organization, replace `TOKEN` with the remove token provided by
- * this
- * endpoint.
+ * For example, you can replace `TOKEN` in the following example with the registration token
+ * provided by this endpoint to remove your self-hosted runner from an organization:
  *
  * ```
- * ./config.sh remove --token TOKEN
+ * ./config.sh remove --token
+ * TOKEN
  * ```
+ *
+ * Authenticated users must have admin access to the organization to use this endpoint.
+ *
+ * OAuth tokens and
+ * personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-remove-token-for-an-organization}
  * Tags: actions
  */
@@ -81191,14 +80961,11 @@ export async function actionsCreateRemoveTokenForOrg<FetcherData>(
  * Get a self-hosted runner for an organization
  * Gets a specific self-hosted runner configured in an organization.
  *
- * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the `repo`
- * scope.
- * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners`
- * permission for organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the
+ * organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to
+ * use this endpoint. If the repository is private, the `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
@@ -81223,14 +80990,12 @@ export async function actionsGetSelfHostedRunnerForOrg<FetcherData>(
  * Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the
  * runner when the machine you were using no longer exists.
  *
- * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the `repo`
- * scope.
- * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners`
- * permission for organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the organization
+ * to use this endpoint.
+ *
+ * OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint.
+ * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-an-organization}
  * Tags: actions
  */
@@ -81254,14 +81019,11 @@ export async function actionsDeleteSelfHostedRunnerFromOrg<FetcherData>(
  * List labels for a self-hosted runner for an organization
  * Lists all labels for a self-hosted runner configured in an organization.
  *
- * You must authenticate using an access token
- * with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the
- * `repo` scope.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
  * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
+ * to use this endpoint. If the repository is private, the `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-labels-for-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
@@ -81286,16 +81048,13 @@ export async function actionsListLabelsForSelfHostedRunnerForOrg<FetcherData>(
 }
 /**
  * Add custom labels to a self-hosted runner for an organization
- * Add custom labels to a self-hosted runner configured in an organization.
+ * Adds custom labels to a self-hosted runner configured in an organization.
  *
- * You must authenticate using an access token
- * with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the
- * `repo` scope.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
  * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * the organization to use this endpoint.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `admin:org` scope to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#add-custom-labels-to-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
@@ -81333,14 +81092,11 @@ export async function actionsAddCustomLabelsToSelfHostedRunnerForOrg<
  * self-hosted runner configured in an
  * organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the
- * repository is private, you must use an access token with the `repo` scope.
- * GitHub Apps must have the `administration`
- * permission for repositories and the `organization_self_hosted_runners` permission for organizations.
- * Authenticated users
- * must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to
- * use these endpoints.
+ * Authenticated users must have admin access to the organization to use this endpoint.
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the
+ * `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#set-custom-labels-for-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
@@ -81378,14 +81134,11 @@ export async function actionsSetCustomLabelsForSelfHostedRunnerForOrg<
  * organization. Returns the remaining read-only labels
  * from the runner.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the
- * repository is private, you must use an access token with the `repo` scope.
- * GitHub Apps must have the `administration`
- * permission for repositories and the `organization_self_hosted_runners` permission for organizations.
- * Authenticated users
- * must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to
- * use these endpoints.
+ * Authenticated users must have admin access to the organization to use this endpoint.
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the
+ * `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#remove-all-custom-labels-from-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
@@ -81419,14 +81172,12 @@ export async function actionsRemoveAllCustomLabelsFromSelfHostedRunnerForOrg<
  * This endpoint returns a `404 Not Found` status if the custom label is not
  * present on the runner.
  *
- * You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you
- * must use an access token with the `repo` scope.
- * GitHub Apps must have the `administration` permission for repositories
- * and the `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated
+ * users must have admin access to the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also
+ * required.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#remove-a-custom-label-from-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
@@ -81457,13 +81208,12 @@ export async function actionsRemoveCustomLabelFromSelfHostedRunnerForOrg<
  * Lists all secrets available in an organization without revealing their
  * encrypted values.
  *
- * You must authenticate using an
- * access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token
- * with the `repo` scope.
- * GitHub Apps must have the `secrets` organization permission to use this endpoint.
- * Authenticated
- * users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also
+ * required.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-organization-secrets}
  * Tags: actions
  */
@@ -81506,13 +81256,11 @@ export async function actionsListOrgSecrets<FetcherData>(
  * encrypt a secret before you can create or update
  * secrets.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the repository
- * is private, you must use an access token with the `repo` scope.
- * GitHub Apps must have the `secrets` organization
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read secrets.
+ * The authenticated user must have collaborator access to a repository to create, update, or read
+ * secrets.
+ *
+ * OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the
+ * repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-organization-public-key}
  * Tags: actions
  */
@@ -81535,13 +81283,12 @@ export async function actionsGetOrgPublicKey<FetcherData>(
  * Get an organization secret
  * Gets a single organization secret without revealing its encrypted value.
  *
- * You must authenticate using an access token
- * with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the
- * `repo` scope.
- * GitHub Apps must have the `secrets` organization permission to use this endpoint.
- * Authenticated users must
- * have collaborator access to a repository to create, update, or read secrets.
+ * The authenticated user must have collaborator
+ * access to a repository to create, update, or read secrets
+ *
+ * OAuth tokens and personal access tokens (classic) need
+ * the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-organization-secret}
  * Tags: actions
  */
@@ -81572,13 +81319,12 @@ export async function actionsGetOrgSecret<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you
- * must use an access token with the `repo` scope.
- * GitHub Apps must have the `secrets` organization permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated
+ * users must have collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal
+ * access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and
+ * personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret}
  * Tags: actions
  */
@@ -81621,13 +81367,12 @@ export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
  * Delete an organization secret
  * Deletes a secret in an organization using the secret name.
  *
- * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the `repo`
- * scope.
- * GitHub Apps must have the `secrets` organization permission to use this endpoint.
- * Authenticated users must have
- * collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must have collaborator access to a
+ * repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal access tokens (classic) need the`admin:org`
+ * scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#delete-an-organization-secret}
  * Tags: actions
  */
@@ -81653,13 +81398,11 @@ export async function actionsDeleteOrgSecret<FetcherData>(
  * for repository access to a secret is set to
  * `selected`.
  *
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the
- * repository is private, you must use an access token with the `repo` scope.
- * GitHub Apps must have the `secrets`
- * organization permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to
- * create, update, or read secrets.
+ * Authenticated users must have collaborator access to a repository to create, update, or read
+ * secrets.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the
+ * repository is private, the `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
@@ -81705,13 +81448,12 @@ export async function actionsListSelectedReposForOrgSecret<FetcherData>(
  * or update an organization
  * secret](https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret).
  *
- * You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an
- * access token with the `repo` scope.
- * GitHub Apps must have the `secrets` organization permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must
+ * have collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also
+ * required.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#set-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
@@ -81741,18 +81483,17 @@ export async function actionsSetSelectedReposForOrgSecret<FetcherData>(
 /**
  * Add selected repository to an organization secret
  * Adds a repository to an organization secret when the `visibility` for
- * repository access is set to `selected`. The
- * visibility is set when you [Create or
+ * repository access is set to `selected`. For more
+ * information about setting the visibility, see [Create or
  * update an organization
  * secret](https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret).
  *
- * You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an
- * access token with the `repo` scope.
- * GitHub Apps must have the `secrets` organization permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must
+ * have collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#add-selected-repository-to-an-organization-secret}
  * Tags: actions
  */
@@ -81781,13 +81522,12 @@ export async function actionsAddSelectedRepoToOrgSecret<FetcherData>(
  * or update an organization
  * secret](https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret).
  *
- * You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an
- * access token with the `repo` scope.
- * GitHub Apps must have the `secrets` organization permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must
+ * have collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also
+ * required.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#remove-selected-repository-from-an-organization-secret}
  * Tags: actions
  */
@@ -81811,10 +81551,12 @@ export async function actionsRemoveSelectedRepoFromOrgSecret<FetcherData>(
 /**
  * List organization variables
  * Lists all organization variables.
- * You must authenticate using an access token with the `admin:org` scope to use this
- * endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the
- * `organization_actions_variables:read` organization permission to use this endpoint. Authenticated users must have
- * collaborator access to a repository to create, update, or read variables.
+ *
+ * Authenticated users must have collaborator access to a repository to create, update,
+ * or read variables.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this
+ * endpoint. If the repository is private, the `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-organization-variables}
  * Tags: actions
  */
@@ -81855,13 +81597,12 @@ export async function actionsListOrgVariables<FetcherData>(
  * Create an organization variable
  * Creates an organization variable that you can reference in a GitHub Actions workflow.
  *
- * You must authenticate using an
- * access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token
- * with the `repo` scope.
- * GitHub Apps must have the `organization_actions_variables:write` organization permission to use
- * this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#create-an-organization-variable}
  * Tags: actions
  */
@@ -81903,13 +81644,12 @@ export async function actionsCreateOrgVariable<FetcherData>(
  * Get an organization variable
  * Gets a specific variable in an organization.
  *
- * You must authenticate using an access token with the `admin:org` scope to
+ * The authenticated user must have collaborator access to a repository to
+ * create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use
+ * this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to
  * use this endpoint.
- * If the repository is private, you must use an access token with the `repo` scope.
- * GitHub Apps must
- * have the `organization_actions_variables:read` organization permission to use this endpoint.
- * Authenticated users must
- * have collaborator access to a repository to create, update, or read variables.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#get-an-organization-variable}
  * Tags: actions
  */
@@ -81937,13 +81677,12 @@ export async function actionsGetOrgVariable<FetcherData>(
  * Update an organization variable
  * Updates an organization variable that you can reference in a GitHub Actions workflow.
  *
- * You must authenticate using an
- * access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token
- * with the `repo` scope.
- * GitHub Apps must have the `organization_actions_variables:write` organization permission to use
- * this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also
+ * required.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#update-an-organization-variable}
  * Tags: actions
  */
@@ -81986,13 +81725,12 @@ export async function actionsUpdateOrgVariable<FetcherData>(
  * Delete an organization variable
  * Deletes an organization variable using the variable name.
  *
- * You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token with the `repo`
- * scope.
- * GitHub Apps must have the `organization_actions_variables:write` organization permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+ * Authenticated users must have collaborator access to a
+ * repository to create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens (classic) need the`admin:org`
+ * scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#delete-an-organization-variable}
  * Tags: actions
  */
@@ -82015,16 +81753,14 @@ export async function actionsDeleteOrgVariable<FetcherData>(
 /**
  * List selected repositories for an organization variable
  * Lists all repositories that can access an organization variable
- * that is available to selected repositories.
+ * that is available to selected
+ * repositories.
  *
- * You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you
- * must use an access token with the `repo` scope.
- * GitHub Apps must have the `organization_actions_variables:read`
- * organization permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to
- * create, update, or read variables.
+ * Authenticated users must have collaborator access to a repository to create, update, or read
+ * variables.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If
+ * the repository is private, the `repo` scope is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-selected-repositories-for-an-organization-variable}
  * Tags: actions
  */
@@ -82069,15 +81805,12 @@ export async function actionsListSelectedReposForOrgVariable<FetcherData>(
  * variables that are available to selected
  * repositories have their `visibility` field set to `selected`.
  *
- * You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you
- * must use an access token with the `repo` scope.
- * GitHub Apps must have the `organization_actions_variables:write`
- * organization permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to
- * create, update, or read variables.
+ * Authenticated
+ * users must have collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope
+ * is also required.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#set-selected-repositories-for-an-organization-variable}
  * Tags: actions
  */
@@ -82110,13 +81843,12 @@ export async function actionsSetSelectedReposForOrgVariable<FetcherData>(
  * Organization variables that
  * are available to selected repositories have their `visibility` field set to `selected`.
  *
- * You must authenticate using an
- * access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an access token
- * with the `repo` scope.
- * GitHub Apps must have the `organization_actions_variables:write` organization permission to use
- * this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#add-selected-repository-to-an-organization-variable}
  * Tags: actions
  */
@@ -82144,14 +81876,12 @@ export async function actionsAddSelectedRepoToOrgVariable<FetcherData>(
  * that are available to
  * selected repositories have their `visibility` field set to `selected`.
  *
- * You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint.
- * If the repository is private, you must use an
- * access token with the `repo` scope.
- * GitHub Apps must have the `organization_actions_variables:write` organization
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read variables.
+ * Authenticated users must
+ * have collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also
+ * required.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#remove-selected-repository-from-an-organization-variable}
  * Tags: actions
  */
@@ -82271,11 +82001,12 @@ export async function orgsUnblockUser<FetcherData>(
  * more information, see "[Managing security managers in your
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
  *
- * To
- * use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with
- * the `repo` scope or `security_events` scope.
+ * The
+ * authenticated user must be an owner or security manager for the organization to use this endpoint.
  *
- * For public repositories, you may instead use the `public_repo` scope.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `security_events` or `repo`s cope to use this endpoint with private or public
+ * repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization}
  * Tags: code-scanning
  */
@@ -82326,8 +82057,8 @@ export async function codeScanningListAlertsForOrg<FetcherData>(
  * List codespaces for the organization
  * Lists the codespaces associated to a specified organization.
  *
- * You must authenticate using an access token with the
- * `admin:org` scope or the `Organization codespaces` read permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-the-organization}
  * Tags: codespaces
  */
@@ -82365,8 +82096,8 @@ export async function codespacesListInOrganization<FetcherData>(
  * Manage access control for organization codespaces
  * Sets which users can access codespaces in an organization. This is synonymous with granting or revoking codespaces
  * access permissions for users according to the visibility.
- * You must authenticate using an access token with the
- * `admin:org` scope or the `Organization codespaces settings` write permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `admin:org` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces}
  * Tags: codespaces
@@ -82411,9 +82142,8 @@ export async function codespacesSetCodespacesAccess<FetcherData>(
  * control for organization
  * codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)."
  *
- * You
- * must authenticate using an access token with the `admin:org` scope or the `Organization codespaces settings` write
- * permission to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#add-users-to-codespaces-access-for-an-organization}
  * Tags: codespaces
@@ -82450,9 +82180,8 @@ export async function codespacesSetCodespacesAccessUsers<FetcherData>(
  * "[Manage access control for organization
  * codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)."
  *
- * You
- * must authenticate using an access token with the `admin:org` scope or the `Organization codespaces settings` write
- * permission to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#remove-users-from-codespaces-access-for-an-organization}
  * Tags: codespaces
@@ -82482,8 +82211,11 @@ export async function codespacesDeleteCodespacesAccessUsers<FetcherData>(
 /**
  * List organization secrets
  * Lists all Codespaces development environment secrets available at the organization-level without revealing their
- * encrypted values.
- * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * encrypted
+ * values.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#list-organization-secrets}
  * Tags: codespaces
  */
@@ -82519,8 +82251,9 @@ export async function codespacesListOrgSecrets<FetcherData>(
 /**
  * Get an organization public key
  * Gets a public key for an organization, which is required in order to encrypt secrets. You need to encrypt the value of a
- * secret before you can create or update secrets. You must authenticate using an access token with the `admin:org` scope
- * to use this endpoint.
+ * secret before you can create or update secrets.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-public-key}
  * Tags: codespaces
  */
@@ -82542,8 +82275,9 @@ export async function codespacesGetOrgPublicKey<FetcherData>(
 /**
  * Get an organization secret
  * Gets an organization development environment secret without revealing its encrypted value.
- * You must authenticate using
- * an access token with the `admin:org` scope to use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-secret}
  * Tags: codespaces
  */
@@ -82572,9 +82306,8 @@ export async function codespacesGetOrgSecret<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access
- * token with the `admin:org` scope to use this endpoint.
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret}
  * Tags: codespaces
  */
@@ -82615,8 +82348,10 @@ export async function codespacesCreateOrUpdateOrgSecret<FetcherData>(
 }
 /**
  * Delete an organization secret
- * Deletes an organization development environment secret using the secret name. You must authenticate using an access
- * token with the `admin:org` scope to use this endpoint.
+ * Deletes an organization development environment secret using the secret name.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#delete-an-organization-secret}
  * Tags: codespaces
  */
@@ -82638,8 +82373,11 @@ export async function codespacesDeleteOrgSecret<FetcherData>(
 }
 /**
  * List selected repositories for an organization secret
- * Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to
- * `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * Lists all repositories that have been selected when the `visibility`
+ * for repository access to a secret is set to
+ * `selected`.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#list-selected-repositories-for-an-organization-secret}
  * Tags: codespaces
  */
@@ -82679,10 +82417,14 @@ export async function codespacesListSelectedReposForOrgSecret<FetcherData>(
 }
 /**
  * Set selected repositories for an organization secret
- * Replaces all repositories for an organization development environment secret when the `visibility` for repository access
- * is set to `selected`. The visibility is set when you [Create or update an organization
- * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret). You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * Replaces all repositories for an organization development environment secret when the `visibility`
+ * for repository access
+ * is set to `selected`. The visibility is set when you [Create
+ * or update an organization
+ * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret).
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#set-selected-repositories-for-an-organization-secret}
  * Tags: codespaces
  */
@@ -82713,8 +82455,9 @@ export async function codespacesSetSelectedReposForOrgSecret<FetcherData>(
  * Add selected repository to an organization secret
  * Adds a repository to an organization development environment secret when the `visibility` for repository access is set
  * to `selected`. The visibility is set when you [Create or update an organization
- * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret). You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret).
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#add-selected-repository-to-an-organization-secret}
  * Tags: codespaces
  */
@@ -82737,10 +82480,14 @@ export async function codespacesAddSelectedRepoToOrgSecret<FetcherData>(
 }
 /**
  * Remove selected repository from an organization secret
- * Removes a repository from an organization development environment secret when the `visibility` for repository access is
- * set to `selected`. The visibility is set when you [Create or update an organization
- * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret). You must
- * authenticate using an access token with the `admin:org` scope to use this endpoint.
+ * Removes a repository from an organization development environment secret when the `visibility`
+ * for repository access is
+ * set to `selected`. The visibility is set when you [Create
+ * or update an organization
+ * secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret).
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#remove-selected-repository-from-an-organization-secret}
  * Tags: codespaces
  */
@@ -82762,21 +82509,22 @@ export async function codespacesRemoveSelectedRepoFromOrgSecret<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Get Copilot Business seat information and settings for an organization
+ * Get Copilot seat information and settings for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Gets information about an organization's Copilot Business
+ * Gets information about an organization's Copilot
  * subscription, including seat breakdown
  * and code matching policies. To configure these settings, go to your
  * organization's settings on GitHub.com.
- * For more information, see "[Managing policies for Copilot Business in your
- * organization](https://docs.github.com/copilot/managing-copilot-business/managing-policies-for-copilot-business-in-your-organization)".
+ * For more information, see "[Managing policies for Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-copilot-business-in-your-organization)".
  *
  * Only
- * organization owners can configure and view details about the organization's Copilot Business subscription. You
- * must
- * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#get-copilot-business-seat-information-and-settings-for-an-organization}
+ * organization owners can configure and view details about the organization's Copilot Business subscription.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-information-and-settings-for-an-organization}
  * Tags: copilot
  */
 export async function copilotGetCopilotOrganizationDetails<FetcherData>(
@@ -82795,17 +82543,19 @@ export async function copilotGetCopilotOrganizationDetails<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * List all Copilot Business seat assignments for an organization
+ * List all Copilot seat assignments for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Lists all Copilot Business seat assignments for an
- * organization that are currently being billed (either active or pending cancellation at the start of the next billing
- * cycle).
+ * Lists all Copilot seat assignments for an organization
+ * that are currently being billed (either active or pending cancellation at the start of the next billing cycle).
  *
- * Only organization owners can configure and view details about the organization's Copilot Business subscription.
- * You must
- * authenticate using an access token with the `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#list-all-copilot-business-seat-assignments-for-an-organization}
+ * Only
+ * organization owners can configure and view details about the organization's Copilot Business or Enterprise
+ * subscription.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this
+ * endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#list-all-copilot-seat-assignments-for-an-organization}
  * Tags: copilot
  */
 export async function copilotListCopilotSeats<FetcherData>(
@@ -82818,7 +82568,7 @@ export async function copilotListCopilotSeats<FetcherData>(
   opts?: FetcherData,
 ): Promise<{
   /**
-   * Total number of Copilot For Business seats for the organization currently being billed.
+   * Total number of Copilot seats for the organization currently being billed.
    */
   total_seats?: number;
   seats?: CopilotSeatDetails[];
@@ -82841,30 +82591,34 @@ export async function copilotListCopilotSeats<FetcherData>(
   });
 }
 /**
- * Add teams to the Copilot Business subscription for an organization
+ * Add teams to the Copilot subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- *  Purchases a GitHub Copilot Business seat for all users
- * within each specified team.
- *  The organization will be billed accordingly. For more information about Copilot Business
- * pricing, see "[Pricing for GitHub Copilot
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)".
- * Only organization owners can configure GitHub Copilot in their organization. You must
- *  authenticate using an access
- * token with the `manage_billing:copilot` scope to use this endpoint.
+ * Purchases a GitHub Copilot seat for all users within each
+ * specified team.
+ * The organization will be billed accordingly. For more information about Copilot pricing, see "[Pricing
+ * for GitHub
+ * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
  *
- *  In order for an admin to use this endpoint, the
- * organization must have a Copilot Business subscription and a configured suggestion matching policy.
- *  For more
- * information about setting up a Copilot Business subscription, see "[Setting up a Copilot Business subscription for your
- * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise#setting-up-a-copilot-business-subscription-for-your-organization)".
- * For more information about setting a suggestion matching policy, see "[Configuring suggestion matching policies for
- * GitHub Copilot in your
- * organization](https://docs.github.com/copilot/managing-copilot-business/managing-policies-for-copilot-business-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#add-teams-to-the-copilot-business-subscription-for-an-organization}
+ * Only
+ * organization owners can configure GitHub Copilot in their organization.
+ *
+ * In order for an admin to use this endpoint, the
+ * organization must have a Copilot Business or Enterprise subscription and a configured suggestion matching policy.
+ * For
+ * more information about setting up a Copilot subscription, see "[Setting up a Copilot subscription for your
+ * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise)".
+ * For
+ * more information about setting a suggestion matching policy, see "[Configuring suggestion matching policies for GitHub
+ * Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-github-copilot-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#add-teams-to-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
-export async function copilotAddCopilotForBusinessSeatsForTeams<FetcherData>(
+export async function copilotAddCopilotSeatsForTeams<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82889,28 +82643,29 @@ export async function copilotAddCopilotForBusinessSeatsForTeams<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Remove teams from the Copilot Business subscription for an organization
+ * Remove teams from the Copilot subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Cancels the Copilot Business seat assignment for all
- * members of each team specified.
- * This will cause the members of the specified team(s) to lose access to GitHub Copilot at
- * the end of the current billing cycle, and the organization will not be billed further for those users.
+ * Cancels the Copilot seat assignment for all members of
+ * each team specified.
+ * This will cause the members of the specified team(s) to lose access to GitHub Copilot at the end of
+ * the current billing cycle, and the organization will not be billed further for those users.
  *
- * For more
- * information about Copilot Business pricing, see "[Pricing for GitHub Copilot
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)".
+ * For more information about
+ * Copilot pricing, see "[Pricing for GitHub
+ * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
  *
  * For
- * more information about disabling access to Copilot Business, see "[Revoking access to GitHub Copilot for specific users
- * in your
- * organization](https://docs.github.com/copilot/managing-copilot-business/managing-access-for-copilot-business-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
+ * more information about disabling access to Copilot Business or Enterprise, see "[Revoking access to GitHub Copilot for
+ * specific users in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-access-for-copilot-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
  *
  * Only
- * organization owners can configure GitHub Copilot in their organization. You must
- * authenticate using an access token with
- * the `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#remove-teams-from-the-copilot-business-subscription-for-an-organization}
+ * organization owners can configure GitHub Copilot in their organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#remove-teams-from-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
 export async function copilotCancelCopilotSeatAssignmentForTeams<FetcherData>(
@@ -82938,33 +82693,34 @@ export async function copilotCancelCopilotSeatAssignmentForTeams<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Add users to the Copilot Business subscription for an organization
+ * Add users to the Copilot subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Purchases a GitHub Copilot Business seat for each user
+ * Purchases a GitHub Copilot seat for each user
  * specified.
- * The organization will be billed accordingly. For more information about Copilot Business pricing, see
- * "[Pricing for GitHub Copilot
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)".
+ * The organization will be billed accordingly. For more information about Copilot pricing, see "[Pricing for
+ * GitHub
+ * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
  *
  * Only
- * organization owners can configure GitHub Copilot in their organization. You must
- * authenticate using an access token with
- * the `manage_billing:copilot` scope to use this endpoint.
+ * organization owners can configure GitHub Copilot in their organization.
  *
- * In order for an admin to use this endpoint, the organization
- * must have a Copilot Business subscription and a configured suggestion matching policy.
- * For more information about
- * setting up a Copilot Business subscription, see "[Setting up a Copilot Business subscription for your
- * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise#setting-up-a-copilot-business-subscription-for-your-organization)".
+ * In order for an admin to use this endpoint, the
+ * organization must have a Copilot Business or Enterprise subscription and a configured suggestion matching policy.
+ * For
+ * more information about setting up a Copilot subscription, see "[Setting up a Copilot subscription for your
+ * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise)".
  * For
  * more information about setting a suggestion matching policy, see "[Configuring suggestion matching policies for GitHub
  * Copilot in your
- * organization](https://docs.github.com/copilot/managing-copilot-business/managing-policies-for-copilot-business-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#add-users-to-the-copilot-business-subscription-for-an-organization}
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-github-copilot-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#add-users-to-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
-export async function copilotAddCopilotForBusinessSeatsForUsers<FetcherData>(
+export async function copilotAddCopilotSeatsForUsers<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82989,28 +82745,29 @@ export async function copilotAddCopilotForBusinessSeatsForUsers<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * Remove users from the Copilot Business subscription for an organization
+ * Remove users from the Copilot subscription for an organization
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Cancels the Copilot Business seat assignment for each user
+ * Cancels the Copilot seat assignment for each user
  * specified.
  * This will cause the specified users to lose access to GitHub Copilot at the end of the current billing cycle,
  * and the organization will not be billed further for those users.
  *
- * For more information about Copilot Business pricing,
- * see "[Pricing for GitHub Copilot
- * Business](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#pricing-for-github-copilot-business)"
+ * For more information about Copilot pricing, see
+ * "[Pricing for GitHub
+ * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
  *
  * For
- * more information about disabling access to Copilot Business, see "[Revoking access to GitHub Copilot for specific users
- * in your
- * organization](https://docs.github.com/copilot/managing-copilot-business/managing-access-for-copilot-business-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
+ * more information about disabling access to Copilot Business or Enterprise, see "[Revoking access to GitHub Copilot for
+ * specific users in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-access-for-copilot-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
  *
  * Only
- * organization owners can configure GitHub Copilot in their organization. You must
- * authenticate using an access token with
- * the `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#remove-users-from-the-copilot-business-subscription-for-an-organization}
+ * organization owners can configure GitHub Copilot in their organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#remove-users-from-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
 export async function copilotCancelCopilotSeatAssignmentForUsers<FetcherData>(
@@ -83041,14 +82798,12 @@ export async function copilotCancelCopilotSeatAssignmentForUsers<FetcherData>(
  * List Dependabot alerts for an organization
  * Lists Dependabot alerts for an organization.
  *
- * To use this endpoint, you must be an owner or security manager for the
- * organization, and you must use an access token with the `repo` scope or `security_events` scope.
+ * The authenticated user must be an owner or security manager for the
+ * organization to use this endpoint.
  *
- * For public
- * repositories, you may instead use the `public_repo` scope.
- *
- * GitHub Apps must have **Dependabot alerts** read permission
- * to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `security_events`
+ * scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo`
+ * scope instead.
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization}
  * Tags: dependabot
  */
@@ -83101,9 +82856,11 @@ export async function dependabotListAlertsForOrg<FetcherData>(
 }
 /**
  * List organization secrets
- * Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an
- * access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets`
- * organization permission to use this endpoint.
+ * Lists all secrets available in an organization without revealing their
+ * encrypted values.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#list-organization-secrets}
  * Tags: dependabot
  */
@@ -83142,9 +82899,11 @@ export async function dependabotListOrgSecrets<FetcherData>(
 }
 /**
  * Get an organization public key
- * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update
- * secrets. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must
- * have the `dependabot_secrets` organization permission to use this endpoint.
+ * Gets your public key, which you need to encrypt secrets. You need to
+ * encrypt a secret before you can create or update
+ * secrets.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-an-organization-public-key}
  * Tags: dependabot
  */
@@ -83165,9 +82924,10 @@ export async function dependabotGetOrgPublicKey<FetcherData>(
 }
 /**
  * Get an organization secret
- * Gets a single organization secret without revealing its encrypted value. You must authenticate using an access token
- * with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission
- * to use this endpoint.
+ * Gets a single organization secret without revealing its encrypted value.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-an-organization-secret}
  * Tags: dependabot
  */
@@ -83198,11 +82958,8 @@ export async function dependabotGetOrgSecret<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access
- * token with the `admin:org` scope to use this endpoint. GitHub Apps must have the
- * `dependabot_secrets` organization
- * permission to use this endpoint.
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret}
  * Tags: dependabot
  */
@@ -83243,9 +83000,10 @@ export async function dependabotCreateOrUpdateOrgSecret<FetcherData>(
 }
 /**
  * Delete an organization secret
- * Deletes a secret in an organization using the secret name. You must authenticate using an access token with the
- * `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use
- * this endpoint.
+ * Deletes a secret in an organization using the secret name.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#delete-an-organization-secret}
  * Tags: dependabot
  */
@@ -83267,9 +83025,11 @@ export async function dependabotDeleteOrgSecret<FetcherData>(
 }
 /**
  * List selected repositories for an organization secret
- * Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to
- * `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps
- * must have the `dependabot_secrets` organization permission to use this endpoint.
+ * Lists all repositories that have been selected when the `visibility`
+ * for repository access to a secret is set to
+ * `selected`.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#list-selected-repositories-for-an-organization-secret}
  * Tags: dependabot
  */
@@ -83309,11 +83069,14 @@ export async function dependabotListSelectedReposForOrgSecret<FetcherData>(
 }
 /**
  * Set selected repositories for an organization secret
- * Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`.
- * The visibility is set when you [Create or update an organization
- * secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets`
- * organization permission to use this endpoint.
+ * Replaces all repositories for an organization secret when the `visibility`
+ * for repository access is set to `selected`.
+ * The visibility is set when you [Create
+ * or update an organization
+ * secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret).
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#set-selected-repositories-for-an-organization-secret}
  * Tags: dependabot
  */
@@ -83342,11 +83105,14 @@ export async function dependabotSetSelectedReposForOrgSecret<FetcherData>(
 }
 /**
  * Add selected repository to an organization secret
- * Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The
- * visibility is set when you [Create or update an organization
- * secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets`
- * organization permission to use this endpoint.
+ * Adds a repository to an organization secret when the `visibility` for
+ * repository access is set to `selected`. The
+ * visibility is set when you [Create or
+ * update an organization
+ * secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret).
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#add-selected-repository-to-an-organization-secret}
  * Tags: dependabot
  */
@@ -83369,11 +83135,14 @@ export async function dependabotAddSelectedRepoToOrgSecret<FetcherData>(
 }
 /**
  * Remove selected repository from an organization secret
- * Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The
- * visibility is set when you [Create or update an organization
- * secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate
- * using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets`
- * organization permission to use this endpoint.
+ * Removes a repository from an organization secret when the `visibility`
+ * for repository access is set to `selected`. The
+ * visibility is set when you [Create
+ * or update an organization
+ * secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret).
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#remove-selected-repository-from-an-organization-secret}
  * Tags: dependabot
  */
@@ -83398,8 +83167,9 @@ export async function dependabotRemoveSelectedRepoFromOrgSecret<FetcherData>(
  * Get list of conflicting packages during Docker migration for organization
  * Lists all packages that are in a specific organization, are readable by the requesting user, and that encountered a
  * conflict during a Docker migration.
- * To use this endpoint, you must authenticate using an access token with the
- * `read:packages` scope.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:packages`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-list-of-conflicting-packages-during-docker-migration-for-organization}
  * Tags: packages
  */
@@ -83664,8 +83434,8 @@ export async function orgsDeleteWebhook<FetcherData>(
  * Returns the webhook configuration for an organization. To get more information about the webhook, including the `active`
  * state and `events`, use "[Get an organization webhook ](/rest/orgs/webhooks#get-an-organization-webhook)."
  *
- * Access
- * tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org_hook` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#get-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
@@ -83691,8 +83461,8 @@ export async function orgsGetWebhookConfigForOrg<FetcherData>(
  * `active` state and `events`, use "[Update an organization webhook
  * ](/rest/orgs/webhooks#update-an-organization-webhook)."
  *
- * Access tokens must have the `admin:org_hook` scope, and GitHub
- * Apps must have the `organization_hooks:write` permission.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `admin:org_hook` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#update-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
@@ -83848,8 +83618,14 @@ export async function appsGetOrgInstallation<FetcherData>(
 }
 /**
  * List app installations for an organization
- * Lists all GitHub Apps in an organization. The installation count includes all GitHub Apps installed on repositories in
- * the organization. You must be an organization owner with `admin:read` scope to use this endpoint.
+ * Lists all GitHub Apps in an organization. The installation count includes
+ * all GitHub Apps installed on repositories in
+ * the organization.
+ *
+ * The authenticated user must be an organization owner to use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:read` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-app-installations-for-an-organization}
  * Tags: orgs
  */
@@ -84245,8 +84021,8 @@ export async function orgsRemoveMember<FetcherData>(
  * List codespaces for a user in organization
  * Lists the codespaces that a member of an organization has for repositories in that organization.
  *
- * You must authenticate
- * using an access token with the `admin:org` scope or the `Organization codespaces` read permission to use this endpoint.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-a-user-in-organization}
  * Tags: codespaces
  */
@@ -84285,12 +84061,8 @@ export async function codespacesGetCodespacesForUserInOrg<FetcherData>(
  * Delete a codespace from the organization
  * Deletes a user's codespace.
  *
- * To use this endpoint you must authenticate using one of the following methods:
- *
- * - An access
- * token with the `admin:org` scope
- * - An access token with write permissions for `Codespaces` on the specific repository
- * and write permissions for `Organization codespaces`
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#delete-a-codespace-from-the-organization}
  * Tags: codespaces
  */
@@ -84315,12 +84087,8 @@ export async function codespacesDeleteFromOrganization<FetcherData>(
  * Stop a codespace for an organization user
  * Stops a user's codespace.
  *
- * To use this endpoint you must authenticate using one of the following methods:
- *
- * - An access
- * token with the `admin:org` scope
- * - An access token with write permissions for `Codespaces lifecycle admin` on the
- * specific repository and write permissions for `Organization codespaces`
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#stop-a-codespace-for-an-organization-user}
  * Tags: codespaces
  */
@@ -84344,16 +84112,18 @@ export async function codespacesStopInOrganization<FetcherData>(
   });
 }
 /**
- * Get Copilot Business seat assignment details for a user
+ * Get Copilot seat assignment details for a user
  * **Note**: This endpoint is in beta and is subject to change.
  *
- * Gets the GitHub Copilot Business seat assignment details
- * for a member of an organization who currently has access to GitHub Copilot.
+ * Gets the GitHub Copilot seat assignment details for a
+ * member of an organization who currently has access to GitHub Copilot.
  *
- * Organization owners can view GitHub Copilot
- * seat assignment details for members in their organization. You must authenticate using an access token with the
+ * Organization owners can view GitHub Copilot seat
+ * assignment details for members in their organization.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
  * `manage_billing:copilot` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-business#get-copilot-business-seat-assignment-details-for-a-user}
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-assignment-details-for-a-user}
  * Tags: copilot
  */
 export async function copilotGetCopilotSeatDetailsForUser<FetcherData>(
@@ -84721,11 +84491,8 @@ export async function migrationsListReposForOrg<FetcherData>(
  * - A user, or a user
  * on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
  *
- * The
- * authenticated user needs an access token with `admin:org` scope or a fine-grained personal access token with the
- * `organization_custom_roles:read` permission to use this endpoint.
- * GitHub Apps must have the
- * `organization_custom_org_roles:read` organization permission to use this endpoint.
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-organization-fine-grained-permissions-for-an-organization}
  * Tags: orgs
  */
@@ -84746,23 +84513,19 @@ export async function orgsListOrganizationFineGrainedPermissions<FetcherData>(
 }
 /**
  * Get all organization roles for an organization
- * Lists the organization roles available in this organization.
+ * Lists the organization roles available in this organization. For more information on organization roles, see "[Managing
+ * people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
  *
- * To use this endpoint, the authenticated user must be one
- * of:
+ * To
+ * use this endpoint, the authenticated user must be one of:
  *
  * - An administrator for the organization.
- * - A user, or a user on a team, with the fine-grained permissions of
- * `read_organization_custom_org_role` in the organization.
+ * - A user, or a user
+ * on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
  *
- * The authenticated user needs an access token with `admin:org`
- * scope or a fine-grained personal access token with the `organization_custom_roles:read` permission to use this
- * endpoint.
- * GitHub Apps must have the `organization_custom_org_roles:read` organization permission to use this
- * endpoint.
- *
- * For more information on organization roles, see "[Managing people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#get-all-organization-roles-for-an-organization}
  * Tags: orgs
  */
@@ -84801,23 +84564,19 @@ export async function orgsListOrgRoles<FetcherData>(
 /**
  * Create a custom organization role
  * Creates a custom organization role that can be assigned to users and teams, granting them specific permissions over the
- * organization.
+ * organization. For more information on custom organization roles, see "[Managing people's access to your organization
+ * with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
  *
- * To use this endpoint, the authenticated user must be one of:
+ * To
+ * use this endpoint, the authenticated user must be one of:
  *
  * - An administrator for the organization.
- * -
- * A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the
- * organization.
+ * - A user, or a user
+ * on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
  *
- * The authenticated user needs an access token with `admin:org` scope or a fine-grained personal access
- * token with the `organization_custom_roles:write` permission to use this endpoint.
- * GitHub Apps must have the
- * `organization_custom_org_roles:write` organization permission to use this endpoint.
- *
- * For more information on custom
- * organization roles, see "[Managing people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#create-a-custom-organization-role}
  * Tags: orgs
  */
@@ -84855,16 +84614,15 @@ export async function orgsCreateCustomOrganizationRole<FetcherData>(
 }
 /**
  * Remove all organization roles for a team
- * Removes all assigned organization roles from a team.
- *
- * To use this endpoint, you must be an administrator for the
- * organization, and you must use an access token with the `admin:org` scope.
- * GitHub Apps must have the `members:write`
- * organization permission to use this endpoint.
- *
- * For more information on organization roles, see "[Managing people's
+ * Removes all assigned organization roles from a team. For more information on organization roles, see "[Managing people's
  * access to your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * The
+ * authenticated user must be an administrator for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-team}
  * Tags: orgs
  */
@@ -84886,15 +84644,15 @@ export async function orgsRevokeAllOrgRolesTeam<FetcherData>(
 }
 /**
  * Assign an organization role to a team
- * Assigns an organization role to a team in an organization.
- * To use this endpoint, you must be an administrator for the
- * organization, and you must use an access token with the `admin:org` scope.
- * GitHub Apps must have the `members`
- * organization read-write permission to use this endpoint.
- *
- * For more information on organization roles, see "[Managing
+ * Assigns an organization role to a team in an organization. For more information on organization roles, see "[Managing
  * people's access to your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * The
+ * authenticated user must be an administrator for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-team}
  * Tags: orgs
  */
@@ -84917,16 +84675,15 @@ export async function orgsAssignTeamToOrgRole<FetcherData>(
 }
 /**
  * Remove an organization role from a team
- * Removes an organization role from a team.
- *
- * To use this endpoint, you must be an administrator for the organization, and
- * you must use an access token with the `admin:org` scope.
- * GitHub Apps must have the `members:write` organization
- * permission to use this endpoint.
- *
- * For more information on organization roles, see "[Managing people's access to your
- * organization with
+ * Removes an organization role from a team. For more information on organization roles, see "[Managing people's access to
+ * your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * The
+ * authenticated user must be an administrator for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-team}
  * Tags: orgs
  */
@@ -84949,16 +84706,15 @@ export async function orgsRevokeOrgRoleTeam<FetcherData>(
 }
 /**
  * Remove all organization roles for a user
- * Revokes all assigned organization roles from a user.
- *
- * To use this endpoint, you must be an administrator for the
- * organization, and you must use an access token with the `admin:org` scope.
- * GitHub Apps must have the `members:write`
- * organization permission to use this endpoint.
- *
- * For more information on organization roles, see "[Managing people's
+ * Revokes all assigned organization roles from a user. For more information on organization roles, see "[Managing people's
  * access to your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * The
+ * authenticated user must be an administrator for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-user}
  * Tags: orgs
  */
@@ -84980,15 +84736,15 @@ export async function orgsRevokeAllOrgRolesUser<FetcherData>(
 }
 /**
  * Assign an organization role to a user
- * Assigns an organization role to a member of an organization.
- * To use this endpoint, you must be an administrator for the
- * organization, and you must use an access token with the `admin:org` scope.
- * GitHub Apps must have the `members`
- * organization read-write permission to use this endpoint.
- *
- * For more information on organization roles, see "[Managing
+ * Assigns an organization role to a member of an organization. For more information on organization roles, see "[Managing
  * people's access to your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * The
+ * authenticated user must be an administrator for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-user}
  * Tags: orgs
  */
@@ -85011,16 +84767,15 @@ export async function orgsAssignUserToOrgRole<FetcherData>(
 }
 /**
  * Remove an organization role from a user
- * Remove an organization role from a user.
- *
- * To use this endpoint, you must be an administrator for the organization, and
- * you must use an access token with the `admin:org` scope.
- * GitHub Apps must have the `members:write` organization
- * permission to use this endpoint.
- *
- * For more information on organization roles, see "[Managing people's access to your
- * organization with
+ * Remove an organization role from a user. For more information on organization roles, see "[Managing people's access to
+ * your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * The
+ * authenticated user must be an administrator for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-user}
  * Tags: orgs
  */
@@ -85043,23 +84798,19 @@ export async function orgsRevokeOrgRoleUser<FetcherData>(
 }
 /**
  * Get an organization role
- * Gets an organization role that is available to this organization.
+ * Gets an organization role that is available to this organization. For more information on organization roles, see
+ * "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
  *
- * To use this endpoint, the authenticated user must be
- * one of:
+ * To
+ * use this endpoint, the authenticated user must be one of:
  *
  * - An administrator for the organization.
- * - A user, or a user on a team, with the fine-grained permissions of
- * `read_organization_custom_org_role` in the organization.
+ * - A user, or a user
+ * on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
  *
- * The authenticated user needs an access token with `admin:org`
- * scope or a fine-grained personal access token with the `organization_custom_roles:read` permission to use this
- * endpoint.
- * GitHub Apps must have the `organization_custom_org_roles:read` organization permission to use this
- * endpoint.
- *
- * For more information on organization roles, see "[Managing people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#get-an-organization-role}
  * Tags: orgs
  */
@@ -85083,24 +84834,20 @@ export async function orgsGetOrgRole<FetcherData>(
 }
 /**
  * Update a custom organization role
- * Updates an existing custom organization role. Permission changes will apply to all assignees.
+ * Updates an existing custom organization role. Permission changes will apply to all assignees. For more information on
+ * custom organization roles, see "[Managing people's access to your organization with
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
  *
- * To use this endpoint, the
- * authenticated user must be one of:
+ *
+ * To
+ * use this endpoint, the authenticated user must be one of:
  *
  * - An administrator for the organization.
- * - A user, or a user on a team, with the
- * fine-grained permissions of `write_organization_custom_org_role` in the organization.
+ * - A user, or a user
+ * on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
  *
- * The authenticated user needs an
- * access token with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write`
- * permission to use this endpoint.
- * GitHub Apps must have the `organization_custom_org_roles:write` organization permission
- * to use this endpoint.
- *
- * For more information on custom organization roles, see "[Managing people's access to your
- * organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#update-a-custom-organization-role}
  * Tags: orgs
  */
@@ -85139,23 +84886,19 @@ export async function orgsPatchCustomOrganizationRole<FetcherData>(
 }
 /**
  * Delete a custom organization role.
- * Deletes a custom organization role.
- *
- * To use this endpoint, the authenticated user must be one of:
- *
- * - An administrator
- * for the organization.
- * - A user, or a user on a team, with the fine-grained permissions of
- * `write_organization_custom_org_role` in the organization.
- *
- * The authenticated user needs an access token with `admin:org`
- * scope or a fine-grained personal access token with the `organization_custom_roles:write` permission to use this
- * endpoint.
- * GitHub Apps must have the `organization_custom_org_roles:write` organization permission to use this
- * endpoint.
- *
- * For more information on custom organization roles, see "[Managing people's access to your organization with
+ * Deletes a custom organization role. For more information on custom organization roles, see "[Managing people's access to
+ * your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * To
+ * use this endpoint, the authenticated user must be one of:
+ *
+ * - An administrator for the organization.
+ * - A user, or a user
+ * on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#delete-a-custom-organization-role}
  * Tags: orgs
  */
@@ -85177,16 +84920,15 @@ export async function orgsDeleteCustomOrganizationRole<FetcherData>(
 }
 /**
  * List teams that are assigned to an organization role
- * Lists the teams that are assigned to an organization role.
- *
- * To use this endpoint, you must be an administrator for the
- * organization, and you must use an access token with the `admin:org` scope.
- * GitHub Apps must have the `members`
- * organization read permission to use this endpoint.
- *
- * For more information on organization roles, see "[Managing people's
- * access to your organization with
+ * Lists the teams that are assigned to an organization role. For more information on organization roles, see "[Managing
+ * people's access to your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * To
+ * use this endpoint, you must be an administrator for the organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-teams-that-are-assigned-to-an-organization-role}
  * Tags: orgs
  */
@@ -85211,16 +84953,15 @@ export async function orgsListOrgRoleTeams<FetcherData>(
 }
 /**
  * List users that are assigned to an organization role
- * Lists organization members that are assigned to an organization role.
- *
- * To use this endpoint, you must be an
- * administrator for the organization, and you must use an access token with the `admin:org` scope.
- * GitHub Apps must have
- * the `members` organization read permission to use this endpoint.
- *
- * For more information on organization roles, see
+ * Lists organization members that are assigned to an organization role. For more information on organization roles, see
  * "[Managing people's access to your organization with
  * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ *
+ * To
+ * use this endpoint, you must be an administrator for the organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-users-that-are-assigned-to-an-organization-role}
  * Tags: orgs
  */
@@ -85329,10 +85070,10 @@ export async function orgsRemoveOutsideCollaborator<FetcherData>(
  * List packages for an organization
  * Lists packages in an organization readable by the user.
  *
- * To use this endpoint, you must authenticate using an access
- * token with the `read:packages` scope. If the `package_type` belongs to a registry that only supports repository-scoped
- * permissions, your token must also include the `repo` scope. For the list of GitHub Packages registries that only support
- * repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
+ * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
+ * permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-an-organization}
  * Tags: packages
@@ -85369,10 +85110,10 @@ export async function packagesListPackagesForOrganization<FetcherData>(
  * Get a package for an organization
  * Gets a specific package in an organization.
  *
- * To use this endpoint, you must authenticate using an access token with the
- * `read:packages` scope. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped
- * permissions, your token must also include the `repo` scope. For the list of GitHub Packages registries that only support
- * repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
+ * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
+ * permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-an-organization}
  * Tags: packages
@@ -85407,17 +85148,17 @@ export async function packagesGetPackageForOrganization<FetcherData>(
  * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more
  * than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
  *
- * To use this endpoint, you must
- * have admin permissions in the organization and authenticate using an access token with the `read:packages` and
- * `delete:packages` scopes. In addition:
- * - If the `package_type` belongs to a GitHub Packages registry that only supports
- * repository-scoped permissions, your token must also include the `repo` scope. For the list of these registries, see
- * "[About permissions for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package you want to delete. For the list of these registries, see "[About permissions for GitHub
+ * The authenticated user must have
+ * admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry
+ * that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list
+ * of these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-an-organization}
  * Tags: packages
  */
@@ -85456,16 +85197,16 @@ export async function packagesDeletePackageForOrg<FetcherData>(
  * In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's
  * namespace first.
  *
- * To use this endpoint, you must have admin permissions in the organization and authenticate using an
- * access token with the `read:packages` and `write:packages` scopes. In addition:
- * - If the `package_type` belongs to a
- * GitHub Packages registry that only supports repository-scoped permissions, your token must also include the `repo`
- * scope. For the list of these registries, see "[About permissions for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package you want to restore. For the list of these registries, see "[About permissions for GitHub
+ * The authenticated user must have admin permissions in the organization to use this endpoint. If the
+ * `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must
+ * also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-an-organization}
  * Tags: packages
  */
@@ -85498,9 +85239,9 @@ export async function packagesRestorePackageForOrg<FetcherData>(
  * List package versions for a package owned by an organization
  * Lists package versions for a package owned by an organization.
  *
- * If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, your token must also include the `repo` scope. For the list
- * of GitHub Packages registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint if the `package_type` belongs to a GitHub Packages registry that only
+ * supports repository-scoped permissions. For the list of these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-an-organization}
  * Tags: packages
@@ -85542,10 +85283,10 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
  * Get a package version for an organization
  * Gets a specific package version in an organization.
  *
- * You must authenticate using an access token with the
- * `read:packages` scope. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped
- * permissions, your token must also include the `repo` scope. For the list of GitHub Packages registries that only support
- * repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
+ * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
+ * permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-an-organization}
  * Tags: packages
@@ -85582,17 +85323,16 @@ export async function packagesGetPackageVersionForOrganization<FetcherData>(
  * 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further
  * assistance.
  *
- * To use this endpoint, you must have admin permissions in the organization and authenticate using an access
- * token with the `read:packages` and `delete:packages` scopes. In addition:
- * - If the `package_type` belongs to a GitHub
- * Packages registry that only supports repository-scoped permissions, your token must also include the `repo` scope. For
- * the list of these registries, see "[About permissions for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package whose version you want to delete. For the list of these registries, see "[About permissions
- * for GitHub
+ * The authenticated user must have admin permissions in the organization to use this endpoint. If the
+ * `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must
+ * also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-package-version-for-an-organization}
  * Tags: packages
  */
@@ -85632,17 +85372,17 @@ export async function packagesDeletePackageVersionForOrg<FetcherData>(
  * restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the
  * deleted package's namespace first.
  *
- * To use this endpoint, you must have admin permissions in the organization and
- * authenticate using an access token with the `read:packages` and `write:packages` scopes. In addition:
- * - If the
- * `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions, your token must
- * also include the `repo` scope. For the list of these registries, see "[About permissions for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package whose version you want to restore. For the list of these registries, see "[About permissions
- * for GitHub
+ * The authenticated user must have admin permissions in the organization to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the
+ * authenticated user must also have admin permissions to the package. For the list of these registries, see "[About
+ * permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-package-version-for-an-organization}
  * Tags: packages
  */
@@ -85672,12 +85412,10 @@ export async function packagesRestorePackageVersionForOrg<FetcherData>(
 }
 /**
  * List requests to access organization resources with fine-grained personal access tokens
- * Lists requests from organization members to access organization resources with a fine-grained personal access token.
- * Only GitHub Apps can call this API,
- * using the `organization_personal_access_token_requests: read` permission.
+ * Lists requests from organization members to access organization resources with a fine-grained personal access
+ * token.
  *
- * **Note**:
- * Fine-grained PATs are in public beta. Related APIs, events, and functionality are subject to change.
+ * Only GitHub Apps can use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-requests-to-access-organization-resources-with-fine-grained-personal-access-tokens}
  * Tags: orgs
  */
@@ -85718,13 +85456,10 @@ export async function orgsListPatGrantRequests<FetcherData>(
 }
 /**
  * Review requests to access organization resources with fine-grained personal access tokens
- * Approves or denies multiple pending requests to access organization resources via a fine-grained personal access token.
- * Only GitHub Apps can call this API,
- * using the `organization_personal_access_token_requests: write`
- * permission.
+ * Approves or denies multiple pending requests to access organization resources via a fine-grained personal access
+ * token.
  *
- * **Note**: Fine-grained PATs are in public beta. Related APIs, events, and functionality are subject to
- * change.
+ * Only GitHub Apps can use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#review-requests-to-access-organization-resources-with-fine-grained-personal-access-tokens}
  * Tags: orgs
  */
@@ -85760,12 +85495,10 @@ export async function orgsReviewPatGrantRequestsInBulk<FetcherData>(
 }
 /**
  * Review a request to access organization resources with a fine-grained personal access token
- * Approves or denies a pending request to access organization resources via a fine-grained personal access token. Only
- * GitHub Apps can call this API,
- * using the `organization_personal_access_token_requests: write` permission.
+ * Approves or denies a pending request to access organization resources via a fine-grained personal access token.
  *
- * **Note**:
- * Fine-grained PATs are in public beta. Related APIs, events, and functionality are subject to change.
+ * Only
+ * GitHub Apps can use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#review-a-request-to-access-organization-resources-with-a-fine-grained-personal-access-token}
  * Tags: orgs
  */
@@ -85798,12 +85531,10 @@ export async function orgsReviewPatGrantRequest<FetcherData>(
 }
 /**
  * List repositories requested to be accessed by a fine-grained personal access token
- * Lists the repositories a fine-grained personal access token request is requesting access to. Only GitHub Apps can call
- * this API,
- * using the `organization_personal_access_token_requests: read` permission.
+ * Lists the repositories a fine-grained personal access token request is requesting access to.
  *
- * **Note**: Fine-grained PATs are in
- * public beta. Related APIs, events, and functionality are subject to change.
+ * Only GitHub Apps can use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-repositories-requested-to-be-accessed-by-a-fine-grained-personal-access-token}
  * Tags: orgs
  */
@@ -85832,12 +85563,10 @@ export async function orgsListPatGrantRequestRepositories<FetcherData>(
 }
 /**
  * List fine-grained personal access tokens with access to organization resources
- * Lists approved fine-grained personal access tokens owned by organization members that can access organization resources.
- * Only GitHub Apps can call this API,
- * using the `organization_personal_access_tokens: read` permission.
+ * Lists approved fine-grained personal access tokens owned by organization members that can access organization
+ * resources.
  *
- * **Note**:
- * Fine-grained PATs are in public beta. Related APIs, events, and functionality are subject to change.
+ * Only GitHub Apps can use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-fine-grained-personal-access-tokens-with-access-to-organization-resources}
  * Tags: orgs
  */
@@ -85879,12 +85608,9 @@ export async function orgsListPatGrants<FetcherData>(
 /**
  * Update the access to organization resources via fine-grained personal access tokens
  * Updates the access organization members have to organization resources via fine-grained personal access tokens. Limited
- * to revoking a token's existing access. Only GitHub Apps can call this API,
- * using the
- * `organization_personal_access_tokens: write` permission.
+ * to revoking a token's existing access.
  *
- * **Note**: Fine-grained PATs are in public beta. Related APIs,
- * events, and functionality are subject to change.
+ * Only GitHub Apps can use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#update-the-access-to-organization-resources-via-fine-grained-personal-access-tokens}
  * Tags: orgs
  */
@@ -85917,12 +85643,10 @@ export async function orgsUpdatePatAccesses<FetcherData>(
 /**
  * Update the access a fine-grained personal access token has to organization resources
  * Updates the access an organization member has to organization resources via a fine-grained personal access token.
- * Limited to revoking the token's existing access. Limited to revoking a token's existing access. Only GitHub Apps can
- * call this API,
- * using the `organization_personal_access_tokens: write` permission.
+ * Limited to revoking the token's existing access. Limited to revoking a token's existing access.
  *
- * **Note**: Fine-grained PATs are in
- * public beta. Related APIs, events, and functionality are subject to change.
+ * Only GitHub Apps can
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#update-the-access-a-fine-grained-personal-access-token-has-to-organization-resources}
  * Tags: orgs
  */
@@ -85951,12 +85675,9 @@ export async function orgsUpdatePatAccess<FetcherData>(
 }
 /**
  * List repositories a fine-grained personal access token has access to
- * Lists the repositories a fine-grained personal access token has access to. Only GitHub Apps can call this API,
- * using the
- * `organization_personal_access_tokens: read` permission.
+ * Lists the repositories a fine-grained personal access token has access to.
  *
- * **Note**: Fine-grained PATs are in public beta. Related APIs,
- * events, and functionality are subject to change.
+ * Only GitHub Apps can use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-repositories-a-fine-grained-personal-access-token-has-access-to}
  * Tags: orgs
  */
@@ -86051,9 +85772,6 @@ export async function projectsCreateForOrg<FetcherData>(
  * Get all custom properties for an organization
  * Gets all custom properties defined for an organization.
  * Organization members can read these properties.
- *
- * GitHub Apps
- * must have the `organization_custom_properties:read` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization}
  * Tags: orgs
  */
@@ -86081,9 +85799,6 @@ export async function orgsGetAllCustomProperties<FetcherData>(
  *   - An administrator for the organization.
  *   - A user, or a user on a team, with the
  * fine-grained permission of `custom_properties_org_definitions_manager` in the organization.
- *
- * GitHub Apps must have the
- * `organization_custom_properties:admin` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization}
  * Tags: orgs
  */
@@ -86113,9 +85828,6 @@ export async function orgsCreateOrUpdateCustomProperties<FetcherData>(
  * Get a custom property for an organization
  * Gets a custom property that is defined for an organization.
  * Organization members can read these properties.
- *
- * GitHub Apps
- * must have the `organization_custom_properties:read` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#get-a-custom-property-for-an-organization}
  * Tags: orgs
  */
@@ -86144,9 +85856,6 @@ export async function orgsGetCustomProperty<FetcherData>(
  * - An administrator for the organization.
  * - A user, or a user on a team, with the
  * fine-grained permission of `custom_properties_org_definitions_manager` in the organization.
- *
- * GitHub Apps must have the
- * `organization_custom_properties:admin` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization}
  * Tags: orgs
  */
@@ -86175,7 +85884,8 @@ export async function orgsCreateOrUpdateCustomProperty<FetcherData>(
      */
     description?: string | null;
     /**
-     * Ordered list of allowed values of the property
+     * An ordered list of the allowed values of the property.
+     * The property can have up to 200 allowed values.
      */
     allowed_values?: string[] | null;
   },
@@ -86199,9 +85909,6 @@ export async function orgsCreateOrUpdateCustomProperty<FetcherData>(
  *   - An administrator for the organization.
  *   - A user, or a user on a team, with the fine-grained permission of
  * `custom_properties_org_definitions_manager` in the organization.
- *
- * GitHub Apps must have the
- * `organization_custom_properties:admin` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization}
  * Tags: orgs
  */
@@ -86226,9 +85933,6 @@ export async function orgsRemoveCustomProperty<FetcherData>(
  * Lists organization repositories with all of their custom property values.
  * Organization members can read these
  * properties.
- *
- * GitHub Apps must have the `organization_custom_properties:read` organization permission to use this
- * endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#list-custom-property-values-for-organization-repositories}
  * Tags: orgs
  */
@@ -86268,9 +85972,6 @@ export async function orgsListCustomPropertiesValuesForRepos<FetcherData>(
  * administrator for the organization.
  *   - A user, or a user on a team, with the fine-grained permission of
  * `custom_properties_org_values_editor` in the organization.
- *
- * GitHub Apps must have the
- * `organization_custom_properties:write` organization permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories}
  * Tags: orgs
  */
@@ -86440,15 +86141,8 @@ export async function reposListForOrg<FetcherData>(
  * Creates a new repository in the specified organization. The authenticated user must be a member of the
  * organization.
  *
- * **OAuth scope requirements**
- *
- * When using
- * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
- * include:
- *
- * *   `public_repo` scope or `repo` scope to create a public repository
- * *   `repo` scope to create a private
- * repository
+ * OAuth app tokens and personal access tokens (classic) need the `public_repo` or `repo` scope to create a
+ * public repository, and `repo` scope to create a private repository.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-an-organization-repository}
  * Tags: repos
  */
@@ -86830,13 +86524,13 @@ export async function reposDeleteOrgRuleset<FetcherData>(
 /**
  * List secret scanning alerts for an organization
  * Lists secret scanning alerts for eligible repositories in an organization, from newest to oldest.
- * To use this endpoint,
- * you must be an administrator or security manager for the organization, and you must use an access token with the `repo`
- * scope or `security_events` scope.
- * For public repositories, you may instead use the `public_repo` scope.
  *
- * GitHub Apps
- * must have the `secret_scanning_alerts` read permission to use this endpoint.
+ * The authenticated
+ * user must be an administrator or security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is
+ * only used with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-organization}
  * Tags: secret-scanning
  */
@@ -86887,9 +86581,11 @@ export async function secretScanningListAlertsForOrg<FetcherData>(
  * List repository security advisories for an organization
  * Lists repository security advisories for an organization.
  *
- * To use this endpoint, you must be an owner or security
- * manager for the organization, and you must use an access token with the `repo` scope or `repository_advisories:write`
- * permission.
+ * The authenticated user must be an owner or security manager
+ * for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` or
+ * `repository_advisories:write` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#list-repository-security-advisories-for-an-organization}
  * Tags: security-advisories
  */
@@ -86927,12 +86623,11 @@ export async function securityAdvisoriesListOrgRepositoryAdvisories<
  * your
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
  *
- * To
- * use this endpoint, you must be an administrator or security manager for the organization, and you must use an access
- * token with the `read:org` scope.
+ * The
+ * authenticated user must be an administrator or security manager for the organization to use this endpoint.
  *
- * GitHub Apps must have the `administration` organization read permission to use this
- * endpoint.
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#list-security-manager-teams}
  * Tags: orgs
  */
@@ -86957,11 +86652,10 @@ export async function orgsListSecurityManagerTeams<FetcherData>(
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)
  * for an organization."
  *
- * To use this endpoint, you must be an administrator for the organization, and you must use an
- * access token with the `write:org` scope.
+ * The authenticated user must be an administrator for the organization to use this endpoint.
  *
- * GitHub Apps must have the `administration` organization read-write permission
- * to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#add-a-security-manager-team}
  * Tags: orgs
  */
@@ -86988,11 +86682,10 @@ export async function orgsAddSecurityManagerTeam<FetcherData>(
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)
  * team from an organization."
  *
- * To use this endpoint, you must be an administrator for the organization, and you must use
- * an access token with the `admin:org` scope.
+ * The authenticated user must be an administrator for the organization to use this
+ * endpoint.
  *
- * GitHub Apps must have the `administration` organization read-write
- * permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#remove-a-security-manager-team}
  * Tags: orgs
  */
@@ -87022,8 +86715,8 @@ export async function orgsRemoveSecurityManagerTeam<FetcherData>(
  * runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub
  * Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
- * Access
- * tokens must have the `repo` or `admin:org` scope.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` or `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-actions-billing-for-an-organization}
  * Tags: billing
  */
@@ -87050,8 +86743,8 @@ export async function billingGetGithubActionsBillingOrg<FetcherData>(
  * private repositories. For more information, see "[Managing billing for GitHub
  * Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access
- * tokens must have the `repo` or `admin:org` scope.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` or `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-packages-billing-for-an-organization}
  * Tags: billing
  */
@@ -87078,8 +86771,8 @@ export async function billingGetGithubPackagesBillingOrg<FetcherData>(
  * apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub
  * Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access
- * tokens must have the `repo` or `admin:org` scope.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` or `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-shared-storage-billing-for-an-organization}
  * Tags: billing
  */
@@ -87321,11 +87014,13 @@ export async function teamsDeleteInOrg<FetcherData>(
 }
 /**
  * List discussions
- * List all discussions on a team's page. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List all discussions on a team's page.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route
+ * `GET /organizations/{org_id}/team/{team_id}/discussions`.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#list-discussions}
  * Tags: teams
  */
@@ -87356,8 +87051,7 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
 }
 /**
  * Create a discussion
- * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Creates a new discussion post on a team's page.
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
@@ -87368,6 +87062,9 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
  *
  * **Note:** You can also specify a team
  * by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#create-a-discussion}
  * Tags: teams
  */
@@ -87406,12 +87103,13 @@ export async function teamsCreateDiscussionInOrg<FetcherData>(
 }
 /**
  * Get a discussion
- * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Get a specific discussion on a team's page.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `GET
- * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the
+ * route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#get-a-discussion}
  * Tags: teams
  */
@@ -87436,13 +87134,14 @@ export async function teamsGetDiscussionInOrg<FetcherData>(
 }
 /**
  * Update a discussion
- * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens
- * require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Edits the title and body text of a discussion post. Only the parameters you provide are updated.
  *
  * **Note:** You can also
  * specify a team by `org_id` and `team_id` using the route `PATCH
  * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#update-a-discussion}
  * Tags: teams
  */
@@ -87478,12 +87177,13 @@ export async function teamsUpdateDiscussionInOrg<FetcherData>(
 }
 /**
  * Delete a discussion
- * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Delete a discussion from a team's page.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `DELETE
- * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route
+ * `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#delete-a-discussion}
  * Tags: teams
  */
@@ -87506,12 +87206,13 @@ export async function teamsDeleteDiscussionInOrg<FetcherData>(
 }
 /**
  * List discussion comments
- * List all comments on a team discussion. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List all comments on a team discussion.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `GET
- * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route
+ * `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments}
  * Tags: teams
  */
@@ -87542,8 +87243,7 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
 }
 /**
  * Create a discussion comment
- * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Creates a new comment on a team discussion.
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
@@ -87555,6 +87255,9 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
  * **Note:** You can also specify a team
  * by `org_id` and `team_id` using the route `POST
  * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment}
  * Tags: teams
  */
@@ -87586,12 +87289,13 @@ export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Get a discussion comment
- * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Get a specific comment on a team discussion.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `GET
- * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the
+ * route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment}
  * Tags: teams
  */
@@ -87617,12 +87321,13 @@ export async function teamsGetDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Update a discussion comment
- * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Edits the body text of a discussion comment.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `PATCH
- * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the
+ * route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment}
  * Tags: teams
  */
@@ -87655,12 +87360,13 @@ export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
 }
 /**
  * Delete a discussion comment
- * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Deletes a comment on a team discussion.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `DELETE
- * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route
+ * `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment}
  * Tags: teams
  */
@@ -87685,13 +87391,14 @@ export async function teamsDeleteDiscussionCommentInOrg<FetcherData>(
 /**
  * List reactions for a team discussion comment
  * List the reactions to a [team discussion
- * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require
- * the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
  *
  * **Note:** You can also
  * specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment}
  * Tags: reactions
  */
@@ -87730,13 +87437,17 @@ export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
 /**
  * Create reaction for a team discussion comment
  * Create a reaction to a [team discussion
- * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require
- * the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A
- * response with an HTTP `200` status means that you already added the reaction type to this team discussion
- * comment.
+ * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST
+ * A response with an HTTP
+ * `200` status means that you already added the reaction type to this team discussion comment.
+ *
+ * **Note:** You can also
+ * specify a team by `org_id` and `team_id` using the route `POST
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment}
  * Tags: reactions
  */
@@ -87783,8 +87494,10 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
  *
  * Delete
  * a reaction to a [team discussion
- * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require
- * the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-team-discussion-comment-reaction}
  * Tags: reactions
  */
@@ -87809,13 +87522,14 @@ export async function reactionsDeleteForTeamDiscussionComment<FetcherData>(
 }
 /**
  * List reactions for a team discussion
- * List the reactions to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion). OAuth access
- * tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List the reactions to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `GET
+ * **Note:**
+ * You can also specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion}
  * Tags: reactions
  */
@@ -87852,14 +87566,17 @@ export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
 }
 /**
  * Create reaction for a team discussion
- * Create a reaction to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion). OAuth access
- * tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP
- * `200` status means that you already added the reaction type to this team discussion.
+ * Create a reaction to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
  *
- * **Note:** You can also specify a
- * team by `org_id` and `team_id` using the route `POST
+ * A response
+ * with an HTTP `200` status means that you already added the reaction type to this team discussion.
+ *
+ * **Note:** You can
+ * also specify a team by `org_id` and `team_id` using the route `POST
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion}
  * Tags: reactions
  */
@@ -87904,8 +87621,10 @@ export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
  *
  * Delete a reaction to a
- * [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion). OAuth access tokens require the
- * `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-team-discussion-reaction}
  * Tags: reactions
  */
@@ -88418,18 +88137,15 @@ export async function teamsListChildInOrg<FetcherData>(
 }
 /**
  * Enable or disable a security feature for an organization
- * Enables or disables the specified security feature for all eligible repositories in an organization.
- *
- * To use this
- * endpoint, you must be an organization owner or be member of a team with the security manager role.
- * A token with the
- * 'write:org' scope is also required.
- *
- * GitHub Apps must have the `organization_administration:write` permission to use
- * this endpoint.
- *
- * For more information, see "[Managing security managers in your
+ * Enables or disables the specified security feature for all eligible repositories in an organization. For more
+ * information, see "[Managing security managers in your
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+ *
+ * The
+ * authenticated user must be an organization owner or be member of a team with the security manager role to use this
+ * endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#enable-or-disable-a-security-feature-for-an-organization}
  * Tags: orgs
  */
@@ -89014,9 +88730,9 @@ export async function projectsCreateColumn<FetcherData>(
  * `core` object provides your rate limit status for all non-search-related resources in the REST API.
  * * The `search`
  * object provides your rate limit status for the REST API for searching (excluding code searches). For more information,
- * see "[Search](https://docs.github.com/rest/search)."
- * * The `code_search` object provides your rate limit status for the
- * REST API for searching code. For more information, see "[Search
+ * see "[Search](https://docs.github.com/rest/search/search)."
+ * * The `code_search` object provides your rate limit status
+ * for the REST API for searching code. For more information, see "[Search
  * code](https://docs.github.com/rest/search/search#search-code)."
  * * The `graphql` object provides your rate limit status
  * for the GraphQL API. For more information, see "[Resource
@@ -89276,12 +88992,14 @@ export async function reposUpdate<FetcherData>(
 }
 /**
  * Delete a repository
- * Deleting a repository requires admin access. If OAuth is used, the `delete_repo` scope is required.
+ * Deleting a repository requires admin access.
  *
- * If an organization
- * owner has configured the organization to prevent members from deleting organization-owned
- * repositories, you will get a
- * `403 Forbidden` response.
+ * If an organization owner has configured the organization to prevent
+ * members from deleting organization-owned
+ * repositories, you will get a `403 Forbidden` response.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `delete_repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#delete-a-repository}
  * Tags: repos
  */
@@ -89303,9 +89021,12 @@ export async function reposDelete<FetcherData>(
 }
 /**
  * List artifacts for a repository
- * Lists all artifacts for a repository. Anyone with read access to the repository can use this endpoint. If the repository
- * is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to
- * use this endpoint.
+ * Lists all artifacts for a repository.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#list-artifacts-for-a-repository}
  * Tags: actions
  */
@@ -89340,9 +89061,12 @@ export async function actionsListArtifactsForRepo<FetcherData>(
 }
 /**
  * Get an artifact
- * Gets a specific artifact for a workflow run. Anyone with read access to the repository can use this endpoint. If the
- * repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
- * permission to use this endpoint.
+ * Gets a specific artifact for a workflow run.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * If the
+ * repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#get-an-artifact}
  * Tags: actions
  */
@@ -89367,8 +89091,9 @@ export async function actionsGetArtifact<FetcherData>(
 }
 /**
  * Delete an artifact
- * Deletes an artifact for a workflow run. You must authenticate using an access token with the `repo` scope to use this
- * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * Deletes an artifact for a workflow run.
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#delete-an-artifact}
  * Tags: actions
  */
@@ -89395,10 +89120,8 @@ export async function actionsDeleteArtifact<FetcherData>(
  * in
  * the response header to find the URL for the download. The `:archive_format` must be `zip`.
  *
- * You must authenticate
- * using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `actions:read` permission to
- * use this endpoint.
+ * OAuth tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#download-an-artifact}
  * Tags: actions
  */
@@ -89425,9 +89148,12 @@ export async function actionsDownloadArtifact<FetcherData>(
  * Gets GitHub Actions cache usage for a repository.
  * The data fetched using this API is refreshed approximately every 5
  * minutes, so values returned from this endpoint may take at least 5 minutes to get updated.
+ *
  * Anyone with read access to
- * the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope.
- * GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * the repository can use this endpoint.
+ *
+ * If the repository is private, OAuth tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/cache#get-github-actions-cache-usage-for-a-repository}
  * Tags: actions
  */
@@ -89450,9 +89176,9 @@ export async function actionsGetActionsCacheUsage<FetcherData>(
 /**
  * List GitHub Actions caches for a repository
  * Lists the GitHub Actions caches for a repository.
- * You must authenticate using an access token with the `repo` scope to
- * use this endpoint.
- * GitHub Apps must have the `actions:read` permission to use this endpoint.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/cache#list-github-actions-caches-for-a-repository}
  * Tags: actions
  */
@@ -89487,10 +89213,8 @@ export async function actionsGetActionsCacheList<FetcherData>(
  * match the provided key are deleted, but you can optionally provide a Git ref to restrict deletions to caches that match
  * both the provided key and the Git ref.
  *
- * You must authenticate using an access token with the `repo` scope to use this
- * endpoint.
- *
- * GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/cache#delete-github-actions-caches-for-a-repository-using-a-cache-key}
  * Tags: actions
  */
@@ -89519,10 +89243,8 @@ export async function actionsDeleteActionsCacheByKey<FetcherData>(
  * Delete a GitHub Actions cache for a repository (using a cache ID)
  * Deletes a GitHub Actions cache for a repository, using a cache ID.
  *
- * You must authenticate using an access token with the
- * `repo` scope to use this endpoint.
- *
- * GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * OAuth tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/cache#delete-a-github-actions-cache-for-a-repository-using-a-cache-id}
  * Tags: actions
  */
@@ -89545,9 +89267,12 @@ export async function actionsDeleteActionsCacheById<FetcherData>(
 }
 /**
  * Get a job for a workflow run
- * Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the
- * repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
- * permission to use this endpoint.
+ * Gets a specific job in a workflow run.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * If the
+ * repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#get-a-job-for-a-workflow-run}
  * Tags: actions
  */
@@ -89574,11 +89299,13 @@ export async function actionsGetJobForWorkflowRun<FetcherData>(
  * Download job logs for a workflow run
  * Gets a redirect URL to download a plain text file of logs for a workflow job. This link expires after 1 minute. Look
  * for
- * `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can
- * use
- * this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must
- * have
- * the `actions:read` permission to use this endpoint.
+ * `Location:` in the response header to find the URL for the download.
+ *
+ * Anyone with read access to the repository can use
+ * this endpoint.
+ *
+ * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#download-job-logs-for-a-workflow-run}
  * Tags: actions
  */
@@ -89603,9 +89330,8 @@ export async function actionsDownloadJobLogsForWorkflowRun<FetcherData>(
  * Re-run a job from a workflow run
  * Re-run a job and its dependent jobs in a workflow run.
  *
- * You must authenticate using an access token with the `repo`
- * scope to use this endpoint.
- * GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run}
  * Tags: actions
  */
@@ -89636,10 +89362,9 @@ export async function actionsReRunJobForWorkflowRun<FetcherData>(
 /**
  * Get the customization template for an OIDC subject claim for a repository
  * Gets the customization template for an OpenID Connect (OIDC) subject claim.
- * You must authenticate using an access token
- * with the `repo` scope to use this
- * endpoint. GitHub Apps must have the `organization_administration:read` permission to
- * use this endpoint.
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#get-the-customization-template-for-an-oidc-subject-claim-for-a-repository}
  * Tags: actions
  */
@@ -89663,9 +89388,8 @@ export async function actionsGetCustomOidcSubClaimForRepo<FetcherData>(
  * Set the customization template for an OIDC subject claim for a repository
  * Sets the customization template and `opt-in` or `opt-out` flag for an OpenID Connect (OIDC) subject claim for a
  * repository.
- * You must authenticate using an access token with the `repo` scope to use this
- * endpoint. GitHub Apps must
- * have the `actions:write` permission to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#set-the-customization-template-for-an-oidc-subject-claim-for-a-repository}
  * Tags: actions
  */
@@ -89701,12 +89425,11 @@ export async function actionsSetCustomOidcSubClaimForRepo<FetcherData>(
  * Lists all organization secrets shared with a repository without revealing their encrypted
  * values.
  *
- * You must authenticate
- * using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `secrets` repository
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read secrets.
+ * Authenticated users
+ * must have collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-repository-organization-secrets}
  * Tags: actions
  */
@@ -89740,13 +89463,13 @@ export async function actionsListRepoOrganizationSecrets<FetcherData>(
 }
 /**
  * List repository organization variables
- * Lists all organiation variables shared with a repository.
+ * Lists all organization variables shared with a repository.
  *
- * You must authenticate using an access token with the `repo`
+ * Authenticated users must have collaborator access to a
+ * repository to create, update, or read variables.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo`
  * scope to use this endpoint.
- * GitHub Apps must have the `actions_variables:read` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read variables.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-repository-organization-variables}
  * Tags: actions
  */
@@ -89785,8 +89508,8 @@ export async function actionsListRepoOrganizationVariables<FetcherData>(
  * Gets the GitHub Actions permissions policy for a repository, including whether GitHub Actions is enabled and the actions
  * and reusable workflows allowed to run in the repository.
  *
- * You must authenticate using an access token with the `repo`
- * scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+ * OAuth tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-github-actions-permissions-for-a-repository}
  * Tags: actions
  */
@@ -89811,8 +89534,7 @@ export async function actionsGetGithubActionsPermissionsRepository<FetcherData>(
  * Sets the GitHub Actions permissions policy for enabling GitHub Actions and allowed actions and reusable workflows in the
  * repository.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must
- * have the `administration` repository permission to use this API.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-github-actions-permissions-for-a-repository}
  * Tags: actions
  */
@@ -89846,10 +89568,8 @@ export async function actionsSetGithubActionsPermissionsRepository<FetcherData>(
  * components in a private
  * repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)."
  *
- * You
- * must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the
- * repository
- * `administration` permission to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-the-level-of-access-for-workflows-outside-of-the-repository}
  * Tags: actions
  */
@@ -89878,10 +89598,8 @@ export async function actionsGetWorkflowAccessToRepository<FetcherData>(
  * components in a private
  * repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)".
  *
- * You
- * must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the
- * repository
- * `administration` permission to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-the-level-of-access-for-workflows-outside-of-the-repository}
  * Tags: actions
  */
@@ -89909,9 +89627,8 @@ export async function actionsSetWorkflowAccessToRepository<FetcherData>(
  * the repository policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub
  * Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
  *
- * You must authenticate using
- * an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository
- * permission to use this API.
+ * OAuth tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-allowed-actions-and-reusable-workflows-for-a-repository}
  * Tags: actions
  */
@@ -89937,9 +89654,8 @@ export async function actionsGetAllowedActionsRepository<FetcherData>(
  * permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions
  * permissions for a repository](#set-github-actions-permissions-for-a-repository)."
  *
- * You must authenticate using an access
- * token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to
- * use this API.
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-allowed-actions-and-reusable-workflows-for-a-repository}
  * Tags: actions
  */
@@ -89970,9 +89686,8 @@ export async function actionsSetAllowedActionsRepository<FetcherData>(
  * GITHUB_TOKEN for your
  * repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#setting-the-permissions-of-the-github_token-for-your-repository)."
  *
- * You
- * must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the repository
- * `administration` permission to use this API.
+ * OAuth
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-default-workflow-permissions-for-a-repository}
  * Tags: actions
  */
@@ -90003,9 +89718,8 @@ export async function actionsGetGithubActionsDefaultWorkflowPermissionsRepositor
  * GITHUB_TOKEN for your
  * repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#setting-the-permissions-of-the-github_token-for-your-repository)."
  *
- * You
- * must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the repository
- * `administration` permission to use this API.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-default-workflow-permissions-for-a-repository}
  * Tags: actions
  */
@@ -90033,12 +89747,10 @@ export async function actionsSetGithubActionsDefaultWorkflowPermissionsRepositor
  * List self-hosted runners for a repository
  * Lists all self-hosted runners configured in a repository.
  *
- * You must authenticate using an access token with the `repo`
- * scope to use this endpoint.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the repository
+ * to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-a-repository}
  * Tags: actions
  */
@@ -90069,12 +89781,11 @@ export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
  * List runner applications for a repository
  * Lists binaries for the runner application that you can download and run.
  *
- * You must authenticate using an access token
- * with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `administration` permission for repositories and
- * the `organization_self_hosted_runners` permission for organizations.
  * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * the repository to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-runner-applications-for-a-repository}
  * Tags: actions
  */
@@ -90098,13 +89809,11 @@ export async function actionsListRunnerApplicationsForRepo<FetcherData>(
  * Create configuration for a just-in-time runner for a repository
  * Generates a configuration that can be passed to the runner application at startup.
  *
- * You must authenticate using an
- * access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `administration` permission for
- * repositories and the `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have
- * admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these
- * endpoints.
+ * The authenticated user must have
+ * admin access to the repository.
+ *
+ * OAuth tokens and personal access tokens (classic) need the`repo` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-a-repository}
  * Tags: actions
  */
@@ -90152,25 +89861,21 @@ export async function actionsGenerateRunnerJitconfigForRepo<FetcherData>(
 }
 /**
  * Create a registration token for a repository
- * Returns a token that you can pass to the `config` script. The token
- * expires after one hour.
+ * Returns a token that you can pass to the `config` script. The token expires after one hour.
  *
- * You must authenticate using
- * an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `administration` permission for
- * repositories and the `organization_self_hosted_runners` permission for organizations.
+ * For example, you can
+ * replace `TOKEN` in the following example with the registration token provided by this endpoint to configure your
+ * self-hosted runner:
+ *
+ * ```
+ * ./config.sh --url https://github.com/octo-org --token TOKEN
+ * ```
+ *
  * Authenticated users must have
- * admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these
- * endpoints.
+ * admin access to the repository to use this endpoint.
  *
- * Example using registration token:
- *
- * Configure your self-hosted runner, replacing `TOKEN` with the
- * registration token provided
- * by this endpoint.
- *
- * ```config.sh --url https://github.com/octo-org/octo-repo-artifacts
- * --token TOKEN```
+ * OAuth tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-registration-token-for-a-repository}
  * Tags: actions
  */
@@ -90194,25 +89899,21 @@ export async function actionsCreateRegistrationTokenForRepo<FetcherData>(
 }
 /**
  * Create a remove token for a repository
- * Returns a token that you can pass to remove a self-hosted runner from
- * a repository. The token expires after one
- * hour.
+ * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an repository. The token
+ * expires after one hour.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the
- * `administration` permission for repositories and the `organization_self_hosted_runners` permission for
- * organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * For example, you can replace `TOKEN` in the following example with the registration token
+ * provided by this endpoint to remove your self-hosted runner from an organization:
  *
- * Example using remove token:
+ * ```
+ * ./config.sh remove --token
+ * TOKEN
+ * ```
  *
- * To remove your
- * self-hosted runner from a repository, replace TOKEN with
- * the remove token provided by this endpoint.
+ * Authenticated users must have admin access to the repository to use this endpoint.
  *
- * ```config.sh
- * remove --token TOKEN```
+ * OAuth tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-remove-token-for-a-repository}
  * Tags: actions
  */
@@ -90238,12 +89939,11 @@ export async function actionsCreateRemoveTokenForRepo<FetcherData>(
  * Get a self-hosted runner for a repository
  * Gets a specific self-hosted runner configured in a repository.
  *
- * You must authenticate using an access token with the
- * `repo` scope to use this endpoint.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the
+ * repository to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
@@ -90269,12 +89969,10 @@ export async function actionsGetSelfHostedRunnerForRepo<FetcherData>(
  * Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner
  * when the machine you were using no longer exists.
  *
- * You must authenticate using an access token with the `repo` scope to
- * use this endpoint.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the repository to use
+ * this endpoint.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-a-repository}
  * Tags: actions
  */
@@ -90299,12 +89997,11 @@ export async function actionsDeleteSelfHostedRunnerFromRepo<FetcherData>(
  * List labels for a self-hosted runner for a repository
  * Lists all labels for a self-hosted runner configured in a repository.
  *
- * You must authenticate using an access token with
- * the `repo` scope to use this endpoint.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
- * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the
+ * repository to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-labels-for-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
@@ -90330,14 +90027,13 @@ export async function actionsListLabelsForSelfHostedRunnerForRepo<FetcherData>(
 }
 /**
  * Add custom labels to a self-hosted runner for a repository
- * Add custom labels to a self-hosted runner configured in a repository.
+ * Adds custom labels to a self-hosted runner configured in a repository.
  *
- * You must authenticate using an access token with
- * the `repo` scope to use this endpoint.
- * GitHub Apps must have the `administration` permission for repositories and the
- * `organization_self_hosted_runners` permission for organizations.
  * Authenticated users must have admin access to
- * repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * the organization to use this endpoint.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#add-custom-labels-to-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
@@ -90376,12 +90072,10 @@ export async function actionsAddCustomLabelsToSelfHostedRunnerForRepo<
  * self-hosted runner configured in a
  * repository.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must
- * have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for
- * organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the repository to use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#set-custom-labels-for-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
@@ -90420,12 +90114,10 @@ export async function actionsSetCustomLabelsForSelfHostedRunnerForRepo<
  * repository. Returns the remaining read-only labels
  * from the runner.
  *
- * You must authenticate using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps
- * must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for
- * organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated users must have admin access to the repository to use this endpoint.
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#remove-all-custom-labels-from-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
@@ -90460,13 +90152,11 @@ export async function actionsRemoveAllCustomLabelsFromSelfHostedRunnerForRepo<
  * This endpoint returns a `404 Not Found` status if the custom label is not
  * present on the runner.
  *
- * You must
- * authenticate using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the
- * `administration` permission for repositories and the `organization_self_hosted_runners` permission for
- * organizations.
- * Authenticated users must have admin access to repositories or organizations, or the
- * `manage_runners:enterprise` scope for enterprises, to use these endpoints.
+ * Authenticated
+ * users must have admin access to the repository to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#remove-a-custom-label-from-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
@@ -90500,8 +90190,10 @@ export async function actionsRemoveCustomLabelFromSelfHostedRunnerForRepo<
  * [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
  *
  * Anyone with read access
- * to the repository can use this endpoint. If the repository is private you must use an access token with the `repo`
- * scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to
+ * use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-repository}
  * Tags: actions
  */
@@ -90570,9 +90262,12 @@ export async function actionsListWorkflowRunsForRepo<FetcherData>(
 }
 /**
  * Get a workflow run
- * Gets a specific workflow run. Anyone with read access to the repository can use this endpoint. If the repository is
- * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use
- * this endpoint.
+ * Gets a specific workflow run.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-a-workflow-run}
  * Tags: actions
  */
@@ -90599,11 +90294,12 @@ export async function actionsGetWorkflowRun<FetcherData>(
 }
 /**
  * Delete a workflow run
- * Delete a specific workflow run. Anyone with write access to the repository can use this endpoint. If the repository
- * is
- * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:write` permission to
- * use
- * this endpoint.
+ * Deletes a specific workflow run.
+ *
+ * Anyone with write access to the repository can use this endpoint.
+ *
+ * If the repository
+ * is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#delete-a-workflow-run}
  * Tags: actions
  */
@@ -90626,8 +90322,10 @@ export async function actionsDeleteWorkflowRun<FetcherData>(
 }
 /**
  * Get the review history for a workflow run
- * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access
- * token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-the-review-history-for-a-workflow-run}
  * Tags: actions
  */
@@ -90658,9 +90356,8 @@ export async function actionsGetReviewsForRun<FetcherData>(
  * ["Approving workflow runs from public
  * forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)."
  *
- * You must
- * authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write`
- * permission to use this endpoint.
+ * OAuth tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#approve-a-workflow-run-for-a-fork-pull-request}
  * Tags: actions
  */
@@ -90683,9 +90380,12 @@ export async function actionsApproveWorkflowRun<FetcherData>(
 }
 /**
  * List workflow run artifacts
- * Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository
- * is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to
- * use this endpoint.
+ * Lists artifacts for a workflow run.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#list-workflow-run-artifacts}
  * Tags: actions
  */
@@ -90721,12 +90421,12 @@ export async function actionsListWorkflowRunArtifacts<FetcherData>(
 }
 /**
  * Get a workflow run attempt
- * Gets a specific workflow run attempt. Anyone with read access to the repository
- * can use this endpoint. If the repository
- * is private you must use an access token
- * with the `repo` scope. GitHub Apps must have the `actions:read` permission
- * to
- * use this endpoint.
+ * Gets a specific workflow run attempt.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-a-workflow-run-attempt}
  * Tags: actions
  */
@@ -90754,10 +90454,16 @@ export async function actionsGetWorkflowRunAttempt<FetcherData>(
 }
 /**
  * List jobs for a workflow run attempt
- * Lists jobs for a specific workflow run attempt. Anyone with read access to the repository can use this endpoint. If the
- * repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
- * permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using
- * parameters, see [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+ * Lists jobs for a specific workflow run attempt. You can use parameters to narrow the list of results. For more
+ * information
+ * about using parameters, see
+ * [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+ *
+ * Anyone with read access
+ * to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to
+ * use this endpoint  with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run-attempt}
  * Tags: actions
  */
@@ -90795,11 +90501,13 @@ export async function actionsListJobsForWorkflowRunAttempt<FetcherData>(
  * Download workflow run attempt logs
  * Gets a redirect URL to download an archive of log files for a specific workflow run attempt. This link expires after
  * 1
- * minute. Look for `Location:` in the response header to find the URL for the download. Anyone with read access to
- * the
- * repository can use this endpoint. If the repository is private you must use an access token with the `repo`
- * scope.
- * GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * minute. Look for `Location:` in the response header to find the URL for the download.
+ *
+ * Anyone with read access to the
+ * repository can use this endpoint.
+ *
+ * If the repository is private, OAuth tokens and personal access tokens (classic) need
+ * the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#download-workflow-run-attempt-logs}
  * Tags: actions
  */
@@ -90825,9 +90533,8 @@ export async function actionsDownloadWorkflowRunAttemptLogs<FetcherData>(
  * Cancel a workflow run
  * Cancels a workflow run using its `id`.
  *
- * You must authenticate using an access token with the `repo` scope to use this
- * endpoint.
- * GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#cancel-a-workflow-run}
  * Tags: actions
  */
@@ -90860,10 +90567,8 @@ export async function actionsCancelWorkflowRun<FetcherData>(
  * are waiting for review from a specific person or team, see [`POST
  * /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments`](/rest/actions/workflow-runs#review-pending-deployments-for-a-workflow-run).
  *
- * If
- * the repository is private, you must use an access token with the `repo` scope.
- * GitHub Apps must have read and write
- * permission for **Deployments** to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#review-custom-deployment-protection-rules-for-a-workflow-run}
  * Tags: actions
  */
@@ -90894,10 +90599,8 @@ export async function actionsReviewCustomGatesForRun<FetcherData>(
  * responding to [`POST
  * /repos/{owner}/{repo}/actions/runs/{run_id}/cancel`](/rest/actions/workflow-runs#cancel-a-workflow-run).
  *
- * You must
- * authenticate using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `actions:write`
- * permission to use this endpoint.
+ * OAuth tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#force-cancel-a-workflow-run}
  * Tags: actions
  */
@@ -90920,10 +90623,15 @@ export async function actionsForceCancelWorkflowRun<FetcherData>(
 }
 /**
  * List jobs for a workflow run
- * Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is
- * private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use
- * this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see
- * [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+ * Lists jobs for a workflow run. You can use parameters to narrow the list of results. For more information
+ * about using
+ * parameters, see [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+ *
+ * Anyone
+ * with read access to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run}
  * Tags: actions
  */
@@ -90961,11 +90669,13 @@ export async function actionsListJobsForWorkflowRun<FetcherData>(
  * Download workflow run logs
  * Gets a redirect URL to download an archive of log files for a workflow run. This link expires after 1 minute. Look
  * for
- * `Location:` in the response header to find the URL for the download. Anyone with read access to the repository can
- * use
- * this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must
- * have
- * the `actions:read` permission to use this endpoint.
+ * `Location:` in the response header to find the URL for the download.
+ *
+ * Anyone with read access to the repository can
+ * use this endpoint.
+ *
+ * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#download-workflow-run-logs}
  * Tags: actions
  */
@@ -90988,8 +90698,10 @@ export async function actionsDownloadWorkflowRunLogs<FetcherData>(
 }
 /**
  * Delete workflow run logs
- * Deletes all logs for a workflow run. You must authenticate using an access token with the `repo` scope to use this
- * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * Deletes all logs for a workflow run.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#delete-workflow-run-logs}
  * Tags: actions
  */
@@ -91015,8 +90727,10 @@ export async function actionsDeleteWorkflowRunLogs<FetcherData>(
  * Get all deployment environments for a workflow run that are waiting for protection rules to pass.
  *
  * Anyone with read
- * access to the repository can use this endpoint. If the repository is private, you must use an access token with the
- * `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * access to the repository can use this endpoint.
+ *
+ * If the repository is private, OAuth tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
@@ -91046,8 +90760,10 @@ export async function actionsGetPendingDeploymentsForRun<FetcherData>(
  * Approve or reject pending deployments that are waiting on approval by a required reviewer.
  *
  * Required reviewers with read
- * access to the repository contents and deployments can use this endpoint. Required reviewers must authenticate using an
- * access token with the `repo` scope to use this endpoint.
+ * access to the repository contents and deployments can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#review-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
@@ -91094,8 +90810,10 @@ export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
 }
 /**
  * Re-run a workflow
- * Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this
- * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * Re-runs your workflow run using its `id`.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope
+ * to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#re-run-a-workflow}
  * Tags: actions
  */
@@ -91125,8 +90843,10 @@ export async function actionsReRunWorkflow<FetcherData>(
 }
 /**
  * Re-run failed jobs from a workflow run
- * Re-run all of the failed jobs and their dependent jobs in a workflow run using the `id` of the workflow run. You must
- * authenticate using an access token with the `repo` scope to use this endpoint.
+ * Re-run all of the failed jobs and their dependent jobs in a workflow run using the `id` of the workflow run.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#re-run-failed-jobs-from-a-workflow-run}
  * Tags: actions
  */
@@ -91164,8 +90884,10 @@ export async function actionsReRunWorkflowFailedJobs<FetcherData>(
  * Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
  * Anyone
- * with read access to the repository can use this endpoint. If the repository is private you must use an access token with
- * the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * with read access to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-workflow-run-usage}
  * Tags: actions
  */
@@ -91191,11 +90913,11 @@ export async function actionsGetWorkflowRunUsage<FetcherData>(
  * Lists all secrets available in a repository without revealing their encrypted
  * values.
  *
- * You must authenticate using an
- * access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `secrets` repository permission to
- * use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-repository-secrets}
  * Tags: actions
  */
@@ -91234,11 +90956,9 @@ export async function actionsListRepoSecrets<FetcherData>(
  * secrets.
  *
  * Anyone with read access to the repository can use this endpoint.
- * If the repository is private you must use an
- * access token with the `repo` scope.
- * GitHub Apps must have the `secrets` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ *
+ * If the repository is private, OAuth tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-a-repository-public-key}
  * Tags: actions
  */
@@ -91262,11 +90982,11 @@ export async function actionsGetRepoPublicKey<FetcherData>(
  * Get a repository secret
  * Gets a single repository secret without revealing its encrypted value.
  *
- * You must authenticate using an access token with
- * the `repo` scope to use this endpoint.
- * GitHub Apps must have the `secrets` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * The authenticated user must have collaborator
+ * access to the repository to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-a-repository-secret}
  * Tags: actions
  */
@@ -91296,12 +91016,11 @@ export async function actionsGetRepoSecret<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `secrets`
- * repository permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create,
- * update, or read secrets.
+ * Authenticated
+ * users must have collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#create-or-update-a-repository-secret}
  * Tags: actions
  */
@@ -91337,11 +91056,11 @@ export async function actionsCreateOrUpdateRepoSecret<FetcherData>(
  * Delete a repository secret
  * Deletes a secret in a repository using the secret name.
  *
- * You must authenticate using an access token with the `repo`
- * scope to use this endpoint.
- * GitHub Apps must have the `secrets` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must have collaborator access to a
+ * repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope
+ * to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#delete-a-repository-secret}
  * Tags: actions
  */
@@ -91365,11 +91084,11 @@ export async function actionsDeleteRepoSecret<FetcherData>(
 /**
  * List repository variables
  * Lists all repository variables.
- * You must authenticate using an access token with the `repo` scope to use this
- * endpoint.
- * GitHub Apps must have the `actions_variables:read` repository permission to use this endpoint.
- * Authenticated
- * users must have collaborator access to a repository to create, update, or read variables.
+ *
+ * Authenticated users must have collaborator access to a repository to create, update, or
+ * read variables.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-repository-variables}
  * Tags: actions
  */
@@ -91407,12 +91126,11 @@ export async function actionsListRepoVariables<FetcherData>(
  * Create a repository variable
  * Creates a repository variable that you can reference in a GitHub Actions workflow.
  *
- * You must authenticate using an
- * access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `actions_variables:write` repository
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read variables.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#create-a-repository-variable}
  * Tags: actions
  */
@@ -91447,11 +91165,10 @@ export async function actionsCreateRepoVariable<FetcherData>(
  * Get a repository variable
  * Gets a specific variable in a repository.
  *
- * You must authenticate using an access token with the `repo` scope to use this
- * endpoint.
- * GitHub Apps must have the `actions_variables:read` repository permission to use this endpoint.
- * Authenticated
- * users must have collaborator access to a repository to create, update, or read variables.
+ * The authenticated user must have collaborator access to the repository to use
+ * this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#get-a-repository-variable}
  * Tags: actions
  */
@@ -91478,12 +91195,11 @@ export async function actionsGetRepoVariable<FetcherData>(
  * Update a repository variable
  * Updates a repository variable that you can reference in a GitHub Actions workflow.
  *
- * You must authenticate using an
- * access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `actions_variables:write` repository
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read variables.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#update-a-repository-variable}
  * Tags: actions
  */
@@ -91519,11 +91235,11 @@ export async function actionsUpdateRepoVariable<FetcherData>(
  * Delete a repository variable
  * Deletes a repository variable using the variable name.
  *
- * You must authenticate using an access token with the `repo`
+ * Authenticated users must have collaborator access to a
+ * repository to create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo`
  * scope to use this endpoint.
- * GitHub Apps must have the `actions_variables:write` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read variables.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#delete-a-repository-variable}
  * Tags: actions
  */
@@ -91546,9 +91262,12 @@ export async function actionsDeleteRepoVariable<FetcherData>(
 }
 /**
  * List repository workflows
- * Lists the workflows in a repository. Anyone with read access to the repository can use this endpoint. If the repository
- * is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to
- * use this endpoint.
+ * Lists the workflows in a repository.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#list-repository-workflows}
  * Tags: actions
  */
@@ -91582,9 +91301,14 @@ export async function actionsListRepoWorkflows<FetcherData>(
 }
 /**
  * Get a workflow
- * Gets a specific workflow. You can replace `workflow_id` with the workflow file name. For example, you could use
- * `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use
- * an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * Gets a specific workflow. You can replace `workflow_id` with the workflow
+ * file name. For example, you could use
+ * `main.yaml`.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#get-a-workflow}
  * Tags: actions
  */
@@ -91612,8 +91336,8 @@ export async function actionsGetWorkflow<FetcherData>(
  * Disables a workflow and sets the `state` of the workflow to `disabled_manually`. You can replace `workflow_id` with the
  * workflow file name. For example, you could use `main.yaml`.
  *
- * You must authenticate using an access token with the `repo`
- * scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * OAuth tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#disable-a-workflow}
  * Tags: actions
  */
@@ -91645,10 +91369,8 @@ export async function actionsDisableWorkflow<FetcherData>(
  * `workflow_dispatch` event in the workflow file, see "[Events that trigger
  * workflows](/actions/reference/events-that-trigger-workflows#workflow_dispatch)."
  *
- * You must authenticate using an access
- * token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this
- * endpoint. For more information, see "[Creating a personal access token for the command
- * line](https://docs.github.com/articles/creating-a-personal-access-token-for-the-command-line)."
+ * OAuth tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event}
  * Tags: actions
  */
@@ -91687,8 +91409,8 @@ export async function actionsCreateWorkflowDispatch<FetcherData>(
  * Enables a workflow and sets the `state` of the workflow to `active`. You can replace `workflow_id` with the workflow
  * file name. For example, you could use `main.yaml`.
  *
- * You must authenticate using an access token with the `repo` scope to
- * use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * OAuth tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#enable-a-workflow}
  * Tags: actions
  */
@@ -91716,8 +91438,10 @@ export async function actionsEnableWorkflow<FetcherData>(
  * [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
  *
  * Anyone with read access
- * to the repository can use this endpoint. If the repository is private you must use an access token with the `repo`
- * scope.
+ * to the repository can use this endpoint
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to
+ * use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-workflow}
  * Tags: actions
  */
@@ -91795,9 +91519,13 @@ export async function actionsListWorkflowRuns<FetcherData>(
  * Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
  * You
- * can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access
- * to the repository can use this endpoint. If the repository is private you must use an access token with the `repo`
- * scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+ * can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+ *
+ * Anyone with read access
+ * to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to
+ * use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#get-workflow-usage}
  * Tags: actions
  */
@@ -91928,12 +91656,12 @@ export async function issuesCheckUserCanBeAssigned<FetcherData>(
   return ctx.handleResponse(res, {});
 }
 /**
- * List all autolinks of a repository
- * This returns a list of autolinks configured for the given repository.
+ * Get all autolinks of a repository
+ * Gets all autolinks that are configured for a repository.
  *
- * Information about autolinks are only available to
- * repository administrators.
- * Learn more at {@link https://docs.github.com/rest/repos/autolinks#list-all-autolinks-of-a-repository}
+ * Information about autolinks are only available to repository
+ * administrators.
+ * Learn more at {@link https://docs.github.com/rest/repos/autolinks#get-all-autolinks-of-a-repository}
  * Tags: repos
  */
 export async function reposListAutolinks<FetcherData>(
@@ -91941,7 +91669,6 @@ export async function reposListAutolinks<FetcherData>(
   params: {
     owner: string;
     repo: string;
-    page?: number;
   },
   opts?: FetcherData,
 ): Promise<Autolink[]> {
@@ -91949,7 +91676,6 @@ export async function reposListAutolinks<FetcherData>(
     path: '/repos/{owner}/{repo}/autolinks',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['page'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
@@ -93012,8 +92738,9 @@ export async function reposDeleteAccessRestrictions<FetcherData>(
  * more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)
  * in the GitHub Help documentation.
  *
- * Lists the GitHub Apps that have push access to this branch. Only installed GitHub
- * Apps with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+ * Lists the GitHub Apps that have push access to this branch. Only GitHub Apps that are
+ * installed on the repository and that have been granted write access to the repository contents can be added as
+ * authorized actors on a protected branch.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-apps-with-access-to-the-protected-branch}
  * Tags: repos
  */
@@ -93043,8 +92770,9 @@ export async function reposGetAppsWithAccessToProtectedBranch<FetcherData>(
  * more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)
  * in the GitHub Help documentation.
  *
- * Grants the specified apps push access for this branch. Only installed GitHub Apps
- * with `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+ * Grants the specified apps push access for this branch. Only GitHub Apps that are
+ * installed on the repository and that have been granted write access to the repository contents can be added as
+ * authorized actors on a protected branch.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#add-app-access-restrictions}
  * Tags: repos
  */
@@ -93084,8 +92812,9 @@ export async function reposAddAppAccessRestrictions<FetcherData>(
  * in the GitHub Help documentation.
  *
  * Replaces the list of apps that have push access to this branch. This removes all apps
- * that previously had push access and grants push access to the new list of apps. Only installed GitHub Apps with `write`
- * access to the `contents` permission can be added as authorized actors on a protected branch.
+ * that previously had push access and grants push access to the new list of apps. Only GitHub Apps that are installed on
+ * the repository and that have been granted write access to the repository contents can be added as authorized actors on a
+ * protected branch.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#set-app-access-restrictions}
  * Tags: repos
  */
@@ -93124,8 +92853,9 @@ export async function reposSetAppAccessRestrictions<FetcherData>(
  * more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)
  * in the GitHub Help documentation.
  *
- * Removes the ability of an app to push to this branch. Only installed GitHub Apps with
- * `write` access to the `contents` permission can be added as authorized actors on a protected branch.
+ * Removes the ability of an app to push to this branch. Only GitHub Apps that are
+ * installed on the repository and that have been granted write access to the repository contents can be added as
+ * authorized actors on a protected branch.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#remove-app-access-restrictions}
  * Tags: repos
  */
@@ -93475,21 +93205,12 @@ export async function reposRemoveUserAccessRestrictions<FetcherData>(
  * is in progress. For more information, see "[Renaming a
  * branch](https://docs.github.com/github/administering-a-repository/renaming-a-branch)".
  *
- * The permissions required to use
- * this endpoint depends on whether you are renaming the default branch.
+ * The authenticated user must have
+ * push access to the branch. If the branch is the default branch, the authenticated user must also have admin or owner
+ * permissions.
  *
- * To rename a non-default branch:
- *
- * * Users must
- * have push access.
- * * GitHub Apps must have the `contents:write` repository permission.
- *
- * To rename the default branch:
- *
- * *
- * Users must have admin or owner permissions.
- * * GitHub Apps must have the `contents:write` and `administration:write`
- * repository permissions.
+ * In order to rename the default branch, fine-grained access tokens also need the `administration:write`
+ * repository permission.
  * Learn more at {@link https://docs.github.com/rest/branches/branches#rename-a-branch}
  * Tags: repos
  */
@@ -93521,16 +93242,15 @@ export async function reposRenameBranch<FetcherData>(
  * Create a check run
  * Creates a new check run for a specific commit in a repository.
  *
- * To create a check run, you must use a GitHub App with
- * the `checks:write` permission. OAuth apps and authenticated users are not able to create a check suite.
+ * To create a check run, you must use a GitHub App. OAuth
+ * apps and authenticated users are not able to create a check suite.
  *
- * In a check
- * suite, GitHub limits the number of check runs with the same name to 1000. Once these check runs exceed 1000, GitHub will
- * start to automatically delete older check runs.
+ * In a check suite, GitHub limits the number of check
+ * runs with the same name to 1000. Once these check runs exceed 1000, GitHub will start to automatically delete older
+ * check runs.
  *
- * **Note:** The Checks API only looks for pushes in the repository where
- * the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an
- * empty `pull_requests` array.
+ * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were
+ * created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#create-a-check-run}
  * Tags: checks
  */
@@ -93558,13 +93278,12 @@ export async function checksCreate<FetcherData>(
  * Get a check run
  * Gets a single check run using its `id`.
  *
- * GitHub Apps must have the `checks:read` permission on a private repository or
- * pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to
- * get check runs in a private repository.
- *
  * **Note:** The Checks API only looks for pushes in the repository where the
  * check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty
  * `pull_requests` array.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint
+ * on a private repository.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#get-a-check-run}
  * Tags: checks
  */
@@ -93591,12 +93310,12 @@ export async function checksGet<FetcherData>(
  * Update a check run
  * Updates a check run for a specific commit in a repository.
  *
- * To update a check run, you must use a GitHub App with the
- * `checks:write` permission. OAuth apps and authenticated users are not able to update a check run.
+ * **Note:** The endpoints to manage checks only look for
+ * pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are
+ * not detected and return an empty `pull_requests` array.
  *
- * **Note:** The
- * endpoints to manage checks only look for pushes in the repository where the check suite or check run were created.
- * Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+ * OAuth apps and personal access tokens (classic) cannot use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#update-a-check-run}
  * Tags: checks
  */
@@ -93625,13 +93344,8 @@ export async function checksUpdate<FetcherData>(
  * List check run annotations
  * Lists annotations for a check run using the annotation `id`.
  *
- * GitHub Apps
- * must have the `checks:read` permission on a
- * private repository or pull access to
- * a public repository to get annotations for a check run. OAuth apps and
- * authenticated
- * users must have the `repo` scope to get annotations for a check run in a private
- * repository.
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `repo` scope to use this endpoint on a private repository.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-run-annotations}
  * Tags: checks
  */
@@ -93659,15 +93373,14 @@ export async function checksListAnnotations<FetcherData>(
  * Rerequest a check run
  * Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger
  * the [`check_run` webhook](https://docs.github.com/webhooks/event-payloads/#check_run) event with the action
- * `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
+ * `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is
+ * cleared.
  *
- * To
- * rerequest a check run, you must use a GitHub App with the `checks:read` permission on a private repository or pull
- * access to a public repository. OAuth apps and authenticated users are not able to rerequest a check run.
- *
- * For more
- * information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow
+ * For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow
  * run](https://docs.github.com/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)".
+ *
+ * OAuth apps and personal
+ * access tokens (classic) cannot use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#rerequest-a-check-run}
  * Tags: checks
  */
@@ -93695,13 +93408,12 @@ export async function checksRerequestRun<FetcherData>(
  * when you've disabled automatic creation using "[Update repository preferences for check
  * suites](https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites)".
  *
- * To create a check
- * suite, you must use a GitHub App with the `checks:write` permission. OAuth apps and authenticated users are not able to
- * create a check suite.
+ * **Note:** The
+ * Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch
+ * in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
+ * `head_branch`.
  *
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check
- * run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array
- * and a `null` value for `head_branch`.
+ * OAuth apps and personal access tokens (classic) cannot use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#create-a-check-suite}
  * Tags: checks
  */
@@ -93780,13 +93492,12 @@ export async function checksSetSuitesPreferences<FetcherData>(
  * Get a check suite
  * Gets a single check suite using its `id`.
  *
- * GitHub Apps must have the `checks:read` permission on a private repository or
- * pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to
- * get check suites in a private repository.
- *
  * **Note:** The Checks API only looks for pushes in the repository where the
  * check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty
  * `pull_requests` array and a `null` value for `head_branch`.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `repo` scope to use this endpoint on a private repository.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#get-a-check-suite}
  * Tags: checks
  */
@@ -93813,13 +93524,12 @@ export async function checksGetSuite<FetcherData>(
  * List check runs in a check suite
  * Lists check runs for a check suite using its `id`.
  *
- * GitHub Apps must have the `checks:read` permission on a private
- * repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the
- * `repo` scope to get check runs in a private repository.
+ * **Note:** The endpoints to manage checks only look for pushes in the
+ * repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected
+ * and return an empty `pull_requests` array.
  *
- * **Note:** The endpoints to manage checks only look for pushes
- * in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not
- * detected and return an empty `pull_requests` array.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope
+ * to use this endpoint on a private repository.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-runs-in-a-check-suite}
  * Tags: checks
  */
@@ -93862,9 +93572,7 @@ export async function checksListForSuite<FetcherData>(
  * `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is
  * cleared.
  *
- * To rerequest a check suite, you must use a GitHub App with the `checks:write` permission on a private
- * repository or pull access to a public repository. OAuth apps and authenticated users are not able to rerequest a check
- * suite.
+ * OAuth apps and personal access tokens (classic) cannot use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#rerequest-a-check-suite}
  * Tags: checks
  */
@@ -93889,14 +93597,14 @@ export async function checksRerequestSuite<FetcherData>(
  * List code scanning alerts for a repository
  * Lists code scanning alerts.
  *
- * To use this endpoint, you must use an access token with the `security_events` scope or, for
- * alerts from public repositories only, an access token with the `public_repo` scope.
+ * The response includes a `most_recent_instance` object.
+ * This provides details of the most
+ * recent instance of this alert
+ * for the default branch (or for the specified Git reference if you used `ref` in the
+ * request).
  *
- * The response includes a
- * `most_recent_instance` object.
- * This provides details of the most recent instance of this alert
- * for the default branch
- * (or for the specified Git reference if you used `ref` in the request).
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint
+ * with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-a-repository}
  * Tags: code-scanning
  */
@@ -93942,9 +93650,11 @@ export async function codeScanningListAlertsForRepo<FetcherData>(
 }
 /**
  * Get a code scanning alert
- * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint
- * with private repositories, the `public_repo` scope also grants permission to read security events on public repositories
- * only.
+ * Gets a single code scanning alert.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `security_events`
+ * scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with
+ * only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -93969,9 +93679,10 @@ export async function codeScanningGetAlert<FetcherData>(
 }
 /**
  * Update a code scanning alert
- * Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use
- * this endpoint with private repositories. You can also use tokens with the `public_repo` scope for public repositories
- * only.
+ * Updates the status of a single code scanning alert.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this
+ * endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -94003,10 +93714,10 @@ export async function codeScanningUpdateAlert<FetcherData>(
 /**
  * List instances of a code scanning alert
  * Lists all instances of the specified code scanning alert.
- * You must use an access token with the `security_events` scope
- * to use this endpoint with private repositories,
- * the `public_repo` scope also grants permission to read security events
- * on public repositories only.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use
+ * this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-instances-of-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -94047,15 +93758,14 @@ export async function codeScanningListAlertInstances<FetcherData>(
  * For very old analyses this data is not available,
  * and `0` is returned in this field.
  *
- * You must use an access
- * token with the `security_events` scope to use this endpoint with private repositories,
- * the `public_repo` scope also
- * grants permission to read security events on public repositories only.
+ * **Deprecation
+ * notice**:
+ * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint.
+ * The example response reflects this change. The tool name can now be found inside the `tool` field.
  *
- * **Deprecation notice**:
- * The `tool_name` field is
- * deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this
- * change. The tool name can now be found inside the `tool` field.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public
+ * repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
  */
@@ -94101,26 +93811,21 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
  * Get a code scanning analysis for a repository
  * Gets a specified code scanning analysis for a repository.
  *
- * You must use an access token with the `security_events` scope
- * to use this endpoint with private repositories,
- * the `public_repo` scope also grants permission to read security events
- * on public repositories only.
- *
- * The default JSON response contains fields that describe the analysis.
- * This includes the
- * Git reference and commit SHA to which the analysis relates,
- * the datetime of the analysis, the name of the code scanning
- * tool,
+ * The default JSON response contains fields that describe the
+ * analysis.
+ * This includes the Git reference and commit SHA to which the analysis relates,
+ * the datetime of the analysis,
+ * the name of the code scanning tool,
  * and the number of alerts.
  *
- * The `rules_count` field in the default response give the number of rules
- * that were run
- * in the analysis.
+ * The `rules_count` field in the default response give the
+ * number of rules
+ * that were run in the analysis.
  * For very old analyses this data is not available,
- * and `0` is returned in this field.
+ * and `0` is returned in
+ * this field.
  *
- * This endpoint
- * supports the following custom media types. For more information, see "[Media
+ * This endpoint supports the following custom media types. For more information, see "[Media
  * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
  * -
@@ -94128,6 +93833,10 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
  * analysis data that was uploaded. The data is formatted as [SARIF version
  * 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html). It also returns additional data such
  * as the `github/alertNumber` and `github/alertUrl` properties.
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to
+ * use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository}
  * Tags: code-scanning
  */
@@ -94152,22 +93861,17 @@ export async function codeScanningGetAnalysis<FetcherData>(
 }
 /**
  * Delete a code scanning analysis from a repository
- * Deletes a specified code scanning analysis from a repository. For
- * private repositories, you must use an access token
- * with the `repo` scope. For public repositories,
- * you must use an access token with `public_repo` scope.
- * GitHub Apps must
- * have the `security_events` write permission to use this endpoint.
+ * Deletes a specified code scanning analysis from a repository.
  *
  * You can delete one analysis at a time.
- * To delete a
- * series of analyses, start with the most recent analysis and work backwards.
- * Conceptually, the process is similar to the
- * undo function in a text editor.
+ * To delete a series
+ * of analyses, start with the most recent analysis and work backwards.
+ * Conceptually, the process is similar to the undo
+ * function in a text editor.
  *
  * When you list the analyses for a repository,
- * one or more will be identified as
- * deletable in the response:
+ * one or more will be identified as deletable in
+ * the response:
  *
  * ```
  * "deletable": true
@@ -94244,6 +93948,9 @@ export async function codeScanningGetAnalysis<FetcherData>(
  * interface, for the specified repository, and it therefore uses the `confirm_delete_url` value. Alternatively, you could
  * use the `next_analysis_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's
  * analysis entirely.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint
+ * with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#delete-a-code-scanning-analysis-from-a-repository}
  * Tags: code-scanning
  */
@@ -94270,10 +93977,9 @@ export async function codeScanningDeleteAnalysis<FetcherData>(
  * List CodeQL databases for a repository
  * Lists the CodeQL databases that are available in a repository.
  *
- * For private repositories, you must use an access token
- * with the `security_events` scope.
- * For public repositories, you can use tokens with the `security_events` or
- * `public_repo` scope.
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to
+ * use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-codeql-databases-for-a-repository}
  * Tags: code-scanning
  */
@@ -94312,10 +94018,9 @@ export async function codeScanningListCodeqlDatabases<FetcherData>(
  * follow redirects or use the `Location` header
  * to make a second request to get the redirect URL.
  *
- * For private
- * repositories, you must use an access token with the `security_events` scope.
- * For public repositories, you can use tokens
- * with the `security_events` or `public_repo` scope.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public
+ * repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-codeql-database-for-a-repository}
  * Tags: code-scanning
  */
@@ -94343,9 +94048,10 @@ export async function codeScanningGetCodeqlDatabase<FetcherData>(
 /**
  * Get a code scanning default setup configuration
  * Gets a code scanning default setup configuration.
- * You must use an access token with the `repo` scope to use this
- * endpoint with private repositories or the `public_repo`
- * scope for public repositories.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with
+ * only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-default-setup-configuration}
  * Tags: code-scanning
  */
@@ -94372,9 +94078,10 @@ export async function codeScanningGetDefaultSetup<FetcherData>(
 /**
  * Update a code scanning default setup configuration
  * Updates a code scanning default setup configuration.
- * You must use an access token with the `repo` scope to use this
- * endpoint with private repositories or the `public_repo`
- * scope for public repositories.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint
+ * with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-default-setup-configuration}
  * Tags: code-scanning
  */
@@ -94398,10 +94105,8 @@ export async function codeScanningUpdateDefaultSetup<FetcherData>(
 }
 /**
  * Upload an analysis as SARIF data
- * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You
- * must use an access token with the `security_events` scope to use this endpoint for private repositories. You can also
- * use tokens with the `public_repo` scope for public repositories only. GitHub Apps must have the `security_events` write
- * permission to use this endpoint. For troubleshooting information, see "[Troubleshooting SARIF
+ * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. For
+ * troubleshooting information, see "[Troubleshooting SARIF
  * uploads](https://docs.github.com/code-security/code-scanning/troubleshooting-sarif)."
  *
  * There are two places where you
@@ -94460,6 +94165,10 @@ export async function codeScanningUpdateDefaultSetup<FetcherData>(
  * upload by using it in the `/sarifs/{sarif_id}` endpoint.
  * For more information, see "[Get information about a SARIF
  * upload](/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload)."
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the
+ * `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#upload-an-analysis-as-sarif-data}
  * Tags: code-scanning
  */
@@ -94508,9 +94217,10 @@ export async function codeScanningUploadSarif<FetcherData>(
  * Get information about a SARIF upload
  * Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you
  * can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a
- * repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access
- * token with the `security_events` scope to use this endpoint with private repositories, the `public_repo` scope also
- * grants permission to read security events on public repositories only.
+ * repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)."
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public
+ * repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload}
  * Tags: code-scanning
  */
@@ -94565,16 +94275,8 @@ export async function reposCodeownersErrors<FetcherData>(
  * List codespaces in a repository for the authenticated user
  * Lists the codespaces associated to a specified repository and the authenticated user.
  *
- * You must authenticate using an
- * access token with the `codespace` scope to use this endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be
- * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have read access to the `codespaces` repository permission.
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#list-codespaces-in-a-repository-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -94612,16 +94314,8 @@ export async function codespacesListInRepositoryForAuthenticatedUser<
  * Create a codespace in a repository
  * Creates a codespace owned by the authenticated user in the specified repository.
  *
- * You must authenticate using an access
- * token with the `codespace` scope to use this endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be
- * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-in-a-repository}
  * Tags: codespaces
  */
@@ -94697,11 +94391,8 @@ export async function codespacesCreateWithRepoForAuthenticatedUser<FetcherData>(
  * specify
  * launchpoint configurations for codespaces created within the repository.
  *
- * You must authenticate using an access token
- * with the `codespace` scope to use this endpoint.
- *
- * GitHub Apps must have read access to the `codespaces_metadata`
- * repository permission to use this endpoint.
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#list-devcontainer-configurations-in-a-repository-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -94737,11 +94428,8 @@ export async function codespacesListDevcontainersInRepositoryForAuthenticatedUse
  * List available machine types for a repository
  * List the machine types available for a given repository based on its configuration.
  *
- * You must authenticate using an
- * access token with the `codespace` scope to use this endpoint.
- *
- * GitHub Apps must have write access to the
- * `codespaces_metadata` repository permission to use this endpoint.
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/machines#list-available-machine-types-for-a-repository}
  * Tags: codespaces
  */
@@ -94775,16 +94463,8 @@ export async function codespacesRepoMachinesForAuthenticatedUser<FetcherData>(
  * Get default attributes for a codespace
  * Gets the default attributes for codespaces created by the user with the repository.
  *
- * You must authenticate using an
- * access token with the `codespace` scope to use this endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be
- * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#get-default-attributes-for-a-codespace}
  * Tags: codespaces
  */
@@ -94820,16 +94500,7 @@ export async function codespacesPreFlightWithRepoForAuthenticatedUser<
  * Checks whether the permissions defined by a given devcontainer configuration have been accepted by the authenticated
  * user.
  *
- * You must authenticate using an access token with the `codespace` scope to use this endpoint.
- *
- * To use this
- * endpoint with GitHub Apps:
- *
- * - The app must be authenticated on behalf of the user. For more information, see
- * "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#check-if-permissions-defined-by-a-devcontainer-have-been-accepted-by-the-authenticated-user}
  * Tags: codespaces
  */
@@ -94854,9 +94525,11 @@ export async function codespacesCheckPermissionsForDevcontainer<FetcherData>(
 }
 /**
  * List repository secrets
- * Lists all development environment secrets available in a repository without revealing their encrypted values. You must
- * authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the
- * `codespaces_secrets` repository permission to use this endpoint.
+ * Lists all development environment secrets available in a repository without revealing their encrypted
+ * values.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#list-repository-secrets}
  * Tags: codespaces
  */
@@ -94896,10 +94569,14 @@ export async function codespacesListRepoSecrets<FetcherData>(
 }
 /**
  * Get a repository public key
- * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update
- * secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an
- * access token with the `repo` scope. GitHub Apps must have write access to the `codespaces_secrets` repository permission
- * to use this endpoint.
+ * Gets your public key, which you need to encrypt secrets. You need to
+ * encrypt a secret before you can create or update
+ * secrets.
+ *
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * If the repository is private, OAuth app
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-public-key}
  * Tags: codespaces
  */
@@ -94921,9 +94598,10 @@ export async function codespacesGetRepoPublicKey<FetcherData>(
 }
 /**
  * Get a repository secret
- * Gets a single repository development environment secret without revealing its encrypted value. You must authenticate
- * using an access token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the
- * `codespaces_secrets` repository permission to use this endpoint.
+ * Gets a single repository development environment secret without revealing its encrypted value.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-secret}
  * Tags: codespaces
  */
@@ -94953,11 +94631,8 @@ export async function codespacesGetRepoSecret<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access
- * token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the
- * `codespaces_secrets`
- * repository permission to use this endpoint.
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#create-or-update-a-repository-secret}
  * Tags: codespaces
  */
@@ -94991,9 +94666,10 @@ export async function codespacesCreateOrUpdateRepoSecret<FetcherData>(
 }
 /**
  * Delete a repository secret
- * Deletes a development environment secret in a repository using the secret name. You must authenticate using an access
- * token with the `repo` scope to use this endpoint. GitHub Apps must have write access to the `codespaces_secrets`
- * repository permission to use this endpoint.
+ * Deletes a development environment secret in a repository using the secret name.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#delete-a-repository-secret}
  * Tags: codespaces
  */
@@ -95025,11 +94701,10 @@ export async function codespacesDeleteRepoSecret<FetcherData>(
  * Team members will include the members of child
  * teams.
  *
- * You must authenticate using an access token with the `read:org` and `repo` scopes with push access to use
- * this
- * endpoint. GitHub Apps must have the `members` organization permission and `metadata` repository permission to use
- * this
- * endpoint.
+ * The authenticated user must have push access to the repository to use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `read:org` and `repo` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#list-repository-collaborators}
  * Tags: repos
  */
@@ -95063,11 +94738,10 @@ export async function reposListCollaborators<FetcherData>(
  * Team members will include the members of child
  * teams.
  *
- * You must authenticate using an access token with the `read:org` and `repo` scopes with push access to use
- * this
- * endpoint. GitHub Apps must have the `members` organization permission and `metadata` repository permission to use
- * this
- * endpoint.
+ * The authenticated user must have push access to the repository to use this endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `read:org` and `repo` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#check-if-a-user-is-a-repository-collaborator}
  * Tags: repos
  */
@@ -95768,66 +95442,69 @@ export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
  * Returns the contents of a single commit reference. You must have `read` access for the repository to use this
  * endpoint.
  *
- * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link
- * headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the
- * only changes are to the file listing.
+ * **Note:** If there are more than 300 files in the commit diff and the default JSON media type is requested,
+ * the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page
+ * contains the static commit information, and the only changes are to the file listing.
  *
- * This endpoint supports the following custom media types. For more information,
- * see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ * This endpoint supports the
+ * following custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)." Pagination query
+ * parameters are not supported for these media types.
  *
- * -
- * **`application/vnd.github.diff`**: Returns the diff of the commit.
- * - **`application/vnd.github.patch`**: Returns the
- * patch of the commit. Diffs with binary data will have no `patch` property.
- * - **`application/vnd.github.sha`**: Returns
- * the commit's SHA-1 hash. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local
- * reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+ * - **`application/vnd.github.diff`**: Returns the diff of the
+ * commit. Larger diffs may time out and return a 5xx status code.
+ * - **`application/vnd.github.patch`**: Returns the patch
+ * of the commit. Diffs with binary data will have no `patch` property. Larger diffs may time out and return a 5xx status
+ * code.
+ * - **`application/vnd.github.sha`**: Returns the commit's SHA-1 hash. You can use this endpoint to check if a
+ * remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as
+ * the ETag.
  *
  * **Signature verification object**
  *
- * The
- * response will include a `verification` object that describes the result of verifying the commit's signature. The
- * following fields are included in the `verification` object:
+ * The response will include a `verification` object that describes the
+ * result of verifying the commit's signature. The following fields are included in the `verification` object:
  *
- * | Name | Type | Description |
- * | ---- | ---- | -----------
- * |
- * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
- * |
- * `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below.
- * |
- * | `signature` | `string` | The signature that was extracted from the commit. |
- * | `payload` | `string` | The value that
- * was signed. |
+ * | Name |
+ * Type | Description |
+ * | ---- | ---- | ----------- |
+ * | `verified` | `boolean` | Indicates whether GitHub considers the
+ * signature in this commit to be verified. |
+ * | `reason` | `string` | The reason for verified value. Possible values and
+ * their meanings are enumerated in table below. |
+ * | `signature` | `string` | The signature that was extracted from the
+ * commit. |
+ * | `payload` | `string` | The value that was signed. |
  *
- * These are the possible values for `reason` in the `verification` object:
+ * These are the possible values for `reason` in the
+ * `verification` object:
  *
  * | Value | Description |
- * | -----
- * | ----------- |
- * | `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag
- * is not among the usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error
- * communicating with the signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service
- * is currently unavailable. |
- * | `unsigned` | The object does not include a signature. |
- * | `unknown_signature_type` | A
- * non-PGP signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in
- * the commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the
- * email address is not verified on their account. |
- * | `bad_email` | The `committer` email address in the commit is not
- * included in the identities of the PGP key that made the signature. |
- * | `unknown_key` | The key that made the signature
- * has not been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature.
+ * | ----- | ----------- |
+ * | `expired_key` | The key that made the
+ * signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
+ * the signature. |
+ * | `gpgverify_error` | There was an error communicating with the signature verification service. |
  * |
- * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
+ * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on their account. |
+ * |
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
  * signature. |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+ * |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/commits/commits#get-a-commit}
  * Tags: repos
  */
@@ -95855,10 +95532,6 @@ export async function reposGetCommit<FetcherData>(
  * List check runs for a Git reference
  * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name.
  *
- * GitHub Apps must have the
- * `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and
- * authenticated users must have the `repo` scope to get check runs in a private repository.
- *
  * **Note:** The endpoints to
  * manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch
  * in a forked repository are not detected and return an empty `pull_requests` array.
@@ -95869,6 +95542,9 @@ export async function reposGetCommit<FetcherData>(
  * reference](https://docs.github.com/rest/reference/checks#list-check-suites-for-a-git-reference) endpoint and provide the
  * `check_suite_id` parameter to the [List check runs in a check
  * suite](https://docs.github.com/rest/reference/checks#list-check-runs-in-a-check-suite) endpoint.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `repo` scope to use this endpoint on a private repository.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-runs-for-a-git-reference}
  * Tags: checks
  */
@@ -95916,14 +95592,13 @@ export async function checksListForRef<FetcherData>(
  * List check suites for a Git reference
  * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name.
  *
- * GitHub Apps must have the
- * `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps
- * and authenticated users must have the `repo` scope to get check suites in a private repository.
- *
- * **Note:** The endpoints
- * to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a
- * branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
+ * **Note:** The endpoints to
+ * manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch
+ * in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
  * `head_branch`.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint on a
+ * private repository.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#list-check-suites-for-a-git-reference}
  * Tags: checks
  */
@@ -96070,9 +95745,10 @@ export async function reposGetCommunityProfileMetrics<FetcherData>(
 }
 /**
  * Compare two commits
- * Compares two commits against one another. You can compare branches in the same repository, or you can compare branches
- * that exist in different repositories within the same repository network, including fork branches. For more information
- * about how to view a repository's network, see "[Understanding connections between
+ * Compares two commits against one another. You can compare refs (branches or tags) and commit SHAs in the same
+ * repository, or you can compare refs and commit SHAs that exist in different repositories within the same repository
+ * network, including fork branches. For more information about how to view a repository's network, see "[Understanding
+ * connections between
  * repositories](https://docs.github.com/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
  *
  * This
@@ -96260,13 +95936,15 @@ export async function reposGetContent<FetcherData>(
 }
 /**
  * Create or update file contents
- * Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the
- * `repo` scope to use this endpoint. If you want to modify files in the `.github/workflows` directory, you must
- * authenticate using an access token with the `workflow` scope.
+ * Creates a new file or replaces an existing file in a repository.
  *
  * **Note:** If you use this endpoint and the "[Delete a
  * file](https://docs.github.com/rest/repos/contents/#delete-a-file)" endpoint in parallel, the concurrent requests will
  * conflict and you will receive errors. You must use these endpoints serially instead.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint. The `workflow` scope is also required in order to
+ * modify files in the `.github/workflows` directory.
  * Learn more at {@link https://docs.github.com/rest/repos/contents#create-or-update-file-contents}
  * Tags: repos
  */
@@ -96454,11 +96132,8 @@ export async function reposListContributors<FetcherData>(
 }
 /**
  * List Dependabot alerts for a repository
- * You must use an access token with the `security_events` scope to use this endpoint with private repositories.
- * You can
- * also use tokens with the `public_repo` scope for public repositories only.
- * GitHub Apps must have **Dependabot alerts**
- * read permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. If this
+ * endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository}
  * Tags: dependabot
  */
@@ -96514,11 +96189,8 @@ export async function dependabotListAlertsForRepo<FetcherData>(
 }
 /**
  * Get a Dependabot alert
- * You must use an access token with the `security_events` scope to use this endpoint with private repositories.
- * You can
- * also use tokens with the `public_repo` scope for public repositories only.
- * GitHub Apps must have **Dependabot alerts**
- * read permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. If this
+ * endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#get-a-dependabot-alert}
  * Tags: dependabot
  */
@@ -96543,15 +96215,13 @@ export async function dependabotGetAlert<FetcherData>(
 }
 /**
  * Update a Dependabot alert
- * You must use an access token with the `security_events` scope to use this endpoint with private repositories.
- * You can
- * also use tokens with the `public_repo` scope for public repositories only.
- * GitHub Apps must have **Dependabot alerts**
- * write permission to use this endpoint.
- *
- * To use this endpoint, you must have access to security alerts for the
- * repository. For more information, see "[Granting access to security
+ * The authenticated user must have access to security alerts for the repository to use this endpoint. For more
+ * information, see "[Granting access to security
  * alerts](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository#granting-access-to-security-alerts)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. If this endpoint
+ * is only used with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#update-a-dependabot-alert}
  * Tags: dependabot
  */
@@ -96597,9 +96267,11 @@ export async function dependabotUpdateAlert<FetcherData>(
 }
 /**
  * List repository secrets
- * Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an
- * access token with the `repo` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` repository
- * permission to use this endpoint.
+ * Lists all secrets available in a repository without revealing their encrypted
+ * values.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#list-repository-secrets}
  * Tags: dependabot
  */
@@ -96635,10 +96307,13 @@ export async function dependabotListRepoSecrets<FetcherData>(
 }
 /**
  * Get a repository public key
- * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update
- * secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an
- * access token with the `repo` scope. GitHub Apps must have the `dependabot_secrets` repository permission to use this
- * endpoint.
+ * Gets your public key, which you need to encrypt secrets. You need to
+ * encrypt a secret before you can create or update
+ * secrets. Anyone with read access
+ * to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint if the repository is private.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key}
  * Tags: dependabot
  */
@@ -96660,9 +96335,10 @@ export async function dependabotGetRepoPublicKey<FetcherData>(
 }
 /**
  * Get a repository secret
- * Gets a single repository secret without revealing its encrypted value. You must authenticate using an access token with
- * the `repo` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` repository permission to use this
- * endpoint.
+ * Gets a single repository secret without revealing its encrypted value.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-a-repository-secret}
  * Tags: dependabot
  */
@@ -96692,11 +96368,8 @@ export async function dependabotGetRepoSecret<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access
- * token with the `repo` scope to use this endpoint. GitHub Apps must have the
- * `dependabot_secrets` repository
- * permission to use this endpoint.
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#create-or-update-a-repository-secret}
  * Tags: dependabot
  */
@@ -96730,8 +96403,10 @@ export async function dependabotCreateOrUpdateRepoSecret<FetcherData>(
 }
 /**
  * Delete a repository secret
- * Deletes a secret in a repository using the secret name. You must authenticate using an access token with the `repo`
- * scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` repository permission to use this endpoint.
+ * Deletes a secret in a repository using the secret name.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#delete-a-repository-secret}
  * Tags: dependabot
  */
@@ -96802,8 +96477,12 @@ export async function dependencyGraphExportSbom<FetcherData>(
 }
 /**
  * Create a snapshot of dependencies for a repository
- * Create a new snapshot of a repository's dependencies. You must authenticate using an access token with the `repo` scope
- * to use this endpoint for a repository that the requesting user has access to.
+ * Create a new snapshot of a repository's dependencies.
+ *
+ * The authenticated user must have access to the repository.
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/dependency-graph/dependency-submission#create-a-snapshot-of-dependencies-for-a-repository}
  * Tags: dependency-graph
  */
@@ -96916,38 +96595,38 @@ export async function reposListDeployments<FetcherData>(
  * world this could be a flag to compile an
  * application with debugging enabled.
  *
- * Users with `repo` or `repo_deployment`
- * scopes can create a deployment for a given ref.
- *
  * Merged branch response:
  *
- * You will see this response when GitHub
- * automatically merges the base branch into the topic branch instead of creating
- * a deployment. This auto-merge happens
- * when:
+ * You will see this
+ * response when GitHub automatically merges the base branch into the topic branch instead of creating
+ * a deployment. This
+ * auto-merge happens when:
  * *   Auto-merge option is enabled in the repository
- * *   Topic branch does not include the latest changes on the
- * base branch, which is `master` in the response example
+ * *   Topic branch does not include the latest
+ * changes on the base branch, which is `master` in the response example
  * *   There are no merge conflicts
  *
- * If there are no new commits in
- * the base branch, a new request to create a deployment should give a successful
+ * If there are no
+ * new commits in the base branch, a new request to create a deployment should give a successful
  * response.
  *
- * Merge conflict response:
+ * Merge conflict
+ * response:
  *
- * This
- * error happens when the `auto_merge` option is enabled and when the default branch (in this case `master`), can't
- * be
- * merged into the branch that's being deployed (in this case `topic-branch`), due to merge conflicts.
+ * This error happens when the `auto_merge` option is enabled and when the default branch (in this case
+ * `master`), can't
+ * be merged into the branch that's being deployed (in this case `topic-branch`), due to merge
+ * conflicts.
  *
- * Failed commit
- * status checks:
+ * Failed commit status checks:
  *
- * This error happens when the `required_contexts` parameter indicates that one or more contexts need to
- * have a `success`
- * status for the commit to be deployed, but one or more of the required contexts do not have a state of
- * `success`.
+ * This error happens when the `required_contexts` parameter indicates that one
+ * or more contexts need to have a `success`
+ * status for the commit to be deployed, but one or more of the required contexts
+ * do not have a state of `success`.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` or
+ * `repo_deployment` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/deployments#create-a-deployment}
  * Tags: repos
  */
@@ -97045,19 +96724,21 @@ export async function reposGetDeployment<FetcherData>(
  * Delete a deployment
  * If the repository only has one deployment, you can delete the deployment regardless of its status. If the repository has
  * more than one deployment, you can only delete inactive deployments. This ensures that repositories with multiple
- * deployments will always have an active deployment. Anyone with `repo` or `repo_deployment` scopes can delete a
- * deployment.
+ * deployments will always have an active deployment.
  *
  * To set a deployment as inactive, you must:
  *
- * *   Create a new deployment that is active so that the system
- * has a record of the current state, then delete the previously active deployment.
- * *   Mark the active deployment as
- * inactive by adding any non-successful deployment status.
+ * *   Create a new
+ * deployment that is active so that the system has a record of the current state, then delete the previously active
+ * deployment.
+ * *   Mark the active deployment as inactive by adding any non-successful deployment status.
  *
- * For more information, see "[Create a
- * deployment](https://docs.github.com/rest/deployments/deployments/#create-a-deployment)" and "[Create a deployment
- * status](https://docs.github.com/rest/deployments/statuses#create-a-deployment-status)."
+ * For more
+ * information, see "[Create a deployment](https://docs.github.com/rest/deployments/deployments/#create-a-deployment)" and
+ * "[Create a deployment status](https://docs.github.com/rest/deployments/statuses#create-a-deployment-status)."
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` or `repo_deployment` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/deployments#delete-a-deployment}
  * Tags: repos
  */
@@ -97112,9 +96793,8 @@ export async function reposListDeploymentStatuses<FetcherData>(
  * Create a deployment status
  * Users with `push` access can create deployment statuses for a given deployment.
  *
- * GitHub Apps require `read & write`
- * access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth apps require the
- * `repo_deployment` scope.
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo_deployment` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/statuses#create-a-deployment-status}
  * Tags: repos
  */
@@ -97214,16 +96894,10 @@ export async function reposGetDeploymentStatus<FetcherData>(
  * a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test
  * to debug your workflow.
  *
- * This endpoint requires write access to the repository by providing either:
+ * This input example shows how you can use the `client_payload` as a test to debug your
+ * workflow.
  *
- *   - Personal access
- * tokens with `repo` scope. For more information, see "[Creating a personal access token for the command
- * line](https://docs.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help
- * documentation.
- *   - GitHub Apps with both `metadata:read` and `contents:read&write` permissions.
- *
- * This input example
- * shows how you can use the `client_payload` as a test to debug your workflow.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-dispatch-event}
  * Tags: repos
  */
@@ -97260,9 +96934,10 @@ export async function reposCreateDispatchEvent<FetcherData>(
  * List environments
  * Lists the environments for a repository.
  *
- * Anyone with read access to the repository can use this endpoint. If the
- * repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read`
- * permission to use this endpoint.
+ * Anyone with read access to the repository can use this endpoint.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#list-environments}
  * Tags: repos
  */
@@ -97306,10 +96981,10 @@ export async function reposGetAllEnvironments<FetcherData>(
  * "[Get a deployment branch policy](/rest/deployments/branch-policies#get-a-deployment-branch-policy)."
  *
  * Anyone with read
- * access to the repository can use this endpoint. If the
- * repository is private, you must use an access token with the
- * `repo` scope. GitHub
- * Apps must have the `actions:read` permission to use this endpoint.
+ * access to the repository can use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#get-an-environment}
  * Tags: repos
  */
@@ -97345,8 +97020,8 @@ export async function reposGetEnvironment<FetcherData>(
  * **Note:** To create or update secrets for an environment, see "[GitHub
  * Actions secrets](/rest/actions/secrets)."
  *
- * You must authenticate using an access token with the `repo` scope to use this
- * endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope
+ * to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#create-or-update-an-environment}
  * Tags: repos
  */
@@ -97390,7 +97065,7 @@ export async function reposCreateOrUpdateEnvironment<FetcherData>(
 }
 /**
  * Delete an environment
- * You must authenticate using an access token with the repo scope to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#delete-an-environment}
  * Tags: repos
  */
@@ -97416,8 +97091,10 @@ export async function reposDeleteAnEnvironment<FetcherData>(
  * Lists the deployment branch policies for an environment.
  *
  * Anyone with read access to the repository can use this
- * endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the
- * `actions:read` permission to use this endpoint.
+ * endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a
+ * private repository.
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#list-deployment-branch-policies}
  * Tags: repos
  */
@@ -97452,9 +97129,8 @@ export async function reposListDeploymentBranchPolicies<FetcherData>(
  * Create a deployment branch policy
  * Creates a deployment branch or tag policy for an environment.
  *
- * You must authenticate using an access token with the
- * `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use
- * this endpoint.
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#create-a-deployment-branch-policy}
  * Tags: repos
  */
@@ -97482,8 +97158,10 @@ export async function reposCreateDeploymentBranchPolicy<FetcherData>(
  * Gets a deployment branch or tag policy for an environment.
  *
  * Anyone with read access to the repository can use this
- * endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the
- * `actions:read` permission to use this endpoint.
+ * endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a
+ * private repository.
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#get-a-deployment-branch-policy}
  * Tags: repos
  */
@@ -97509,9 +97187,8 @@ export async function reposGetDeploymentBranchPolicy<FetcherData>(
  * Update a deployment branch policy
  * Updates a deployment branch or tag policy for an environment.
  *
- * You must authenticate using an access token with the
- * `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use
- * this endpoint.
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#update-a-deployment-branch-policy}
  * Tags: repos
  */
@@ -97539,9 +97216,8 @@ export async function reposUpdateDeploymentBranchPolicy<FetcherData>(
  * Delete a deployment branch policy
  * Deletes a deployment branch or tag policy for an environment.
  *
- * You must authenticate using an access token with the
- * `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use
- * this endpoint.
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#delete-a-deployment-branch-policy}
  * Tags: repos
  */
@@ -97566,14 +97242,15 @@ export async function reposDeleteDeploymentBranchPolicy<FetcherData>(
 /**
  * Get all deployment protection rules for an environment
  * Gets all custom deployment protection rules that are enabled for an environment. Anyone with read access to the
- * repository can use this endpoint. If the repository is private and you want to use a personal access token (classic),
- * you must use an access token with the `repo` scope. GitHub Apps and fine-grained personal access tokens must have the
- * `actions:read` permission to use this endpoint. For more information about environments, see "[Using environments for
- * deployment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
+ * repository can use this endpoint. For more information about environments, see "[Using environments for
+ * deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
  *
  * For
  * more information about the app that is providing this custom deployment rule, see the [documentation for the `GET
  * /apps/{app_slug}` endpoint](https://docs.github.com/rest/apps/apps#get-an-app).
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#get-all-deployment-protection-rules-for-an-environment}
  * Tags: repos
  */
@@ -97605,13 +97282,15 @@ export async function reposGetAllDeploymentProtectionRules<FetcherData>(
  * Create a custom deployment protection rule on an environment
  * Enable a custom deployment protection rule for an environment.
  *
- * You must authenticate using an access token with the
- * `repo` scope to use this endpoint. Enabling a custom protection rule requires admin or owner permissions to the
- * repository. GitHub Apps must have the `actions:write` permission to use this endpoint.
+ * The authenticated user must have admin or owner
+ * permissions to the repository to use this endpoint.
  *
- * For more information about the
- * app that is providing this custom deployment rule, see the [documentation for the `GET /apps/{app_slug}`
+ * For more information about the app that is providing this custom
+ * deployment rule, see the [documentation for the `GET /apps/{app_slug}`
  * endpoint](https://docs.github.com/rest/apps/apps#get-an-app).
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#create-a-custom-deployment-protection-rule-on-an-environment}
  * Tags: repos
  */
@@ -97642,17 +97321,17 @@ export async function reposCreateDeploymentProtectionRule<FetcherData>(
 /**
  * List custom deployment rule integrations available for an environment
  * Gets all custom deployment protection rule integrations that are available for an environment. Anyone with read access
- * to the repository can use this endpoint. If the repository is private and you want to use a personal access token
- * (classic), you must use an access token with the `repo` scope. GitHub Apps and fine-grained personal access tokens must
- * have the `actions:read` permission to use this endpoint.
+ * to the repository can use this endpoint.
  *
- * For more information about environments, see "[Using
- * environments for
- * deployment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
+ * For more information about environments, see "[Using environments for
+ * deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
  *
  * For
  * more information about the app that is providing this custom deployment rule, see "[GET an
  * app](https://docs.github.com/rest/apps/apps#get-an-app)".
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#list-custom-deployment-rule-integrations-available-for-an-environment}
  * Tags: repos
  */
@@ -97686,14 +97365,15 @@ export async function reposListCustomDeploymentRuleIntegrations<FetcherData>(
 /**
  * Get a custom deployment protection rule
  * Gets an enabled custom deployment protection rule for an environment. Anyone with read access to the repository can use
- * this endpoint. If the repository is private and you want to use a personal access token (classic), you must use an
- * access token with the `repo` scope. GitHub Apps and fine-grained personal access tokens must have the `actions:read`
- * permission to use this endpoint. For more information about environments, see "[Using environments for
- * deployment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
+ * this endpoint. For more information about environments, see "[Using environments for
+ * deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
  *
  * For
  * more information about the app that is providing this custom deployment rule, see [`GET
  * /apps/{app_slug}`](https://docs.github.com/rest/apps/apps#get-an-app).
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#get-a-custom-deployment-protection-rule}
  * Tags: repos
  */
@@ -97719,10 +97399,11 @@ export async function reposGetCustomDeploymentProtectionRule<FetcherData>(
  * Disable a custom protection rule for an environment
  * Disables a custom deployment protection rule for an environment.
  *
- * You must authenticate using an access token with the
- * `repo` scope to use this endpoint. Removing a custom protection rule requires admin or owner permissions to the
- * repository. GitHub Apps must have the `actions:write` permission to use this endpoint. For more information, see "[Get
- * an app](https://docs.github.com/rest/apps/apps#get-an-app)".
+ * The authenticated user must have admin or owner
+ * permissions to the repository to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#disable-a-custom-protection-rule-for-an-environment}
  * Tags: repos
  */
@@ -98736,8 +98417,8 @@ export async function reposDeleteWebhook<FetcherData>(
  * Returns the webhook configuration for a repository. To get more information about the webhook, including the `active`
  * state and `events`, use "[Get a repository webhook](/rest/webhooks/repos#get-a-repository-webhook)."
  *
- * Access tokens must
- * have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `read:repo_hook` or `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#get-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
@@ -98763,9 +98444,8 @@ export async function reposGetWebhookConfigForRepo<FetcherData>(
  * Updates the webhook configuration for a repository. To update more information about the webhook, including the `active`
  * state and `events`, use "[Update a repository webhook](/rest/webhooks/repos#update-a-repository-webhook)."
  *
- * Access
- * tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write`
- * permission.
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `write:repo_hook` or `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#update-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
@@ -100977,6 +100657,7 @@ export async function licensesGetForRepo<FetcherData>(
   params: {
     owner: string;
     repo: string;
+    ref?: CodeScanningRef;
   },
   opts?: FetcherData,
 ): Promise<LicenseContent> {
@@ -100984,6 +100665,7 @@ export async function licensesGetForRepo<FetcherData>(
     path: '/repos/{owner}/{repo}/license',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {});
@@ -101329,8 +101011,8 @@ export async function activityMarkRepoNotificationsAsRead<FetcherData>(
  * Get a GitHub Pages site
  * Gets information about a GitHub Pages site.
  *
- * A token with the `repo` scope is required. GitHub Apps must have the
- * `pages:read` permission.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope
+ * to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site}
  * Tags: repos
  */
@@ -101357,9 +101039,11 @@ export async function reposGetPages<FetcherData>(
  * Configures a GitHub Pages site. For more information, see "[About GitHub
  * Pages](/github/working-with-github-pages/about-github-pages)."
  *
- * To use this endpoint, you must be a repository
- * administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages
- * write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
+ * The authenticated user must be a repository
+ * administrator, maintainer, or have the 'manage GitHub Pages settings' permission.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#create-a-apiname-pages-site}
  * Tags: repos
  */
@@ -101388,9 +101072,11 @@ export async function reposCreatePagesSite<FetcherData>(
  * Updates information for a GitHub Pages site. For more information, see "[About GitHub
  * Pages](/github/working-with-github-pages/about-github-pages).
  *
- * To use this endpoint, you must be a repository
- * administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages
- * write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
+ * The authenticated user must be a repository
+ * administrator, maintainer, or have the 'manage GitHub Pages settings' permission.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#update-information-about-a-apiname-pages-site}
  * Tags: repos
  */
@@ -101417,9 +101103,11 @@ export async function reposUpdateInformationAboutPagesSite<FetcherData>(
  * Deletes a GitHub Pages site. For more information, see "[About GitHub
  * Pages](/github/working-with-github-pages/about-github-pages).
  *
- * To use this endpoint, you must be a repository
- * administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages
- * write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
+ * The authenticated user must be a repository
+ * administrator, maintainer, or have the 'manage GitHub Pages settings' permission.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#delete-a-apiname-pages-site}
  * Tags: repos
  */
@@ -101443,8 +101131,8 @@ export async function reposDeletePagesSite<FetcherData>(
  * List GitHub Pages builds
  * Lists builts of a GitHub Pages site.
  *
- * A token with the `repo` scope is required. GitHub Apps must have the `pages:read`
- * permission.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#list-apiname-pages-builds}
  * Tags: repos
  */
@@ -101501,8 +101189,8 @@ export async function reposRequestPagesBuild<FetcherData>(
  * Get latest Pages build
  * Gets information about the single most recent build of a GitHub Pages site.
  *
- * A token with the `repo` scope is required.
- * GitHub Apps must have the `pages:read` permission.
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-latest-pages-build}
  * Tags: repos
  */
@@ -101528,8 +101216,8 @@ export async function reposGetLatestPagesBuild<FetcherData>(
  * Get GitHub Pages build
  * Gets information about a GitHub Pages build.
  *
- * A token with the `repo` scope is required. GitHub Apps must have the
- * `pages:read` permission.
+ * OAuth app tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-apiname-pages-build}
  * Tags: repos
  */
@@ -101556,8 +101244,7 @@ export async function reposGetPagesBuild<FetcherData>(
  * Create a GitHub Pages deployment
  * Create a GitHub Pages deployment for a repository.
  *
- * Users must have write permissions. GitHub Apps must have the
- * `pages:write` permission to use this endpoint.
+ * The authenticated user must have write permission to the repository.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#create-a-github-pages-deployment}
  * Tags: repos
  */
@@ -101606,8 +101293,8 @@ export async function reposCreatePagesDeployment<FetcherData>(
  * Get the status of a GitHub Pages deployment
  * Gets the current status of a GitHub Pages deployment.
  *
- * Users must have read permission for the GitHub Pages site. GitHub
- * Apps must have the `pages:read` permission.
+ * The authenticated user must have read permission for the GitHub
+ * Pages site.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-the-status-of-a-github-pages-deployment}
  * Tags: repos
  */
@@ -101632,8 +101319,7 @@ export async function reposGetPagesDeployment<FetcherData>(
  * Cancel a GitHub Pages deployment
  * Cancels a GitHub Pages deployment.
  *
- * Users must have write permissions for the GitHub Pages site. GitHub Apps must have
- * the `pages:write` permission to use this endpoint.
+ * The authenticated user must have write permissions for the GitHub Pages site.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#cancel-a-github-pages-deployment}
  * Tags: repos
  */
@@ -101663,9 +101349,11 @@ export async function reposCancelPagesDeployment<FetcherData>(
  * for the domain. After the background task completes, subsequent requests to this endpoint return a `200 OK` status with
  * the health check results in the response.
  *
- * To use this endpoint, you must be a repository administrator, maintainer, or
- * have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required.
- * GitHub Apps must have the `administrative:write` and `pages:write` permissions.
+ * The authenticated user must be a repository administrator, maintainer, or
+ * have the 'manage GitHub Pages settings' permission to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-a-dns-health-check-for-github-pages}
  * Tags: repos
  */
@@ -101804,8 +101492,6 @@ export async function projectsCreateForRepo<FetcherData>(
  * Gets all custom property values that are set for a repository.
  * Users with read access to the repository can use this
  * endpoint.
- *
- * GitHub Apps must have the `metadata:read` repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/repos/custom-properties#get-all-custom-property-values-for-a-repository}
  * Tags: repos
  */
@@ -101833,9 +101519,6 @@ export async function reposGetCustomPropertiesValues<FetcherData>(
  *
  * Repository admins and other users with the
  * repository-level "edit custom property values" fine-grained permission can use this endpoint.
- *
- * GitHub Apps must have the
- * `repository_custom_properties:write` permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository}
  * Tags: repos
  */
@@ -102458,16 +102141,8 @@ export async function pullsUpdate<FetcherData>(
  * Create a codespace from a pull request
  * Creates a codespace owned by the authenticated user for the specified pull request.
  *
- * You must authenticate using an
- * access token with the `codespace` scope to use this endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be
- * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-from-a-pull-request}
  * Tags: codespaces
  */
@@ -104413,13 +104088,13 @@ export async function reposDeleteRepoRuleset<FetcherData>(
 /**
  * List secret scanning alerts for a repository
  * Lists secret scanning alerts for an eligible repository, from newest to oldest.
- * To use this endpoint, you must be an
- * administrator for the repository or for the organization that owns the repository, and you must use a personal access
- * token with the `repo` scope or `security_events` scope.
- * For public repositories, you may instead use the `public_repo`
- * scope.
  *
- * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+ * The authenticated user must be an
+ * administrator for the repository or for the organization that owns the repository to use this endpoint.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this
+ * endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-a-repository}
  * Tags: secret-scanning
  */
@@ -104468,13 +104143,13 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
 /**
  * Get a secret scanning alert
  * Gets a single secret scanning alert detected in an eligible repository.
- * To use this endpoint, you must be an
- * administrator for the repository or for the organization that owns the repository, and you must use a personal access
- * token with the `repo` scope or `security_events` scope.
- * For public repositories, you may instead use the `public_repo`
- * scope.
  *
- * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+ * The authenticated user must be an administrator
+ * for the repository or for the organization that owns the repository to use this endpoint.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used
+ * with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#get-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
@@ -104500,13 +104175,13 @@ export async function secretScanningGetAlert<FetcherData>(
 /**
  * Update a secret scanning alert
  * Updates the status of a secret scanning alert in an eligible repository.
- * To use this endpoint, you must be an
- * administrator for the repository or for the organization that owns the repository, and you must use a personal access
- * token with the `repo` scope or `security_events` scope.
- * For public repositories, you may instead use the `public_repo`
- * scope.
  *
- * GitHub Apps must have the `secret_scanning_alerts` write permission to use this endpoint.
+ * The authenticated user must be an
+ * administrator for the repository or for the organization that owns the repository to use this endpoint.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this
+ * endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#update-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
@@ -104538,13 +104213,13 @@ export async function secretScanningUpdateAlert<FetcherData>(
 /**
  * List locations for a secret scanning alert
  * Lists all locations for a given secret scanning alert for an eligible repository.
- * To use this endpoint, you must be an
- * administrator for the repository or for the organization that owns the repository, and you must use a personal access
- * token with the `repo` scope or `security_events` scope.
- * For public repositories, you may instead use the `public_repo`
- * scope.
  *
- * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+ * The authenticated user must be an
+ * administrator for the repository or for the organization that owns the repository to use this endpoint.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this
+ * endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-locations-for-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
@@ -104571,14 +104246,14 @@ export async function secretScanningListLocationsForAlert<FetcherData>(
 /**
  * List repository security advisories
  * Lists security advisories in a repository.
- * You must authenticate using an access token with the `repo` scope or
- * `repository_advisories:read` permission
- * in order to get published security advisories in a private repository, or any
- * unpublished security advisories that you have access to.
  *
- * You can access unpublished security advisories from a
- * repository if you are a security manager or administrator of that repository, or if you are a collaborator on any
+ * The authenticated user can access unpublished security advisories from a
+ * repository if they are a security manager or administrator of that repository, or if they are a collaborator on any
  * security advisory.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` or
+ * `repository_advisories:read` scope to to get a published security advisory in a private repository, or any unpublished
+ * security advisory that the authenticated user has access to.
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#list-repository-security-advisories}
  * Tags: security-advisories
  */
@@ -104612,11 +104287,12 @@ export async function securityAdvisoriesListRepositoryAdvisories<FetcherData>(
 /**
  * Create a repository security advisory
  * Creates a new repository security advisory.
- * You must authenticate using an access token with the `repo` scope or
- * `repository_advisories:write` permission to use this endpoint.
  *
- * In order to create a draft repository security advisory,
- * you must be a security manager or administrator of that repository.
+ * In order to create a draft repository security advisory, the authenticated
+ * user must be a security manager or administrator of that repository.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` or `repository_advisories:write` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#create-a-repository-security-advisory}
  * Tags: security-advisories
  */
@@ -104674,17 +104350,18 @@ export async function securityAdvisoriesCreatePrivateVulnerabilityReport<
 /**
  * Get a repository security advisory
  * Get a repository security advisory using its GitHub Security Advisory (GHSA) identifier.
- * You can access any published
- * security advisory on a public repository.
- * You must authenticate using an access token with the `repo` scope or
- * `repository_advisories:read` permission
- * in order to get a published security advisory in a private repository, or any
- * unpublished security advisory that you have access to.
  *
- * You can access an unpublished security advisory from a
- * repository if you are a security manager or administrator of that repository, or if you are a
- * collaborator on the
- * security advisory.
+ * Anyone can access any
+ * published security advisory on a public repository.
+ *
+ * The authenticated user can access an unpublished security advisory
+ * from a repository if they are a security manager or administrator of that repository, or if they are a
+ * collaborator on
+ * the security advisory.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` or
+ * `repository_advisories:read` scope to to get a published security advisory in a private repository, or any unpublished
+ * security advisory that the authenticated user has access to.
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#get-a-repository-security-advisory}
  * Tags: security-advisories
  */
@@ -104710,13 +104387,14 @@ export async function securityAdvisoriesGetRepositoryAdvisory<FetcherData>(
 /**
  * Update a repository security advisory
  * Update a repository security advisory using its GitHub Security Advisory (GHSA) identifier.
- * You must authenticate using
- * an access token with the `repo` scope or `repository_advisories:write` permission to use this endpoint.
  *
- * In order to
- * update any security advisory, you must be a security manager or administrator of that repository,
- * or a collaborator on
- * the repository security advisory.
+ * In order to update any
+ * security advisory, the authenticated user must be a security manager or administrator of that repository,
+ * or a
+ * collaborator on the repository security advisory.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo`
+ * or `repository_advisories:write` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#update-a-repository-security-advisory}
  * Tags: security-advisories
  */
@@ -104750,11 +104428,12 @@ export async function securityAdvisoriesUpdateRepositoryAdvisory<FetcherData>(
  * You
  * may request a CVE for public repositories, but cannot do so for private repositories.
  *
- * You must authenticate using an
- * access token with the `repo` scope or `repository_advisories:write` permission to use this endpoint.
+ * In order to request a CVE for a
+ * repository security advisory, the authenticated user must be a security manager or administrator of that
+ * repository.
  *
- * In order to
- * request a CVE for a repository security advisory, you must be a security manager or administrator of that repository.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` or `repository_advisories:write`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#request-a-cve-for-a-repository-security-advisory}
  * Tags: security-advisories
  */
@@ -105283,14 +104962,9 @@ export async function reposDownloadTarballArchive<FetcherData>(
  * For a
  * public repository, a team is listed only if that team added the public repository explicitly.
  *
- * Personal access tokens
- * require the following scopes:
- * * `public_repo` to call this endpoint on a public repository
- * * `repo` to call this
- * endpoint on a private repository (this scope also includes public repositories)
- *
- * This endpoint is not compatible with
- * fine-grained personal access tokens.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `public_repo` or `repo` scope to use this endpoint with a public repository,
+ * and `repo` scope to use this endpoint with a private repository.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repository-teams}
  * Tags: repos
  */
@@ -105469,9 +105143,6 @@ export async function reposGetViews<FetcherData>(
  * The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the
  * requirements to transfer personal and organization-owned repositories, see [about repository
  * transfers](https://docs.github.com/articles/about-repository-transfers/).
- * You must use a personal access token (classic)
- * or an OAuth token for this endpoint. An installation access token or a fine-grained personal access token cannot be used
- * because they are only granted access to a single account.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#transfer-a-repository}
  * Tags: repos
  */
@@ -105621,15 +105292,8 @@ export async function reposDownloadZipballArchive<FetcherData>(
  * repository's information using the [Get a repository](https://docs.github.com/rest/repos/repos#get-a-repository)
  * endpoint and check that the `is_template` key is `true`.
  *
- * **OAuth scope requirements**
- *
- * When using
- * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
- * include:
- *
- * *   `public_repo` scope or `repo` scope to create a public repository
- * *   `repo` scope to create a private
- * repository
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `public_repo` or `repo` scope to create a public repository, and `repo` scope to create a private repository.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-using-a-template}
  * Tags: repos
  */
@@ -105713,11 +105377,11 @@ export async function reposListPublic<FetcherData>(
  * Lists all secrets available in an environment without revealing their
  * encrypted values.
  *
- * You must authenticate using an
- * access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `secrets` repository permission to
- * use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-environment-secrets}
  * Tags: actions
  */
@@ -105756,12 +105420,9 @@ export async function actionsListEnvironmentSecrets<FetcherData>(
  * before you can create or update secrets.
  *
  * Anyone with read access to the repository can use this endpoint.
+ *
  * If the
- * repository is private you must use an access token with the `repo` scope.
- * GitHub Apps must have the `secrets` repository
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read secrets.
+ * repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-environment-public-key}
  * Tags: actions
  */
@@ -105785,11 +105446,11 @@ export async function actionsGetEnvironmentPublicKey<FetcherData>(
  * Get an environment secret
  * Gets a single environment secret without revealing its encrypted value.
  *
- * You must authenticate using an access token
- * with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `secrets` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must have collaborator
+ * access to a repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-environment-secret}
  * Tags: actions
  */
@@ -105819,12 +105480,11 @@ export async function actionsGetEnvironmentSecret<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `secrets`
- * repository permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create,
- * update, or read secrets.
+ * Authenticated
+ * users must have collaborator access to a repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal
+ * access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#create-or-update-an-environment-secret}
  * Tags: actions
  */
@@ -105860,11 +105520,11 @@ export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
  * Delete an environment secret
  * Deletes a secret in an environment using the secret name.
  *
- * You must authenticate using an access token with the `repo`
- * scope to use this endpoint.
- * GitHub Apps must have the `secrets` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+ * Authenticated users must have collaborator access to a
+ * repository to create, update, or read secrets.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope
+ * to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#delete-an-environment-secret}
  * Tags: actions
  */
@@ -105889,11 +105549,10 @@ export async function actionsDeleteEnvironmentSecret<FetcherData>(
  * List environment variables
  * Lists all environment variables.
  *
- * You must authenticate using an access token with the `repo` scope to use this
- * endpoint.
- * GitHub Apps must have the `environments:read` repository permission to use this endpoint.
- * Authenticated users
- * must have collaborator access to a repository to create, update, or read variables.
+ * Authenticated users must have collaborator access to a repository to create, update,
+ * or read variables.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-environment-variables}
  * Tags: actions
  */
@@ -105931,12 +105590,11 @@ export async function actionsListEnvironmentVariables<FetcherData>(
  * Create an environment variable
  * Create an environment variable that you can reference in a GitHub Actions workflow.
  *
- * You must authenticate using an
- * access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `environment:write` repository
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read variables.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#create-an-environment-variable}
  * Tags: actions
  */
@@ -105971,11 +105629,11 @@ export async function actionsCreateEnvironmentVariable<FetcherData>(
  * Get an environment variable
  * Gets a specific variable in an environment.
  *
- * You must authenticate using an access token with the `repo` scope to use
- * this endpoint.
- * GitHub Apps must have the `environments:read` repository permission to use this endpoint.
- * Authenticated
- * users must have collaborator access to a repository to create, update, or read variables.
+ * Authenticated users must have collaborator access to a repository to
+ * create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#get-an-environment-variable}
  * Tags: actions
  */
@@ -106002,12 +105660,11 @@ export async function actionsGetEnvironmentVariable<FetcherData>(
  * Update an environment variable
  * Updates an environment variable that you can reference in a GitHub Actions workflow.
  *
- * You must authenticate using an
- * access token with the `repo` scope to use this endpoint.
- * GitHub Apps must have the `environment:write` repository
- * permission to use this endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or
- * read variables.
+ * Authenticated users must have
+ * collaborator access to a repository to create, update, or read variables.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#update-an-environment-variable}
  * Tags: actions
  */
@@ -106043,11 +105700,11 @@ export async function actionsUpdateEnvironmentVariable<FetcherData>(
  * Delete an environment variable
  * Deletes an environment variable using the variable name.
  *
- * You must authenticate using an access token with the `repo`
+ * Authenticated users must have collaborator access to a
+ * repository to create, update, or read variables.
+ *
+ * OAuth tokens and personal access tokens (classic) need the `repo`
  * scope to use this endpoint.
- * GitHub Apps must have the `environment:write` repository permission to use this
- * endpoint.
- * Authenticated users must have collaborator access to a repository to create, update, or read variables.
  * Learn more at {@link https://docs.github.com/rest/actions/variables#delete-an-environment-variable}
  * Tags: actions
  */
@@ -106630,8 +106287,10 @@ export async function teamsDeleteLegacy<FetcherData>(
  * your existing code to use the new [`List discussions`](https://docs.github.com/rest/teams/discussions#list-discussions)
  * endpoint.
  *
- * List all discussions on a team's page. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * List all discussions on a team's page.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#list-discussions-legacy}
  * Tags: teams
@@ -106666,14 +106325,17 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
  * discussion`](https://docs.github.com/rest/teams/discussions#create-a-discussion) endpoint.
  *
  * Creates a new discussion
- * post on a team's page. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * post on a team's page.
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
  * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
- * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#create-a-discussion-legacy}
  * Tags: teams
@@ -106716,8 +106378,10 @@ export async function teamsCreateDiscussionLegacy<FetcherData>(
  * your existing code to use the new [Get a discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion)
  * endpoint.
  *
- * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Get a specific discussion on a team's page.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#get-a-discussion-legacy}
  * Tags: teams
@@ -106747,8 +106411,10 @@ export async function teamsGetDiscussionLegacy<FetcherData>(
  * discussion](https://docs.github.com/rest/teams/discussions#update-a-discussion) endpoint.
  *
  * Edits the title and body text
- * of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * of a discussion post. Only the parameters you provide are updated.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `write:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#update-a-discussion-legacy}
  * Tags: teams
@@ -106789,8 +106455,10 @@ export async function teamsUpdateDiscussionLegacy<FetcherData>(
  * discussion`](https://docs.github.com/rest/teams/discussions#delete-a-discussion) endpoint.
  *
  * Delete a discussion from a
- * team's page. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * team's page.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this
+ * endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#delete-a-discussion-legacy}
  * Tags: teams
@@ -106818,8 +106486,10 @@ export async function teamsDeleteDiscussionLegacy<FetcherData>(
  * comments](https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments) endpoint.
  *
  * List all comments
- * on a team discussion. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * on a team discussion.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use
+ * this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments-legacy}
  * Tags: teams
@@ -106855,14 +106525,17 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
  * comment](https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment) endpoint.
  *
  * Creates a new
- * comment on a team discussion. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * comment on a team discussion.
  *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
  * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
- * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment-legacy}
  * Tags: teams
@@ -106899,8 +106572,10 @@ export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
  * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment) endpoint.
  *
  * Get a specific
- * comment on a team discussion. OAuth access tokens require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * comment on a team discussion.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to
+ * use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment-legacy}
  * Tags: teams
@@ -106931,8 +106606,10 @@ export async function teamsGetDiscussionCommentLegacy<FetcherData>(
  * comment](https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment) endpoint.
  *
  * Edits the body
- * text of a discussion comment. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * text of a discussion comment.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope
+ * to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment-legacy}
  * Tags: teams
@@ -106970,8 +106647,10 @@ export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
  * comment](https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment) endpoint.
  *
  * Deletes a
- * comment on a team discussion. OAuth access tokens require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * comment on a team discussion.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope
+ * to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment-legacy}
  * Tags: teams
@@ -107001,8 +106680,10 @@ export async function teamsDeleteDiscussionCommentLegacy<FetcherData>(
  *
  * List
  * the reactions to a [team discussion
- * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require
- * the `read:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment-legacy}
  * Tags: reactions
@@ -107046,9 +106727,13 @@ export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
  * endpoint.
  *
  * Create a reaction to a [team discussion
- * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require
- * the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A
- * response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+ * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+ *
+ * A response with an HTTP
+ * `200` status means that you already added the reaction type to this team discussion comment.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment-legacy}
  * Tags: reactions
@@ -107096,9 +106781,10 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy<
  * discussion`](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion) endpoint.
  *
  * List the
- * reactions to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion). OAuth access tokens
- * require the `read:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * reactions to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-legacy}
  * Tags: reactions
@@ -107140,10 +106826,13 @@ export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
  * discussion`](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion) endpoint.
  *
  * Create a
- * reaction to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion). OAuth access tokens
- * require the `write:discussion`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP
- * `200` status means that you already added the reaction type to this team discussion.
+ * reaction to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+ *
+ * A response with an
+ * HTTP `200` status means that you already added the reaction type to this team discussion.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-legacy}
  * Tags: reactions
@@ -107794,11 +107483,8 @@ export async function teamsListChildLegacy<FetcherData>(
 }
 /**
  * Get the authenticated user
- * If the authenticated user is authenticated with an OAuth token with the `user` scope, then the response lists public and
- * private profile information.
- *
- * If the authenticated user is authenticated through OAuth without the `user` scope, then
- * the response lists only public profile information.
+ * OAuth app tokens and personal access tokens (classic) need the `user` scope in order for the response to include private
+ * profile information.
  * Learn more at {@link https://docs.github.com/rest/users/users#get-the-authenticated-user}
  * Tags: users
  */
@@ -107983,16 +107669,8 @@ export async function usersUnblock<FetcherData>(
  * List codespaces for the authenticated user
  * Lists the authenticated user's codespaces.
  *
- * You must authenticate using an access token with the `codespace` scope to
- * use this endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be authenticated on behalf of the user. For
- * more information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have read access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#list-codespaces-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108033,16 +107711,8 @@ export async function codespacesListForAuthenticatedUser<FetcherData>(
  * This endpoint requires either a `repository_id` OR a
  * `pull_request` but not both.
  *
- * You must authenticate using an access token with the `codespace` scope to use this
- * endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be authenticated on behalf of the user. For more
- * information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108159,11 +107829,10 @@ export async function codespacesCreateForAuthenticatedUser<FetcherData>(
  * encrypted
  * values.
  *
- * You must authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this
- * endpoint. User must have Codespaces access to use this endpoint.
+ * The authenticated user must have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have read access to the
- * `codespaces_user_secrets` user permission to use this endpoint.
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#list-secrets-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108200,11 +107869,10 @@ export async function codespacesListSecretsForAuthenticatedUser<FetcherData>(
  * Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update
  * secrets.
  *
- * You must authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this
- * endpoint. User must have Codespaces access to use this endpoint.
+ * The authenticated user must have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have read access to the
- * `codespaces_user_secrets` user permission to use this endpoint.
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#get-public-key-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108225,12 +107893,11 @@ export async function codespacesGetPublicKeyForAuthenticatedUser<FetcherData>(
  * Get a secret for the authenticated user
  * Gets a development environment secret available to a user's codespaces without revealing its encrypted value.
  *
- * You must
- * authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must
- * have Codespaces access to use this endpoint.
+ * The
+ * authenticated user must have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces_user_secrets` user
- * permission to use this endpoint.
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#get-a-secret-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108258,12 +107925,11 @@ export async function codespacesGetSecretForAuthenticatedUser<FetcherData>(
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
- * You must
- * authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must
- * also have Codespaces access to use this endpoint.
+ * The authenticated
+ * user must have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces_user_secrets`
- * user permission and `codespaces_secrets` repository permission on all referenced repositories to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `codespace` or `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#create-or-update-a-secret-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108304,11 +107970,11 @@ export async function codespacesCreateOrUpdateSecretForAuthenticatedUser<
  * Deletes a development environment secret from a user's codespaces using the secret name. Deleting the secret will remove
  * access from all codespaces that were allowed to access the secret.
  *
- * You must authenticate using an access token with the
- * `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use this
- * endpoint.
+ * The authenticated user must have Codespaces access
+ * to use this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces_user_secrets` user permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#delete-a-secret-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108331,13 +107997,11 @@ export async function codespacesDeleteSecretForAuthenticatedUser<FetcherData>(
  * List selected repositories for a user secret
  * List the repositories that have been granted the ability to use a user's development environment secret.
  *
- * You must
- * authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must
- * have Codespaces access to use this endpoint.
+ * The
+ * authenticated user must have Codespaces access to use this endpoint.
  *
- * GitHub Apps must have read access to the `codespaces_user_secrets` user
- * permission and write access to the `codespaces_secrets` repository permission on all referenced repositories to use this
- * endpoint.
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#list-selected-repositories-for-a-user-secret}
  * Tags: codespaces
  */
@@ -108377,12 +108041,11 @@ export async function codespacesListRepositoriesForSecretForAuthenticatedUser<
  * Set selected repositories for a user secret
  * Select the repositories that will use a user's development environment secret.
  *
- * You must authenticate using an access
- * token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access to use
- * this endpoint.
+ * The authenticated user must have
+ * Codespaces access to use this endpoint.
  *
- * GitHub Apps must have write access to the `codespaces_user_secrets` user permission and write access to
- * the `codespaces_secrets` repository permission on all referenced repositories to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` or
+ * `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#set-selected-repositories-for-a-user-secret}
  * Tags: codespaces
  */
@@ -108413,11 +108076,12 @@ export async function codespacesSetRepositoriesForSecretForAuthenticatedUser<
 /**
  * Add a selected repository to a user secret
  * Adds a repository to the selected repositories for a user's development environment secret.
- * You must authenticate using
- * an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces access
- * to use this endpoint.
- * GitHub Apps must have write access to the `codespaces_user_secrets` user permission and write
- * access to the `codespaces_secrets` repository permission on the referenced repository to use this endpoint.
+ *
+ * The authenticated user must
+ * have Codespaces access to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `codespace`
+ * or `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#add-a-selected-repository-to-a-user-secret}
  * Tags: codespaces
  */
@@ -108442,11 +108106,12 @@ export async function codespacesAddRepositoryForSecretForAuthenticatedUser<
 /**
  * Remove a selected repository from a user secret
  * Removes a repository from the selected repositories for a user's development environment secret.
- * You must authenticate
- * using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must have Codespaces
- * access to use this endpoint.
- * GitHub Apps must have write access to the `codespaces_user_secrets` user permission to use
- * this endpoint.
+ *
+ * The authenticated user
+ * must have Codespaces access to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `codespace` or `codespace:secrets` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#remove-a-selected-repository-from-a-user-secret}
  * Tags: codespaces
  */
@@ -108472,16 +108137,8 @@ export async function codespacesRemoveRepositoryForSecretForAuthenticatedUser<
  * Get a codespace for the authenticated user
  * Gets information about a user's codespace.
  *
- * You must authenticate using an access token with the `codespace` scope to
- * use this endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be authenticated on behalf of the user. For
- * more information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have read access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#get-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108510,16 +108167,7 @@ export async function codespacesGetForAuthenticatedUser<FetcherData>(
  * If you specify a new machine type it will be applied the next time your codespace is
  * started.
  *
- * You must authenticate using an access token with the `codespace` scope to use this endpoint.
- *
- * To use this
- * endpoint with GitHub Apps:
- *
- * - The app must be authenticated on behalf of the user. For more information, see
- * "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#update-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108559,16 +108207,8 @@ export async function codespacesUpdateForAuthenticatedUser<FetcherData>(
  * Delete a codespace for the authenticated user
  * Deletes a user's codespace.
  *
- * You must authenticate using an access token with the `codespace` scope to use this
- * endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be authenticated on behalf of the user. For more
- * information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#delete-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108595,11 +108235,8 @@ export async function codespacesDeleteForAuthenticatedUser<FetcherData>(
  * If changes cannot be pushed to the codespace's repository, they will be pushed to a new or
  * previously-existing fork instead.
  *
- * You must authenticate using a personal access token with the `codespace` scope to use
- * this endpoint.
- *
- * GitHub Apps must have write access to the `codespaces_lifecycle_admin` repository permission to use this
- * endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` scope to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#export-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
@@ -108624,11 +108261,8 @@ export async function codespacesExportForAuthenticatedUser<FetcherData>(
  * Get details about a codespace export
  * Gets information about an export of a codespace.
  *
- * You must authenticate using a personal access token with the
+ * OAuth app tokens and personal access tokens (classic) need the
  * `codespace` scope to use this endpoint.
- *
- * GitHub Apps must have read access to the `codespaces_lifecycle_admin`
- * repository permission to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#get-details-about-a-codespace-export}
  * Tags: codespaces
  */
@@ -108656,11 +108290,8 @@ export async function codespacesGetExportDetailsForAuthenticatedUser<
  * List machine types for a codespace
  * List the machine types a codespace can transition to use.
  *
- * You must authenticate using an access token with the
- * `codespace` scope to use this endpoint.
- *
- * GitHub Apps must have read access to the `codespaces_metadata` repository
- * permission to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/machines#list-machine-types-for-a-codespace}
  * Tags: codespaces
  */
@@ -108697,16 +108328,8 @@ export async function codespacesCodespaceMachinesForAuthenticatedUser<
  * This will fail for a codespace
  * that is already published, meaning it has an associated repository.
  *
- * You must authenticate using a personal access token
- * with the `codespace` scope to use this endpoint.
- *
- * To use this endpoint with GitHub Apps:
- *
- * - The app must be
- * authenticated on behalf of the user. For more information, see "[Authenticating with a GitHub App on behalf of a
- * user](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user)."
- * -
- * The app must have write access to the `codespaces` repository permission.
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `codespace` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-repository-from-an-unpublished-codespace}
  * Tags: codespaces
  */
@@ -108744,10 +108367,7 @@ export async function codespacesPublishForAuthenticatedUser<FetcherData>(
  * Start a codespace for the authenticated user
  * Starts a user's codespace.
  *
- * You must authenticate using an access token with the `codespace` scope to use this
- * endpoint.
- *
- * GitHub Apps must have write access to the `codespaces_lifecycle_admin` repository permission to use this
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this
  * endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#start-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
@@ -108773,10 +108393,7 @@ export async function codespacesStartForAuthenticatedUser<FetcherData>(
  * Stop a codespace for the authenticated user
  * Stops a user's codespace.
  *
- * You must authenticate using an access token with the `codespace` scope to use this
- * endpoint.
- *
- * GitHub Apps must have write access to the `codespaces_lifecycle_admin` repository permission to use this
+ * OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this
  * endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#stop-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
@@ -108802,8 +108419,9 @@ export async function codespacesStopForAuthenticatedUser<FetcherData>(
  * Get list of conflicting packages during Docker migration for authenticated-user
  * Lists all packages that are owned by the authenticated user within the user's namespace, and that encountered a conflict
  * during a Docker migration.
- * To use this endpoint, you must authenticate using an access token with the `read:packages`
- * scope.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-list-of-conflicting-packages-during-docker-migration-for-authenticated-user}
  * Tags: packages
  */
@@ -108854,8 +108472,11 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticatedUser<
 }
 /**
  * List email addresses for the authenticated user
- * Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with
- * the `user:email` scope.
+ * Lists all of your email addresses, and specifies which one is visible
+ * to the public.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `user:email` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/emails#list-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
@@ -108878,7 +108499,7 @@ export async function usersListEmailsForAuthenticatedUser<FetcherData>(
 }
 /**
  * Add an email address for the authenticated user
- * This endpoint is accessible with the `user` scope.
+ * OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/emails#add-an-email-address-for-the-authenticated-user}
  * Tags: users
  */
@@ -108908,7 +108529,7 @@ export async function usersAddEmailForAuthenticatedUser<FetcherData>(
 }
 /**
  * Delete an email address for the authenticated user
- * This endpoint is accessible with the `user` scope.
+ * OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/emails#delete-an-email-address-for-the-authenticated-user}
  * Tags: users
  */
@@ -109006,8 +108627,8 @@ export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
  * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
  * "[HTTP verbs](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  *
- * Following a user
- * requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `user:follow` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/followers#follow-a-user}
  * Tags: users
  */
@@ -109028,8 +108649,7 @@ export async function usersFollow<FetcherData>(
 }
 /**
  * Unfollow a user
- * Unfollowing a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow`
- * scope.
+ * OAuth app tokens and personal access tokens (classic) need the `user:follow` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/followers#unfollow-a-user}
  * Tags: users
  */
@@ -109050,8 +108670,10 @@ export async function usersUnfollow<FetcherData>(
 }
 /**
  * List GPG keys for the authenticated user
- * Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least
- * `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Lists the current user's GPG keys.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:gpg_key` scope
+ * to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#list-gpg-keys-for-the-authenticated-user}
  * Tags: users
  */
@@ -109076,9 +108698,10 @@ export async function usersListGpgKeysForAuthenticatedUser<FetcherData>(
 }
 /**
  * Create a GPG key for the authenticated user
- * Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth
- * with at least `write:gpg_key`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Adds a GPG key to the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `write:gpg_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#create-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -109110,8 +108733,10 @@ export async function usersCreateGpgKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * Get a GPG key for the authenticated user
- * View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at
- * least `read:gpg_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * View extended details for a single GPG key.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:gpg_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#get-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -109134,9 +108759,10 @@ export async function usersGetGpgKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * Delete a GPG key for the authenticated user
- * Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or
- * via OAuth with at least `admin:gpg_key`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Removes a GPG key from the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `admin:gpg_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#delete-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -109160,16 +108786,11 @@ export async function usersDeleteGpgKeyForAuthenticatedUser<FetcherData>(
  * Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or
  * `:admin`) to access.
  *
- * You must use a [user access
- * token](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app),
- * created for a user who has authorized your GitHub App, to access this endpoint.
+ * The authenticated user has explicit permission to access repositories they own, repositories where
+ * they are a collaborator, and repositories that they can access through an organization membership.
  *
- * The authenticated user has explicit
- * permission to access repositories they own, repositories where they are a collaborator, and repositories that they can
- * access through an organization membership.
- *
- * You can find the permissions for the installation under the `permissions`
- * key.
+ * You can find the
+ * permissions for the installation under the `permissions` key.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#list-app-installations-accessible-to-the-user-access-token}
  * Tags: apps
  */
@@ -109212,13 +108833,8 @@ export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
  * The authenticated user has explicit permission to access repositories they own, repositories where they
  * are a collaborator, and repositories that they can access through an organization membership.
  *
- * You must use a [user
- * access
- * token](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app),
- * created for a user who has authorized your GitHub App, to access this endpoint.
- *
- * The access the user has to each
- * repository is included in the hash under the `permissions` key.
+ * The access the user has
+ * to each repository is included in the hash under the `permissions` key.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token}
  * Tags: apps
  */
@@ -109260,12 +108876,6 @@ export async function appsListInstallationReposForAuthenticatedUser<
 /**
  * Add a repository to an app installation
  * Add a single repository to an installation. The authenticated user must have admin access to the repository.
- *
- * You must
- * use a personal access token (which you can create via the [command
- * line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token) or [Basic
- * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to access this
- * endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#add-a-repository-to-an-app-installation}
  * Tags: apps
  */
@@ -109291,11 +108901,6 @@ export async function appsAddRepoToInstallationForAuthenticatedUser<
  * Remove a repository from an app installation
  * Remove a single repository from an installation. The authenticated user must have admin access to the repository. The
  * installation must have the `repository_selection` of `selected`.
- *
- * You must use a personal access token (which you can
- * create via the [command line](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token)
- * or [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)) to
- * access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#remove-a-repository-from-an-app-installation}
  * Tags: apps
  */
@@ -109465,9 +109070,10 @@ export async function issuesListForAuthenticatedUser<FetcherData>(
 }
 /**
  * List public SSH keys for the authenticated user
- * Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic
- * Auth or via OAuth with at least `read:public_key`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Lists the public SSH keys for the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:public_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/keys#list-public-ssh-keys-for-the-authenticated-user}
  * Tags: users
  */
@@ -109492,9 +109098,10 @@ export async function usersListPublicSshKeysForAuthenticatedUser<FetcherData>(
 }
 /**
  * Create a public SSH key for the authenticated user
- * Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or
- * OAuth with at least `write:public_key`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Adds a public SSH key to the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `write:gpg_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/keys#create-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -109527,9 +109134,10 @@ export async function usersCreatePublicSshKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * Get a public SSH key for the authenticated user
- * View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with
- * at least `read:public_key`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * View extended details for a single public SSH key.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:public_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/keys#get-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -109552,9 +109160,10 @@ export async function usersGetPublicSshKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * Delete a public SSH key for the authenticated user
- * Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic
- * Auth or via OAuth with at least `admin:public_key`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+ * Removes a public SSH key from the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:public_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/keys#delete-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -109575,10 +109184,7 @@ export async function usersDeletePublicSshKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * List subscriptions for the authenticated user
- * Lists the active subscriptions for the authenticated user. GitHub Apps must use a [user access
- * token](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app),
- * created for a user who has authorized your GitHub App, to access this endpoint. OAuth apps must authenticate using an
- * [OAuth token](https://docs.github.com/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps).
+ * Lists the active subscriptions for the authenticated user.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#list-subscriptions-for-the-authenticated-user}
  * Tags: apps
  */
@@ -109607,10 +109213,7 @@ export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
 }
 /**
  * List subscriptions for the authenticated user (stubbed)
- * Lists the active subscriptions for the authenticated user. GitHub Apps must use a [user access
- * token](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app),
- * created for a user who has authorized your GitHub App, to access this endpoint. OAuth apps must authenticate using an
- * [OAuth token](https://docs.github.com/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps).
+ * Lists the active subscriptions for the authenticated user.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#list-subscriptions-for-the-authenticated-user-stubbed}
  * Tags: apps
  */
@@ -109973,12 +109576,11 @@ export async function migrationsListReposForAuthenticatedUser<FetcherData>(
  * List organizations for the authenticated user
  * List organizations for the authenticated user.
  *
- * **OAuth scope requirements**
- *
- * This only lists organizations that your
- * authorization allows you to operate on in some way (e.g., you can list teams with `read:org` scope, you can publicize
- * your organization membership with `user` scope, etc.). Therefore, this API requires at least `user` or `read:org` scope.
- * OAuth requests with insufficient scope receive a `403 Forbidden` response.
+ * For OAuth app tokens and personal access tokens (classic), this endpoint
+ * only lists organizations that your authorization allows you to operate on in some way (e.g., you can list teams with
+ * `read:org` scope, you can publicize your organization membership with `user` scope, etc.). Therefore, this API requires
+ * at least `user` or `read:org` scope for OAuth app tokens and personal access tokens (classic). Requests with
+ * insufficient scope will receive a `403 Forbidden` response.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-organizations-for-the-authenticated-user}
  * Tags: orgs
  */
@@ -110003,10 +109605,10 @@ export async function orgsListForAuthenticatedUser<FetcherData>(
  * List packages for the authenticated user's namespace
  * Lists packages owned by the authenticated user within the user's namespace.
  *
- * To use this endpoint, you must authenticate
- * using an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub Packages registry that
- * only supports repository-scoped permissions, your token must also include the `repo` scope. For the list of GitHub
- * Packages registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-the-authenticated-users-namespace}
  * Tags: packages
@@ -110042,10 +109644,10 @@ export async function packagesListPackagesForAuthenticatedUser<FetcherData>(
  * Get a package for the authenticated user
  * Gets a specific package for a package owned by the authenticated user.
  *
- * To use this endpoint, you must authenticate
- * using an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub Packages registry that
- * only supports repository-scoped permissions, your token must also include the `repo` scope. For the list of GitHub
- * Packages registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-the-authenticated-user}
  * Tags: packages
@@ -110079,12 +109681,10 @@ export async function packagesGetPackageForAuthenticatedUser<FetcherData>(
  * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has
  * more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
  *
- * To use this endpoint, you
- * must authenticate using an access token with the `read:packages` and `delete:packages` scopes.
- * If the `package_type`
- * belongs to a GitHub Packages registry that only supports repository-scoped permissions, your token must also include the
- * `repo` scope. For the list of GitHub Packages registries that only support repository-scoped permissions, see "[About
- * permissions for GitHub
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. If the
+ * `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions, `repo` scope is
+ * also required. For the list these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-the-authenticated-user}
  * Tags: packages
@@ -110122,10 +109722,10 @@ export async function packagesDeletePackageForAuthenticatedUser<FetcherData>(
  * In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's
  * namespace first.
  *
- * To use this endpoint, you must authenticate using an access token with the `read:packages` and
- * `write:packages` scopes. If the `package_type` belongs to a GitHub Packages registry that only supports
- * repository-scoped permissions, your token must also include the `repo` scope. For the list of GitHub Packages registries
- * that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages`
+ * scopes to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports
+ * repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
+ * permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-the-authenticated-user}
  * Tags: packages
@@ -110158,10 +109758,10 @@ export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
  * List package versions for a package owned by the authenticated user
  * Lists package versions for a package owned by the authenticated user.
  *
- * To use this endpoint, you must authenticate using
- * an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub Packages registry that only
- * supports repository-scoped permissions, your token must also include the `repo` scope. For the list of GitHub Packages
- * registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-the-authenticated-user}
  * Tags: packages
@@ -110202,10 +109802,10 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
  * Get a package version for the authenticated user
  * Gets a specific package version for a package owned by the authenticated user.
  *
- * To use this endpoint, you must
- * authenticate using an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, your token must also include the `repo` scope. For the list
- * of GitHub Packages registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-the-authenticated-user}
  * Tags: packages
@@ -110243,12 +109843,12 @@ export async function packagesGetPackageVersionForAuthenticatedUser<
  * package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub
  * support for further assistance.
  *
- * To use this endpoint, you must have admin permissions in the organization and
- * authenticate using an access token with the `read:packages` and `delete:packages` scopes.
- * If the `package_type` belongs
- * to a GitHub Packages registry that only supports repository-scoped permissions, your token must also include the `repo`
- * scope. For the list of GitHub Packages registries that only support repository-scoped permissions, see "[About
- * permissions for GitHub
+ * The authenticated user must have admin permissions in the organization to use this
+ * endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes
+ * to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped
+ * permissions, the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-version-for-the-authenticated-user}
  * Tags: packages
@@ -110290,10 +109890,10 @@ export async function packagesDeletePackageVersionForAuthenticatedUser<
  * to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the
  * deleted package's namespace first.
  *
- * To use this endpoint, you must authenticate using an access token with the
- * `read:packages` and `write:packages` scopes. If the `package_type` belongs to a GitHub Packages registry that only
- * supports repository-scoped permissions, your token must also include the `repo` scope. For the list of GitHub Packages
- * registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens (classic) need the `read:packages` and
+ * `write:packages` scopes to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
+ * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
+ * permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-version-for-the-authenticated-user}
  * Tags: packages
@@ -110360,9 +109960,14 @@ export async function projectsCreateForAuthenticatedUser<FetcherData>(
 }
 /**
  * List public email addresses for the authenticated user
- * Lists your publicly visible email address, which you can set with the [Set primary email visibility for the
- * authenticated user](https://docs.github.com/rest/users/emails#set-primary-email-visibility-for-the-authenticated-user)
- * endpoint. This endpoint is accessible with the `user:email` scope.
+ * Lists your publicly visible email address, which you can set with the
+ * [Set primary email visibility for the
+ * authenticated
+ * user](https://docs.github.com/rest/users/emails#set-primary-email-visibility-for-the-authenticated-user)
+ * endpoint.
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `user:email` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/emails#list-public-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
@@ -110433,15 +110038,8 @@ export async function reposListForAuthenticatedUser<FetcherData>(
  * Create a repository for the authenticated user
  * Creates a new repository for the authenticated user.
  *
- * **OAuth scope requirements**
- *
- * When using
- * [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must
- * include:
- *
- * *   `public_repo` scope or `repo` scope to create a public repository
- * *   `repo` scope to create a private
- * repository
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `public_repo` or `repo` scope to create a public repository, and `repo` scope to create a private repository.
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user}
  * Tags: repos
  */
@@ -110680,7 +110278,10 @@ export async function usersListSocialAccountsForAuthenticatedUser<FetcherData>(
 }
 /**
  * Add social accounts for the authenticated user
- * Add one or more social accounts to the authenticated user's profile. This endpoint is accessible with the `user` scope.
+ * Add one or more social accounts to the authenticated user's profile.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `user` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/social-accounts#add-social-accounts-for-the-authenticated-user}
  * Tags: users
  */
@@ -110707,8 +110308,10 @@ export async function usersAddSocialAccountForAuthenticatedUser<FetcherData>(
 }
 /**
  * Delete social accounts for the authenticated user
- * Deletes one or more social accounts from the authenticated user's profile. This endpoint is accessible with the `user`
- * scope.
+ * Deletes one or more social accounts from the authenticated user's profile.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `user` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/social-accounts#delete-social-accounts-for-the-authenticated-user}
  * Tags: users
  */
@@ -110735,10 +110338,10 @@ export async function usersDeleteSocialAccountForAuthenticatedUser<FetcherData>(
 }
 /**
  * List SSH signing keys for the authenticated user
- * Lists the SSH signing keys for the authenticated user's GitHub account. You must authenticate with Basic Authentication,
- * or you must authenticate with OAuth with at least `read:ssh_signing_key` scope. For more information, see
- * "[Understanding scopes for OAuth
- * apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)."
+ * Lists the SSH signing keys for the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:ssh_signing_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#list-ssh-signing-keys-for-the-authenticated-user}
  * Tags: users
  */
@@ -110763,10 +110366,10 @@ export async function usersListSshSigningKeysForAuthenticatedUser<FetcherData>(
 }
 /**
  * Create a SSH signing key for the authenticated user
- * Creates an SSH signing key for the authenticated user's GitHub account. You must authenticate with Basic Authentication,
- * or you must authenticate with OAuth with at least `write:ssh_signing_key` scope. For more information, see
- * "[Understanding scopes for OAuth
- * apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)."
+ * Creates an SSH signing key for the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `write:ssh_signing_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#create-a-ssh-signing-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -110799,9 +110402,10 @@ export async function usersCreateSshSigningKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * Get an SSH signing key for the authenticated user
- * Gets extended details for an SSH signing key. You must authenticate with Basic Authentication, or you must authenticate
- * with OAuth with at least `read:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth
- * apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)."
+ * Gets extended details for an SSH signing key.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:ssh_signing_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#get-an-ssh-signing-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -110824,10 +110428,10 @@ export async function usersGetSshSigningKeyForAuthenticatedUser<FetcherData>(
 }
 /**
  * Delete an SSH signing key for the authenticated user
- * Deletes an SSH signing key from the authenticated user's GitHub account. You must authenticate with Basic
- * Authentication, or you must authenticate with OAuth with at least `admin:ssh_signing_key` scope. For more information,
- * see "[Understanding scopes for OAuth
- * apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)."
+ * Deletes an SSH signing key from the authenticated user's GitHub account.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:ssh_signing_key` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#delete-an-ssh-signing-key-for-the-authenticated-user}
  * Tags: users
  */
@@ -110978,14 +110582,15 @@ export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
 }
 /**
  * List teams for the authenticated user
- * List all of the teams across all of the organizations to which the authenticated user belongs. This method requires
- * `user`, `repo`, or `read:org`
- * [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via
- * [OAuth](https://docs.github.com/apps/building-oauth-apps/). When using a fine-grained personal access token, the
- * resource owner of the token [must be a single
- * organization](https://docs.github.com/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#fine-grained-personal-access-tokens),
- * and have at least read-only member organization permissions. The response payload only contains the teams from a single
- * organization when using a fine-grained personal access token.
+ * List all of the teams across all of the organizations to which the authenticated
+ * user belongs.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `user`, `repo`, or `read:org` scope to use this endpoint.
+ *
+ * When using a
+ * fine-grained personal access token, the resource owner of the token must be a single organization, and the response will
+ * only include the teams from that organization.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-teams-for-the-authenticated-user}
  * Tags: teams
  */
@@ -111040,18 +110645,11 @@ export async function usersList<FetcherData>(
  * Get a user
  * Provides publicly available information about someone with a GitHub account.
  *
- * GitHub Apps with the `Plan` user
- * permission can use this endpoint to retrieve information about a user's GitHub plan. The GitHub App must be
- * authenticated as a user. See "[Identifying and authorizing users for GitHub
- * Apps](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details
- * about authentication. For an example response, see 'Response with GitHub plan information' below"
- *
- * The `email` key in
- * the following response is the publicly visible email address from your GitHub [profile
- * page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be
- * “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it
- * will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub. For more
- * information, see
+ * The `email` key in the following response
+ * is the publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting
+ * up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint.
+ * If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible
+ * email addresses when authenticated with GitHub. For more information, see
  * [Authentication](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#authentication).
  *
  * The Emails API
@@ -111092,8 +110690,9 @@ export async function usersGetByUsername<FetcherData>(
  * Get list of conflicting packages during Docker migration for user
  * Lists all packages that are in a specific user's namespace, that the requesting user has access to, and that encountered
  * a conflict during Docker migration.
- * To use this endpoint, you must authenticate using an access token with the
- * `read:packages` scope.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:packages`
+ * scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-list-of-conflicting-packages-during-docker-migration-for-user}
  * Tags: packages
  */
@@ -111318,18 +110917,20 @@ export async function usersListGpgKeysForUser<FetcherData>(
 }
 /**
  * Get contextual information for a user
- * Provides hovercard information when authenticated through basic auth or OAuth with the `repo` scope. You can find out
- * more about someone in relation to their pull requests, issues, repositories, and organizations.
+ * Provides hovercard information. You can find out more about someone in relation to their pull requests, issues,
+ * repositories, and organizations.
  *
- * The `subject_type` and
- * `subject_id` parameters provide context for the person's hovercard, which returns more information than without the
- * parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository via cURL,
- * it would look like this:
+ * The `subject_type` and `subject_id` parameters provide context for the person's
+ * hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about
+ * `octocat` who owns the `Spoon-Knife` repository via cURL, it would look like this:
  *
  * ```shell
  *  curl -u username:token
  * https://api.github.com/users/octocat/hovercard?subject_type=repository&subject_id=1300192
  * ```
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/users/users#get-contextual-information-for-a-user}
  * Tags: users
  */
@@ -111436,10 +111037,10 @@ export async function orgsListForUser<FetcherData>(
  * List packages for a user
  * Lists all packages in a user's namespace for which the requesting user has access.
  *
- * To use this endpoint, you must
- * authenticate using an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, your token must also include the `repo` scope. For the list
- * of GitHub Packages registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-a-user}
  * Tags: packages
@@ -111476,10 +111077,10 @@ export async function packagesListPackagesForUser<FetcherData>(
  * Get a package for a user
  * Gets a specific package metadata for a public package owned by a user.
  *
- * To use this endpoint, you must authenticate
- * using an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub Packages registry that
- * only supports repository-scoped permissions, your token must also include the `repo` scope. For the list of GitHub
- * Packages registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-a-user}
  * Tags: packages
@@ -111514,16 +111115,16 @@ export async function packagesGetPackageForUser<FetcherData>(
  * Deletes an entire package for a user. You cannot delete a public package if any version of the package has more than
  * 5,000 downloads. In this scenario, contact GitHub support for further assistance.
  *
- * To use this endpoint, you must
- * authenticate using an access token with the `read:packages` and `delete:packages` scopes. In addition:
- * - If the
- * `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions, your token must
- * also include the `repo` scope. For the list of these registries, see "[About permissions for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package you want to delete. For the list of these registries, see "[About permissions for GitHub
+ * If the `package_type` belongs to a
+ * GitHub Packages registry that supports granular permissions, the authenticated user must have admin permissions to the
+ * package. For the list of these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-a-user}
  * Tags: packages
  */
@@ -111562,16 +111163,16 @@ export async function packagesDeletePackageForUser<FetcherData>(
  * In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's
  * namespace first.
  *
- * To use this endpoint, you must authenticate using an access token with the `read:packages` and
- * `write:packages` scopes. In addition:
- * - If the `package_type` belongs to a GitHub Packages registry that only supports
- * repository-scoped permissions, your token must also include the `repo` scope. For the list of these registries, see
- * "[About permissions for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package you want to restore. For the list of these registries, see "[About permissions for GitHub
+ * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the
+ * authenticated user must have admin permissions to the package. For the list of these registries, see "[About permissions
+ * for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-a-user}
  * Tags: packages
  */
@@ -111604,10 +111205,10 @@ export async function packagesRestorePackageForUser<FetcherData>(
  * List package versions for a package owned by a user
  * Lists package versions for a public package owned by a specified user.
  *
- * To use this endpoint, you must authenticate
- * using an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub Packages registry that
- * only supports repository-scoped permissions, your token must also include the `repo` scope. For the list of GitHub
- * Packages registries that only support repository-scoped permissions, see "[About permissions for GitHub
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-a-user}
  * Tags: packages
@@ -111645,11 +111246,10 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
  * Get a package version for a user
  * Gets a specific package version for a public package owned by a specified user.
  *
- * At this time, to use this endpoint, you
- * must authenticate using an access token with the `read:packages` scope. If the `package_type` belongs to a GitHub
- * Packages registry that only supports repository-scoped permissions, your token must also include the `repo` scope. For
- * the list of GitHub Packages registries that only support repository-scoped permissions, see "[About permissions for
- * GitHub
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
+ * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
+ * registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-a-user}
  * Tags: packages
@@ -111685,18 +111285,16 @@ export async function packagesGetPackageVersionForUser<FetcherData>(
  * Deletes a specific package version for a user. If the package is public and the package version has more than 5,000
  * downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
  *
- * To
- * use this endpoint, you must authenticate using an access token with the `read:packages` and `delete:packages` scopes. In
- * addition:
- * - If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped
- * permissions, your token must also include the `repo` scope. For the list of these registries, see "[About permissions
- * for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package whose version you want to delete. For the list of these registries, see "[About permissions
- * for GitHub
+ * If
+ * the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must
+ * have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-package-version-for-a-user}
  * Tags: packages
  */
@@ -111736,17 +111334,16 @@ export async function packagesDeletePackageVersionForUser<FetcherData>(
  * In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's
  * namespace first.
  *
- * To use this endpoint, you must authenticate using an access token with the `read:packages` and
- * `write:packages` scopes. In addition:
- * - If the `package_type` belongs to a GitHub Packages registry that only supports
- * repository-scoped permissions, your token must also include the `repo` scope. For the list of these registries, see
- * "[About permissions for GitHub
- * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
- * -
- * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, you must have admin
- * permissions to the package whose version you want to restore. For the list of these registries, see "[About permissions
+ * If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the
+ * authenticated user must have admin permissions to the package. For the list of these registries, see "[About permissions
  * for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
+ * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
+ * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-package-version-for-a-user}
  * Tags: packages
  */
@@ -111894,8 +111491,8 @@ export async function reposListForUser<FetcherData>(
  * runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub
  * Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
- * Access
- * tokens must have the `user` scope.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `user` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-actions-billing-for-a-user}
  * Tags: billing
  */
@@ -111922,8 +111519,8 @@ export async function billingGetGithubActionsBillingUser<FetcherData>(
  * private repositories. For more information, see "[Managing billing for GitHub
  * Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access
- * tokens must have the `user` scope.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `user` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-packages-billing-for-a-user}
  * Tags: billing
  */
@@ -111950,8 +111547,8 @@ export async function billingGetGithubPackagesBillingUser<FetcherData>(
  * apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub
  * Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
  *
- * Access
- * tokens must have the `user` scope.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `user` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-shared-storage-billing-for-a-user}
  * Tags: billing
  */
