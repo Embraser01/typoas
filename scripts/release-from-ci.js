@@ -48,9 +48,8 @@ module.exports = async ({ github, context, exec }) => {
   await exec.exec('yarn', [
     'workspaces',
     'foreach',
-    '-pt',
-    '--since',
-    context.ref, // Check diff of the release commit
+    '-Apt',
+    ...versions.flatMap((v) => ['--include', v.ident]),
     'npm',
     'publish',
   ]);
@@ -66,7 +65,7 @@ module.exports = async ({ github, context, exec }) => {
     owner: context.repo.owner,
     repo: context.repo.repo,
     tag_name: `${versions[0].ident}@${versions[0].newVersion}`,
-    target_commitish: targetCommitish,
+    target_commitish: targetCommitish.trim(),
     name: versionStrings.join(', '),
     prereleasee: isPrerelease,
     generate_release_notes: true,
