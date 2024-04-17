@@ -6,8 +6,6 @@
     "esModuleInterop": true,
     "declaration": true,
     "lib": ["ES2019"],
-    "outDir": "lib",
-    "rootDir": "src"
-  },
-  "include": ["src"]
+    "noEmit": true
+  }
 }
