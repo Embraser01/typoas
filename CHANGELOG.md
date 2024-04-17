@@ -4,7 +4,9 @@
 
 - Add `-p,--prettier` option to the cli to format the generated code with prettier [#51](https://github.com/Embraser01/typoas/pull/51)
 
-## 3.1.7 - 2024-02-23
+## 3.1.7 - 2024-02-23, 2024-04-17
+
+- Automated release process
 
 ## 3.1.6 - 2024-02-23
 

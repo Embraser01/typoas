@@ -1,6 +1,6 @@
 {
   "name": "@typoas/cli",
-  "version": "3.1.5",
+  "version": "3.1.6-rc.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -40,5 +40,6 @@
       "typoas-cli": "./lib/bin.js"
     },
     "types": "./lib/index.d.ts"
-  }
+  },
+  "stableVersion": "3.1.5"
 }
