@@ -27,27 +27,12 @@ jobs:
       - name: Yarn install
         run: yarn
 
-      - name: Apply version to packages
-        id: version-apply
-        run: yarn version apply -all ${{ inputs.prerelease && '--prerelease' }}
-
-      - name: Compute commit message
+      - name: Publish changed packages and create release
         uses: actions/github-script@v7
-        id: commit-message
-        with:
-          result-encoding: string
-          script: |
-            return `chore: release ${versions.map((v) => `${v.ident}@${v.newVersion}`)}`;
-
-      # Commiting using the GitHub action bot
-      # More info here: https://github.com/actions/checkout/issues/13#issuecomment-724415212
-      - name: Create commit of changed files
-        run: |
-          git add .
-          git commit -m "${{ steps.commit-message.outputs.result }}" --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-          git push
-
-      - name: Publish changed packages
-        run: yarn workspaces foreach -pt --since ${{ github.ref }} npm publish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        with:
+          script: |
+            const script = require('./scripts/release-from-ci.js')
+            await script({ github, context, exec });
