@@ -1,0 +1,3 @@
+releases:
+  "@typoas/cli": patch
+  "@typoas/generator": patch
