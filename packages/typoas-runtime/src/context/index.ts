@@ -9,16 +9,17 @@ import { ApiException } from '../exception';
 import { applyTransform, Transform } from '../transformers';
 import { DateTransformer } from '../transformers';
 import {
+  EnhancedHTTPStatus,
   Fetcher,
   IsomorphicFetchHttpLibrary,
   RequestContext,
   ResponseContext,
   SerializerOptions,
+  StatusResponse,
 } from '../fetcher';
 import {
   applyTemplating,
   isBlob,
-  isCodeInRange,
   isFormData,
   isHttpStatusValid,
   isURLSearchParams,
@@ -27,7 +28,6 @@ import {
 } from '../utils';
 
 const CONTENT_TYPE_HEADER = 'content-type';
-const EMPTY_BODY_CODES = [204, 304];
 
 export class Context<
   AuthModes extends Record<string, SecurityAuthentication>,
@@ -114,13 +114,76 @@ export class Context<
   }
 
   /**
+   * Apply transformations (like Dates) to the response body.
+   * Uses the response status code to find the correct handler (schema).
+   */
+  private async transformResponse(
+    res: ResponseContext,
+    handlers?: Record<string, ResponseHandler>,
+  ): Promise<unknown> {
+    const contentType = res.headers[CONTENT_TYPE_HEADER];
+
+    if (contentType?.includes('text/')) {
+      return res.body.text();
+    }
+    if (!contentType?.includes('application/json')) {
+      return res.body.binary();
+    }
+
+    const rangeCode = `${res.httpStatusCode.toString().slice(0, 1)}XX`;
+    const handler =
+      handlers?.[res.httpStatusCode] ||
+      handlers?.[rangeCode] ||
+      handlers?.default;
+
+    const body = await res.body.json();
+
+    if (handler?.transforms) {
+      for (const [key, transformer] of Object.entries(this.transformers)) {
+        const transforms = handler.transforms[key];
+        if (transforms) {
+          for (const transform of transforms) {
+            applyTransform({ body }, 'body', key, transformer, transform, 0);
+          }
+        }
+      }
+    }
+    return body;
+  }
+
+  /**
    * Handle response by applying transforms.
+   *
+   * When fullResponseMode is set, all responses will be returned as a StatusResponse object
+   * instead of throwing on non-2xx status codes.
+   *
+   * Note that the possibility of disabling this mode might be removed in the future.
    */
   async handleResponse<T = unknown>(
     res: ResponseContext,
     handlers?: Record<string, ResponseHandler>,
+    fullResponseMode = false,
   ): Promise<T> {
-    if (EMPTY_BODY_CODES.includes(res.httpStatusCode) || !res.body) {
+    if (fullResponseMode) {
+      let body: unknown;
+
+      // Empty body codes
+      if (res.httpStatusCode === 204 || res.httpStatusCode === 304) {
+        body = null;
+      } else {
+        body = await this.transformResponse(res, handlers);
+      }
+
+      const r: StatusResponse<EnhancedHTTPStatus> = {
+        data: body,
+        headers: res.headers,
+        ok: isHttpStatusValid(res.httpStatusCode),
+        status: res.httpStatusCode,
+      };
+      return r as T;
+    }
+
+    if (res.httpStatusCode === 204 || res.httpStatusCode === 304 || !res.body) {
       if (isHttpStatusValid(res.httpStatusCode)) {
         // In case there isn't body, force return value to null
         return null as unknown as T;
@@ -128,44 +191,7 @@ export class Context<
       throw new ApiException(res.httpStatusCode, null);
     }
 
-    const contentType = res.headers[CONTENT_TYPE_HEADER];
-    let statusCode = Object.keys(handlers || {})
-      .filter((code) => code !== 'default')
-      .find((code) => isCodeInRange(code, res.httpStatusCode));
-
-    if (!statusCode && handlers?.default) {
-      statusCode = 'default';
-    }
-
-    let body: unknown;
-    if (contentType?.includes('application/json')) {
-      body = await res.body.json();
-
-      if (statusCode) {
-        const handler = handlers?.[statusCode];
-        if (handler?.transforms) {
-          for (const [key, transformer] of Object.entries(this.transformers)) {
-            const transforms = handler.transforms[key];
-            if (transforms) {
-              for (const transform of transforms) {
-                applyTransform(
-                  { body },
-                  'body',
-                  key,
-                  transformer,
-                  transform,
-                  0,
-                );
-              }
-            }
-          }
-        }
-      }
-    } else if (contentType?.includes('text/')) {
-      body = await res.body.text();
-    } else {
-      body = await res.body.binary();
-    }
+    const body = await this.transformResponse(res, handlers);
 
     // Do not throw on valid http status code.
     if (isHttpStatusValid(res.httpStatusCode)) {

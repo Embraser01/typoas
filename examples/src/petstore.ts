@@ -161,7 +161,12 @@ export async function updatePet<FetcherData>(
   params: {},
   body: Pet,
   opts?: FetcherData,
-): Promise<Pet> {
+): Promise<
+  | r.StatusResponse<200, Pet>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<405, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet',
     params,
@@ -170,7 +175,7 @@ export async function updatePet<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add a new pet to the store
@@ -182,7 +187,7 @@ export async function addPet<FetcherData>(
   params: {},
   body: Pet,
   opts?: FetcherData,
-): Promise<Pet> {
+): Promise<r.StatusResponse<200, Pet> | r.StatusResponse<405, unknown>> {
   const req = await ctx.createRequest({
     path: '/pet',
     params,
@@ -191,7 +196,7 @@ export async function addPet<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Finds Pets by status
@@ -204,7 +209,7 @@ export async function findPetsByStatus<FetcherData>(
     status?: 'available' | 'pending' | 'sold';
   },
   opts?: FetcherData,
-): Promise<Pet[]> {
+): Promise<r.StatusResponse<200, Pet[]> | r.StatusResponse<400, unknown>> {
   const req = await ctx.createRequest({
     path: '/pet/findByStatus',
     params,
@@ -213,7 +218,7 @@ export async function findPetsByStatus<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Finds Pets by tags
@@ -226,7 +231,7 @@ export async function findPetsByTags<FetcherData>(
     tags?: string[];
   },
   opts?: FetcherData,
-): Promise<Pet[]> {
+): Promise<r.StatusResponse<200, Pet[]> | r.StatusResponse<400, unknown>> {
   const req = await ctx.createRequest({
     path: '/pet/findByTags',
     params,
@@ -235,7 +240,7 @@ export async function findPetsByTags<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Find pet by ID
@@ -248,7 +253,11 @@ export async function getPetById<FetcherData>(
     petId: number;
   },
   opts?: FetcherData,
-): Promise<Pet> {
+): Promise<
+  | r.StatusResponse<200, Pet>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
     params,
@@ -256,7 +265,7 @@ export async function getPetById<FetcherData>(
     auth: ['api_key', 'petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Updates a pet in the store with form data
@@ -270,7 +279,7 @@ export async function updatePetWithForm<FetcherData>(
     status?: string;
   },
   opts?: FetcherData,
-): Promise<unknown> {
+): Promise<r.StatusResponse<405, unknown>> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
     params,
@@ -279,7 +288,7 @@ export async function updatePetWithForm<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Deletes a pet
@@ -292,7 +301,7 @@ export async function deletePet<FetcherData>(
     petId: number;
   },
   opts?: FetcherData,
-): Promise<unknown> {
+): Promise<r.StatusResponse<400, unknown>> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
     params,
@@ -300,7 +309,7 @@ export async function deletePet<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * uploads an image
@@ -314,7 +323,7 @@ export async function uploadFile<FetcherData>(
   },
   body: Blob,
   opts?: FetcherData,
-): Promise<ApiResponse> {
+): Promise<r.StatusResponse<200, ApiResponse>> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}/uploadImage',
     params,
@@ -324,7 +333,7 @@ export async function uploadFile<FetcherData>(
     auth: ['petstore_auth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Returns pet inventories by status
@@ -335,9 +344,14 @@ export async function getInventory<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<{
-  [key: string]: number;
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      [key: string]: number;
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/store/inventory',
     params,
@@ -345,7 +359,7 @@ export async function getInventory<FetcherData>(
     auth: ['api_key'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Place an order for a pet
@@ -357,7 +371,7 @@ export async function placeOrder<FetcherData>(
   params: {},
   body: Order,
   opts?: FetcherData,
-): Promise<Order> {
+): Promise<r.StatusResponse<200, Order> | r.StatusResponse<405, unknown>> {
   const req = await ctx.createRequest({
     path: '/store/order',
     params,
@@ -365,9 +379,13 @@ export async function placeOrder<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Order]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Order]]] } },
+    },
+    true,
+  );
 }
 /**
  * Find purchase order by ID
@@ -380,16 +398,24 @@ export async function getOrderById<FetcherData>(
     orderId: number;
   },
   opts?: FetcherData,
-): Promise<Order> {
+): Promise<
+  | r.StatusResponse<200, Order>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/store/order/{orderId}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Order]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Order]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete purchase order by ID
@@ -402,14 +428,14 @@ export async function deleteOrder<FetcherData>(
     orderId: number;
   },
   opts?: FetcherData,
-): Promise<unknown> {
+): Promise<r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/store/order/{orderId}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create user
@@ -421,7 +447,7 @@ export async function createUser<FetcherData>(
   params: {},
   body: User,
   opts?: FetcherData,
-): Promise<User> {
+): Promise<r.StatusResponse<'default', User>> {
   const req = await ctx.createRequest({
     path: '/user',
     params,
@@ -429,7 +455,7 @@ export async function createUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Creates list of users with given input array
@@ -441,7 +467,7 @@ export async function createUsersWithListInput<FetcherData>(
   params: {},
   body: User[],
   opts?: FetcherData,
-): Promise<User> {
+): Promise<r.StatusResponse<200, User> | r.StatusResponse<'default', unknown>> {
   const req = await ctx.createRequest({
     path: '/user/createWithList',
     params,
@@ -449,7 +475,7 @@ export async function createUsersWithListInput<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Logs user into the system
@@ -462,7 +488,7 @@ export async function loginUser<FetcherData>(
     password?: string;
   },
   opts?: FetcherData,
-): Promise<string> {
+): Promise<r.StatusResponse<200, string> | r.StatusResponse<400, unknown>> {
   const req = await ctx.createRequest({
     path: '/user/login',
     params,
@@ -470,7 +496,7 @@ export async function loginUser<FetcherData>(
     queryParams: ['username', 'password'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Logs out current logged in user session
@@ -480,14 +506,14 @@ export async function logoutUser<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<'default', unknown>> {
   const req = await ctx.createRequest({
     path: '/user/logout',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get user by user name
@@ -499,14 +525,18 @@ export async function getUserByName<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<User> {
+): Promise<
+  | r.StatusResponse<200, User>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update user
@@ -520,7 +550,7 @@ export async function updateUser<FetcherData>(
   },
   body: User,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<'default', unknown>> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,
@@ -528,7 +558,7 @@ export async function updateUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete user
@@ -541,12 +571,12 @@ export async function deleteUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<unknown> {
+): Promise<r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }

@@ -5,9 +5,14 @@ import * as r from '@typoas/runtime';
  * properties on the account like its current requirements or if the account is
  * enabled to make live charges or receive payouts.
  *
- * For Custom accounts, the properties below are always returned. For other accounts, some properties are returned until that
- * account has started to go through Connect Onboarding. Once you create an [Account Link](https://stripe.com/docs/api/account_links) or [Account Session](https://stripe.com/docs/api/account_sessions),
- * some properties are only returned for Custom accounts. Learn about the differences [between accounts](https://stripe.com/docs/connect/accounts).
+ * For accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection)
+ * is `application`, which includes Custom accounts, the properties below are always
+ * returned.
+ *
+ * For accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection)
+ * is `stripe`, which includes Standard and Express accounts, some properties are only returned
+ * until you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions)
+ * to start Connect Onboarding. Learn about the [differences between accounts](/connect/accounts).
  */
 export type Account = {
   /**
@@ -15,7 +20,7 @@ export type Account = {
    */
   business_profile?: AccountBusinessProfile | null;
   /**
-   * The business type. Once you create an [Account Link](https://stripe.com/docs/api/account_links) or [Account Session](https://stripe.com/docs/api/account_sessions), this property is only returned for Custom accounts.
+   * The business type. After you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions), this property is only returned for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts.
    */
   business_type?:
     | ('company' | 'government_entity' | 'individual' | 'non_profit')
@@ -40,7 +45,7 @@ export type Account = {
    */
   default_currency?: string;
   /**
-   * Whether account details have been submitted. Standard accounts cannot receive payouts before this is true.
+   * Whether account details have been submitted. Accounts with Stripe Dashboard access, which includes Standard accounts, cannot receive payouts before this is true. Accounts where this is false should be directed to [an onboarding flow](/connect/onboarding) to finish submitting account details.
    */
   details_submitted?: boolean;
   /**
@@ -96,16 +101,16 @@ export type Account = {
   settings?: AccountSettings | null;
   tos_acceptance?: AccountTosAcceptance;
   /**
-   * The Stripe account type. Can be `standard`, `express`, or `custom`.
+   * The Stripe account type. Can be `standard`, `express`, `custom`, or `none`.
    */
-  type?: 'custom' | 'express' | 'standard';
+  type?: 'custom' | 'express' | 'none' | 'standard';
 };
 /**
  * AccountAnnualRevenue
  */
 export type AccountAnnualRevenue = {
   /**
-   * A non-negative integer representing the amount in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
+   * A non-negative integer representing the amount in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
    */
   amount?: number | null;
   /**
@@ -214,6 +219,10 @@ export type AccountCapabilities = {
    */
   afterpay_clearpay_payments?: 'active' | 'inactive' | 'pending';
   /**
+   * The status of the AmazonPay capability of the account, or whether the account can directly process AmazonPay payments.
+   */
+  amazon_pay_payments?: 'active' | 'inactive' | 'pending';
+  /**
    * The status of the BECS Direct Debit (AU) payments capability of the account, or whether the account can directly process BECS Direct Debit (AU) charges.
    */
   au_becs_debit_payments?: 'active' | 'inactive' | 'pending';
@@ -297,6 +306,10 @@ export type AccountCapabilities = {
    * The status of the link_payments capability of the account, or whether the account can directly process Link charges.
    */
   link_payments?: 'active' | 'inactive' | 'pending';
+  /**
+   * The status of the MobilepPay capability of the account, or whether the account can directly process MobilePay charges.
+   */
+  mobilepay_payments?: 'active' | 'inactive' | 'pending';
   /**
    * The status of the OXXO payments capability of the account, or whether the account can directly process OXXO charges.
    */
@@ -387,7 +400,7 @@ export type AccountCapabilityFutureRequirements = {
    */
   past_due: string[];
   /**
-   * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`.
+   * Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`. Fields might appear in `eventually_due` or `currently_due` and in `pending_verification` if verification fails but another verification is still pending.
    */
   pending_verification: string[];
 };
@@ -408,13 +421,11 @@ export type AccountCapabilityRequirements = {
    */
   currently_due: string[];
   /**
-   * If the capability is disabled, this string describes why. Can be `requirements.past_due`, `requirements.pending_verification`, `listed`, `platform_paused`, `rejected.fraud`, `rejected.listed`, `rejected.terms_of_service`, `rejected.other`, `under_review`, or `other`.
+   * If the capability is disabled, this string describes why. [Learn more about handling verification issues](https://stripe.com/docs/connect/handling-api-verification). Can be `requirements.fields_needed`, `pending.onboarding`, `pending.review`, `rejected.other`, `platform_paused`, `rejected.inactivty`, or `rejected.unsupported_business`.
    *
-   * `rejected.unsupported_business` means that the account's business is not supported by the capability. For example, payment methods may restrict the businesses they support in their terms of service:
+   * `rejected.unsupported_business` means that the account's business is not supported by the capability. For example, payment methods may restrict the businesses they support in their terms of service, such as in [Afterpay Clearpay's terms of service](/afterpay-clearpay/legal#restricted-businesses).
    *
-   * - [Afterpay Clearpay's terms of service](/afterpay-clearpay/legal#restricted-businesses)
-   *
-   * If you believe that the rejection is in error, please contact support at https://support.stripe.com/contact/ for assistance.
+   * `rejected.inactivity` means that the capability has been paused for inactivity. This disabled reason currently only applies to the Issuing capability. See [Issuing: Managing Inactive Connects](https://support.stripe.com/questions/issuing-managing-inactive-connect-accounts) for more details.
    */
   disabled_reason?: string | null;
   /**
@@ -430,7 +441,7 @@ export type AccountCapabilityRequirements = {
    */
   past_due: string[];
   /**
-   * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`.
+   * Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`. Fields might appear in `eventually_due`, `currently_due`, or `past_due` and in `pending_verification` if verification fails but another verification is still pending.
    */
   pending_verification: string[];
 };
@@ -517,7 +528,7 @@ export type AccountFutureRequirements = {
    */
   past_due?: string[] | null;
   /**
-   * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`.
+   * Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`. Fields might appear in `eventually_due` or `currently_due` and in `pending_verification` if verification fails but another verification is still pending.
    */
   pending_verification?: string[] | null;
 };
@@ -560,7 +571,7 @@ export type AccountLink = {
  */
 export type AccountMonthlyEstimatedRevenue = {
   /**
-   * A non-negative integer representing how much to charge in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
+   * A non-negative integer representing how much to charge in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
    */
   amount: number;
   /**
@@ -598,7 +609,7 @@ export type AccountPaymentsSettings = {
  */
 export type AccountPayoutSettings = {
   /**
-   * A Boolean indicating if Stripe should try to reclaim negative balances from an attached bank account. See our [Understanding Connect Account Balances](https://stripe.com/docs/connect/account-balances) documentation for details. Default value is `false` for Custom accounts, otherwise `true`.
+   * A Boolean indicating if Stripe should try to reclaim negative balances from an attached bank account. See [Understanding Connect account balances](/connect/account-balances) for details. The default value is `false` when [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts, otherwise `true`.
    */
   debit_negative_balances: boolean;
   schedule: TransferSchedule;
@@ -640,7 +651,7 @@ export type AccountRequirements = {
    */
   past_due?: string[] | null;
   /**
-   * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`.
+   * Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`. Fields might appear in `eventually_due`, `currently_due`, or `past_due` and in `pending_verification` if verification fails but another verification is still pending.
    */
   pending_verification?: string[] | null;
 };
@@ -744,6 +755,7 @@ export type AccountRequirementsError = {
     | 'verification_failed_keyed_match'
     | 'verification_failed_name_match'
     | 'verification_failed_other'
+    | 'verification_failed_representative_authority'
     | 'verification_failed_residential_address'
     | 'verification_failed_tax_id_match'
     | 'verification_failed_tax_id_not_issued'
@@ -869,14 +881,52 @@ export type AccountTreasurySettings = {
  * AccountUnificationAccountController
  */
 export type AccountUnificationAccountController = {
+  fees?: AccountUnificationAccountControllerFees;
   /**
    * `true` if the Connect application retrieving the resource controls the account and can therefore exercise [platform controls](https://stripe.com/docs/connect/platform-controls-for-standard-accounts). Otherwise, this field is null.
    */
   is_controller?: boolean;
+  losses?: AccountUnificationAccountControllerLosses;
+  /**
+   * A value indicating responsibility for collecting requirements on this account. Only returned when the Connect application retrieving the resource controls the account.
+   */
+  requirement_collection?: 'application' | 'stripe';
+  stripe_dashboard?: AccountUnificationAccountControllerStripeDashboard;
   /**
    * The controller type. Can be `application`, if a Connect application controls the account, or `account`, if the account controls itself.
    */
   type: 'account' | 'application';
+};
+/**
+ * AccountUnificationAccountControllerFees
+ */
+export type AccountUnificationAccountControllerFees = {
+  /**
+   * A value indicating the responsible payer of a bundle of Stripe fees for pricing-control eligible products on this account. Learn more about [fee behavior on connected accounts](https://docs.stripe.com/connect/direct-charges-fee-payer-behavior).
+   */
+  payer:
+    | 'account'
+    | 'application'
+    | 'application_custom'
+    | 'application_express';
+};
+/**
+ * AccountUnificationAccountControllerLosses
+ */
+export type AccountUnificationAccountControllerLosses = {
+  /**
+   * A value indicating who is liable when this account can't pay back negative balances from payments.
+   */
+  payments: 'application' | 'stripe';
+};
+/**
+ * AccountUnificationAccountControllerStripeDashboard
+ */
+export type AccountUnificationAccountControllerStripeDashboard = {
+  /**
+   * A value indicating the Stripe dashboard this account has access to independent of the Connect application.
+   */
+  type: 'express' | 'full' | 'none';
 };
 /**
  * Address
@@ -1161,7 +1211,7 @@ export type Balance = {
    */
   available: BalanceAmount[];
   /**
-   * Funds held due to negative balances on connected Custom accounts. You can find the connect reserve balance for each currency and payment type in the `source_types` property.
+   * Funds held due to negative balances on connected accounts where [account.controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts. You can find the connect reserve balance for each currency and payment type in the `source_types` property.
    */
   connect_reserved?: BalanceAmount[];
   /**
@@ -1370,11 +1420,12 @@ export type BalanceTransaction = {
  * BankAccount
  * These bank accounts are payment methods on `Customer` objects.
  *
- * On the other hand [External Accounts](https://stripe.com/docs/api#external_accounts) are transfer
- * destinations on `Account` objects for [Custom accounts](https://stripe.com/docs/connect/custom-accounts).
+ * On the other hand [External Accounts](/api#external_accounts) are transfer
+ * destinations on `Account` objects for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection)
+ * is `application`, which includes [Custom accounts](/connect/custom-accounts).
  * They can be bank accounts or debit cards as well, and are documented in the links above.
  *
- * Related guide: [Bank debits and transfers](https://stripe.com/docs/payments/bank-debits-transfers)
+ * Related guide: [Bank debits and transfers](/payments/bank-debits-transfers)
  */
 export type BankAccount = {
   /**
@@ -1565,6 +1616,10 @@ export type BankConnectionsResourceOwnershipRefresh = {
    */
   last_attempted_at: number;
   /**
+   * Time at which the next ownership refresh can be initiated. This value will be `null` when `status` is `pending`. Measured in seconds since the Unix epoch.
+   */
+  next_refresh_available_at?: number | null;
+  /**
    * The status of the last refresh attempt.
    */
   status: 'failed' | 'pending' | 'succeeded';
@@ -1604,6 +1659,154 @@ export type BankConnectionsResourceTransactionResourceStatusTransitions = {
   void_at?: number | null;
 };
 /**
+ * BillingMeter
+ * A billing meter is a resource that allows you to track usage of a particular event. For example, you might create a billing meter to track the number of API calls made by a particular user. You can then attach the billing meter to a price and attach the price to a subscription to charge the user for the number of API calls they make.
+ */
+export type BillingMeter = {
+  /**
+   * Time at which the object was created. Measured in seconds since the Unix epoch.
+   */
+  created: number;
+  customer_mapping: BillingMeterResourceCustomerMappingSettings;
+  default_aggregation: BillingMeterResourceAggregationSettings;
+  /**
+   * The meter's name.
+   */
+  display_name: string;
+  /**
+   * The name of the meter event to record usage for. Corresponds with the `event_name` field on meter events.
+   */
+  event_name: string;
+  /**
+   * The time window to pre-aggregate meter events for, if any.
+   */
+  event_time_window?: ('day' | 'hour') | null;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'billing.meter';
+  /**
+   * The meter's status.
+   */
+  status: 'active' | 'inactive';
+  status_transitions: BillingMeterResourceBillingMeterStatusTransitions;
+  /**
+   * Time at which the object was last updated. Measured in seconds since the Unix epoch.
+   */
+  updated: number;
+  value_settings: BillingMeterResourceBillingMeterValue;
+};
+/**
+ * BillingMeterEvent
+ * A billing meter event represents a customer's usage of a product. Meter events are used to bill a customer based on their usage.
+ * Meter events are associated with billing meters, which define the shape of the event's payload and how those events are aggregated for billing.
+ */
+export type BillingMeterEvent = {
+  /**
+   * Time at which the object was created. Measured in seconds since the Unix epoch.
+   */
+  created: number;
+  /**
+   * The name of the meter event. Corresponds with the `event_name` field on a meter.
+   */
+  event_name: string;
+  /**
+   * A unique identifier for the event.
+   */
+  identifier: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'billing.meter_event';
+  /**
+   * The payload of the event. This contains the fields corresponding to a meter's `customer_mapping.event_payload_key` (default is `stripe_customer_id`) and `value_settings.event_payload_key` (default is `value`). Read more about the [payload](https://stripe.com/docs/billing/subscriptions/usage-based/recording-usage#payload-key-overrides).
+   */
+  payload: {
+    [key: string]: string;
+  };
+  /**
+   * The timestamp passed in when creating the event. Measured in seconds since the Unix epoch.
+   */
+  timestamp: number;
+};
+/**
+ * BillingMeterEventAdjustment
+ * A billing meter event adjustment is a resource that allows you to cancel a meter event. For example, you might create a billing meter event adjustment to cancel a meter event that was created in error or attached to the wrong customer.
+ */
+export type BillingMeterEventAdjustment = {
+  /**
+   * Specifies which event to cancel.
+   */
+  cancel?: BillingMeterResourceBillingMeterEventAdjustmentCancel | null;
+  /**
+   * The name of the meter event. Corresponds with the `event_name` field on a meter.
+   */
+  event_name: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'billing.meter_event_adjustment';
+  /**
+   * The meter event adjustment's status.
+   */
+  status: 'complete' | 'pending';
+  /**
+   * Specifies whether to cancel a single event or a range of events for a time period. Time period cancellation is not supported yet.
+   */
+  type: 'cancel';
+};
+/**
+ * BillingMeterEventSummary
+ * A billing meter event summary represents an aggregated view of a customer's billing meter events within a specified timeframe. It indicates how much
+ * usage was accrued by a customer for that period.
+ */
+export type BillingMeterEventSummary = {
+  /**
+   * Aggregated value of all the events within `start_time` (inclusive) and `end_time` (inclusive). The aggregation strategy is defined on meter via `default_aggregation`.
+   */
+  aggregated_value: number;
+  /**
+   * End timestamp for this event summary (inclusive).
+   */
+  end_time: number;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * The meter associated with this event summary.
+   */
+  meter: string;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'billing.meter_event_summary';
+  /**
+   * Start timestamp for this event summary (inclusive).
+   */
+  start_time: number;
+};
+/**
  * billing_details
  */
 export type BillingDetails = {
@@ -1623,6 +1826,55 @@ export type BillingDetails = {
    * Billing phone number (including extension).
    */
   phone?: string | null;
+};
+/**
+ * BillingMeterResourceAggregationSettings
+ */
+export type BillingMeterResourceAggregationSettings = {
+  /**
+   * Specifies how events are aggregated.
+   */
+  formula: 'count' | 'sum';
+};
+/**
+ * BillingMeterResourceBillingMeterEventAdjustmentCancel
+ */
+export type BillingMeterResourceBillingMeterEventAdjustmentCancel = {
+  /**
+   * Unique identifier for the event.
+   */
+  identifier?: string | null;
+};
+/**
+ * BillingMeterResourceBillingMeterStatusTransitions
+ */
+export type BillingMeterResourceBillingMeterStatusTransitions = {
+  /**
+   * The time the meter was deactivated, if any. Measured in seconds since Unix epoch.
+   */
+  deactivated_at?: number | null;
+};
+/**
+ * BillingMeterResourceBillingMeterValue
+ */
+export type BillingMeterResourceBillingMeterValue = {
+  /**
+   * The key in the meter event payload to use as the value for this meter.
+   */
+  event_payload_key: string;
+};
+/**
+ * BillingMeterResourceCustomerMappingSettings
+ */
+export type BillingMeterResourceCustomerMappingSettings = {
+  /**
+   * The key in the meter event payload to use for mapping the event to a customer.
+   */
+  event_payload_key: string;
+  /**
+   * The method for mapping a meter event to a customer.
+   */
+  type: 'by_id';
 };
 /**
  * PortalConfiguration
@@ -1776,7 +2028,7 @@ export type BillingPortalSession = {
    */
   object: 'billing_portal.session';
   /**
-   * The account for which the session was created on behalf of. When specified, only subscriptions and invoices with this `on_behalf_of` account appear in the portal. For more information, see the [docs](https://stripe.com/docs/connect/separate-charges-and-transfers#on-behalf-of). Use the [Accounts API](https://stripe.com/docs/api/accounts/object#account_object-settings-branding) to modify the `on_behalf_of` account's branding settings, which the portal displays.
+   * The account for which the session was created on behalf of. When specified, only subscriptions and invoices with this `on_behalf_of` account appear in the portal. For more information, see the [docs](https://stripe.com/docs/connect/separate-charges-and-transfers#settlement-merchant). Use the [Accounts API](https://stripe.com/docs/api/accounts/object#account_object-settings-branding) to modify the `on_behalf_of` account's branding settings, which the portal displays.
    */
   on_behalf_of?: string | null;
   /**
@@ -1862,7 +2114,7 @@ export type Capability = {
  */
 export type Card = {
   /**
-   * The account this card belongs to. This attribute will not be in the card object if the card belongs to a customer or recipient instead.
+   * The account this card belongs to. This attribute will not be in the card object if the card belongs to a customer or recipient instead. This property is only available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts.
    */
   account?: (string | Account) | null;
   /**
@@ -1910,7 +2162,7 @@ export type Card = {
    */
   country?: string | null;
   /**
-   * Three-letter [ISO code for currency](https://stripe.com/docs/payouts). Only applicable on accounts (not customers or recipients). The card can be used as a transfer destination for funds in this currency.
+   * Three-letter [ISO code for currency](https://stripe.com/docs/payouts). Only applicable on accounts (not customers or recipients). The card can be used as a transfer destination for funds in this currency. This property is only available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts.
    */
   currency?: string | null;
   /**
@@ -1922,7 +2174,7 @@ export type Card = {
    */
   cvc_check?: string | null;
   /**
-   * Whether this card is the default external account for its currency.
+   * Whether this card is the default external account for its currency. This property is only available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts.
    */
   default_for_currency?: boolean | null;
   /**
@@ -2009,7 +2261,7 @@ export type CardIssuingAccountTermsOfService = {
 /**
  * card_mandate_payment_method_details
  */
-export type CardMandatePaymentMethodDetails = any;
+export type CardMandatePaymentMethodDetails = unknown;
 /**
  * cash_balance
  * A customer's `Cash balance` represents real funds. Customers can add funds to their cash balance by sending a bank transfer. These funds can be used for payment and can eventually be paid out to your bank account.
@@ -2060,11 +2312,11 @@ export type Charge = {
    */
   application?: (string | Application) | null;
   /**
-   * The application fee (if any) for the charge. [See the Connect documentation](https://stripe.com/docs/connect/direct-charges#collecting-fees) for details.
+   * The application fee (if any) for the charge. [See the Connect documentation](https://stripe.com/docs/connect/direct-charges#collect-fees) for details.
    */
   application_fee?: (string | ApplicationFee) | null;
   /**
-   * The amount of the application fee (if any) requested for the charge. [See the Connect documentation](https://stripe.com/docs/connect/direct-charges#collecting-fees) for details.
+   * The amount of the application fee (if any) requested for the charge. [See the Connect documentation](https://stripe.com/docs/connect/direct-charges#collect-fees) for details.
    */
   application_fee_amount?: number | null;
   /**
@@ -2547,6 +2799,10 @@ export type CheckoutSession = {
    */
   return_url?: string;
   /**
+   * Controls saved payment method settings for the session. Only available in `payment` and `subscription` mode.
+   */
+  saved_payment_method_options?: PaymentPagesCheckoutSessionSavedPaymentMethodOptions | null;
+  /**
    * The ID of the SetupIntent for Checkout Sessions in `setup` mode.
    */
   setup_intent?: (string | SetupIntent) | null;
@@ -2687,6 +2943,19 @@ export type CheckoutAlipayPaymentMethodOptions = {
   setup_future_usage?: 'none';
 };
 /**
+ * CheckoutAmazonPayPaymentMethodOptions
+ */
+export type CheckoutAmazonPayPaymentMethodOptions = {
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none' | 'off_session';
+};
+/**
  * CheckoutAuBecsDebitPaymentMethodOptions
  */
 export type CheckoutAuBecsDebitPaymentMethodOptions = {
@@ -2756,6 +3025,10 @@ export type CheckoutCardInstallmentsOptions = {
  */
 export type CheckoutCardPaymentMethodOptions = {
   installments?: CheckoutCardInstallmentsOptions;
+  /**
+   * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+   */
+  request_three_d_secure: 'any' | 'automatic' | 'challenge';
   /**
    * Indicates that you intend to make future payments with this PaymentIntent's payment method.
    *
@@ -2945,6 +3218,19 @@ export type CheckoutLinkPaymentMethodOptions = {
   setup_future_usage?: 'none' | 'off_session';
 };
 /**
+ * CheckoutMobilepayPaymentMethodOptions
+ */
+export type CheckoutMobilepayPaymentMethodOptions = {
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none';
+};
+/**
  * CheckoutOxxoPaymentMethodOptions
  */
 export type CheckoutOxxoPaymentMethodOptions = {
@@ -3024,7 +3310,16 @@ export type CheckoutPixPaymentMethodOptions = {
 /**
  * CheckoutRevolutPayPaymentMethodOptions
  */
-export type CheckoutRevolutPayPaymentMethodOptions = any;
+export type CheckoutRevolutPayPaymentMethodOptions = {
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none' | 'off_session';
+};
 /**
  * CheckoutSepaDebitPaymentMethodOptions
  */
@@ -3046,6 +3341,7 @@ export type CheckoutSessionPaymentMethodOptions = {
   affirm?: CheckoutAffirmPaymentMethodOptions;
   afterpay_clearpay?: CheckoutAfterpayClearpayPaymentMethodOptions;
   alipay?: CheckoutAlipayPaymentMethodOptions;
+  amazon_pay?: CheckoutAmazonPayPaymentMethodOptions;
   au_becs_debit?: CheckoutAuBecsDebitPaymentMethodOptions;
   bacs_debit?: CheckoutBacsDebitPaymentMethodOptions;
   bancontact?: CheckoutBancontactPaymentMethodOptions;
@@ -3061,6 +3357,7 @@ export type CheckoutSessionPaymentMethodOptions = {
   klarna?: CheckoutKlarnaPaymentMethodOptions;
   konbini?: CheckoutKonbiniPaymentMethodOptions;
   link?: CheckoutLinkPaymentMethodOptions;
+  mobilepay?: CheckoutMobilepayPaymentMethodOptions;
   oxxo?: CheckoutOxxoPaymentMethodOptions;
   p24?: CheckoutP24PaymentMethodOptions;
   paynow?: CheckoutPaynowPaymentMethodOptions;
@@ -3367,6 +3664,211 @@ export type ClimateRemovalsProductsPrice = {
   amount_total: number;
 };
 /**
+ * ConfirmationTokensResourceConfirmationToken
+ * ConfirmationTokens help transport client side data collected by Stripe JS over
+ * to your server for confirming a PaymentIntent or SetupIntent. If the confirmation
+ * is successful, values present on the ConfirmationToken are written onto the Intent.
+ *
+ * To learn more about how to use ConfirmationToken, visit the related guides:
+ * - [Finalize payments on the server](https://stripe.com/docs/payments/finalize-payments-on-the-server)
+ * - [Build two-step confirmation](https://stripe.com/docs/payments/build-a-two-step-confirmation).
+ */
+export type ConfirmationToken = {
+  /**
+   * Time at which the object was created. Measured in seconds since the Unix epoch.
+   */
+  created: number;
+  /**
+   * Time at which this ConfirmationToken expires and can no longer be used to confirm a PaymentIntent or SetupIntent.
+   */
+  expires_at?: number | null;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * Data used for generating a Mandate.
+   */
+  mandate_data?: ConfirmationTokensResourceMandateData | null;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'confirmation_token';
+  /**
+   * ID of the PaymentIntent that this ConfirmationToken was used to confirm, or null if this ConfirmationToken has not yet been used.
+   */
+  payment_intent?: string | null;
+  /**
+   * Payment details collected by the Payment Element, used to create a PaymentMethod when a PaymentIntent or SetupIntent is confirmed with this ConfirmationToken.
+   */
+  payment_method_preview?: ConfirmationTokensResourcePaymentMethodPreview | null;
+  /**
+   * Return URL used to confirm the Intent.
+   */
+  return_url?: string | null;
+  /**
+   * Indicates that you intend to make future payments with this ConfirmationToken's payment method.
+   *
+   * The presence of this property will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete.
+   */
+  setup_future_usage?: ('off_session' | 'on_session') | null;
+  /**
+   * ID of the SetupIntent that this ConfirmationToken was used to confirm, or null if this ConfirmationToken has not yet been used.
+   */
+  setup_intent?: string | null;
+  /**
+   * Shipping information collected on this ConfirmationToken.
+   */
+  shipping?: ConfirmationTokensResourceShipping | null;
+  /**
+   * Indicates whether the Stripe SDK is used to handle confirmation flow. Defaults to `true` on ConfirmationToken.
+   */
+  use_stripe_sdk: boolean;
+};
+/**
+ * ConfirmationTokensResourceMandateData
+ * Data used for generating a Mandate.
+ */
+export type ConfirmationTokensResourceMandateData = {
+  customer_acceptance: ConfirmationTokensResourceMandateDataResourceCustomerAcceptance;
+};
+/**
+ * ConfirmationTokensResourceMandateDataResourceCustomerAcceptance
+ * This hash contains details about the customer acceptance of the Mandate.
+ */
+export type ConfirmationTokensResourceMandateDataResourceCustomerAcceptance = {
+  /**
+   * If this is a Mandate accepted online, this hash contains details about the online acceptance.
+   */
+  online?: ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnline | null;
+  /**
+   * The type of customer acceptance information included with the Mandate.
+   */
+  type: string;
+};
+/**
+ * ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnline
+ * This hash contains details about the online acceptance.
+ */
+export type ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnline =
+  {
+    /**
+     * The IP address from which the Mandate was accepted by the customer.
+     */
+    ip_address?: string | null;
+    /**
+     * The user agent of the browser from which the Mandate was accepted by the customer.
+     */
+    user_agent?: string | null;
+  };
+/**
+ * ConfirmationTokensResourcePaymentMethodPreview
+ * Details of the PaymentMethod collected by Payment Element
+ */
+export type ConfirmationTokensResourcePaymentMethodPreview = {
+  acss_debit?: PaymentMethodAcssDebit;
+  affirm?: PaymentMethodAffirm;
+  afterpay_clearpay?: PaymentMethodAfterpayClearpay;
+  alipay?: PaymentFlowsPrivatePaymentMethodsAlipay;
+  /**
+   * This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to “unspecified”.
+   */
+  allow_redisplay?: 'always' | 'limited' | 'unspecified';
+  amazon_pay?: PaymentMethodAmazonPay;
+  au_becs_debit?: PaymentMethodAuBecsDebit;
+  bacs_debit?: PaymentMethodBacsDebit;
+  bancontact?: PaymentMethodBancontact;
+  billing_details: BillingDetails;
+  blik?: PaymentMethodBlik;
+  boleto?: PaymentMethodBoleto;
+  card?: PaymentMethodCard;
+  card_present?: PaymentMethodCardPresent;
+  cashapp?: PaymentMethodCashapp;
+  customer_balance?: PaymentMethodCustomerBalance;
+  eps?: PaymentMethodEps;
+  fpx?: PaymentMethodFpx;
+  giropay?: PaymentMethodGiropay;
+  grabpay?: PaymentMethodGrabpay;
+  ideal?: PaymentMethodIdeal;
+  interac_present?: PaymentMethodInteracPresent;
+  klarna?: PaymentMethodKlarna;
+  konbini?: PaymentMethodKonbini;
+  link?: PaymentMethodLink;
+  mobilepay?: PaymentMethodMobilepay;
+  oxxo?: PaymentMethodOxxo;
+  p24?: PaymentMethodP24;
+  paynow?: PaymentMethodPaynow;
+  paypal?: PaymentMethodPaypal;
+  pix?: PaymentMethodPix;
+  promptpay?: PaymentMethodPromptpay;
+  revolut_pay?: PaymentMethodRevolutPay;
+  sepa_debit?: PaymentMethodSepaDebit;
+  sofort?: PaymentMethodSofort;
+  swish?: PaymentMethodSwish;
+  /**
+   * The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
+   */
+  type:
+    | 'acss_debit'
+    | 'affirm'
+    | 'afterpay_clearpay'
+    | 'alipay'
+    | 'amazon_pay'
+    | 'au_becs_debit'
+    | 'bacs_debit'
+    | 'bancontact'
+    | 'blik'
+    | 'boleto'
+    | 'card'
+    | 'card_present'
+    | 'cashapp'
+    | 'customer_balance'
+    | 'eps'
+    | 'fpx'
+    | 'giropay'
+    | 'grabpay'
+    | 'ideal'
+    | 'interac_present'
+    | 'klarna'
+    | 'konbini'
+    | 'link'
+    | 'mobilepay'
+    | 'oxxo'
+    | 'p24'
+    | 'paynow'
+    | 'paypal'
+    | 'pix'
+    | 'promptpay'
+    | 'revolut_pay'
+    | 'sepa_debit'
+    | 'sofort'
+    | 'swish'
+    | 'us_bank_account'
+    | 'wechat_pay'
+    | 'zip';
+  us_bank_account?: PaymentMethodUsBankAccount;
+  wechat_pay?: PaymentMethodWechatPay;
+  zip?: PaymentMethodZip;
+};
+/**
+ * ConfirmationTokensResourceShipping
+ */
+export type ConfirmationTokensResourceShipping = {
+  address: Address;
+  /**
+   * Recipient name.
+   */
+  name: string;
+  /**
+   * Recipient phone (including extension).
+   */
+  phone?: string | null;
+};
+/**
  * ConnectAccountReference
  */
 export type ConnectAccountReference = {
@@ -3409,13 +3911,37 @@ export type ConnectCollectionTransfer = {
   object: 'connect_collection_transfer';
 };
 /**
+ * ConnectEmbeddedAccountConfigClaim
+ */
+export type ConnectEmbeddedAccountConfigClaim = {
+  /**
+   * Whether the embedded component is enabled.
+   */
+  enabled: boolean;
+  features: ConnectEmbeddedAccountFeaturesClaim;
+};
+/**
+ * ConnectEmbeddedAccountFeaturesClaim
+ */
+export type ConnectEmbeddedAccountFeaturesClaim = {
+  /**
+   * Whether to allow platforms to control bank account collection for their connected accounts. This feature can only be false for custom accounts (or accounts where the platform is compliance owner). Otherwise, bank account collection is determined by compliance requirements.
+   */
+  external_account_collection: boolean;
+};
+/**
  * ConnectEmbeddedAccountSessionCreateComponents
  */
 export type ConnectEmbeddedAccountSessionCreateComponents = {
-  account_onboarding: ConnectEmbeddedBaseConfigClaim;
-  payment_details: ConnectEmbeddedPaymentsConfig;
-  payments: ConnectEmbeddedPaymentsConfig;
-  payouts: ConnectEmbeddedPayoutsConfig;
+  account_management: ConnectEmbeddedAccountConfigClaim;
+  account_onboarding: ConnectEmbeddedAccountConfigClaim;
+  balances: ConnectEmbeddedPayoutsConfigClaim;
+  documents: ConnectEmbeddedBaseConfigClaim;
+  notification_banner: ConnectEmbeddedAccountConfigClaim;
+  payment_details: ConnectEmbeddedPaymentsConfigClaim;
+  payments: ConnectEmbeddedPaymentsConfigClaim;
+  payouts: ConnectEmbeddedPayoutsConfigClaim;
+  payouts_list: ConnectEmbeddedBaseConfigClaim;
 };
 /**
  * ConnectEmbeddedBaseConfigClaim
@@ -3430,11 +3956,11 @@ export type ConnectEmbeddedBaseConfigClaim = {
 /**
  * ConnectEmbeddedBaseFeatures
  */
-export type ConnectEmbeddedBaseFeatures = any;
+export type ConnectEmbeddedBaseFeatures = unknown;
 /**
- * ConnectEmbeddedPaymentsConfig
+ * ConnectEmbeddedPaymentsConfigClaim
  */
-export type ConnectEmbeddedPaymentsConfig = {
+export type ConnectEmbeddedPaymentsConfigClaim = {
   /**
    * Whether the embedded component is enabled.
    */
@@ -3450,6 +3976,10 @@ export type ConnectEmbeddedPaymentsFeatures = {
    */
   capture_payments: boolean;
   /**
+   * Whether to allow connected accounts to manage destination charges that are created on behalf of them. This is `false` by default.
+   */
+  destination_on_behalf_of_charge_management: boolean;
+  /**
    * Whether to allow responding to disputes, including submitting evidence and accepting disputes. This is `true` by default.
    */
   dispute_management: boolean;
@@ -3459,9 +3989,9 @@ export type ConnectEmbeddedPaymentsFeatures = {
   refund_management: boolean;
 };
 /**
- * ConnectEmbeddedPayoutsConfig
+ * ConnectEmbeddedPayoutsConfigClaim
  */
-export type ConnectEmbeddedPayoutsConfig = {
+export type ConnectEmbeddedPayoutsConfigClaim = {
   /**
    * Whether the embedded component is enabled.
    */
@@ -4720,6 +5250,10 @@ export type DeletedDiscount = {
    * The subscription that this coupon is applied to, if it is applied to a particular subscription.
    */
   subscription?: string | null;
+  /**
+   * The subscription item that this coupon is applied to, if it is applied to a particular subscription item.
+   */
+  subscription_item?: string | null;
 };
 /**
  * Polymorphic
@@ -4830,6 +5364,23 @@ export type DeletedProduct = {
    * String representing the object's type. Objects of the same type share the same value.
    */
   object: 'product';
+};
+/**
+ * DeletedProductFeature
+ */
+export type DeletedProductFeature = {
+  /**
+   * Always true for a deleted object
+   */
+  deleted: true;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'product_feature';
 };
 /**
  * RadarListDeletedList
@@ -4987,7 +5538,7 @@ export type DeletedWebhookEndpoint = {
 /**
  * destination_details_unimplemented
  */
-export type DestinationDetailsUnimplemented = any;
+export type DestinationDetailsUnimplemented = unknown;
 /**
  * Discount
  * A discount represents the actual application of a [coupon](https://stripe.com/docs/api#coupons) or [promotion code](https://stripe.com/docs/api#promotion_codes).
@@ -5037,6 +5588,10 @@ export type Discount = {
    * The subscription that this coupon is applied to, if it is applied to a particular subscription.
    */
   subscription?: string | null;
+  /**
+   * The subscription item that this coupon is applied to, if it is applied to a particular subscription item.
+   */
+  subscription_item?: string | null;
 };
 /**
  * DiscountsResourceDiscountAmount
@@ -5050,6 +5605,23 @@ export type DiscountsResourceDiscountAmount = {
    * The discount that was applied to get this discount amount.
    */
   discount: string | Discount | DeletedDiscount;
+};
+/**
+ * DiscountsResourceStackableDiscount
+ */
+export type DiscountsResourceStackableDiscount = {
+  /**
+   * ID of the coupon to create a new discount for.
+   */
+  coupon?: (string | Coupon) | null;
+  /**
+   * ID of an existing discount on the object (or one of its ancestors) to reuse.
+   */
+  discount?: (string | Discount) | null;
+  /**
+   * ID of the promotion code to create a new discount for.
+   */
+  promotion_code?: (string | PromotionCode) | null;
 };
 /**
  * Dispute
@@ -5263,14 +5835,12 @@ export type DisputeEvidenceDetails = {
  * DisputePaymentMethodDetails
  */
 export type DisputePaymentMethodDetails = {
-  /**
-   * Card specific dispute details.
-   */
-  card?: DisputePaymentMethodDetailsCard | null;
+  card?: DisputePaymentMethodDetailsCard;
+  paypal?: DisputePaymentMethodDetailsPaypal;
   /**
    * Payment method type.
    */
-  type: 'card';
+  type: 'card' | 'paypal';
 };
 /**
  * DisputePaymentMethodDetailsCard
@@ -5286,6 +5856,19 @@ export type DisputePaymentMethodDetailsCard = {
   network_reason_code?: string | null;
 };
 /**
+ * DisputePaymentMethodDetailsPaypal
+ */
+export type DisputePaymentMethodDetailsPaypal = {
+  /**
+   * The ID of the dispute in PayPal.
+   */
+  case_id?: string | null;
+  /**
+   * The reason for the dispute as defined by PayPal
+   */
+  reason_code?: string | null;
+};
+/**
  * EmailSent
  */
 export type EmailSent = {
@@ -5297,6 +5880,69 @@ export type EmailSent = {
    * The recipient's email address.
    */
   email_sent_to: string;
+};
+/**
+ * ActiveEntitlement
+ * An active entitlement describes access to a feature for a customer.
+ */
+export type EntitlementsActiveEntitlement = {
+  /**
+   * The [Feature](https://stripe.com/docs/api/entitlements/feature) that the customer is entitled to.
+   */
+  feature: string | EntitlementsFeature;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * A unique key you provide as your own system identifier. This may be up to 80 characters.
+   */
+  lookup_key: string;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'entitlements.active_entitlement';
+};
+/**
+ * Feature
+ * A feature represents a monetizable ability or functionality in your system.
+ * Features can be assigned to products, and when those products are purchased, Stripe will create an entitlement to the feature for the purchasing customer.
+ */
+export type EntitlementsFeature = {
+  /**
+   * Inactive features cannot be attached to new products and will not be returned from the features list endpoint.
+   */
+  active: boolean;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * A unique key you provide as your own system identifier. This may be up to 80 characters.
+   */
+  lookup_key: string;
+  /**
+   * Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+   */
+  metadata: {
+    [key: string]: string;
+  };
+  /**
+   * The feature's name, for your own purpose, not meant to be displayable to the customer.
+   */
+  name: string;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'entitlements.feature';
 };
 /**
  * EphemeralKey
@@ -5356,10 +6002,10 @@ export type Error = {
  * `Event` objects directly to an endpoint on your server. You can manage
  * webhooks in your
  * [account settings](https://dashboard.stripe.com/account/webhooks). Learn how
- * to [listen for events](https://stripe.com/docs/webhooks)
+ * to [listen for events](https://docs.stripe.com/webhooks)
  * so that your integration can automatically trigger reactions.
  *
- * When using [Connect](https://stripe.com/docs/connect), you can also receive event notifications
+ * When using [Connect](https://docs.stripe.com/connect), you can also receive event notifications
  * that occur in connected accounts. For these events, there's an
  * additional `account` attribute in the received `Event` object.
  *
@@ -5471,7 +6117,7 @@ export type ExternalAccountRequirements = {
    */
   past_due?: string[] | null;
   /**
-   * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`.
+   * Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`. Fields might appear in `eventually_due`, `currently_due`, or `past_due` and in `pending_verification` if verification fails but another verification is still pending.
    */
   pending_verification?: string[] | null;
 };
@@ -6010,6 +6656,136 @@ export type FinancialReportingFinanceReportRunRunParameters = {
   timezone?: string;
 };
 /**
+ * ForwardedRequestContext
+ * Metadata about the forwarded request.
+ */
+export type ForwardedRequestContext = {
+  /**
+   * The time it took in milliseconds for the destination endpoint to respond.
+   */
+  destination_duration: number;
+  /**
+   * The IP address of the destination.
+   */
+  destination_ip_address: string;
+};
+/**
+ * ForwardedRequestDetails
+ * Details about the request forwarded to the destination endpoint.
+ */
+export type ForwardedRequestDetails = {
+  /**
+   * The body payload to send to the destination endpoint.
+   */
+  body: string;
+  /**
+   * The headers to include in the forwarded request. Can be omitted if no additional headers (excluding Stripe-generated ones such as the Content-Type header) should be included.
+   */
+  headers: ForwardedRequestHeader[];
+  /**
+   * The HTTP method used to call the destination endpoint.
+   */
+  http_method: 'POST';
+};
+/**
+ * ForwardedRequestHeader
+ * Header data.
+ */
+export type ForwardedRequestHeader = {
+  /**
+   * The header name.
+   */
+  name: string;
+  /**
+   * The header value.
+   */
+  value: string;
+};
+/**
+ * ForwardedResponseDetails
+ * Details about the response from the destination endpoint.
+ */
+export type ForwardedResponseDetails = {
+  /**
+   * The response body from the destination endpoint to Stripe.
+   */
+  body: string;
+  /**
+   * HTTP headers that the destination endpoint returned.
+   */
+  headers: ForwardedRequestHeader[];
+  /**
+   * The HTTP status code that the destination endpoint returned.
+   */
+  status: number;
+};
+/**
+ * ForwardingRequest
+ * Instructs Stripe to make a request on your behalf using the destination URL. The destination URL
+ * is activated by Stripe at the time of onboarding. Stripe verifies requests with your credentials
+ * provided during onboarding, and injects card details from the payment_method into the request.
+ *
+ * Stripe redacts all sensitive fields and headers, including authentication credentials and card numbers,
+ * before storing the request and response data in the forwarding Request object, which are subject to a
+ * 30-day retention period.
+ *
+ * You can provide a Stripe idempotency key to make sure that requests with the same key result in only one
+ * outbound request. The Stripe idempotency key provided should be unique and different from any idempotency
+ * keys provided on the underlying third-party request.
+ *
+ * Forwarding Requests are synchronous requests that return a response or time out according to
+ * Stripe’s limits.
+ *
+ * Related guide: [Forward card details to third-party API endpoints](https://docs.stripe.com/payments/forwarding).
+ */
+export type ForwardingRequest = {
+  /**
+   * Time at which the object was created. Measured in seconds since the Unix epoch.
+   */
+  created: number;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'forwarding.request';
+  /**
+   * The PaymentMethod to insert into the forwarded request. Forwarding previously consumed PaymentMethods is allowed.
+   */
+  payment_method: string;
+  /**
+   * The field kinds to be replaced in the forwarded request.
+   */
+  replacements: (
+    | 'card_cvc'
+    | 'card_expiry'
+    | 'card_number'
+    | 'cardholder_name'
+  )[];
+  /**
+   * Context about the request from Stripe's servers to the destination endpoint.
+   */
+  request_context?: ForwardedRequestContext | null;
+  /**
+   * The request that was sent to the destination endpoint. We redact any sensitive fields.
+   */
+  request_details?: ForwardedRequestDetails | null;
+  /**
+   * The response that the destination endpoint returned to us. We redact any sensitive fields.
+   */
+  response_details?: ForwardedResponseDetails | null;
+  /**
+   * The destination URL for the forwarded request. Must be supported by the config.
+   */
+  url?: string | null;
+};
+/**
  * CustomerBalanceFundingInstructionsCustomerBalanceFundingInstructions
  * Each customer has a [`balance`](https://stripe.com/docs/api/customers/object#customer_object-balance) that is
  * automatically applied to future invoices and payments using the `customer_balance` payment method.
@@ -6374,6 +7150,37 @@ export type GelatoDocumentReportError = {
   reason?: string | null;
 };
 /**
+ * GelatoEmailReport
+ * Result from a email check
+ */
+export type GelatoEmailReport = {
+  /**
+   * Email to be verified.
+   */
+  email?: string | null;
+  /**
+   * Details on the verification error. Present when status is `unverified`.
+   */
+  error?: GelatoEmailReportError | null;
+  /**
+   * Status of this `email` check.
+   */
+  status: 'unverified' | 'verified';
+};
+/**
+ * GelatoEmailReportError
+ */
+export type GelatoEmailReportError = {
+  /**
+   * A short machine-readable string giving the reason for the verification failure.
+   */
+  code?: ('email_unverified_other' | 'email_verification_declined') | null;
+  /**
+   * A human-readable message giving the reason for the failure. These messages can be shown to your users.
+   */
+  reason?: string | null;
+};
+/**
  * GelatoIdNumberReport
  * Result from an id_number check
  */
@@ -6427,6 +7234,50 @@ export type GelatoIdNumberReportError = {
   reason?: string | null;
 };
 /**
+ * GelatoPhoneReport
+ * Result from a phone check
+ */
+export type GelatoPhoneReport = {
+  /**
+   * Details on the verification error. Present when status is `unverified`.
+   */
+  error?: GelatoPhoneReportError | null;
+  /**
+   * Phone to be verified.
+   */
+  phone?: string | null;
+  /**
+   * Status of this `phone` check.
+   */
+  status: 'unverified' | 'verified';
+};
+/**
+ * GelatoPhoneReportError
+ */
+export type GelatoPhoneReportError = {
+  /**
+   * A short machine-readable string giving the reason for the verification failure.
+   */
+  code?: ('phone_unverified_other' | 'phone_verification_declined') | null;
+  /**
+   * A human-readable message giving the reason for the failure. These messages can be shown to your users.
+   */
+  reason?: string | null;
+};
+/**
+ * GelatoProvidedDetails
+ */
+export type GelatoProvidedDetails = {
+  /**
+   * Email of user being verified
+   */
+  email?: string;
+  /**
+   * Phone number of user being verified
+   */
+  phone?: string;
+};
+/**
  * GelatoReportDocumentOptions
  */
 export type GelatoReportDocumentOptions = {
@@ -6450,7 +7301,7 @@ export type GelatoReportDocumentOptions = {
 /**
  * GelatoReportIdNumberOptions
  */
-export type GelatoReportIdNumberOptions = any;
+export type GelatoReportIdNumberOptions = unknown;
 /**
  * GelatoSelfieReport
  * Result from a selfie check
@@ -6515,9 +7366,18 @@ export type GelatoSessionDocumentOptions = {
   require_matching_selfie?: boolean;
 };
 /**
+ * GelatoSessionEmailOptions
+ */
+export type GelatoSessionEmailOptions = {
+  /**
+   * Request one time password verification of `provided_details.email`.
+   */
+  require_verification?: boolean;
+};
+/**
  * GelatoSessionIdNumberOptions
  */
-export type GelatoSessionIdNumberOptions = any;
+export type GelatoSessionIdNumberOptions = unknown;
 /**
  * GelatoSessionLastError
  * Shows last VerificationSession error
@@ -6535,9 +7395,13 @@ export type GelatoSessionLastError = {
         | 'document_expired'
         | 'document_type_not_supported'
         | 'document_unverified_other'
+        | 'email_unverified_other'
+        | 'email_verification_declined'
         | 'id_number_insufficient_document_data'
         | 'id_number_mismatch'
         | 'id_number_unverified_other'
+        | 'phone_unverified_other'
+        | 'phone_verification_declined'
         | 'selfie_document_missing_photo'
         | 'selfie_face_mismatch'
         | 'selfie_manipulated'
@@ -6551,6 +7415,15 @@ export type GelatoSessionLastError = {
   reason?: string | null;
 };
 /**
+ * GelatoSessionPhoneOptions
+ */
+export type GelatoSessionPhoneOptions = {
+  /**
+   * Request one time password verification of `provided_details.phone`.
+   */
+  require_verification?: boolean;
+};
+/**
  * GelatoVerificationReportOptions
  */
 export type GelatoVerificationReportOptions = {
@@ -6562,7 +7435,9 @@ export type GelatoVerificationReportOptions = {
  */
 export type GelatoVerificationSessionOptions = {
   document?: GelatoSessionDocumentOptions;
+  email?: GelatoSessionEmailOptions;
   id_number?: GelatoSessionIdNumberOptions;
+  phone?: GelatoSessionPhoneOptions;
 };
 /**
  * GelatoVerifiedOutputs
@@ -6576,6 +7451,10 @@ export type GelatoVerifiedOutputs = {
    * The user’s verified date of birth.
    */
   dob?: GelatoDataVerifiedOutputsDate | null;
+  /**
+   * The user's verified email address
+   */
+  email?: string | null;
   /**
    * The user's verified first name.
    */
@@ -6592,6 +7471,10 @@ export type GelatoVerifiedOutputs = {
    * The user's verified last name.
    */
   last_name?: string | null;
+  /**
+   * The user's verified phone number
+   */
+  phone?: string | null;
 };
 /**
  * GelatoVerificationReport
@@ -6617,6 +7500,7 @@ export type IdentityVerificationReport = {
    */
   created: number;
   document?: GelatoDocumentReport;
+  email?: GelatoEmailReport;
   /**
    * Unique identifier for the object.
    */
@@ -6631,11 +7515,16 @@ export type IdentityVerificationReport = {
    */
   object: 'identity.verification_report';
   options?: GelatoVerificationReportOptions;
+  phone?: GelatoPhoneReport;
   selfie?: GelatoSelfieReport;
   /**
    * Type of report.
    */
-  type: 'document' | 'id_number';
+  type: 'document' | 'id_number' | 'verification_flow';
+  /**
+   * The configuration token of a Verification Flow from the dashboard.
+   */
+  verification_flow?: string;
   /**
    * ID of the VerificationSession that created this report.
    */
@@ -6699,6 +7588,10 @@ export type IdentityVerificationSession = {
    */
   options?: GelatoVerificationSessionOptions | null;
   /**
+   * Details provided about the user being verified. These details may be shown to the user.
+   */
+  provided_details?: GelatoProvidedDetails | null;
+  /**
    * Redaction status of this VerificationSession. If the VerificationSession is not redacted, this field will be null.
    */
   redaction?: VerificationSessionRedaction | null;
@@ -6709,11 +7602,15 @@ export type IdentityVerificationSession = {
   /**
    * The type of [verification check](https://stripe.com/docs/identity/verification-checks) to be performed.
    */
-  type: 'document' | 'id_number';
+  type: 'document' | 'id_number' | 'verification_flow';
   /**
    * The short-lived URL that you use to redirect a user to Stripe to submit their identity information. This URL expires after 48 hours and can only be used once. Don’t store it, log it, send it in emails or expose it to anyone other than the user. Refer to our docs on [verifying identity documents](https://stripe.com/docs/identity/verify-identity-documents?platform=web&type=redirect) to learn how to redirect users to Stripe.
    */
   url?: string | null;
+  /**
+   * The configuration token of a Verification Flow from the dashboard.
+   */
+  verification_flow?: string;
   /**
    * The user’s verified data.
    */
@@ -6755,13 +7652,42 @@ export type InboundTransfersPaymentMethodDetailsUsBankAccount = {
    */
   last4?: string | null;
   /**
-   * The US bank account network used to debit funds.
+   * ID of the mandate used to make this payment.
+   */
+  mandate?: string | Mandate;
+  /**
+   * The network rails used. See the [docs](https://stripe.com/docs/treasury/money-movement/timelines) to learn more about money movement timelines for each network type.
    */
   network: 'ach';
   /**
    * Routing number of the bank account.
    */
   routing_number?: string | null;
+};
+/**
+ * internal_card
+ */
+export type InternalCard = {
+  /**
+   * Brand of the card used in the transaction
+   */
+  brand?: string | null;
+  /**
+   * Two-letter ISO code representing the country of the card
+   */
+  country?: string | null;
+  /**
+   * Two digit number representing the card's expiration month
+   */
+  exp_month?: number | null;
+  /**
+   * Two digit number representing the card's expiration year
+   */
+  exp_year?: number | null;
+  /**
+   * The last 4 digits of the card
+   */
+  last4?: string | null;
 };
 /**
  * Invoice
@@ -6836,7 +7762,7 @@ export type Invoice = {
    */
   application_fee_amount?: number | null;
   /**
-   * Number of payment attempts made for this invoice, from the perspective of the payment retry schedule. Any payment attempt counts as the first attempt, and subsequently only automatic retries increment the attempt count. In other words, manual payment attempts after the first attempt do not affect the retry schedule.
+   * Number of payment attempts made for this invoice, from the perspective of the payment retry schedule. Any payment attempt counts as the first attempt, and subsequently only automatic retries increment the attempt count. In other words, manual payment attempts after the first attempt do not affect the retry schedule. If a failure is returned with a non-retryable return code, the invoice can no longer be retried unless a new payment method is obtained. Retries will continue to be scheduled, and attempt_count will continue to increment, but retries will only be executed if a new payment method is obtained.
    */
   attempt_count: number;
   /**
@@ -6947,7 +7873,7 @@ export type Invoice = {
   /**
    * The discounts applied to the invoice. Line item discounts are applied before invoice discounts. Use `expand[]=discounts` to expand each discount.
    */
-  discounts?: (string | Discount | DeletedDiscount)[] | null;
+  discounts: (string | Discount | DeletedDiscount)[];
   /**
    * The date on which payment for this invoice is due. This value will be `null` for invoices where `collection_method=charge_automatically`.
    */
@@ -7051,11 +7977,11 @@ export type Invoice = {
   payment_intent?: (string | PaymentIntent) | null;
   payment_settings: InvoicesPaymentSettings;
   /**
-   * End of the usage period during which invoice items were added to this invoice.
+   * End of the usage period during which invoice items were added to this invoice. This looks back one period for a subscription invoice. Use the [line item period](/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
    */
   period_end: number;
   /**
-   * Start of the usage period during which invoice items were added to this invoice.
+   * Start of the usage period during which invoice items were added to this invoice. This looks back one period for a subscription invoice. Use the [line item period](/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
    */
   period_start: number;
   /**
@@ -7276,7 +8202,11 @@ export type InvoicePaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer
 /**
  * invoice_payment_method_options_konbini
  */
-export type InvoicePaymentMethodOptionsKonbini = any;
+export type InvoicePaymentMethodOptionsKonbini = unknown;
+/**
+ * invoice_payment_method_options_sepa_debit
+ */
+export type InvoicePaymentMethodOptionsSepaDebit = unknown;
 /**
  * invoice_payment_method_options_us_bank_account
  */
@@ -7294,11 +8224,16 @@ export type InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptions = {
   /**
    * The list of permissions to request. The `payment_method` permission must be included.
    */
-  permissions?: ('balances' | 'payment_method' | 'transactions')[];
+  permissions?: (
+    | 'balances'
+    | 'ownership'
+    | 'payment_method'
+    | 'transactions'
+  )[];
   /**
    * Data features requested to be retrieved upon account creation.
    */
-  prefetch?: ('balances' | 'transactions')[] | null;
+  prefetch?: ('balances' | 'ownership' | 'transactions')[] | null;
 };
 /**
  * InvoiceRenderingPdf
@@ -7323,6 +8258,15 @@ export type InvoiceSettingCustomField = {
   value: string;
 };
 /**
+ * InvoiceSettingCustomerRenderingOptions
+ */
+export type InvoiceSettingCustomerRenderingOptions = {
+  /**
+   * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+   */
+  amount_tax_display?: string | null;
+};
+/**
  * InvoiceSettingCustomerSetting
  */
 export type InvoiceSettingCustomerSetting = {
@@ -7341,7 +8285,7 @@ export type InvoiceSettingCustomerSetting = {
   /**
    * Default options for invoice PDF rendering for this customer.
    */
-  rendering_options?: InvoiceSettingRenderingOptions | null;
+  rendering_options?: InvoiceSettingCustomerRenderingOptions | null;
 };
 /**
  * InvoiceSettingQuoteSetting
@@ -7590,6 +8534,10 @@ export type InvoicesPaymentMethodOptions = {
    */
   konbini?: InvoicePaymentMethodOptionsKonbini | null;
   /**
+   * If paying by `sepa_debit`, this sub-hash contains details about the SEPA Direct Debit payment method options to pass to the invoice’s PaymentIntent.
+   */
+  sepa_debit?: InvoicePaymentMethodOptionsSepaDebit | null;
+  /**
    * If paying by `us_bank_account`, this sub-hash contains details about the ACH direct debit payment method options to pass to the invoice’s PaymentIntent.
    */
   us_bank_account?: InvoicePaymentMethodOptionsUsBankAccount | null;
@@ -7614,6 +8562,7 @@ export type InvoicesPaymentSettings = {
         | 'ach_credit_transfer'
         | 'ach_debit'
         | 'acss_debit'
+        | 'amazon_pay'
         | 'au_becs_debit'
         | 'bacs_debit'
         | 'bancontact'
@@ -7632,6 +8581,7 @@ export type InvoicesPaymentSettings = {
         | 'paynow'
         | 'paypal'
         | 'promptpay'
+        | 'revolut_pay'
         | 'sepa_debit'
         | 'sofort'
         | 'us_bank_account'
@@ -7670,7 +8620,7 @@ export type InvoicesResourceInvoiceRendering = {
  */
 export type InvoicesResourceInvoiceTaxId = {
   /**
-   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, `bh_vat`, `kz_bin`, `ng_tin`, `om_vat`, or `unknown`
    */
   type:
     | 'ad_nrt'
@@ -7679,6 +8629,7 @@ export type InvoicesResourceInvoiceTaxId = {
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bh_vat'
     | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
@@ -7712,14 +8663,17 @@ export type InvoicesResourceInvoiceTaxId = {
     | 'jp_trn'
     | 'ke_pin'
     | 'kr_brn'
+    | 'kz_bin'
     | 'li_uid'
     | 'mx_rfc'
     | 'my_frp'
     | 'my_itn'
     | 'my_sst'
+    | 'ng_tin'
     | 'no_vat'
     | 'no_voec'
     | 'nz_gst'
+    | 'om_vat'
     | 'pe_ruc'
     | 'ph_tin'
     | 'ro_tin'
@@ -7987,6 +8941,10 @@ export type IssuingCard = {
    */
   object: 'issuing.card';
   /**
+   * The personalization design object belonging to this card.
+   */
+  personalization_design?: (string | IssuingPersonalizationDesign) | null;
+  /**
    * The latest card that replaces this card, if any.
    */
   replaced_by?: (string | IssuingCard) | null;
@@ -8141,6 +9099,91 @@ export type IssuingDispute = {
   treasury?: IssuingDisputeTreasury | null;
 };
 /**
+ * IssuingPersonalizationDesign
+ * A Personalization Design is a logical grouping of a Physical Bundle, card logo, and carrier text that represents a product line.
+ */
+export type IssuingPersonalizationDesign = {
+  /**
+   * The file for the card logo to use with physical bundles that support card logos. Must have a `purpose` value of `issuing_logo`.
+   */
+  card_logo?: (string | File) | null;
+  /**
+   * Hash containing carrier text, for use with physical bundles that support carrier text.
+   */
+  carrier_text?: IssuingPersonalizationDesignCarrierText | null;
+  /**
+   * Time at which the object was created. Measured in seconds since the Unix epoch.
+   */
+  created: number;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * A lookup key used to retrieve personalization designs dynamically from a static string. This may be up to 200 characters.
+   */
+  lookup_key?: string | null;
+  /**
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+   */
+  metadata: {
+    [key: string]: string;
+  };
+  /**
+   * Friendly display name.
+   */
+  name?: string | null;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'issuing.personalization_design';
+  /**
+   * The physical bundle object belonging to this personalization design.
+   */
+  physical_bundle: string | IssuingPhysicalBundle;
+  preferences: IssuingPersonalizationDesignPreferences;
+  rejection_reasons: IssuingPersonalizationDesignRejectionReasons;
+  /**
+   * Whether this personalization design can be used to create cards.
+   */
+  status: 'active' | 'inactive' | 'rejected' | 'review';
+};
+/**
+ * IssuingPhysicalBundle
+ * A Physical Bundle represents the bundle of physical items - card stock, carrier letter, and envelope - that is shipped to a cardholder when you create a physical card.
+ */
+export type IssuingPhysicalBundle = {
+  features?: IssuingPhysicalBundleFeatures;
+  /**
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * Friendly display name.
+   */
+  name: string;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'issuing.physical_bundle';
+  /**
+   * Whether this physical bundle can be used to create cards.
+   */
+  status: 'active' | 'inactive' | 'review';
+  /**
+   * Whether this physical bundle is a standard Stripe offering or custom-made for you.
+   */
+  type: 'custom' | 'standard';
+};
+/**
  * IssuingSettlement
  * When a non-stripe BIN is used, any use of an [issued card](https://stripe.com/docs/issuing) must be settled directly with the card network. The net amount owed is represented by an Issuing `Settlement` object.
  */
@@ -8226,7 +9269,7 @@ export type IssuingToken = {
    */
   created: number;
   /**
-   * The hashed ID derived from the device ID from the card network associated with the token
+   * The hashed ID derived from the device ID from the card network associated with the token.
    */
   device_fingerprint?: string | null;
   /**
@@ -8933,6 +9976,10 @@ export type IssuingCardAuthorizationControls = {
       )[]
     | null;
   /**
+   * Array of strings containing representing countries from which authorizations will be allowed. Authorizations from merchants in all other countries will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `blocked_merchant_countries`. Provide an empty value to unset this control.
+   */
+  allowed_merchant_countries?: string[] | null;
+  /**
    * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
    */
   blocked_categories?:
@@ -9234,6 +10281,10 @@ export type IssuingCardAuthorizationControls = {
         | 'wrecking_and_salvage_yards'
       )[]
     | null;
+  /**
+   * Array of strings containing representing countries from which authorizations will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `allowed_merchant_countries`. Provide an empty value to unset this control.
+   */
+  blocked_merchant_countries?: string[] | null;
   /**
    * Limit spending with amount-based rules that apply across any cards this card replaced (i.e., its `replacement_for` card and _that_ card's `replacement_for` card, up the chain).
    */
@@ -9975,6 +11026,10 @@ export type IssuingCardholderAuthorizationControls = {
       )[]
     | null;
   /**
+   * Array of strings containing representing countries from which authorizations will be allowed. Authorizations from merchants in all other countries will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `blocked_merchant_countries`. Provide an empty value to unset this control.
+   */
+  allowed_merchant_countries?: string[] | null;
+  /**
    * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
    */
   blocked_categories?:
@@ -10276,6 +11331,10 @@ export type IssuingCardholderAuthorizationControls = {
         | 'wrecking_and_salvage_yards'
       )[]
     | null;
+  /**
+   * Array of strings containing representing countries from which authorizations will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `allowed_merchant_countries`. Provide an empty value to unset this control.
+   */
+  blocked_merchant_countries?: string[] | null;
   /**
    * Limit spending with amount-based rules that apply across this cardholder's cards.
    */
@@ -10814,6 +11873,7 @@ export type IssuingDisputeEvidence = {
   duplicate?: IssuingDisputeDuplicateEvidence;
   fraudulent?: IssuingDisputeFraudulentEvidence;
   merchandise_not_as_described?: IssuingDisputeMerchandiseNotAsDescribedEvidence;
+  no_valid_authorization?: IssuingDisputeNoValidAuthorizationEvidence;
   not_received?: IssuingDisputeNotReceivedEvidence;
   other?: IssuingDisputeOtherEvidence;
   /**
@@ -10824,6 +11884,7 @@ export type IssuingDisputeEvidence = {
     | 'duplicate'
     | 'fraudulent'
     | 'merchandise_not_as_described'
+    | 'no_valid_authorization'
     | 'not_received'
     | 'other'
     | 'service_not_as_described';
@@ -10870,6 +11931,19 @@ export type IssuingDisputeMerchandiseNotAsDescribedEvidence = {
    * Date when the product was returned or attempted to be returned.
    */
   returned_at?: number | null;
+};
+/**
+ * IssuingDisputeNoValidAuthorizationEvidence
+ */
+export type IssuingDisputeNoValidAuthorizationEvidence = {
+  /**
+   * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+   */
+  additional_documentation?: (string | File) | null;
+  /**
+   * Explanation of why the cardholder is disputing this transaction.
+   */
+  explanation?: string | null;
 };
 /**
  * IssuingDisputeNotReceivedEvidence
@@ -11124,6 +12198,91 @@ export type IssuingNetworkTokenWalletProvider = {
   suggested_decision_version?: string;
 };
 /**
+ * IssuingPersonalizationDesignCarrierText
+ */
+export type IssuingPersonalizationDesignCarrierText = {
+  /**
+   * The footer body text of the carrier letter.
+   */
+  footer_body?: string | null;
+  /**
+   * The footer title text of the carrier letter.
+   */
+  footer_title?: string | null;
+  /**
+   * The header body text of the carrier letter.
+   */
+  header_body?: string | null;
+  /**
+   * The header title text of the carrier letter.
+   */
+  header_title?: string | null;
+};
+/**
+ * IssuingPersonalizationDesignPreferences
+ */
+export type IssuingPersonalizationDesignPreferences = {
+  /**
+   * Whether we use this personalization design to create cards when one isn't specified. A connected account uses the Connect platform's default design if no personalization design is set as the default design.
+   */
+  is_default: boolean;
+  /**
+   * Whether this personalization design is used to create cards when one is not specified and a default for this connected account does not exist.
+   */
+  is_platform_default?: boolean | null;
+};
+/**
+ * IssuingPersonalizationDesignRejectionReasons
+ */
+export type IssuingPersonalizationDesignRejectionReasons = {
+  /**
+   * The reason(s) the card logo was rejected.
+   */
+  card_logo?:
+    | (
+        | 'geographic_location'
+        | 'inappropriate'
+        | 'network_name'
+        | 'non_binary_image'
+        | 'non_fiat_currency'
+        | 'other'
+        | 'other_entity'
+        | 'promotional_material'
+      )[]
+    | null;
+  /**
+   * The reason(s) the carrier text was rejected.
+   */
+  carrier_text?:
+    | (
+        | 'geographic_location'
+        | 'inappropriate'
+        | 'network_name'
+        | 'non_fiat_currency'
+        | 'other'
+        | 'other_entity'
+        | 'promotional_material'
+      )[]
+    | null;
+};
+/**
+ * IssuingPhysicalBundleFeatures
+ */
+export type IssuingPhysicalBundleFeatures = {
+  /**
+   * The policy for how to use card logo images in a card design with this physical bundle.
+   */
+  card_logo: 'optional' | 'required' | 'unsupported';
+  /**
+   * The policy for how to use carrier letter text in a card design with this physical bundle.
+   */
+  carrier_text: 'optional' | 'required' | 'unsupported';
+  /**
+   * The policy for how to use a second line on a card with this physical bundle.
+   */
+  second_line: 'optional' | 'required' | 'unsupported';
+};
+/**
  * IssuingTransactionAmountDetails
  */
 export type IssuingTransactionAmountDetails = {
@@ -11199,7 +12358,7 @@ export type IssuingTransactionFuelData = {
    */
   type: string;
   /**
-   * The units for `volume_decimal`. One of `us_gallon` or `liter`.
+   * The units for `volume_decimal`. One of `liter`, `us_gallon`, or `other`.
    */
   unit: string;
   /**
@@ -11619,7 +12778,7 @@ export type LineItem = {
   /**
    * The discounts applied to the invoice line item. Line item discounts are applied before invoice discounts. Use `expand[]=discounts` to expand each discount.
    */
-  discounts?: (string | Discount)[] | null;
+  discounts: (string | Discount)[];
   /**
    * Unique identifier for the object.
    */
@@ -11637,7 +12796,7 @@ export type LineItem = {
    */
   livemode: boolean;
   /**
-   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Note that for line items with `type=subscription` this will reflect the metadata of the subscription that caused the line item to be created.
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Note that for line items with `type=subscription`, `metadata` reflects the current metadata from the subscription associated with the line item, unless the invoice line was directly updated with different metadata after creation.
    */
   metadata: {
     [key: string]: string;
@@ -11750,7 +12909,7 @@ export type LinkedAccountOptionsUsBankAccount = {
   /**
    * Data features requested to be retrieved upon account creation.
    */
-  prefetch?: ('balances' | 'transactions')[] | null;
+  prefetch?: ('balances' | 'ownership' | 'transactions')[] | null;
   /**
    * For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
    */
@@ -11758,7 +12917,7 @@ export type LinkedAccountOptionsUsBankAccount = {
 };
 /**
  * LoginLink
- * Login Links are single-use login link for an Express account to access their Stripe dashboard.
+ * Login Links are single-use URLs for a connected account to access the Express Dashboard. The connected account's [account.controller.stripe_dashboard.type](/api/accounts/object#account_object-controller-stripe_dashboard-type) must be `express` to have access to the Express Dashboard.
  */
 export type LoginLink = {
   /**
@@ -11834,6 +12993,10 @@ export type MandateAcssDebit = {
   transaction_type: 'business' | 'personal';
 };
 /**
+ * mandate_amazon_pay
+ */
+export type MandateAmazonPay = unknown;
+/**
  * mandate_au_becs_debit
  */
 export type MandateAuBecsDebit = {
@@ -11874,26 +13037,28 @@ export type MandateBacsDebit = {
 /**
  * mandate_cashapp
  */
-export type MandateCashapp = any;
+export type MandateCashapp = unknown;
 /**
  * mandate_link
  */
-export type MandateLink = any;
+export type MandateLink = unknown;
 /**
  * mandate_multi_use
  */
-export type MandateMultiUse = any;
+export type MandateMultiUse = unknown;
 /**
  * mandate_payment_method_details
  */
 export type MandatePaymentMethodDetails = {
   acss_debit?: MandateAcssDebit;
+  amazon_pay?: MandateAmazonPay;
   au_becs_debit?: MandateAuBecsDebit;
   bacs_debit?: MandateBacsDebit;
   card?: CardMandatePaymentMethodDetails;
   cashapp?: MandateCashapp;
   link?: MandateLink;
   paypal?: MandatePaypal;
+  revolut_pay?: MandateRevolutPay;
   sepa_debit?: MandateSepaDebit;
   /**
    * This mandate corresponds with a specific payment method type. The `payment_method_details` includes an additional hash with the same name and contains mandate information that's specific to that payment method.
@@ -11914,6 +13079,10 @@ export type MandatePaypal = {
    */
   payer_id?: string | null;
 };
+/**
+ * mandate_revolut_pay
+ */
+export type MandateRevolutPay = unknown;
 /**
  * mandate_sepa_debit
  */
@@ -11969,11 +13138,11 @@ export type NotificationEventData = {
   /**
    * Object containing the API resource relevant to the event. For example, an `invoice.created` event will have a full [invoice object](https://stripe.com/docs/api#invoice_object) as the value of the object key.
    */
-  object: any;
+  object: unknown;
   /**
    * Object containing the names of the updated attributes and their values prior to the event (only included in events of type `*.updated`). If an array attribute has any updated elements, this object contains the entire array. In Stripe API versions 2017-04-06 or earlier, an updated array attribute in this object includes only the updated array elements.
    */
-  previous_attributes?: any;
+  previous_attributes?: unknown;
 };
 /**
  * NotificationEventRequest
@@ -11991,7 +13160,7 @@ export type NotificationEventRequest = {
 /**
  * offline_acceptance
  */
-export type OfflineAcceptance = any;
+export type OfflineAcceptance = unknown;
 /**
  * online_acceptance
  */
@@ -12055,7 +13224,11 @@ export type OutboundPaymentsPaymentMethodDetailsUsBankAccount = {
    */
   last4?: string | null;
   /**
-   * The US bank account network used to send funds.
+   * ID of the mandate used to make this payment.
+   */
+  mandate?: string | Mandate;
+  /**
+   * The network rails used. See the [docs](https://stripe.com/docs/treasury/money-movement/timelines) to learn more about money movement timelines for each network type.
    */
   network: 'ach' | 'us_domestic_wire';
   /**
@@ -12099,7 +13272,11 @@ export type OutboundTransfersPaymentMethodDetailsUsBankAccount = {
    */
   last4?: string | null;
   /**
-   * The US bank account network used to send funds.
+   * ID of the mandate used to make this payment.
+   */
+  mandate?: string | Mandate;
+  /**
+   * The network rails used. See the [docs](https://stripe.com/docs/treasury/money-movement/timelines) to learn more about money movement timelines for each network type.
    */
   network: 'ach' | 'us_domestic_wire';
   /**
@@ -12183,7 +13360,7 @@ export type PaymentFlowsInstallmentOptions = {
 /**
  * PaymentFlowsPrivatePaymentMethodsAlipay
  */
-export type PaymentFlowsPrivatePaymentMethodsAlipay = any;
+export type PaymentFlowsPrivatePaymentMethodsAlipay = unknown;
 /**
  * PaymentFlowsPrivatePaymentMethodsAlipayDetails
  */
@@ -12491,7 +13668,7 @@ export type PaymentIntentNextAction = {
   /**
    * When confirming a PaymentIntent with Stripe.js, Stripe.js depends on the contents of this dictionary to invoke authentication flows. The shape of the contents is subject to change and is only intended to be used by Stripe.js.
    */
-  use_stripe_sdk?: any;
+  use_stripe_sdk?: unknown;
   verify_with_microdeposits?: PaymentIntentNextActionVerifyWithMicrodeposits;
   wechat_pay_display_qr_code?: PaymentIntentNextActionWechatPayDisplayQrCode;
   wechat_pay_redirect_to_android_app?: PaymentIntentNextActionWechatPayRedirectToAndroidApp;
@@ -12808,8 +13985,8 @@ export type PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode = {
   /**
    * The URL to the hosted Swish instructions page, which allows customers to view the QR code.
    */
-  hosted_instructions_url?: string;
-  qr_code?: PaymentIntentNextActionSwishQrCode;
+  hosted_instructions_url: string;
+  qr_code: PaymentIntentNextActionSwishQrCode;
 };
 /**
  * PaymentIntentNextActionSwishQRCode
@@ -12818,15 +13995,15 @@ export type PaymentIntentNextActionSwishQrCode = {
   /**
    * The raw data string used to generate QR code, it should be used together with QR code library.
    */
-  data?: string;
+  data: string;
   /**
    * The image_url_png string used to render QR code
    */
-  image_url_png?: string;
+  image_url_png: string;
   /**
    * The image_url_svg string used to render QR code
    */
-  image_url_svg?: string;
+  image_url_svg: string;
 };
 /**
  * PaymentIntentNextActionVerifyWithMicrodeposits
@@ -12928,6 +14105,9 @@ export type PaymentIntentPaymentMethodOptions = {
   alipay?:
     | PaymentMethodOptionsAlipay
     | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
+  amazon_pay?:
+    | PaymentMethodOptionsAmazonPay
+    | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
   au_becs_debit?:
     | PaymentIntentPaymentMethodOptionsAuBecsDebit
     | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
@@ -12981,6 +14161,9 @@ export type PaymentIntentPaymentMethodOptions = {
     | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
   link?:
     | PaymentIntentPaymentMethodOptionsLink
+    | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
+  mobilepay?:
+    | PaymentIntentPaymentMethodOptionsMobilepay
     | PaymentIntentTypeSpecificPaymentMethodOptionsClient;
   oxxo?:
     | PaymentMethodOptionsOxxo
@@ -13197,7 +14380,24 @@ export type PaymentIntentPaymentMethodOptionsMandateOptionsAcssDebit = {
 /**
  * payment_intent_payment_method_options_mandate_options_sepa_debit
  */
-export type PaymentIntentPaymentMethodOptionsMandateOptionsSepaDebit = any;
+export type PaymentIntentPaymentMethodOptionsMandateOptionsSepaDebit = unknown;
+/**
+ * payment_intent_payment_method_options_mobilepay
+ */
+export type PaymentIntentPaymentMethodOptionsMobilepay = {
+  /**
+   * Controls when the funds will be captured from the customer's account.
+   */
+  capture_method?: 'manual';
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none';
+};
 /**
  * payment_intent_payment_method_options_sepa_debit
  */
@@ -14098,6 +15298,11 @@ export type PaymentMethod = {
   affirm?: PaymentMethodAffirm;
   afterpay_clearpay?: PaymentMethodAfterpayClearpay;
   alipay?: PaymentFlowsPrivatePaymentMethodsAlipay;
+  /**
+   * This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to “unspecified”.
+   */
+  allow_redisplay?: 'always' | 'limited' | 'unspecified';
+  amazon_pay?: PaymentMethodAmazonPay;
   au_becs_debit?: PaymentMethodAuBecsDebit;
   bacs_debit?: PaymentMethodBacsDebit;
   bancontact?: PaymentMethodBancontact;
@@ -14139,6 +15344,7 @@ export type PaymentMethod = {
   metadata?: {
     [key: string]: string;
   } | null;
+  mobilepay?: PaymentMethodMobilepay;
   /**
    * String representing the object's type. Objects of the same type share the same value.
    */
@@ -14162,6 +15368,7 @@ export type PaymentMethod = {
     | 'affirm'
     | 'afterpay_clearpay'
     | 'alipay'
+    | 'amazon_pay'
     | 'au_becs_debit'
     | 'bacs_debit'
     | 'bancontact'
@@ -14180,6 +15387,7 @@ export type PaymentMethod = {
     | 'klarna'
     | 'konbini'
     | 'link'
+    | 'mobilepay'
     | 'oxxo'
     | 'p24'
     | 'paynow'
@@ -14225,11 +15433,15 @@ export type PaymentMethodAcssDebit = {
 /**
  * payment_method_affirm
  */
-export type PaymentMethodAffirm = any;
+export type PaymentMethodAffirm = unknown;
 /**
  * payment_method_afterpay_clearpay
  */
-export type PaymentMethodAfterpayClearpay = any;
+export type PaymentMethodAfterpayClearpay = unknown;
+/**
+ * payment_method_amazon_pay
+ */
+export type PaymentMethodAmazonPay = unknown;
 /**
  * payment_method_au_becs_debit
  */
@@ -14267,11 +15479,11 @@ export type PaymentMethodBacsDebit = {
 /**
  * payment_method_bancontact
  */
-export type PaymentMethodBancontact = any;
+export type PaymentMethodBancontact = unknown;
 /**
  * payment_method_blik
  */
-export type PaymentMethodBlik = any;
+export type PaymentMethodBlik = unknown;
 /**
  * payment_method_boleto
  */
@@ -14417,6 +15629,10 @@ export type PaymentMethodCardPresent = {
    */
   networks?: PaymentMethodCardPresentNetworks | null;
   /**
+   * EMV tag 5F2D. Preferred languages specified by the integrated circuit chip.
+   */
+  preferred_locales?: string[] | null;
+  /**
    * How card details were read in this transaction.
    */
   read_method?:
@@ -14472,19 +15688,19 @@ export type PaymentMethodCardWallet = {
 /**
  * payment_method_card_wallet_amex_express_checkout
  */
-export type PaymentMethodCardWalletAmexExpressCheckout = any;
+export type PaymentMethodCardWalletAmexExpressCheckout = unknown;
 /**
  * payment_method_card_wallet_apple_pay
  */
-export type PaymentMethodCardWalletApplePay = any;
+export type PaymentMethodCardWalletApplePay = unknown;
 /**
  * payment_method_card_wallet_google_pay
  */
-export type PaymentMethodCardWalletGooglePay = any;
+export type PaymentMethodCardWalletGooglePay = unknown;
 /**
  * payment_method_card_wallet_link
  */
-export type PaymentMethodCardWalletLink = any;
+export type PaymentMethodCardWalletLink = unknown;
 /**
  * payment_method_card_wallet_masterpass
  */
@@ -14509,7 +15725,7 @@ export type PaymentMethodCardWalletMasterpass = {
 /**
  * payment_method_card_wallet_samsung_pay
  */
-export type PaymentMethodCardWalletSamsungPay = any;
+export type PaymentMethodCardWalletSamsungPay = unknown;
 /**
  * payment_method_card_wallet_visa_checkout
  */
@@ -14610,6 +15826,7 @@ export type PaymentMethodConfiguration = {
   affirm?: PaymentMethodConfigResourcePaymentMethodProperties;
   afterpay_clearpay?: PaymentMethodConfigResourcePaymentMethodProperties;
   alipay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  amazon_pay?: PaymentMethodConfigResourcePaymentMethodProperties;
   apple_pay?: PaymentMethodConfigResourcePaymentMethodProperties;
   /**
    * For child configs, the Connect application associated with the configuration.
@@ -14646,6 +15863,7 @@ export type PaymentMethodConfiguration = {
    * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
    */
   livemode: boolean;
+  mobilepay?: PaymentMethodConfigResourcePaymentMethodProperties;
   /**
    * The configuration's name.
    */
@@ -14666,13 +15884,15 @@ export type PaymentMethodConfiguration = {
   revolut_pay?: PaymentMethodConfigResourcePaymentMethodProperties;
   sepa_debit?: PaymentMethodConfigResourcePaymentMethodProperties;
   sofort?: PaymentMethodConfigResourcePaymentMethodProperties;
+  swish?: PaymentMethodConfigResourcePaymentMethodProperties;
   us_bank_account?: PaymentMethodConfigResourcePaymentMethodProperties;
   wechat_pay?: PaymentMethodConfigResourcePaymentMethodProperties;
+  zip?: PaymentMethodConfigResourcePaymentMethodProperties;
 };
 /**
  * payment_method_customer_balance
  */
-export type PaymentMethodCustomerBalance = any;
+export type PaymentMethodCustomerBalance = unknown;
 /**
  * payment_method_details
  */
@@ -14683,6 +15903,7 @@ export type PaymentMethodDetails = {
   affirm?: PaymentMethodDetailsAffirm;
   afterpay_clearpay?: PaymentMethodDetailsAfterpayClearpay;
   alipay?: PaymentFlowsPrivatePaymentMethodsAlipayDetails;
+  amazon_pay?: PaymentMethodDetailsAmazonPay;
   au_becs_debit?: PaymentMethodDetailsAuBecsDebit;
   bacs_debit?: PaymentMethodDetailsBacsDebit;
   bancontact?: PaymentMethodDetailsBancontact;
@@ -14701,6 +15922,7 @@ export type PaymentMethodDetails = {
   klarna?: PaymentMethodDetailsKlarna;
   konbini?: PaymentMethodDetailsKonbini;
   link?: PaymentMethodDetailsLink;
+  mobilepay?: PaymentMethodDetailsMobilepay;
   multibanco?: PaymentMethodDetailsMultibanco;
   oxxo?: PaymentMethodDetailsOxxo;
   p24?: PaymentMethodDetailsP24;
@@ -14806,7 +16028,7 @@ export type PaymentMethodDetailsAcssDebit = {
 /**
  * payment_method_details_affirm
  */
-export type PaymentMethodDetailsAffirm = any;
+export type PaymentMethodDetailsAffirm = unknown;
 /**
  * payment_method_details_afterpay_clearpay
  */
@@ -14820,6 +16042,10 @@ export type PaymentMethodDetailsAfterpayClearpay = {
    */
   reference?: string | null;
 };
+/**
+ * payment_method_details_amazon_pay
+ */
+export type PaymentMethodDetailsAmazonPay = unknown;
 /**
  * payment_method_details_au_becs_debit
  */
@@ -14904,7 +16130,7 @@ export type PaymentMethodDetailsBancontact = {
 /**
  * payment_method_details_blik
  */
-export type PaymentMethodDetailsBlik = any;
+export type PaymentMethodDetailsBlik = unknown;
 /**
  * payment_method_details_boleto
  */
@@ -15115,6 +16341,10 @@ export type PaymentMethodDetailsCardPresent = {
    */
   overcapture_supported: boolean;
   /**
+   * EMV tag 5F2D. Preferred languages specified by the integrated circuit chip.
+   */
+  preferred_locales?: string[] | null;
+  /**
    * How card details were read in this transaction.
    */
   read_method?:
@@ -15165,7 +16395,7 @@ export type PaymentMethodDetailsCardPresentReceipt = {
    */
   authorization_response_code?: string | null;
   /**
-   * How the cardholder verified ownership of the card.
+   * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offline_pin`, `offline_pin_and_signature`, `online_pin`, or `signature`.
    */
   cardholder_verification_method?: string | null;
   /**
@@ -15211,19 +16441,19 @@ export type PaymentMethodDetailsCardWallet = {
 /**
  * payment_method_details_card_wallet_amex_express_checkout
  */
-export type PaymentMethodDetailsCardWalletAmexExpressCheckout = any;
+export type PaymentMethodDetailsCardWalletAmexExpressCheckout = unknown;
 /**
  * payment_method_details_card_wallet_apple_pay
  */
-export type PaymentMethodDetailsCardWalletApplePay = any;
+export type PaymentMethodDetailsCardWalletApplePay = unknown;
 /**
  * payment_method_details_card_wallet_google_pay
  */
-export type PaymentMethodDetailsCardWalletGooglePay = any;
+export type PaymentMethodDetailsCardWalletGooglePay = unknown;
 /**
  * payment_method_details_card_wallet_link
  */
-export type PaymentMethodDetailsCardWalletLink = any;
+export type PaymentMethodDetailsCardWalletLink = unknown;
 /**
  * payment_method_details_card_wallet_masterpass
  */
@@ -15248,7 +16478,7 @@ export type PaymentMethodDetailsCardWalletMasterpass = {
 /**
  * payment_method_details_card_wallet_samsung_pay
  */
-export type PaymentMethodDetailsCardWalletSamsungPay = any;
+export type PaymentMethodDetailsCardWalletSamsungPay = unknown;
 /**
  * payment_method_details_card_wallet_visa_checkout
  */
@@ -15286,7 +16516,7 @@ export type PaymentMethodDetailsCashapp = {
 /**
  * payment_method_details_customer_balance
  */
-export type PaymentMethodDetailsCustomerBalance = any;
+export type PaymentMethodDetailsCustomerBalance = unknown;
 /**
  * payment_method_details_eps
  */
@@ -15565,7 +16795,7 @@ export type PaymentMethodDetailsInteracPresentReceipt = {
    */
   authorization_response_code?: string | null;
   /**
-   * How the cardholder verified ownership of the card.
+   * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offline_pin`, `offline_pin_and_signature`, `online_pin`, or `signature`.
    */
   cardholder_verification_method?: string | null;
   /**
@@ -15623,6 +16853,15 @@ export type PaymentMethodDetailsLink = {
    * You could use this attribute to get a sense of international fees.
    */
   country?: string | null;
+};
+/**
+ * payment_method_details_mobilepay
+ */
+export type PaymentMethodDetailsMobilepay = {
+  /**
+   * Internal card details
+   */
+  card?: InternalCard | null;
 };
 /**
  * payment_method_details_multibanco
@@ -15751,7 +16990,7 @@ export type PaymentMethodDetailsPromptpay = {
 /**
  * payment_method_details_revolut_pay
  */
-export type PaymentMethodDetailsRevolutPay = any;
+export type PaymentMethodDetailsRevolutPay = unknown;
 /**
  * payment_method_details_sepa_debit
  */
@@ -15827,7 +17066,7 @@ export type PaymentMethodDetailsSofort = {
 /**
  * payment_method_details_stripe_account
  */
-export type PaymentMethodDetailsStripeAccount = any;
+export type PaymentMethodDetailsStripeAccount = unknown;
 /**
  * payment_method_details_swish
  */
@@ -15870,6 +17109,14 @@ export type PaymentMethodDetailsUsBankAccount = {
    */
   last4?: string | null;
   /**
+   * ID of the mandate used to make this payment.
+   */
+  mandate?: string | Mandate;
+  /**
+   * Reference number to locate ACH payments with customer's bank.
+   */
+  payment_reference?: string | null;
+  /**
    * Routing number of the bank account.
    */
   routing_number?: string | null;
@@ -15877,7 +17124,7 @@ export type PaymentMethodDetailsUsBankAccount = {
 /**
  * payment_method_details_wechat
  */
-export type PaymentMethodDetailsWechat = any;
+export type PaymentMethodDetailsWechat = unknown;
 /**
  * payment_method_details_wechat_pay
  */
@@ -15894,7 +17141,7 @@ export type PaymentMethodDetailsWechatPay = {
 /**
  * payment_method_details_zip
  */
-export type PaymentMethodDetailsZip = any;
+export type PaymentMethodDetailsZip = unknown;
 /**
  * PaymentMethodDomainResourcePaymentMethodDomain
  * A payment method domain represents a web domain that you have registered with Stripe.
@@ -16027,11 +17274,11 @@ export type PaymentMethodFpx = {
 /**
  * payment_method_giropay
  */
-export type PaymentMethodGiropay = any;
+export type PaymentMethodGiropay = unknown;
 /**
  * payment_method_grabpay
  */
-export type PaymentMethodGrabpay = any;
+export type PaymentMethodGrabpay = unknown;
 /**
  * payment_method_ideal
  */
@@ -16155,7 +17402,7 @@ export type PaymentMethodKlarna = {
 /**
  * payment_method_konbini
  */
-export type PaymentMethodKonbini = any;
+export type PaymentMethodKonbini = unknown;
 /**
  * payment_method_link
  */
@@ -16165,6 +17412,10 @@ export type PaymentMethodLink = {
    */
   email?: string | null;
 };
+/**
+ * payment_method_mobilepay
+ */
+export type PaymentMethodMobilepay = unknown;
 /**
  * payment_method_options_affirm
  */
@@ -16212,6 +17463,23 @@ export type PaymentMethodOptionsAfterpayClearpay = {
  * payment_method_options_alipay
  */
 export type PaymentMethodOptionsAlipay = {
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none' | 'off_session';
+};
+/**
+ * payment_method_options_amazon_pay
+ */
+export type PaymentMethodOptionsAmazonPay = {
+  /**
+   * Controls when the funds will be captured from the customer's account.
+   */
+  capture_method?: 'manual';
   /**
    * Indicates that you intend to make future payments with this PaymentIntent's payment method.
    *
@@ -16470,7 +17738,7 @@ export type PaymentMethodOptionsIdeal = {
 /**
  * payment_method_options_interac_present
  */
-export type PaymentMethodOptionsInteracPresent = any;
+export type PaymentMethodOptionsInteracPresent = unknown;
 /**
  * payment_method_options_klarna
  */
@@ -16626,7 +17894,20 @@ export type PaymentMethodOptionsPromptpay = {
 /**
  * payment_method_options_revolut_pay
  */
-export type PaymentMethodOptionsRevolutPay = any;
+export type PaymentMethodOptionsRevolutPay = {
+  /**
+   * Controls when the funds will be captured from the customer's account.
+   */
+  capture_method?: 'manual';
+  /**
+   * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+   *
+   * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
+   *
+   * When processing card payments, Stripe also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as [SCA](https://stripe.com/docs/strong-customer-authentication).
+   */
+  setup_future_usage?: 'none' | 'off_session';
+};
 /**
  * payment_method_options_sofort
  */
@@ -16690,7 +17971,7 @@ export type PaymentMethodOptionsZip = {
 /**
  * payment_method_oxxo
  */
-export type PaymentMethodOxxo = any;
+export type PaymentMethodOxxo = unknown;
 /**
  * payment_method_p24
  */
@@ -16732,7 +18013,7 @@ export type PaymentMethodP24 = {
 /**
  * payment_method_paynow
  */
-export type PaymentMethodPaynow = any;
+export type PaymentMethodPaynow = unknown;
 /**
  * payment_method_paypal
  */
@@ -16750,15 +18031,15 @@ export type PaymentMethodPaypal = {
 /**
  * payment_method_pix
  */
-export type PaymentMethodPix = any;
+export type PaymentMethodPix = unknown;
 /**
  * payment_method_promptpay
  */
-export type PaymentMethodPromptpay = any;
+export type PaymentMethodPromptpay = unknown;
 /**
  * payment_method_revolut_pay
  */
-export type PaymentMethodRevolutPay = any;
+export type PaymentMethodRevolutPay = unknown;
 /**
  * payment_method_sepa_debit
  */
@@ -16800,7 +18081,7 @@ export type PaymentMethodSofort = {
 /**
  * payment_method_swish
  */
-export type PaymentMethodSwish = any;
+export type PaymentMethodSwish = unknown;
 /**
  * payment_method_us_bank_account
  */
@@ -16888,11 +18169,11 @@ export type PaymentMethodUsBankAccountStatusDetails = {
 /**
  * payment_method_wechat_pay
  */
-export type PaymentMethodWechatPay = any;
+export type PaymentMethodWechatPay = unknown;
 /**
  * payment_method_zip
  */
-export type PaymentMethodZip = any;
+export type PaymentMethodZip = unknown;
 /**
  * PaymentPagesCheckoutSessionAfterExpiration
  */
@@ -17216,6 +18497,19 @@ export type PaymentPagesCheckoutSessionPhoneNumberCollection = {
   enabled: boolean;
 };
 /**
+ * PaymentPagesCheckoutSessionSavedPaymentMethodOptions
+ */
+export type PaymentPagesCheckoutSessionSavedPaymentMethodOptions = {
+  /**
+   * Controls which payment methods are eligible to be redisplayed to returning customers. Corresponds to `allow_redisplay` on the payment method.
+   */
+  allow_redisplay_filters?: ('always' | 'limited' | 'unspecified')[] | null;
+  /**
+   * Enable customers to choose if they wish to save their payment method for future use. Disabled by default.
+   */
+  payment_method_save?: ('disabled' | 'enabled') | null;
+};
+/**
  * PaymentPagesCheckoutSessionShippingAddressCollection
  */
 export type PaymentPagesCheckoutSessionShippingAddressCollection = {
@@ -17506,7 +18800,7 @@ export type PaymentPagesCheckoutSessionShippingOption = {
  */
 export type PaymentPagesCheckoutSessionTaxId = {
   /**
-   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, `bh_vat`, `kz_bin`, `ng_tin`, `om_vat`, or `unknown`
    */
   type:
     | 'ad_nrt'
@@ -17515,6 +18809,7 @@ export type PaymentPagesCheckoutSessionTaxId = {
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bh_vat'
     | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
@@ -17548,14 +18843,17 @@ export type PaymentPagesCheckoutSessionTaxId = {
     | 'jp_trn'
     | 'ke_pin'
     | 'kr_brn'
+    | 'kz_bin'
     | 'li_uid'
     | 'mx_rfc'
     | 'my_frp'
     | 'my_itn'
     | 'my_sst'
+    | 'ng_tin'
     | 'no_vat'
     | 'no_voec'
     | 'nz_gst'
+    | 'om_vat'
     | 'pe_ruc'
     | 'ph_tin'
     | 'ro_tin'
@@ -17765,10 +19063,9 @@ export type Period = {
  * Person
  * This is an object representing a person associated with a Stripe account.
  *
- * A platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.
- * See the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform prefilling and account onboarding steps.
+ * A platform cannot access a person for an account where [account.controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.
  *
- * Related guide: [Handling identity verification with the API](https://stripe.com/docs/connect/handling-api-verification#person-information)
+ * See the [Standard onboarding](/connect/standard-accounts) or [Express onboarding](/connect/express-accounts) documentation for information about prefilling information and account onboarding steps. Learn more about [handling identity verification with the API](/connect/handling-api-verification#person-information).
  */
 export type Person = {
   /**
@@ -17916,7 +19213,7 @@ export type PersonFutureRequirements = {
    */
   past_due: string[];
   /**
-   * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`.
+   * Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`. Fields might appear in `eventually_due` or `currently_due` and in `pending_verification` if verification fails but another verification is still pending.
    */
   pending_verification: string[];
 };
@@ -17978,7 +19275,7 @@ export type PersonRequirements = {
    */
   past_due: string[];
   /**
-   * Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`.
+   * Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`. Fields might appear in `eventually_due`, `currently_due`, or `past_due` and in `pending_verification` if verification fails but another verification is still pending.
    */
   pending_verification: string[];
 };
@@ -18044,6 +19341,10 @@ export type Plan = {
   metadata?: {
     [key: string]: string;
   } | null;
+  /**
+   * The meter tracking the usage of a metered price
+   */
+  meter?: string | null;
   /**
    * A brief description of the plan, hidden from customers.
    */
@@ -18172,7 +19473,6 @@ export type PortalFeatures = {
   invoice_history: PortalInvoiceList;
   payment_method_update: PortalPaymentMethodUpdate;
   subscription_cancel: PortalSubscriptionCancel;
-  subscription_pause: PortalSubscriptionPause;
   subscription_update: PortalSubscriptionUpdate;
 };
 /**
@@ -18401,15 +19701,6 @@ export type PortalSubscriptionCancellationReason = {
   )[];
 };
 /**
- * PortalSubscriptionPause
- */
-export type PortalSubscriptionPause = {
-  /**
-   * Whether the feature is enabled.
-   */
-  enabled: boolean;
-};
-/**
  * PortalSubscriptionUpdate
  */
 export type PortalSubscriptionUpdate = {
@@ -18596,10 +19887,6 @@ export type Product = {
    */
   description?: string | null;
   /**
-   * A list of up to 15 features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).
-   */
-  features: ProductFeature[];
-  /**
    * Unique identifier for the object.
    */
   id: string;
@@ -18611,6 +19898,10 @@ export type Product = {
    * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
    */
   livemode: boolean;
+  /**
+   * A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).
+   */
+  marketing_features: ProductMarketingFeature[];
   /**
    * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
    */
@@ -18656,10 +19947,30 @@ export type Product = {
 };
 /**
  * ProductFeature
+ * A product_feature represents an attachment between a feature and a product.
+ * When a product is purchased that has a feature attached, Stripe will create an entitlement to the feature for the purchasing customer.
  */
 export type ProductFeature = {
+  entitlement_feature: EntitlementsFeature;
   /**
-   * The feature's name. Up to 80 characters long.
+   * Unique identifier for the object.
+   */
+  id: string;
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean;
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'product_feature';
+};
+/**
+ * ProductMarketingFeature
+ */
+export type ProductMarketingFeature = {
+  /**
+   * The marketing feature name. Up to 80 characters long.
    */
   name?: string;
 };
@@ -19326,6 +20637,10 @@ export type Recurring = {
    */
   interval_count: number;
   /**
+   * The meter tracking the usage of a metered price
+   */
+  meter?: string | null;
+  /**
    * Configures how the quantity per period should be determined. Can be either `metered` or `licensed`. `licensed` automatically bills the `quantity` set when adding it to a subscription. `metered` aggregates the total usage based on usage records. Defaults to `licensed`.
    */
   usage_type: 'licensed' | 'metered';
@@ -19430,6 +20745,7 @@ export type RefundDestinationDetails = {
   affirm?: DestinationDetailsUnimplemented;
   afterpay_clearpay?: DestinationDetailsUnimplemented;
   alipay?: DestinationDetailsUnimplemented;
+  amazon_pay?: DestinationDetailsUnimplemented;
   au_bank_transfer?: DestinationDetailsUnimplemented;
   blik?: RefundDestinationDetailsGeneric;
   br_bank_transfer?: RefundDestinationDetailsGeneric;
@@ -19891,6 +21207,7 @@ export type SetupAttempt = {
  */
 export type SetupAttemptPaymentMethodDetails = {
   acss_debit?: SetupAttemptPaymentMethodDetailsAcssDebit;
+  amazon_pay?: SetupAttemptPaymentMethodDetailsAmazonPay;
   au_becs_debit?: SetupAttemptPaymentMethodDetailsAuBecsDebit;
   bacs_debit?: SetupAttemptPaymentMethodDetailsBacsDebit;
   bancontact?: SetupAttemptPaymentMethodDetailsBancontact;
@@ -19902,6 +21219,7 @@ export type SetupAttemptPaymentMethodDetails = {
   klarna?: SetupAttemptPaymentMethodDetailsKlarna;
   link?: SetupAttemptPaymentMethodDetailsLink;
   paypal?: SetupAttemptPaymentMethodDetailsPaypal;
+  revolut_pay?: SetupAttemptPaymentMethodDetailsRevolutPay;
   sepa_debit?: SetupAttemptPaymentMethodDetailsSepaDebit;
   sofort?: SetupAttemptPaymentMethodDetailsSofort;
   /**
@@ -19913,15 +21231,19 @@ export type SetupAttemptPaymentMethodDetails = {
 /**
  * setup_attempt_payment_method_details_acss_debit
  */
-export type SetupAttemptPaymentMethodDetailsAcssDebit = any;
+export type SetupAttemptPaymentMethodDetailsAcssDebit = unknown;
+/**
+ * setup_attempt_payment_method_details_amazon_pay
+ */
+export type SetupAttemptPaymentMethodDetailsAmazonPay = unknown;
 /**
  * setup_attempt_payment_method_details_au_becs_debit
  */
-export type SetupAttemptPaymentMethodDetailsAuBecsDebit = any;
+export type SetupAttemptPaymentMethodDetailsAuBecsDebit = unknown;
 /**
  * setup_attempt_payment_method_details_bacs_debit
  */
-export type SetupAttemptPaymentMethodDetailsBacsDebit = any;
+export type SetupAttemptPaymentMethodDetailsBacsDebit = unknown;
 /**
  * setup_attempt_payment_method_details_bancontact
  */
@@ -19964,7 +21286,7 @@ export type SetupAttemptPaymentMethodDetailsBancontact = {
 /**
  * setup_attempt_payment_method_details_boleto
  */
-export type SetupAttemptPaymentMethodDetailsBoleto = any;
+export type SetupAttemptPaymentMethodDetailsBoleto = unknown;
 /**
  * setup_attempt_payment_method_details_card
  */
@@ -20041,6 +21363,10 @@ export type SetupAttemptPaymentMethodDetailsCardPresent = {
    * The ID of the Card PaymentMethod which was generated by this SetupAttempt.
    */
   generated_card?: (string | PaymentMethod) | null;
+  /**
+   * Details about payments collected offline.
+   */
+  offline?: PaymentMethodDetailsCardPresentOffline | null;
 };
 /**
  * setup_attempt_payment_method_details_card_wallet
@@ -20056,7 +21382,7 @@ export type SetupAttemptPaymentMethodDetailsCardWallet = {
 /**
  * setup_attempt_payment_method_details_cashapp
  */
-export type SetupAttemptPaymentMethodDetailsCashapp = any;
+export type SetupAttemptPaymentMethodDetailsCashapp = unknown;
 /**
  * setup_attempt_payment_method_details_ideal
  */
@@ -20129,19 +21455,23 @@ export type SetupAttemptPaymentMethodDetailsIdeal = {
 /**
  * setup_attempt_payment_method_details_klarna
  */
-export type SetupAttemptPaymentMethodDetailsKlarna = any;
+export type SetupAttemptPaymentMethodDetailsKlarna = unknown;
 /**
  * setup_attempt_payment_method_details_link
  */
-export type SetupAttemptPaymentMethodDetailsLink = any;
+export type SetupAttemptPaymentMethodDetailsLink = unknown;
 /**
  * setup_attempt_payment_method_details_paypal
  */
-export type SetupAttemptPaymentMethodDetailsPaypal = any;
+export type SetupAttemptPaymentMethodDetailsPaypal = unknown;
+/**
+ * setup_attempt_payment_method_details_revolut_pay
+ */
+export type SetupAttemptPaymentMethodDetailsRevolutPay = unknown;
 /**
  * setup_attempt_payment_method_details_sepa_debit
  */
-export type SetupAttemptPaymentMethodDetailsSepaDebit = any;
+export type SetupAttemptPaymentMethodDetailsSepaDebit = unknown;
 /**
  * setup_attempt_payment_method_details_sofort
  */
@@ -20184,7 +21514,7 @@ export type SetupAttemptPaymentMethodDetailsSofort = {
 /**
  * setup_attempt_payment_method_details_us_bank_account
  */
-export type SetupAttemptPaymentMethodDetailsUsBankAccount = any;
+export type SetupAttemptPaymentMethodDetailsUsBankAccount = unknown;
 /**
  * SetupIntent
  * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
@@ -20193,13 +21523,13 @@ export type SetupAttemptPaymentMethodDetailsUsBankAccount = any;
  *
  * Create a SetupIntent when you're ready to collect your customer's payment credentials.
  * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
- * The SetupIntent transitions through multiple [statuses](https://stripe.com/docs/payments/intents#intent-statuses) as it guides
+ * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
  * you through the setup process.
  *
  * Successful SetupIntents result in payment credentials that are optimized for future payments.
- * For example, cardholders in [certain regions](/guides/strong-customer-authentication) might need to be run through
- * [Strong Customer Authentication](https://stripe.com/docs/strong-customer-authentication) during payment method collection
- * to streamline later [off-session payments](https://stripe.com/docs/payments/setup-intents).
+ * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+ * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+ * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
  * If you use the SetupIntent with a [Customer](https://stripe.com/docs/api#setup_intent_object-customer),
  * it automatically attaches the resulting payment method to that Customer after successful setup.
  * We recommend using SetupIntents or [setup_future_usage](https://stripe.com/docs/api#payment_intent_object-setup_future_usage) on
@@ -20207,7 +21537,7 @@ export type SetupAttemptPaymentMethodDetailsUsBankAccount = any;
  *
  * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
  *
- * Related guide: [Setup Intents API](https://stripe.com/docs/payments/setup-intents)
+ * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
  */
 export type SetupIntent = {
   /**
@@ -20344,7 +21674,7 @@ export type SetupIntentNextAction = {
   /**
    * When confirming a SetupIntent with Stripe.js, Stripe.js depends on the contents of this dictionary to invoke authentication flows. The shape of the contents is subject to change and is only intended to be used by Stripe.js.
    */
-  use_stripe_sdk?: any;
+  use_stripe_sdk?: unknown;
   verify_with_microdeposits?: SetupIntentNextActionVerifyWithMicrodeposits;
 };
 /**
@@ -20384,7 +21714,13 @@ export type SetupIntentPaymentMethodOptions = {
   acss_debit?:
     | SetupIntentPaymentMethodOptionsAcssDebit
     | SetupIntentTypeSpecificPaymentMethodOptionsClient;
+  amazon_pay?:
+    | SetupIntentPaymentMethodOptionsAmazonPay
+    | SetupIntentTypeSpecificPaymentMethodOptionsClient;
   card?: SetupIntentPaymentMethodOptionsCard;
+  card_present?:
+    | SetupIntentPaymentMethodOptionsCardPresent
+    | SetupIntentTypeSpecificPaymentMethodOptionsClient;
   link?:
     | SetupIntentPaymentMethodOptionsLink
     | SetupIntentTypeSpecificPaymentMethodOptionsClient;
@@ -20412,6 +21748,10 @@ export type SetupIntentPaymentMethodOptionsAcssDebit = {
    */
   verification_method?: 'automatic' | 'instant' | 'microdeposits';
 };
+/**
+ * setup_intent_payment_method_options_amazon_pay
+ */
+export type SetupIntentPaymentMethodOptionsAmazonPay = unknown;
 /**
  * setup_intent_payment_method_options_card
  */
@@ -20489,9 +21829,13 @@ export type SetupIntentPaymentMethodOptionsCardMandateOptions = {
   supported_types?: 'india'[] | null;
 };
 /**
+ * setup_intent_payment_method_options_card_present
+ */
+export type SetupIntentPaymentMethodOptionsCardPresent = unknown;
+/**
  * setup_intent_payment_method_options_link
  */
-export type SetupIntentPaymentMethodOptionsLink = any;
+export type SetupIntentPaymentMethodOptionsLink = unknown;
 /**
  * setup_intent_payment_method_options_mandate_options_acss_debit
  */
@@ -20520,7 +21864,7 @@ export type SetupIntentPaymentMethodOptionsMandateOptionsAcssDebit = {
 /**
  * setup_intent_payment_method_options_mandate_options_sepa_debit
  */
-export type SetupIntentPaymentMethodOptionsMandateOptionsSepaDebit = any;
+export type SetupIntentPaymentMethodOptionsMandateOptionsSepaDebit = unknown;
 /**
  * setup_intent_payment_method_options_paypal
  */
@@ -21500,9 +22844,13 @@ export type Subscription = {
    */
   description?: string | null;
   /**
-   * Describes the current discount applied to this subscription, if there is one. When billing, a discount applied to a subscription overrides a discount applied on a customer-wide basis.
+   * Describes the current discount applied to this subscription, if there is one. When billing, a discount applied to a subscription overrides a discount applied on a customer-wide basis. This field has been deprecated and will be removed in a future API version. Use `discounts` instead.
    */
   discount?: Discount | null;
+  /**
+   * The discounts applied to the subscription. Subscription item discounts are applied before subscription discounts. Use `expand[]=discounts` to expand each discount.
+   */
+  discounts: (string | Discount)[];
   /**
    * If the subscription has ended, the date the subscription ended.
    */
@@ -21560,7 +22908,7 @@ export type Subscription = {
    */
   on_behalf_of?: (string | Account) | null;
   /**
-   * If specified, payment collection for this subscription will be paused.
+   * If specified, payment collection for this subscription will be paused. Note that the subscription status will be unchanged and will not be updated to `paused`. Learn more about [pausing collection](/billing/subscriptions/pause-payment).
    */
   pause_collection?: SubscriptionsResourcePauseCollection | null;
   /**
@@ -21588,11 +22936,13 @@ export type Subscription = {
    */
   start_date: number;
   /**
-   * Possible values are `incomplete`, `incomplete_expired`, `trialing`, `active`, `past_due`, `canceled`, or `unpaid`.
+   * Possible values are `incomplete`, `incomplete_expired`, `trialing`, `active`, `past_due`, `canceled`, `unpaid`, or `paused`.
    *
-   * For `collection_method=charge_automatically` a subscription moves into `incomplete` if the initial payment attempt fails. A subscription in this state can only have metadata and default_source updated. Once the first invoice is paid, the subscription moves into an `active` state. If the first invoice is not paid within 23 hours, the subscription transitions to `incomplete_expired`. This is a terminal state, the open invoice will be voided and no further invoices will be generated.
+   * For `collection_method=charge_automatically` a subscription moves into `incomplete` if the initial payment attempt fails. A subscription in this status can only have metadata and default_source updated. Once the first invoice is paid, the subscription moves into an `active` status. If the first invoice is not paid within 23 hours, the subscription transitions to `incomplete_expired`. This is a terminal status, the open invoice will be voided and no further invoices will be generated.
    *
    * A subscription that is currently in a trial period is `trialing` and moves to `active` when the trial period is over.
+   *
+   * A subscription can only enter a `paused` status [when a trial ends without a payment method](/billing/subscriptions/trials#create-free-trials-without-payment). A `paused` subscription doesn't generate invoices and can be resumed after your customer adds their payment method. The `paused` status is different from [pausing collection](/billing/subscriptions/pause-payment), which still generates invoices and leaves the subscription's status unchanged.
    *
    * If subscription `collection_method=charge_automatically`, it becomes `past_due` when payment is required but cannot be paid (due to failed payment or awaiting additional user actions). Once Stripe has exhausted all payment retry attempts, the subscription will become `canceled` or `unpaid` (depending on your subscriptions settings).
    *
@@ -21659,7 +23009,8 @@ export type SubscriptionBillingThresholds = {
  */
 export type SubscriptionDetailsData = {
   /**
-   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that will reflect the metadata of the subscription at the time of invoice creation. *Note: This attribute is populated only for invoices created on or after June 29, 2023.*
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) defined as subscription metadata when an invoice is created. Becomes an immutable snapshot of the subscription metadata at the time of invoice finalization.
+   *  *Note: This attribute is populated only for invoices created on or after June 29, 2023.*
    */
   metadata?: {
     [key: string]: string;
@@ -21679,6 +23030,10 @@ export type SubscriptionItem = {
    * Time at which the object was created. Measured in seconds since the Unix epoch.
    */
   created: number;
+  /**
+   * The discounts applied to the subscription item. Subscription item discounts are applied before subscription discounts. Use `expand[]=discounts` to expand each discount.
+   */
+  discounts: (string | Discount)[];
   /**
    * Unique identifier for the object.
    */
@@ -21842,6 +23197,10 @@ export type SubscriptionSchedule = {
  */
 export type SubscriptionScheduleAddInvoiceItem = {
   /**
+   * The stackable discounts that will be applied to the item.
+   */
+  discounts: DiscountsResourceStackableDiscount[];
+  /**
    * ID of the price used to generate the invoice item.
    */
   price: string | Price | DeletedPrice;
@@ -21863,6 +23222,10 @@ export type SubscriptionScheduleConfigurationItem = {
    * Define thresholds at which an invoice will be sent, and the related subscription advanced to a new billing period
    */
   billing_thresholds?: SubscriptionItemBillingThresholds | null;
+  /**
+   * The discounts applied to the subscription item. Subscription item discounts are applied before subscription discounts. Use `expand[]=discounts` to expand each discount.
+   */
+  discounts: DiscountsResourceStackableDiscount[];
   /**
    * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an item. Metadata on this item will update the underlying subscription item's `metadata` when the phase is entered.
    */
@@ -21941,6 +23304,10 @@ export type SubscriptionSchedulePhaseConfiguration = {
    * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
    */
   description?: string | null;
+  /**
+   * The stackable discounts that will be applied to the subscription on this phase. Subscription item discounts are applied before subscription discounts.
+   */
+  discounts: DiscountsResourceStackableDiscount[];
   /**
    * The end of this phase of the subscription schedule.
    */
@@ -22110,6 +23477,10 @@ export type SubscriptionsResourcePaymentMethodOptions = {
    */
   konbini?: InvoicePaymentMethodOptionsKonbini | null;
   /**
+   * This sub-hash contains details about the SEPA Direct Debit payment method options to pass to invoices created by the subscription.
+   */
+  sepa_debit?: InvoicePaymentMethodOptionsSepaDebit | null;
+  /**
    * This sub-hash contains details about the ACH direct debit payment method options to pass to invoices created by the subscription.
    */
   us_bank_account?: InvoicePaymentMethodOptionsUsBankAccount | null;
@@ -22130,6 +23501,7 @@ export type SubscriptionsResourcePaymentSettings = {
         | 'ach_credit_transfer'
         | 'ach_debit'
         | 'acss_debit'
+        | 'amazon_pay'
         | 'au_becs_debit'
         | 'bacs_debit'
         | 'bancontact'
@@ -22148,6 +23520,7 @@ export type SubscriptionsResourcePaymentSettings = {
         | 'paynow'
         | 'paypal'
         | 'promptpay'
+        | 'revolut_pay'
         | 'sepa_debit'
         | 'sofort'
         | 'us_bank_account'
@@ -22261,6 +23634,10 @@ export type TaxCalculation = {
    * String representing the object's type. Objects of the same type share the same value.
    */
   object: 'tax.calculation';
+  /**
+   * The details of the ship from location, such as the address.
+   */
+  ship_from_details?: TaxProductResourceShipFromDetails | null;
   /**
    * The shipping cost details for the calculation.
    */
@@ -22469,6 +23846,10 @@ export type TaxTransaction = {
    */
   reversal?: TaxProductResourceTaxTransactionResourceReversal | null;
   /**
+   * The details of the ship from location, such as the address.
+   */
+  ship_from_details?: TaxProductResourceShipFromDetails | null;
+  /**
    * The shipping cost details for the transaction.
    */
   shipping_cost?: TaxProductResourceTaxTransactionShippingCost | null;
@@ -22645,7 +24026,7 @@ export type TaxId = {
    */
   owner?: TaxIDsOwner | null;
   /**
-   * Type of the tax ID, one of `ad_nrt`, `ae_trn`, `ar_cuit`, `au_abn`, `au_arn`, `bg_uic`, `bo_tin`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `no_voec`, `nz_gst`, `pe_ruc`, `ph_tin`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sv_nit`, `th_vat`, `tr_tin`, `tw_vat`, `ua_vat`, `us_ein`, `uy_ruc`, `ve_rif`, `vn_tin`, or `za_vat`. Note that some legacy tax IDs have type `unknown`
+   * Type of the tax ID, one of `ad_nrt`, `ae_trn`, `ar_cuit`, `au_abn`, `au_arn`, `bg_uic`, `bh_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kr_brn`, `kz_bin`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `ng_tin`, `no_vat`, `no_voec`, `nz_gst`, `om_vat`, `pe_ruc`, `ph_tin`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sv_nit`, `th_vat`, `tr_tin`, `tw_vat`, `ua_vat`, `us_ein`, `uy_ruc`, `ve_rif`, `vn_tin`, or `za_vat`. Note that some legacy tax IDs have type `unknown`
    */
   type:
     | 'ad_nrt'
@@ -22654,6 +24035,7 @@ export type TaxId = {
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bh_vat'
     | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
@@ -22687,14 +24069,17 @@ export type TaxId = {
     | 'jp_trn'
     | 'ke_pin'
     | 'kr_brn'
+    | 'kz_bin'
     | 'li_uid'
     | 'mx_rfc'
     | 'my_frp'
     | 'my_itn'
     | 'my_sst'
+    | 'ng_tin'
     | 'no_vat'
     | 'no_voec'
     | 'nz_gst'
+    | 'om_vat'
     | 'pe_ruc'
     | 'ph_tin'
     | 'ro_tin'
@@ -22751,6 +24136,7 @@ export type TaxProductRegistrationsResourceCountryOptions = {
   au?: TaxProductRegistrationsResourceCountryOptionsDefault;
   be?: TaxProductRegistrationsResourceCountryOptionsEurope;
   bg?: TaxProductRegistrationsResourceCountryOptionsEurope;
+  bh?: TaxProductRegistrationsResourceCountryOptionsDefault;
   ca?: TaxProductRegistrationsResourceCountryOptionsCanada;
   ch?: TaxProductRegistrationsResourceCountryOptionsDefault;
   cl?: TaxProductRegistrationsResourceCountryOptionsSimplified;
@@ -22760,10 +24146,12 @@ export type TaxProductRegistrationsResourceCountryOptions = {
   de?: TaxProductRegistrationsResourceCountryOptionsEurope;
   dk?: TaxProductRegistrationsResourceCountryOptionsEurope;
   ee?: TaxProductRegistrationsResourceCountryOptionsEurope;
+  eg?: TaxProductRegistrationsResourceCountryOptionsSimplified;
   es?: TaxProductRegistrationsResourceCountryOptionsEurope;
   fi?: TaxProductRegistrationsResourceCountryOptionsEurope;
   fr?: TaxProductRegistrationsResourceCountryOptionsEurope;
   gb?: TaxProductRegistrationsResourceCountryOptionsDefault;
+  ge?: TaxProductRegistrationsResourceCountryOptionsSimplified;
   gr?: TaxProductRegistrationsResourceCountryOptionsEurope;
   hr?: TaxProductRegistrationsResourceCountryOptionsEurope;
   hu?: TaxProductRegistrationsResourceCountryOptionsEurope;
@@ -22772,16 +24160,20 @@ export type TaxProductRegistrationsResourceCountryOptions = {
   is?: TaxProductRegistrationsResourceCountryOptionsDefault;
   it?: TaxProductRegistrationsResourceCountryOptionsEurope;
   jp?: TaxProductRegistrationsResourceCountryOptionsDefault;
+  ke?: TaxProductRegistrationsResourceCountryOptionsSimplified;
   kr?: TaxProductRegistrationsResourceCountryOptionsSimplified;
+  kz?: TaxProductRegistrationsResourceCountryOptionsSimplified;
   lt?: TaxProductRegistrationsResourceCountryOptionsEurope;
   lu?: TaxProductRegistrationsResourceCountryOptionsEurope;
   lv?: TaxProductRegistrationsResourceCountryOptionsEurope;
   mt?: TaxProductRegistrationsResourceCountryOptionsEurope;
   mx?: TaxProductRegistrationsResourceCountryOptionsSimplified;
   my?: TaxProductRegistrationsResourceCountryOptionsSimplified;
+  ng?: TaxProductRegistrationsResourceCountryOptionsSimplified;
   nl?: TaxProductRegistrationsResourceCountryOptionsEurope;
   no?: TaxProductRegistrationsResourceCountryOptionsDefault;
   nz?: TaxProductRegistrationsResourceCountryOptionsDefault;
+  om?: TaxProductRegistrationsResourceCountryOptionsDefault;
   pl?: TaxProductRegistrationsResourceCountryOptionsEurope;
   pt?: TaxProductRegistrationsResourceCountryOptionsEurope;
   ro?: TaxProductRegistrationsResourceCountryOptionsEurope;
@@ -22919,7 +24311,7 @@ export type TaxProductResourceCustomerDetails = {
  */
 export type TaxProductResourceCustomerDetailsResourceTaxId = {
   /**
-   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, or `unknown`
+   * The type of the tax ID, one of `ad_nrt`, `ar_cuit`, `eu_vat`, `bo_tin`, `br_cnpj`, `br_cpf`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eu_oss_vat`, `pe_ruc`, `ro_tin`, `rs_pib`, `sv_nit`, `uy_ruc`, `ve_rif`, `vn_tin`, `gb_vat`, `nz_gst`, `au_abn`, `au_arn`, `in_gst`, `no_vat`, `no_voec`, `za_vat`, `ch_vat`, `mx_rfc`, `sg_uen`, `ru_inn`, `ru_kpp`, `ca_bn`, `hk_br`, `es_cif`, `tw_vat`, `th_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `li_uid`, `my_itn`, `us_ein`, `kr_brn`, `ca_qst`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `my_sst`, `sg_gst`, `ae_trn`, `cl_tin`, `sa_vat`, `id_npwp`, `my_frp`, `il_vat`, `ge_vat`, `ua_vat`, `is_vat`, `bg_uic`, `hu_tin`, `si_tin`, `ke_pin`, `tr_tin`, `eg_tin`, `ph_tin`, `bh_vat`, `kz_bin`, `ng_tin`, `om_vat`, or `unknown`
    */
   type:
     | 'ad_nrt'
@@ -22928,6 +24320,7 @@ export type TaxProductResourceCustomerDetailsResourceTaxId = {
     | 'au_abn'
     | 'au_arn'
     | 'bg_uic'
+    | 'bh_vat'
     | 'bo_tin'
     | 'br_cnpj'
     | 'br_cpf'
@@ -22961,14 +24354,17 @@ export type TaxProductResourceCustomerDetailsResourceTaxId = {
     | 'jp_trn'
     | 'ke_pin'
     | 'kr_brn'
+    | 'kz_bin'
     | 'li_uid'
     | 'mx_rfc'
     | 'my_frp'
     | 'my_itn'
     | 'my_sst'
+    | 'ng_tin'
     | 'no_vat'
     | 'no_voec'
     | 'nz_gst'
+    | 'om_vat'
     | 'pe_ruc'
     | 'ph_tin'
     | 'ro_tin'
@@ -23116,6 +24512,12 @@ export type TaxProductResourcePostalAddress = {
   state?: string | null;
 };
 /**
+ * TaxProductResourceShipFromDetails
+ */
+export type TaxProductResourceShipFromDetails = {
+  address: TaxProductResourcePostalAddress;
+};
+/**
  * TaxProductResourceTaxBreakdown
  */
 export type TaxProductResourceTaxBreakdown = {
@@ -23246,7 +24648,7 @@ export type TaxProductResourceTaxSettingsStatusDetails = {
 /**
  * TaxProductResourceTaxSettingsStatusDetailsResourceActive
  */
-export type TaxProductResourceTaxSettingsStatusDetailsResourceActive = any;
+export type TaxProductResourceTaxSettingsStatusDetailsResourceActive = unknown;
 /**
  * TaxProductResourceTaxSettingsStatusDetailsResourcePending
  */
@@ -23411,6 +24813,10 @@ export type TerminalConfiguration = {
    */
   livemode: boolean;
   /**
+   * String indicating the name of the Configuration object, set by the user
+   */
+  name?: string | null;
+  /**
    * String representing the object's type. Objects of the same type share the same value.
    */
   object: 'terminal.configuration';
@@ -23489,12 +24895,13 @@ export type TerminalReader = {
    */
   device_sw_version?: string | null;
   /**
-   * Type of reader, one of `bbpos_wisepad3`, `stripe_m2`, `bbpos_chipper2x`, `bbpos_wisepos_e`, `verifone_P400`, or `simulated_wisepos_e`.
+   * Type of reader, one of `bbpos_wisepad3`, `stripe_m2`, `bbpos_chipper2x`, `bbpos_wisepos_e`, `verifone_P400`, `simulated_wisepos_e`, or `mobile_phone_reader`.
    */
   device_type:
     | 'bbpos_chipper2x'
     | 'bbpos_wisepad3'
     | 'bbpos_wisepos_e'
+    | 'mobile_phone_reader'
     | 'simulated_wisepos_e'
     | 'stripe_m2'
     | 'verifone_P400';
@@ -23969,7 +25376,7 @@ export type ThreeDSecureUsage = {
  *
  * You can't store or use tokens more than once. To store card or bank account
  * information for later use, create [Customer](https://stripe.com/docs/api#customers)
- * objects or [Custom accounts](https://stripe.com/docs/api#external_accounts).
+ * objects or [External accounts](/api#external_accounts).
  * [Radar](https://stripe.com/docs/radar), our integrated solution for automatic fraud protection,
  * performs best with integrations that use client-side tokenization.
  */
@@ -24222,7 +25629,7 @@ export type TransferData = {
  * transfer only if the destination account has enough balance to cover the
  * reversal.
  *
- * Related guide: [Reversing transfers](https://stripe.com/docs/connect/separate-charges-and-transfers#reversing-transfers)
+ * Related guide: [Reverse transfers](https://stripe.com/docs/connect/separate-charges-and-transfers#reverse-transfers)
  */
 export type TransferReversal = {
   /**
@@ -24725,6 +26132,10 @@ export type TreasuryOutboundPayment = {
   status: 'canceled' | 'failed' | 'posted' | 'processing' | 'returned';
   status_transitions: TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransitions;
   /**
+   * Details about network-specific tracking information if available.
+   */
+  tracking_details?: TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetails | null;
+  /**
    * The Transaction associated with this object.
    */
   transaction: string | TreasuryTransaction;
@@ -24804,6 +26215,10 @@ export type TreasuryOutboundTransfer = {
    */
   status: 'canceled' | 'failed' | 'posted' | 'processing' | 'returned';
   status_transitions: TreasuryOutboundTransfersResourceStatusTransitions;
+  /**
+   * Details about network-specific tracking information if available.
+   */
+  tracking_details?: TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetails | null;
   /**
    * The Transaction associated with this object.
    */
@@ -25371,6 +26786,15 @@ export type TreasuryInboundTransfersResourceInboundTransferResourceStatusTransit
     succeeded_at?: number | null;
   };
 /**
+ * TreasuryOutboundPaymentsResourceACHTrackingDetails
+ */
+export type TreasuryOutboundPaymentsResourceAchTrackingDetails = {
+  /**
+   * ACH trace ID of the OutboundPayment for payments sent over the `ach` network.
+   */
+  trace_id: string;
+};
+/**
  * TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetails
  */
 export type TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetails =
@@ -25407,6 +26831,18 @@ export type TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransit
     returned_at?: number | null;
   };
 /**
+ * TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetails
+ */
+export type TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetails =
+  {
+    ach?: TreasuryOutboundPaymentsResourceAchTrackingDetails;
+    /**
+     * The US bank account network used to send funds.
+     */
+    type: 'ach' | 'us_domestic_wire';
+    us_domestic_wire?: TreasuryOutboundPaymentsResourceUsDomesticWireTrackingDetails;
+  };
+/**
  * TreasuryOutboundPaymentsResourceReturnedStatus
  */
 export type TreasuryOutboundPaymentsResourceReturnedStatus = {
@@ -25429,6 +26865,40 @@ export type TreasuryOutboundPaymentsResourceReturnedStatus = {
    */
   transaction: string | TreasuryTransaction;
 };
+/**
+ * TreasuryOutboundPaymentsResourceUSDomesticWireTrackingDetails
+ */
+export type TreasuryOutboundPaymentsResourceUsDomesticWireTrackingDetails = {
+  /**
+   * IMAD of the OutboundPayment for payments sent over the `us_domestic_wire` network.
+   */
+  imad: string;
+  /**
+   * OMAD of the OutboundPayment for payments sent over the `us_domestic_wire` network.
+   */
+  omad?: string | null;
+};
+/**
+ * TreasuryOutboundTransfersResourceACHTrackingDetails
+ */
+export type TreasuryOutboundTransfersResourceAchTrackingDetails = {
+  /**
+   * ACH trace ID of the OutboundTransfer for transfers sent over the `ach` network.
+   */
+  trace_id: string;
+};
+/**
+ * TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetails
+ */
+export type TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetails =
+  {
+    ach?: TreasuryOutboundTransfersResourceAchTrackingDetails;
+    /**
+     * The US bank account network used to send funds.
+     */
+    type: 'ach' | 'us_domestic_wire';
+    us_domestic_wire?: TreasuryOutboundTransfersResourceUsDomesticWireTrackingDetails;
+  };
 /**
  * TreasuryOutboundTransfersResourceReturnedDetails
  */
@@ -25472,6 +26942,19 @@ export type TreasuryOutboundTransfersResourceStatusTransitions = {
    * Timestamp describing when an OutboundTransfer changed status to `returned`
    */
   returned_at?: number | null;
+};
+/**
+ * TreasuryOutboundTransfersResourceUSDomesticWireTrackingDetails
+ */
+export type TreasuryOutboundTransfersResourceUsDomesticWireTrackingDetails = {
+  /**
+   * IMAD of the OutboundTransfer for transfers sent over the `us_domestic_wire` network.
+   */
+  imad: string;
+  /**
+   * OMAD of the OutboundTransfer for transfers sent over the `us_domestic_wire` network.
+   */
+  omad?: string | null;
 };
 /**
  * TreasuryReceivedCreditsResourceLinkedFlows
@@ -25573,6 +27056,10 @@ export type TreasuryReceivedDebitsResourceLinkedFlows = {
    * Set if the ReceivedDebit is also viewable as an [Issuing Dispute](https://stripe.com/docs/api#issuing_disputes) object.
    */
   issuing_transaction?: string | null;
+  /**
+   * Set if the ReceivedDebit was created due to a [Payout](https://stripe.com/docs/api#payouts) object.
+   */
+  payout?: string | null;
 };
 /**
  * TreasuryReceivedDebitsResourceReversalDetails
@@ -25739,6 +27226,8 @@ export type UsBankAccountNetworks = {
  * metered billing of subscription prices.
  *
  * Related guide: [Metered billing](https://stripe.com/docs/billing/subscriptions/metered-billing)
+ *
+ * This is our legacy usage-based billing API. See the [updated usage-based billing docs](https://docs.stripe.com/billing/subscriptions/usage-based).
  */
 export type UsageRecord = {
   /**
@@ -25807,13 +27296,13 @@ export type VerificationSessionRedaction = {
 };
 /**
  * NotificationWebhookEndpoint
- * You can configure [webhook endpoints](https://stripe.com/docs/webhooks/) via the API to be
+ * You can configure [webhook endpoints](https://docs.stripe.com/webhooks/) via the API to be
  * notified about events that happen in your Stripe account or connected
  * accounts.
  *
  * Most users configure webhooks from [the dashboard](https://dashboard.stripe.com/webhooks), which provides a user interface for registering and testing your webhook endpoints.
  *
- * Related guide: [Setting up webhooks](https://stripe.com/docs/webhooks/configure)
+ * Related guide: [Setting up webhooks](https://docs.stripe.com/webhooks/configure)
  */
 export type WebhookEndpoint = {
   /**
@@ -25855,7 +27344,7 @@ export type WebhookEndpoint = {
    */
   object: 'webhook_endpoint';
   /**
-   * The endpoint's secret, used to generate [webhook signatures](https://stripe.com/docs/webhooks/signatures). Only returned at creation.
+   * The endpoint's secret, used to generate [webhook signatures](https://docs.stripe.com/webhooks/signatures). Only returned at creation.
    */
   secret?: string;
   /**
@@ -25903,9 +27392,11 @@ export async function getAccount<FetcherData>(
   params: {
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Account> {
+): Promise<
+  r.StatusResponse<200, Account> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/account',
     params,
@@ -25915,7 +27406,7 @@ export async function getAccount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an AccountLink object that includes a single-use Stripe URL that the platform can redirect their user to in
@@ -25924,9 +27415,11 @@ export async function getAccount<FetcherData>(
 export async function postAccountLinks<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<AccountLink> {
+): Promise<
+  r.StatusResponse<200, AccountLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/account_links',
     params,
@@ -25935,7 +27428,7 @@ export async function postAccountLinks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a AccountSession object that includes a single-use token that the platform can use on their front-end to
@@ -25944,9 +27437,11 @@ export async function postAccountLinks<FetcherData>(
 export async function postAccountSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<AccountSession> {
+): Promise<
+  r.StatusResponse<200, AccountSession> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/account_sessions',
     params,
@@ -25955,7 +27450,7 @@ export async function postAccountSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of accounts connected to your platform via <a href="/docs/connect">Connect</a>. If you’re not a
@@ -25977,23 +27472,29 @@ export async function getAccounts<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Account[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Account[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts',
     params,
@@ -26009,7 +27510,7 @@ export async function getAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>With <a href="/docs/connect">Connect</a>, you can create Stripe accounts for your users.
@@ -26027,9 +27528,11 @@ export async function getAccounts<FetcherData>(
 export async function postAccounts<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Account> {
+): Promise<
+  r.StatusResponse<200, Account> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts',
     params,
@@ -26038,27 +27541,32 @@ export async function postAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>With <a href="/docs/connect">Connect</a>, you can delete accounts you manage.</p>
+ * <p>With <a href="/connect">Connect</a>, you can delete accounts you manage.</p>
  *
- * <p>Accounts created using
- * test-mode keys can be deleted at any time. Standard accounts created using live-mode keys cannot be deleted. Custom or
- * Express accounts created using live-mode keys can only be deleted once all balances are zero.</p>
+ * <p>Test-mode accounts can be deleted at
+ * any time.</p>
  *
- * <p>If you want to
- * delete your own account, use the <a href="https://dashboard.stripe.com/settings/account">account information tab in your
- * account settings</a> instead.</p>
+ * <p>Live-mode accounts where Stripe is responsible for negative account balances cannot be deleted, which
+ * includes Standard accounts. Live-mode accounts where your platform is liable for negative account balances, which
+ * includes Custom and Express accounts, can be deleted when all <a href="/api/balance/balanace_object">balances</a> are
+ * zero.</p>
+ *
+ * <p>If you want to delete your own account, use the <a
+ * href="https://dashboard.stripe.com/settings/account">account information tab in your account settings</a> instead.</p>
  */
 export async function deleteAccountsAccount<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedAccount> {
+): Promise<
+  r.StatusResponse<200, DeletedAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}',
     params,
@@ -26067,7 +27575,7 @@ export async function deleteAccountsAccount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an account.</p>
@@ -26078,9 +27586,11 @@ export async function getAccountsAccount<FetcherData>(
     account: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Account> {
+): Promise<
+  r.StatusResponse<200, Account> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}',
     params,
@@ -26090,22 +27600,30 @@ export async function getAccountsAccount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>Updates a <a href="/docs/connect/accounts">connected account</a> by setting the values of the parameters passed. Any
+ * <p>Updates a <a href="/connect/accounts">connected account</a> by setting the values of the parameters passed. Any
  * parameters not provided are
  * left unchanged.</p>
  *
- * <p>For Custom accounts, you can update any information on the account.
- * For other accounts, you can update all information until that
- * account has started to go through Connect Onboarding. Once
- * you create an <a href="/docs/api/account_links">Account Link</a> or <a href="/docs/api/account_sessions">Account
- * Session</a>,
- * some properties can only be changed or updated for Custom accounts.</p>
+ * <p>For accounts where <a
+ * href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+ * is
+ * <code>application</code>, which includes Custom accounts, you can update any information on the account.</p>
  *
- * <p>To update your own account, use
- * the <a href="https://dashboard.stripe.com/settings/account">Dashboard</a>. Refer to our
+ * <p>For
+ * accounts where <a
+ * href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+ * is
+ * <code>stripe</code>, which includes Standard and Express accounts, you can update all information until you create
+ * an <a
+ * href="/api/account_links">Account Link</a> or <a href="/api/account_sessions">Account Session</a> to start Connect
+ * onboarding,
+ * after which some properties can no longer be updated.</p>
+ *
+ * <p>To update your own account, use the <a
+ * href="https://dashboard.stripe.com/settings/account">Dashboard</a>. Refer to our
  * <a
  * href="/docs/connect/updating-accounts">Connect</a> documentation to learn more about updating accounts.</p>
  */
@@ -26114,9 +27632,11 @@ export async function postAccountsAccount<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Account> {
+): Promise<
+  r.StatusResponse<200, Account> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}',
     params,
@@ -26125,7 +27645,7 @@ export async function postAccountsAccount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Create an external account for a given account.</p>
@@ -26135,9 +27655,11 @@ export async function postAccountsAccountBankAccounts<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ExternalAccount> {
+): Promise<
+  r.StatusResponse<200, ExternalAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/bank_accounts',
     params,
@@ -26146,7 +27668,7 @@ export async function postAccountsAccountBankAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Delete a specified external account for a given account.</p>
@@ -26157,9 +27679,12 @@ export async function deleteAccountsAccountBankAccountsId<FetcherData>(
     account: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedExternalAccount> {
+): Promise<
+  | r.StatusResponse<200, DeletedExternalAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/bank_accounts/{id}',
     params,
@@ -26168,7 +27693,7 @@ export async function deleteAccountsAccountBankAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve a specified external account for a given account.</p>
@@ -26180,9 +27705,11 @@ export async function getAccountsAccountBankAccountsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ExternalAccount> {
+): Promise<
+  r.StatusResponse<200, ExternalAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/bank_accounts/{id}',
     params,
@@ -26192,15 +27719,22 @@ export async function getAccountsAccountBankAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>Updates the metadata, account holder name, account holder type of a bank account belonging to a <a
- * href="/docs/connect/custom-accounts">Custom account</a>, and optionally sets it as the default for its currency. Other
- * bank account details are not editable by design.</p>
+ * <p>Updates the metadata, account holder name, account holder type of a bank account belonging to
+ * a connected account and
+ * optionally sets it as the default for its currency. Other bank account
+ * details are not editable by design.</p>
  *
- * <p>You can re-enable a disabled bank account by performing an
- * update call without providing any arguments or changes.</p>
+ * <p>You
+ * can only update bank accounts when <a
+ * href="/api/accounts/object#account_object-controller-requirement_collection">account.controller.requirement_collection</a>
+ * is <code>application</code>, which includes <a href="/connect/custom-accounts">Custom accounts</a>.</p>
+ *
+ * <p>You can
+ * re-enable a disabled bank account by performing an update call without providing any
+ * arguments or changes.</p>
  */
 export async function postAccountsAccountBankAccountsId<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -26208,9 +27742,11 @@ export async function postAccountsAccountBankAccountsId<FetcherData>(
     account: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ExternalAccount> {
+): Promise<
+  r.StatusResponse<200, ExternalAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/bank_accounts/{id}',
     params,
@@ -26219,7 +27755,7 @@ export async function postAccountsAccountBankAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of capabilities associated with the account. The capabilities are returned sorted by creation date,
@@ -26231,23 +27767,29 @@ export async function getAccountsAccountCapabilities<FetcherData>(
     account: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Capability[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Capability[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/capabilities',
     params,
@@ -26257,7 +27799,7 @@ export async function getAccountsAccountCapabilities<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves information about the specified Account Capability.</p>
@@ -26269,9 +27811,11 @@ export async function getAccountsAccountCapabilitiesCapability<FetcherData>(
     capability: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Capability> {
+): Promise<
+  r.StatusResponse<200, Capability> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/capabilities/{capability}',
     params,
@@ -26281,7 +27825,7 @@ export async function getAccountsAccountCapabilitiesCapability<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing Account Capability. Request or remove a capability by updating its <code>requested</code>
@@ -26293,9 +27837,11 @@ export async function postAccountsAccountCapabilitiesCapability<FetcherData>(
     account: string;
     capability: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Capability> {
+): Promise<
+  r.StatusResponse<200, Capability> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/capabilities/{capability}',
     params,
@@ -26304,7 +27850,7 @@ export async function postAccountsAccountCapabilitiesCapability<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List external accounts for an account.</p>
@@ -26319,26 +27865,32 @@ export async function getAccountsAccountExternalAccounts<FetcherData>(
     object?: 'bank_account' | 'card';
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * The list contains all external accounts that have been attached to the Stripe account. These may be bank accounts or cards.
-   */
-  data: (BankAccount | Card)[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * The list contains all external accounts that have been attached to the Stripe account. These may be bank accounts or cards.
+         */
+        data: (BankAccount | Card)[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/external_accounts',
     params,
@@ -26354,7 +27906,7 @@ export async function getAccountsAccountExternalAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Create an external account for a given account.</p>
@@ -26364,9 +27916,11 @@ export async function postAccountsAccountExternalAccounts<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ExternalAccount> {
+): Promise<
+  r.StatusResponse<200, ExternalAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/external_accounts',
     params,
@@ -26375,7 +27929,7 @@ export async function postAccountsAccountExternalAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Delete a specified external account for a given account.</p>
@@ -26386,9 +27940,12 @@ export async function deleteAccountsAccountExternalAccountsId<FetcherData>(
     account: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedExternalAccount> {
+): Promise<
+  | r.StatusResponse<200, DeletedExternalAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/external_accounts/{id}',
     params,
@@ -26397,7 +27954,7 @@ export async function deleteAccountsAccountExternalAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve a specified external account for a given account.</p>
@@ -26409,9 +27966,11 @@ export async function getAccountsAccountExternalAccountsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ExternalAccount> {
+): Promise<
+  r.StatusResponse<200, ExternalAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/external_accounts/{id}',
     params,
@@ -26421,15 +27980,22 @@ export async function getAccountsAccountExternalAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>Updates the metadata, account holder name, account holder type of a bank account belonging to a <a
- * href="/docs/connect/custom-accounts">Custom account</a>, and optionally sets it as the default for its currency. Other
- * bank account details are not editable by design.</p>
+ * <p>Updates the metadata, account holder name, account holder type of a bank account belonging to
+ * a connected account and
+ * optionally sets it as the default for its currency. Other bank account
+ * details are not editable by design.</p>
  *
- * <p>You can re-enable a disabled bank account by performing an
- * update call without providing any arguments or changes.</p>
+ * <p>You
+ * can only update bank accounts when <a
+ * href="/api/accounts/object#account_object-controller-requirement_collection">account.controller.requirement_collection</a>
+ * is <code>application</code>, which includes <a href="/connect/custom-accounts">Custom accounts</a>.</p>
+ *
+ * <p>You can
+ * re-enable a disabled bank account by performing an update call without providing any
+ * arguments or changes.</p>
  */
 export async function postAccountsAccountExternalAccountsId<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -26437,9 +28003,11 @@ export async function postAccountsAccountExternalAccountsId<FetcherData>(
     account: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ExternalAccount> {
+): Promise<
+  r.StatusResponse<200, ExternalAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/external_accounts/{id}',
     params,
@@ -26448,23 +28016,25 @@ export async function postAccountsAccountExternalAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>Creates a single-use login link for an Express account to access their Stripe dashboard.</p>
+ * <p>Creates a single-use login link for a connected account to access the Express Dashboard.</p>
  *
- * <p><strong>You may only
- * create login links for <a href="/docs/connect/express-accounts">Express accounts</a> connected to your
- * platform</strong>.</p>
+ * <p><strong>You can only
+ * create login links for accounts that use the <a href="/connect/express-dashboard">Express Dashboard</a> and are
+ * connected to your platform</strong>.</p>
  */
 export async function postAccountsAccountLoginLinks<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<LoginLink> {
+): Promise<
+  r.StatusResponse<200, LoginLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/login_links',
     params,
@@ -26473,7 +28043,7 @@ export async function postAccountsAccountLoginLinks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of people associated with the account’s legal entity. The people are returned sorted by creation date,
@@ -26495,23 +28065,29 @@ export async function getAccountsAccountPeople<FetcherData>(
     };
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Person[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Person[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/people',
     params,
@@ -26527,7 +28103,7 @@ export async function getAccountsAccountPeople<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new person.</p>
@@ -26537,9 +28113,9 @@ export async function postAccountsAccountPeople<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Person> {
+): Promise<r.StatusResponse<200, Person> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/people',
     params,
@@ -26548,7 +28124,7 @@ export async function postAccountsAccountPeople<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an
@@ -26561,9 +28137,11 @@ export async function deleteAccountsAccountPeoplePerson<FetcherData>(
     account: string;
     person: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedPerson> {
+): Promise<
+  r.StatusResponse<200, DeletedPerson> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/people/{person}',
     params,
@@ -26572,7 +28150,7 @@ export async function deleteAccountsAccountPeoplePerson<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an existing person.</p>
@@ -26584,9 +28162,9 @@ export async function getAccountsAccountPeoplePerson<FetcherData>(
     expand?: string[];
     person: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Person> {
+): Promise<r.StatusResponse<200, Person> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/people/{person}',
     params,
@@ -26596,7 +28174,7 @@ export async function getAccountsAccountPeoplePerson<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing person.</p>
@@ -26607,9 +28185,9 @@ export async function postAccountsAccountPeoplePerson<FetcherData>(
     account: string;
     person: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Person> {
+): Promise<r.StatusResponse<200, Person> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/people/{person}',
     params,
@@ -26618,7 +28196,7 @@ export async function postAccountsAccountPeoplePerson<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of people associated with the account’s legal entity. The people are returned sorted by creation date,
@@ -26640,23 +28218,29 @@ export async function getAccountsAccountPersons<FetcherData>(
     };
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Person[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Person[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/persons',
     params,
@@ -26672,7 +28256,7 @@ export async function getAccountsAccountPersons<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new person.</p>
@@ -26682,9 +28266,9 @@ export async function postAccountsAccountPersons<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Person> {
+): Promise<r.StatusResponse<200, Person> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/persons',
     params,
@@ -26693,7 +28277,7 @@ export async function postAccountsAccountPersons<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an
@@ -26706,9 +28290,11 @@ export async function deleteAccountsAccountPersonsPerson<FetcherData>(
     account: string;
     person: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedPerson> {
+): Promise<
+  r.StatusResponse<200, DeletedPerson> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/persons/{person}',
     params,
@@ -26717,7 +28303,7 @@ export async function deleteAccountsAccountPersonsPerson<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an existing person.</p>
@@ -26729,9 +28315,9 @@ export async function getAccountsAccountPersonsPerson<FetcherData>(
     expand?: string[];
     person: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Person> {
+): Promise<r.StatusResponse<200, Person> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/persons/{person}',
     params,
@@ -26741,7 +28327,7 @@ export async function getAccountsAccountPersonsPerson<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing person.</p>
@@ -26752,9 +28338,9 @@ export async function postAccountsAccountPersonsPerson<FetcherData>(
     account: string;
     person: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Person> {
+): Promise<r.StatusResponse<200, Person> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/persons/{person}',
     params,
@@ -26763,13 +28349,14 @@ export async function postAccountsAccountPersonsPerson<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>With <a href="/docs/connect">Connect</a>, you may flag accounts as suspicious.</p>
+ * <p>With <a href="/connect">Connect</a>, you can reject accounts that you have flagged as suspicious.</p>
  *
- * <p>Test-mode Custom and Express
- * accounts can be rejected at any time. Accounts created using live-mode keys may only be rejected once all balances are
+ * <p>Only
+ * accounts where your platform is liable for negative account balances, which includes Custom and Express accounts, can be
+ * rejected. Test-mode accounts can be rejected at any time. Live-mode accounts can only be rejected after all balances are
  * zero.</p>
  */
 export async function postAccountsAccountReject<FetcherData>(
@@ -26777,9 +28364,11 @@ export async function postAccountsAccountReject<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Account> {
+): Promise<
+  r.StatusResponse<200, Account> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/accounts/{account}/reject',
     params,
@@ -26788,7 +28377,7 @@ export async function postAccountsAccountReject<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List apple pay domains.</p>
@@ -26802,23 +28391,29 @@ export async function getApplePayDomains<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ApplePayDomain[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ApplePayDomain[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apple_pay/domains',
     params,
@@ -26834,7 +28429,7 @@ export async function getApplePayDomains<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Create an apple pay domain.</p>
@@ -26842,9 +28437,11 @@ export async function getApplePayDomains<FetcherData>(
 export async function postApplePayDomains<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ApplePayDomain> {
+): Promise<
+  r.StatusResponse<200, ApplePayDomain> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apple_pay/domains',
     params,
@@ -26853,7 +28450,7 @@ export async function postApplePayDomains<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Delete an apple pay domain.</p>
@@ -26863,9 +28460,12 @@ export async function deleteApplePayDomainsDomain<FetcherData>(
   params: {
     domain: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedApplePayDomain> {
+): Promise<
+  | r.StatusResponse<200, DeletedApplePayDomain>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apple_pay/domains/{domain}',
     params,
@@ -26874,7 +28474,7 @@ export async function deleteApplePayDomainsDomain<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve an apple pay domain.</p>
@@ -26885,9 +28485,11 @@ export async function getApplePayDomainsDomain<FetcherData>(
     domain: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ApplePayDomain> {
+): Promise<
+  r.StatusResponse<200, ApplePayDomain> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apple_pay/domains/{domain}',
     params,
@@ -26897,7 +28499,7 @@ export async function getApplePayDomainsDomain<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of application fees you’ve previously collected. The application fees are returned in sorted order,
@@ -26920,23 +28522,29 @@ export async function getApplicationFees<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ApplicationFee[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ApplicationFee[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/application_fees',
     params,
@@ -26953,7 +28561,7 @@ export async function getApplicationFees<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>By default, you can see the 10 most recent refunds stored directly on the application fee object, but you can also
@@ -26966,9 +28574,11 @@ export async function getApplicationFeesFeeRefundsId<FetcherData>(
     fee: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FeeRefund> {
+): Promise<
+  r.StatusResponse<200, FeeRefund> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/application_fees/{fee}/refunds/{id}',
     params,
@@ -26978,7 +28588,7 @@ export async function getApplicationFeesFeeRefundsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified application fee refund by setting the values of the parameters passed. Any parameters not
@@ -26992,9 +28602,11 @@ export async function postApplicationFeesFeeRefundsId<FetcherData>(
     fee: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FeeRefund> {
+): Promise<
+  r.StatusResponse<200, FeeRefund> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/application_fees/{fee}/refunds/{id}',
     params,
@@ -27003,7 +28615,7 @@ export async function postApplicationFeesFeeRefundsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an application fee that your account has collected. The same information is returned when
@@ -27015,9 +28627,11 @@ export async function getApplicationFeesId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ApplicationFee> {
+): Promise<
+  r.StatusResponse<200, ApplicationFee> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/application_fees/{id}',
     params,
@@ -27027,16 +28641,18 @@ export async function getApplicationFeesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 export async function postApplicationFeesIdRefund<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ApplicationFee> {
+): Promise<
+  r.StatusResponse<200, ApplicationFee> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/application_fees/{id}/refund',
     params,
@@ -27045,7 +28661,7 @@ export async function postApplicationFeesIdRefund<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can see a list of the refunds belonging to a specific application fee. Note that the 10 most recent refunds are
@@ -27061,26 +28677,32 @@ export async function getApplicationFeesIdRefunds<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: FeeRefund[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: FeeRefund[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/application_fees/{id}/refunds',
     params,
@@ -27090,7 +28712,7 @@ export async function getApplicationFeesIdRefunds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Refunds an application fee that has previously been collected but not yet refunded.
@@ -27112,9 +28734,11 @@ export async function postApplicationFeesIdRefunds<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FeeRefund> {
+): Promise<
+  r.StatusResponse<200, FeeRefund> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/application_fees/{id}/refunds',
     params,
@@ -27123,7 +28747,7 @@ export async function postApplicationFeesIdRefunds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List all secrets stored on the given scope.</p>
@@ -27140,23 +28764,29 @@ export async function getAppsSecrets<FetcherData>(
     };
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: AppsSecret[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: AppsSecret[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apps/secrets',
     params,
@@ -27172,7 +28802,7 @@ export async function getAppsSecrets<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Create or replace a secret in the secret store.</p>
@@ -27180,9 +28810,11 @@ export async function getAppsSecrets<FetcherData>(
 export async function postAppsSecrets<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<AppsSecret> {
+): Promise<
+  r.StatusResponse<200, AppsSecret> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apps/secrets',
     params,
@@ -27191,7 +28823,7 @@ export async function postAppsSecrets<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes a secret from the secret store by name and scope.</p>
@@ -27199,9 +28831,11 @@ export async function postAppsSecrets<FetcherData>(
 export async function postAppsSecretsDelete<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<AppsSecret> {
+): Promise<
+  r.StatusResponse<200, AppsSecret> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apps/secrets/delete',
     params,
@@ -27210,7 +28844,7 @@ export async function postAppsSecretsDelete<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Finds a secret in the secret store by name and scope.</p>
@@ -27225,9 +28859,11 @@ export async function getAppsSecretsFind<FetcherData>(
       user?: string;
     };
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<AppsSecret> {
+): Promise<
+  r.StatusResponse<200, AppsSecret> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/apps/secrets/find',
     params,
@@ -27237,7 +28873,7 @@ export async function getAppsSecretsFind<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the current account balance, based on the authentication that was used to make the request.
@@ -27250,9 +28886,11 @@ export async function getBalance<FetcherData>(
   params: {
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Balance> {
+): Promise<
+  r.StatusResponse<200, Balance> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/balance',
     params,
@@ -27262,7 +28900,7 @@ export async function getBalance<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of transactions that have contributed to the Stripe account balance (e.g., charges, transfers, and so
@@ -27291,23 +28929,29 @@ export async function getBalanceHistory<FetcherData>(
     starting_after?: string;
     type?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: BalanceTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: BalanceTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/balance/history',
     params,
@@ -27327,7 +28971,7 @@ export async function getBalanceHistory<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the balance transaction with the given ID.</p>
@@ -27341,9 +28985,11 @@ export async function getBalanceHistoryId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BalanceTransaction> {
+): Promise<
+  r.StatusResponse<200, BalanceTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/balance/history/{id}',
     params,
@@ -27353,7 +28999,7 @@ export async function getBalanceHistoryId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of transactions that have contributed to the Stripe account balance (e.g., charges, transfers, and so
@@ -27382,23 +29028,29 @@ export async function getBalanceTransactions<FetcherData>(
     starting_after?: string;
     type?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: BalanceTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: BalanceTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/balance_transactions',
     params,
@@ -27418,7 +29070,7 @@ export async function getBalanceTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the balance transaction with the given ID.</p>
@@ -27432,9 +29084,11 @@ export async function getBalanceTransactionsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BalanceTransaction> {
+): Promise<
+  r.StatusResponse<200, BalanceTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/balance_transactions/{id}',
     params,
@@ -27444,7 +29098,276 @@ export async function getBalanceTransactionsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a billing meter event adjustment</p>
+ */
+export async function postBillingMeterEventAdjustments<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, BillingMeterEventAdjustment>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meter_event_adjustments',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a billing meter event</p>
+ */
+export async function postBillingMeterEvents<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, BillingMeterEvent> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meter_events',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieve a list of billing meters.</p>
+ */
+export async function getBillingMeters<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    starting_after?: string;
+    status?: 'active' | 'inactive';
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: BillingMeter[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meters',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+      'status',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a billing meter</p>
+ */
+export async function postBillingMeters<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, BillingMeter> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meters',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieves a billing meter given an ID</p>
+ */
+export async function getBillingMetersId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, BillingMeter> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meters/{id}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Updates a billing meter</p>
+ */
+export async function postBillingMetersId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, BillingMeter> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meters/{id}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Deactivates a billing meter</p>
+ */
+export async function postBillingMetersIdDeactivate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, BillingMeter> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meters/{id}/deactivate',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieve a list of billing meter event summaries.</p>
+ */
+export async function getBillingMetersIdEventSummaries<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    customer: string;
+    end_time: number;
+    ending_before?: string;
+    expand?: string[];
+    id: string;
+    limit?: number;
+    start_time: number;
+    starting_after?: string;
+    value_grouping_window?: 'hour';
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: BillingMeterEventSummary[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meters/{id}/event_summaries',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'customer',
+      'end_time',
+      'ending_before',
+      'expand',
+      'limit',
+      'start_time',
+      'starting_after',
+      'value_grouping_window',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Reactivates a billing meter</p>
+ */
+export async function postBillingMetersIdReactivate<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, BillingMeter> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/billing/meters/{id}/reactivate',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of configurations that describe the functionality of the customer portal.</p>
@@ -27459,23 +29382,29 @@ export async function getBillingPortalConfigurations<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: BillingPortalConfiguration[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: BillingPortalConfiguration[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/billing_portal/configurations',
     params,
@@ -27492,7 +29421,7 @@ export async function getBillingPortalConfigurations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a configuration that describes the functionality and behavior of a PortalSession</p>
@@ -27500,9 +29429,12 @@ export async function getBillingPortalConfigurations<FetcherData>(
 export async function postBillingPortalConfigurations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BillingPortalConfiguration> {
+): Promise<
+  | r.StatusResponse<200, BillingPortalConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/billing_portal/configurations',
     params,
@@ -27511,7 +29443,7 @@ export async function postBillingPortalConfigurations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a configuration that describes the functionality of the customer portal.</p>
@@ -27522,9 +29454,12 @@ export async function getBillingPortalConfigurationsConfiguration<FetcherData>(
     configuration: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BillingPortalConfiguration> {
+): Promise<
+  | r.StatusResponse<200, BillingPortalConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/billing_portal/configurations/{configuration}',
     params,
@@ -27534,7 +29469,7 @@ export async function getBillingPortalConfigurationsConfiguration<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a configuration that describes the functionality of the customer portal.</p>
@@ -27544,9 +29479,12 @@ export async function postBillingPortalConfigurationsConfiguration<FetcherData>(
   params: {
     configuration: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BillingPortalConfiguration> {
+): Promise<
+  | r.StatusResponse<200, BillingPortalConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/billing_portal/configurations/{configuration}',
     params,
@@ -27555,7 +29493,7 @@ export async function postBillingPortalConfigurationsConfiguration<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a session of the customer portal.</p>
@@ -27563,9 +29501,12 @@ export async function postBillingPortalConfigurationsConfiguration<FetcherData>(
 export async function postBillingPortalSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BillingPortalSession> {
+): Promise<
+  | r.StatusResponse<200, BillingPortalSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/billing_portal/sessions',
     params,
@@ -27574,7 +29515,7 @@ export async function postBillingPortalSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of charges you’ve previously created. The charges are returned in sorted order, with the most recent
@@ -27599,23 +29540,29 @@ export async function getCharges<FetcherData>(
     starting_after?: string;
     transfer_group?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Charge[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Charge[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/charges',
     params,
@@ -27634,7 +29581,7 @@ export async function getCharges<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>This method is no longer recommended—use the <a href="/docs/api/payment_intents">Payment Intents API</a>
@@ -27646,9 +29593,9 @@ export async function getCharges<FetcherData>(
 export async function postCharges<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Charge> {
+): Promise<r.StatusResponse<200, Charge> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges',
     params,
@@ -27657,7 +29604,7 @@ export async function postCharges<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Search for charges you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query
@@ -27676,22 +29623,28 @@ export async function getChargesSearch<FetcherData>(
     page?: string;
     query: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Charge[];
-  has_more: boolean;
-  next_page?: string | null;
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'search_result';
-  /**
-   * The total number of objects that match the query, only accurate up to 10,000.
-   */
-  total_count?: number;
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Charge[];
+        has_more: boolean;
+        next_page?: string | null;
+        /**
+         * String representing the object's type. Objects of the same type share the same value.
+         */
+        object: 'search_result';
+        /**
+         * The total number of objects that match the query, only accurate up to 10,000.
+         */
+        total_count?: number;
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/charges/search',
     params,
@@ -27701,7 +29654,7 @@ export async function getChargesSearch<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a charge that has previously been created. Supply the unique charge ID that was returned
@@ -27714,9 +29667,9 @@ export async function getChargesCharge<FetcherData>(
     charge: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Charge> {
+): Promise<r.StatusResponse<200, Charge> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}',
     params,
@@ -27726,7 +29679,7 @@ export async function getChargesCharge<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified charge by setting the values of the parameters passed. Any parameters not provided will be left
@@ -27737,9 +29690,9 @@ export async function postChargesCharge<FetcherData>(
   params: {
     charge: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Charge> {
+): Promise<r.StatusResponse<200, Charge> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}',
     params,
@@ -27748,7 +29701,7 @@ export async function postChargesCharge<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Capture the payment of an existing, uncaptured charge that was created with the <code>capture</code> option set to
@@ -27766,9 +29719,9 @@ export async function postChargesChargeCapture<FetcherData>(
   params: {
     charge: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Charge> {
+): Promise<r.StatusResponse<200, Charge> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/capture',
     params,
@@ -27777,7 +29730,7 @@ export async function postChargesChargeCapture<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve a dispute for a specified charge.</p>
@@ -27788,9 +29741,11 @@ export async function getChargesChargeDispute<FetcherData>(
     charge: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Dispute> {
+): Promise<
+  r.StatusResponse<200, Dispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/dispute',
     params,
@@ -27800,16 +29755,18 @@ export async function getChargesChargeDispute<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 export async function postChargesChargeDispute<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Dispute> {
+): Promise<
+  r.StatusResponse<200, Dispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/dispute',
     params,
@@ -27818,16 +29775,18 @@ export async function postChargesChargeDispute<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 export async function postChargesChargeDisputeClose<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Dispute> {
+): Promise<
+  r.StatusResponse<200, Dispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/dispute/close',
     params,
@@ -27836,7 +29795,7 @@ export async function postChargesChargeDisputeClose<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you create a new refund, you must specify either a Charge or a PaymentIntent object.</p>
@@ -27860,9 +29819,9 @@ export async function postChargesChargeRefund<FetcherData>(
   params: {
     charge: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Charge> {
+): Promise<r.StatusResponse<200, Charge> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/refund',
     params,
@@ -27871,7 +29830,7 @@ export async function postChargesChargeRefund<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can see a list of the refunds belonging to a specific charge. Note that the 10 most recent refunds are always
@@ -27887,26 +29846,32 @@ export async function getChargesChargeRefunds<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Refund[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Refund[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/refunds',
     params,
@@ -27916,7 +29881,7 @@ export async function getChargesChargeRefunds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create
@@ -27941,9 +29906,9 @@ export async function postChargesChargeRefunds<FetcherData>(
   params: {
     charge: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/refunds',
     params,
@@ -27952,7 +29917,7 @@ export async function postChargesChargeRefunds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing refund.</p>
@@ -27964,9 +29929,9 @@ export async function getChargesChargeRefundsRefund<FetcherData>(
     expand?: string[];
     refund: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/refunds/{refund}',
     params,
@@ -27976,7 +29941,7 @@ export async function getChargesChargeRefundsRefund<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Update a specified refund.</p>
@@ -27987,9 +29952,9 @@ export async function postChargesChargeRefundsRefund<FetcherData>(
     charge: string;
     refund: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/charges/{charge}/refunds/{refund}',
     params,
@@ -27998,7 +29963,7 @@ export async function postChargesChargeRefundsRefund<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Checkout Sessions.</p>
@@ -28027,23 +29992,29 @@ export async function getCheckoutSessions<FetcherData>(
     status?: 'complete' | 'expired' | 'open';
     subscription?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: CheckoutSession[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: CheckoutSession[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/checkout/sessions',
     params,
@@ -28065,7 +30036,7 @@ export async function getCheckoutSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a Session object.</p>
@@ -28073,9 +30044,11 @@ export async function getCheckoutSessions<FetcherData>(
 export async function postCheckoutSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CheckoutSession> {
+): Promise<
+  r.StatusResponse<200, CheckoutSession> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/checkout/sessions',
     params,
@@ -28084,7 +30057,7 @@ export async function postCheckoutSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a Session object.</p>
@@ -28095,9 +30068,11 @@ export async function getCheckoutSessionsSession<FetcherData>(
     expand?: string[];
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CheckoutSession> {
+): Promise<
+  r.StatusResponse<200, CheckoutSession> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/checkout/sessions/{session}',
     params,
@@ -28107,7 +30082,7 @@ export async function getCheckoutSessionsSession<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>A Session can be expired when it is in one of these statuses: <code>open</code> </p>
@@ -28120,9 +30095,11 @@ export async function postCheckoutSessionsSessionExpire<FetcherData>(
   params: {
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CheckoutSession> {
+): Promise<
+  r.StatusResponse<200, CheckoutSession> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/checkout/sessions/{session}/expire',
     params,
@@ -28131,7 +30108,7 @@ export async function postCheckoutSessionsSessionExpire<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When retrieving a Checkout Session, there is an includable <strong>line_items</strong> property containing the first
@@ -28146,26 +30123,32 @@ export async function getCheckoutSessionsSessionLineItems<FetcherData>(
     session: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Item[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Item[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/checkout/sessions/{session}/line_items',
     params,
@@ -28175,7 +30158,7 @@ export async function getCheckoutSessionsSessionLineItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists all Climate order objects. The orders are returned sorted by creation date, with the
@@ -28190,23 +30173,29 @@ export async function getClimateOrders<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ClimateOrder[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ClimateOrder[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/orders',
     params,
@@ -28216,7 +30205,7 @@ export async function getClimateOrders<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a Climate order object for a given Climate product. The order will be processed immediately
@@ -28226,9 +30215,11 @@ export async function getClimateOrders<FetcherData>(
 export async function postClimateOrders<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ClimateOrder> {
+): Promise<
+  r.StatusResponse<200, ClimateOrder> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/orders',
     params,
@@ -28237,7 +30228,7 @@ export async function postClimateOrders<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a Climate order object with the given ID.</p>
@@ -28248,9 +30239,11 @@ export async function getClimateOrdersOrder<FetcherData>(
     expand?: string[];
     order: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ClimateOrder> {
+): Promise<
+  r.StatusResponse<200, ClimateOrder> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/orders/{order}',
     params,
@@ -28260,7 +30253,7 @@ export async function getClimateOrdersOrder<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified order by setting the values of the parameters passed.</p>
@@ -28270,9 +30263,11 @@ export async function postClimateOrdersOrder<FetcherData>(
   params: {
     order: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ClimateOrder> {
+): Promise<
+  r.StatusResponse<200, ClimateOrder> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/orders/{order}',
     params,
@@ -28281,7 +30276,7 @@ export async function postClimateOrdersOrder<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels a Climate order. You can cancel an order within 30 days of creation. Stripe refunds the
@@ -28297,9 +30292,11 @@ export async function postClimateOrdersOrderCancel<FetcherData>(
   params: {
     order: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ClimateOrder> {
+): Promise<
+  r.StatusResponse<200, ClimateOrder> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/orders/{order}/cancel',
     params,
@@ -28308,7 +30305,7 @@ export async function postClimateOrdersOrderCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists all available Climate product objects.</p>
@@ -28321,23 +30318,29 @@ export async function getClimateProducts<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ClimateProduct[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ClimateProduct[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/products',
     params,
@@ -28347,7 +30350,7 @@ export async function getClimateProducts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a Climate product with the given ID.</p>
@@ -28358,9 +30361,11 @@ export async function getClimateProductsProduct<FetcherData>(
     expand?: string[];
     product: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ClimateProduct> {
+): Promise<
+  r.StatusResponse<200, ClimateProduct> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/products/{product}',
     params,
@@ -28370,7 +30375,7 @@ export async function getClimateProductsProduct<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists all available Climate supplier objects.</p>
@@ -28383,23 +30388,29 @@ export async function getClimateSuppliers<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ClimateSupplier[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ClimateSupplier[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/suppliers',
     params,
@@ -28409,7 +30420,7 @@ export async function getClimateSuppliers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a Climate supplier object.</p>
@@ -28420,9 +30431,11 @@ export async function getClimateSuppliersSupplier<FetcherData>(
     expand?: string[];
     supplier: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ClimateSupplier> {
+): Promise<
+  r.StatusResponse<200, ClimateSupplier> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/climate/suppliers/{supplier}',
     params,
@@ -28432,7 +30445,32 @@ export async function getClimateSuppliersSupplier<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieves an existing ConfirmationToken object</p>
+ */
+export async function getConfirmationTokensConfirmationToken<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    confirmation_token: string;
+    expand?: string[];
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, ConfirmationToken> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/confirmation_tokens/{confirmation_token}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists all Country Spec objects available in the API.</p>
@@ -28445,23 +30483,29 @@ export async function getCountrySpecs<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: CountrySpec[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: CountrySpec[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/country_specs',
     params,
@@ -28471,7 +30515,7 @@ export async function getCountrySpecs<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a Country Spec for a given Country code.</p>
@@ -28482,9 +30526,11 @@ export async function getCountrySpecsCountry<FetcherData>(
     country: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CountrySpec> {
+): Promise<
+  r.StatusResponse<200, CountrySpec> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/country_specs/{country}',
     params,
@@ -28494,7 +30540,7 @@ export async function getCountrySpecsCountry<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your coupons.</p>
@@ -28515,23 +30561,29 @@ export async function getCoupons<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Coupon[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Coupon[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/coupons',
     params,
@@ -28547,7 +30599,7 @@ export async function getCoupons<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can create coupons easily via the <a href="https://dashboard.stripe.com/coupons">coupon management</a> page of
@@ -28564,9 +30616,9 @@ export async function getCoupons<FetcherData>(
 export async function postCoupons<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Coupon> {
+): Promise<r.StatusResponse<200, Coupon> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/coupons',
     params,
@@ -28575,7 +30627,7 @@ export async function postCoupons<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can delete coupons via the <a href="https://dashboard.stripe.com/coupons">coupon management</a> page of the
@@ -28587,9 +30639,11 @@ export async function deleteCouponsCoupon<FetcherData>(
   params: {
     coupon: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedCoupon> {
+): Promise<
+  r.StatusResponse<200, DeletedCoupon> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/coupons/{coupon}',
     params,
@@ -28598,7 +30652,7 @@ export async function deleteCouponsCoupon<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the coupon with the given ID.</p>
@@ -28609,9 +30663,9 @@ export async function getCouponsCoupon<FetcherData>(
     coupon: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Coupon> {
+): Promise<r.StatusResponse<200, Coupon> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/coupons/{coupon}',
     params,
@@ -28621,7 +30675,7 @@ export async function getCouponsCoupon<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not
@@ -28632,9 +30686,9 @@ export async function postCouponsCoupon<FetcherData>(
   params: {
     coupon: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Coupon> {
+): Promise<r.StatusResponse<200, Coupon> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/coupons/{coupon}',
     params,
@@ -28643,7 +30697,7 @@ export async function postCouponsCoupon<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of credit notes.</p>
@@ -28651,6 +30705,14 @@ export async function postCouponsCoupon<FetcherData>(
 export async function getCreditNotes<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
+    created?:
+      | {
+          gt?: number;
+          gte?: number;
+          lt?: number;
+          lte?: number;
+        }
+      | number;
     customer?: string;
     ending_before?: string;
     expand?: string[];
@@ -28658,29 +30720,36 @@ export async function getCreditNotes<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: CreditNote[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: CreditNote[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes',
     params,
     method: r.HttpMethod.GET,
     body,
     queryParams: [
+      'created',
       'customer',
       'ending_before',
       'expand',
@@ -28691,7 +30760,7 @@ export async function getCreditNotes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Issue a credit note to adjust the amount of a finalized invoice. For a <code>status=open</code> invoice, a credit
@@ -28722,9 +30791,11 @@ export async function getCreditNotes<FetcherData>(
 export async function postCreditNotes<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CreditNote> {
+): Promise<
+  r.StatusResponse<200, CreditNote> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes',
     params,
@@ -28733,7 +30804,7 @@ export async function postCreditNotes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Get a preview of a credit note without creating it.</p>
@@ -28779,9 +30850,11 @@ export async function getCreditNotesPreview<FetcherData>(
       shipping_rate?: string;
     };
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CreditNote> {
+): Promise<
+  r.StatusResponse<200, CreditNote> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes/preview',
     params,
@@ -28805,7 +30878,7 @@ export async function getCreditNotesPreview<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When retrieving a credit note preview, you’ll get a <strong>lines</strong> property containing the first handful of
@@ -28855,26 +30928,32 @@ export async function getCreditNotesPreviewLines<FetcherData>(
     };
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: CreditNoteLineItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: CreditNoteLineItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes/preview/lines',
     params,
@@ -28901,10 +30980,10 @@ export async function getCreditNotesPreviewLines<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>When retrieving a credit note, you’ll get a <strong>lines</strong> property containing the the first handful of those
+ * <p>When retrieving a credit note, you’ll get a <strong>lines</strong> property containing the first handful of those
  * items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>
  */
 export async function getCreditNotesCreditNoteLines<FetcherData>(
@@ -28916,26 +30995,32 @@ export async function getCreditNotesCreditNoteLines<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: CreditNoteLineItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: CreditNoteLineItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes/{credit_note}/lines',
     params,
@@ -28945,7 +31030,7 @@ export async function getCreditNotesCreditNoteLines<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the credit note object with the given identifier.</p>
@@ -28956,9 +31041,11 @@ export async function getCreditNotesId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CreditNote> {
+): Promise<
+  r.StatusResponse<200, CreditNote> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes/{id}',
     params,
@@ -28968,7 +31055,7 @@ export async function getCreditNotesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing credit note.</p>
@@ -28978,9 +31065,11 @@ export async function postCreditNotesId<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CreditNote> {
+): Promise<
+  r.StatusResponse<200, CreditNote> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes/{id}',
     params,
@@ -28989,7 +31078,7 @@ export async function postCreditNotesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Marks a credit note as void. Learn more about <a href="/docs/billing/invoices/credit-notes#voiding">voiding credit
@@ -29000,9 +31089,11 @@ export async function postCreditNotesIdVoid<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CreditNote> {
+): Promise<
+  r.StatusResponse<200, CreditNote> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/credit_notes/{id}/void',
     params,
@@ -29011,7 +31102,7 @@ export async function postCreditNotesIdVoid<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a customer session object that includes a single-use client secret that you can use on your front-end to
@@ -29020,9 +31111,11 @@ export async function postCreditNotesIdVoid<FetcherData>(
 export async function postCustomerSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CustomerSession> {
+): Promise<
+  r.StatusResponse<200, CustomerSession> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customer_sessions',
     params,
@@ -29031,7 +31124,7 @@ export async function postCustomerSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your customers. The customers are returned sorted by creation date, with the most recent customers
@@ -29055,23 +31148,29 @@ export async function getCustomers<FetcherData>(
     starting_after?: string;
     test_clock?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Customer[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Customer[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers',
     params,
@@ -29089,7 +31188,7 @@ export async function getCustomers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new customer object.</p>
@@ -29097,9 +31196,11 @@ export async function getCustomers<FetcherData>(
 export async function postCustomers<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Customer> {
+): Promise<
+  r.StatusResponse<200, Customer> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers',
     params,
@@ -29108,7 +31209,7 @@ export async function postCustomers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Search for customers you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search
@@ -29127,22 +31228,28 @@ export async function getCustomersSearch<FetcherData>(
     page?: string;
     query: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Customer[];
-  has_more: boolean;
-  next_page?: string | null;
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'search_result';
-  /**
-   * The total number of objects that match the query, only accurate up to 10,000.
-   */
-  total_count?: number;
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Customer[];
+        has_more: boolean;
+        next_page?: string | null;
+        /**
+         * String representing the object's type. Objects of the same type share the same value.
+         */
+        object: 'search_result';
+        /**
+         * The total number of objects that match the query, only accurate up to 10,000.
+         */
+        total_count?: number;
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/search',
     params,
@@ -29152,7 +31259,7 @@ export async function getCustomersSearch<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Permanently deletes a customer. It cannot be undone. Also immediately cancels any active subscriptions on the
@@ -29163,9 +31270,11 @@ export async function deleteCustomersCustomer<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedCustomer> {
+): Promise<
+  r.StatusResponse<200, DeletedCustomer> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}',
     params,
@@ -29174,7 +31283,7 @@ export async function deleteCustomersCustomer<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a Customer object.</p>
@@ -29185,9 +31294,12 @@ export async function getCustomersCustomer<FetcherData>(
     customer: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Customer | DeletedCustomer> {
+): Promise<
+  | r.StatusResponse<200, Customer | DeletedCustomer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}',
     params,
@@ -29197,7 +31309,7 @@ export async function getCustomersCustomer<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified customer by setting the values of the parameters passed. Any parameters not provided will be
@@ -29216,9 +31328,11 @@ export async function postCustomersCustomer<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Customer> {
+): Promise<
+  r.StatusResponse<200, Customer> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}',
     params,
@@ -29227,7 +31341,7 @@ export async function postCustomersCustomer<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of transactions that updated the customer’s <a href="/docs/billing/customer/balance">balances</a>.</p>
@@ -29241,26 +31355,32 @@ export async function getCustomersCustomerBalanceTransactions<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: CustomerBalanceTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: CustomerBalanceTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/balance_transactions',
     params,
@@ -29270,7 +31390,7 @@ export async function getCustomersCustomerBalanceTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an immutable transaction that updates the customer’s credit <a
@@ -29281,9 +31401,12 @@ export async function postCustomersCustomerBalanceTransactions<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CustomerBalanceTransaction> {
+): Promise<
+  | r.StatusResponse<200, CustomerBalanceTransaction>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/balance_transactions',
     params,
@@ -29292,7 +31415,7 @@ export async function postCustomersCustomerBalanceTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a specific customer balance transaction that updated the customer’s <a
@@ -29307,9 +31430,12 @@ export async function getCustomersCustomerBalanceTransactionsTransaction<
     expand?: string[];
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CustomerBalanceTransaction> {
+): Promise<
+  | r.StatusResponse<200, CustomerBalanceTransaction>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/balance_transactions/{transaction}',
     params,
@@ -29319,7 +31445,7 @@ export async function getCustomersCustomerBalanceTransactionsTransaction<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Most credit balance transaction fields are immutable, but you may update its <code>description</code> and
@@ -29333,9 +31459,12 @@ export async function postCustomersCustomerBalanceTransactionsTransaction<
     customer: string;
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CustomerBalanceTransaction> {
+): Promise<
+  | r.StatusResponse<200, CustomerBalanceTransaction>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/balance_transactions/{transaction}',
     params,
@@ -29344,7 +31473,7 @@ export async function postCustomersCustomerBalanceTransactionsTransaction<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can see a list of the bank accounts belonging to a Customer. Note that the 10 most recent sources are always
@@ -29361,26 +31490,32 @@ export async function getCustomersCustomerBankAccounts<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: BankAccount[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: BankAccount[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/bank_accounts',
     params,
@@ -29390,7 +31525,7 @@ export async function getCustomersCustomerBankAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p>
@@ -29407,9 +31542,11 @@ export async function postCustomersCustomerBankAccounts<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentSource> {
+): Promise<
+  r.StatusResponse<200, PaymentSource> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/bank_accounts',
     params,
@@ -29418,7 +31555,7 @@ export async function postCustomersCustomerBankAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Delete a specified source for a given customer.</p>
@@ -29429,9 +31566,12 @@ export async function deleteCustomersCustomerBankAccountsId<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentSource | DeletedPaymentSource> {
+): Promise<
+  | r.StatusResponse<200, PaymentSource | DeletedPaymentSource>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/bank_accounts/{id}',
     params,
@@ -29440,7 +31580,7 @@ export async function deleteCustomersCustomerBankAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>By default, you can see the 10 most recent sources stored on a Customer directly on the object, but you can also
@@ -29454,9 +31594,11 @@ export async function getCustomersCustomerBankAccountsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BankAccount> {
+): Promise<
+  r.StatusResponse<200, BankAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/bank_accounts/{id}',
     params,
@@ -29466,7 +31608,7 @@ export async function getCustomersCustomerBankAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Update a specified source for a given customer.</p>
@@ -29477,9 +31619,12 @@ export async function postCustomersCustomerBankAccountsId<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Card | BankAccount | Source> {
+): Promise<
+  | r.StatusResponse<200, Card | BankAccount | Source>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/bank_accounts/{id}',
     params,
@@ -29488,7 +31633,7 @@ export async function postCustomersCustomerBankAccountsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Verify a specified bank account for a given customer.</p>
@@ -29499,9 +31644,11 @@ export async function postCustomersCustomerBankAccountsIdVerify<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BankAccount> {
+): Promise<
+  r.StatusResponse<200, BankAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/bank_accounts/{id}/verify',
     params,
@@ -29510,7 +31657,7 @@ export async function postCustomersCustomerBankAccountsIdVerify<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can see a list of the cards belonging to a customer.
@@ -29529,23 +31676,29 @@ export async function getCustomersCustomerCards<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Card[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Card[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cards',
     params,
@@ -29555,7 +31708,7 @@ export async function getCustomersCustomerCards<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p>
@@ -29572,9 +31725,11 @@ export async function postCustomersCustomerCards<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentSource> {
+): Promise<
+  r.StatusResponse<200, PaymentSource> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cards',
     params,
@@ -29583,7 +31738,7 @@ export async function postCustomersCustomerCards<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Delete a specified source for a given customer.</p>
@@ -29594,9 +31749,12 @@ export async function deleteCustomersCustomerCardsId<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentSource | DeletedPaymentSource> {
+): Promise<
+  | r.StatusResponse<200, PaymentSource | DeletedPaymentSource>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cards/{id}',
     params,
@@ -29605,7 +31763,7 @@ export async function deleteCustomersCustomerCardsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can always see the 10 most recent cards directly on a customer; this method lets you retrieve details about a
@@ -29619,9 +31777,9 @@ export async function getCustomersCustomerCardsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Card> {
+): Promise<r.StatusResponse<200, Card> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cards/{id}',
     params,
@@ -29631,7 +31789,7 @@ export async function getCustomersCustomerCardsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Update a specified source for a given customer.</p>
@@ -29642,9 +31800,12 @@ export async function postCustomersCustomerCardsId<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Card | BankAccount | Source> {
+): Promise<
+  | r.StatusResponse<200, Card | BankAccount | Source>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cards/{id}',
     params,
@@ -29653,7 +31814,7 @@ export async function postCustomersCustomerCardsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a customer’s cash balance.</p>
@@ -29664,9 +31825,11 @@ export async function getCustomersCustomerCashBalance<FetcherData>(
     customer: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CashBalance> {
+): Promise<
+  r.StatusResponse<200, CashBalance> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cash_balance',
     params,
@@ -29676,7 +31839,7 @@ export async function getCustomersCustomerCashBalance<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Changes the settings on a customer’s cash balance.</p>
@@ -29686,9 +31849,11 @@ export async function postCustomersCustomerCashBalance<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CashBalance> {
+): Promise<
+  r.StatusResponse<200, CashBalance> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cash_balance',
     params,
@@ -29697,7 +31862,7 @@ export async function postCustomersCustomerCashBalance<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of transactions that modified the customer’s <a href="/docs/payments/customer-balance">cash
@@ -29712,26 +31877,32 @@ export async function getCustomersCustomerCashBalanceTransactions<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: CustomerCashBalanceTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: CustomerCashBalanceTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cash_balance_transactions',
     params,
@@ -29741,7 +31912,7 @@ export async function getCustomersCustomerCashBalanceTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a specific cash balance transaction, which updated the customer’s <a
@@ -29756,9 +31927,12 @@ export async function getCustomersCustomerCashBalanceTransactionsTransaction<
     expand?: string[];
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CustomerCashBalanceTransaction> {
+): Promise<
+  | r.StatusResponse<200, CustomerCashBalanceTransaction>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/cash_balance_transactions/{transaction}',
     params,
@@ -29768,7 +31942,7 @@ export async function getCustomersCustomerCashBalanceTransactionsTransaction<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Removes the currently applied discount on a customer.</p>
@@ -29778,9 +31952,11 @@ export async function deleteCustomersCustomerDiscount<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedDiscount> {
+): Promise<
+  r.StatusResponse<200, DeletedDiscount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/discount',
     params,
@@ -29789,7 +31965,7 @@ export async function deleteCustomersCustomerDiscount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 export async function getCustomersCustomerDiscount<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -29797,9 +31973,11 @@ export async function getCustomersCustomerDiscount<FetcherData>(
     customer: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Discount> {
+): Promise<
+  r.StatusResponse<200, Discount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/discount',
     params,
@@ -29809,7 +31987,7 @@ export async function getCustomersCustomerDiscount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve funding instructions for a customer cash balance. If funding instructions do not yet exist for the customer,
@@ -29823,9 +32001,12 @@ export async function postCustomersCustomerFundingInstructions<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FundingInstructions> {
+): Promise<
+  | r.StatusResponse<200, FundingInstructions>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/funding_instructions',
     params,
@@ -29834,7 +32015,7 @@ export async function postCustomersCustomerFundingInstructions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of PaymentMethods for a given Customer</p>
@@ -29842,6 +32023,7 @@ export async function postCustomersCustomerFundingInstructions<FetcherData>(
 export async function getCustomersCustomerPaymentMethods<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
+    allow_redisplay?: 'always' | 'limited' | 'unspecified';
     customer: string;
     ending_before?: string;
     expand?: string[];
@@ -29852,6 +32034,7 @@ export async function getCustomersCustomerPaymentMethods<FetcherData>(
       | 'affirm'
       | 'afterpay_clearpay'
       | 'alipay'
+      | 'amazon_pay'
       | 'au_becs_debit'
       | 'bacs_debit'
       | 'bancontact'
@@ -29868,6 +32051,7 @@ export async function getCustomersCustomerPaymentMethods<FetcherData>(
       | 'klarna'
       | 'konbini'
       | 'link'
+      | 'mobilepay'
       | 'oxxo'
       | 'p24'
       | 'paynow'
@@ -29882,33 +32066,46 @@ export async function getCustomersCustomerPaymentMethods<FetcherData>(
       | 'wechat_pay'
       | 'zip';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PaymentMethod[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PaymentMethod[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/payment_methods',
     params,
     method: r.HttpMethod.GET,
     body,
-    queryParams: ['ending_before', 'expand', 'limit', 'starting_after', 'type'],
+    queryParams: [
+      'allow_redisplay',
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+      'type',
+    ],
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a PaymentMethod object for a given Customer.</p>
@@ -29922,9 +32119,11 @@ export async function getCustomersCustomerPaymentMethodsPaymentMethod<
     expand?: string[];
     payment_method: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethod> {
+): Promise<
+  r.StatusResponse<200, PaymentMethod> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/payment_methods/{payment_method}',
     params,
@@ -29934,7 +32133,7 @@ export async function getCustomersCustomerPaymentMethodsPaymentMethod<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List sources for a specified customer.</p>
@@ -29949,26 +32148,32 @@ export async function getCustomersCustomerSources<FetcherData>(
     object?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: (BankAccount | Card | Source)[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: (BankAccount | Card | Source)[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/sources',
     params,
@@ -29984,7 +32189,7 @@ export async function getCustomersCustomerSources<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p>
@@ -30001,9 +32206,11 @@ export async function postCustomersCustomerSources<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentSource> {
+): Promise<
+  r.StatusResponse<200, PaymentSource> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/sources',
     params,
@@ -30012,7 +32219,7 @@ export async function postCustomersCustomerSources<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Delete a specified source for a given customer.</p>
@@ -30023,9 +32230,12 @@ export async function deleteCustomersCustomerSourcesId<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentSource | DeletedPaymentSource> {
+): Promise<
+  | r.StatusResponse<200, PaymentSource | DeletedPaymentSource>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/sources/{id}',
     params,
@@ -30034,7 +32244,7 @@ export async function deleteCustomersCustomerSourcesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve a specified source for a given customer.</p>
@@ -30046,9 +32256,11 @@ export async function getCustomersCustomerSourcesId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentSource> {
+): Promise<
+  r.StatusResponse<200, PaymentSource> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/sources/{id}',
     params,
@@ -30058,7 +32270,7 @@ export async function getCustomersCustomerSourcesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Update a specified source for a given customer.</p>
@@ -30069,9 +32281,12 @@ export async function postCustomersCustomerSourcesId<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Card | BankAccount | Source> {
+): Promise<
+  | r.StatusResponse<200, Card | BankAccount | Source>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/sources/{id}',
     params,
@@ -30080,7 +32295,7 @@ export async function postCustomersCustomerSourcesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Verify a specified bank account for a given customer.</p>
@@ -30091,9 +32306,11 @@ export async function postCustomersCustomerSourcesIdVerify<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<BankAccount> {
+): Promise<
+  r.StatusResponse<200, BankAccount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/sources/{id}/verify',
     params,
@@ -30102,7 +32319,7 @@ export async function postCustomersCustomerSourcesIdVerify<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can see a list of the customer’s active subscriptions. Note that the 10 most recent active subscriptions are
@@ -30118,26 +32335,32 @@ export async function getCustomersCustomerSubscriptions<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Subscription[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Subscription[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/subscriptions',
     params,
@@ -30147,7 +32370,7 @@ export async function getCustomersCustomerSubscriptions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new subscription on an existing customer.</p>
@@ -30157,9 +32380,11 @@ export async function postCustomersCustomerSubscriptions<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/subscriptions',
     params,
@@ -30168,7 +32393,7 @@ export async function postCustomersCustomerSubscriptions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels a customer’s subscription. If you set the <code>at_period_end</code> parameter to <code>true</code>, the
@@ -30196,9 +32421,11 @@ export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedId<
     customer: string;
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/subscriptions/{subscription_exposed_id}',
     params,
@@ -30207,7 +32434,7 @@ export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedId<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the subscription with the given ID.</p>
@@ -30221,9 +32448,11 @@ export async function getCustomersCustomerSubscriptionsSubscriptionExposedId<
     expand?: string[];
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/subscriptions/{subscription_exposed_id}',
     params,
@@ -30233,7 +32462,7 @@ export async function getCustomersCustomerSubscriptionsSubscriptionExposedId<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing subscription on a customer to match the specified parameters. When changing plans or quantities,
@@ -30248,9 +32477,11 @@ export async function postCustomersCustomerSubscriptionsSubscriptionExposedId<
     customer: string;
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/subscriptions/{subscription_exposed_id}',
     params,
@@ -30259,7 +32490,7 @@ export async function postCustomersCustomerSubscriptionsSubscriptionExposedId<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Removes the currently applied discount on a customer.</p>
@@ -30272,9 +32503,11 @@ export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedIdD
     customer: string;
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedDiscount> {
+): Promise<
+  r.StatusResponse<200, DeletedDiscount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/subscriptions/{subscription_exposed_id}/discount',
     params,
@@ -30283,7 +32516,7 @@ export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedIdD
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 export async function getCustomersCustomerSubscriptionsSubscriptionExposedIdDiscount<
   FetcherData,
@@ -30294,9 +32527,11 @@ export async function getCustomersCustomerSubscriptionsSubscriptionExposedIdDisc
     expand?: string[];
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Discount> {
+): Promise<
+  r.StatusResponse<200, Discount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/subscriptions/{subscription_exposed_id}/discount',
     params,
@@ -30306,7 +32541,7 @@ export async function getCustomersCustomerSubscriptionsSubscriptionExposedIdDisc
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of tax IDs for a customer.</p>
@@ -30320,26 +32555,32 @@ export async function getCustomersCustomerTaxIds<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TaxId[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TaxId[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/tax_ids',
     params,
@@ -30349,7 +32590,7 @@ export async function getCustomersCustomerTaxIds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new <code>tax_id</code> object for a customer.</p>
@@ -30359,9 +32600,9 @@ export async function postCustomersCustomerTaxIds<FetcherData>(
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxId> {
+): Promise<r.StatusResponse<200, TaxId> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/tax_ids',
     params,
@@ -30370,7 +32611,7 @@ export async function postCustomersCustomerTaxIds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes an existing <code>tax_id</code> object.</p>
@@ -30381,9 +32622,11 @@ export async function deleteCustomersCustomerTaxIdsId<FetcherData>(
     customer: string;
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedTaxId> {
+): Promise<
+  r.StatusResponse<200, DeletedTaxId> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/tax_ids/{id}',
     params,
@@ -30392,7 +32635,7 @@ export async function deleteCustomersCustomerTaxIdsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the <code>tax_id</code> object with the given identifier.</p>
@@ -30404,9 +32647,9 @@ export async function getCustomersCustomerTaxIdsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxId> {
+): Promise<r.StatusResponse<200, TaxId> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/customers/{customer}/tax_ids/{id}',
     params,
@@ -30416,7 +32659,7 @@ export async function getCustomersCustomerTaxIdsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your disputes.</p>
@@ -30439,23 +32682,29 @@ export async function getDisputes<FetcherData>(
     payment_intent?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Dispute[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Dispute[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/disputes',
     params,
@@ -30473,7 +32722,7 @@ export async function getDisputes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the dispute with the given ID.</p>
@@ -30484,9 +32733,11 @@ export async function getDisputesDispute<FetcherData>(
     dispute: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Dispute> {
+): Promise<
+  r.StatusResponse<200, Dispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/disputes/{dispute}',
     params,
@@ -30496,7 +32747,7 @@ export async function getDisputesDispute<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you get a dispute, contacting your customer is always the best first step. If that doesn’t work, you can submit
@@ -30513,9 +32764,11 @@ export async function postDisputesDispute<FetcherData>(
   params: {
     dispute: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Dispute> {
+): Promise<
+  r.StatusResponse<200, Dispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/disputes/{dispute}',
     params,
@@ -30524,7 +32777,7 @@ export async function postDisputesDispute<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Closing the dispute for a charge indicates that you do not have any evidence to submit and are essentially dismissing
@@ -30538,9 +32791,11 @@ export async function postDisputesDisputeClose<FetcherData>(
   params: {
     dispute: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Dispute> {
+): Promise<
+  r.StatusResponse<200, Dispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/disputes/{dispute}/close',
     params,
@@ -30549,7 +32804,211 @@ export async function postDisputesDisputeClose<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieve a list of active entitlements for a customer</p>
+ */
+export async function getEntitlementsActiveEntitlements<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    customer: string;
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    starting_after?: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: EntitlementsActiveEntitlement[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/entitlements/active_entitlements',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'customer',
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieve an active entitlement</p>
+ */
+export async function getEntitlementsActiveEntitlementsId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, EntitlementsActiveEntitlement>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/entitlements/active_entitlements/{id}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieve a list of features</p>
+ */
+export async function getEntitlementsFeatures<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    archived?: boolean;
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    lookup_key?: string;
+    starting_after?: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: EntitlementsFeature[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/entitlements/features',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'archived',
+      'ending_before',
+      'expand',
+      'limit',
+      'lookup_key',
+      'starting_after',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a feature</p>
+ */
+export async function postEntitlementsFeatures<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, EntitlementsFeature>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/entitlements/features',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieves a feature</p>
+ */
+export async function getEntitlementsFeaturesId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, EntitlementsFeature>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/entitlements/features/{id}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Update a feature’s metadata or permanently deactivate it.</p>
+ */
+export async function postEntitlementsFeaturesId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, EntitlementsFeature>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/entitlements/features/{id}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a short-lived API key for a given resource.</p>
@@ -30557,9 +33016,11 @@ export async function postDisputesDisputeClose<FetcherData>(
 export async function postEphemeralKeys<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<EphemeralKey> {
+): Promise<
+  r.StatusResponse<200, EphemeralKey> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/ephemeral_keys',
     params,
@@ -30568,7 +33029,7 @@ export async function postEphemeralKeys<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Invalidates a short-lived API key for a given resource.</p>
@@ -30578,9 +33039,11 @@ export async function deleteEphemeralKeysKey<FetcherData>(
   params: {
     key: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<EphemeralKey> {
+): Promise<
+  r.StatusResponse<200, EphemeralKey> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/ephemeral_keys/{key}',
     params,
@@ -30589,12 +33052,12 @@ export async function deleteEphemeralKeysKey<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List events, going back up to 30 days. Each event data is rendered according to Stripe API version at its creation
- * time, specified in <a href="/docs/api/events/object">event object</a> <code>api_version</code> attribute (not according
- * to your current Stripe API version or <code>Stripe-Version</code> header).</p>
+ * time, specified in <a href="https://docs.stripe.com/api/events/object">event object</a> <code>api_version</code>
+ * attribute (not according to your current Stripe API version or <code>Stripe-Version</code> header).</p>
  */
 export async function getEvents<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -30615,23 +33078,29 @@ export async function getEvents<FetcherData>(
     type?: string;
     types?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Event[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Event[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/events',
     params,
@@ -30650,7 +33119,7 @@ export async function getEvents<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an event. Supply the unique identifier of the event, which you might have received in a
@@ -30662,9 +33131,9 @@ export async function getEventsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Event> {
+): Promise<r.StatusResponse<200, Event> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/events/{id}',
     params,
@@ -30674,7 +33143,7 @@ export async function getEventsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of objects that contain the rates at which foreign currencies are converted to one another. Only shows
@@ -30688,23 +33157,29 @@ export async function getExchangeRates<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ExchangeRate[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ExchangeRate[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/exchange_rates',
     params,
@@ -30714,7 +33189,7 @@ export async function getExchangeRates<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the exchange rates from the given currency to every supported currency.</p>
@@ -30725,9 +33200,11 @@ export async function getExchangeRatesRateId<FetcherData>(
     expand?: string[];
     rate_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ExchangeRate> {
+): Promise<
+  r.StatusResponse<200, ExchangeRate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/exchange_rates/{rate_id}',
     params,
@@ -30737,7 +33214,7 @@ export async function getExchangeRatesRateId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of file links.</p>
@@ -30760,26 +33237,32 @@ export async function getFileLinks<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: FileLink[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: FileLink[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/file_links',
     params,
@@ -30797,7 +33280,7 @@ export async function getFileLinks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new file link object.</p>
@@ -30805,9 +33288,11 @@ export async function getFileLinks<FetcherData>(
 export async function postFileLinks<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FileLink> {
+): Promise<
+  r.StatusResponse<200, FileLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/file_links',
     params,
@@ -30816,7 +33301,7 @@ export async function postFileLinks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the file link with the given ID.</p>
@@ -30827,9 +33312,11 @@ export async function getFileLinksLink<FetcherData>(
     expand?: string[];
     link: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FileLink> {
+): Promise<
+  r.StatusResponse<200, FileLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/file_links/{link}',
     params,
@@ -30839,7 +33326,7 @@ export async function getFileLinksLink<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing file link object. Expired links can no longer be updated.</p>
@@ -30849,9 +33336,11 @@ export async function postFileLinksLink<FetcherData>(
   params: {
     link: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FileLink> {
+): Promise<
+  r.StatusResponse<200, FileLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/file_links/{link}',
     params,
@@ -30860,7 +33349,7 @@ export async function postFileLinksLink<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of the files that your account has access to. Stripe sorts and returns the files by their creation
@@ -30898,23 +33387,29 @@ export async function getFiles<FetcherData>(
       | 'terminal_reader_splashscreen';
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: File[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: File[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/files',
     params,
@@ -30931,7 +33426,7 @@ export async function getFiles<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>To upload a file to Stripe, you need to send a request of type <code>multipart/form-data</code>. Include the file you
@@ -30943,9 +33438,9 @@ export async function getFiles<FetcherData>(
 export async function postFiles<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<File> {
+): Promise<r.StatusResponse<200, File> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/files',
     params,
@@ -30954,7 +33449,7 @@ export async function postFiles<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing file object. After you supply a unique file ID, Stripe returns the corresponding
@@ -30966,9 +33461,9 @@ export async function getFilesFile<FetcherData>(
     expand?: string[];
     file: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<File> {
+): Promise<r.StatusResponse<200, File> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/files/{file}',
     params,
@@ -30978,7 +33473,7 @@ export async function getFilesFile<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Financial Connections <code>Account</code> objects.</p>
@@ -30996,26 +33491,32 @@ export async function getFinancialConnectionsAccounts<FetcherData>(
     session?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: FinancialConnectionsAccount[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: FinancialConnectionsAccount[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/accounts',
     params,
@@ -31032,7 +33533,7 @@ export async function getFinancialConnectionsAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an Financial Connections <code>Account</code>.</p>
@@ -31043,9 +33544,12 @@ export async function getFinancialConnectionsAccountsAccount<FetcherData>(
     account: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/accounts/{account}',
     params,
@@ -31055,7 +33559,7 @@ export async function getFinancialConnectionsAccountsAccount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data
@@ -31068,9 +33572,12 @@ export async function postFinancialConnectionsAccountsAccountDisconnect<
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/accounts/{account}/disconnect',
     params,
@@ -31079,7 +33586,7 @@ export async function postFinancialConnectionsAccountsAccountDisconnect<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists all owners for a given <code>Account</code></p>
@@ -31094,26 +33601,32 @@ export async function getFinancialConnectionsAccountsAccountOwners<FetcherData>(
     ownership: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: FinancialConnectionsAccountOwner[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: FinancialConnectionsAccountOwner[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/accounts/{account}/owners',
     params,
@@ -31129,7 +33642,7 @@ export async function getFinancialConnectionsAccountsAccountOwners<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>
@@ -31141,9 +33654,12 @@ export async function postFinancialConnectionsAccountsAccountRefresh<
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/accounts/{account}/refresh',
     params,
@@ -31152,7 +33668,7 @@ export async function postFinancialConnectionsAccountsAccountRefresh<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Subscribes to periodic refreshes of data associated with a Financial Connections <code>Account</code>.</p>
@@ -31164,9 +33680,12 @@ export async function postFinancialConnectionsAccountsAccountSubscribe<
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/accounts/{account}/subscribe',
     params,
@@ -31175,7 +33694,7 @@ export async function postFinancialConnectionsAccountsAccountSubscribe<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Unsubscribes from periodic refreshes of data associated with a Financial Connections <code>Account</code>.</p>
@@ -31187,9 +33706,12 @@ export async function postFinancialConnectionsAccountsAccountUnsubscribe<
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/accounts/{account}/unsubscribe',
     params,
@@ -31198,7 +33720,7 @@ export async function postFinancialConnectionsAccountsAccountUnsubscribe<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s
@@ -31207,9 +33729,12 @@ export async function postFinancialConnectionsAccountsAccountUnsubscribe<
 export async function postFinancialConnectionsSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsSession> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/sessions',
     params,
@@ -31218,7 +33743,7 @@ export async function postFinancialConnectionsSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a Financial Connections <code>Session</code></p>
@@ -31229,9 +33754,12 @@ export async function getFinancialConnectionsSessionsSession<FetcherData>(
     expand?: string[];
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsSession> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/sessions/{session}',
     params,
@@ -31241,7 +33769,7 @@ export async function getFinancialConnectionsSessionsSession<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Financial Connections <code>Transaction</code> objects.</p>
@@ -31266,26 +33794,32 @@ export async function getFinancialConnectionsTransactions<FetcherData>(
       after: string;
     };
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: FinancialConnectionsTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: FinancialConnectionsTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/transactions',
     params,
@@ -31303,7 +33837,7 @@ export async function getFinancialConnectionsTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a Financial Connections <code>Transaction</code></p>
@@ -31316,9 +33850,12 @@ export async function getFinancialConnectionsTransactionsTransaction<
     expand?: string[];
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsTransaction> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsTransaction>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/financial_connections/transactions/{transaction}',
     params,
@@ -31328,7 +33865,110 @@ export async function getFinancialConnectionsTransactionsTransaction<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Lists all ForwardingRequest objects.</p>
+ */
+export async function getForwardingRequests<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    created?: {
+      gt?: number;
+      gte?: number;
+      lt?: number;
+      lte?: number;
+    };
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    starting_after?: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ForwardingRequest[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/forwarding/requests',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'created',
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a ForwardingRequest object.</p>
+ */
+export async function postForwardingRequests<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, ForwardingRequest> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/forwarding/requests',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieves a ForwardingRequest object.</p>
+ */
+export async function getForwardingRequestsId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, ForwardingRequest> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/forwarding/requests/{id}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List all verification reports.</p>
@@ -31352,23 +33992,29 @@ export async function getIdentityVerificationReports<FetcherData>(
     type?: 'document' | 'id_number';
     verification_session?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IdentityVerificationReport[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IdentityVerificationReport[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_reports',
     params,
@@ -31387,7 +34033,7 @@ export async function getIdentityVerificationReports<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an existing VerificationReport</p>
@@ -31398,9 +34044,12 @@ export async function getIdentityVerificationReportsReport<FetcherData>(
     expand?: string[];
     report: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IdentityVerificationReport> {
+): Promise<
+  | r.StatusResponse<200, IdentityVerificationReport>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_reports/{report}',
     params,
@@ -31410,7 +34059,7 @@ export async function getIdentityVerificationReportsReport<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of VerificationSessions</p>
@@ -31433,23 +34082,29 @@ export async function getIdentityVerificationSessions<FetcherData>(
     starting_after?: string;
     status?: 'canceled' | 'processing' | 'requires_input' | 'verified';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IdentityVerificationSession[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IdentityVerificationSession[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_sessions',
     params,
@@ -31467,7 +34122,7 @@ export async function getIdentityVerificationSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a VerificationSession object.</p>
@@ -31485,9 +34140,12 @@ export async function getIdentityVerificationSessions<FetcherData>(
 export async function postIdentityVerificationSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IdentityVerificationSession> {
+): Promise<
+  | r.StatusResponse<200, IdentityVerificationSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_sessions',
     params,
@@ -31496,7 +34154,7 @@ export async function postIdentityVerificationSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a VerificationSession that was previously created.</p>
@@ -31512,9 +34170,12 @@ export async function getIdentityVerificationSessionsSession<FetcherData>(
     expand?: string[];
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IdentityVerificationSession> {
+): Promise<
+  | r.StatusResponse<200, IdentityVerificationSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_sessions/{session}',
     params,
@@ -31524,7 +34185,7 @@ export async function getIdentityVerificationSessionsSession<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a VerificationSession object.</p>
@@ -31538,9 +34199,12 @@ export async function postIdentityVerificationSessionsSession<FetcherData>(
   params: {
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IdentityVerificationSession> {
+): Promise<
+  | r.StatusResponse<200, IdentityVerificationSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_sessions/{session}',
     params,
@@ -31549,7 +34213,7 @@ export async function postIdentityVerificationSessionsSession<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>A VerificationSession object can be canceled when it is in <code>requires_input</code> <a
@@ -31565,9 +34229,12 @@ export async function postIdentityVerificationSessionsSessionCancel<
   params: {
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IdentityVerificationSession> {
+): Promise<
+  | r.StatusResponse<200, IdentityVerificationSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_sessions/{session}/cancel',
     params,
@@ -31576,7 +34243,7 @@ export async function postIdentityVerificationSessionsSessionCancel<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Redact a VerificationSession to remove all collected information from Stripe. This will redact
@@ -31617,9 +34284,12 @@ export async function postIdentityVerificationSessionsSessionRedact<
   params: {
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IdentityVerificationSession> {
+): Promise<
+  | r.StatusResponse<200, IdentityVerificationSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/identity/verification_sessions/{session}/redact',
     params,
@@ -31628,7 +34298,7 @@ export async function postIdentityVerificationSessionsSessionRedact<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your invoice items. Invoice items are returned sorted by creation date, with the most recently
@@ -31653,23 +34323,29 @@ export async function getInvoiceitems<FetcherData>(
     pending?: boolean;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Invoiceitem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Invoiceitem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoiceitems',
     params,
@@ -31688,7 +34364,7 @@ export async function getInvoiceitems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an item to be added to a draft invoice (up to 250 items per invoice). If no invoice is specified, the item
@@ -31697,9 +34373,11 @@ export async function getInvoiceitems<FetcherData>(
 export async function postInvoiceitems<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoiceitem> {
+): Promise<
+  r.StatusResponse<200, Invoiceitem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoiceitems',
     params,
@@ -31708,7 +34386,7 @@ export async function postInvoiceitems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes an invoice item, removing it from an invoice. Deleting invoice items is only possible when they’re not
@@ -31719,9 +34397,11 @@ export async function deleteInvoiceitemsInvoiceitem<FetcherData>(
   params: {
     invoiceitem: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedInvoiceitem> {
+): Promise<
+  r.StatusResponse<200, DeletedInvoiceitem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoiceitems/{invoiceitem}',
     params,
@@ -31730,7 +34410,7 @@ export async function deleteInvoiceitemsInvoiceitem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the invoice item with the given ID.</p>
@@ -31741,9 +34421,11 @@ export async function getInvoiceitemsInvoiceitem<FetcherData>(
     expand?: string[];
     invoiceitem: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoiceitem> {
+): Promise<
+  r.StatusResponse<200, Invoiceitem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoiceitems/{invoiceitem}',
     params,
@@ -31753,7 +34435,7 @@ export async function getInvoiceitemsInvoiceitem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the amount or description of an invoice item on an upcoming invoice. Updating an invoice item is only
@@ -31764,9 +34446,11 @@ export async function postInvoiceitemsInvoiceitem<FetcherData>(
   params: {
     invoiceitem: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoiceitem> {
+): Promise<
+  r.StatusResponse<200, Invoiceitem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoiceitems/{invoiceitem}',
     params,
@@ -31775,7 +34459,7 @@ export async function postInvoiceitemsInvoiceitem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can list all invoices, or list the invoices for a specific customer. The invoices are returned sorted by creation
@@ -31809,23 +34493,29 @@ export async function getInvoices<FetcherData>(
     status?: 'draft' | 'open' | 'paid' | 'uncollectible' | 'void';
     subscription?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Invoice[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Invoice[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices',
     params,
@@ -31846,7 +34536,7 @@ export async function getInvoices<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>This endpoint creates a draft invoice for a given customer. The invoice remains a draft until you <a
@@ -31856,9 +34546,11 @@ export async function getInvoices<FetcherData>(
 export async function postInvoices<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices',
     params,
@@ -31867,7 +34559,46 @@ export async function postInvoices<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>At any time, you can preview the upcoming invoice for a customer. This will show you all the charges that are
+ * pending, including subscription renewal charges, invoice item charges, etc. It will also show you any discounts that are
+ * applicable to the invoice.</p>
+ *
+ * <p>Note that when you are viewing an upcoming invoice, you are simply viewing a preview
+ * – the invoice has not yet been created. As such, the upcoming invoice will not show up in invoice listing calls, and you
+ * cannot use the API to pay or edit the invoice. If you want to change the amount that your customer will be billed, you
+ * can add, remove, or update pending invoice items, or update the customer’s discount.</p>
+ *
+ * <p>You can preview the effects
+ * of updating a subscription, including a preview of what proration will take place. To ensure that the actual proration
+ * is calculated exactly the same as the previewed proration, you should pass the
+ * <code>subscription_details.proration_date</code> parameter when doing the actual subscription update. The recommended
+ * way to get only the prorations being previewed is to consider only proration line items where <code>period[start]</code>
+ * is equal to the <code>subscription_details.proration_date</code> value passed in the request. </p>
+ *
+ * <p>Note: Currency
+ * conversion calculations use the latest exchange rates. Exchange rates may vary between the time of the preview and the
+ * time of the actual invoice creation. <a href="https://docs.stripe.com/currencies/conversions">Learn more</a></p>
+ */
+export async function postInvoicesCreatePreview<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/invoices/create_preview',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Search for invoices you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search
@@ -31886,22 +34617,28 @@ export async function getInvoicesSearch<FetcherData>(
     page?: string;
     query: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Invoice[];
-  has_more: boolean;
-  next_page?: string | null;
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'search_result';
-  /**
-   * The total number of objects that match the query, only accurate up to 10,000.
-   */
-  total_count?: number;
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Invoice[];
+        has_more: boolean;
+        next_page?: string | null;
+        /**
+         * String representing the object's type. Objects of the same type share the same value.
+         */
+        object: 'search_result';
+        /**
+         * The total number of objects that match the query, only accurate up to 10,000.
+         */
+        total_count?: number;
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/search',
     params,
@@ -31911,7 +34648,7 @@ export async function getInvoicesSearch<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>At any time, you can preview the upcoming invoice for a customer. This will show you all the charges that are
@@ -31925,11 +34662,14 @@ export async function getInvoicesSearch<FetcherData>(
  *
  * <p>You can preview the effects
  * of updating a subscription, including a preview of what proration will take place. To ensure that the actual proration
- * is calculated exactly the same as the previewed proration, you should pass a <code>proration_date</code> parameter when
- * doing the actual subscription update. The value passed in should be the same as the
- * <code>subscription_proration_date</code> returned on the upcoming invoice resource. The recommended way to get only the
- * prorations being previewed is to consider only proration line items where <code>period[start]</code> is equal to the
- * <code>subscription_proration_date</code> on the upcoming invoice resource.</p>
+ * is calculated exactly the same as the previewed proration, you should pass the
+ * <code>subscription_details.proration_date</code> parameter when doing the actual subscription update. The recommended
+ * way to get only the prorations being previewed is to consider only proration line items where <code>period[start]</code>
+ * is equal to the <code>subscription_details.proration_date</code> value passed in the request.</p>
+ *
+ * <p>Note: Currency
+ * conversion calculations use the latest exchange rates. Exchange rates may vary between the time of the preview and the
+ * time of the actual invoice creation. <a href="https://docs.stripe.com/currencies/conversions">Learn more</a></p>
  */
 export async function getInvoicesUpcoming<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -31990,6 +34730,7 @@ export async function getInvoicesUpcoming<FetcherData>(
           | 'au_abn'
           | 'au_arn'
           | 'bg_uic'
+          | 'bh_vat'
           | 'bo_tin'
           | 'br_cnpj'
           | 'br_cpf'
@@ -32023,14 +34764,17 @@ export async function getInvoicesUpcoming<FetcherData>(
           | 'jp_trn'
           | 'ke_pin'
           | 'kr_brn'
+          | 'kz_bin'
           | 'li_uid'
           | 'mx_rfc'
           | 'my_frp'
           | 'my_itn'
           | 'my_sst'
+          | 'ng_tin'
           | 'no_vat'
           | 'no_voec'
           | 'nz_gst'
+          | 'om_vat'
           | 'pe_ruc'
           | 'ph_tin'
           | 'ro_tin'
@@ -32110,13 +34854,195 @@ export async function getInvoicesUpcoming<FetcherData>(
       type: 'account' | 'self';
     };
     on_behalf_of?: string | '';
+    preview_mode?: 'next' | 'recurring';
     schedule?: string;
+    schedule_details?: {
+      end_behavior?: 'cancel' | 'release';
+      phases?: {
+        add_invoice_items?: {
+          discounts?: {
+            coupon?: string;
+            discount?: string;
+            promotion_code?: string;
+          }[];
+          price?: string;
+          /**
+           * one_time_price_data_with_negative_amounts
+           */
+          price_data?: {
+            currency: string;
+            product: string;
+            tax_behavior?: 'exclusive' | 'inclusive' | 'unspecified';
+            unit_amount?: number;
+            unit_amount_decimal?: string;
+          };
+          quantity?: number;
+          tax_rates?: string[] | '';
+        }[];
+        application_fee_percent?: number;
+        /**
+         * automatic_tax_config
+         */
+        automatic_tax?: {
+          enabled: boolean;
+          /**
+           * param
+           */
+          liability?: {
+            account?: string;
+            type: 'account' | 'self';
+          };
+        };
+        billing_cycle_anchor?: 'automatic' | 'phase_start';
+        billing_thresholds?:
+          | {
+              amount_gte?: number;
+              reset_billing_cycle_anchor?: boolean;
+            }
+          | '';
+        collection_method?: 'charge_automatically' | 'send_invoice';
+        coupon?: string;
+        default_payment_method?: string;
+        default_tax_rates?: string[] | '';
+        description?: string | '';
+        discounts?:
+          | {
+              coupon?: string;
+              discount?: string;
+              promotion_code?: string;
+            }[]
+          | '';
+        end_date?: number | 'now';
+        /**
+         * invoice_settings
+         */
+        invoice_settings?: {
+          account_tax_ids?: string[] | '';
+          days_until_due?: number;
+          /**
+           * param
+           */
+          issuer?: {
+            account?: string;
+            type: 'account' | 'self';
+          };
+        };
+        items: {
+          billing_thresholds?:
+            | {
+                usage_gte: number;
+              }
+            | '';
+          discounts?:
+            | {
+                coupon?: string;
+                discount?: string;
+                promotion_code?: string;
+              }[]
+            | '';
+          metadata?: {
+            [key: string]: string;
+          };
+          price?: string;
+          /**
+           * recurring_price_data
+           */
+          price_data?: {
+            currency: string;
+            product: string;
+            /**
+             * recurring_adhoc
+             */
+            recurring: {
+              interval: 'day' | 'month' | 'week' | 'year';
+              interval_count?: number;
+            };
+            tax_behavior?: 'exclusive' | 'inclusive' | 'unspecified';
+            unit_amount?: number;
+            unit_amount_decimal?: string;
+          };
+          quantity?: number;
+          tax_rates?: string[] | '';
+        }[];
+        iterations?: number;
+        metadata?: {
+          [key: string]: string;
+        };
+        on_behalf_of?: string;
+        proration_behavior?: 'always_invoice' | 'create_prorations' | 'none';
+        start_date?: number | 'now';
+        /**
+         * transfer_data_specs
+         */
+        transfer_data?: {
+          amount_percent?: number;
+          destination: string;
+        };
+        trial?: boolean;
+        trial_end?: number | 'now';
+      }[];
+      proration_behavior?: 'always_invoice' | 'create_prorations' | 'none';
+    };
     subscription?: string;
     subscription_billing_cycle_anchor?: ('now' | 'unchanged') | number;
     subscription_cancel_at?: number | '';
     subscription_cancel_at_period_end?: boolean;
     subscription_cancel_now?: boolean;
     subscription_default_tax_rates?: string[] | '';
+    subscription_details?: {
+      billing_cycle_anchor?: ('now' | 'unchanged') | number;
+      cancel_at?: number | '';
+      cancel_at_period_end?: boolean;
+      cancel_now?: boolean;
+      default_tax_rates?: string[] | '';
+      items?: {
+        billing_thresholds?:
+          | {
+              usage_gte: number;
+            }
+          | '';
+        clear_usage?: boolean;
+        deleted?: boolean;
+        discounts?:
+          | {
+              coupon?: string;
+              discount?: string;
+              promotion_code?: string;
+            }[]
+          | '';
+        id?: string;
+        metadata?:
+          | {
+              [key: string]: string;
+            }
+          | '';
+        price?: string;
+        /**
+         * recurring_price_data
+         */
+        price_data?: {
+          currency: string;
+          product: string;
+          /**
+           * recurring_adhoc
+           */
+          recurring: {
+            interval: 'day' | 'month' | 'week' | 'year';
+            interval_count?: number;
+          };
+          tax_behavior?: 'exclusive' | 'inclusive' | 'unspecified';
+          unit_amount?: number;
+          unit_amount_decimal?: string;
+        };
+        quantity?: number;
+        tax_rates?: string[] | '';
+      }[];
+      proration_behavior?: 'always_invoice' | 'create_prorations' | 'none';
+      proration_date?: number;
+      resume_at?: 'now';
+      start_date?: number;
+      trial_end?: 'now' | number;
+    };
     subscription_items?: {
       billing_thresholds?:
         | {
@@ -32125,6 +35051,13 @@ export async function getInvoicesUpcoming<FetcherData>(
         | '';
       clear_usage?: boolean;
       deleted?: boolean;
+      discounts?:
+        | {
+            coupon?: string;
+            discount?: string;
+            promotion_code?: string;
+          }[]
+        | '';
       id?: string;
       metadata?:
         | {
@@ -32160,11 +35093,12 @@ export async function getInvoicesUpcoming<FetcherData>(
     subscription_resume_at?: 'now';
     subscription_start_date?: number;
     subscription_trial_end?: 'now' | number;
-    subscription_trial_from_plan?: boolean;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/upcoming',
     params,
@@ -32181,25 +35115,27 @@ export async function getInvoicesUpcoming<FetcherData>(
       'invoice_items',
       'issuer',
       'on_behalf_of',
+      'preview_mode',
       'schedule',
+      'schedule_details',
       'subscription',
       'subscription_billing_cycle_anchor',
       'subscription_cancel_at',
       'subscription_cancel_at_period_end',
       'subscription_cancel_now',
       'subscription_default_tax_rates',
+      'subscription_details',
       'subscription_items',
       'subscription_proration_behavior',
       'subscription_proration_date',
       'subscription_resume_at',
       'subscription_start_date',
       'subscription_trial_end',
-      'subscription_trial_from_plan',
     ],
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When retrieving an upcoming invoice, you’ll get a <strong>lines</strong> property containing the total count of line
@@ -32265,6 +35201,7 @@ export async function getInvoicesUpcomingLines<FetcherData>(
           | 'au_abn'
           | 'au_arn'
           | 'bg_uic'
+          | 'bh_vat'
           | 'bo_tin'
           | 'br_cnpj'
           | 'br_cpf'
@@ -32298,14 +35235,17 @@ export async function getInvoicesUpcomingLines<FetcherData>(
           | 'jp_trn'
           | 'ke_pin'
           | 'kr_brn'
+          | 'kz_bin'
           | 'li_uid'
           | 'mx_rfc'
           | 'my_frp'
           | 'my_itn'
           | 'my_sst'
+          | 'ng_tin'
           | 'no_vat'
           | 'no_voec'
           | 'nz_gst'
+          | 'om_vat'
           | 'pe_ruc'
           | 'ph_tin'
           | 'ro_tin'
@@ -32387,7 +35327,135 @@ export async function getInvoicesUpcomingLines<FetcherData>(
     };
     limit?: number;
     on_behalf_of?: string | '';
+    preview_mode?: 'next' | 'recurring';
     schedule?: string;
+    schedule_details?: {
+      end_behavior?: 'cancel' | 'release';
+      phases?: {
+        add_invoice_items?: {
+          discounts?: {
+            coupon?: string;
+            discount?: string;
+            promotion_code?: string;
+          }[];
+          price?: string;
+          /**
+           * one_time_price_data_with_negative_amounts
+           */
+          price_data?: {
+            currency: string;
+            product: string;
+            tax_behavior?: 'exclusive' | 'inclusive' | 'unspecified';
+            unit_amount?: number;
+            unit_amount_decimal?: string;
+          };
+          quantity?: number;
+          tax_rates?: string[] | '';
+        }[];
+        application_fee_percent?: number;
+        /**
+         * automatic_tax_config
+         */
+        automatic_tax?: {
+          enabled: boolean;
+          /**
+           * param
+           */
+          liability?: {
+            account?: string;
+            type: 'account' | 'self';
+          };
+        };
+        billing_cycle_anchor?: 'automatic' | 'phase_start';
+        billing_thresholds?:
+          | {
+              amount_gte?: number;
+              reset_billing_cycle_anchor?: boolean;
+            }
+          | '';
+        collection_method?: 'charge_automatically' | 'send_invoice';
+        coupon?: string;
+        default_payment_method?: string;
+        default_tax_rates?: string[] | '';
+        description?: string | '';
+        discounts?:
+          | {
+              coupon?: string;
+              discount?: string;
+              promotion_code?: string;
+            }[]
+          | '';
+        end_date?: number | 'now';
+        /**
+         * invoice_settings
+         */
+        invoice_settings?: {
+          account_tax_ids?: string[] | '';
+          days_until_due?: number;
+          /**
+           * param
+           */
+          issuer?: {
+            account?: string;
+            type: 'account' | 'self';
+          };
+        };
+        items: {
+          billing_thresholds?:
+            | {
+                usage_gte: number;
+              }
+            | '';
+          discounts?:
+            | {
+                coupon?: string;
+                discount?: string;
+                promotion_code?: string;
+              }[]
+            | '';
+          metadata?: {
+            [key: string]: string;
+          };
+          price?: string;
+          /**
+           * recurring_price_data
+           */
+          price_data?: {
+            currency: string;
+            product: string;
+            /**
+             * recurring_adhoc
+             */
+            recurring: {
+              interval: 'day' | 'month' | 'week' | 'year';
+              interval_count?: number;
+            };
+            tax_behavior?: 'exclusive' | 'inclusive' | 'unspecified';
+            unit_amount?: number;
+            unit_amount_decimal?: string;
+          };
+          quantity?: number;
+          tax_rates?: string[] | '';
+        }[];
+        iterations?: number;
+        metadata?: {
+          [key: string]: string;
+        };
+        on_behalf_of?: string;
+        proration_behavior?: 'always_invoice' | 'create_prorations' | 'none';
+        start_date?: number | 'now';
+        /**
+         * transfer_data_specs
+         */
+        transfer_data?: {
+          amount_percent?: number;
+          destination: string;
+        };
+        trial?: boolean;
+        trial_end?: number | 'now';
+      }[];
+      proration_behavior?: 'always_invoice' | 'create_prorations' | 'none';
+    };
     starting_after?: string;
     subscription?: string;
     subscription_billing_cycle_anchor?: ('now' | 'unchanged') | number;
@@ -32395,6 +35463,60 @@ export async function getInvoicesUpcomingLines<FetcherData>(
     subscription_cancel_at_period_end?: boolean;
     subscription_cancel_now?: boolean;
     subscription_default_tax_rates?: string[] | '';
+    subscription_details?: {
+      billing_cycle_anchor?: ('now' | 'unchanged') | number;
+      cancel_at?: number | '';
+      cancel_at_period_end?: boolean;
+      cancel_now?: boolean;
+      default_tax_rates?: string[] | '';
+      items?: {
+        billing_thresholds?:
+          | {
+              usage_gte: number;
+            }
+          | '';
+        clear_usage?: boolean;
+        deleted?: boolean;
+        discounts?:
+          | {
+              coupon?: string;
+              discount?: string;
+              promotion_code?: string;
+            }[]
+          | '';
+        id?: string;
+        metadata?:
+          | {
+              [key: string]: string;
+            }
+          | '';
+        price?: string;
+        /**
+         * recurring_price_data
+         */
+        price_data?: {
+          currency: string;
+          product: string;
+          /**
+           * recurring_adhoc
+           */
+          recurring: {
+            interval: 'day' | 'month' | 'week' | 'year';
+            interval_count?: number;
+          };
+          tax_behavior?: 'exclusive' | 'inclusive' | 'unspecified';
+          unit_amount?: number;
+          unit_amount_decimal?: string;
+        };
+        quantity?: number;
+        tax_rates?: string[] | '';
+      }[];
+      proration_behavior?: 'always_invoice' | 'create_prorations' | 'none';
+      proration_date?: number;
+      resume_at?: 'now';
+      start_date?: number;
+      trial_end?: 'now' | number;
+    };
     subscription_items?: {
       billing_thresholds?:
         | {
@@ -32403,6 +35525,13 @@ export async function getInvoicesUpcomingLines<FetcherData>(
         | '';
       clear_usage?: boolean;
       deleted?: boolean;
+      discounts?:
+        | {
+            coupon?: string;
+            discount?: string;
+            promotion_code?: string;
+          }[]
+        | '';
       id?: string;
       metadata?:
         | {
@@ -32438,28 +35567,33 @@ export async function getInvoicesUpcomingLines<FetcherData>(
     subscription_resume_at?: 'now';
     subscription_start_date?: number;
     subscription_trial_end?: 'now' | number;
-    subscription_trial_from_plan?: boolean;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: LineItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: LineItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/upcoming/lines',
     params,
@@ -32478,7 +35612,9 @@ export async function getInvoicesUpcomingLines<FetcherData>(
       'issuer',
       'limit',
       'on_behalf_of',
+      'preview_mode',
       'schedule',
+      'schedule_details',
       'starting_after',
       'subscription',
       'subscription_billing_cycle_anchor',
@@ -32486,18 +35622,18 @@ export async function getInvoicesUpcomingLines<FetcherData>(
       'subscription_cancel_at_period_end',
       'subscription_cancel_now',
       'subscription_default_tax_rates',
+      'subscription_details',
       'subscription_items',
       'subscription_proration_behavior',
       'subscription_proration_date',
       'subscription_resume_at',
       'subscription_start_date',
       'subscription_trial_end',
-      'subscription_trial_from_plan',
     ],
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Permanently deletes a one-off invoice draft. This cannot be undone. Attempts to delete invoices that are no longer in
@@ -32509,9 +35645,11 @@ export async function deleteInvoicesInvoice<FetcherData>(
   params: {
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedInvoice> {
+): Promise<
+  r.StatusResponse<200, DeletedInvoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}',
     params,
@@ -32520,7 +35658,7 @@ export async function deleteInvoicesInvoice<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the invoice with the given ID.</p>
@@ -32531,9 +35669,11 @@ export async function getInvoicesInvoice<FetcherData>(
     expand?: string[];
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}',
     params,
@@ -32543,7 +35683,7 @@ export async function getInvoicesInvoice<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Draft invoices are fully editable. Once an invoice is <a
@@ -32563,9 +35703,11 @@ export async function postInvoicesInvoice<FetcherData>(
   params: {
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}',
     params,
@@ -32574,7 +35716,7 @@ export async function postInvoicesInvoice<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you’d like to
@@ -32585,9 +35727,11 @@ export async function postInvoicesInvoiceFinalize<FetcherData>(
   params: {
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}/finalize',
     params,
@@ -32596,7 +35740,7 @@ export async function postInvoicesInvoiceFinalize<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When retrieving an invoice, you’ll get a <strong>lines</strong> property containing the total count of line items and
@@ -32612,26 +35756,32 @@ export async function getInvoicesInvoiceLines<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: LineItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: LineItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}/lines',
     params,
@@ -32641,7 +35791,7 @@ export async function getInvoicesInvoiceLines<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an invoice’s line item. Some fields, such as <code>tax_amounts</code>, only live on the invoice line item,
@@ -32658,9 +35808,11 @@ export async function postInvoicesInvoiceLinesLineItemId<FetcherData>(
     invoice: string;
     line_item_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<LineItem> {
+): Promise<
+  r.StatusResponse<200, LineItem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}/lines/{line_item_id}',
     params,
@@ -32669,7 +35821,7 @@ export async function postInvoicesInvoiceLinesLineItemId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Marking an invoice as uncollectible is useful for keeping track of bad debts that can be written off for accounting
@@ -32680,9 +35832,11 @@ export async function postInvoicesInvoiceMarkUncollectible<FetcherData>(
   params: {
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}/mark_uncollectible',
     params,
@@ -32691,7 +35845,7 @@ export async function postInvoicesInvoiceMarkUncollectible<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Stripe automatically creates and then attempts to collect payment on invoices for customers on subscriptions
@@ -32704,9 +35858,11 @@ export async function postInvoicesInvoicePay<FetcherData>(
   params: {
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}/pay',
     params,
@@ -32715,7 +35871,7 @@ export async function postInvoicesInvoicePay<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Stripe will automatically send invoices to customers according to your <a
@@ -32731,9 +35887,11 @@ export async function postInvoicesInvoiceSend<FetcherData>(
   params: {
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}/send',
     params,
@@ -32742,21 +35900,28 @@ export async function postInvoicesInvoiceSend<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Mark a finalized invoice as void. This cannot be undone. Voiding an invoice is similar to <a
  * href="#delete_invoice">deletion</a>, however it only applies to finalized invoices and maintains a papertrail where the
  * invoice can still be found.</p>
+ *
+ * <p>Consult with local regulations to determine whether and how an invoice might be
+ * amended, canceled, or voided in the jurisdiction you’re doing business in. You might need to <a
+ * href="#create_invoice">issue another invoice</a> or <a href="#create_credit_note">credit note</a> instead. Stripe
+ * recommends that you consult with your legal counsel for advice specific to your business.</p>
  */
 export async function postInvoicesInvoiceVoid<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Invoice> {
+): Promise<
+  r.StatusResponse<200, Invoice> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/invoices/{invoice}/void',
     params,
@@ -32765,7 +35930,7 @@ export async function postInvoicesInvoiceVoid<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Issuing <code>Authorization</code> objects. The objects are sorted in descending order by creation
@@ -32790,23 +35955,29 @@ export async function getIssuingAuthorizations<FetcherData>(
     starting_after?: string;
     status?: 'closed' | 'pending' | 'reversed';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IssuingAuthorization[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingAuthorization[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/authorizations',
     params,
@@ -32825,7 +35996,7 @@ export async function getIssuingAuthorizations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an Issuing <code>Authorization</code> object.</p>
@@ -32836,9 +36007,12 @@ export async function getIssuingAuthorizationsAuthorization<FetcherData>(
     authorization: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/authorizations/{authorization}',
     params,
@@ -32848,7 +36022,7 @@ export async function getIssuingAuthorizationsAuthorization<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified Issuing <code>Authorization</code> object by setting the values of the parameters passed. Any
@@ -32859,9 +36033,12 @@ export async function postIssuingAuthorizationsAuthorization<FetcherData>(
   params: {
     authorization: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/authorizations/{authorization}',
     params,
@@ -32870,7 +36047,7 @@ export async function postIssuingAuthorizationsAuthorization<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>[Deprecated] Approves a pending Issuing <code>Authorization</code> object. This request should be made within the
@@ -32887,9 +36064,12 @@ export async function postIssuingAuthorizationsAuthorizationApprove<
   params: {
     authorization: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/authorizations/{authorization}/approve',
     params,
@@ -32898,7 +36078,7 @@ export async function postIssuingAuthorizationsAuthorizationApprove<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>[Deprecated] Declines a pending Issuing <code>Authorization</code> object. This request should be made within the
@@ -32915,9 +36095,12 @@ export async function postIssuingAuthorizationsAuthorizationDecline<
   params: {
     authorization: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/authorizations/{authorization}/decline',
     params,
@@ -32926,7 +36109,7 @@ export async function postIssuingAuthorizationsAuthorizationDecline<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Issuing <code>Cardholder</code> objects. The objects are sorted in descending order by creation
@@ -32952,23 +36135,29 @@ export async function getIssuingCardholders<FetcherData>(
     status?: 'active' | 'blocked' | 'inactive';
     type?: 'company' | 'individual';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IssuingCardholder[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingCardholder[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cardholders',
     params,
@@ -32988,7 +36177,7 @@ export async function getIssuingCardholders<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new Issuing <code>Cardholder</code> object that can be issued cards.</p>
@@ -32996,9 +36185,11 @@ export async function getIssuingCardholders<FetcherData>(
 export async function postIssuingCardholders<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCardholder> {
+): Promise<
+  r.StatusResponse<200, IssuingCardholder> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cardholders',
     params,
@@ -33007,7 +36198,7 @@ export async function postIssuingCardholders<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an Issuing <code>Cardholder</code> object.</p>
@@ -33018,9 +36209,11 @@ export async function getIssuingCardholdersCardholder<FetcherData>(
     cardholder: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCardholder> {
+): Promise<
+  r.StatusResponse<200, IssuingCardholder> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cardholders/{cardholder}',
     params,
@@ -33030,7 +36223,7 @@ export async function getIssuingCardholdersCardholder<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified Issuing <code>Cardholder</code> object by setting the values of the parameters passed. Any
@@ -33041,9 +36234,11 @@ export async function postIssuingCardholdersCardholder<FetcherData>(
   params: {
     cardholder: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCardholder> {
+): Promise<
+  r.StatusResponse<200, IssuingCardholder> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cardholders/{cardholder}',
     params,
@@ -33052,7 +36247,7 @@ export async function postIssuingCardholdersCardholder<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Issuing <code>Card</code> objects. The objects are sorted in descending order by creation date,
@@ -33076,27 +36271,34 @@ export async function getIssuingCards<FetcherData>(
     expand?: string[];
     last4?: string;
     limit?: number;
+    personalization_design?: string;
     starting_after?: string;
     status?: 'active' | 'canceled' | 'inactive';
     type?: 'physical' | 'virtual';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IssuingCard[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingCard[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cards',
     params,
@@ -33111,6 +36313,7 @@ export async function getIssuingCards<FetcherData>(
       'expand',
       'last4',
       'limit',
+      'personalization_design',
       'starting_after',
       'status',
       'type',
@@ -33118,7 +36321,7 @@ export async function getIssuingCards<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an Issuing <code>Card</code> object.</p>
@@ -33126,9 +36329,11 @@ export async function getIssuingCards<FetcherData>(
 export async function postIssuingCards<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCard> {
+): Promise<
+  r.StatusResponse<200, IssuingCard> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cards',
     params,
@@ -33137,7 +36342,7 @@ export async function postIssuingCards<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an Issuing <code>Card</code> object.</p>
@@ -33148,9 +36353,11 @@ export async function getIssuingCardsCard<FetcherData>(
     card: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCard> {
+): Promise<
+  r.StatusResponse<200, IssuingCard> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cards/{card}',
     params,
@@ -33160,7 +36367,7 @@ export async function getIssuingCardsCard<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified Issuing <code>Card</code> object by setting the values of the parameters passed. Any parameters
@@ -33171,9 +36378,11 @@ export async function postIssuingCardsCard<FetcherData>(
   params: {
     card: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCard> {
+): Promise<
+  r.StatusResponse<200, IssuingCard> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/cards/{card}',
     params,
@@ -33182,7 +36391,7 @@ export async function postIssuingCardsCard<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Issuing <code>Dispute</code> objects. The objects are sorted in descending order by creation date,
@@ -33206,23 +36415,29 @@ export async function getIssuingDisputes<FetcherData>(
     status?: 'expired' | 'lost' | 'submitted' | 'unsubmitted' | 'won';
     transaction?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IssuingDispute[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingDispute[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/disputes',
     params,
@@ -33240,7 +36455,7 @@ export async function getIssuingDisputes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an Issuing <code>Dispute</code> object. Individual pieces of evidence within the <code>evidence</code> object
@@ -33251,9 +36466,11 @@ export async function getIssuingDisputes<FetcherData>(
 export async function postIssuingDisputes<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingDispute> {
+): Promise<
+  r.StatusResponse<200, IssuingDispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/disputes',
     params,
@@ -33262,7 +36479,7 @@ export async function postIssuingDisputes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an Issuing <code>Dispute</code> object.</p>
@@ -33273,9 +36490,11 @@ export async function getIssuingDisputesDispute<FetcherData>(
     dispute: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingDispute> {
+): Promise<
+  r.StatusResponse<200, IssuingDispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/disputes/{dispute}',
     params,
@@ -33285,7 +36504,7 @@ export async function getIssuingDisputesDispute<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified Issuing <code>Dispute</code> object by setting the values of the parameters passed. Any
@@ -33297,9 +36516,11 @@ export async function postIssuingDisputesDispute<FetcherData>(
   params: {
     dispute: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingDispute> {
+): Promise<
+  r.StatusResponse<200, IssuingDispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/disputes/{dispute}',
     params,
@@ -33308,7 +36529,7 @@ export async function postIssuingDisputesDispute<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Submits an Issuing <code>Dispute</code> to the card network. Stripe validates that all evidence fields required for
@@ -33320,9 +36541,11 @@ export async function postIssuingDisputesDisputeSubmit<FetcherData>(
   params: {
     dispute: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingDispute> {
+): Promise<
+  r.StatusResponse<200, IssuingDispute> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/disputes/{dispute}/submit',
     params,
@@ -33331,61 +36554,224 @@ export async function postIssuingDisputesDisputeSubmit<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>Returns a list of Issuing <code>Settlement</code> objects. The objects are sorted in descending order by creation
- * date, with the most recently created object appearing first.</p>
+ * <p>Returns a list of personalization design objects. The objects are sorted in descending order by creation date, with
+ * the most recently created object appearing first.</p>
  */
-export async function getIssuingSettlements<FetcherData>(
+export async function getIssuingPersonalizationDesigns<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
-    created?:
-      | {
-          gt?: number;
-          gte?: number;
-          lt?: number;
-          lte?: number;
-        }
-      | number;
     ending_before?: string;
     expand?: string[];
     limit?: number;
+    lookup_keys?: string[];
+    preferences?: {
+      is_default?: boolean;
+      is_platform_default?: boolean;
+    };
     starting_after?: string;
+    status?: 'active' | 'inactive' | 'rejected' | 'review';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IssuingSettlement[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingPersonalizationDesign[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
-    path: '/v1/issuing/settlements',
+    path: '/v1/issuing/personalization_designs',
     params,
     method: r.HttpMethod.GET,
     body,
     queryParams: [
-      'created',
       'ending_before',
       'expand',
       'limit',
+      'lookup_keys',
+      'preferences',
       'starting_after',
+      'status',
     ],
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a personalization design object.</p>
+ */
+export async function postIssuingPersonalizationDesigns<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssuingPersonalizationDesign>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/personalization_designs',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieves a personalization design object.</p>
+ */
+export async function getIssuingPersonalizationDesignsPersonalizationDesign<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    personalization_design: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssuingPersonalizationDesign>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/personalization_designs/{personalization_design}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Updates a card personalization object.</p>
+ */
+export async function postIssuingPersonalizationDesignsPersonalizationDesign<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    personalization_design: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssuingPersonalizationDesign>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/personalization_designs/{personalization_design}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Returns a list of physical bundle objects. The objects are sorted in descending order by creation date, with the most
+ * recently created object appearing first.</p>
+ */
+export async function getIssuingPhysicalBundles<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    starting_after?: string;
+    status?: 'active' | 'inactive' | 'review';
+    type?: 'custom' | 'standard';
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingPhysicalBundle[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/physical_bundles',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: [
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+      'status',
+      'type',
+    ],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieves a physical bundle object.</p>
+ */
+export async function getIssuingPhysicalBundlesPhysicalBundle<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    physical_bundle: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssuingPhysicalBundle>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/issuing/physical_bundles/{physical_bundle}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an Issuing <code>Settlement</code> object.</p>
@@ -33396,9 +36782,11 @@ export async function getIssuingSettlementsSettlement<FetcherData>(
     expand?: string[];
     settlement: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingSettlement> {
+): Promise<
+  r.StatusResponse<200, IssuingSettlement> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/settlements/{settlement}',
     params,
@@ -33408,7 +36796,7 @@ export async function getIssuingSettlementsSettlement<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified Issuing <code>Settlement</code> object by setting the values of the parameters passed. Any
@@ -33419,9 +36807,11 @@ export async function postIssuingSettlementsSettlement<FetcherData>(
   params: {
     settlement: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingSettlement> {
+): Promise<
+  r.StatusResponse<200, IssuingSettlement> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/settlements/{settlement}',
     params,
@@ -33430,7 +36820,7 @@ export async function postIssuingSettlementsSettlement<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists all Issuing <code>Token</code> objects for a given card.</p>
@@ -33453,23 +36843,29 @@ export async function getIssuingTokens<FetcherData>(
     starting_after?: string;
     status?: 'active' | 'deleted' | 'requested' | 'suspended';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IssuingToken[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingToken[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/tokens',
     params,
@@ -33487,7 +36883,7 @@ export async function getIssuingTokens<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an Issuing <code>Token</code> object.</p>
@@ -33498,9 +36894,11 @@ export async function getIssuingTokensToken<FetcherData>(
     expand?: string[];
     token: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingToken> {
+): Promise<
+  r.StatusResponse<200, IssuingToken> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/tokens/{token}',
     params,
@@ -33510,7 +36908,7 @@ export async function getIssuingTokensToken<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Attempts to update the specified Issuing <code>Token</code> object to the status specified.</p>
@@ -33520,9 +36918,11 @@ export async function postIssuingTokensToken<FetcherData>(
   params: {
     token: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingToken> {
+): Promise<
+  r.StatusResponse<200, IssuingToken> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/tokens/{token}',
     params,
@@ -33531,7 +36931,7 @@ export async function postIssuingTokensToken<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Issuing <code>Transaction</code> objects. The objects are sorted in descending order by creation
@@ -33556,23 +36956,29 @@ export async function getIssuingTransactions<FetcherData>(
     starting_after?: string;
     type?: 'capture' | 'refund';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: IssuingTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: IssuingTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/transactions',
     params,
@@ -33591,7 +36997,7 @@ export async function getIssuingTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an Issuing <code>Transaction</code> object.</p>
@@ -33602,9 +37008,11 @@ export async function getIssuingTransactionsTransaction<FetcherData>(
     expand?: string[];
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingTransaction> {
+): Promise<
+  r.StatusResponse<200, IssuingTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/transactions/{transaction}',
     params,
@@ -33614,7 +37022,7 @@ export async function getIssuingTransactionsTransaction<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified Issuing <code>Transaction</code> object by setting the values of the parameters passed. Any
@@ -33625,9 +37033,11 @@ export async function postIssuingTransactionsTransaction<FetcherData>(
   params: {
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingTransaction> {
+): Promise<
+  r.StatusResponse<200, IssuingTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/issuing/transactions/{transaction}',
     params,
@@ -33636,7 +37046,7 @@ export async function postIssuingTransactionsTransaction<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s
@@ -33645,9 +37055,12 @@ export async function postIssuingTransactionsTransaction<FetcherData>(
 export async function postLinkAccountSessions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsSession> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/link_account_sessions',
     params,
@@ -33656,7 +37069,7 @@ export async function postLinkAccountSessions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a Financial Connections <code>Session</code></p>
@@ -33667,9 +37080,12 @@ export async function getLinkAccountSessionsSession<FetcherData>(
     expand?: string[];
     session: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsSession> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsSession>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/link_account_sessions/{session}',
     params,
@@ -33679,7 +37095,7 @@ export async function getLinkAccountSessionsSession<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Financial Connections <code>Account</code> objects.</p>
@@ -33697,26 +37113,32 @@ export async function getLinkedAccounts<FetcherData>(
     session?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: FinancialConnectionsAccount[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: FinancialConnectionsAccount[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/linked_accounts',
     params,
@@ -33733,7 +37155,7 @@ export async function getLinkedAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an Financial Connections <code>Account</code>.</p>
@@ -33744,9 +37166,12 @@ export async function getLinkedAccountsAccount<FetcherData>(
     account: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/linked_accounts/{account}',
     params,
@@ -33756,7 +37181,7 @@ export async function getLinkedAccountsAccount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data
@@ -33767,9 +37192,12 @@ export async function postLinkedAccountsAccountDisconnect<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/linked_accounts/{account}/disconnect',
     params,
@@ -33778,7 +37206,7 @@ export async function postLinkedAccountsAccountDisconnect<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists all owners for a given <code>Account</code></p>
@@ -33793,26 +37221,32 @@ export async function getLinkedAccountsAccountOwners<FetcherData>(
     ownership: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: FinancialConnectionsAccountOwner[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: FinancialConnectionsAccountOwner[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/linked_accounts/{account}/owners',
     params,
@@ -33828,7 +37262,7 @@ export async function getLinkedAccountsAccountOwners<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>
@@ -33838,9 +37272,12 @@ export async function postLinkedAccountsAccountRefresh<FetcherData>(
   params: {
     account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<FinancialConnectionsAccount> {
+): Promise<
+  | r.StatusResponse<200, FinancialConnectionsAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/linked_accounts/{account}/refresh',
     params,
@@ -33849,7 +37286,7 @@ export async function postLinkedAccountsAccountRefresh<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a Mandate object.</p>
@@ -33860,9 +37297,11 @@ export async function getMandatesMandate<FetcherData>(
     expand?: string[];
     mandate: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Mandate> {
+): Promise<
+  r.StatusResponse<200, Mandate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/mandates/{mandate}',
     params,
@@ -33872,7 +37311,7 @@ export async function getMandatesMandate<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of PaymentIntents.</p>
@@ -33894,23 +37333,29 @@ export async function getPaymentIntents<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PaymentIntent[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PaymentIntent[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents',
     params,
@@ -33927,7 +37372,7 @@ export async function getPaymentIntents<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a PaymentIntent object.</p>
@@ -33949,9 +37394,11 @@ export async function getPaymentIntents<FetcherData>(
 export async function postPaymentIntents<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents',
     params,
@@ -33960,7 +37407,7 @@ export async function postPaymentIntents<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Search for PaymentIntents you’ve previously created using Stripe’s <a
@@ -33980,22 +37427,28 @@ export async function getPaymentIntentsSearch<FetcherData>(
     page?: string;
     query: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PaymentIntent[];
-  has_more: boolean;
-  next_page?: string | null;
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'search_result';
-  /**
-   * The total number of objects that match the query, only accurate up to 10,000.
-   */
-  total_count?: number;
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PaymentIntent[];
+        has_more: boolean;
+        next_page?: string | null;
+        /**
+         * String representing the object's type. Objects of the same type share the same value.
+         */
+        object: 'search_result';
+        /**
+         * The total number of objects that match the query, only accurate up to 10,000.
+         */
+        total_count?: number;
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/search',
     params,
@@ -34005,7 +37458,7 @@ export async function getPaymentIntentsSearch<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a PaymentIntent that has previously been created. </p>
@@ -34024,9 +37477,11 @@ export async function getPaymentIntentsIntent<FetcherData>(
     expand?: string[];
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}',
     params,
@@ -34036,7 +37491,7 @@ export async function getPaymentIntentsIntent<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates properties on a PaymentIntent object without confirming.</p>
@@ -34055,9 +37510,11 @@ export async function postPaymentIntentsIntent<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}',
     params,
@@ -34066,7 +37523,7 @@ export async function postPaymentIntentsIntent<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Manually reconcile the remaining amount for a <code>customer_balance</code> PaymentIntent.</p>
@@ -34076,9 +37533,11 @@ export async function postPaymentIntentsIntentApplyCustomerBalance<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}/apply_customer_balance',
     params,
@@ -34087,7 +37546,7 @@ export async function postPaymentIntentsIntentApplyCustomerBalance<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can cancel a PaymentIntent object when it’s in one of these statuses: <code>requires_payment_method</code>,
@@ -34107,9 +37566,11 @@ export async function postPaymentIntentsIntentCancel<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}/cancel',
     params,
@@ -34118,7 +37579,7 @@ export async function postPaymentIntentsIntentCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Capture the funds of an existing uncaptured PaymentIntent when its status is
@@ -34135,9 +37596,11 @@ export async function postPaymentIntentsIntentCapture<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}/capture',
     params,
@@ -34146,7 +37609,7 @@ export async function postPaymentIntentsIntentCapture<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Confirm that your customer intends to pay with current or provided
@@ -34190,9 +37653,11 @@ export async function postPaymentIntentsIntentConfirm<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}/confirm',
     params,
@@ -34201,7 +37666,7 @@ export async function postPaymentIntentsIntentConfirm<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Perform an incremental authorization on an eligible
@@ -34248,9 +37713,11 @@ export async function postPaymentIntentsIntentIncrementAuthorization<
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}/increment_authorization',
     params,
@@ -34259,7 +37726,7 @@ export async function postPaymentIntentsIntentIncrementAuthorization<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Verifies microdeposits on a PaymentIntent object.</p>
@@ -34269,9 +37736,11 @@ export async function postPaymentIntentsIntentVerifyMicrodeposits<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentIntent> {
+): Promise<
+  r.StatusResponse<200, PaymentIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_intents/{intent}/verify_microdeposits',
     params,
@@ -34280,7 +37749,7 @@ export async function postPaymentIntentsIntentVerifyMicrodeposits<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your payment links.</p>
@@ -34294,23 +37763,29 @@ export async function getPaymentLinks<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PaymentLink[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PaymentLink[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_links',
     params,
@@ -34326,7 +37801,7 @@ export async function getPaymentLinks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a payment link.</p>
@@ -34334,9 +37809,11 @@ export async function getPaymentLinks<FetcherData>(
 export async function postPaymentLinks<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentLink> {
+): Promise<
+  r.StatusResponse<200, PaymentLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_links',
     params,
@@ -34345,7 +37822,7 @@ export async function postPaymentLinks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve a payment link.</p>
@@ -34356,9 +37833,11 @@ export async function getPaymentLinksPaymentLink<FetcherData>(
     expand?: string[];
     payment_link: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentLink> {
+): Promise<
+  r.StatusResponse<200, PaymentLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_links/{payment_link}',
     params,
@@ -34368,7 +37847,7 @@ export async function getPaymentLinksPaymentLink<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a payment link.</p>
@@ -34378,9 +37857,11 @@ export async function postPaymentLinksPaymentLink<FetcherData>(
   params: {
     payment_link: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentLink> {
+): Promise<
+  r.StatusResponse<200, PaymentLink> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_links/{payment_link}',
     params,
@@ -34389,7 +37870,7 @@ export async function postPaymentLinksPaymentLink<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When retrieving a payment link, there is an includable <strong>line_items</strong> property containing the first
@@ -34404,26 +37885,32 @@ export async function getPaymentLinksPaymentLinkLineItems<FetcherData>(
     payment_link: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Item[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Item[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_links/{payment_link}/line_items',
     params,
@@ -34433,7 +37920,7 @@ export async function getPaymentLinksPaymentLinkLineItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List payment method configurations</p>
@@ -34442,35 +37929,50 @@ export async function getPaymentMethodConfigurations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     application?: string | '';
+    ending_before?: string;
     expand?: string[];
+    limit?: number;
+    starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PaymentMethodConfiguration[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PaymentMethodConfiguration[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_configurations',
     params,
     method: r.HttpMethod.GET,
     body,
-    queryParams: ['application', 'expand'],
+    queryParams: [
+      'application',
+      'ending_before',
+      'expand',
+      'limit',
+      'starting_after',
+    ],
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a payment method configuration</p>
@@ -34478,9 +37980,12 @@ export async function getPaymentMethodConfigurations<FetcherData>(
 export async function postPaymentMethodConfigurations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethodConfiguration> {
+): Promise<
+  | r.StatusResponse<200, PaymentMethodConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_configurations',
     params,
@@ -34489,7 +37994,7 @@ export async function postPaymentMethodConfigurations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve payment method configuration</p>
@@ -34500,9 +38005,12 @@ export async function getPaymentMethodConfigurationsConfiguration<FetcherData>(
     configuration: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethodConfiguration> {
+): Promise<
+  | r.StatusResponse<200, PaymentMethodConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_configurations/{configuration}',
     params,
@@ -34512,7 +38020,7 @@ export async function getPaymentMethodConfigurationsConfiguration<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Update payment method configuration</p>
@@ -34522,9 +38030,12 @@ export async function postPaymentMethodConfigurationsConfiguration<FetcherData>(
   params: {
     configuration: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethodConfiguration> {
+): Promise<
+  | r.StatusResponse<200, PaymentMethodConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_configurations/{configuration}',
     params,
@@ -34533,7 +38044,7 @@ export async function postPaymentMethodConfigurationsConfiguration<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Lists the details of existing payment method domains.</p>
@@ -34548,23 +38059,29 @@ export async function getPaymentMethodDomains<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PaymentMethodDomain[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PaymentMethodDomain[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_domains',
     params,
@@ -34581,7 +38098,7 @@ export async function getPaymentMethodDomains<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a payment method domain.</p>
@@ -34589,9 +38106,12 @@ export async function getPaymentMethodDomains<FetcherData>(
 export async function postPaymentMethodDomains<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethodDomain> {
+): Promise<
+  | r.StatusResponse<200, PaymentMethodDomain>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_domains',
     params,
@@ -34600,7 +38120,7 @@ export async function postPaymentMethodDomains<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing payment method domain.</p>
@@ -34611,9 +38131,12 @@ export async function getPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
     expand?: string[];
     payment_method_domain: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethodDomain> {
+): Promise<
+  | r.StatusResponse<200, PaymentMethodDomain>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_domains/{payment_method_domain}',
     params,
@@ -34623,7 +38146,7 @@ export async function getPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing payment method domain.</p>
@@ -34633,9 +38156,12 @@ export async function postPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
   params: {
     payment_method_domain: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethodDomain> {
+): Promise<
+  | r.StatusResponse<200, PaymentMethodDomain>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_domains/{payment_method_domain}',
     params,
@@ -34644,7 +38170,7 @@ export async function postPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Some payment methods such as Apple Pay require additional steps to verify a domain. If the requirements weren’t
@@ -34666,9 +38192,12 @@ export async function postPaymentMethodDomainsPaymentMethodDomainValidate<
   params: {
     payment_method_domain: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethodDomain> {
+): Promise<
+  | r.StatusResponse<200, PaymentMethodDomain>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_method_domains/{payment_method_domain}/validate',
     params,
@@ -34677,7 +38206,7 @@ export async function postPaymentMethodDomainsPaymentMethodDomainValidate<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of PaymentMethods for Treasury flows. If you want to list the PaymentMethods attached to a Customer
@@ -34697,6 +38226,7 @@ export async function getPaymentMethods<FetcherData>(
       | 'affirm'
       | 'afterpay_clearpay'
       | 'alipay'
+      | 'amazon_pay'
       | 'au_becs_debit'
       | 'bacs_debit'
       | 'bancontact'
@@ -34713,6 +38243,7 @@ export async function getPaymentMethods<FetcherData>(
       | 'klarna'
       | 'konbini'
       | 'link'
+      | 'mobilepay'
       | 'oxxo'
       | 'p24'
       | 'paynow'
@@ -34727,23 +38258,29 @@ export async function getPaymentMethods<FetcherData>(
       | 'wechat_pay'
       | 'zip';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PaymentMethod[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PaymentMethod[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_methods',
     params,
@@ -34760,7 +38297,7 @@ export async function getPaymentMethods<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a PaymentMethod object. Read the <a href="/docs/stripe-js/reference#stripe-create-payment-method">Stripe.js
@@ -34774,9 +38311,11 @@ export async function getPaymentMethods<FetcherData>(
 export async function postPaymentMethods<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethod> {
+): Promise<
+  r.StatusResponse<200, PaymentMethod> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_methods',
     params,
@@ -34785,7 +38324,7 @@ export async function postPaymentMethods<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer,
@@ -34797,9 +38336,11 @@ export async function getPaymentMethodsPaymentMethod<FetcherData>(
     expand?: string[];
     payment_method: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethod> {
+): Promise<
+  r.StatusResponse<200, PaymentMethod> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_methods/{payment_method}',
     params,
@@ -34809,7 +38350,7 @@ export async function getPaymentMethodsPaymentMethod<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a PaymentMethod object. A PaymentMethod must be attached a customer to be updated.</p>
@@ -34819,9 +38360,11 @@ export async function postPaymentMethodsPaymentMethod<FetcherData>(
   params: {
     payment_method: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethod> {
+): Promise<
+  r.StatusResponse<200, PaymentMethod> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_methods/{payment_method}',
     params,
@@ -34830,7 +38373,7 @@ export async function postPaymentMethodsPaymentMethod<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Attaches a PaymentMethod object to a Customer.</p>
@@ -34862,9 +38405,11 @@ export async function postPaymentMethodsPaymentMethodAttach<FetcherData>(
   params: {
     payment_method: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethod> {
+): Promise<
+  r.StatusResponse<200, PaymentMethod> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_methods/{payment_method}/attach',
     params,
@@ -34873,7 +38418,7 @@ export async function postPaymentMethodsPaymentMethodAttach<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Detaches a PaymentMethod object from a Customer. After a PaymentMethod is detached, it can no longer be used for a
@@ -34884,9 +38429,11 @@ export async function postPaymentMethodsPaymentMethodDetach<FetcherData>(
   params: {
     payment_method: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PaymentMethod> {
+): Promise<
+  r.StatusResponse<200, PaymentMethod> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payment_methods/{payment_method}/detach',
     params,
@@ -34895,7 +38442,7 @@ export async function postPaymentMethodsPaymentMethodDetach<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of existing payouts sent to third-party bank accounts or payouts that Stripe sent to you. The payouts
@@ -34927,23 +38474,29 @@ export async function getPayouts<FetcherData>(
     starting_after?: string;
     status?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Payout[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Payout[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/payouts',
     params,
@@ -34962,7 +38515,7 @@ export async function getPayouts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>To send funds to your own bank account, create a new payout object. Your <a href="#balance">Stripe balance</a> must
@@ -34979,9 +38532,9 @@ export async function getPayouts<FetcherData>(
 export async function postPayouts<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Payout> {
+): Promise<r.StatusResponse<200, Payout> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/payouts',
     params,
@@ -34990,7 +38543,7 @@ export async function postPayouts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing payout. Supply the unique payout ID from either a payout creation request or the
@@ -35002,9 +38555,9 @@ export async function getPayoutsPayout<FetcherData>(
     expand?: string[];
     payout: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Payout> {
+): Promise<r.StatusResponse<200, Payout> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/payouts/{payout}',
     params,
@@ -35014,7 +38567,7 @@ export async function getPayoutsPayout<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified payout by setting the values of the parameters you pass. We don’t change parameters that you
@@ -35025,9 +38578,9 @@ export async function postPayoutsPayout<FetcherData>(
   params: {
     payout: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Payout> {
+): Promise<r.StatusResponse<200, Payout> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/payouts/{payout}',
     params,
@@ -35036,7 +38589,7 @@ export async function postPayoutsPayout<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can cancel a previously created payout if its status is <code>pending</code>. Stripe refunds the funds to your
@@ -35047,9 +38600,9 @@ export async function postPayoutsPayoutCancel<FetcherData>(
   params: {
     payout: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Payout> {
+): Promise<r.StatusResponse<200, Payout> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/payouts/{payout}/cancel',
     params,
@@ -35058,7 +38611,7 @@ export async function postPayoutsPayoutCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Reverses a payout by debiting the destination bank account. At this time, you can only reverse payouts for connected
@@ -35074,9 +38627,9 @@ export async function postPayoutsPayoutReverse<FetcherData>(
   params: {
     payout: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Payout> {
+): Promise<r.StatusResponse<200, Payout> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/payouts/{payout}/reverse',
     params,
@@ -35085,7 +38638,7 @@ export async function postPayoutsPayoutReverse<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your plans.</p>
@@ -35108,26 +38661,32 @@ export async function getPlans<FetcherData>(
     product?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Plan[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Plan[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/plans',
     params,
@@ -35145,7 +38704,7 @@ export async function getPlans<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can now model subscriptions more flexibly using the <a href="#prices">Prices API</a>. It replaces the Plans API
@@ -35154,9 +38713,9 @@ export async function getPlans<FetcherData>(
 export async function postPlans<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Plan> {
+): Promise<r.StatusResponse<200, Plan> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/plans',
     params,
@@ -35165,7 +38724,7 @@ export async function postPlans<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deleting plans means new subscribers can’t be added. Existing subscribers aren’t affected.</p>
@@ -35175,9 +38734,11 @@ export async function deletePlansPlan<FetcherData>(
   params: {
     plan: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedPlan> {
+): Promise<
+  r.StatusResponse<200, DeletedPlan> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/plans/{plan}',
     params,
@@ -35186,7 +38747,7 @@ export async function deletePlansPlan<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the plan with the given ID.</p>
@@ -35197,9 +38758,9 @@ export async function getPlansPlan<FetcherData>(
     expand?: string[];
     plan: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Plan> {
+): Promise<r.StatusResponse<200, Plan> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/plans/{plan}',
     params,
@@ -35209,7 +38770,7 @@ export async function getPlansPlan<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified plan by setting the values of the parameters passed. Any parameters not provided are left
@@ -35220,9 +38781,9 @@ export async function postPlansPlan<FetcherData>(
   params: {
     plan: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Plan> {
+): Promise<r.StatusResponse<200, Plan> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/plans/{plan}',
     params,
@@ -35231,7 +38792,7 @@ export async function postPlansPlan<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your active prices, excluding <a href="/docs/products-prices/pricing-models#inline-pricing">inline
@@ -35257,31 +38818,38 @@ export async function getPrices<FetcherData>(
     product?: string;
     recurring?: {
       interval?: 'day' | 'month' | 'week' | 'year';
+      meter?: string;
       usage_type?: 'licensed' | 'metered';
     };
     starting_after?: string;
     type?: 'one_time' | 'recurring';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Price[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Price[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/prices',
     params,
@@ -35303,7 +38871,7 @@ export async function getPrices<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new price for an existing product. The price can be recurring or one-time.</p>
@@ -35311,9 +38879,9 @@ export async function getPrices<FetcherData>(
 export async function postPrices<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Price> {
+): Promise<r.StatusResponse<200, Price> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/prices',
     params,
@@ -35322,7 +38890,7 @@ export async function postPrices<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Search for prices you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query
@@ -35341,22 +38909,28 @@ export async function getPricesSearch<FetcherData>(
     page?: string;
     query: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Price[];
-  has_more: boolean;
-  next_page?: string | null;
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'search_result';
-  /**
-   * The total number of objects that match the query, only accurate up to 10,000.
-   */
-  total_count?: number;
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Price[];
+        has_more: boolean;
+        next_page?: string | null;
+        /**
+         * String representing the object's type. Objects of the same type share the same value.
+         */
+        object: 'search_result';
+        /**
+         * The total number of objects that match the query, only accurate up to 10,000.
+         */
+        total_count?: number;
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/prices/search',
     params,
@@ -35366,7 +38940,7 @@ export async function getPricesSearch<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the price with the given ID.</p>
@@ -35377,9 +38951,9 @@ export async function getPricesPrice<FetcherData>(
     expand?: string[];
     price: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Price> {
+): Promise<r.StatusResponse<200, Price> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/prices/{price}',
     params,
@@ -35389,7 +38963,7 @@ export async function getPricesPrice<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified price by setting the values of the parameters passed. Any parameters not provided are left
@@ -35400,9 +38974,9 @@ export async function postPricesPrice<FetcherData>(
   params: {
     price: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Price> {
+): Promise<r.StatusResponse<200, Price> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/prices/{price}',
     params,
@@ -35411,7 +38985,7 @@ export async function postPricesPrice<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your products. The products are returned sorted by creation date, with the most recently created
@@ -35437,26 +39011,32 @@ export async function getProducts<FetcherData>(
     starting_after?: string;
     url?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Product[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Product[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/products',
     params,
@@ -35476,7 +39056,7 @@ export async function getProducts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new product object.</p>
@@ -35484,9 +39064,11 @@ export async function getProducts<FetcherData>(
 export async function postProducts<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Product> {
+): Promise<
+  r.StatusResponse<200, Product> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/products',
     params,
@@ -35495,7 +39077,7 @@ export async function postProducts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Search for products you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search
@@ -35514,22 +39096,28 @@ export async function getProductsSearch<FetcherData>(
     page?: string;
     query: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Product[];
-  has_more: boolean;
-  next_page?: string | null;
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'search_result';
-  /**
-   * The total number of objects that match the query, only accurate up to 10,000.
-   */
-  total_count?: number;
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Product[];
+        has_more: boolean;
+        next_page?: string | null;
+        /**
+         * String representing the object's type. Objects of the same type share the same value.
+         */
+        object: 'search_result';
+        /**
+         * The total number of objects that match the query, only accurate up to 10,000.
+         */
+        total_count?: number;
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/products/search',
     params,
@@ -35539,7 +39127,7 @@ export async function getProductsSearch<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting
@@ -35550,9 +39138,11 @@ export async function deleteProductsId<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedProduct> {
+): Promise<
+  r.StatusResponse<200, DeletedProduct> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/products/{id}',
     params,
@@ -35561,7 +39151,7 @@ export async function deleteProductsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing product. Supply the unique product ID from either a product creation request or
@@ -35573,9 +39163,11 @@ export async function getProductsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Product> {
+): Promise<
+  r.StatusResponse<200, Product> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/products/{id}',
     params,
@@ -35585,7 +39177,7 @@ export async function getProductsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left
@@ -35596,9 +39188,11 @@ export async function postProductsId<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Product> {
+): Promise<
+  r.StatusResponse<200, Product> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/products/{id}',
     params,
@@ -35607,7 +39201,127 @@ export async function postProductsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieve a list of features for a product</p>
+ */
+export async function getProductsProductFeatures<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    ending_before?: string;
+    expand?: string[];
+    limit?: number;
+    product: string;
+    starting_after?: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ProductFeature[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/products/{product}/features',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['ending_before', 'expand', 'limit', 'starting_after'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a product_feature, which represents a feature attachment to a product</p>
+ */
+export async function postProductsProductFeatures<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    product: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, ProductFeature> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/products/{product}/features',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Deletes the feature attachment to a product</p>
+ */
+export async function deleteProductsProductFeaturesId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    id: string;
+    product: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, DeletedProductFeature>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/products/{product}/features/{id}',
+    params,
+    method: r.HttpMethod.DELETE,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Retrieves a product_feature, which represents a feature attachment to a product</p>
+ */
+export async function getProductsProductFeaturesId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    expand?: string[];
+    id: string;
+    product: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, ProductFeature> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/products/{product}/features/{id}',
+    params,
+    method: r.HttpMethod.GET,
+    body,
+    queryParams: ['expand'],
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your promotion codes.</p>
@@ -35632,23 +39346,29 @@ export async function getPromotionCodes<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: PromotionCode[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: PromotionCode[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/promotion_codes',
     params,
@@ -35668,7 +39388,7 @@ export async function getPromotionCodes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>A promotion code points to a coupon. You can optionally restrict the code to a specific customer, redemption limit,
@@ -35677,9 +39397,11 @@ export async function getPromotionCodes<FetcherData>(
 export async function postPromotionCodes<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PromotionCode> {
+): Promise<
+  r.StatusResponse<200, PromotionCode> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/promotion_codes',
     params,
@@ -35688,7 +39410,7 @@ export async function postPromotionCodes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the promotion code with the given ID. In order to retrieve a promotion code by the customer-facing
@@ -35700,9 +39422,11 @@ export async function getPromotionCodesPromotionCode<FetcherData>(
     expand?: string[];
     promotion_code: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PromotionCode> {
+): Promise<
+  r.StatusResponse<200, PromotionCode> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/promotion_codes/{promotion_code}',
     params,
@@ -35712,7 +39436,7 @@ export async function getPromotionCodesPromotionCode<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified promotion code by setting the values of the parameters passed. Most fields are, by design, not
@@ -35723,9 +39447,11 @@ export async function postPromotionCodesPromotionCode<FetcherData>(
   params: {
     promotion_code: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<PromotionCode> {
+): Promise<
+  r.StatusResponse<200, PromotionCode> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/promotion_codes/{promotion_code}',
     params,
@@ -35734,7 +39460,7 @@ export async function postPromotionCodesPromotionCode<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your quotes.</p>
@@ -35750,23 +39476,29 @@ export async function getQuotes<FetcherData>(
     status?: 'accepted' | 'canceled' | 'draft' | 'open';
     test_clock?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Quote[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Quote[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/quotes',
     params,
@@ -35784,7 +39516,7 @@ export async function getQuotes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>A quote models prices and services for a customer. Default options for <code>header</code>, <code>description</code>,
@@ -35794,9 +39526,9 @@ export async function getQuotes<FetcherData>(
 export async function postQuotes<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Quote> {
+): Promise<r.StatusResponse<200, Quote> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/quotes',
     params,
@@ -35805,7 +39537,7 @@ export async function postQuotes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the quote with the given ID.</p>
@@ -35816,9 +39548,9 @@ export async function getQuotesQuote<FetcherData>(
     expand?: string[];
     quote: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Quote> {
+): Promise<r.StatusResponse<200, Quote> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}',
     params,
@@ -35828,7 +39560,7 @@ export async function getQuotesQuote<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>A quote models prices and services for a customer.</p>
@@ -35838,9 +39570,9 @@ export async function postQuotesQuote<FetcherData>(
   params: {
     quote: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Quote> {
+): Promise<r.StatusResponse<200, Quote> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}',
     params,
@@ -35849,7 +39581,7 @@ export async function postQuotesQuote<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Accepts the specified quote.</p>
@@ -35859,9 +39591,9 @@ export async function postQuotesQuoteAccept<FetcherData>(
   params: {
     quote: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Quote> {
+): Promise<r.StatusResponse<200, Quote> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}/accept',
     params,
@@ -35870,7 +39602,7 @@ export async function postQuotesQuoteAccept<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels the quote.</p>
@@ -35880,9 +39612,9 @@ export async function postQuotesQuoteCancel<FetcherData>(
   params: {
     quote: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Quote> {
+): Promise<r.StatusResponse<200, Quote> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}/cancel',
     params,
@@ -35891,7 +39623,7 @@ export async function postQuotesQuoteCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When retrieving a quote, there is an includable <a
@@ -35908,26 +39640,32 @@ export async function getQuotesQuoteComputedUpfrontLineItems<FetcherData>(
     quote: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Item[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Item[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}/computed_upfront_line_items',
     params,
@@ -35937,7 +39675,7 @@ export async function getQuotesQuoteComputedUpfrontLineItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Finalizes the quote.</p>
@@ -35947,9 +39685,9 @@ export async function postQuotesQuoteFinalize<FetcherData>(
   params: {
     quote: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Quote> {
+): Promise<r.StatusResponse<200, Quote> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}/finalize',
     params,
@@ -35958,7 +39696,7 @@ export async function postQuotesQuoteFinalize<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When retrieving a quote, there is an includable <strong>line_items</strong> property containing the first handful of
@@ -35973,26 +39711,32 @@ export async function getQuotesQuoteLineItems<FetcherData>(
     quote: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Item[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Item[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}/line_items',
     params,
@@ -36002,10 +39746,11 @@ export async function getQuotesQuoteLineItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>Download the PDF for a finalized quote</p>
+ * <p>Download the PDF for a finalized quote. Explanation for special handling can be found <a
+ * href="https://docs.corp.stripe.com/quotes/overview#quote_pdf">here</a></p>
  */
 export async function getQuotesQuotePdf<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -36013,9 +39758,11 @@ export async function getQuotesQuotePdf<FetcherData>(
     expand?: string[];
     quote: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  r.StatusResponse<200, unknown> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/quotes/{quote}/pdf',
     params,
@@ -36025,7 +39772,7 @@ export async function getQuotesQuotePdf<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of early fraud warnings.</p>
@@ -36048,23 +39795,29 @@ export async function getRadarEarlyFraudWarnings<FetcherData>(
     payment_intent?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: RadarEarlyFraudWarning[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: RadarEarlyFraudWarning[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/early_fraud_warnings',
     params,
@@ -36082,7 +39835,7 @@ export async function getRadarEarlyFraudWarnings<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an early fraud warning that has previously been created. </p>
@@ -36096,9 +39849,12 @@ export async function getRadarEarlyFraudWarningsEarlyFraudWarning<FetcherData>(
     early_fraud_warning: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<RadarEarlyFraudWarning> {
+): Promise<
+  | r.StatusResponse<200, RadarEarlyFraudWarning>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/early_fraud_warnings/{early_fraud_warning}',
     params,
@@ -36108,7 +39864,7 @@ export async function getRadarEarlyFraudWarningsEarlyFraudWarning<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of <code>ValueListItem</code> objects. The objects are sorted in descending order by creation date,
@@ -36132,23 +39888,29 @@ export async function getRadarValueListItems<FetcherData>(
     value?: string;
     value_list: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: RadarValueListItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: RadarValueListItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_list_items',
     params,
@@ -36166,7 +39928,7 @@ export async function getRadarValueListItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new <code>ValueListItem</code> object, which is added to the specified parent value list.</p>
@@ -36174,9 +39936,11 @@ export async function getRadarValueListItems<FetcherData>(
 export async function postRadarValueListItems<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<RadarValueListItem> {
+): Promise<
+  r.StatusResponse<200, RadarValueListItem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_list_items',
     params,
@@ -36185,7 +39949,7 @@ export async function postRadarValueListItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes a <code>ValueListItem</code> object, removing it from its parent value list.</p>
@@ -36195,9 +39959,12 @@ export async function deleteRadarValueListItemsItem<FetcherData>(
   params: {
     item: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedRadarValueListItem> {
+): Promise<
+  | r.StatusResponse<200, DeletedRadarValueListItem>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_list_items/{item}',
     params,
@@ -36206,7 +39973,7 @@ export async function deleteRadarValueListItemsItem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a <code>ValueListItem</code> object.</p>
@@ -36217,9 +39984,11 @@ export async function getRadarValueListItemsItem<FetcherData>(
     expand?: string[];
     item: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<RadarValueListItem> {
+): Promise<
+  r.StatusResponse<200, RadarValueListItem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_list_items/{item}',
     params,
@@ -36229,7 +39998,7 @@ export async function getRadarValueListItemsItem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of <code>ValueList</code> objects. The objects are sorted in descending order by creation date, with
@@ -36253,23 +40022,29 @@ export async function getRadarValueLists<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: RadarValueList[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: RadarValueList[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_lists',
     params,
@@ -36287,7 +40062,7 @@ export async function getRadarValueLists<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new <code>ValueList</code> object, which can then be referenced in rules.</p>
@@ -36295,9 +40070,11 @@ export async function getRadarValueLists<FetcherData>(
 export async function postRadarValueLists<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<RadarValueList> {
+): Promise<
+  r.StatusResponse<200, RadarValueList> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_lists',
     params,
@@ -36306,7 +40083,7 @@ export async function postRadarValueLists<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a
@@ -36317,9 +40094,12 @@ export async function deleteRadarValueListsValueList<FetcherData>(
   params: {
     value_list: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedRadarValueList> {
+): Promise<
+  | r.StatusResponse<200, DeletedRadarValueList>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_lists/{value_list}',
     params,
@@ -36328,7 +40108,7 @@ export async function deleteRadarValueListsValueList<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a <code>ValueList</code> object.</p>
@@ -36339,9 +40119,11 @@ export async function getRadarValueListsValueList<FetcherData>(
     expand?: string[];
     value_list: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<RadarValueList> {
+): Promise<
+  r.StatusResponse<200, RadarValueList> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_lists/{value_list}',
     params,
@@ -36351,7 +40133,7 @@ export async function getRadarValueListsValueList<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a <code>ValueList</code> object by setting the values of the parameters passed. Any parameters not provided
@@ -36362,9 +40144,11 @@ export async function postRadarValueListsValueList<FetcherData>(
   params: {
     value_list: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<RadarValueList> {
+): Promise<
+  r.StatusResponse<200, RadarValueList> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/radar/value_lists/{value_list}',
     params,
@@ -36373,7 +40157,7 @@ export async function postRadarValueListsValueList<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of all refunds you created. We return the refunds in sorted order, with the most recent refunds
@@ -36397,23 +40181,29 @@ export async function getRefunds<FetcherData>(
     payment_intent?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Refund[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Refund[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/refunds',
     params,
@@ -36431,7 +40221,7 @@ export async function getRefunds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create
@@ -36454,9 +40244,9 @@ export async function getRefunds<FetcherData>(
 export async function postRefunds<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/refunds',
     params,
@@ -36465,7 +40255,7 @@ export async function postRefunds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing refund.</p>
@@ -36476,9 +40266,9 @@ export async function getRefundsRefund<FetcherData>(
     expand?: string[];
     refund: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/refunds/{refund}',
     params,
@@ -36488,7 +40278,7 @@ export async function getRefundsRefund<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the refund that you specify by setting the values of the passed parameters. Any parameters that you don’t
@@ -36501,9 +40291,9 @@ export async function postRefundsRefund<FetcherData>(
   params: {
     refund: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/refunds/{refund}',
     params,
@@ -36512,7 +40302,7 @@ export async function postRefundsRefund<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels a refund with a status of <code>requires_action</code>.</p>
@@ -36525,9 +40315,9 @@ export async function postRefundsRefundCancel<FetcherData>(
   params: {
     refund: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/refunds/{refund}/cancel',
     params,
@@ -36536,7 +40326,7 @@ export async function postRefundsRefundCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Report Runs, with the most recent appearing first.</p>
@@ -36557,23 +40347,29 @@ export async function getReportingReportRuns<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ReportingReportRun[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ReportingReportRun[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/reporting/report_runs',
     params,
@@ -36589,7 +40385,7 @@ export async function getReportingReportRuns<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new object and begin running the report. (Certain report types require a <a
@@ -36598,9 +40394,11 @@ export async function getReportingReportRuns<FetcherData>(
 export async function postReportingReportRuns<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ReportingReportRun> {
+): Promise<
+  r.StatusResponse<200, ReportingReportRun> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/reporting/report_runs',
     params,
@@ -36609,7 +40407,7 @@ export async function postReportingReportRuns<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing Report Run.</p>
@@ -36620,9 +40418,11 @@ export async function getReportingReportRunsReportRun<FetcherData>(
     expand?: string[];
     report_run: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ReportingReportRun> {
+): Promise<
+  r.StatusResponse<200, ReportingReportRun> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/reporting/report_runs/{report_run}',
     params,
@@ -36632,7 +40432,7 @@ export async function getReportingReportRunsReportRun<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a full list of Report Types.</p>
@@ -36642,23 +40442,29 @@ export async function getReportingReportTypes<FetcherData>(
   params: {
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ReportingReportType[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ReportingReportType[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/reporting/report_types',
     params,
@@ -36668,7 +40474,7 @@ export async function getReportingReportTypes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a Report Type. (Certain report types require a <a
@@ -36680,9 +40486,12 @@ export async function getReportingReportTypesReportType<FetcherData>(
     expand?: string[];
     report_type: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ReportingReportType> {
+): Promise<
+  | r.StatusResponse<200, ReportingReportType>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/reporting/report_types/{report_type}',
     params,
@@ -36692,7 +40501,7 @@ export async function getReportingReportTypesReportType<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of <code>Review</code> objects that have <code>open</code> set to <code>true</code>. The objects are
@@ -36714,23 +40523,29 @@ export async function getReviews<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Review[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Review[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/reviews',
     params,
@@ -36746,7 +40561,7 @@ export async function getReviews<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a <code>Review</code> object.</p>
@@ -36757,9 +40572,9 @@ export async function getReviewsReview<FetcherData>(
     expand?: string[];
     review: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Review> {
+): Promise<r.StatusResponse<200, Review> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/reviews/{review}',
     params,
@@ -36769,7 +40584,7 @@ export async function getReviewsReview<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Approves a <code>Review</code> object, closing it and removing it from the list of reviews.</p>
@@ -36779,9 +40594,9 @@ export async function postReviewsReviewApprove<FetcherData>(
   params: {
     review: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Review> {
+): Promise<r.StatusResponse<200, Review> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/reviews/{review}/approve',
     params,
@@ -36790,7 +40605,7 @@ export async function postReviewsReviewApprove<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of SetupAttempts that associate with a provided SetupIntent.</p>
@@ -36812,23 +40627,29 @@ export async function getSetupAttempts<FetcherData>(
     setup_intent: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: SetupAttempt[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: SetupAttempt[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_attempts',
     params,
@@ -36845,7 +40666,7 @@ export async function getSetupAttempts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of SetupIntents.</p>
@@ -36869,23 +40690,29 @@ export async function getSetupIntents<FetcherData>(
     payment_method?: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: SetupIntent[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: SetupIntent[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_intents',
     params,
@@ -36904,7 +40731,7 @@ export async function getSetupIntents<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a SetupIntent object.</p>
@@ -36917,9 +40744,11 @@ export async function getSetupIntents<FetcherData>(
 export async function postSetupIntents<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SetupIntent> {
+): Promise<
+  r.StatusResponse<200, SetupIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_intents',
     params,
@@ -36928,7 +40757,7 @@ export async function postSetupIntents<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a SetupIntent that has previously been created. </p>
@@ -36947,9 +40776,11 @@ export async function getSetupIntentsIntent<FetcherData>(
     expand?: string[];
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SetupIntent> {
+): Promise<
+  r.StatusResponse<200, SetupIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_intents/{intent}',
     params,
@@ -36959,7 +40790,7 @@ export async function getSetupIntentsIntent<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a SetupIntent object.</p>
@@ -36969,9 +40800,11 @@ export async function postSetupIntentsIntent<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SetupIntent> {
+): Promise<
+  r.StatusResponse<200, SetupIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_intents/{intent}',
     params,
@@ -36980,7 +40813,7 @@ export async function postSetupIntentsIntent<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can cancel a SetupIntent object when it’s in one of these statuses: <code>requires_payment_method</code>,
@@ -36994,9 +40827,11 @@ export async function postSetupIntentsIntentCancel<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SetupIntent> {
+): Promise<
+  r.StatusResponse<200, SetupIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_intents/{intent}/cancel',
     params,
@@ -37005,7 +40840,7 @@ export async function postSetupIntentsIntentCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Confirm that your customer intends to set up the current or
@@ -37034,9 +40869,11 @@ export async function postSetupIntentsIntentConfirm<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SetupIntent> {
+): Promise<
+  r.StatusResponse<200, SetupIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_intents/{intent}/confirm',
     params,
@@ -37045,7 +40882,7 @@ export async function postSetupIntentsIntentConfirm<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Verifies microdeposits on a SetupIntent object.</p>
@@ -37055,9 +40892,11 @@ export async function postSetupIntentsIntentVerifyMicrodeposits<FetcherData>(
   params: {
     intent: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SetupIntent> {
+): Promise<
+  r.StatusResponse<200, SetupIntent> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/setup_intents/{intent}/verify_microdeposits',
     params,
@@ -37066,7 +40905,7 @@ export async function postSetupIntentsIntentVerifyMicrodeposits<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your shipping rates.</p>
@@ -37089,23 +40928,29 @@ export async function getShippingRates<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ShippingRate[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ShippingRate[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/shipping_rates',
     params,
@@ -37123,7 +40968,7 @@ export async function getShippingRates<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new shipping rate object.</p>
@@ -37131,9 +40976,11 @@ export async function getShippingRates<FetcherData>(
 export async function postShippingRates<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ShippingRate> {
+): Promise<
+  r.StatusResponse<200, ShippingRate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/shipping_rates',
     params,
@@ -37142,7 +40989,7 @@ export async function postShippingRates<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns the shipping rate object with the given ID.</p>
@@ -37153,9 +41000,11 @@ export async function getShippingRatesShippingRateToken<FetcherData>(
     expand?: string[];
     shipping_rate_token: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ShippingRate> {
+): Promise<
+  r.StatusResponse<200, ShippingRate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/shipping_rates/{shipping_rate_token}',
     params,
@@ -37165,7 +41014,7 @@ export async function getShippingRatesShippingRateToken<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing shipping rate object.</p>
@@ -37175,9 +41024,11 @@ export async function postShippingRatesShippingRateToken<FetcherData>(
   params: {
     shipping_rate_token: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ShippingRate> {
+): Promise<
+  r.StatusResponse<200, ShippingRate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/shipping_rates/{shipping_rate_token}',
     params,
@@ -37186,7 +41037,7 @@ export async function postShippingRatesShippingRateToken<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of scheduled query runs.</p>
@@ -37199,23 +41050,29 @@ export async function getSigmaScheduledQueryRuns<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: ScheduledQueryRun[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: ScheduledQueryRun[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/sigma/scheduled_query_runs',
     params,
@@ -37225,7 +41082,7 @@ export async function getSigmaScheduledQueryRuns<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an scheduled query run.</p>
@@ -37236,9 +41093,11 @@ export async function getSigmaScheduledQueryRunsScheduledQueryRun<FetcherData>(
     expand?: string[];
     scheduled_query_run: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ScheduledQueryRun> {
+): Promise<
+  r.StatusResponse<200, ScheduledQueryRun> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/sigma/scheduled_query_runs/{scheduled_query_run}',
     params,
@@ -37248,7 +41107,7 @@ export async function getSigmaScheduledQueryRunsScheduledQueryRun<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new source object.</p>
@@ -37256,9 +41115,9 @@ export async function getSigmaScheduledQueryRunsScheduledQueryRun<FetcherData>(
 export async function postSources<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Source> {
+): Promise<r.StatusResponse<200, Source> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/sources',
     params,
@@ -37267,7 +41126,7 @@ export async function postSources<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an existing source object. Supply the unique source ID from a source creation request and Stripe will
@@ -37280,9 +41139,9 @@ export async function getSourcesSource<FetcherData>(
     expand?: string[];
     source: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Source> {
+): Promise<r.StatusResponse<200, Source> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/sources/{source}',
     params,
@@ -37292,7 +41151,7 @@ export async function getSourcesSource<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified source by setting the values of the parameters passed. Any parameters not provided will be left
@@ -37307,9 +41166,9 @@ export async function postSourcesSource<FetcherData>(
   params: {
     source: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Source> {
+): Promise<r.StatusResponse<200, Source> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/sources/{source}',
     params,
@@ -37318,7 +41177,7 @@ export async function postSourcesSource<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a new Source MandateNotification.</p>
@@ -37332,9 +41191,12 @@ export async function getSourcesSourceMandateNotificationsMandateNotification<
     mandate_notification: string;
     source: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SourceMandateNotification> {
+): Promise<
+  | r.StatusResponse<200, SourceMandateNotification>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/sources/{source}/mandate_notifications/{mandate_notification}',
     params,
@@ -37344,7 +41206,7 @@ export async function getSourcesSourceMandateNotificationsMandateNotification<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>List source transactions for a given source.</p>
@@ -37358,23 +41220,29 @@ export async function getSourcesSourceSourceTransactions<FetcherData>(
     source: string;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: SourceTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: SourceTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/sources/{source}/source_transactions',
     params,
@@ -37384,7 +41252,7 @@ export async function getSourcesSourceSourceTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieve an existing source transaction object. Supply the unique source ID from a source creation request and the
@@ -37399,9 +41267,11 @@ export async function getSourcesSourceSourceTransactionsSourceTransaction<
     source: string;
     source_transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SourceTransaction> {
+): Promise<
+  r.StatusResponse<200, SourceTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/sources/{source}/source_transactions/{source_transaction}',
     params,
@@ -37411,7 +41281,7 @@ export async function getSourcesSourceSourceTransactionsSourceTransaction<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Verify a given source.</p>
@@ -37421,9 +41291,9 @@ export async function postSourcesSourceVerify<FetcherData>(
   params: {
     source: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Source> {
+): Promise<r.StatusResponse<200, Source> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/sources/{source}/verify',
     params,
@@ -37432,7 +41302,7 @@ export async function postSourcesSourceVerify<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your subscription items for a given subscription.</p>
@@ -37446,23 +41316,29 @@ export async function getSubscriptionItems<FetcherData>(
     starting_after?: string;
     subscription: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: SubscriptionItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: SubscriptionItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_items',
     params,
@@ -37478,7 +41354,7 @@ export async function getSubscriptionItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Adds a new item to an existing subscription. No existing items will be changed or replaced.</p>
@@ -37486,9 +41362,11 @@ export async function getSubscriptionItems<FetcherData>(
 export async function postSubscriptionItems<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionItem> {
+): Promise<
+  r.StatusResponse<200, SubscriptionItem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_items',
     params,
@@ -37497,7 +41375,7 @@ export async function postSubscriptionItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes an item from the subscription. Removing a subscription item from a subscription will not cancel the
@@ -37508,9 +41386,12 @@ export async function deleteSubscriptionItemsItem<FetcherData>(
   params: {
     item: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedSubscriptionItem> {
+): Promise<
+  | r.StatusResponse<200, DeletedSubscriptionItem>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_items/{item}',
     params,
@@ -37519,7 +41400,7 @@ export async function deleteSubscriptionItemsItem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the subscription item with the given ID.</p>
@@ -37530,9 +41411,11 @@ export async function getSubscriptionItemsItem<FetcherData>(
     expand?: string[];
     item: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionItem> {
+): Promise<
+  r.StatusResponse<200, SubscriptionItem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_items/{item}',
     params,
@@ -37542,7 +41425,7 @@ export async function getSubscriptionItemsItem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the plan or quantity of an item on a current subscription.</p>
@@ -37552,9 +41435,11 @@ export async function postSubscriptionItemsItem<FetcherData>(
   params: {
     item: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionItem> {
+): Promise<
+  r.StatusResponse<200, SubscriptionItem> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_items/{item}',
     params,
@@ -37563,7 +41448,7 @@ export async function postSubscriptionItemsItem<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>For the specified subscription item, returns a list of summary objects. Each object in the list provides usage
@@ -37586,23 +41471,29 @@ export async function getSubscriptionItemsSubscriptionItemUsageRecordSummaries<
     starting_after?: string;
     subscription_item: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: UsageRecordSummary[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: UsageRecordSummary[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_items/{subscription_item}/usage_record_summaries',
     params,
@@ -37612,7 +41503,7 @@ export async function getSubscriptionItemsSubscriptionItemUsageRecordSummaries<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a usage record for a specified subscription item and date, and fills it with a quantity.</p>
@@ -37641,9 +41532,11 @@ export async function postSubscriptionItemsSubscriptionItemUsageRecords<
   params: {
     subscription_item: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<UsageRecord> {
+): Promise<
+  r.StatusResponse<200, UsageRecord> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_items/{subscription_item}/usage_records',
     params,
@@ -37652,7 +41545,7 @@ export async function postSubscriptionItemsSubscriptionItemUsageRecords<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the list of your subscription schedules.</p>
@@ -37699,23 +41592,29 @@ export async function getSubscriptionSchedules<FetcherData>(
     scheduled?: boolean;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: SubscriptionSchedule[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: SubscriptionSchedule[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_schedules',
     params,
@@ -37736,7 +41635,7 @@ export async function getSubscriptionSchedules<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>
@@ -37744,9 +41643,12 @@ export async function getSubscriptionSchedules<FetcherData>(
 export async function postSubscriptionSchedules<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionSchedule> {
+): Promise<
+  | r.StatusResponse<200, SubscriptionSchedule>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_schedules',
     params,
@@ -37755,7 +41657,7 @@ export async function postSubscriptionSchedules<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule
@@ -37767,9 +41669,12 @@ export async function getSubscriptionSchedulesSchedule<FetcherData>(
     expand?: string[];
     schedule: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionSchedule> {
+): Promise<
+  | r.StatusResponse<200, SubscriptionSchedule>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_schedules/{schedule}',
     params,
@@ -37779,7 +41684,7 @@ export async function getSubscriptionSchedulesSchedule<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing subscription schedule.</p>
@@ -37789,9 +41694,12 @@ export async function postSubscriptionSchedulesSchedule<FetcherData>(
   params: {
     schedule: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionSchedule> {
+): Promise<
+  | r.StatusResponse<200, SubscriptionSchedule>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_schedules/{schedule}',
     params,
@@ -37800,7 +41708,7 @@ export async function postSubscriptionSchedulesSchedule<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels a subscription schedule and its associated subscription immediately (if the subscription schedule has an
@@ -37812,9 +41720,12 @@ export async function postSubscriptionSchedulesScheduleCancel<FetcherData>(
   params: {
     schedule: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionSchedule> {
+): Promise<
+  | r.StatusResponse<200, SubscriptionSchedule>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_schedules/{schedule}/cancel',
     params,
@@ -37823,7 +41734,7 @@ export async function postSubscriptionSchedulesScheduleCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Releases the subscription schedule immediately, which will stop scheduling of its phases, but leave any existing
@@ -37836,9 +41747,12 @@ export async function postSubscriptionSchedulesScheduleRelease<FetcherData>(
   params: {
     schedule: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<SubscriptionSchedule> {
+): Promise<
+  | r.StatusResponse<200, SubscriptionSchedule>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscription_schedules/{schedule}/release',
     params,
@@ -37847,7 +41761,7 @@ export async function postSubscriptionSchedulesScheduleRelease<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>By default, returns a list of subscriptions that have not been canceled. In order to list canceled subscriptions,
@@ -37903,23 +41817,29 @@ export async function getSubscriptions<FetcherData>(
       | 'unpaid';
     test_clock?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Subscription[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Subscription[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions',
     params,
@@ -37943,7 +41863,7 @@ export async function getSubscriptions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled
@@ -37963,9 +41883,11 @@ export async function getSubscriptions<FetcherData>(
 export async function postSubscriptions<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions',
     params,
@@ -37974,7 +41896,7 @@ export async function postSubscriptions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Search for subscriptions you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search
@@ -37993,22 +41915,28 @@ export async function getSubscriptionsSearch<FetcherData>(
     page?: string;
     query: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Subscription[];
-  has_more: boolean;
-  next_page?: string | null;
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'search_result';
-  /**
-   * The total number of objects that match the query, only accurate up to 10,000.
-   */
-  total_count?: number;
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Subscription[];
+        has_more: boolean;
+        next_page?: string | null;
+        /**
+         * String representing the object's type. Objects of the same type share the same value.
+         */
+        object: 'search_result';
+        /**
+         * The total number of objects that match the query, only accurate up to 10,000.
+         */
+        total_count?: number;
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions/search',
     params,
@@ -38018,7 +41946,7 @@ export async function getSubscriptionsSearch<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels a customer’s subscription immediately. The customer will not be charged again for the
@@ -38040,9 +41968,11 @@ export async function deleteSubscriptionsSubscriptionExposedId<FetcherData>(
   params: {
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions/{subscription_exposed_id}',
     params,
@@ -38051,7 +41981,7 @@ export async function deleteSubscriptionsSubscriptionExposedId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the subscription with the given ID.</p>
@@ -38062,9 +41992,11 @@ export async function getSubscriptionsSubscriptionExposedId<FetcherData>(
     expand?: string[];
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions/{subscription_exposed_id}',
     params,
@@ -38074,7 +42006,7 @@ export async function getSubscriptionsSubscriptionExposedId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing subscription to match the specified parameters.
@@ -38127,9 +42059,11 @@ export async function postSubscriptionsSubscriptionExposedId<FetcherData>(
   params: {
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions/{subscription_exposed_id}',
     params,
@@ -38138,7 +42072,7 @@ export async function postSubscriptionsSubscriptionExposedId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Removes the currently applied discount on a subscription.</p>
@@ -38150,9 +42084,11 @@ export async function deleteSubscriptionsSubscriptionExposedIdDiscount<
   params: {
     subscription_exposed_id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedDiscount> {
+): Promise<
+  r.StatusResponse<200, DeletedDiscount> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions/{subscription_exposed_id}/discount',
     params,
@@ -38161,7 +42097,7 @@ export async function deleteSubscriptionsSubscriptionExposedIdDiscount<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Initiates resumption of a paused subscription, optionally resetting the billing cycle anchor and creating prorations.
@@ -38174,9 +42110,11 @@ export async function postSubscriptionsSubscriptionResume<FetcherData>(
   params: {
     subscription: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Subscription> {
+): Promise<
+  r.StatusResponse<200, Subscription> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/subscriptions/{subscription}/resume',
     params,
@@ -38185,7 +42123,7 @@ export async function postSubscriptionsSubscriptionResume<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Calculates tax based on input and returns a Tax <code>Calculation</code> object.</p>
@@ -38193,9 +42131,11 @@ export async function postSubscriptionsSubscriptionResume<FetcherData>(
 export async function postTaxCalculations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxCalculation> {
+): Promise<
+  r.StatusResponse<200, TaxCalculation> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/calculations',
     params,
@@ -38204,7 +42144,7 @@ export async function postTaxCalculations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the line items of a persisted tax calculation as a collection.</p>
@@ -38218,26 +42158,32 @@ export async function getTaxCalculationsCalculationLineItems<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TaxCalculationLineItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TaxCalculationLineItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/calculations/{calculation}/line_items',
     params,
@@ -38247,7 +42193,7 @@ export async function getTaxCalculationsCalculationLineItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of Tax <code>Registration</code> objects.</p>
@@ -38261,23 +42207,29 @@ export async function getTaxRegistrations<FetcherData>(
     starting_after?: string;
     status?: 'active' | 'all' | 'expired' | 'scheduled';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: TaxRegistration[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: TaxRegistration[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/registrations',
     params,
@@ -38293,7 +42245,7 @@ export async function getTaxRegistrations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new Tax <code>Registration</code> object.</p>
@@ -38301,9 +42253,11 @@ export async function getTaxRegistrations<FetcherData>(
 export async function postTaxRegistrations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxRegistration> {
+): Promise<
+  r.StatusResponse<200, TaxRegistration> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/registrations',
     params,
@@ -38312,7 +42266,7 @@ export async function postTaxRegistrations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a Tax <code>Registration</code> object.</p>
@@ -38323,9 +42277,11 @@ export async function getTaxRegistrationsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxRegistration> {
+): Promise<
+  r.StatusResponse<200, TaxRegistration> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/registrations/{id}',
     params,
@@ -38335,7 +42291,7 @@ export async function getTaxRegistrationsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing Tax <code>Registration</code> object.</p>
@@ -38348,9 +42304,11 @@ export async function postTaxRegistrationsId<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxRegistration> {
+): Promise<
+  r.StatusResponse<200, TaxRegistration> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/registrations/{id}',
     params,
@@ -38359,7 +42317,7 @@ export async function postTaxRegistrationsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves Tax <code>Settings</code> for a merchant.</p>
@@ -38369,9 +42327,11 @@ export async function getTaxSettings<FetcherData>(
   params: {
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxSettings> {
+): Promise<
+  r.StatusResponse<200, TaxSettings> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/settings',
     params,
@@ -38381,7 +42341,7 @@ export async function getTaxSettings<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates Tax <code>Settings</code> parameters used in tax calculations. All parameters are editable but none can be
@@ -38390,9 +42350,11 @@ export async function getTaxSettings<FetcherData>(
 export async function postTaxSettings<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxSettings> {
+): Promise<
+  r.StatusResponse<200, TaxSettings> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/settings',
     params,
@@ -38401,7 +42363,7 @@ export async function postTaxSettings<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a Tax <code>Transaction</code> from a calculation.</p>
@@ -38409,9 +42371,11 @@ export async function postTaxSettings<FetcherData>(
 export async function postTaxTransactionsCreateFromCalculation<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxTransaction> {
+): Promise<
+  r.StatusResponse<200, TaxTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/transactions/create_from_calculation',
     params,
@@ -38420,7 +42384,7 @@ export async function postTaxTransactionsCreateFromCalculation<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Partially or fully reverses a previously created <code>Transaction</code>.</p>
@@ -38428,9 +42392,11 @@ export async function postTaxTransactionsCreateFromCalculation<FetcherData>(
 export async function postTaxTransactionsCreateReversal<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxTransaction> {
+): Promise<
+  r.StatusResponse<200, TaxTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/transactions/create_reversal',
     params,
@@ -38439,7 +42405,7 @@ export async function postTaxTransactionsCreateReversal<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a Tax <code>Transaction</code> object.</p>
@@ -38450,9 +42416,11 @@ export async function getTaxTransactionsTransaction<FetcherData>(
     expand?: string[];
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxTransaction> {
+): Promise<
+  r.StatusResponse<200, TaxTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/transactions/{transaction}',
     params,
@@ -38462,7 +42430,7 @@ export async function getTaxTransactionsTransaction<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the line items of a committed standalone transaction as a collection.</p>
@@ -38476,26 +42444,32 @@ export async function getTaxTransactionsTransactionLineItems<FetcherData>(
     starting_after?: string;
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TaxTransactionLineItem[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TaxTransactionLineItem[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax/transactions/{transaction}/line_items',
     params,
@@ -38505,7 +42479,7 @@ export async function getTaxTransactionsTransactionLineItems<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>A list of <a href="https://stripe.com/docs/tax/tax-categories">all tax codes available</a> to add to Products in
@@ -38519,23 +42493,29 @@ export async function getTaxCodes<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: TaxCode[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: TaxCode[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_codes',
     params,
@@ -38545,7 +42525,7 @@ export async function getTaxCodes<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing tax code. Supply the unique tax code ID and Stripe will return the corresponding
@@ -38557,9 +42537,11 @@ export async function getTaxCodesId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxCode> {
+): Promise<
+  r.StatusResponse<200, TaxCode> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_codes/{id}',
     params,
@@ -38569,7 +42551,7 @@ export async function getTaxCodesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of tax IDs.</p>
@@ -38587,26 +42569,32 @@ export async function getTaxIds<FetcherData>(
     };
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TaxId[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TaxId[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_ids',
     params,
@@ -38622,7 +42610,7 @@ export async function getTaxIds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new account or customer <code>tax_id</code> object.</p>
@@ -38630,9 +42618,9 @@ export async function getTaxIds<FetcherData>(
 export async function postTaxIds<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxId> {
+): Promise<r.StatusResponse<200, TaxId> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/tax_ids',
     params,
@@ -38641,7 +42629,7 @@ export async function postTaxIds<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes an existing account or customer <code>tax_id</code> object.</p>
@@ -38651,9 +42639,11 @@ export async function deleteTaxIdsId<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedTaxId> {
+): Promise<
+  r.StatusResponse<200, DeletedTaxId> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_ids/{id}',
     params,
@@ -38662,7 +42652,7 @@ export async function deleteTaxIdsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves an account or customer <code>tax_id</code> object.</p>
@@ -38673,9 +42663,9 @@ export async function getTaxIdsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxId> {
+): Promise<r.StatusResponse<200, TaxId> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/tax_ids/{id}',
     params,
@@ -38685,7 +42675,7 @@ export async function getTaxIdsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your tax rates. Tax rates are returned sorted by creation date, with the most recently created tax
@@ -38709,23 +42699,29 @@ export async function getTaxRates<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: TaxRate[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: TaxRate[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_rates',
     params,
@@ -38743,7 +42739,7 @@ export async function getTaxRates<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new tax rate.</p>
@@ -38751,9 +42747,11 @@ export async function getTaxRates<FetcherData>(
 export async function postTaxRates<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxRate> {
+): Promise<
+  r.StatusResponse<200, TaxRate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_rates',
     params,
@@ -38762,7 +42760,7 @@ export async function postTaxRates<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a tax rate with the given ID</p>
@@ -38773,9 +42771,11 @@ export async function getTaxRatesTaxRate<FetcherData>(
     expand?: string[];
     tax_rate: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxRate> {
+): Promise<
+  r.StatusResponse<200, TaxRate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_rates/{tax_rate}',
     params,
@@ -38785,7 +42785,7 @@ export async function getTaxRatesTaxRate<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates an existing tax rate.</p>
@@ -38795,9 +42795,11 @@ export async function postTaxRatesTaxRate<FetcherData>(
   params: {
     tax_rate: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TaxRate> {
+): Promise<
+  r.StatusResponse<200, TaxRate> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/tax_rates/{tax_rate}',
     params,
@@ -38806,7 +42808,7 @@ export async function postTaxRatesTaxRate<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of <code>Configuration</code> objects.</p>
@@ -38820,23 +42822,29 @@ export async function getTerminalConfigurations<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: TerminalConfiguration[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: TerminalConfiguration[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/configurations',
     params,
@@ -38852,7 +42860,7 @@ export async function getTerminalConfigurations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new <code>Configuration</code> object.</p>
@@ -38860,9 +42868,12 @@ export async function getTerminalConfigurations<FetcherData>(
 export async function postTerminalConfigurations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalConfiguration> {
+): Promise<
+  | r.StatusResponse<200, TerminalConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/configurations',
     params,
@@ -38871,7 +42882,7 @@ export async function postTerminalConfigurations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes a <code>Configuration</code> object.</p>
@@ -38881,9 +42892,12 @@ export async function deleteTerminalConfigurationsConfiguration<FetcherData>(
   params: {
     configuration: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedTerminalConfiguration> {
+): Promise<
+  | r.StatusResponse<200, DeletedTerminalConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/configurations/{configuration}',
     params,
@@ -38892,7 +42906,7 @@ export async function deleteTerminalConfigurationsConfiguration<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a <code>Configuration</code> object.</p>
@@ -38903,9 +42917,12 @@ export async function getTerminalConfigurationsConfiguration<FetcherData>(
     configuration: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalConfiguration | DeletedTerminalConfiguration> {
+): Promise<
+  | r.StatusResponse<200, TerminalConfiguration | DeletedTerminalConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/configurations/{configuration}',
     params,
@@ -38915,7 +42932,7 @@ export async function getTerminalConfigurationsConfiguration<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a new <code>Configuration</code> object.</p>
@@ -38925,9 +42942,12 @@ export async function postTerminalConfigurationsConfiguration<FetcherData>(
   params: {
     configuration: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalConfiguration | DeletedTerminalConfiguration> {
+): Promise<
+  | r.StatusResponse<200, TerminalConfiguration | DeletedTerminalConfiguration>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/configurations/{configuration}',
     params,
@@ -38936,7 +42956,7 @@ export async function postTerminalConfigurationsConfiguration<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>To connect to a reader the Stripe Terminal SDK needs to retrieve a short-lived connection token from Stripe, proxied
@@ -38945,9 +42965,12 @@ export async function postTerminalConfigurationsConfiguration<FetcherData>(
 export async function postTerminalConnectionTokens<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalConnectionToken> {
+): Promise<
+  | r.StatusResponse<200, TerminalConnectionToken>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/connection_tokens',
     params,
@@ -38956,7 +42979,7 @@ export async function postTerminalConnectionTokens<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of <code>Location</code> objects.</p>
@@ -38969,23 +42992,29 @@ export async function getTerminalLocations<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: TerminalLocation[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: TerminalLocation[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/locations',
     params,
@@ -38995,7 +43024,7 @@ export async function getTerminalLocations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new <code>Location</code> object.
@@ -39005,9 +43034,11 @@ export async function getTerminalLocations<FetcherData>(
 export async function postTerminalLocations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalLocation> {
+): Promise<
+  r.StatusResponse<200, TerminalLocation> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/locations',
     params,
@@ -39016,7 +43047,7 @@ export async function postTerminalLocations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes a <code>Location</code> object.</p>
@@ -39026,9 +43057,12 @@ export async function deleteTerminalLocationsLocation<FetcherData>(
   params: {
     location: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedTerminalLocation> {
+): Promise<
+  | r.StatusResponse<200, DeletedTerminalLocation>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/locations/{location}',
     params,
@@ -39037,7 +43071,7 @@ export async function deleteTerminalLocationsLocation<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a <code>Location</code> object.</p>
@@ -39048,9 +43082,12 @@ export async function getTerminalLocationsLocation<FetcherData>(
     expand?: string[];
     location: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalLocation | DeletedTerminalLocation> {
+): Promise<
+  | r.StatusResponse<200, TerminalLocation | DeletedTerminalLocation>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/locations/{location}',
     params,
@@ -39060,7 +43097,7 @@ export async function getTerminalLocationsLocation<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a <code>Location</code> object by setting the values of the parameters passed. Any parameters not provided
@@ -39071,9 +43108,12 @@ export async function postTerminalLocationsLocation<FetcherData>(
   params: {
     location: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalLocation | DeletedTerminalLocation> {
+): Promise<
+  | r.StatusResponse<200, TerminalLocation | DeletedTerminalLocation>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/locations/{location}',
     params,
@@ -39082,7 +43122,7 @@ export async function postTerminalLocationsLocation<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of <code>Reader</code> objects.</p>
@@ -39094,6 +43134,7 @@ export async function getTerminalReaders<FetcherData>(
       | 'bbpos_chipper2x'
       | 'bbpos_wisepad3'
       | 'bbpos_wisepos_e'
+      | 'mobile_phone_reader'
       | 'simulated_wisepos_e'
       | 'stripe_m2'
       | 'verifone_P400';
@@ -39105,26 +43146,32 @@ export async function getTerminalReaders<FetcherData>(
     starting_after?: string;
     status?: 'offline' | 'online';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * A list of readers
-   */
-  data: TerminalReader[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * A list of readers
+         */
+        data: TerminalReader[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers',
     params,
@@ -39143,7 +43190,7 @@ export async function getTerminalReaders<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new <code>Reader</code> object.</p>
@@ -39151,9 +43198,11 @@ export async function getTerminalReaders<FetcherData>(
 export async function postTerminalReaders<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader> {
+): Promise<
+  r.StatusResponse<200, TerminalReader> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers',
     params,
@@ -39162,7 +43211,7 @@ export async function postTerminalReaders<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes a <code>Reader</code> object.</p>
@@ -39172,9 +43221,12 @@ export async function deleteTerminalReadersReader<FetcherData>(
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedTerminalReader> {
+): Promise<
+  | r.StatusResponse<200, DeletedTerminalReader>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}',
     params,
@@ -39183,7 +43235,7 @@ export async function deleteTerminalReadersReader<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a <code>Reader</code> object.</p>
@@ -39194,9 +43246,12 @@ export async function getTerminalReadersReader<FetcherData>(
     expand?: string[];
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader | DeletedTerminalReader> {
+): Promise<
+  | r.StatusResponse<200, TerminalReader | DeletedTerminalReader>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}',
     params,
@@ -39206,7 +43261,7 @@ export async function getTerminalReadersReader<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will
@@ -39217,9 +43272,12 @@ export async function postTerminalReadersReader<FetcherData>(
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader | DeletedTerminalReader> {
+): Promise<
+  | r.StatusResponse<200, TerminalReader | DeletedTerminalReader>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}',
     params,
@@ -39228,7 +43286,7 @@ export async function postTerminalReadersReader<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels the current reader action.</p>
@@ -39238,9 +43296,11 @@ export async function postTerminalReadersReaderCancelAction<FetcherData>(
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader> {
+): Promise<
+  r.StatusResponse<200, TerminalReader> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}/cancel_action',
     params,
@@ -39249,7 +43309,7 @@ export async function postTerminalReadersReaderCancelAction<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Initiates a payment flow on a Reader.</p>
@@ -39261,9 +43321,11 @@ export async function postTerminalReadersReaderProcessPaymentIntent<
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader> {
+): Promise<
+  r.StatusResponse<200, TerminalReader> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}/process_payment_intent',
     params,
@@ -39272,7 +43334,7 @@ export async function postTerminalReadersReaderProcessPaymentIntent<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Initiates a setup intent flow on a Reader.</p>
@@ -39282,9 +43344,11 @@ export async function postTerminalReadersReaderProcessSetupIntent<FetcherData>(
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader> {
+): Promise<
+  r.StatusResponse<200, TerminalReader> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}/process_setup_intent',
     params,
@@ -39293,7 +43357,7 @@ export async function postTerminalReadersReaderProcessSetupIntent<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Initiates a refund on a Reader</p>
@@ -39303,9 +43367,11 @@ export async function postTerminalReadersReaderRefundPayment<FetcherData>(
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader> {
+): Promise<
+  r.StatusResponse<200, TerminalReader> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}/refund_payment',
     params,
@@ -39314,7 +43380,7 @@ export async function postTerminalReadersReaderRefundPayment<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Sets reader display to show cart details.</p>
@@ -39324,9 +43390,11 @@ export async function postTerminalReadersReaderSetReaderDisplay<FetcherData>(
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader> {
+): Promise<
+  r.StatusResponse<200, TerminalReader> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/terminal/readers/{reader}/set_reader_display',
     params,
@@ -39335,7 +43403,28 @@ export async function postTerminalReadersReaderSetReaderDisplay<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Creates a test mode Confirmation Token server side for your integration tests.</p>
+ */
+export async function postTestHelpersConfirmationTokens<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, ConfirmationToken> | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/confirmation_tokens',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Create an incoming testmode bank transfer</p>
@@ -39347,9 +43436,12 @@ export async function postTestHelpersCustomersCustomerFundCashBalance<
   params: {
     customer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<CustomerCashBalanceTransaction> {
+): Promise<
+  | r.StatusResponse<200, CustomerCashBalanceTransaction>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/customers/{customer}/fund_cash_balance',
     params,
@@ -39358,7 +43450,7 @@ export async function postTestHelpersCustomersCustomerFundCashBalance<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Create a test-mode authorization.</p>
@@ -39366,9 +43458,12 @@ export async function postTestHelpersCustomersCustomerFundCashBalance<
 export async function postTestHelpersIssuingAuthorizations<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/authorizations',
     params,
@@ -39377,7 +43472,7 @@ export async function postTestHelpersIssuingAuthorizations<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Capture a test-mode authorization.</p>
@@ -39389,9 +43484,12 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationCapture<
   params: {
     authorization: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/authorizations/{authorization}/capture',
     params,
@@ -39400,7 +43498,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationCapture<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Expire a test-mode Authorization.</p>
@@ -39412,9 +43510,12 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationExpire<
   params: {
     authorization: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/authorizations/{authorization}/expire',
     params,
@@ -39423,7 +43524,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationExpire<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Increment a test-mode Authorization.</p>
@@ -39435,9 +43536,12 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationIncrement
   params: {
     authorization: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/authorizations/{authorization}/increment',
     params,
@@ -39446,7 +43550,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationIncrement
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Reverse a test-mode Authorization.</p>
@@ -39458,9 +43562,12 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationReverse<
   params: {
     authorization: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingAuthorization> {
+): Promise<
+  | r.StatusResponse<200, IssuingAuthorization>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/authorizations/{authorization}/reverse',
     params,
@@ -39469,7 +43576,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationReverse<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>delivered</code>.</p>
@@ -39481,9 +43588,11 @@ export async function postTestHelpersIssuingCardsCardShippingDeliver<
   params: {
     card: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCard> {
+): Promise<
+  r.StatusResponse<200, IssuingCard> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/cards/{card}/shipping/deliver',
     params,
@@ -39492,7 +43601,7 @@ export async function postTestHelpersIssuingCardsCardShippingDeliver<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>
@@ -39502,9 +43611,11 @@ export async function postTestHelpersIssuingCardsCardShippingFail<FetcherData>(
   params: {
     card: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCard> {
+): Promise<
+  r.StatusResponse<200, IssuingCard> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/cards/{card}/shipping/fail',
     params,
@@ -39513,7 +43624,7 @@ export async function postTestHelpersIssuingCardsCardShippingFail<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>returned</code>.</p>
@@ -39525,9 +43636,11 @@ export async function postTestHelpersIssuingCardsCardShippingReturn<
   params: {
     card: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCard> {
+): Promise<
+  r.StatusResponse<200, IssuingCard> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/cards/{card}/shipping/return',
     params,
@@ -39536,7 +43649,7 @@ export async function postTestHelpersIssuingCardsCardShippingReturn<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>
@@ -39546,9 +43659,11 @@ export async function postTestHelpersIssuingCardsCardShippingShip<FetcherData>(
   params: {
     card: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingCard> {
+): Promise<
+  r.StatusResponse<200, IssuingCard> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/cards/{card}/shipping/ship',
     params,
@@ -39557,7 +43672,85 @@ export async function postTestHelpersIssuingCardsCardShippingShip<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Updates the <code>status</code> of the specified testmode personalization design object to <code>active</code>.</p>
+ */
+export async function postTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    personalization_design: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssuingPersonalizationDesign>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Updates the <code>status</code> of the specified testmode personalization design object to <code>inactive</code>.</p>
+ */
+export async function postTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    personalization_design: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssuingPersonalizationDesign>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Updates the <code>status</code> of the specified testmode personalization design object to <code>rejected</code>.</p>
+ */
+export async function postTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    personalization_design: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssuingPersonalizationDesign>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Allows the user to capture an arbitrary amount, also known as a forced capture.</p>
@@ -39567,9 +43760,11 @@ export async function postTestHelpersIssuingTransactionsCreateForceCapture<
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingTransaction> {
+): Promise<
+  r.StatusResponse<200, IssuingTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/transactions/create_force_capture',
     params,
@@ -39578,7 +43773,7 @@ export async function postTestHelpersIssuingTransactionsCreateForceCapture<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Allows the user to refund an arbitrary amount, also known as a unlinked refund.</p>
@@ -39588,9 +43783,11 @@ export async function postTestHelpersIssuingTransactionsCreateUnlinkedRefund<
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingTransaction> {
+): Promise<
+  r.StatusResponse<200, IssuingTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/transactions/create_unlinked_refund',
     params,
@@ -39599,7 +43796,7 @@ export async function postTestHelpersIssuingTransactionsCreateUnlinkedRefund<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Refund a test-mode Transaction.</p>
@@ -39611,9 +43808,11 @@ export async function postTestHelpersIssuingTransactionsTransactionRefund<
   params: {
     transaction: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<IssuingTransaction> {
+): Promise<
+  r.StatusResponse<200, IssuingTransaction> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/issuing/transactions/{transaction}/refund',
     params,
@@ -39622,7 +43821,7 @@ export async function postTestHelpersIssuingTransactionsTransactionRefund<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Expire a refund with a status of <code>requires_action</code>.</p>
@@ -39632,9 +43831,9 @@ export async function postTestHelpersRefundsRefundExpire<FetcherData>(
   params: {
     refund: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Refund> {
+): Promise<r.StatusResponse<200, Refund> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/refunds/{refund}/expire',
     params,
@@ -39643,7 +43842,7 @@ export async function postTestHelpersRefundsRefundExpire<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Presents a payment method on a simulated reader. Can be used to simulate accepting a payment, saving a card or
@@ -39656,9 +43855,11 @@ export async function postTestHelpersTerminalReadersReaderPresentPaymentMethod<
   params: {
     reader: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TerminalReader> {
+): Promise<
+  r.StatusResponse<200, TerminalReader> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/terminal/readers/{reader}/present_payment_method',
     params,
@@ -39667,7 +43868,7 @@ export async function postTestHelpersTerminalReadersReaderPresentPaymentMethod<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your test clocks.</p>
@@ -39680,23 +43881,29 @@ export async function getTestHelpersTestClocks<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: TestHelpersTestClock[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: TestHelpersTestClock[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/test_clocks',
     params,
@@ -39706,7 +43913,7 @@ export async function getTestHelpersTestClocks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new test clock that can be attached to new customers and quotes.</p>
@@ -39714,9 +43921,12 @@ export async function getTestHelpersTestClocks<FetcherData>(
 export async function postTestHelpersTestClocks<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TestHelpersTestClock> {
+): Promise<
+  | r.StatusResponse<200, TestHelpersTestClock>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/test_clocks',
     params,
@@ -39725,7 +43935,7 @@ export async function postTestHelpersTestClocks<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Deletes a test clock.</p>
@@ -39735,9 +43945,12 @@ export async function deleteTestHelpersTestClocksTestClock<FetcherData>(
   params: {
     test_clock: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedTestHelpersTestClock> {
+): Promise<
+  | r.StatusResponse<200, DeletedTestHelpersTestClock>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/test_clocks/{test_clock}',
     params,
@@ -39746,7 +43959,7 @@ export async function deleteTestHelpersTestClocksTestClock<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a test clock.</p>
@@ -39757,9 +43970,12 @@ export async function getTestHelpersTestClocksTestClock<FetcherData>(
     expand?: string[];
     test_clock: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TestHelpersTestClock> {
+): Promise<
+  | r.StatusResponse<200, TestHelpersTestClock>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/test_clocks/{test_clock}',
     params,
@@ -39769,7 +43985,7 @@ export async function getTestHelpersTestClocksTestClock<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Starts advancing a test clock to a specified time in the future. Advancement is done when status changes to
@@ -39780,9 +43996,12 @@ export async function postTestHelpersTestClocksTestClockAdvance<FetcherData>(
   params: {
     test_clock: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TestHelpersTestClock> {
+): Promise<
+  | r.StatusResponse<200, TestHelpersTestClock>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/test_clocks/{test_clock}/advance',
     params,
@@ -39791,7 +44010,7 @@ export async function postTestHelpersTestClocksTestClockAdvance<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created InboundTransfer to the <code>failed</code> status. The InboundTransfer must already
@@ -39804,9 +44023,12 @@ export async function postTestHelpersTreasuryInboundTransfersIdFail<
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryInboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryInboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/inbound_transfers/{id}/fail',
     params,
@@ -39815,7 +44037,7 @@ export async function postTestHelpersTreasuryInboundTransfersIdFail<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Marks the test mode InboundTransfer object as returned and links the InboundTransfer to a ReceivedDebit. The
@@ -39828,9 +44050,12 @@ export async function postTestHelpersTreasuryInboundTransfersIdReturn<
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryInboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryInboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/inbound_transfers/{id}/return',
     params,
@@ -39839,7 +44064,7 @@ export async function postTestHelpersTreasuryInboundTransfersIdReturn<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created InboundTransfer to the <code>succeeded</code> status. The InboundTransfer must
@@ -39852,9 +44077,12 @@ export async function postTestHelpersTreasuryInboundTransfersIdSucceed<
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryInboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryInboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/inbound_transfers/{id}/succeed',
     params,
@@ -39863,7 +44091,32 @@ export async function postTestHelpersTreasuryInboundTransfersIdSucceed<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Updates a test mode created OutboundPayment with tracking details. The OutboundPayment must not be cancelable, and
+ * cannot be in the <code>canceled</code> or <code>failed</code> states.</p>
+ */
+export async function postTestHelpersTreasuryOutboundPaymentsId<FetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    id: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundPayment>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/treasury/outbound_payments/{id}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created OutboundPayment to the <code>failed</code> status. The OutboundPayment must already
@@ -39876,9 +44129,12 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdFail<
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundPayment> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundPayment>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/outbound_payments/{id}/fail',
     params,
@@ -39887,7 +44143,7 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdFail<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created OutboundPayment to the <code>posted</code> status. The OutboundPayment must already
@@ -39900,9 +44156,12 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdPost<
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundPayment> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundPayment>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/outbound_payments/{id}/post',
     params,
@@ -39911,7 +44170,7 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdPost<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created OutboundPayment to the <code>returned</code> status. The OutboundPayment must already
@@ -39924,9 +44183,12 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdReturn<
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundPayment> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundPayment>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/outbound_payments/{id}/return',
     params,
@@ -39935,7 +44197,34 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdReturn<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * <p>Updates a test mode created OutboundTransfer with tracking details. The OutboundTransfer must not be cancelable, and
+ * cannot be in the <code>canceled</code> or <code>failed</code> states.</p>
+ */
+export async function postTestHelpersTreasuryOutboundTransfersOutboundTransfer<
+  FetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    outbound_transfer: string;
+  },
+  body: unknown,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
+  const req = await ctx.createRequest({
+    path: '/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+    auth: ['basicAuth', 'bearerAuth'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created OutboundTransfer to the <code>failed</code> status. The OutboundTransfer must already
@@ -39948,9 +44237,12 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferFa
   params: {
     outbound_transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/fail',
     params,
@@ -39959,7 +44251,7 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferFa
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created OutboundTransfer to the <code>posted</code> status. The OutboundTransfer must already
@@ -39972,9 +44264,12 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferPo
   params: {
     outbound_transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/post',
     params,
@@ -39983,7 +44278,7 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferPo
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Transitions a test mode created OutboundTransfer to the <code>returned</code> status. The OutboundTransfer must
@@ -39996,9 +44291,12 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferRe
   params: {
     outbound_transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/return',
     params,
@@ -40007,7 +44305,7 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferRe
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Use this endpoint to simulate a test mode ReceivedCredit initiated by a third party. In live mode, you can’t directly
@@ -40016,9 +44314,12 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferRe
 export async function postTestHelpersTreasuryReceivedCredits<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryReceivedCredit> {
+): Promise<
+  | r.StatusResponse<200, TreasuryReceivedCredit>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/received_credits',
     params,
@@ -40027,7 +44328,7 @@ export async function postTestHelpersTreasuryReceivedCredits<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Use this endpoint to simulate a test mode ReceivedDebit initiated by a third party. In live mode, you can’t directly
@@ -40036,9 +44337,12 @@ export async function postTestHelpersTreasuryReceivedCredits<FetcherData>(
 export async function postTestHelpersTreasuryReceivedDebits<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryReceivedDebit> {
+): Promise<
+  | r.StatusResponse<200, TreasuryReceivedDebit>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/test_helpers/treasury/received_debits',
     params,
@@ -40047,20 +44351,22 @@ export async function postTestHelpersTreasuryReceivedDebits<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a single-use token that represents a bank account’s details.
  * You can use this token with any API method in
  * place of a bank account dictionary. You can only use this token once. To do so, attach it to a <a
- * href="#accounts">Custom account</a>.</p>
+ * href="#accounts">connected account</a> where <a
+ * href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a> is
+ * <code>application</code>, which includes Custom accounts.</p>
  */
 export async function postTokens<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Token> {
+): Promise<r.StatusResponse<200, Token> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/tokens',
     params,
@@ -40069,7 +44375,7 @@ export async function postTokens<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the token with the given ID.</p>
@@ -40080,9 +44386,9 @@ export async function getTokensToken<FetcherData>(
     expand?: string[];
     token: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Token> {
+): Promise<r.StatusResponse<200, Token> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/tokens/{token}',
     params,
@@ -40092,7 +44398,7 @@ export async function getTokensToken<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of top-ups.</p>
@@ -40122,23 +44428,29 @@ export async function getTopups<FetcherData>(
     starting_after?: string;
     status?: 'canceled' | 'failed' | 'pending' | 'succeeded';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: Topup[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: Topup[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/topups',
     params,
@@ -40156,7 +44468,7 @@ export async function getTopups<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Top up the balance of an account</p>
@@ -40164,9 +44476,9 @@ export async function getTopups<FetcherData>(
 export async function postTopups<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Topup> {
+): Promise<r.StatusResponse<200, Topup> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/topups',
     params,
@@ -40175,7 +44487,7 @@ export async function postTopups<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a top-up that has previously been created. Supply the unique top-up ID that was returned
@@ -40187,9 +44499,9 @@ export async function getTopupsTopup<FetcherData>(
     expand?: string[];
     topup: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Topup> {
+): Promise<r.StatusResponse<200, Topup> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/topups/{topup}',
     params,
@@ -40199,7 +44511,7 @@ export async function getTopupsTopup<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the metadata of a top-up. Other top-up details are not editable by design.</p>
@@ -40209,9 +44521,9 @@ export async function postTopupsTopup<FetcherData>(
   params: {
     topup: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Topup> {
+): Promise<r.StatusResponse<200, Topup> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/topups/{topup}',
     params,
@@ -40220,7 +44532,7 @@ export async function postTopupsTopup<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels a top-up. Only pending top-ups can be canceled.</p>
@@ -40230,9 +44542,9 @@ export async function postTopupsTopupCancel<FetcherData>(
   params: {
     topup: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Topup> {
+): Promise<r.StatusResponse<200, Topup> | r.StatusResponse<'default', Error>> {
   const req = await ctx.createRequest({
     path: '/v1/topups/{topup}/cancel',
     params,
@@ -40241,7 +44553,7 @@ export async function postTopupsTopupCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of existing transfers sent to connected accounts. The transfers are returned in sorted order, with the
@@ -40265,26 +44577,32 @@ export async function getTransfers<FetcherData>(
     starting_after?: string;
     transfer_group?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: Transfer[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: Transfer[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers',
     params,
@@ -40302,7 +44620,7 @@ export async function getTransfers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>To send funds from your Stripe account to a connected account, you create a new transfer object. Your <a
@@ -40312,9 +44630,11 @@ export async function getTransfers<FetcherData>(
 export async function postTransfers<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Transfer> {
+): Promise<
+  r.StatusResponse<200, Transfer> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers',
     params,
@@ -40323,7 +44643,7 @@ export async function postTransfers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can see a list of the reversals belonging to a specific transfer. Note that the 10 most recent reversals are
@@ -40339,26 +44659,32 @@ export async function getTransfersIdReversals<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TransferReversal[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TransferReversal[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers/{id}/reversals',
     params,
@@ -40368,7 +44694,7 @@ export async function getTransfersIdReversals<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>When you create a new reversal, you must specify a transfer to create it on.</p>
@@ -40385,9 +44711,11 @@ export async function postTransfersIdReversals<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TransferReversal> {
+): Promise<
+  r.StatusResponse<200, TransferReversal> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers/{id}/reversals',
     params,
@@ -40396,7 +44724,7 @@ export async function postTransfersIdReversals<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing transfer. Supply the unique transfer ID from either a transfer creation request
@@ -40408,9 +44736,11 @@ export async function getTransfersTransfer<FetcherData>(
     expand?: string[];
     transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Transfer> {
+): Promise<
+  r.StatusResponse<200, Transfer> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers/{transfer}',
     params,
@@ -40420,7 +44750,7 @@ export async function getTransfersTransfer<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified transfer by setting the values of the parameters passed. Any parameters not provided will be
@@ -40433,9 +44763,11 @@ export async function postTransfersTransfer<FetcherData>(
   params: {
     transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<Transfer> {
+): Promise<
+  r.StatusResponse<200, Transfer> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers/{transfer}',
     params,
@@ -40444,7 +44776,7 @@ export async function postTransfersTransfer<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>By default, you can see the 10 most recent reversals stored directly on the transfer object, but you can also
@@ -40457,9 +44789,11 @@ export async function getTransfersTransferReversalsId<FetcherData>(
     id: string;
     transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TransferReversal> {
+): Promise<
+  r.StatusResponse<200, TransferReversal> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers/{transfer}/reversals/{id}',
     params,
@@ -40469,7 +44803,7 @@ export async function getTransfersTransferReversalsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the specified reversal by setting the values of the parameters passed. Any parameters not provided will be
@@ -40483,9 +44817,11 @@ export async function postTransfersTransferReversalsId<FetcherData>(
     id: string;
     transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TransferReversal> {
+): Promise<
+  r.StatusResponse<200, TransferReversal> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/transfers/{transfer}/reversals/{id}',
     params,
@@ -40494,7 +44830,7 @@ export async function postTransfersTransferReversalsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of CreditReversals.</p>
@@ -40510,26 +44846,32 @@ export async function getTreasuryCreditReversals<FetcherData>(
     starting_after?: string;
     status?: 'canceled' | 'posted' | 'processing';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryCreditReversal[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryCreditReversal[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/credit_reversals',
     params,
@@ -40547,7 +44889,7 @@ export async function getTreasuryCreditReversals<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Reverses a ReceivedCredit and creates a CreditReversal object.</p>
@@ -40555,9 +44897,12 @@ export async function getTreasuryCreditReversals<FetcherData>(
 export async function postTreasuryCreditReversals<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryCreditReversal> {
+): Promise<
+  | r.StatusResponse<200, TreasuryCreditReversal>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/credit_reversals',
     params,
@@ -40566,7 +44911,7 @@ export async function postTreasuryCreditReversals<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing CreditReversal by passing the unique CreditReversal ID from either the
@@ -40578,9 +44923,12 @@ export async function getTreasuryCreditReversalsCreditReversal<FetcherData>(
     credit_reversal: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryCreditReversal> {
+): Promise<
+  | r.StatusResponse<200, TreasuryCreditReversal>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/credit_reversals/{credit_reversal}',
     params,
@@ -40590,7 +44938,7 @@ export async function getTreasuryCreditReversalsCreditReversal<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of DebitReversals.</p>
@@ -40607,26 +44955,32 @@ export async function getTreasuryDebitReversals<FetcherData>(
     starting_after?: string;
     status?: 'canceled' | 'completed' | 'processing';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryDebitReversal[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryDebitReversal[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/debit_reversals',
     params,
@@ -40645,7 +44999,7 @@ export async function getTreasuryDebitReversals<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Reverses a ReceivedDebit and creates a DebitReversal object.</p>
@@ -40653,9 +45007,12 @@ export async function getTreasuryDebitReversals<FetcherData>(
 export async function postTreasuryDebitReversals<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryDebitReversal> {
+): Promise<
+  | r.StatusResponse<200, TreasuryDebitReversal>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/debit_reversals',
     params,
@@ -40664,7 +45021,7 @@ export async function postTreasuryDebitReversals<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a DebitReversal object.</p>
@@ -40675,9 +45032,12 @@ export async function getTreasuryDebitReversalsDebitReversal<FetcherData>(
     debit_reversal: string;
     expand?: string[];
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryDebitReversal> {
+): Promise<
+  | r.StatusResponse<200, TreasuryDebitReversal>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/debit_reversals/{debit_reversal}',
     params,
@@ -40687,7 +45047,7 @@ export async function getTreasuryDebitReversalsDebitReversal<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of FinancialAccounts.</p>
@@ -40708,23 +45068,29 @@ export async function getTreasuryFinancialAccounts<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: TreasuryFinancialAccount[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: TreasuryFinancialAccount[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/financial_accounts',
     params,
@@ -40740,7 +45106,7 @@ export async function getTreasuryFinancialAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates a new FinancialAccount. For now, each connected account can only have one FinancialAccount.</p>
@@ -40748,9 +45114,12 @@ export async function getTreasuryFinancialAccounts<FetcherData>(
 export async function postTreasuryFinancialAccounts<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryFinancialAccount> {
+): Promise<
+  | r.StatusResponse<200, TreasuryFinancialAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/financial_accounts',
     params,
@@ -40759,7 +45128,7 @@ export async function postTreasuryFinancialAccounts<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of a FinancialAccount.</p>
@@ -40770,9 +45139,12 @@ export async function getTreasuryFinancialAccountsFinancialAccount<FetcherData>(
     expand?: string[];
     financial_account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryFinancialAccount> {
+): Promise<
+  | r.StatusResponse<200, TreasuryFinancialAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/financial_accounts/{financial_account}',
     params,
@@ -40782,7 +45154,7 @@ export async function getTreasuryFinancialAccountsFinancialAccount<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the details of a FinancialAccount.</p>
@@ -40794,9 +45166,12 @@ export async function postTreasuryFinancialAccountsFinancialAccount<
   params: {
     financial_account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryFinancialAccount> {
+): Promise<
+  | r.StatusResponse<200, TreasuryFinancialAccount>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/financial_accounts/{financial_account}',
     params,
@@ -40805,7 +45180,7 @@ export async function postTreasuryFinancialAccountsFinancialAccount<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves Features information associated with the FinancialAccount.</p>
@@ -40818,9 +45193,12 @@ export async function getTreasuryFinancialAccountsFinancialAccountFeatures<
     expand?: string[];
     financial_account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryFinancialAccountFeatures> {
+): Promise<
+  | r.StatusResponse<200, TreasuryFinancialAccountFeatures>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/financial_accounts/{financial_account}/features',
     params,
@@ -40830,7 +45208,7 @@ export async function getTreasuryFinancialAccountsFinancialAccountFeatures<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the Features associated with a FinancialAccount.</p>
@@ -40842,9 +45220,12 @@ export async function postTreasuryFinancialAccountsFinancialAccountFeatures<
   params: {
     financial_account: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryFinancialAccountFeatures> {
+): Promise<
+  | r.StatusResponse<200, TreasuryFinancialAccountFeatures>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/financial_accounts/{financial_account}/features',
     params,
@@ -40853,7 +45234,7 @@ export async function postTreasuryFinancialAccountsFinancialAccountFeatures<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of InboundTransfers sent from the specified FinancialAccount.</p>
@@ -40868,26 +45249,32 @@ export async function getTreasuryInboundTransfers<FetcherData>(
     starting_after?: string;
     status?: 'canceled' | 'failed' | 'processing' | 'succeeded';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryInboundTransfer[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryInboundTransfer[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/inbound_transfers',
     params,
@@ -40904,7 +45291,7 @@ export async function getTreasuryInboundTransfers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an InboundTransfer.</p>
@@ -40912,9 +45299,12 @@ export async function getTreasuryInboundTransfers<FetcherData>(
 export async function postTreasuryInboundTransfers<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryInboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryInboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/inbound_transfers',
     params,
@@ -40923,7 +45313,7 @@ export async function postTreasuryInboundTransfers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing InboundTransfer.</p>
@@ -40934,9 +45324,12 @@ export async function getTreasuryInboundTransfersId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryInboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryInboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/inbound_transfers/{id}',
     params,
@@ -40946,7 +45339,7 @@ export async function getTreasuryInboundTransfersId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancels an InboundTransfer.</p>
@@ -40958,9 +45351,12 @@ export async function postTreasuryInboundTransfersInboundTransferCancel<
   params: {
     inbound_transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryInboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryInboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/inbound_transfers/{inbound_transfer}/cancel',
     params,
@@ -40969,7 +45365,7 @@ export async function postTreasuryInboundTransfersInboundTransferCancel<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of OutboundPayments sent from the specified FinancialAccount.</p>
@@ -40993,26 +45389,32 @@ export async function getTreasuryOutboundPayments<FetcherData>(
     starting_after?: string;
     status?: 'canceled' | 'failed' | 'posted' | 'processing' | 'returned';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryOutboundPayment[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryOutboundPayment[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_payments',
     params,
@@ -41031,7 +45433,7 @@ export async function getTreasuryOutboundPayments<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an OutboundPayment.</p>
@@ -41039,9 +45441,12 @@ export async function getTreasuryOutboundPayments<FetcherData>(
 export async function postTreasuryOutboundPayments<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundPayment> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundPayment>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_payments',
     params,
@@ -41050,7 +45455,7 @@ export async function postTreasuryOutboundPayments<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing OutboundPayment by passing the unique OutboundPayment ID from either the
@@ -41062,9 +45467,12 @@ export async function getTreasuryOutboundPaymentsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundPayment> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundPayment>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_payments/{id}',
     params,
@@ -41074,7 +45482,7 @@ export async function getTreasuryOutboundPaymentsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Cancel an OutboundPayment.</p>
@@ -41084,9 +45492,12 @@ export async function postTreasuryOutboundPaymentsIdCancel<FetcherData>(
   params: {
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundPayment> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundPayment>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_payments/{id}/cancel',
     params,
@@ -41095,7 +45506,7 @@ export async function postTreasuryOutboundPaymentsIdCancel<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of OutboundTransfers sent from the specified FinancialAccount.</p>
@@ -41110,26 +45521,32 @@ export async function getTreasuryOutboundTransfers<FetcherData>(
     starting_after?: string;
     status?: 'canceled' | 'failed' | 'posted' | 'processing' | 'returned';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryOutboundTransfer[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryOutboundTransfer[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_transfers',
     params,
@@ -41146,7 +45563,7 @@ export async function getTreasuryOutboundTransfers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Creates an OutboundTransfer.</p>
@@ -41154,9 +45571,12 @@ export async function getTreasuryOutboundTransfers<FetcherData>(
 export async function postTreasuryOutboundTransfers<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_transfers',
     params,
@@ -41165,7 +45585,7 @@ export async function postTreasuryOutboundTransfers<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing OutboundTransfer by passing the unique OutboundTransfer ID from either the
@@ -41177,9 +45597,12 @@ export async function getTreasuryOutboundTransfersOutboundTransfer<FetcherData>(
     expand?: string[];
     outbound_transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_transfers/{outbound_transfer}',
     params,
@@ -41189,7 +45612,7 @@ export async function getTreasuryOutboundTransfersOutboundTransfer<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>An OutboundTransfer can be canceled if the funds have not yet been paid out.</p>
@@ -41201,9 +45624,12 @@ export async function postTreasuryOutboundTransfersOutboundTransferCancel<
   params: {
     outbound_transfer: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryOutboundTransfer> {
+): Promise<
+  | r.StatusResponse<200, TreasuryOutboundTransfer>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/outbound_transfers/{outbound_transfer}/cancel',
     params,
@@ -41212,7 +45638,7 @@ export async function postTreasuryOutboundTransfersOutboundTransferCancel<
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of ReceivedCredits.</p>
@@ -41234,26 +45660,32 @@ export async function getTreasuryReceivedCredits<FetcherData>(
     starting_after?: string;
     status?: 'failed' | 'succeeded';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryReceivedCredit[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryReceivedCredit[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/received_credits',
     params,
@@ -41271,7 +45703,7 @@ export async function getTreasuryReceivedCredits<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing ReceivedCredit by passing the unique ReceivedCredit ID from the ReceivedCredit
@@ -41283,9 +45715,12 @@ export async function getTreasuryReceivedCreditsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryReceivedCredit> {
+): Promise<
+  | r.StatusResponse<200, TreasuryReceivedCredit>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/received_credits/{id}',
     params,
@@ -41295,7 +45730,7 @@ export async function getTreasuryReceivedCreditsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of ReceivedDebits.</p>
@@ -41310,26 +45745,32 @@ export async function getTreasuryReceivedDebits<FetcherData>(
     starting_after?: string;
     status?: 'failed' | 'succeeded';
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryReceivedDebit[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryReceivedDebit[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/received_debits',
     params,
@@ -41346,7 +45787,7 @@ export async function getTreasuryReceivedDebits<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing ReceivedDebit by passing the unique ReceivedDebit ID from the ReceivedDebit
@@ -41358,9 +45799,12 @@ export async function getTreasuryReceivedDebitsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryReceivedDebit> {
+): Promise<
+  | r.StatusResponse<200, TreasuryReceivedDebit>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/received_debits/{id}',
     params,
@@ -41370,7 +45814,7 @@ export async function getTreasuryReceivedDebitsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a list of TransactionEntry objects.</p>
@@ -41402,26 +45846,32 @@ export async function getTreasuryTransactionEntries<FetcherData>(
     starting_after?: string;
     transaction?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryTransactionEntry[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryTransactionEntry[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/transaction_entries',
     params,
@@ -41441,7 +45891,7 @@ export async function getTreasuryTransactionEntries<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a TransactionEntry object.</p>
@@ -41452,9 +45902,12 @@ export async function getTreasuryTransactionEntriesId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryTransactionEntry> {
+): Promise<
+  | r.StatusResponse<200, TreasuryTransactionEntry>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/transaction_entries/{id}',
     params,
@@ -41464,7 +45917,7 @@ export async function getTreasuryTransactionEntriesId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves a list of Transaction objects.</p>
@@ -41498,26 +45951,32 @@ export async function getTreasuryTransactions<FetcherData>(
         | number;
     };
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  /**
-   * Details about each object.
-   */
-  data: TreasuryTransaction[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Details about each object.
+         */
+        data: TreasuryTransaction[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/transactions',
     params,
@@ -41537,7 +45996,7 @@ export async function getTreasuryTransactions<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the details of an existing Transaction.</p>
@@ -41548,9 +46007,12 @@ export async function getTreasuryTransactionsId<FetcherData>(
     expand?: string[];
     id: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<TreasuryTransaction> {
+): Promise<
+  | r.StatusResponse<200, TreasuryTransaction>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/treasury/transactions/{id}',
     params,
@@ -41560,7 +46022,7 @@ export async function getTreasuryTransactionsId<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Returns a list of your webhook endpoints.</p>
@@ -41573,23 +46035,29 @@ export async function getWebhookEndpoints<FetcherData>(
     limit?: number;
     starting_after?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<{
-  data: WebhookEndpoint[];
-  /**
-   * True if this list has another page of items after this one that can be fetched.
-   */
-  has_more: boolean;
-  /**
-   * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
-   */
-  object: 'list';
-  /**
-   * The URL where this list can be accessed.
-   */
-  url: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        data: WebhookEndpoint[];
+        /**
+         * True if this list has another page of items after this one that can be fetched.
+         */
+        has_more: boolean;
+        /**
+         * String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+         */
+        object: 'list';
+        /**
+         * The URL where this list can be accessed.
+         */
+        url: string;
+      }
+    >
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/webhook_endpoints',
     params,
@@ -41599,7 +46067,7 @@ export async function getWebhookEndpoints<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>A webhook endpoint must have a <code>url</code> and a list of <code>enabled_events</code>. You may optionally specify
@@ -41612,9 +46080,11 @@ export async function getWebhookEndpoints<FetcherData>(
 export async function postWebhookEndpoints<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<WebhookEndpoint> {
+): Promise<
+  r.StatusResponse<200, WebhookEndpoint> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/webhook_endpoints',
     params,
@@ -41623,7 +46093,7 @@ export async function postWebhookEndpoints<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>You can also delete webhook endpoints via the <a href="https://dashboard.stripe.com/account/webhooks">webhook
@@ -41634,9 +46104,12 @@ export async function deleteWebhookEndpointsWebhookEndpoint<FetcherData>(
   params: {
     webhook_endpoint: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<DeletedWebhookEndpoint> {
+): Promise<
+  | r.StatusResponse<200, DeletedWebhookEndpoint>
+  | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/webhook_endpoints/{webhook_endpoint}',
     params,
@@ -41645,7 +46118,7 @@ export async function deleteWebhookEndpointsWebhookEndpoint<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Retrieves the webhook endpoint with the given ID.</p>
@@ -41656,9 +46129,11 @@ export async function getWebhookEndpointsWebhookEndpoint<FetcherData>(
     expand?: string[];
     webhook_endpoint: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<WebhookEndpoint> {
+): Promise<
+  r.StatusResponse<200, WebhookEndpoint> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/webhook_endpoints/{webhook_endpoint}',
     params,
@@ -41668,7 +46143,7 @@ export async function getWebhookEndpointsWebhookEndpoint<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * <p>Updates the webhook endpoint. You may edit the <code>url</code>, the list of <code>enabled_events</code>, and the
@@ -41679,9 +46154,11 @@ export async function postWebhookEndpointsWebhookEndpoint<FetcherData>(
   params: {
     webhook_endpoint: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<WebhookEndpoint> {
+): Promise<
+  r.StatusResponse<200, WebhookEndpoint> | r.StatusResponse<'default', Error>
+> {
   const req = await ctx.createRequest({
     path: '/v1/webhook_endpoints/{webhook_endpoint}',
     params,
@@ -41690,5 +46167,5 @@ export async function postWebhookEndpointsWebhookEndpoint<FetcherData>(
     auth: ['basicAuth', 'bearerAuth'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }

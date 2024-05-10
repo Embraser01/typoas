@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { applyTemplating, isCodeInRange } from '../utils';
+import { applyTemplating } from '../utils';
 
 describe('apply templating', () => {
   it('should replace variables in string', () => {
@@ -34,22 +34,5 @@ describe('apply templating', () => {
         userId: 'weird=user/id/52',
       }),
     ).toEqual('/weird%3Duser%2Fid%2F52/test');
-  });
-});
-
-describe('is code in range', () => {
-  it('should work with specific codes', () => {
-    expect(isCodeInRange('200', 200)).toBeTruthy();
-    expect(isCodeInRange('201', 201)).toBeTruthy();
-    expect(isCodeInRange('2XX', 200)).toBeTruthy();
-    expect(isCodeInRange('2XX', 243)).toBeTruthy();
-    expect(isCodeInRange('201', 200)).toBeFalsy();
-    expect(isCodeInRange('3XX', 200)).toBeFalsy();
-    expect(isCodeInRange('XXX', 200)).toBeTruthy();
-  });
-
-  it('should work for default code range', () => {
-    expect(isCodeInRange('default', 200)).toBeTruthy();
-    expect(isCodeInRange('default', 500)).toBeTruthy();
   });
 });

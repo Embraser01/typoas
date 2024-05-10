@@ -63,6 +63,7 @@ export type ContextOptions = {
   fetcherOptions?: boolean;
   anyInsteadOfUnknown?: boolean;
   wrapLinesAt?: number;
+  fullResponseMode?: boolean;
 };
 
 export class Context {
@@ -167,5 +168,9 @@ export class Context {
 
   getWrapLinesAt(): number {
     return this.opts.wrapLinesAt || 120;
+  }
+
+  isFullResponseMode(): boolean {
+    return this.opts.fullResponseMode !== false;
   }
 }

@@ -13,12 +13,12 @@ export class GenerateCommand extends Command {
     description: `Generate a TS file from an OpenAPI spec.`,
     examples: [
       [
-        `Generate MyClient client`,
-        `$0 generate -n MyClient -i spec.json -o src/client.ts`,
+        `Generate client from local specs`,
+        `$0 generate -i spec.json -o src/client.ts`,
       ],
       [
-        `Generate MyClient client`,
-        `$0 generate -n MyClient -i https://petstore.swagger.io/v2/swagger.json -o src/client.ts`,
+        `Generate client from URLs`,
+        `$0 generate -i https://petstore3.swagger.io/api/v3/openapi.json -o src/client.ts`,
       ],
     ],
   };
@@ -41,6 +41,11 @@ export class GenerateCommand extends Command {
 
   prettier = Option.Boolean('-p,--prettier', {
     description: 'If set, the generated file will be formatted with Prettier',
+  });
+
+  fullResponseMode = Option.Boolean('-r,--full-response-mode', {
+    description:
+      'Enabled by default, generate functions that only throws on network errors, can be disabled using --no-full-response-mode',
   });
 
   jsDoc = Option.Boolean('--js-doc', {
@@ -84,6 +89,7 @@ export class GenerateCommand extends Command {
       generateEnums: this.generateEnums,
       anyInsteadOfUnknown: this.anyInsteadOfUnknown,
       wrapLinesAt: this.wrapLinesAt,
+      fullResponseMode: this.fullResponseMode,
     });
 
     let content = getStringFromSourceFile(src);

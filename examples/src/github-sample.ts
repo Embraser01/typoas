@@ -1440,7 +1440,7 @@ export type AuthenticationToken = {
    *   "deployments": "write"
    * }
    */
-  permissions?: any;
+  permissions?: unknown;
   /**
    * The repositories this token has access to
    */
@@ -1485,8 +1485,8 @@ export type AuditLogEvent = {
    */
   blocked_user?: string;
   business?: string;
-  config?: any[];
-  config_was?: any[];
+  config?: unknown[];
+  config_was?: unknown[];
   content_type?: string;
   /**
    * The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
@@ -1498,8 +1498,8 @@ export type AuditLogEvent = {
    */
   _document_id?: string;
   emoji?: string;
-  events?: any[];
-  events_were?: any[];
+  events?: unknown[];
+  events_were?: unknown[];
   explanation?: string;
   fingerprint?: string;
   hook_id?: number;
@@ -1993,8 +1993,8 @@ export type BaseGist = {
   comments_url: string;
   owner?: SimpleUser | null;
   truncated?: boolean;
-  forks?: any[];
-  history?: any[];
+  forks?: unknown[];
+  history?: unknown[];
 };
 /**
  * Public User
@@ -2128,8 +2128,8 @@ export type GistSimple = {
     comments_url: string;
     owner?: SimpleUser | null;
     truncated?: boolean;
-    forks?: any[];
-    history?: any[];
+    forks?: unknown[];
+    history?: unknown[];
   } | null;
   url?: string;
   forks_url?: string;
@@ -3118,7 +3118,7 @@ export type ActionsPublicKey = {
  * Empty Object
  * An object without any properties.
  */
-export type EmptyObject = any;
+export type EmptyObject = unknown;
 /**
  * Credential Authorization
  * Credential Authorization
@@ -3470,7 +3470,7 @@ export type Migration = {
   updated_at: Date;
   node_id: string;
   archive_url?: string;
-  exclude?: any[];
+  exclude?: unknown[];
 };
 /**
  * Package
@@ -3575,13 +3575,13 @@ export type PackageVersion = {
      * Container Metadata
      */
     container?: {
-      tags: any[];
+      tags: unknown[];
     };
     /**
      * Docker Metadata
      */
     docker?: {
-      tag?: any[];
+      tag?: unknown[];
     };
   };
 };
@@ -6007,7 +6007,7 @@ export type CheckRun = {
     id: number;
   } | null;
   app: Integration | null;
-  pull_requests: any;
+  pull_requests: unknown;
   deployment?: DeploymentSimple;
 };
 /**
@@ -6303,7 +6303,7 @@ export type CodeScanningAlert = {
   /**
    * @deprecated
    */
-  instances?: any;
+  instances?: unknown;
   instances_url: AlertInstancesUrl;
   state: CodeScanningAlertState;
   dismissed_by: SimpleUser;
@@ -8644,7 +8644,7 @@ export type PagesHttpsCertificate = {
    *   "www.example.com"
    * ]
    */
-  domains: any[];
+  domains: unknown[];
   expires_at?: string;
 };
 /**
@@ -9914,12 +9914,12 @@ export type ScimUser = {
   operations?: {
     op: 'add' | 'remove' | 'replace';
     path?: string;
-    value?: string | any | any[];
+    value?: string | unknown | unknown[];
   }[];
   /**
    * associated groups
    */
-  groups?: any[];
+  groups?: unknown[];
 };
 /**
  * SCIM User List
@@ -10500,8 +10500,8 @@ export type GpgKey = {
     primary_key_id?: number;
     key_id?: string;
     public_key?: string;
-    emails?: any[];
-    subkeys?: any[];
+    emails?: unknown[];
+    subkeys?: unknown[];
     can_sign?: boolean;
     can_encrypt_comms?: boolean;
     can_encrypt_storage?: boolean;
@@ -11371,48 +11371,53 @@ export async function metaRoot<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<{
-  current_user_url: string;
-  current_user_authorizations_html_url: string;
-  authorizations_url: string;
-  code_search_url: string;
-  commit_search_url: string;
-  emails_url: string;
-  emojis_url: string;
-  events_url: string;
-  feeds_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  hub_url: string;
-  issue_search_url: string;
-  issues_url: string;
-  keys_url: string;
-  label_search_url: string;
-  notifications_url: string;
-  organization_url: string;
-  organization_repositories_url: string;
-  organization_teams_url: string;
-  public_gists_url: string;
-  rate_limit_url: string;
-  repository_url: string;
-  repository_search_url: string;
-  current_user_repositories_url: string;
-  starred_url: string;
-  starred_gists_url: string;
-  topic_search_url?: string;
-  user_url: string;
-  user_organizations_url: string;
-  user_repositories_url: string;
-  user_search_url: string;
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      current_user_url: string;
+      current_user_authorizations_html_url: string;
+      authorizations_url: string;
+      code_search_url: string;
+      commit_search_url: string;
+      emails_url: string;
+      emojis_url: string;
+      events_url: string;
+      feeds_url: string;
+      followers_url: string;
+      following_url: string;
+      gists_url: string;
+      hub_url: string;
+      issue_search_url: string;
+      issues_url: string;
+      keys_url: string;
+      label_search_url: string;
+      notifications_url: string;
+      organization_url: string;
+      organization_repositories_url: string;
+      organization_teams_url: string;
+      public_gists_url: string;
+      rate_limit_url: string;
+      repository_url: string;
+      repository_search_url: string;
+      current_user_repositories_url: string;
+      starred_url: string;
+      starred_gists_url: string;
+      topic_search_url?: string;
+      user_url: string;
+      user_organizations_url: string;
+      user_repositories_url: string;
+      user_search_url: string;
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the authenticated app
@@ -11432,16 +11437,20 @@ export async function appsGetAuthenticated<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<Integration> {
+): Promise<r.StatusResponse<200, Integration>> {
   const req = await ctx.createRequest({
     path: '/app',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Integration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Integration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a GitHub App from a manifest
@@ -11457,18 +11466,23 @@ export async function appsCreateFromManifest<FetcherData>(
   params: {
     code: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
 ): Promise<
-  Integration &
-    ({
-      client_id: string;
-      client_secret: string;
-      webhook_secret: string | null;
-      pem: string;
-    } & {
-      [key: string]: any;
-    })
+  | r.StatusResponse<
+      201,
+      Integration &
+        ({
+          client_id: string;
+          client_secret: string;
+          webhook_secret: string | null;
+          pem: string;
+        } & {
+          [key: string]: any;
+        })
+    >
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
 > {
   const req = await ctx.createRequest({
     path: '/app-manifests/{code}/conversions',
@@ -11477,11 +11491,15 @@ export async function appsCreateFromManifest<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': {
-      transforms: { date: [[['select', [[['ref', $date_Integration]]]]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '201': {
+        transforms: { date: [[['select', [[['ref', $date_Integration]]]]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a webhook configuration for an app
@@ -11498,14 +11516,14 @@ export async function appsGetWebhookConfigForApp<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<WebhookConfig> {
+): Promise<r.StatusResponse<200, WebhookConfig>> {
   const req = await ctx.createRequest({
     path: '/app/hook/config',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a webhook configuration for an app
@@ -11528,7 +11546,7 @@ export async function appsUpdateWebhookConfigForApp<FetcherData>(
     insecure_ssl?: WebhookConfigInsecureSsl;
   },
   opts?: FetcherData,
-): Promise<WebhookConfig> {
+): Promise<r.StatusResponse<200, WebhookConfig>> {
   const req = await ctx.createRequest({
     path: '/app/hook/config',
     params,
@@ -11536,7 +11554,7 @@ export async function appsUpdateWebhookConfigForApp<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List deliveries for an app webhook
@@ -11555,7 +11573,11 @@ export async function appsListWebhookDeliveries<FetcherData>(
     cursor?: string;
   },
   opts?: FetcherData,
-): Promise<HookDeliveryItem[]> {
+): Promise<
+  | r.StatusResponse<200, HookDeliveryItem[]>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/app/hook/deliveries',
     params,
@@ -11563,11 +11585,15 @@ export async function appsListWebhookDeliveries<FetcherData>(
     queryParams: ['per_page', 'cursor'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a delivery for an app webhook
@@ -11585,16 +11611,24 @@ export async function appsGetWebhookDelivery<FetcherData>(
     delivery_id: number;
   },
   opts?: FetcherData,
-): Promise<HookDelivery> {
+): Promise<
+  | r.StatusResponse<200, HookDelivery>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/app/hook/deliveries/{delivery_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
+    },
+    true,
+  );
 }
 /**
  * Redeliver a delivery for an app webhook
@@ -11612,14 +11646,18 @@ export async function appsRedeliverWebhookDelivery<FetcherData>(
     delivery_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/app/hook/deliveries/{delivery_id}/attempts',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List installations for the authenticated app
@@ -11640,7 +11678,7 @@ export async function appsListInstallations<FetcherData>(
     outdated?: string;
   },
   opts?: FetcherData,
-): Promise<Installation[]> {
+): Promise<r.StatusResponse<200, Installation[]>> {
   const req = await ctx.createRequest({
     path: '/app/installations',
     params,
@@ -11648,9 +11686,15 @@ export async function appsListInstallations<FetcherData>(
     queryParams: ['per_page', 'page', 'since', 'outdated'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Installation]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_Installation]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Get an installation for the authenticated app
@@ -11670,16 +11714,30 @@ export async function appsGetInstallation<FetcherData>(
     installation_id: number;
   },
   opts?: FetcherData,
-): Promise<Installation> {
+): Promise<
+  | r.StatusResponse<200, Installation>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Installation]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an installation for the authenticated app
@@ -11699,14 +11757,14 @@ export async function appsDeleteInstallation<FetcherData>(
     installation_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create an installation access token for an app
@@ -11744,7 +11802,20 @@ export async function appsCreateInstallationAccessToken<FetcherData>(
     permissions?: AppPermissions;
   },
   opts?: FetcherData,
-): Promise<InstallationToken> {
+): Promise<
+  | r.StatusResponse<201, InstallationToken>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}/access_tokens',
     params,
@@ -11752,9 +11823,13 @@ export async function appsCreateInstallationAccessToken<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_InstallationToken]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_InstallationToken]]] } },
+    },
+    true,
+  );
 }
 /**
  * Suspend an app installation
@@ -11774,14 +11849,14 @@ export async function appsSuspendInstallation<FetcherData>(
     installation_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}/suspended',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unsuspend an app installation
@@ -11799,14 +11874,14 @@ export async function appsUnsuspendInstallation<FetcherData>(
     installation_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/app/installations/{installation_id}/suspended',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List your grants
@@ -11839,7 +11914,13 @@ export async function oauthAuthorizationsListGrants<FetcherData>(
     client_id?: string;
   },
   opts?: FetcherData,
-): Promise<ApplicationGrant[] | any> {
+): Promise<
+  | r.StatusResponse<200, ApplicationGrant[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/grants',
     params,
@@ -11847,11 +11928,15 @@ export async function oauthAuthorizationsListGrants<FetcherData>(
     queryParams: ['per_page', 'page', 'client_id'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_ApplicationGrant]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_ApplicationGrant]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a single grant
@@ -11872,16 +11957,25 @@ export async function oauthAuthorizationsGetGrant<FetcherData>(
     grant_id: number;
   },
   opts?: FetcherData,
-): Promise<ApplicationGrant | any> {
+): Promise<
+  | r.StatusResponse<200, ApplicationGrant>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/grants/{grant_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ApplicationGrant]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ApplicationGrant]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a grant
@@ -11907,14 +12001,19 @@ export async function oauthAuthorizationsDeleteGrant<FetcherData>(
     grant_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/grants/{grant_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete an app authorization
@@ -11941,7 +12040,9 @@ export async function appsDeleteAuthorization<FetcherData>(
     access_token?: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  r.StatusResponse<204, unknown> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/grant',
     params,
@@ -11949,7 +12050,7 @@ export async function appsDeleteAuthorization<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Revoke a grant for an application
@@ -11979,14 +12080,14 @@ export async function appsRevokeGrantForApplication<FetcherData>(
     access_token: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/grants/{access_token}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check a token
@@ -12010,7 +12111,11 @@ export async function appsCheckToken<FetcherData>(
     access_token: string;
   },
   opts?: FetcherData,
-): Promise<Authorization> {
+): Promise<
+  | r.StatusResponse<200, Authorization>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token',
     params,
@@ -12018,9 +12123,13 @@ export async function appsCheckToken<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Reset a token
@@ -12044,7 +12153,9 @@ export async function appsResetToken<FetcherData>(
     access_token: string;
   },
   opts?: FetcherData,
-): Promise<Authorization> {
+): Promise<
+  r.StatusResponse<200, Authorization> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token',
     params,
@@ -12052,9 +12163,13 @@ export async function appsResetToken<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an app token
@@ -12076,7 +12191,9 @@ export async function appsDeleteToken<FetcherData>(
     access_token: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  r.StatusResponse<204, unknown> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token',
     params,
@@ -12084,7 +12201,7 @@ export async function appsDeleteToken<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a scoped access token
@@ -12133,7 +12250,13 @@ export async function appsScopeToken<FetcherData>(
     permissions?: AppPermissions;
   },
   opts?: FetcherData,
-): Promise<Authorization> {
+): Promise<
+  | r.StatusResponse<200, Authorization>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/token/scoped',
     params,
@@ -12141,9 +12264,13 @@ export async function appsScopeToken<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Check an authorization
@@ -12169,18 +12296,25 @@ export async function appsCheckAuthorization<FetcherData>(
     access_token: string;
   },
   opts?: FetcherData,
-): Promise<Authorization | null> {
+): Promise<
+  | r.StatusResponse<200, Authorization | null>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/tokens/{access_token}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['select', [[['ref', $date_Authorization]]]]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['select', [[['ref', $date_Authorization]]]]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Reset an authorization
@@ -12206,16 +12340,20 @@ export async function appsResetAuthorization<FetcherData>(
     access_token: string;
   },
   opts?: FetcherData,
-): Promise<Authorization> {
+): Promise<r.StatusResponse<200, Authorization>> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/tokens/{access_token}',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Revoke an authorization for an application
@@ -12239,14 +12377,14 @@ export async function appsRevokeAuthorizationForApplication<FetcherData>(
     access_token: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/applications/{client_id}/tokens/{access_token}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an app
@@ -12268,16 +12406,31 @@ export async function appsGetBySlug<FetcherData>(
     app_slug: string;
   },
   opts?: FetcherData,
-): Promise<Integration> {
+): Promise<
+  | r.StatusResponse<200, Integration>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/apps/{app_slug}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Integration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Integration]]] } },
+    },
+    true,
+  );
 }
 /**
  * List your authorizations
@@ -12300,7 +12453,13 @@ export async function oauthAuthorizationsListAuthorizations<FetcherData>(
     client_id?: string;
   },
   opts?: FetcherData,
-): Promise<Authorization[] | any> {
+): Promise<
+  | r.StatusResponse<200, Authorization[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/authorizations',
     params,
@@ -12308,9 +12467,15 @@ export async function oauthAuthorizationsListAuthorizations<FetcherData>(
     queryParams: ['per_page', 'page', 'client_id'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_Authorization]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Create a new authorization
@@ -12388,7 +12553,14 @@ export async function oauthAuthorizationsCreateAuthorization<FetcherData>(
     fingerprint?: string;
   },
   opts?: FetcherData,
-): Promise<Authorization | any> {
+): Promise<
+  | r.StatusResponse<201, Authorization>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/authorizations',
     params,
@@ -12396,9 +12568,13 @@ export async function oauthAuthorizationsCreateAuthorization<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get-or-create an authorization for a specific app
@@ -12474,7 +12650,14 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp<
     fingerprint?: string;
   },
   opts?: FetcherData,
-): Promise<Authorization | any> {
+): Promise<
+  | r.StatusResponse<200, Authorization>
+  | r.StatusResponse<201, Authorization>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/authorizations/clients/{client_id}',
     params,
@@ -12482,10 +12665,14 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForApp<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-    '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+      '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get-or-create an authorization for a specific app and fingerprint
@@ -12551,7 +12738,11 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
     note_url?: string;
   },
   opts?: FetcherData,
-): Promise<Authorization> {
+): Promise<
+  | r.StatusResponse<200, Authorization>
+  | r.StatusResponse<201, Authorization>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/authorizations/clients/{client_id}/{fingerprint}',
     params,
@@ -12559,10 +12750,14 @@ export async function oauthAuthorizationsGetOrCreateAuthorizationForAppAndFinger
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-    '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+      '201': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a single authorization
@@ -12583,16 +12778,25 @@ export async function oauthAuthorizationsGetAuthorization<FetcherData>(
     authorization_id: number;
   },
   opts?: FetcherData,
-): Promise<Authorization | any> {
+): Promise<
+  | r.StatusResponse<200, Authorization>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/authorizations/{authorization_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update an existing authorization
@@ -12653,7 +12857,9 @@ export async function oauthAuthorizationsUpdateAuthorization<FetcherData>(
     fingerprint?: string;
   },
   opts?: FetcherData,
-): Promise<Authorization> {
+): Promise<
+  r.StatusResponse<200, Authorization> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/authorizations/{authorization_id}',
     params,
@@ -12661,9 +12867,13 @@ export async function oauthAuthorizationsUpdateAuthorization<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Authorization]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an authorization
@@ -12684,14 +12894,19 @@ export async function oauthAuthorizationsDeleteAuthorization<FetcherData>(
     authorization_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/authorizations/{authorization_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get all codes of conduct
@@ -12702,14 +12917,16 @@ export async function codesOfConductGetAllCodesOfConduct<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<CodeOfConduct[] | any> {
+): Promise<
+  r.StatusResponse<200, CodeOfConduct[]> | r.StatusResponse<304, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/codes_of_conduct',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a code of conduct
@@ -12722,14 +12939,18 @@ export async function codesOfConductGetConductCode<FetcherData>(
     key: string;
   },
   opts?: FetcherData,
-): Promise<CodeOfConduct | any> {
+): Promise<
+  | r.StatusResponse<200, CodeOfConduct>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/codes_of_conduct/{key}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get emojis
@@ -12742,10 +12963,13 @@ export async function emojisGet<FetcherData>(
   params: {},
   opts?: FetcherData,
 ): Promise<
-  | {
-      [key: string]: string;
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        [key: string]: string;
+      }
+    >
+  | r.StatusResponse<304, unknown>
 > {
   const req = await ctx.createRequest({
     path: '/emojis',
@@ -12753,7 +12977,7 @@ export async function emojisGet<FetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get GitHub Actions permissions for an enterprise
@@ -12772,14 +12996,14 @@ export async function enterpriseAdminGetGithubActionsPermissionsEnterprise<
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<ActionsEnterprisePermissions> {
+): Promise<r.StatusResponse<200, ActionsEnterprisePermissions>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set GitHub Actions permissions for an enterprise
@@ -12802,7 +13026,7 @@ export async function enterpriseAdminSetGithubActionsPermissionsEnterprise<
     allowed_actions?: AllowedActions;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions',
     params,
@@ -12810,7 +13034,7 @@ export async function enterpriseAdminSetGithubActionsPermissionsEnterprise<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List selected organizations enabled for GitHub Actions in an enterprise
@@ -12833,10 +13057,15 @@ export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActio
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  organizations: OrganizationSimple[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      organizations: OrganizationSimple[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/organizations',
     params,
@@ -12844,7 +13073,7 @@ export async function enterpriseAdminListSelectedOrganizationsEnabledGithubActio
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set selected organizations enabled for GitHub Actions in an enterprise
@@ -12871,7 +13100,7 @@ export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubAction
     selected_organization_ids: number[];
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/organizations',
     params,
@@ -12879,7 +13108,7 @@ export async function enterpriseAdminSetSelectedOrganizationsEnabledGithubAction
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Enable a selected organization for GitHub Actions in an enterprise
@@ -12902,14 +13131,14 @@ export async function enterpriseAdminEnableSelectedOrganizationGithubActionsEnte
     org_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/organizations/{org_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Disable a selected organization for GitHub Actions in an enterprise
@@ -12932,14 +13161,14 @@ export async function enterpriseAdminDisableSelectedOrganizationGithubActionsEnt
     org_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/organizations/{org_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get allowed actions for an enterprise
@@ -12958,14 +13187,14 @@ export async function enterpriseAdminGetAllowedActionsEnterprise<FetcherData>(
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<SelectedActions> {
+): Promise<r.StatusResponse<200, SelectedActions>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/selected-actions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set allowed actions for an enterprise
@@ -12985,7 +13214,7 @@ export async function enterpriseAdminSetAllowedActionsEnterprise<FetcherData>(
   },
   body: SelectedActions,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/permissions/selected-actions',
     params,
@@ -12993,7 +13222,7 @@ export async function enterpriseAdminSetAllowedActionsEnterprise<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List self-hosted runner groups for an enterprise
@@ -13014,10 +13243,15 @@ export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise<
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  runner_groups: RunnerGroupsEnterprise[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runner_groups: RunnerGroupsEnterprise[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups',
     params,
@@ -13025,7 +13259,7 @@ export async function enterpriseAdminListSelfHostedRunnerGroupsForEnterprise<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a self-hosted runner group for an enterprise
@@ -13062,7 +13296,7 @@ export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise<
     runners?: number[];
   },
   opts?: FetcherData,
-): Promise<RunnerGroupsEnterprise> {
+): Promise<r.StatusResponse<201, RunnerGroupsEnterprise>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups',
     params,
@@ -13070,7 +13304,7 @@ export async function enterpriseAdminCreateSelfHostedRunnerGroupForEnterprise<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a self-hosted runner group for an enterprise
@@ -13090,14 +13324,14 @@ export async function enterpriseAdminGetSelfHostedRunnerGroupForEnterprise<
     runner_group_id: number;
   },
   opts?: FetcherData,
-): Promise<RunnerGroupsEnterprise> {
+): Promise<r.StatusResponse<200, RunnerGroupsEnterprise>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a self-hosted runner group for an enterprise
@@ -13128,7 +13362,7 @@ export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise<
     visibility?: 'selected' | 'all';
   },
   opts?: FetcherData,
-): Promise<RunnerGroupsEnterprise> {
+): Promise<r.StatusResponse<200, RunnerGroupsEnterprise>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}',
     params,
@@ -13136,7 +13370,7 @@ export async function enterpriseAdminUpdateSelfHostedRunnerGroupForEnterprise<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a self-hosted runner group from an enterprise
@@ -13156,14 +13390,14 @@ export async function enterpriseAdminDeleteSelfHostedRunnerGroupFromEnterprise<
     runner_group_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization access to a self-hosted runner group in an enterprise
@@ -13185,10 +13419,15 @@ export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnter
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  organizations: OrganizationSimple[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      organizations: OrganizationSimple[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations',
     params,
@@ -13196,7 +13435,7 @@ export async function enterpriseAdminListOrgAccessToSelfHostedRunnerGroupInEnter
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set organization access for a self-hosted runner group in an enterprise
@@ -13222,7 +13461,7 @@ export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterp
     selected_organization_ids: number[];
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations',
     params,
@@ -13230,7 +13469,7 @@ export async function enterpriseAdminSetOrgAccessToSelfHostedRunnerGroupInEnterp
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add organization access to a self-hosted runner group in an enterprise
@@ -13253,14 +13492,14 @@ export async function enterpriseAdminAddOrgAccessToSelfHostedRunnerGroupInEnterp
     org_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove organization access to a self-hosted runner group in an enterprise
@@ -13283,14 +13522,14 @@ export async function enterpriseAdminRemoveOrgAccessToSelfHostedRunnerGroupInEnt
     org_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List self-hosted runners in a group for an enterprise
@@ -13312,10 +13551,15 @@ export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise<
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  runners: Runner[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runners: Runner[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners',
     params,
@@ -13323,7 +13567,7 @@ export async function enterpriseAdminListSelfHostedRunnersInGroupForEnterprise<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set self-hosted runners in a group for an enterprise
@@ -13349,7 +13593,7 @@ export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise<
     runners: number[];
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners',
     params,
@@ -13357,7 +13601,7 @@ export async function enterpriseAdminSetSelfHostedRunnersInGroupForEnterprise<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add a self-hosted runner to a group for an enterprise
@@ -13379,14 +13623,14 @@ export async function enterpriseAdminAddSelfHostedRunnerToGroupForEnterprise<
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a self-hosted runner from a group for an enterprise
@@ -13407,14 +13651,14 @@ export async function enterpriseAdminRemoveSelfHostedRunnerFromGroupForEnterpris
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List self-hosted runners for an enterprise
@@ -13435,10 +13679,15 @@ export async function enterpriseAdminListSelfHostedRunnersForEnterprise<
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count?: number;
-  runners?: Runner[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count?: number;
+      runners?: Runner[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners',
     params,
@@ -13446,7 +13695,7 @@ export async function enterpriseAdminListSelfHostedRunnersForEnterprise<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List runner applications for an enterprise
@@ -13465,14 +13714,14 @@ export async function enterpriseAdminListRunnerApplicationsForEnterprise<
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<RunnerApplication[]> {
+): Promise<r.StatusResponse<200, RunnerApplication[]>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/downloads',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a registration token for an enterprise
@@ -13501,16 +13750,20 @@ export async function enterpriseAdminCreateRegistrationTokenForEnterprise<
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<AuthenticationToken> {
+): Promise<r.StatusResponse<201, AuthenticationToken>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/registration-token',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a remove token for an enterprise
@@ -13540,16 +13793,20 @@ export async function enterpriseAdminCreateRemoveTokenForEnterprise<
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<AuthenticationToken> {
+): Promise<r.StatusResponse<201, AuthenticationToken>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/remove-token',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a self-hosted runner for an enterprise
@@ -13569,14 +13826,14 @@ export async function enterpriseAdminGetSelfHostedRunnerForEnterprise<
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<Runner> {
+): Promise<r.StatusResponse<200, Runner>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a self-hosted runner from an enterprise
@@ -13597,14 +13854,14 @@ export async function enterpriseAdminDeleteSelfHostedRunnerFromEnterprise<
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the audit log for an enterprise
@@ -13626,7 +13883,7 @@ export async function enterpriseAdminGetAuditLog<FetcherData>(
     per_page?: number;
   },
   opts?: FetcherData,
-): Promise<AuditLogEvent[]> {
+): Promise<r.StatusResponse<200, AuditLogEvent[]>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/audit-log',
     params,
@@ -13642,7 +13899,7 @@ export async function enterpriseAdminGetAuditLog<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get GitHub Actions billing for an enterprise
@@ -13665,14 +13922,14 @@ export async function billingGetGithubActionsBillingGhe<FetcherData>(
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<ActionsBillingUsage> {
+): Promise<r.StatusResponse<200, ActionsBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/settings/billing/actions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get GitHub Packages billing for an enterprise
@@ -13693,14 +13950,14 @@ export async function billingGetGithubPackagesBillingGhe<FetcherData>(
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<PackagesBillingUsage> {
+): Promise<r.StatusResponse<200, PackagesBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/settings/billing/packages',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get shared storage billing for an enterprise
@@ -13721,14 +13978,14 @@ export async function billingGetSharedStorageBillingGhe<FetcherData>(
     enterprise: string;
   },
   opts?: FetcherData,
-): Promise<CombinedBillingUsage> {
+): Promise<r.StatusResponse<200, CombinedBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/enterprises/{enterprise}/settings/billing/shared-storage',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List public events
@@ -13744,7 +14001,19 @@ export async function activityListPublicEvents<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[] | any> {
+): Promise<
+  | r.StatusResponse<200, Event[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/events',
     params,
@@ -13752,9 +14021,13 @@ export async function activityListPublicEvents<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get feeds
@@ -13786,14 +14059,14 @@ export async function activityGetFeeds<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<Feed> {
+): Promise<r.StatusResponse<200, Feed>> {
   const req = await ctx.createRequest({
     path: '/feeds',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List gists for the authenticated user
@@ -13809,7 +14082,11 @@ export async function gistsList<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<BaseGist[] | any> {
+): Promise<
+  | r.StatusResponse<200, BaseGist[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists',
     params,
@@ -13817,9 +14094,13 @@ export async function gistsList<FetcherData>(
     queryParams: ['since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a gist
@@ -13859,7 +14140,13 @@ export async function gistsCreate<FetcherData>(
     public?: boolean | ('true' | 'false');
   },
   opts?: FetcherData,
-): Promise<GistSimple | any> {
+): Promise<
+  | r.StatusResponse<201, GistSimple>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/gists',
     params,
@@ -13867,9 +14154,13 @@ export async function gistsCreate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_GistSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_GistSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public gists
@@ -13889,7 +14180,12 @@ export async function gistsListPublic<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<BaseGist[] | any> {
+): Promise<
+  | r.StatusResponse<200, BaseGist[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/public',
     params,
@@ -13897,9 +14193,13 @@ export async function gistsListPublic<FetcherData>(
     queryParams: ['since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
+    },
+    true,
+  );
 }
 /**
  * List starred gists
@@ -13915,7 +14215,12 @@ export async function gistsListStarred<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<BaseGist[] | any> {
+): Promise<
+  | r.StatusResponse<200, BaseGist[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/starred',
     params,
@@ -13923,9 +14228,13 @@ export async function gistsListStarred<FetcherData>(
     queryParams: ['since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a gist
@@ -13938,16 +14247,36 @@ export async function gistsGet<FetcherData>(
     gist_id: string;
   },
   opts?: FetcherData,
-): Promise<GistSimple | any> {
+): Promise<
+  | r.StatusResponse<200, GistSimple>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<
+      403,
+      {
+        block?: {
+          reason?: string;
+          created_at?: string;
+          html_url?: string | null;
+        };
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a gist
@@ -13961,9 +14290,13 @@ export async function gistsUpdate<FetcherData>(
   params: {
     gist_id: string;
   },
-  body: (any | any) | null,
+  body: (unknown | unknown) | null,
   opts?: FetcherData,
-): Promise<GistSimple> {
+): Promise<
+  | r.StatusResponse<200, GistSimple>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}',
     params,
@@ -13971,9 +14304,13 @@ export async function gistsUpdate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a gist
@@ -13986,14 +14323,19 @@ export async function gistsDelete<FetcherData>(
     gist_id: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List gist comments
@@ -14008,7 +14350,12 @@ export async function gistsListComments<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<GistComment[] | any> {
+): Promise<
+  | r.StatusResponse<200, GistComment[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments',
     params,
@@ -14016,9 +14363,13 @@ export async function gistsListComments<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_GistComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_GistComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a gist comment
@@ -14038,7 +14389,12 @@ export async function gistsCreateComment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<GistComment | any> {
+): Promise<
+  | r.StatusResponse<201, GistComment>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments',
     params,
@@ -14046,9 +14402,13 @@ export async function gistsCreateComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_GistComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_GistComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a gist comment
@@ -14062,16 +14422,36 @@ export async function gistsGetComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<GistComment | any> {
+): Promise<
+  | r.StatusResponse<200, GistComment>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<
+      403,
+      {
+        block?: {
+          reason?: string;
+          created_at?: string;
+          html_url?: string | null;
+        };
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_GistComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_GistComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a gist comment
@@ -14092,7 +14472,9 @@ export async function gistsUpdateComment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<GistComment> {
+): Promise<
+  r.StatusResponse<200, GistComment> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments/{comment_id}',
     params,
@@ -14100,9 +14482,13 @@ export async function gistsUpdateComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_GistComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_GistComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a gist comment
@@ -14116,14 +14502,19 @@ export async function gistsDeleteComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List gist commits
@@ -14138,7 +14529,12 @@ export async function gistsListCommits<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<GistCommit[] | any> {
+): Promise<
+  | r.StatusResponse<200, GistCommit[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/commits',
     params,
@@ -14146,9 +14542,13 @@ export async function gistsListCommits<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_GistCommit]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_GistCommit]]] } },
+    },
+    true,
+  );
 }
 /**
  * List gist forks
@@ -14163,7 +14563,12 @@ export async function gistsListForks<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<GistSimple[] | any> {
+): Promise<
+  | r.StatusResponse<200, GistSimple[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/forks',
     params,
@@ -14171,9 +14576,13 @@ export async function gistsListForks<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_GistSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_GistSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * Fork a gist
@@ -14187,16 +14596,26 @@ export async function gistsFork<FetcherData>(
     gist_id: string;
   },
   opts?: FetcherData,
-): Promise<BaseGist | any> {
+): Promise<
+  | r.StatusResponse<201, BaseGist>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/forks',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_BaseGist]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_BaseGist]]] } },
+    },
+    true,
+  );
 }
 /**
  * Check if a gist is starred
@@ -14209,14 +14628,19 @@ export async function gistsCheckIsStarred<FetcherData>(
     gist_id: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/star',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Star a gist
@@ -14231,14 +14655,19 @@ export async function gistsStar<FetcherData>(
     gist_id: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/star',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unstar a gist
@@ -14251,14 +14680,19 @@ export async function gistsUnstar<FetcherData>(
     gist_id: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/star',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a gist revision
@@ -14272,16 +14706,25 @@ export async function gistsGetRevision<FetcherData>(
     sha: string;
   },
   opts?: FetcherData,
-): Promise<GistSimple> {
+): Promise<
+  | r.StatusResponse<200, GistSimple>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/gists/{gist_id}/{sha}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_GistSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get all gitignore templates
@@ -14294,14 +14737,14 @@ export async function gitignoreGetAllTemplates<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<string[] | any> {
+): Promise<r.StatusResponse<200, string[]> | r.StatusResponse<304, unknown>> {
   const req = await ctx.createRequest({
     path: '/gitignore/templates',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a gitignore template
@@ -14317,14 +14760,16 @@ export async function gitignoreGetTemplate<FetcherData>(
     name: string;
   },
   opts?: FetcherData,
-): Promise<GitignoreTemplate | any> {
+): Promise<
+  r.StatusResponse<200, GitignoreTemplate> | r.StatusResponse<304, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/gitignore/templates/{name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repositories accessible to the app installation
@@ -14344,15 +14789,20 @@ export async function appsListReposAccessibleToInstallation<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      repositories: Repository[];
-      /**
-       * @example "selected"
-       */
-      repository_selection?: string;
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        repositories: Repository[];
+        /**
+         * @example "selected"
+         */
+        repository_selection?: string;
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
 > {
   const req = await ctx.createRequest({
     path: '/installation/repositories',
@@ -14361,15 +14811,19 @@ export async function appsListReposAccessibleToInstallation<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Revoke an installation access token
@@ -14392,14 +14846,14 @@ export async function appsRevokeInstallationAccessToken<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/installation/token',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List issues assigned to the authenticated user
@@ -14444,7 +14898,12 @@ export async function issuesList<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Issue[] | any> {
+): Promise<
+  | r.StatusResponse<200, Issue[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/issues',
     params,
@@ -14465,9 +14924,13 @@ export async function issuesList<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get all commonly used licenses
@@ -14482,7 +14945,9 @@ export async function licensesGetAllCommonlyUsed<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<LicenseSimple[] | any> {
+): Promise<
+  r.StatusResponse<200, LicenseSimple[]> | r.StatusResponse<304, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/licenses',
     params,
@@ -14490,7 +14955,7 @@ export async function licensesGetAllCommonlyUsed<FetcherData>(
     queryParams: ['featured', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a license
@@ -14503,14 +14968,19 @@ export async function licensesGet<FetcherData>(
     license: string;
   },
   opts?: FetcherData,
-): Promise<License | any> {
+): Promise<
+  | r.StatusResponse<200, License>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/licenses/{license}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Render a Markdown document
@@ -14537,7 +15007,7 @@ export async function markdownRender<FetcherData>(
     context?: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<r.StatusResponse<200, unknown> | r.StatusResponse<304, unknown>> {
   const req = await ctx.createRequest({
     path: '/markdown',
     params,
@@ -14545,7 +15015,7 @@ export async function markdownRender<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Render a Markdown document in raw mode
@@ -14560,7 +15030,7 @@ export async function markdownRenderRaw<FetcherData>(
   params: {},
   body: string,
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<r.StatusResponse<200, unknown> | r.StatusResponse<304, unknown>> {
   const req = await ctx.createRequest({
     path: '/markdown/raw',
     params,
@@ -14568,7 +15038,7 @@ export async function markdownRenderRaw<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a subscription plan for an account
@@ -14590,14 +15060,18 @@ export async function appsGetSubscriptionPlanForAccount<FetcherData>(
     account_id: number;
   },
   opts?: FetcherData,
-): Promise<MarketplacePurchase> {
+): Promise<
+  | r.StatusResponse<200, MarketplacePurchase>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/accounts/{account_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List plans
@@ -14618,7 +15092,11 @@ export async function appsListPlans<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MarketplaceListingPlan[]> {
+): Promise<
+  | r.StatusResponse<200, MarketplaceListingPlan[]>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/plans',
     params,
@@ -14626,7 +15104,7 @@ export async function appsListPlans<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List accounts for a plan
@@ -14653,7 +15131,12 @@ export async function appsListAccountsForPlan<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MarketplacePurchase[]> {
+): Promise<
+  | r.StatusResponse<200, MarketplacePurchase[]>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/plans/{plan_id}/accounts',
     params,
@@ -14661,7 +15144,7 @@ export async function appsListAccountsForPlan<FetcherData>(
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a subscription plan for an account (stubbed)
@@ -14683,14 +15166,18 @@ export async function appsGetSubscriptionPlanForAccountStubbed<FetcherData>(
     account_id: number;
   },
   opts?: FetcherData,
-): Promise<MarketplacePurchase> {
+): Promise<
+  | r.StatusResponse<200, MarketplacePurchase>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/stubbed/accounts/{account_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List plans (stubbed)
@@ -14711,7 +15198,10 @@ export async function appsListPlansStubbed<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MarketplaceListingPlan[]> {
+): Promise<
+  | r.StatusResponse<200, MarketplaceListingPlan[]>
+  | r.StatusResponse<401, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/stubbed/plans',
     params,
@@ -14719,7 +15209,7 @@ export async function appsListPlansStubbed<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List accounts for a plan (stubbed)
@@ -14746,7 +15236,10 @@ export async function appsListAccountsForPlanStubbed<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MarketplacePurchase[]> {
+): Promise<
+  | r.StatusResponse<200, MarketplacePurchase[]>
+  | r.StatusResponse<401, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/marketplace_listing/stubbed/plans/{plan_id}/accounts',
     params,
@@ -14754,7 +15247,7 @@ export async function appsListAccountsForPlanStubbed<FetcherData>(
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get GitHub meta information
@@ -14771,14 +15264,16 @@ export async function metaGet<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<ApiOverview | any> {
+): Promise<
+  r.StatusResponse<200, ApiOverview> | r.StatusResponse<304, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/meta',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List public events for a network of repositories
@@ -14794,7 +15289,13 @@ export async function activityListPublicEventsForRepoNetwork<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[] | BasicError | any> {
+): Promise<
+  | r.StatusResponse<200, Event[]>
+  | r.StatusResponse<301, BasicError>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/networks/{owner}/{repo}/events',
     params,
@@ -14802,9 +15303,13 @@ export async function activityListPublicEventsForRepoNetwork<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List notifications for the authenticated user
@@ -14825,7 +15330,13 @@ export async function activityListNotificationsForAuthenticatedUser<
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Thread[] | any> {
+): Promise<
+  | r.StatusResponse<200, Thread[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/notifications',
     params,
@@ -14840,9 +15351,13 @@ export async function activityListNotificationsForAuthenticatedUser<
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Thread]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Thread]]] } },
+    },
+    true,
+  );
 }
 /**
  * Mark notifications as read
@@ -14870,11 +15385,16 @@ export async function activityMarkNotificationsAsRead<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      message?: string;
-    }
-  | any
-  | any
+  | r.StatusResponse<
+      202,
+      {
+        message?: string;
+      }
+    >
+  | r.StatusResponse<205, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
 > {
   const req = await ctx.createRequest({
     path: '/notifications',
@@ -14883,7 +15403,7 @@ export async function activityMarkNotificationsAsRead<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a thread
@@ -14896,16 +15416,25 @@ export async function activityGetThread<FetcherData>(
     thread_id: number;
   },
   opts?: FetcherData,
-): Promise<Thread | any> {
+): Promise<
+  | r.StatusResponse<200, Thread>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Thread]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Thread]]] } },
+    },
+    true,
+  );
 }
 /**
  * Mark a thread as read
@@ -14918,14 +15447,18 @@ export async function activityMarkThreadAsRead<FetcherData>(
     thread_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<205, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}',
     params,
     method: r.HttpMethod.PATCH,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a thread subscription for the authenticated user
@@ -14946,16 +15479,25 @@ export async function activityGetThreadSubscriptionForAuthenticatedUser<
     thread_id: number;
   },
   opts?: FetcherData,
-): Promise<ThreadSubscription | any> {
+): Promise<
+  | r.StatusResponse<200, ThreadSubscription>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}/subscription',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ThreadSubscription]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ThreadSubscription]]] } },
+    },
+    true,
+  );
 }
 /**
  * Set a thread subscription
@@ -14984,7 +15526,12 @@ export async function activitySetThreadSubscription<FetcherData>(
     ignored?: boolean;
   },
   opts?: FetcherData,
-): Promise<ThreadSubscription | any> {
+): Promise<
+  | r.StatusResponse<200, ThreadSubscription>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}/subscription',
     params,
@@ -14992,9 +15539,13 @@ export async function activitySetThreadSubscription<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ThreadSubscription]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ThreadSubscription]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a thread subscription
@@ -15012,14 +15563,19 @@ export async function activityDeleteThreadSubscription<FetcherData>(
     thread_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/notifications/threads/{thread_id}/subscription',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get Octocat
@@ -15033,7 +15589,7 @@ export async function metaGetOctocat<FetcherData>(
     s?: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<200, unknown>> {
   const req = await ctx.createRequest({
     path: '/octocat',
     params,
@@ -15041,7 +15597,7 @@ export async function metaGetOctocat<FetcherData>(
     queryParams: ['s'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organizations
@@ -15061,7 +15617,9 @@ export async function orgsList<FetcherData>(
     per_page?: number;
   },
   opts?: FetcherData,
-): Promise<OrganizationSimple[] | any> {
+): Promise<
+  r.StatusResponse<200, OrganizationSimple[]> | r.StatusResponse<304, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/organizations',
     params,
@@ -15069,7 +15627,7 @@ export async function orgsList<FetcherData>(
     queryParams: ['since', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an organization
@@ -15092,16 +15650,22 @@ export async function orgsGet<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<OrganizationFull> {
+): Promise<
+  r.StatusResponse<200, OrganizationFull> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_OrganizationFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_OrganizationFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update an organization
@@ -15233,7 +15797,18 @@ export async function orgsUpdate<FetcherData>(
     blog?: string;
   },
   opts?: FetcherData,
-): Promise<OrganizationFull> {
+): Promise<
+  | r.StatusResponse<200, OrganizationFull>
+  | r.StatusResponse<409, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError | ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}',
     params,
@@ -15241,9 +15816,13 @@ export async function orgsUpdate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_OrganizationFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_OrganizationFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get GitHub Actions permissions for an organization
@@ -15263,14 +15842,14 @@ export async function actionsGetGithubActionsPermissionsOrganization<
     org: string;
   },
   opts?: FetcherData,
-): Promise<ActionsOrganizationPermissions> {
+): Promise<r.StatusResponse<200, ActionsOrganizationPermissions>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set GitHub Actions permissions for an organization
@@ -15298,7 +15877,7 @@ export async function actionsSetGithubActionsPermissionsOrganization<
     allowed_actions?: AllowedActions;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions',
     params,
@@ -15306,7 +15885,7 @@ export async function actionsSetGithubActionsPermissionsOrganization<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List selected repositories enabled for GitHub Actions in an organization
@@ -15330,10 +15909,15 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  repositories: Repository[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      repositories: Repository[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/repositories',
     params,
@@ -15341,15 +15925,19 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Set selected repositories enabled for GitHub Actions in an organization
@@ -15377,7 +15965,7 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
     selected_repository_ids: number[];
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/repositories',
     params,
@@ -15385,7 +15973,7 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Enable a selected repository for GitHub Actions in an organization
@@ -15409,14 +15997,14 @@ export async function actionsEnableSelectedRepositoryGithubActionsOrganization<
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Disable a selected repository for GitHub Actions in an organization
@@ -15440,14 +16028,14 @@ export async function actionsDisableSelectedRepositoryGithubActionsOrganization<
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get allowed actions for an organization
@@ -15467,14 +16055,14 @@ export async function actionsGetAllowedActionsOrganization<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<SelectedActions> {
+): Promise<r.StatusResponse<200, SelectedActions>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/selected-actions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set allowed actions for an organization
@@ -15502,7 +16090,7 @@ export async function actionsSetAllowedActionsOrganization<FetcherData>(
   },
   body: SelectedActions,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/permissions/selected-actions',
     params,
@@ -15510,7 +16098,7 @@ export async function actionsSetAllowedActionsOrganization<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List self-hosted runner groups for an organization
@@ -15533,10 +16121,15 @@ export async function actionsListSelfHostedRunnerGroupsForOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  runner_groups: RunnerGroupsOrg[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runner_groups: RunnerGroupsOrg[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups',
     params,
@@ -15544,7 +16137,7 @@ export async function actionsListSelfHostedRunnerGroupsForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a self-hosted runner group for an organization
@@ -15585,7 +16178,7 @@ export async function actionsCreateSelfHostedRunnerGroupForOrg<FetcherData>(
     runners?: number[];
   },
   opts?: FetcherData,
-): Promise<RunnerGroupsOrg> {
+): Promise<r.StatusResponse<201, RunnerGroupsOrg>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups',
     params,
@@ -15593,7 +16186,7 @@ export async function actionsCreateSelfHostedRunnerGroupForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a self-hosted runner group for an organization
@@ -15615,14 +16208,14 @@ export async function actionsGetSelfHostedRunnerGroupForOrg<FetcherData>(
     runner_group_id: number;
   },
   opts?: FetcherData,
-): Promise<RunnerGroupsOrg> {
+): Promise<r.StatusResponse<200, RunnerGroupsOrg>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a self-hosted runner group for an organization
@@ -15654,7 +16247,7 @@ export async function actionsUpdateSelfHostedRunnerGroupForOrg<FetcherData>(
     visibility?: 'selected' | 'all' | 'private';
   },
   opts?: FetcherData,
-): Promise<RunnerGroupsOrg> {
+): Promise<r.StatusResponse<200, RunnerGroupsOrg>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
     params,
@@ -15662,7 +16255,7 @@ export async function actionsUpdateSelfHostedRunnerGroupForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a self-hosted runner group from an organization
@@ -15683,14 +16276,14 @@ export async function actionsDeleteSelfHostedRunnerGroupFromOrg<FetcherData>(
     runner_group_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository access to a self-hosted runner group in an organization
@@ -15717,10 +16310,15 @@ export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg<
     per_page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  repositories: MinimalRepository[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      repositories: MinimalRepository[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories',
     params,
@@ -15728,19 +16326,23 @@ export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg<
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            ['access', 'repositories'],
-            ['loop'],
-            ['ref', $date_MinimalRepository],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'repositories'],
+              ['loop'],
+              ['ref', $date_MinimalRepository],
+            ],
           ],
-        ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Set repository access for a self-hosted runner group in an organization
@@ -15770,7 +16372,7 @@ export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg<
     selected_repository_ids: number[];
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories',
     params,
@@ -15778,7 +16380,7 @@ export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add repository access to a self-hosted runner group in an organization
@@ -15807,14 +16409,14 @@ export async function actionsAddRepoAccessToSelfHostedRunnerGroupInOrg<
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove repository access to a self-hosted runner group in an organization
@@ -15842,14 +16444,14 @@ export async function actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg<
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List self-hosted runners in a group for an organization
@@ -15873,10 +16475,15 @@ export async function actionsListSelfHostedRunnersInGroupForOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  runners: Runner[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runners: Runner[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners',
     params,
@@ -15884,7 +16491,7 @@ export async function actionsListSelfHostedRunnersInGroupForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set self-hosted runners in a group for an organization
@@ -15912,7 +16519,7 @@ export async function actionsSetSelfHostedRunnersInGroupForOrg<FetcherData>(
     runners: number[];
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners',
     params,
@@ -15920,7 +16527,7 @@ export async function actionsSetSelfHostedRunnersInGroupForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add a self-hosted runner to a group for an organization
@@ -15945,14 +16552,14 @@ export async function actionsAddSelfHostedRunnerToGroupForOrg<FetcherData>(
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a self-hosted runner from a group for an organization
@@ -15976,14 +16583,14 @@ export async function actionsRemoveSelfHostedRunnerFromGroupForOrg<FetcherData>(
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List self-hosted runners for an organization
@@ -16002,10 +16609,15 @@ export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  runners: Runner[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runners: Runner[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners',
     params,
@@ -16013,7 +16625,7 @@ export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List runner applications for an organization
@@ -16030,14 +16642,14 @@ export async function actionsListRunnerApplicationsForOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<RunnerApplication[]> {
+): Promise<r.StatusResponse<200, RunnerApplication[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/downloads',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a registration token for an organization
@@ -16064,16 +16676,20 @@ export async function actionsCreateRegistrationTokenForOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<AuthenticationToken> {
+): Promise<r.StatusResponse<201, AuthenticationToken>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/registration-token',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a remove token for an organization
@@ -16101,16 +16717,20 @@ export async function actionsCreateRemoveTokenForOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<AuthenticationToken> {
+): Promise<r.StatusResponse<201, AuthenticationToken>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/remove-token',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a self-hosted runner for an organization
@@ -16128,14 +16748,14 @@ export async function actionsGetSelfHostedRunnerForOrg<FetcherData>(
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<Runner> {
+): Promise<r.StatusResponse<200, Runner>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a self-hosted runner from an organization
@@ -16154,14 +16774,14 @@ export async function actionsDeleteSelfHostedRunnerFromOrg<FetcherData>(
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization secrets
@@ -16179,10 +16799,15 @@ export async function actionsListOrgSecrets<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  secrets: OrganizationActionsSecret[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      secrets: OrganizationActionsSecret[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets',
     params,
@@ -16190,19 +16815,23 @@ export async function actionsListOrgSecrets<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            ['access', 'secrets'],
-            ['loop'],
-            ['ref', $date_OrganizationActionsSecret],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'secrets'],
+              ['loop'],
+              ['ref', $date_OrganizationActionsSecret],
+            ],
           ],
-        ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get an organization public key
@@ -16218,14 +16847,14 @@ export async function actionsGetOrgPublicKey<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<ActionsPublicKey> {
+): Promise<r.StatusResponse<200, ActionsPublicKey>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/public-key',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an organization secret
@@ -16242,18 +16871,22 @@ export async function actionsGetOrgSecret<FetcherData>(
     secret_name: string;
   },
   opts?: FetcherData,
-): Promise<OrganizationActionsSecret> {
+): Promise<r.StatusResponse<200, OrganizationActionsSecret>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', $date_OrganizationActionsSecret]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_OrganizationActionsSecret]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create or update an organization secret
@@ -16386,7 +17019,9 @@ export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
     selected_repository_ids?: string[];
   },
   opts?: FetcherData,
-): Promise<EmptyObject | any> {
+): Promise<
+  r.StatusResponse<201, EmptyObject> | r.StatusResponse<204, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}',
     params,
@@ -16394,7 +17029,7 @@ export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete an organization secret
@@ -16411,14 +17046,14 @@ export async function actionsDeleteOrgSecret<FetcherData>(
     secret_name: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List selected repositories for an organization secret
@@ -16437,10 +17072,15 @@ export async function actionsListSelectedReposForOrgSecret<FetcherData>(
     per_page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  repositories: MinimalRepository[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      repositories: MinimalRepository[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}/repositories',
     params,
@@ -16448,19 +17088,23 @@ export async function actionsListSelectedReposForOrgSecret<FetcherData>(
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            ['access', 'repositories'],
-            ['loop'],
-            ['ref', $date_MinimalRepository],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'repositories'],
+              ['loop'],
+              ['ref', $date_MinimalRepository],
+            ],
           ],
-        ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Set selected repositories for an organization secret
@@ -16485,7 +17129,7 @@ export async function actionsSetSelectedReposForOrgSecret<FetcherData>(
     selected_repository_ids?: number[];
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}/repositories',
     params,
@@ -16493,7 +17137,7 @@ export async function actionsSetSelectedReposForOrgSecret<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add selected repository to an organization secret
@@ -16513,14 +17157,14 @@ export async function actionsAddSelectedRepoToOrgSecret<FetcherData>(
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<409, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove selected repository from an organization secret
@@ -16540,14 +17184,14 @@ export async function actionsRemoveSelectedRepoFromOrgSecret<FetcherData>(
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<409, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the audit log for an organization
@@ -16573,7 +17217,7 @@ export async function orgsGetAuditLog<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<AuditLogEvent[]> {
+): Promise<r.StatusResponse<200, AuditLogEvent[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/audit-log',
     params,
@@ -16589,7 +17233,7 @@ export async function orgsGetAuditLog<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List users blocked by an organization
@@ -16603,14 +17247,23 @@ export async function orgsListBlockedUsers<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<
+  | r.StatusResponse<200, SimpleUser[]>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check if a user is blocked by an organization
@@ -16624,14 +17277,14 @@ export async function orgsCheckBlockedUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Block a user from an organization
@@ -16645,14 +17298,16 @@ export async function orgsBlockUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  r.StatusResponse<204, unknown> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unblock a user from an organization
@@ -16666,14 +17321,14 @@ export async function orgsUnblockUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List SAML SSO authorizations for an organization
@@ -16694,20 +17349,24 @@ export async function orgsListSamlSsoAuthorizations<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<CredentialAuthorization[]> {
+): Promise<r.StatusResponse<200, CredentialAuthorization[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/credential-authorizations',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['loop'], ['ref', $date_CredentialAuthorization]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_CredentialAuthorization]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Remove a SAML SSO authorization for an organization
@@ -16728,14 +17387,14 @@ export async function orgsRemoveSamlSsoAuthorization<FetcherData>(
     credential_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/credential-authorizations/{credential_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List public organization events
@@ -16750,7 +17409,7 @@ export async function activityListPublicOrgEvents<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[]> {
+): Promise<r.StatusResponse<200, Event[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/events',
     params,
@@ -16758,9 +17417,13 @@ export async function activityListPublicOrgEvents<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List failed organization invitations
@@ -16777,7 +17440,10 @@ export async function orgsListFailedInvitations<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrganizationInvitation[]> {
+): Promise<
+  | r.StatusResponse<200, OrganizationInvitation[]>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/failed_invitations',
     params,
@@ -16785,7 +17451,7 @@ export async function orgsListFailedInvitations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization webhooks
@@ -16800,7 +17466,9 @@ export async function orgsListWebhooks<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrgHook[]> {
+): Promise<
+  r.StatusResponse<200, OrgHook[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks',
     params,
@@ -16808,9 +17476,13 @@ export async function orgsListWebhooks<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_OrgHook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_OrgHook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create an organization webhook
@@ -16860,7 +17532,11 @@ export async function orgsCreateWebhook<FetcherData>(
     active?: boolean;
   },
   opts?: FetcherData,
-): Promise<OrgHook> {
+): Promise<
+  | r.StatusResponse<201, OrgHook>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks',
     params,
@@ -16868,9 +17544,13 @@ export async function orgsCreateWebhook<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_OrgHook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_OrgHook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get an organization webhook
@@ -16886,16 +17566,20 @@ export async function orgsGetWebhook<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<OrgHook> {
+): Promise<r.StatusResponse<200, OrgHook> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_OrgHook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_OrgHook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update an organization webhook
@@ -16941,7 +17625,11 @@ export async function orgsUpdateWebhook<FetcherData>(
     name?: string;
   },
   opts?: FetcherData,
-): Promise<OrgHook> {
+): Promise<
+  | r.StatusResponse<200, OrgHook>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}',
     params,
@@ -16949,9 +17637,13 @@ export async function orgsUpdateWebhook<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_OrgHook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_OrgHook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an organization webhook
@@ -16965,14 +17657,14 @@ export async function orgsDeleteWebhook<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a webhook configuration for an organization
@@ -16991,14 +17683,14 @@ export async function orgsGetWebhookConfigForOrg<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<WebhookConfig> {
+): Promise<r.StatusResponse<200, WebhookConfig>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/config',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a webhook configuration for an organization
@@ -17024,7 +17716,7 @@ export async function orgsUpdateWebhookConfigForOrg<FetcherData>(
     insecure_ssl?: WebhookConfigInsecureSsl;
   },
   opts?: FetcherData,
-): Promise<WebhookConfig> {
+): Promise<r.StatusResponse<200, WebhookConfig>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/config',
     params,
@@ -17032,7 +17724,7 @@ export async function orgsUpdateWebhookConfigForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List deliveries for an organization webhook
@@ -17049,7 +17741,11 @@ export async function orgsListWebhookDeliveries<FetcherData>(
     cursor?: string;
   },
   opts?: FetcherData,
-): Promise<HookDeliveryItem[]> {
+): Promise<
+  | r.StatusResponse<200, HookDeliveryItem[]>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/deliveries',
     params,
@@ -17057,11 +17753,15 @@ export async function orgsListWebhookDeliveries<FetcherData>(
     queryParams: ['per_page', 'cursor'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a webhook delivery for an organization webhook
@@ -17077,16 +17777,24 @@ export async function orgsGetWebhookDelivery<FetcherData>(
     delivery_id: number;
   },
   opts?: FetcherData,
-): Promise<HookDelivery> {
+): Promise<
+  | r.StatusResponse<200, HookDelivery>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
+    },
+    true,
+  );
 }
 /**
  * Redeliver a delivery for an organization webhook
@@ -17102,14 +17810,18 @@ export async function orgsRedeliverWebhookDelivery<FetcherData>(
     delivery_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Ping an organization webhook
@@ -17124,14 +17836,14 @@ export async function orgsPingWebhook<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/hooks/{hook_id}/pings',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an organization installation for the authenticated app
@@ -17149,16 +17861,20 @@ export async function appsGetOrgInstallation<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<Installation> {
+): Promise<r.StatusResponse<200, Installation>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/installation',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Installation]]] } },
+    },
+    true,
+  );
 }
 /**
  * List app installations for an organization
@@ -17175,10 +17891,15 @@ export async function orgsListAppInstallations<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  installations: Installation[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      installations: Installation[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/installations',
     params,
@@ -17186,15 +17907,23 @@ export async function orgsListAppInstallations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'installations'], ['loop'], ['ref', $date_Installation]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'installations'],
+              ['loop'],
+              ['ref', $date_Installation],
+            ],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get interaction restrictions for an organization
@@ -17209,20 +17938,24 @@ export async function interactionsGetRestrictionsForOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<InteractionLimitResponse | any> {
+): Promise<r.StatusResponse<200, InteractionLimitResponse | unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/interaction-limits',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Set interaction restrictions for an organization
@@ -17239,7 +17972,10 @@ export async function interactionsSetRestrictionsForOrg<FetcherData>(
   },
   body: InteractionLimit,
   opts?: FetcherData,
-): Promise<InteractionLimitResponse> {
+): Promise<
+  | r.StatusResponse<200, InteractionLimitResponse>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/interaction-limits',
     params,
@@ -17247,11 +17983,15 @@ export async function interactionsSetRestrictionsForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Remove interaction restrictions for an organization
@@ -17266,14 +18006,14 @@ export async function interactionsRemoveRestrictionsForOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/interaction-limits',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List pending organization invitations
@@ -17291,7 +18031,10 @@ export async function orgsListPendingInvitations<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrganizationInvitation[]> {
+): Promise<
+  | r.StatusResponse<200, OrganizationInvitation[]>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations',
     params,
@@ -17299,7 +18042,7 @@ export async function orgsListPendingInvitations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create an organization invitation
@@ -17344,7 +18087,11 @@ export async function orgsCreateInvitation<FetcherData>(
     team_ids?: number[];
   },
   opts?: FetcherData,
-): Promise<OrganizationInvitation> {
+): Promise<
+  | r.StatusResponse<201, OrganizationInvitation>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations',
     params,
@@ -17352,7 +18099,7 @@ export async function orgsCreateInvitation<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Cancel an organization invitation
@@ -17371,14 +18118,18 @@ export async function orgsCancelInvitation<FetcherData>(
     invitation_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations/{invitation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization invitation teams
@@ -17396,7 +18147,7 @@ export async function orgsListInvitationTeams<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<r.StatusResponse<200, Team[]> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/invitations/{invitation_id}/teams',
     params,
@@ -17404,7 +18155,7 @@ export async function orgsListInvitationTeams<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization issues assigned to the authenticated user
@@ -17441,7 +18192,7 @@ export async function issuesListForOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Issue[]> {
+): Promise<r.StatusResponse<200, Issue[]> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/issues',
     params,
@@ -17458,9 +18209,13 @@ export async function issuesListForOrg<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
+    },
+    true,
+  );
 }
 /**
  * List organization members
@@ -17479,7 +18234,11 @@ export async function orgsListMembers<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[] | any> {
+): Promise<
+  | r.StatusResponse<200, SimpleUser[]>
+  | r.StatusResponse<302, unknown>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/members',
     params,
@@ -17487,7 +18246,7 @@ export async function orgsListMembers<FetcherData>(
     queryParams: ['filter', 'role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check organization membership for a user
@@ -17502,14 +18261,18 @@ export async function orgsCheckMembershipForUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<302, unknown>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/members/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove an organization member
@@ -17525,14 +18288,14 @@ export async function orgsRemoveMember<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<403, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/members/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get organization membership for a user
@@ -17548,14 +18311,18 @@ export async function orgsGetMembershipForUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<OrgMembership> {
+): Promise<
+  | r.StatusResponse<200, OrgMembership>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/memberships/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set organization membership for a user
@@ -17596,7 +18363,11 @@ export async function orgsSetMembershipForUser<FetcherData>(
     role?: 'admin' | 'member';
   },
   opts?: FetcherData,
-): Promise<OrgMembership> {
+): Promise<
+  | r.StatusResponse<200, OrgMembership>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/memberships/{username}',
     params,
@@ -17604,7 +18375,7 @@ export async function orgsSetMembershipForUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove organization membership for a user
@@ -17624,14 +18395,18 @@ export async function orgsRemoveMembershipForUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/memberships/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization migrations
@@ -17648,7 +18423,7 @@ export async function migrationsListForOrg<FetcherData>(
     exclude?: 'repositories'[];
   },
   opts?: FetcherData,
-): Promise<Migration[]> {
+): Promise<r.StatusResponse<200, Migration[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations',
     params,
@@ -17656,9 +18431,13 @@ export async function migrationsListForOrg<FetcherData>(
     queryParams: ['per_page', 'page', 'exclude'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Migration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Migration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Start an organization migration
@@ -17687,7 +18466,11 @@ export async function migrationsStartForOrg<FetcherData>(
     exclude?: 'repositories'[];
   },
   opts?: FetcherData,
-): Promise<Migration> {
+): Promise<
+  | r.StatusResponse<201, Migration>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations',
     params,
@@ -17695,9 +18478,13 @@ export async function migrationsStartForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Migration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Migration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get an organization migration status
@@ -17722,7 +18509,9 @@ export async function migrationsGetStatusForOrg<FetcherData>(
     exclude?: 'repositories'[];
   },
   opts?: FetcherData,
-): Promise<Migration> {
+): Promise<
+  r.StatusResponse<200, Migration> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}',
     params,
@@ -17730,9 +18519,13 @@ export async function migrationsGetStatusForOrg<FetcherData>(
     queryParams: ['exclude'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Migration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Migration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Download an organization migration archive
@@ -17747,14 +18540,14 @@ export async function migrationsDownloadArchiveForOrg<FetcherData>(
     migration_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<302, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete an organization migration archive
@@ -17769,14 +18562,14 @@ export async function migrationsDeleteArchiveForOrg<FetcherData>(
     migration_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unlock an organization repository
@@ -17794,14 +18587,14 @@ export async function migrationsUnlockRepoForOrg<FetcherData>(
     repo_name: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repositories in an organization migration
@@ -17818,7 +18611,9 @@ export async function migrationsListReposForOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<
+  r.StatusResponse<200, MinimalRepository[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/migrations/{migration_id}/repositories',
     params,
@@ -17826,11 +18621,15 @@ export async function migrationsListReposForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * List outside collaborators for an organization
@@ -17847,7 +18646,7 @@ export async function orgsListOutsideCollaborators<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<r.StatusResponse<200, SimpleUser[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/outside_collaborators',
     params,
@@ -17855,7 +18654,7 @@ export async function orgsListOutsideCollaborators<FetcherData>(
     queryParams: ['filter', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Convert an organization member to outside collaborator
@@ -17873,14 +18672,19 @@ export async function orgsConvertMemberToOutsideCollaborator<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, unknown>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/outside_collaborators/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove outside collaborator from an organization
@@ -17895,14 +18699,23 @@ export async function orgsRemoveOutsideCollaborator<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<
+      422,
+      {
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/outside_collaborators/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a package for an organization
@@ -17928,16 +18741,20 @@ export async function packagesGetPackageForOrganization<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<Package> {
+): Promise<r.StatusResponse<200, Package>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Package]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Package]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a package for an organization
@@ -17967,14 +18784,19 @@ export async function packagesDeletePackageForOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Restore a package for an organization
@@ -18012,7 +18834,12 @@ export async function packagesRestorePackageForOrg<FetcherData>(
     token?: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/restore',
     params,
@@ -18020,7 +18847,7 @@ export async function packagesRestorePackageForOrg<FetcherData>(
     queryParams: ['token'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get all package versions for a package owned by an organization
@@ -18052,7 +18879,12 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
     state?: 'active' | 'deleted';
   },
   opts?: FetcherData,
-): Promise<PackageVersion[]> {
+): Promise<
+  | r.StatusResponse<200, PackageVersion[]>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions',
     params,
@@ -18060,11 +18892,15 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
     queryParams: ['page', 'per_page', 'state'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a package version for an organization
@@ -18091,16 +18927,20 @@ export async function packagesGetPackageVersionForOrganization<FetcherData>(
     package_version_id: number;
   },
   opts?: FetcherData,
-): Promise<PackageVersion> {
+): Promise<r.StatusResponse<200, PackageVersion>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete package version for an organization
@@ -18132,14 +18972,19 @@ export async function packagesDeletePackageVersionForOrg<FetcherData>(
     package_version_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Restore package version for an organization
@@ -18177,14 +19022,19 @@ export async function packagesRestorePackageVersionForOrg<FetcherData>(
     package_version_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization projects
@@ -18202,7 +19052,10 @@ export async function projectsListForOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Project[]> {
+): Promise<
+  | r.StatusResponse<200, Project[]>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/projects',
     params,
@@ -18210,9 +19063,13 @@ export async function projectsListForOrg<FetcherData>(
     queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create an organization project
@@ -18237,7 +19094,14 @@ export async function projectsCreateForOrg<FetcherData>(
     body?: string;
   },
   opts?: FetcherData,
-): Promise<Project> {
+): Promise<
+  | r.StatusResponse<201, Project>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/projects',
     params,
@@ -18245,9 +19109,13 @@ export async function projectsCreateForOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public organization members
@@ -18263,7 +19131,7 @@ export async function orgsListPublicMembers<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<r.StatusResponse<200, SimpleUser[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members',
     params,
@@ -18271,7 +19139,7 @@ export async function orgsListPublicMembers<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check public organization membership for a user
@@ -18285,14 +19153,14 @@ export async function orgsCheckPublicMembershipForUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set public organization membership for the authenticated user
@@ -18311,14 +19179,14 @@ export async function orgsSetPublicMembershipForAuthenticatedUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<403, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove public organization membership for the authenticated user
@@ -18334,14 +19202,14 @@ export async function orgsRemovePublicMembershipForAuthenticatedUser<
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/public_members/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organization repositories
@@ -18367,7 +19235,7 @@ export async function reposListForOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<r.StatusResponse<200, MinimalRepository[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/repos',
     params,
@@ -18375,11 +19243,15 @@ export async function reposListForOrg<FetcherData>(
     queryParams: ['type', 'sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create an organization repository
@@ -18485,7 +19357,11 @@ export async function reposCreateInOrg<FetcherData>(
     delete_branch_on_merge?: boolean;
   },
   opts?: FetcherData,
-): Promise<Repository> {
+): Promise<
+  | r.StatusResponse<201, Repository>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/repos',
     params,
@@ -18493,9 +19369,13 @@ export async function reposCreateInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Repository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get GitHub Actions billing for an organization
@@ -18518,14 +19398,14 @@ export async function billingGetGithubActionsBillingOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<ActionsBillingUsage> {
+): Promise<r.StatusResponse<200, ActionsBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/settings/billing/actions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get GitHub Packages billing for an organization
@@ -18546,14 +19426,14 @@ export async function billingGetGithubPackagesBillingOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<PackagesBillingUsage> {
+): Promise<r.StatusResponse<200, PackagesBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/settings/billing/packages',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get shared storage billing for an organization
@@ -18574,14 +19454,14 @@ export async function billingGetSharedStorageBillingOrg<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<CombinedBillingUsage> {
+): Promise<r.StatusResponse<200, CombinedBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/settings/billing/shared-storage',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List IdP groups for an organization
@@ -18608,7 +19488,7 @@ export async function teamsListIdpGroupsForOrg<FetcherData>(
     page?: string;
   },
   opts?: FetcherData,
-): Promise<GroupMapping> {
+): Promise<r.StatusResponse<200, GroupMapping>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/team-sync/groups',
     params,
@@ -18616,7 +19496,7 @@ export async function teamsListIdpGroupsForOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List teams
@@ -18632,7 +19512,7 @@ export async function teamsList<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<r.StatusResponse<200, Team[]> | r.StatusResponse<403, BasicError>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams',
     params,
@@ -18640,7 +19520,7 @@ export async function teamsList<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a team
@@ -18703,7 +19583,11 @@ export async function teamsCreate<FetcherData>(
     parent_team_id?: number;
   },
   opts?: FetcherData,
-): Promise<TeamFull> {
+): Promise<
+  | r.StatusResponse<201, TeamFull>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams',
     params,
@@ -18711,9 +19595,13 @@ export async function teamsCreate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a team by name
@@ -18731,16 +19619,22 @@ export async function teamsGetByName<FetcherData>(
     team_slug: string;
   },
   opts?: FetcherData,
-): Promise<TeamFull> {
+): Promise<
+  r.StatusResponse<200, TeamFull> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a team
@@ -18789,7 +19683,7 @@ export async function teamsUpdateInOrg<FetcherData>(
     parent_team_id?: number | null;
   },
   opts?: FetcherData,
-): Promise<TeamFull> {
+): Promise<r.StatusResponse<201, TeamFull>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}',
     params,
@@ -18797,9 +19691,13 @@ export async function teamsUpdateInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a team
@@ -18820,14 +19718,14 @@ export async function teamsDeleteInOrg<FetcherData>(
     team_slug: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List discussions
@@ -18850,7 +19748,7 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
     pinned?: string;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion[]> {
+): Promise<r.StatusResponse<200, TeamDiscussion[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions',
     params,
@@ -18858,11 +19756,15 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
     queryParams: ['direction', 'per_page', 'page', 'pinned'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussion]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_TeamDiscussion]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a discussion
@@ -18903,7 +19805,7 @@ export async function teamsCreateDiscussionInOrg<FetcherData>(
     private?: boolean;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion> {
+): Promise<r.StatusResponse<201, TeamDiscussion>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions',
     params,
@@ -18911,9 +19813,13 @@ export async function teamsCreateDiscussionInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a discussion
@@ -18934,16 +19840,20 @@ export async function teamsGetDiscussionInOrg<FetcherData>(
     discussion_number: number;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion> {
+): Promise<r.StatusResponse<200, TeamDiscussion>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a discussion
@@ -18975,7 +19885,7 @@ export async function teamsUpdateDiscussionInOrg<FetcherData>(
     body?: string;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion> {
+): Promise<r.StatusResponse<200, TeamDiscussion>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}',
     params,
@@ -18983,9 +19893,13 @@ export async function teamsUpdateDiscussionInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a discussion
@@ -19006,14 +19920,14 @@ export async function teamsDeleteDiscussionInOrg<FetcherData>(
     discussion_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List discussion comments
@@ -19037,7 +19951,7 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment[]> {
+): Promise<r.StatusResponse<200, TeamDiscussionComment[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments',
     params,
@@ -19045,11 +19959,17 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
     queryParams: ['direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussionComment]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_TeamDiscussionComment]]],
+        },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a discussion comment
@@ -19083,7 +20003,7 @@ export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment> {
+): Promise<r.StatusResponse<201, TeamDiscussionComment>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments',
     params,
@@ -19091,9 +20011,13 @@ export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a discussion comment
@@ -19115,16 +20039,20 @@ export async function teamsGetDiscussionCommentInOrg<FetcherData>(
     comment_number: number;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment> {
+): Promise<r.StatusResponse<200, TeamDiscussionComment>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a discussion comment
@@ -19152,7 +20080,7 @@ export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment> {
+): Promise<r.StatusResponse<200, TeamDiscussionComment>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}',
     params,
@@ -19160,9 +20088,13 @@ export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a discussion comment
@@ -19184,14 +20116,14 @@ export async function teamsDeleteDiscussionCommentInOrg<FetcherData>(
     comment_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List reactions for a team discussion comment
@@ -19225,7 +20157,7 @@ export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<r.StatusResponse<200, Reaction[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions',
     params,
@@ -19233,9 +20165,13 @@ export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for a team discussion comment
@@ -19273,7 +20209,7 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<r.StatusResponse<200, Reaction> | r.StatusResponse<201, Reaction>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions',
     params,
@@ -19281,10 +20217,14 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete team discussion comment reaction
@@ -19308,14 +20248,14 @@ export async function reactionsDeleteForTeamDiscussionComment<FetcherData>(
     reaction_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List reactions for a team discussion
@@ -19348,7 +20288,7 @@ export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<r.StatusResponse<200, Reaction[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions',
     params,
@@ -19356,9 +20296,13 @@ export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for a team discussion
@@ -19395,7 +20339,7 @@ export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<r.StatusResponse<200, Reaction> | r.StatusResponse<201, Reaction>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions',
     params,
@@ -19403,10 +20347,14 @@ export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete team discussion reaction
@@ -19428,14 +20376,14 @@ export async function reactionsDeleteForTeamDiscussion<FetcherData>(
     reaction_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List pending team invitations
@@ -19457,7 +20405,7 @@ export async function teamsListPendingInvitationsInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrganizationInvitation[]> {
+): Promise<r.StatusResponse<200, OrganizationInvitation[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/invitations',
     params,
@@ -19465,7 +20413,7 @@ export async function teamsListPendingInvitationsInOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List team members
@@ -19486,7 +20434,7 @@ export async function teamsListMembersInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<r.StatusResponse<200, SimpleUser[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/members',
     params,
@@ -19494,7 +20442,7 @@ export async function teamsListMembersInOrg<FetcherData>(
     queryParams: ['role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get team membership for a user
@@ -19523,14 +20471,16 @@ export async function teamsGetMembershipForUserInOrg<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<TeamMembership> {
+): Promise<
+  r.StatusResponse<200, TeamMembership> | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/memberships/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add or update team membership for a user
@@ -19581,7 +20531,11 @@ export async function teamsAddOrUpdateMembershipForUserInOrg<FetcherData>(
     role?: 'member' | 'maintainer';
   },
   opts?: FetcherData,
-): Promise<TeamMembership> {
+): Promise<
+  | r.StatusResponse<200, TeamMembership>
+  | r.StatusResponse<403, unknown>
+  | r.StatusResponse<422, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/memberships/{username}',
     params,
@@ -19589,7 +20543,7 @@ export async function teamsAddOrUpdateMembershipForUserInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove team membership for a user
@@ -19622,14 +20576,14 @@ export async function teamsRemoveMembershipForUserInOrg<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<403, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/memberships/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List team projects
@@ -19649,7 +20603,7 @@ export async function teamsListProjectsInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<TeamProject[]> {
+): Promise<r.StatusResponse<200, TeamProject[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects',
     params,
@@ -19657,7 +20611,7 @@ export async function teamsListProjectsInOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check team permissions for a project
@@ -19677,14 +20631,16 @@ export async function teamsCheckPermissionsForProjectInOrg<FetcherData>(
     project_id: number;
   },
   opts?: FetcherData,
-): Promise<TeamProject> {
+): Promise<
+  r.StatusResponse<200, TeamProject> | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects/{project_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add or update team project permissions
@@ -19715,7 +20671,16 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg<FetcherData>(
     permission?: 'read' | 'write' | 'admin';
   } | null,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<
+      403,
+      {
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects/{project_id}',
     params,
@@ -19723,7 +20688,7 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a project from a team
@@ -19745,14 +20710,14 @@ export async function teamsRemoveProjectInOrg<FetcherData>(
     project_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/projects/{project_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List team repositories
@@ -19772,7 +20737,7 @@ export async function teamsListReposInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<r.StatusResponse<200, MinimalRepository[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos',
     params,
@@ -19780,11 +20745,15 @@ export async function teamsListReposInOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Check team permissions for a repository
@@ -19813,16 +20782,24 @@ export async function teamsCheckPermissionsForRepoInOrg<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<TeamRepository | any> {
+): Promise<
+  | r.StatusResponse<200, TeamRepository>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamRepository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamRepository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Add or update team repository permissions
@@ -19865,7 +20842,7 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg<FetcherData>(
     permission?: 'pull' | 'push' | 'admin' | 'maintain' | 'triage';
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}',
     params,
@@ -19873,7 +20850,7 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a repository from a team
@@ -19896,14 +20873,14 @@ export async function teamsRemoveRepoInOrg<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List IdP groups for a team
@@ -19925,14 +20902,14 @@ export async function teamsListIdpGroupsInOrg<FetcherData>(
     team_slug: string;
   },
   opts?: FetcherData,
-): Promise<GroupMapping> {
+): Promise<r.StatusResponse<200, GroupMapping>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/team-sync/group-mappings',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create or update IdP group connections
@@ -19975,7 +20952,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg<FetcherData>(
     }[];
   },
   opts?: FetcherData,
-): Promise<GroupMapping> {
+): Promise<r.StatusResponse<200, GroupMapping>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/team-sync/group-mappings',
     params,
@@ -19983,7 +20960,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsInOrg<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List child teams
@@ -20003,7 +20980,7 @@ export async function teamsListChildInOrg<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<r.StatusResponse<200, Team[]>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/teams/{team_slug}/teams',
     params,
@@ -20011,7 +20988,7 @@ export async function teamsListChildInOrg<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a project card
@@ -20024,16 +21001,26 @@ export async function projectsGetCard<FetcherData>(
     card_id: number;
   },
   opts?: FetcherData,
-): Promise<ProjectCard | any> {
+): Promise<
+  | r.StatusResponse<200, ProjectCard>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update an existing project card
@@ -20057,7 +21044,14 @@ export async function projectsUpdateCard<FetcherData>(
     archived?: boolean;
   },
   opts?: FetcherData,
-): Promise<ProjectCard | any> {
+): Promise<
+  | r.StatusResponse<200, ProjectCard>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}',
     params,
@@ -20065,9 +21059,13 @@ export async function projectsUpdateCard<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a project card
@@ -20080,14 +21078,27 @@ export async function projectsDeleteCard<FetcherData>(
     card_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<
+      403,
+      {
+        message?: string;
+        documentation_url?: string;
+        errors?: string[];
+      }
+    >
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Move a project card
@@ -20112,7 +21123,37 @@ export async function projectsMoveCard<FetcherData>(
     column_id?: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<201, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<
+      403,
+      {
+        message?: string;
+        documentation_url?: string;
+        errors?: {
+          code?: string;
+          message?: string;
+          resource?: string;
+          field?: string;
+        }[];
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+        errors?: {
+          code?: string;
+          message?: string;
+        }[];
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/cards/{card_id}/moves',
     params,
@@ -20120,7 +21161,7 @@ export async function projectsMoveCard<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a project column
@@ -20133,16 +21174,26 @@ export async function projectsGetColumn<FetcherData>(
     column_id: number;
   },
   opts?: FetcherData,
-): Promise<ProjectColumn | any> {
+): Promise<
+  | r.StatusResponse<200, ProjectColumn>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update an existing project column
@@ -20162,7 +21213,12 @@ export async function projectsUpdateColumn<FetcherData>(
     name: string;
   },
   opts?: FetcherData,
-): Promise<ProjectColumn | any> {
+): Promise<
+  | r.StatusResponse<200, ProjectColumn>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}',
     params,
@@ -20170,9 +21226,13 @@ export async function projectsUpdateColumn<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a project column
@@ -20185,14 +21245,19 @@ export async function projectsDeleteColumn<FetcherData>(
     column_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List project cards
@@ -20208,7 +21273,12 @@ export async function projectsListCards<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<ProjectCard[] | any> {
+): Promise<
+  | r.StatusResponse<200, ProjectCard[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}/cards',
     params,
@@ -20216,9 +21286,13 @@ export async function projectsListCards<FetcherData>(
     queryParams: ['archived_state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_ProjectCard]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_ProjectCard]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a project card
@@ -20251,7 +21325,25 @@ export async function projectsCreateCard<FetcherData>(
         content_type: string;
       },
   opts?: FetcherData,
-): Promise<ProjectCard | any> {
+): Promise<
+  | r.StatusResponse<201, ProjectCard>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError | ValidationErrorSimple>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+        errors?: {
+          code?: string;
+          message?: string;
+        }[];
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}/cards',
     params,
@@ -20259,9 +21351,13 @@ export async function projectsCreateCard<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_ProjectCard]]] } },
+    },
+    true,
+  );
 }
 /**
  * Move a project column
@@ -20281,7 +21377,13 @@ export async function projectsMoveColumn<FetcherData>(
     position: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<201, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/projects/columns/{column_id}/moves',
     params,
@@ -20289,7 +21391,7 @@ export async function projectsMoveColumn<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a project
@@ -20304,16 +21406,25 @@ export async function projectsGet<FetcherData>(
     project_id: number;
   },
   opts?: FetcherData,
-): Promise<Project | any> {
+): Promise<
+  | r.StatusResponse<200, Project>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a project
@@ -20353,7 +21464,22 @@ export async function projectsUpdate<FetcherData>(
     private?: boolean;
   },
   opts?: FetcherData,
-): Promise<Project | any> {
+): Promise<
+  | r.StatusResponse<200, Project>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<
+      403,
+      {
+        message?: string;
+        documentation_url?: string;
+        errors?: string[];
+      }
+    >
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}',
     params,
@@ -20361,9 +21487,13 @@ export async function projectsUpdate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a project
@@ -20377,14 +21507,28 @@ export async function projectsDelete<FetcherData>(
     project_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<
+      403,
+      {
+        message?: string;
+        documentation_url?: string;
+        errors?: string[];
+      }
+    >
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List project collaborators
@@ -20404,7 +21548,21 @@ export async function projectsListCollaborators<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[] | any> {
+): Promise<
+  | r.StatusResponse<200, SimpleUser[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators',
     params,
@@ -20412,7 +21570,7 @@ export async function projectsListCollaborators<FetcherData>(
     queryParams: ['affiliation', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add project collaborator
@@ -20436,7 +21594,21 @@ export async function projectsAddCollaborator<FetcherData>(
     permission?: 'read' | 'write' | 'admin';
   } | null,
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators/{username}',
     params,
@@ -20444,7 +21616,7 @@ export async function projectsAddCollaborator<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove user as a collaborator
@@ -20460,14 +21632,28 @@ export async function projectsRemoveCollaborator<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get project permission for a user
@@ -20484,14 +21670,28 @@ export async function projectsGetPermissionForUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<RepositoryCollaboratorPermission | any> {
+): Promise<
+  | r.StatusResponse<200, RepositoryCollaboratorPermission>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/collaborators/{username}/permission',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List project columns
@@ -20506,7 +21706,12 @@ export async function projectsListColumns<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<ProjectColumn[] | any> {
+): Promise<
+  | r.StatusResponse<200, ProjectColumn[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/columns',
     params,
@@ -20514,9 +21719,15 @@ export async function projectsListColumns<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_ProjectColumn]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_ProjectColumn]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Create a project column
@@ -20536,7 +21747,13 @@ export async function projectsCreateColumn<FetcherData>(
     name: string;
   },
   opts?: FetcherData,
-): Promise<ProjectColumn | any> {
+): Promise<
+  | r.StatusResponse<201, ProjectColumn>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/projects/{project_id}/columns',
     params,
@@ -20544,9 +21761,13 @@ export async function projectsCreateColumn<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_ProjectColumn]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get rate limit status for the authenticated user
@@ -20562,14 +21783,18 @@ export async function rateLimitGet<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<RateLimitOverview | any> {
+): Promise<
+  | r.StatusResponse<200, RateLimitOverview>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/rate_limit',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a reaction (Legacy)
@@ -20591,14 +21816,27 @@ export async function reactionsDeleteLegacy<FetcherData>(
     reaction_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a repository
@@ -20618,16 +21856,25 @@ export async function reposGet<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<FullRepository | BasicError> {
+): Promise<
+  | r.StatusResponse<200, FullRepository>
+  | r.StatusResponse<301, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_FullRepository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_FullRepository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a repository
@@ -20739,7 +21986,13 @@ export async function reposUpdate<FetcherData>(
     archived?: boolean;
   },
   opts?: FetcherData,
-): Promise<FullRepository | BasicError> {
+): Promise<
+  | r.StatusResponse<200, FullRepository>
+  | r.StatusResponse<307, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}',
     params,
@@ -20747,9 +22000,13 @@ export async function reposUpdate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_FullRepository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_FullRepository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a repository
@@ -20769,14 +22026,25 @@ export async function reposDelete<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any | BasicError> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<307, BasicError>
+  | r.StatusResponse<
+      403,
+      {
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List artifacts for a repository
@@ -20795,10 +22063,15 @@ export async function actionsListArtifactsForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  artifacts: Artifact[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      artifacts: Artifact[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/artifacts',
     params,
@@ -20806,13 +22079,17 @@ export async function actionsListArtifactsForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'artifacts'], ['loop'], ['ref', $date_Artifact]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['access', 'artifacts'], ['loop'], ['ref', $date_Artifact]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get an artifact
@@ -20830,16 +22107,20 @@ export async function actionsGetArtifact<FetcherData>(
     artifact_id: number;
   },
   opts?: FetcherData,
-): Promise<Artifact> {
+): Promise<r.StatusResponse<200, Artifact>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/artifacts/{artifact_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Artifact]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Artifact]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an artifact
@@ -20856,14 +22137,14 @@ export async function actionsDeleteArtifact<FetcherData>(
     artifact_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/artifacts/{artifact_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Download an artifact
@@ -20886,14 +22167,14 @@ export async function actionsDownloadArtifact<FetcherData>(
     archive_format: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<302, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/artifacts/{artifact_id}/{archive_format}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a job for a workflow run
@@ -20911,16 +22192,20 @@ export async function actionsGetJobForWorkflowRun<FetcherData>(
     job_id: number;
   },
   opts?: FetcherData,
-): Promise<Job> {
+): Promise<r.StatusResponse<200, Job>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/jobs/{job_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Job]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Job]]] } },
+    },
+    true,
+  );
 }
 /**
  * Download job logs for a workflow run
@@ -20942,14 +22227,14 @@ export async function actionsDownloadJobLogsForWorkflowRun<FetcherData>(
     job_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<302, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/jobs/{job_id}/logs',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get GitHub Actions permissions for a repository
@@ -20969,14 +22254,14 @@ export async function actionsGetGithubActionsPermissionsRepository<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<ActionsRepositoryPermissions> {
+): Promise<r.StatusResponse<200, ActionsRepositoryPermissions>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set GitHub Actions permissions for a repository
@@ -21003,7 +22288,7 @@ export async function actionsSetGithubActionsPermissionsRepository<FetcherData>(
     allowed_actions?: AllowedActions;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions',
     params,
@@ -21011,7 +22296,7 @@ export async function actionsSetGithubActionsPermissionsRepository<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get allowed actions for a repository
@@ -21031,14 +22316,14 @@ export async function actionsGetAllowedActionsRepository<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<SelectedActions> {
+): Promise<r.StatusResponse<200, SelectedActions>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions/selected-actions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set allowed actions for a repository
@@ -21067,7 +22352,7 @@ export async function actionsSetAllowedActionsRepository<FetcherData>(
   },
   body: SelectedActions,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/permissions/selected-actions',
     params,
@@ -21075,7 +22360,7 @@ export async function actionsSetAllowedActionsRepository<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List self-hosted runners for a repository
@@ -21093,10 +22378,15 @@ export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  runners: Runner[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runners: Runner[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners',
     params,
@@ -21104,7 +22394,7 @@ export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List runner applications for a repository
@@ -21122,14 +22412,14 @@ export async function actionsListRunnerApplicationsForRepo<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<RunnerApplication[]> {
+): Promise<r.StatusResponse<200, RunnerApplication[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/downloads',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a registration token for a repository
@@ -21156,16 +22446,20 @@ export async function actionsCreateRegistrationTokenForRepo<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<AuthenticationToken> {
+): Promise<r.StatusResponse<201, AuthenticationToken>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/registration-token',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a remove token for a repository
@@ -21192,16 +22486,20 @@ export async function actionsCreateRemoveTokenForRepo<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<AuthenticationToken> {
+): Promise<r.StatusResponse<201, AuthenticationToken>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/remove-token',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_AuthenticationToken]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a self-hosted runner for a repository
@@ -21221,14 +22519,14 @@ export async function actionsGetSelfHostedRunnerForRepo<FetcherData>(
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<Runner> {
+): Promise<r.StatusResponse<200, Runner>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a self-hosted runner from a repository
@@ -21249,14 +22547,14 @@ export async function actionsDeleteSelfHostedRunnerFromRepo<FetcherData>(
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/{runner_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List workflow runs for a repository
@@ -21297,10 +22595,15 @@ export async function actionsListWorkflowRunsForRepo<FetcherData>(
     created?: Date;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  workflow_runs: WorkflowRun[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      workflow_runs: WorkflowRun[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs',
     params,
@@ -21316,15 +22619,19 @@ export async function actionsListWorkflowRunsForRepo<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'workflow_runs'], ['loop'], ['ref', $date_WorkflowRun]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'workflow_runs'], ['loop'], ['ref', $date_WorkflowRun]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a workflow run
@@ -21342,16 +22649,20 @@ export async function actionsGetWorkflowRun<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<WorkflowRun> {
+): Promise<r.StatusResponse<200, WorkflowRun>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_WorkflowRun]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_WorkflowRun]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a workflow run
@@ -21371,14 +22682,14 @@ export async function actionsDeleteWorkflowRun<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the review history for a workflow run
@@ -21395,18 +22706,22 @@ export async function actionsGetReviewsForRun<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<EnvironmentApprovals[]> {
+): Promise<r.StatusResponse<200, EnvironmentApprovals[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/approvals',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_EnvironmentApprovals]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_EnvironmentApprovals]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Approve a workflow run for a fork pull request
@@ -21428,14 +22743,18 @@ export async function actionsApproveWorkflowRun<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<EmptyObject> {
+): Promise<
+  | r.StatusResponse<201, EmptyObject>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/approve',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List workflow run artifacts
@@ -21455,10 +22774,15 @@ export async function actionsListWorkflowRunArtifacts<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  artifacts: Artifact[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      artifacts: Artifact[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/artifacts',
     params,
@@ -21466,13 +22790,17 @@ export async function actionsListWorkflowRunArtifacts<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'artifacts'], ['loop'], ['ref', $date_Artifact]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['access', 'artifacts'], ['loop'], ['ref', $date_Artifact]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Cancel a workflow run
@@ -21489,14 +22817,14 @@ export async function actionsCancelWorkflowRun<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<202, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/cancel',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List jobs for a workflow run
@@ -21518,10 +22846,15 @@ export async function actionsListJobsForWorkflowRun<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  jobs: Job[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      jobs: Job[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/jobs',
     params,
@@ -21529,13 +22862,17 @@ export async function actionsListJobsForWorkflowRun<FetcherData>(
     queryParams: ['filter', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'jobs'], ['loop'], ['ref', $date_Job]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['access', 'jobs'], ['loop'], ['ref', $date_Job]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Download workflow run logs
@@ -21557,14 +22894,14 @@ export async function actionsDownloadWorkflowRunLogs<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<302, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/logs',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete workflow run logs
@@ -21581,14 +22918,14 @@ export async function actionsDeleteWorkflowRunLogs<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/logs',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get pending deployments for a workflow run
@@ -21608,18 +22945,22 @@ export async function actionsGetPendingDeploymentsForRun<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<PendingDeployment[]> {
+): Promise<r.StatusResponse<200, PendingDeployment[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_PendingDeployment]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_PendingDeployment]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Review pending deployments for a workflow run
@@ -21659,7 +23000,7 @@ export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
     comment: string;
   },
   opts?: FetcherData,
-): Promise<Deployment[]> {
+): Promise<r.StatusResponse<200, Deployment[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments',
     params,
@@ -21667,9 +23008,13 @@ export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Deployment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Deployment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Re-run a workflow
@@ -21686,14 +23031,14 @@ export async function actionsReRunWorkflow<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<201, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/rerun',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get workflow run usage
@@ -21718,14 +23063,14 @@ export async function actionsGetWorkflowRunUsage<FetcherData>(
     run_id: number;
   },
   opts?: FetcherData,
-): Promise<WorkflowRunUsage> {
+): Promise<r.StatusResponse<200, WorkflowRunUsage>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runs/{run_id}/timing',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository secrets
@@ -21744,10 +23089,15 @@ export async function actionsListRepoSecrets<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  secrets: ActionsSecret[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      secrets: ActionsSecret[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets',
     params,
@@ -21755,13 +23105,19 @@ export async function actionsListRepoSecrets<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'secrets'], ['loop'], ['ref', $date_ActionsSecret]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'secrets'], ['loop'], ['ref', $date_ActionsSecret]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a repository public key
@@ -21778,14 +23134,14 @@ export async function actionsGetRepoPublicKey<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<ActionsPublicKey> {
+): Promise<r.StatusResponse<200, ActionsPublicKey>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/public-key',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a repository secret
@@ -21802,16 +23158,20 @@ export async function actionsGetRepoSecret<FetcherData>(
     secret_name: string;
   },
   opts?: FetcherData,
-): Promise<ActionsSecret> {
+): Promise<r.StatusResponse<200, ActionsSecret>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ActionsSecret]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ActionsSecret]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create or update a repository secret
@@ -21934,7 +23294,7 @@ export async function actionsCreateOrUpdateRepoSecret<FetcherData>(
     key_id?: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<r.StatusResponse<201, unknown> | r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/{secret_name}',
     params,
@@ -21942,7 +23302,7 @@ export async function actionsCreateOrUpdateRepoSecret<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a repository secret
@@ -21959,14 +23319,14 @@ export async function actionsDeleteRepoSecret<FetcherData>(
     secret_name: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/secrets/{secret_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository workflows
@@ -21985,10 +23345,15 @@ export async function actionsListRepoWorkflows<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  workflows: Workflow[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      workflows: Workflow[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows',
     params,
@@ -21996,13 +23361,17 @@ export async function actionsListRepoWorkflows<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'workflows'], ['loop'], ['ref', $date_Workflow]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['access', 'workflows'], ['loop'], ['ref', $date_Workflow]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a workflow
@@ -22020,16 +23389,20 @@ export async function actionsGetWorkflow<FetcherData>(
     workflow_id: number | string;
   },
   opts?: FetcherData,
-): Promise<Workflow> {
+): Promise<r.StatusResponse<200, Workflow>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Workflow]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Workflow]]] } },
+    },
+    true,
+  );
 }
 /**
  * Disable a workflow
@@ -22049,14 +23422,14 @@ export async function actionsDisableWorkflow<FetcherData>(
     workflow_id: number | string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a workflow dispatch event
@@ -22096,7 +23469,7 @@ export async function actionsCreateWorkflowDispatch<FetcherData>(
     };
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches',
     params,
@@ -22104,7 +23477,7 @@ export async function actionsCreateWorkflowDispatch<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Enable a workflow
@@ -22124,14 +23497,14 @@ export async function actionsEnableWorkflow<FetcherData>(
     workflow_id: number | string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List workflow runs
@@ -22172,10 +23545,15 @@ export async function actionsListWorkflowRuns<FetcherData>(
     created?: Date;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  workflow_runs: WorkflowRun[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      workflow_runs: WorkflowRun[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs',
     params,
@@ -22191,15 +23569,19 @@ export async function actionsListWorkflowRuns<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'workflow_runs'], ['loop'], ['ref', $date_WorkflowRun]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'workflow_runs'], ['loop'], ['ref', $date_WorkflowRun]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get workflow usage
@@ -22225,14 +23607,14 @@ export async function actionsGetWorkflowUsage<FetcherData>(
     workflow_id: number | string;
   },
   opts?: FetcherData,
-): Promise<WorkflowUsage> {
+): Promise<r.StatusResponse<200, WorkflowUsage>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List assignees
@@ -22251,7 +23633,9 @@ export async function issuesListAssignees<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<
+  r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/assignees',
     params,
@@ -22259,7 +23643,7 @@ export async function issuesListAssignees<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check if a user can be assigned
@@ -22280,14 +23664,14 @@ export async function issuesCheckUserCanBeAssigned<FetcherData>(
     assignee: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/assignees/{assignee}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List all autolinks of a repository
@@ -22306,7 +23690,7 @@ export async function reposListAutolinks<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Autolink[]> {
+): Promise<r.StatusResponse<200, Autolink[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks',
     params,
@@ -22314,7 +23698,7 @@ export async function reposListAutolinks<FetcherData>(
     queryParams: ['page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create an autolink reference for a repository
@@ -22339,7 +23723,9 @@ export async function reposCreateAutolink<FetcherData>(
     url_template: string;
   },
   opts?: FetcherData,
-): Promise<Autolink> {
+): Promise<
+  r.StatusResponse<201, Autolink> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks',
     params,
@@ -22347,7 +23733,7 @@ export async function reposCreateAutolink<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an autolink reference of a repository
@@ -22366,14 +23752,16 @@ export async function reposGetAutolink<FetcherData>(
     autolink_id: number;
   },
   opts?: FetcherData,
-): Promise<Autolink> {
+): Promise<
+  r.StatusResponse<200, Autolink> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks/{autolink_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete an autolink reference from a repository
@@ -22392,14 +23780,14 @@ export async function reposDeleteAutolink<FetcherData>(
     autolink_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/autolinks/{autolink_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Enable automated security fixes
@@ -22416,14 +23804,14 @@ export async function reposEnableAutomatedSecurityFixes<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/automated-security-fixes',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Disable automated security fixes
@@ -22440,14 +23828,14 @@ export async function reposDisableAutomatedSecurityFixes<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/automated-security-fixes',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List branches
@@ -22464,7 +23852,9 @@ export async function reposListBranches<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<ShortBranch[]> {
+): Promise<
+  r.StatusResponse<200, ShortBranch[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches',
     params,
@@ -22472,7 +23862,7 @@ export async function reposListBranches<FetcherData>(
     queryParams: ['protected', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a branch
@@ -22487,14 +23877,25 @@ export async function reposGetBranch<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<BranchWithProtection | BasicError> {
+): Promise<
+  | r.StatusResponse<200, BranchWithProtection>
+  | r.StatusResponse<301, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get branch protection
@@ -22513,14 +23914,16 @@ export async function reposGetBranchProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<BranchProtection> {
+): Promise<
+  r.StatusResponse<200, BranchProtection> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update branch protection
@@ -22629,7 +24032,19 @@ export async function reposUpdateBranchProtection<FetcherData>(
     required_conversation_resolution?: boolean;
   },
   opts?: FetcherData,
-): Promise<ProtectedBranch> {
+): Promise<
+  | r.StatusResponse<200, ProtectedBranch>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection',
     params,
@@ -22637,7 +24052,7 @@ export async function reposUpdateBranchProtection<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete branch protection
@@ -22656,14 +24071,14 @@ export async function reposDeleteBranchProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<403, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get admin branch protection
@@ -22682,14 +24097,14 @@ export async function reposGetAdminBranchProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<ProtectedBranchAdminEnforced> {
+): Promise<r.StatusResponse<200, ProtectedBranchAdminEnforced>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set admin branch protection
@@ -22711,14 +24126,14 @@ export async function reposSetAdminBranchProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<ProtectedBranchAdminEnforced> {
+): Promise<r.StatusResponse<200, ProtectedBranchAdminEnforced>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete admin branch protection
@@ -22740,14 +24155,14 @@ export async function reposDeleteAdminBranchProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get pull request review protection
@@ -22766,14 +24181,14 @@ export async function reposGetPullRequestReviewProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<ProtectedBranchPullRequestReview> {
+): Promise<r.StatusResponse<200, ProtectedBranchPullRequestReview>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update pull request review protection
@@ -22825,7 +24240,10 @@ export async function reposUpdatePullRequestReviewProtection<FetcherData>(
     required_approving_review_count?: number;
   },
   opts?: FetcherData,
-): Promise<ProtectedBranchPullRequestReview> {
+): Promise<
+  | r.StatusResponse<200, ProtectedBranchPullRequestReview>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews',
     params,
@@ -22833,7 +24251,7 @@ export async function reposUpdatePullRequestReviewProtection<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete pull request review protection
@@ -22852,14 +24270,14 @@ export async function reposDeletePullRequestReviewProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get commit signature protection
@@ -22886,14 +24304,17 @@ export async function reposGetCommitSignatureProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<ProtectedBranchAdminEnforced> {
+): Promise<
+  | r.StatusResponse<200, ProtectedBranchAdminEnforced>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_signatures',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create commit signature protection
@@ -22915,14 +24336,17 @@ export async function reposCreateCommitSignatureProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<ProtectedBranchAdminEnforced> {
+): Promise<
+  | r.StatusResponse<200, ProtectedBranchAdminEnforced>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_signatures',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete commit signature protection
@@ -22945,14 +24369,14 @@ export async function reposDeleteCommitSignatureProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_signatures',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get status checks protection
@@ -22971,14 +24395,16 @@ export async function reposGetStatusChecksProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<StatusCheckPolicy> {
+): Promise<
+  r.StatusResponse<200, StatusCheckPolicy> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update status check protection
@@ -23010,7 +24436,11 @@ export async function reposUpdateStatusCheckProtection<FetcherData>(
     contexts?: string[];
   },
   opts?: FetcherData,
-): Promise<StatusCheckPolicy> {
+): Promise<
+  | r.StatusResponse<200, StatusCheckPolicy>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks',
     params,
@@ -23018,7 +24448,7 @@ export async function reposUpdateStatusCheckProtection<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove status check protection
@@ -23037,14 +24467,14 @@ export async function reposRemoveStatusCheckProtection<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get all status check contexts
@@ -23063,14 +24493,16 @@ export async function reposGetAllStatusCheckContexts<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<string[]> {
+): Promise<
+  r.StatusResponse<200, string[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add status check contexts
@@ -23097,7 +24529,12 @@ export async function reposAddStatusCheckContexts<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<string[]> {
+): Promise<
+  | r.StatusResponse<200, string[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
     params,
@@ -23105,7 +24542,7 @@ export async function reposAddStatusCheckContexts<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set status check contexts
@@ -23132,7 +24569,11 @@ export async function reposSetStatusCheckContexts<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<string[]> {
+): Promise<
+  | r.StatusResponse<200, string[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
     params,
@@ -23140,7 +24581,7 @@ export async function reposSetStatusCheckContexts<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove status check contexts
@@ -23167,7 +24608,11 @@ export async function reposRemoveStatusCheckContexts<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<string[]> {
+): Promise<
+  | r.StatusResponse<200, string[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts',
     params,
@@ -23175,7 +24620,7 @@ export async function reposRemoveStatusCheckContexts<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get access restrictions
@@ -23199,14 +24644,17 @@ export async function reposGetAccessRestrictions<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<BranchRestrictionPolicy> {
+): Promise<
+  | r.StatusResponse<200, BranchRestrictionPolicy>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete access restrictions
@@ -23227,14 +24675,14 @@ export async function reposDeleteAccessRestrictions<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get apps with access to the protected branch
@@ -23256,16 +24704,22 @@ export async function reposGetAppsWithAccessToProtectedBranch<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<Integration[]> {
+): Promise<
+  r.StatusResponse<200, Integration[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Add app access restrictions
@@ -23304,7 +24758,9 @@ export async function reposAddAppAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<Integration[]> {
+): Promise<
+  r.StatusResponse<200, Integration[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
     params,
@@ -23312,9 +24768,13 @@ export async function reposAddAppAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Set app access restrictions
@@ -23354,7 +24814,9 @@ export async function reposSetAppAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<Integration[]> {
+): Promise<
+  r.StatusResponse<200, Integration[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
     params,
@@ -23362,9 +24824,13 @@ export async function reposSetAppAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Remove app access restrictions
@@ -23403,7 +24869,9 @@ export async function reposRemoveAppAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<Integration[]> {
+): Promise<
+  r.StatusResponse<200, Integration[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps',
     params,
@@ -23411,9 +24879,13 @@ export async function reposRemoveAppAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Integration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get teams with access to the protected branch
@@ -23434,14 +24906,14 @@ export async function reposGetTeamsWithAccessToProtectedBranch<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<r.StatusResponse<200, Team[]> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add team access restrictions
@@ -23479,7 +24951,9 @@ export async function reposAddTeamAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<
+  r.StatusResponse<200, Team[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
     params,
@@ -23487,7 +24961,7 @@ export async function reposAddTeamAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set team access restrictions
@@ -23526,7 +25000,9 @@ export async function reposSetTeamAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<
+  r.StatusResponse<200, Team[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
     params,
@@ -23534,7 +25010,7 @@ export async function reposSetTeamAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove team access restrictions
@@ -23572,7 +25048,9 @@ export async function reposRemoveTeamAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<
+  r.StatusResponse<200, Team[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams',
     params,
@@ -23580,7 +25058,7 @@ export async function reposRemoveTeamAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get users with access to the protected branch
@@ -23601,14 +25079,16 @@ export async function reposGetUsersWithAccessToProtectedBranch<FetcherData>(
     branch: string;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<
+  r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add user access restrictions
@@ -23646,7 +25126,9 @@ export async function reposAddUserAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<
+  r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
     params,
@@ -23654,7 +25136,7 @@ export async function reposAddUserAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set user access restrictions
@@ -23692,7 +25174,9 @@ export async function reposSetUserAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<
+  r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
     params,
@@ -23700,7 +25184,7 @@ export async function reposSetUserAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove user access restrictions
@@ -23738,7 +25222,9 @@ export async function reposRemoveUserAccessRestrictions<FetcherData>(
       }
     | string[],
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<
+  r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users',
     params,
@@ -23746,7 +25232,7 @@ export async function reposRemoveUserAccessRestrictions<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Rename a branch
@@ -23788,7 +25274,12 @@ export async function reposRenameBranch<FetcherData>(
     new_name: string;
   },
   opts?: FetcherData,
-): Promise<BranchWithProtection> {
+): Promise<
+  | r.StatusResponse<201, BranchWithProtection>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/branches/{branch}/rename',
     params,
@@ -23796,7 +25287,7 @@ export async function reposRenameBranch<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a check run
@@ -23818,9 +25309,9 @@ export async function checksCreate<FetcherData>(
     owner: string;
     repo: string;
   },
-  body: any | any,
+  body: unknown | unknown,
   opts?: FetcherData,
-): Promise<CheckRun> {
+): Promise<r.StatusResponse<201, CheckRun>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs',
     params,
@@ -23828,9 +25319,13 @@ export async function checksCreate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_CheckRun]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_CheckRun]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a check run
@@ -23852,16 +25347,20 @@ export async function checksGet<FetcherData>(
     check_run_id: number;
   },
   opts?: FetcherData,
-): Promise<CheckRun> {
+): Promise<r.StatusResponse<200, CheckRun>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs/{check_run_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CheckRun]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CheckRun]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a check run
@@ -23880,9 +25379,9 @@ export async function checksUpdate<FetcherData>(
     repo: string;
     check_run_id: number;
   },
-  body: any | any,
+  body: unknown | unknown,
   opts?: FetcherData,
-): Promise<CheckRun> {
+): Promise<r.StatusResponse<200, CheckRun>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs/{check_run_id}',
     params,
@@ -23890,9 +25389,13 @@ export async function checksUpdate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CheckRun]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CheckRun]]] } },
+    },
+    true,
+  );
 }
 /**
  * List check run annotations
@@ -23912,7 +25415,7 @@ export async function checksListAnnotations<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<CheckAnnotation[]> {
+): Promise<r.StatusResponse<200, CheckAnnotation[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-runs/{check_run_id}/annotations',
     params,
@@ -23920,7 +25423,7 @@ export async function checksListAnnotations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a check suite
@@ -23949,7 +25452,9 @@ export async function checksCreateSuite<FetcherData>(
     head_sha: string;
   },
   opts?: FetcherData,
-): Promise<CheckSuite> {
+): Promise<
+  r.StatusResponse<200, CheckSuite> | r.StatusResponse<201, CheckSuite>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites',
     params,
@@ -23957,10 +25462,14 @@ export async function checksCreateSuite<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
-    '201': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
+      '201': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update repository preferences for check suites
@@ -23994,7 +25503,7 @@ export async function checksSetSuitesPreferences<FetcherData>(
     }[];
   },
   opts?: FetcherData,
-): Promise<CheckSuitePreference> {
+): Promise<r.StatusResponse<200, CheckSuitePreference>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites/preferences',
     params,
@@ -24002,9 +25511,13 @@ export async function checksSetSuitesPreferences<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CheckSuitePreference]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CheckSuitePreference]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a check suite
@@ -24026,16 +25539,20 @@ export async function checksGetSuite<FetcherData>(
     check_suite_id: number;
   },
   opts?: FetcherData,
-): Promise<CheckSuite> {
+): Promise<r.StatusResponse<200, CheckSuite>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites/{check_suite_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CheckSuite]]] } },
+    },
+    true,
+  );
 }
 /**
  * List check runs in a check suite
@@ -24062,10 +25579,15 @@ export async function checksListForSuite<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  check_runs: CheckRun[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      check_runs: CheckRun[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs',
     params,
@@ -24073,13 +25595,17 @@ export async function checksListForSuite<FetcherData>(
     queryParams: ['check_name', 'status', 'filter', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'check_runs'], ['loop'], ['ref', $date_CheckRun]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['access', 'check_runs'], ['loop'], ['ref', $date_CheckRun]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Rerequest a check suite
@@ -24101,14 +25627,14 @@ export async function checksRerequestSuite<FetcherData>(
     check_suite_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<201, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List code scanning alerts for a repository
@@ -24140,7 +25666,19 @@ export async function codeScanningListAlertsForRepo<FetcherData>(
     state?: CodeScanningAlertState;
   },
   opts?: FetcherData,
-): Promise<CodeScanningAlertItems[]> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningAlertItems[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts',
     params,
@@ -24148,11 +25686,17 @@ export async function codeScanningListAlertsForRepo<FetcherData>(
     queryParams: ['tool_name', 'tool_guid', 'page', 'per_page', 'ref', 'state'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_CodeScanningAlertItems]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_CodeScanningAlertItems]]],
+        },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a code scanning alert
@@ -24175,16 +25719,32 @@ export async function codeScanningGetAlert<FetcherData>(
     alert_number: AlertNumber;
   },
   opts?: FetcherData,
-): Promise<CodeScanningAlert> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningAlert>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CodeScanningAlert]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CodeScanningAlert]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a code scanning alert
@@ -24205,7 +25765,19 @@ export async function codeScanningUpdateAlert<FetcherData>(
     dismissed_reason?: CodeScanningAlertDismissedReason;
   },
   opts?: FetcherData,
-): Promise<CodeScanningAlert> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningAlert>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}',
     params,
@@ -24213,9 +25785,13 @@ export async function codeScanningUpdateAlert<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CodeScanningAlert]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CodeScanningAlert]]] } },
+    },
+    true,
+  );
 }
 /**
  * List instances of a code scanning alert
@@ -24235,7 +25811,19 @@ export async function codeScanningListAlertInstances<FetcherData>(
     ref?: CodeScanningRef;
   },
   opts?: FetcherData,
-): Promise<CodeScanningAlertInstance[]> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningAlertInstance[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances',
     params,
@@ -24243,7 +25831,7 @@ export async function codeScanningListAlertInstances<FetcherData>(
     queryParams: ['page', 'per_page', 'ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List code scanning analyses for a repository
@@ -24286,7 +25874,19 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
     sarif_id?: CodeScanningAnalysisSarifId;
   },
   opts?: FetcherData,
-): Promise<CodeScanningAnalysis[]> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningAnalysis[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/analyses',
     params,
@@ -24301,11 +25901,15 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_CodeScanningAnalysis]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_CodeScanningAnalysis]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a code scanning analysis for a repository
@@ -24350,16 +25954,32 @@ export async function codeScanningGetAnalysis<FetcherData>(
     analysis_id: number;
   },
   opts?: FetcherData,
-): Promise<CodeScanningAnalysis> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningAnalysis>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CodeScanningAnalysis]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CodeScanningAnalysis]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a code scanning analysis from a repository
@@ -24465,7 +26085,20 @@ export async function codeScanningDeleteAnalysis<FetcherData>(
     confirm_delete?: string | null;
   },
   opts?: FetcherData,
-): Promise<CodeScanningAnalysisDeletion> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningAnalysisDeletion>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}',
     params,
@@ -24473,7 +26106,7 @@ export async function codeScanningDeleteAnalysis<FetcherData>(
     queryParams: ['confirm_delete'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Upload an analysis as SARIF data
@@ -24539,7 +26172,21 @@ export async function codeScanningUploadSarif<FetcherData>(
     tool_name?: string;
   },
   opts?: FetcherData,
-): Promise<CodeScanningSarifsReceipt> {
+): Promise<
+  | r.StatusResponse<202, CodeScanningSarifsReceipt>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<413, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/sarifs',
     params,
@@ -24547,7 +26194,7 @@ export async function codeScanningUploadSarif<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get information about a SARIF upload
@@ -24567,14 +26214,26 @@ export async function codeScanningGetSarif<FetcherData>(
     sarif_id: string;
   },
   opts?: FetcherData,
-): Promise<CodeScanningSarifsStatus> {
+): Promise<
+  | r.StatusResponse<200, CodeScanningSarifsStatus>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository collaborators
@@ -24597,7 +26256,9 @@ export async function reposListCollaborators<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Collaborator[]> {
+): Promise<
+  r.StatusResponse<200, Collaborator[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators',
     params,
@@ -24605,7 +26266,7 @@ export async function reposListCollaborators<FetcherData>(
     queryParams: ['affiliation', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check if a user is a repository collaborator
@@ -24626,14 +26287,14 @@ export async function reposCheckCollaborator<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add a repository collaborator
@@ -24690,7 +26351,12 @@ export async function reposAddCollaborator<FetcherData>(
     permissions?: string;
   },
   opts?: FetcherData,
-): Promise<RepositoryInvitation | any> {
+): Promise<
+  | r.StatusResponse<201, RepositoryInvitation>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}',
     params,
@@ -24698,9 +26364,13 @@ export async function reposAddCollaborator<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_RepositoryInvitation]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_RepositoryInvitation]]] } },
+    },
+    true,
+  );
 }
 /**
  * Remove a repository collaborator
@@ -24715,14 +26385,14 @@ export async function reposRemoveCollaborator<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get repository permissions for a user
@@ -24739,14 +26409,17 @@ export async function reposGetCollaboratorPermissionLevel<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<RepositoryCollaboratorPermission> {
+): Promise<
+  | r.StatusResponse<200, RepositoryCollaboratorPermission>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/collaborators/{username}/permission',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List commit comments for a repository
@@ -24767,7 +26440,7 @@ export async function reposListCommitCommentsForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<CommitComment[]> {
+): Promise<r.StatusResponse<200, CommitComment[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments',
     params,
@@ -24775,9 +26448,15 @@ export async function reposListCommitCommentsForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_CommitComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_CommitComment]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Get a commit comment
@@ -24792,16 +26471,22 @@ export async function reposGetCommitComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<CommitComment> {
+): Promise<
+  r.StatusResponse<200, CommitComment> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CommitComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CommitComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a commit comment
@@ -24822,7 +26507,9 @@ export async function reposUpdateCommitComment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<CommitComment> {
+): Promise<
+  r.StatusResponse<200, CommitComment> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}',
     params,
@@ -24830,9 +26517,13 @@ export async function reposUpdateCommitComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CommitComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CommitComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a commit comment
@@ -24847,14 +26538,14 @@ export async function reposDeleteCommitComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List reactions for a commit comment
@@ -24881,7 +26572,17 @@ export async function reactionsListForCommitComment<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<
+  | r.StatusResponse<200, Reaction[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions',
     params,
@@ -24889,9 +26590,13 @@ export async function reactionsListForCommitComment<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for a commit comment
@@ -24922,7 +26627,18 @@ export async function reactionsCreateForCommitComment<FetcherData>(
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<
+  | r.StatusResponse<200, Reaction>
+  | r.StatusResponse<201, Reaction>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions',
     params,
@@ -24930,10 +26646,14 @@ export async function reactionsCreateForCommitComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a commit comment reaction
@@ -24954,14 +26674,14 @@ export async function reactionsDeleteForCommitComment<FetcherData>(
     reaction_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List commits
@@ -25027,7 +26747,13 @@ export async function reposListCommits<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Commit[]> {
+): Promise<
+  | r.StatusResponse<200, Commit[]>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits',
     params,
@@ -25043,7 +26769,7 @@ export async function reposListCommits<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List branches for HEAD commit
@@ -25065,14 +26791,24 @@ export async function reposListBranchesForHeadCommit<FetcherData>(
     commit_sha: string;
   },
   opts?: FetcherData,
-): Promise<BranchShort[]> {
+): Promise<
+  | r.StatusResponse<200, BranchShort[]>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List commit comments
@@ -25090,7 +26826,7 @@ export async function reposListCommentsForCommit<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<CommitComment[]> {
+): Promise<r.StatusResponse<200, CommitComment[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/comments',
     params,
@@ -25098,9 +26834,15 @@ export async function reposListCommentsForCommit<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_CommitComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_CommitComment]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Create a commit comment
@@ -25142,7 +26884,11 @@ export async function reposCreateCommitComment<FetcherData>(
     line?: number;
   },
   opts?: FetcherData,
-): Promise<CommitComment> {
+): Promise<
+  | r.StatusResponse<201, CommitComment>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/comments',
     params,
@@ -25150,9 +26896,13 @@ export async function reposCreateCommitComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_CommitComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_CommitComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * List pull requests associated with a commit
@@ -25174,7 +26924,16 @@ export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestSimple[]> {
+): Promise<
+  | r.StatusResponse<200, PullRequestSimple[]>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{commit_sha}/pulls',
     params,
@@ -25182,11 +26941,15 @@ export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_PullRequestSimple]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_PullRequestSimple]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a commit
@@ -25265,7 +27028,12 @@ export async function reposGetCommit<FetcherData>(
     ref: string;
   },
   opts?: FetcherData,
-): Promise<Commit> {
+): Promise<
+  | r.StatusResponse<200, Commit>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<500, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}',
     params,
@@ -25273,7 +27041,7 @@ export async function reposGetCommit<FetcherData>(
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List check runs for a Git reference
@@ -25301,10 +27069,15 @@ export async function checksListForRef<FetcherData>(
     app_id?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  check_runs: CheckRun[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      check_runs: CheckRun[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}/check-runs',
     params,
@@ -25319,13 +27092,17 @@ export async function checksListForRef<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'check_runs'], ['loop'], ['ref', $date_CheckRun]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['access', 'check_runs'], ['loop'], ['ref', $date_CheckRun]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * List check suites for a Git reference
@@ -25351,10 +27128,15 @@ export async function checksListSuitesForRef<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  check_suites: CheckSuite[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      check_suites: CheckSuite[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}/check-suites',
     params,
@@ -25362,15 +27144,19 @@ export async function checksListSuitesForRef<FetcherData>(
     queryParams: ['app_id', 'check_name', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'check_suites'], ['loop'], ['ref', $date_CheckSuite]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'check_suites'], ['loop'], ['ref', $date_CheckSuite]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get the combined status for a specific reference
@@ -25401,7 +27187,10 @@ export async function reposGetCombinedStatusForRef<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<CombinedCommitStatus> {
+): Promise<
+  | r.StatusResponse<200, CombinedCommitStatus>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}/status',
     params,
@@ -25409,9 +27198,13 @@ export async function reposGetCombinedStatusForRef<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CombinedCommitStatus]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CombinedCommitStatus]]] } },
+    },
+    true,
+  );
 }
 /**
  * List commit statuses for a reference
@@ -25433,7 +27226,9 @@ export async function reposListCommitStatusesForRef<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Status[] | BasicError> {
+): Promise<
+  r.StatusResponse<200, Status[]> | r.StatusResponse<301, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/commits/{ref}/statuses',
     params,
@@ -25441,7 +27236,7 @@ export async function reposListCommitStatusesForRef<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the code of conduct for a repository
@@ -25460,14 +27255,14 @@ export async function codesOfConductGetForRepo<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<CodeOfConduct> {
+): Promise<r.StatusResponse<200, CodeOfConduct>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/community/code_of_conduct',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get community profile metrics
@@ -25498,16 +27293,20 @@ export async function reposGetCommunityProfileMetrics<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<CommunityProfile> {
+): Promise<r.StatusResponse<200, CommunityProfile>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/community/profile',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CommunityProfile]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CommunityProfile]]] } },
+    },
+    true,
+  );
 }
 /**
  * Compare two commits
@@ -25596,7 +27395,11 @@ export async function reposCompareCommits<FetcherData>(
     basehead: string;
   },
   opts?: FetcherData,
-): Promise<CommitComparison> {
+): Promise<
+  | r.StatusResponse<200, CommitComparison>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/compare/{basehead}',
     params,
@@ -25604,7 +27407,7 @@ export async function reposCompareCommits<FetcherData>(
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a content attachment
@@ -25643,7 +27446,21 @@ export async function appsCreateContentAttachment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<ContentReferenceAttachment | any> {
+): Promise<
+  | r.StatusResponse<200, ContentReferenceAttachment>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments',
     params,
@@ -25651,7 +27468,7 @@ export async function appsCreateContentAttachment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get repository content
@@ -25719,7 +27536,13 @@ export async function reposGetContent<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  (ContentDirectory | ContentFile | ContentSymlink | ContentSubmodule) | any
+  | r.StatusResponse<
+      200,
+      ContentDirectory | ContentFile | ContentSymlink | ContentSubmodule
+    >
+  | r.StatusResponse<302, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
 > {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contents/{path}',
@@ -25728,7 +27551,7 @@ export async function reposGetContent<FetcherData>(
     queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create or update file contents
@@ -25796,7 +27619,13 @@ export async function reposCreateOrUpdateFileContents<FetcherData>(
     };
   },
   opts?: FetcherData,
-): Promise<FileCommit> {
+): Promise<
+  | r.StatusResponse<200, FileCommit>
+  | r.StatusResponse<201, FileCommit>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contents/{path}',
     params,
@@ -25804,7 +27633,7 @@ export async function reposCreateOrUpdateFileContents<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a file
@@ -25870,7 +27699,20 @@ export async function reposDeleteFile<FetcherData>(
     };
   },
   opts?: FetcherData,
-): Promise<FileCommit> {
+): Promise<
+  | r.StatusResponse<200, FileCommit>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contents/{path}',
     params,
@@ -25878,7 +27720,7 @@ export async function reposDeleteFile<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository contributors
@@ -25903,7 +27745,12 @@ export async function reposListContributors<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Contributor[] | any> {
+): Promise<
+  | r.StatusResponse<200, Contributor[]>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/contributors',
     params,
@@ -25911,7 +27758,7 @@ export async function reposListContributors<FetcherData>(
     queryParams: ['anon', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List deployments
@@ -25932,7 +27779,7 @@ export async function reposListDeployments<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Deployment[]> {
+): Promise<r.StatusResponse<200, Deployment[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments',
     params,
@@ -25940,9 +27787,13 @@ export async function reposListDeployments<FetcherData>(
     queryParams: ['sha', 'ref', 'task', 'environment', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Deployment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Deployment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a deployment
@@ -26071,10 +27922,15 @@ export async function reposCreateDeployment<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | Deployment
-  | {
-      message?: string;
-    }
+  | r.StatusResponse<201, Deployment>
+  | r.StatusResponse<
+      202,
+      {
+        message?: string;
+      }
+    >
+  | r.StatusResponse<409, unknown>
+  | r.StatusResponse<422, ValidationError>
 > {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments',
@@ -26083,9 +27939,13 @@ export async function reposCreateDeployment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Deployment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Deployment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a deployment
@@ -26100,16 +27960,22 @@ export async function reposGetDeployment<FetcherData>(
     deployment_id: number;
   },
   opts?: FetcherData,
-): Promise<Deployment> {
+): Promise<
+  r.StatusResponse<200, Deployment> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Deployment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Deployment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a deployment
@@ -26137,14 +28003,18 @@ export async function reposDeleteDeployment<FetcherData>(
     deployment_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List deployment statuses
@@ -26162,7 +28032,9 @@ export async function reposListDeploymentStatuses<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<DeploymentStatus[]> {
+): Promise<
+  r.StatusResponse<200, DeploymentStatus[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}/statuses',
     params,
@@ -26170,11 +28042,15 @@ export async function reposListDeploymentStatuses<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_DeploymentStatus]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_DeploymentStatus]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a deployment status
@@ -26235,7 +28111,10 @@ export async function reposCreateDeploymentStatus<FetcherData>(
     auto_inactive?: boolean;
   },
   opts?: FetcherData,
-): Promise<DeploymentStatus> {
+): Promise<
+  | r.StatusResponse<201, DeploymentStatus>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}/statuses',
     params,
@@ -26243,9 +28122,13 @@ export async function reposCreateDeploymentStatus<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_DeploymentStatus]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_DeploymentStatus]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a deployment status
@@ -26262,16 +28145,30 @@ export async function reposGetDeploymentStatus<FetcherData>(
     status_id: number;
   },
   opts?: FetcherData,
-): Promise<DeploymentStatus> {
+): Promise<
+  | r.StatusResponse<200, DeploymentStatus>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_DeploymentStatus]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_DeploymentStatus]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a repository dispatch event
@@ -26318,7 +28215,9 @@ export async function reposCreateDispatchEvent<FetcherData>(
     };
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  r.StatusResponse<204, unknown> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/dispatches',
     params,
@@ -26326,7 +28225,7 @@ export async function reposCreateDispatchEvent<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get all environments
@@ -26345,29 +28244,38 @@ export async function reposGetAllEnvironments<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<{
-  /**
-   * The number of environments in this repository
-   * @example 5
-   */
-  total_count?: number;
-  environments?: Environment[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      /**
+       * The number of environments in this repository
+       * @example 5
+       */
+      total_count?: number;
+      environments?: Environment[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/environments',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'environments'], ['loop'], ['ref', $date_Environment]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'environments'], ['loop'], ['ref', $date_Environment]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get an environment
@@ -26384,16 +28292,20 @@ export async function reposGetEnvironment<FetcherData>(
     environment_name: string;
   },
   opts?: FetcherData,
-): Promise<Environment> {
+): Promise<r.StatusResponse<200, Environment>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/environments/{environment_name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Environment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Environment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create or update an environment
@@ -26439,7 +28351,9 @@ export async function reposCreateOrUpdateEnvironment<FetcherData>(
     deployment_branch_policy?: DeploymentBranchPolicy;
   } | null,
   opts?: FetcherData,
-): Promise<Environment> {
+): Promise<
+  r.StatusResponse<200, Environment> | r.StatusResponse<422, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/environments/{environment_name}',
     params,
@@ -26447,9 +28361,13 @@ export async function reposCreateOrUpdateEnvironment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Environment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Environment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an environment
@@ -26465,14 +28383,14 @@ export async function reposDeleteAnEnvironment<FetcherData>(
     environment_name: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/environments/{environment_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository events
@@ -26488,7 +28406,7 @@ export async function activityListRepoEvents<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[]> {
+): Promise<r.StatusResponse<200, Event[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/events',
     params,
@@ -26496,9 +28414,13 @@ export async function activityListRepoEvents<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List forks
@@ -26515,7 +28437,9 @@ export async function reposListForks<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<
+  r.StatusResponse<200, MinimalRepository[]> | r.StatusResponse<400, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/forks',
     params,
@@ -26523,11 +28447,15 @@ export async function reposListForks<FetcherData>(
     queryParams: ['sort', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a fork
@@ -26552,7 +28480,13 @@ export async function reposCreateFork<FetcherData>(
     organization?: string;
   } | null,
   opts?: FetcherData,
-): Promise<FullRepository> {
+): Promise<
+  | r.StatusResponse<202, FullRepository>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/forks',
     params,
@@ -26560,9 +28494,13 @@ export async function reposCreateFork<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '202': { transforms: { date: [[['ref', $date_FullRepository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '202': { transforms: { date: [[['ref', $date_FullRepository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a blob
@@ -26587,7 +28525,13 @@ export async function gitCreateBlob<FetcherData>(
     encoding?: string;
   },
   opts?: FetcherData,
-): Promise<ShortBlob> {
+): Promise<
+  | r.StatusResponse<201, ShortBlob>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/blobs',
     params,
@@ -26595,7 +28539,7 @@ export async function gitCreateBlob<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a blob
@@ -26614,14 +28558,19 @@ export async function gitGetBlob<FetcherData>(
     file_sha: string;
   },
   opts?: FetcherData,
-): Promise<Blob> {
+): Promise<
+  | r.StatusResponse<200, Blob>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/blobs/{file_sha}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a commit
@@ -26735,7 +28684,11 @@ export async function gitCreateCommit<FetcherData>(
     signature?: string;
   },
   opts?: FetcherData,
-): Promise<GitCommit> {
+): Promise<
+  | r.StatusResponse<201, GitCommit>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/commits',
     params,
@@ -26743,9 +28696,13 @@ export async function gitCreateCommit<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_GitCommit]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_GitCommit]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a commit
@@ -26808,16 +28765,22 @@ export async function gitGetCommit<FetcherData>(
     commit_sha: string;
   },
   opts?: FetcherData,
-): Promise<GitCommit> {
+): Promise<
+  r.StatusResponse<200, GitCommit> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/commits/{commit_sha}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_GitCommit]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_GitCommit]]] } },
+    },
+    true,
+  );
 }
 /**
  * List matching references
@@ -26850,7 +28813,7 @@ export async function gitListMatchingRefs<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<GitRef[]> {
+): Promise<r.StatusResponse<200, GitRef[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/matching-refs/{ref}',
     params,
@@ -26858,7 +28821,7 @@ export async function gitListMatchingRefs<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a reference
@@ -26881,14 +28844,14 @@ export async function gitGetRef<FetcherData>(
     ref: string;
   },
   opts?: FetcherData,
-): Promise<GitRef> {
+): Promise<r.StatusResponse<200, GitRef> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/ref/{ref}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a reference
@@ -26918,7 +28881,9 @@ export async function gitCreateRef<FetcherData>(
     key?: string;
   },
   opts?: FetcherData,
-): Promise<GitRef> {
+): Promise<
+  r.StatusResponse<201, GitRef> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/refs',
     params,
@@ -26926,7 +28891,7 @@ export async function gitCreateRef<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a reference
@@ -26951,7 +28916,9 @@ export async function gitUpdateRef<FetcherData>(
     force?: boolean;
   },
   opts?: FetcherData,
-): Promise<GitRef> {
+): Promise<
+  r.StatusResponse<200, GitRef> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/refs/{ref}',
     params,
@@ -26959,7 +28926,7 @@ export async function gitUpdateRef<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a reference
@@ -26974,14 +28941,16 @@ export async function gitDeleteRef<FetcherData>(
     ref: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  r.StatusResponse<204, unknown> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/refs/{ref}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a tag object
@@ -27081,7 +29050,9 @@ export async function gitCreateTag<FetcherData>(
     };
   },
   opts?: FetcherData,
-): Promise<GitTag> {
+): Promise<
+  r.StatusResponse<201, GitTag> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/tags',
     params,
@@ -27089,7 +29060,7 @@ export async function gitCreateTag<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a tag
@@ -27149,14 +29120,14 @@ export async function gitGetTag<FetcherData>(
     tag_sha: string;
   },
   opts?: FetcherData,
-): Promise<GitTag> {
+): Promise<r.StatusResponse<200, GitTag> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/tags/{tag_sha}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a tree
@@ -27214,7 +29185,12 @@ export async function gitCreateTree<FetcherData>(
     base_tree?: string;
   },
   opts?: FetcherData,
-): Promise<GitTree> {
+): Promise<
+  | r.StatusResponse<201, GitTree>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/trees',
     params,
@@ -27222,7 +29198,7 @@ export async function gitCreateTree<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a tree
@@ -27243,7 +29219,11 @@ export async function gitGetTree<FetcherData>(
     recursive?: string;
   },
   opts?: FetcherData,
-): Promise<GitTree> {
+): Promise<
+  | r.StatusResponse<200, GitTree>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/trees/{tree_sha}',
     params,
@@ -27251,7 +29231,7 @@ export async function gitGetTree<FetcherData>(
     queryParams: ['recursive'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository webhooks
@@ -27267,7 +29247,7 @@ export async function reposListWebhooks<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Hook[]> {
+): Promise<r.StatusResponse<200, Hook[]> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks',
     params,
@@ -27275,9 +29255,13 @@ export async function reposListWebhooks<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Hook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Hook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a repository webhook
@@ -27330,7 +29314,12 @@ export async function reposCreateWebhook<FetcherData>(
     active?: boolean;
   } | null,
   opts?: FetcherData,
-): Promise<Hook> {
+): Promise<
+  | r.StatusResponse<201, Hook>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks',
     params,
@@ -27338,9 +29327,13 @@ export async function reposCreateWebhook<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Hook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Hook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a repository webhook
@@ -27357,16 +29350,20 @@ export async function reposGetWebhook<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<Hook> {
+): Promise<r.StatusResponse<200, Hook> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Hook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Hook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a repository webhook
@@ -27425,7 +29422,11 @@ export async function reposUpdateWebhook<FetcherData>(
     active?: boolean;
   },
   opts?: FetcherData,
-): Promise<Hook> {
+): Promise<
+  | r.StatusResponse<200, Hook>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}',
     params,
@@ -27433,9 +29434,13 @@ export async function reposUpdateWebhook<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Hook]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Hook]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a repository webhook
@@ -27450,14 +29455,14 @@ export async function reposDeleteWebhook<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a webhook configuration for a repository
@@ -27477,14 +29482,14 @@ export async function reposGetWebhookConfigForRepo<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<WebhookConfig> {
+): Promise<r.StatusResponse<200, WebhookConfig>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/config',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a webhook configuration for a repository
@@ -27511,7 +29516,7 @@ export async function reposUpdateWebhookConfigForRepo<FetcherData>(
     insecure_ssl?: WebhookConfigInsecureSsl;
   },
   opts?: FetcherData,
-): Promise<WebhookConfig> {
+): Promise<r.StatusResponse<200, WebhookConfig>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/config',
     params,
@@ -27519,7 +29524,7 @@ export async function reposUpdateWebhookConfigForRepo<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List deliveries for a repository webhook
@@ -27537,7 +29542,11 @@ export async function reposListWebhookDeliveries<FetcherData>(
     cursor?: string;
   },
   opts?: FetcherData,
-): Promise<HookDeliveryItem[]> {
+): Promise<
+  | r.StatusResponse<200, HookDeliveryItem[]>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/deliveries',
     params,
@@ -27545,11 +29554,15 @@ export async function reposListWebhookDeliveries<FetcherData>(
     queryParams: ['per_page', 'cursor'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_HookDeliveryItem]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a delivery for a repository webhook
@@ -27566,16 +29579,24 @@ export async function reposGetWebhookDelivery<FetcherData>(
     delivery_id: number;
   },
   opts?: FetcherData,
-): Promise<HookDelivery> {
+): Promise<
+  | r.StatusResponse<200, HookDelivery>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_HookDelivery]]] } },
+    },
+    true,
+  );
 }
 /**
  * Redeliver a delivery for a repository webhook
@@ -27592,14 +29613,18 @@ export async function reposRedeliverWebhookDelivery<FetcherData>(
     delivery_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}/attempts',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Ping a repository webhook
@@ -27615,14 +29640,14 @@ export async function reposPingWebhook<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/pings',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Test the push repository webhook
@@ -27642,14 +29667,14 @@ export async function reposTestPushWebhook<FetcherData>(
     hook_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/tests',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an import status
@@ -27731,14 +29756,14 @@ export async function migrationsGetImportStatus<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<Import> {
+): Promise<r.StatusResponse<200, Import> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Start an import
@@ -27775,7 +29800,11 @@ export async function migrationsStartImport<FetcherData>(
     tfvc_project?: string;
   },
   opts?: FetcherData,
-): Promise<Import> {
+): Promise<
+  | r.StatusResponse<201, Import>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
     params,
@@ -27783,7 +29812,7 @@ export async function migrationsStartImport<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update an import
@@ -27818,7 +29847,7 @@ export async function migrationsUpdateImport<FetcherData>(
     tfvc_project?: string;
   } | null,
   opts?: FetcherData,
-): Promise<Import> {
+): Promise<r.StatusResponse<200, Import>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
     params,
@@ -27826,7 +29855,7 @@ export async function migrationsUpdateImport<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Cancel an import
@@ -27841,14 +29870,14 @@ export async function migrationsCancelImport<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get commit authors
@@ -27871,7 +29900,9 @@ export async function migrationsGetCommitAuthors<FetcherData>(
     since?: number;
   },
   opts?: FetcherData,
-): Promise<PorterAuthor[]> {
+): Promise<
+  r.StatusResponse<200, PorterAuthor[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/authors',
     params,
@@ -27879,7 +29910,7 @@ export async function migrationsGetCommitAuthors<FetcherData>(
     queryParams: ['since'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Map a commit author
@@ -27906,7 +29937,11 @@ export async function migrationsMapCommitAuthor<FetcherData>(
     name?: string;
   },
   opts?: FetcherData,
-): Promise<PorterAuthor> {
+): Promise<
+  | r.StatusResponse<200, PorterAuthor>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/authors/{author_id}',
     params,
@@ -27914,7 +29949,7 @@ export async function migrationsMapCommitAuthor<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get large files
@@ -27929,14 +29964,14 @@ export async function migrationsGetLargeFiles<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<PorterLargeFile[]> {
+): Promise<r.StatusResponse<200, PorterLargeFile[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/large_files',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update Git LFS preference
@@ -27959,7 +29994,9 @@ export async function migrationsSetLfsPreference<FetcherData>(
     use_lfs: 'opt_in' | 'opt_out';
   },
   opts?: FetcherData,
-): Promise<Import> {
+): Promise<
+  r.StatusResponse<200, Import> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/import/lfs',
     params,
@@ -27967,7 +30004,7 @@ export async function migrationsSetLfsPreference<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a repository installation for the authenticated app
@@ -27987,16 +30024,24 @@ export async function appsGetRepoInstallation<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<Installation | BasicError> {
+): Promise<
+  | r.StatusResponse<200, Installation>
+  | r.StatusResponse<301, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/installation',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Installation]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get interaction restrictions for a repository
@@ -28012,20 +30057,24 @@ export async function interactionsGetRestrictionsForRepo<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<InteractionLimitResponse | any> {
+): Promise<r.StatusResponse<200, InteractionLimitResponse | unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/interaction-limits',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Set interaction restrictions for a repository
@@ -28044,7 +30093,10 @@ export async function interactionsSetRestrictionsForRepo<FetcherData>(
   },
   body: InteractionLimit,
   opts?: FetcherData,
-): Promise<InteractionLimitResponse> {
+): Promise<
+  | r.StatusResponse<200, InteractionLimitResponse>
+  | r.StatusResponse<409, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/interaction-limits',
     params,
@@ -28052,11 +30104,15 @@ export async function interactionsSetRestrictionsForRepo<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Remove interaction restrictions for a repository
@@ -28074,14 +30130,14 @@ export async function interactionsRemoveRestrictionsForRepo<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<409, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/interaction-limits',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository invitations
@@ -28099,7 +30155,7 @@ export async function reposListInvitations<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<RepositoryInvitation[]> {
+): Promise<r.StatusResponse<200, RepositoryInvitation[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/invitations',
     params,
@@ -28107,11 +30163,15 @@ export async function reposListInvitations<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_RepositoryInvitation]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_RepositoryInvitation]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Update a repository invitation
@@ -28132,7 +30192,7 @@ export async function reposUpdateInvitation<FetcherData>(
     permissions?: 'read' | 'write' | 'maintain' | 'triage' | 'admin';
   },
   opts?: FetcherData,
-): Promise<RepositoryInvitation> {
+): Promise<r.StatusResponse<200, RepositoryInvitation>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/invitations/{invitation_id}',
     params,
@@ -28140,9 +30200,13 @@ export async function reposUpdateInvitation<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_RepositoryInvitation]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_RepositoryInvitation]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a repository invitation
@@ -28157,14 +30221,14 @@ export async function reposDeleteInvitation<FetcherData>(
     invitation_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/invitations/{invitation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository issues
@@ -28199,7 +30263,12 @@ export async function issuesListForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<IssueSimple[] | BasicError> {
+): Promise<
+  | r.StatusResponse<200, IssueSimple[]>
+  | r.StatusResponse<301, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues',
     params,
@@ -28219,9 +30288,13 @@ export async function issuesListForRepo<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_IssueSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create an issue
@@ -28277,7 +30350,21 @@ export async function issuesCreate<FetcherData>(
     assignees?: string[];
   },
   opts?: FetcherData,
-): Promise<Issue> {
+): Promise<
+  | r.StatusResponse<201, Issue>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues',
     params,
@@ -28285,9 +30372,13 @@ export async function issuesCreate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Issue]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Issue]]] } },
+    },
+    true,
+  );
 }
 /**
  * List issue comments for a repository
@@ -28307,7 +30398,11 @@ export async function issuesListCommentsForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<IssueComment[]> {
+): Promise<
+  | r.StatusResponse<200, IssueComment[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments',
     params,
@@ -28315,9 +30410,15 @@ export async function issuesListCommentsForRepo<FetcherData>(
     queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_IssueComment]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Get an issue comment
@@ -28332,16 +30433,22 @@ export async function issuesGetComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<IssueComment> {
+): Promise<
+  r.StatusResponse<200, IssueComment> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_IssueComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_IssueComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update an issue comment
@@ -28362,7 +30469,9 @@ export async function issuesUpdateComment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<IssueComment> {
+): Promise<
+  r.StatusResponse<200, IssueComment> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}',
     params,
@@ -28370,9 +30479,13 @@ export async function issuesUpdateComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_IssueComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_IssueComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an issue comment
@@ -28387,14 +30500,14 @@ export async function issuesDeleteComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List reactions for an issue comment
@@ -28421,7 +30534,17 @@ export async function reactionsListForIssueComment<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<
+  | r.StatusResponse<200, Reaction[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions',
     params,
@@ -28429,9 +30552,13 @@ export async function reactionsListForIssueComment<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for an issue comment
@@ -28462,7 +30589,18 @@ export async function reactionsCreateForIssueComment<FetcherData>(
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<
+  | r.StatusResponse<200, Reaction>
+  | r.StatusResponse<201, Reaction>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions',
     params,
@@ -28470,10 +30608,14 @@ export async function reactionsCreateForIssueComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an issue comment reaction
@@ -28494,14 +30636,14 @@ export async function reactionsDeleteForIssueComment<FetcherData>(
     reaction_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List issue events for a repository
@@ -28517,7 +30659,9 @@ export async function issuesListEventsForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<IssueEvent[]> {
+): Promise<
+  r.StatusResponse<200, IssueEvent[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/events',
     params,
@@ -28525,9 +30669,13 @@ export async function issuesListEventsForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueEvent]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_IssueEvent]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get an issue event
@@ -28542,16 +30690,25 @@ export async function issuesGetEvent<FetcherData>(
     event_id: number;
   },
   opts?: FetcherData,
-): Promise<IssueEvent> {
+): Promise<
+  | r.StatusResponse<200, IssueEvent>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/events/{event_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_IssueEvent]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_IssueEvent]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get an issue
@@ -28588,16 +30745,26 @@ export async function issuesGet<FetcherData>(
     issue_number: number;
   },
   opts?: FetcherData,
-): Promise<Issue | BasicError | any> {
+): Promise<
+  | r.StatusResponse<200, Issue>
+  | r.StatusResponse<301, BasicError>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Issue]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Issue]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update an issue
@@ -28648,7 +30815,22 @@ export async function issuesUpdate<FetcherData>(
     assignees?: string[];
   },
   opts?: FetcherData,
-): Promise<Issue | BasicError> {
+): Promise<
+  | r.StatusResponse<200, Issue>
+  | r.StatusResponse<301, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}',
     params,
@@ -28656,9 +30838,13 @@ export async function issuesUpdate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Issue]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Issue]]] } },
+    },
+    true,
+  );
 }
 /**
  * Add assignees to an issue
@@ -28680,7 +30866,7 @@ export async function issuesAddAssignees<FetcherData>(
     assignees?: string[];
   },
   opts?: FetcherData,
-): Promise<IssueSimple> {
+): Promise<r.StatusResponse<201, IssueSimple>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/assignees',
     params,
@@ -28688,9 +30874,13 @@ export async function issuesAddAssignees<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_IssueSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_IssueSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * Remove assignees from an issue
@@ -28712,7 +30902,7 @@ export async function issuesRemoveAssignees<FetcherData>(
     assignees?: string[];
   },
   opts?: FetcherData,
-): Promise<IssueSimple> {
+): Promise<r.StatusResponse<200, IssueSimple>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/assignees',
     params,
@@ -28720,9 +30910,13 @@ export async function issuesRemoveAssignees<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_IssueSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_IssueSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * List issue comments
@@ -28741,7 +30935,11 @@ export async function issuesListComments<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<IssueComment[]> {
+): Promise<
+  | r.StatusResponse<200, IssueComment[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/comments',
     params,
@@ -28749,9 +30947,15 @@ export async function issuesListComments<FetcherData>(
     queryParams: ['since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_IssueComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_IssueComment]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Create an issue comment
@@ -28779,7 +30983,13 @@ export async function issuesCreateComment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<IssueComment> {
+): Promise<
+  | r.StatusResponse<201, IssueComment>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/comments',
     params,
@@ -28787,9 +30997,13 @@ export async function issuesCreateComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_IssueComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_IssueComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * List issue events
@@ -28806,7 +31020,10 @@ export async function issuesListEvents<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<IssueEventForIssue[]> {
+): Promise<
+  | r.StatusResponse<200, IssueEventForIssue[]>
+  | r.StatusResponse<410, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/events',
     params,
@@ -28814,7 +31031,7 @@ export async function issuesListEvents<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List labels for an issue
@@ -28831,7 +31048,7 @@ export async function issuesListLabelsOnIssue<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Label[]> {
+): Promise<r.StatusResponse<200, Label[]> | r.StatusResponse<410, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
     params,
@@ -28839,7 +31056,7 @@ export async function issuesListLabelsOnIssue<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add labels to an issue
@@ -28871,7 +31088,11 @@ export async function issuesAddLabels<FetcherData>(
       }[]
     | string,
   opts?: FetcherData,
-): Promise<Label[]> {
+): Promise<
+  | r.StatusResponse<200, Label[]>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
     params,
@@ -28879,7 +31100,7 @@ export async function issuesAddLabels<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set labels for an issue
@@ -28912,7 +31133,11 @@ export async function issuesSetLabels<FetcherData>(
       }[]
     | string,
   opts?: FetcherData,
-): Promise<Label[]> {
+): Promise<
+  | r.StatusResponse<200, Label[]>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
     params,
@@ -28920,7 +31145,7 @@ export async function issuesSetLabels<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove all labels from an issue
@@ -28935,14 +31160,14 @@ export async function issuesRemoveAllLabels<FetcherData>(
     issue_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<410, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a label from an issue
@@ -28960,14 +31185,18 @@ export async function issuesRemoveLabel<FetcherData>(
     name: string;
   },
   opts?: FetcherData,
-): Promise<Label[]> {
+): Promise<
+  | r.StatusResponse<200, Label[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/labels/{name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Lock an issue
@@ -28997,7 +31226,13 @@ export async function issuesLock<FetcherData>(
     lock_reason?: 'off-topic' | 'too heated' | 'resolved' | 'spam';
   } | null,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/lock',
     params,
@@ -29005,7 +31240,7 @@ export async function issuesLock<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unlock an issue
@@ -29021,14 +31256,18 @@ export async function issuesUnlock<FetcherData>(
     issue_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/lock',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List reactions for an issue
@@ -29055,7 +31294,18 @@ export async function reactionsListForIssue<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<
+  | r.StatusResponse<200, Reaction[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions',
     params,
@@ -29063,9 +31313,13 @@ export async function reactionsListForIssue<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for an issue
@@ -29096,7 +31350,18 @@ export async function reactionsCreateForIssue<FetcherData>(
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<
+  | r.StatusResponse<200, Reaction>
+  | r.StatusResponse<201, Reaction>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions',
     params,
@@ -29104,10 +31369,14 @@ export async function reactionsCreateForIssue<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete an issue reaction
@@ -29128,14 +31397,14 @@ export async function reactionsDeleteForIssue<FetcherData>(
     reaction_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List timeline events for an issue
@@ -29152,7 +31421,18 @@ export async function issuesListEventsForTimeline<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<TimelineIssueEvents[]> {
+): Promise<
+  | r.StatusResponse<200, TimelineIssueEvents[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/issues/{issue_number}/timeline',
     params,
@@ -29160,11 +31440,15 @@ export async function issuesListEventsForTimeline<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_TimelineIssueEvents]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_TimelineIssueEvents]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * List deploy keys
@@ -29180,7 +31464,7 @@ export async function reposListDeployKeys<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<DeployKey[]> {
+): Promise<r.StatusResponse<200, DeployKey[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys',
     params,
@@ -29188,7 +31472,7 @@ export async function reposListDeployKeys<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a deploy key
@@ -29219,7 +31503,9 @@ export async function reposCreateDeployKey<FetcherData>(
     read_only?: boolean;
   },
   opts?: FetcherData,
-): Promise<DeployKey> {
+): Promise<
+  r.StatusResponse<201, DeployKey> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys',
     params,
@@ -29227,7 +31513,7 @@ export async function reposCreateDeployKey<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a deploy key
@@ -29242,14 +31528,16 @@ export async function reposGetDeployKey<FetcherData>(
     key_id: number;
   },
   opts?: FetcherData,
-): Promise<DeployKey> {
+): Promise<
+  r.StatusResponse<200, DeployKey> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys/{key_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a deploy key
@@ -29265,14 +31553,14 @@ export async function reposDeleteDeployKey<FetcherData>(
     key_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/keys/{key_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List labels for a repository
@@ -29288,7 +31576,7 @@ export async function issuesListLabelsForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Label[]> {
+): Promise<r.StatusResponse<200, Label[]> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels',
     params,
@@ -29296,7 +31584,7 @@ export async function issuesListLabelsForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a label
@@ -29324,7 +31612,11 @@ export async function issuesCreateLabel<FetcherData>(
     description?: string;
   },
   opts?: FetcherData,
-): Promise<Label> {
+): Promise<
+  | r.StatusResponse<201, Label>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels',
     params,
@@ -29332,7 +31624,7 @@ export async function issuesCreateLabel<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a label
@@ -29347,14 +31639,14 @@ export async function issuesGetLabel<FetcherData>(
     name: string;
   },
   opts?: FetcherData,
-): Promise<Label> {
+): Promise<r.StatusResponse<200, Label> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels/{name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a label
@@ -29383,7 +31675,7 @@ export async function issuesUpdateLabel<FetcherData>(
     description?: string;
   },
   opts?: FetcherData,
-): Promise<Label> {
+): Promise<r.StatusResponse<200, Label>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels/{name}',
     params,
@@ -29391,7 +31683,7 @@ export async function issuesUpdateLabel<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a label
@@ -29406,14 +31698,14 @@ export async function issuesDeleteLabel<FetcherData>(
     name: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/labels/{name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository languages
@@ -29429,14 +31721,14 @@ export async function reposListLanguages<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<Language> {
+): Promise<r.StatusResponse<200, Language>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/languages',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the license for a repository
@@ -29456,14 +31748,14 @@ export async function licensesGetForRepo<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<LicenseContent> {
+): Promise<r.StatusResponse<200, LicenseContent>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/license',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Merge a branch
@@ -29491,7 +31783,14 @@ export async function reposMerge<FetcherData>(
     commit_message?: string;
   },
   opts?: FetcherData,
-): Promise<Commit | any> {
+): Promise<
+  | r.StatusResponse<201, Commit>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<409, unknown>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/merges',
     params,
@@ -29499,7 +31798,7 @@ export async function reposMerge<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List milestones
@@ -29518,7 +31817,9 @@ export async function issuesListMilestones<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Milestone[]> {
+): Promise<
+  r.StatusResponse<200, Milestone[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones',
     params,
@@ -29526,9 +31827,13 @@ export async function issuesListMilestones<FetcherData>(
     queryParams: ['state', 'sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Milestone]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Milestone]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a milestone
@@ -29561,7 +31866,11 @@ export async function issuesCreateMilestone<FetcherData>(
     due_on?: Date;
   },
   opts?: FetcherData,
-): Promise<Milestone> {
+): Promise<
+  | r.StatusResponse<201, Milestone>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones',
     params,
@@ -29569,9 +31878,13 @@ export async function issuesCreateMilestone<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Milestone]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Milestone]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a milestone
@@ -29586,16 +31899,22 @@ export async function issuesGetMilestone<FetcherData>(
     milestone_number: number;
   },
   opts?: FetcherData,
-): Promise<Milestone> {
+): Promise<
+  r.StatusResponse<200, Milestone> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Milestone]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Milestone]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a milestone
@@ -29629,7 +31948,7 @@ export async function issuesUpdateMilestone<FetcherData>(
     due_on?: Date;
   },
   opts?: FetcherData,
-): Promise<Milestone> {
+): Promise<r.StatusResponse<200, Milestone>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}',
     params,
@@ -29637,9 +31956,13 @@ export async function issuesUpdateMilestone<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Milestone]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Milestone]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a milestone
@@ -29654,14 +31977,14 @@ export async function issuesDeleteMilestone<FetcherData>(
     milestone_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List labels for issues in a milestone
@@ -29678,7 +32001,7 @@ export async function issuesListLabelsForMilestone<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Label[]> {
+): Promise<r.StatusResponse<200, Label[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/milestones/{milestone_number}/labels',
     params,
@@ -29686,7 +32009,7 @@ export async function issuesListLabelsForMilestone<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository notifications for the authenticated user
@@ -29709,7 +32032,7 @@ export async function activityListRepoNotificationsForAuthenticatedUser<
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Thread[]> {
+): Promise<r.StatusResponse<200, Thread[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/notifications',
     params,
@@ -29724,9 +32047,13 @@ export async function activityListRepoNotificationsForAuthenticatedUser<
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Thread]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Thread]]] } },
+    },
+    true,
+  );
 }
 /**
  * Mark repository notifications as read
@@ -29753,11 +32080,14 @@ export async function activityMarkRepoNotificationsAsRead<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      message?: string;
-      url?: string;
-    }
-  | any
+  | r.StatusResponse<
+      202,
+      {
+        message?: string;
+        url?: string;
+      }
+    >
+  | r.StatusResponse<205, unknown>
 > {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/notifications',
@@ -29766,7 +32096,7 @@ export async function activityMarkRepoNotificationsAsRead<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a GitHub Pages site
@@ -29780,14 +32110,14 @@ export async function reposGetPages<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<Page> {
+): Promise<r.StatusResponse<200, Page> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a GitHub Pages site
@@ -29819,7 +32149,18 @@ export async function reposCreatePagesSite<FetcherData>(
     };
   } | null,
   opts?: FetcherData,
-): Promise<Page> {
+): Promise<
+  | r.StatusResponse<201, Page>
+  | r.StatusResponse<409, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
     params,
@@ -29827,7 +32168,7 @@ export async function reposCreatePagesSite<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update information about a GitHub Pages site
@@ -29842,9 +32183,13 @@ export async function reposUpdateInformationAboutPagesSite<FetcherData>(
     owner: string;
     repo: string;
   },
-  body: any | any | any | any,
+  body: unknown | unknown | unknown | unknown,
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
     params,
@@ -29852,7 +32197,7 @@ export async function reposUpdateInformationAboutPagesSite<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a GitHub Pages site
@@ -29866,14 +32211,25 @@ export async function reposDeletePagesSite<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List GitHub Pages builds
@@ -29889,7 +32245,7 @@ export async function reposListPagesBuilds<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<PageBuild[]> {
+): Promise<r.StatusResponse<200, PageBuild[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds',
     params,
@@ -29897,9 +32253,13 @@ export async function reposListPagesBuilds<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_PageBuild]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_PageBuild]]] } },
+    },
+    true,
+  );
 }
 /**
  * Request a GitHub Pages build
@@ -29920,14 +32280,14 @@ export async function reposRequestPagesBuild<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<PageBuildStatus> {
+): Promise<r.StatusResponse<201, PageBuildStatus>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get latest Pages build
@@ -29941,16 +32301,20 @@ export async function reposGetLatestPagesBuild<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<PageBuild> {
+): Promise<r.StatusResponse<200, PageBuild>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds/latest',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PageBuild]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PageBuild]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get GitHub Pages build
@@ -29965,16 +32329,20 @@ export async function reposGetPagesBuild<FetcherData>(
     build_id: number;
   },
   opts?: FetcherData,
-): Promise<PageBuild> {
+): Promise<r.StatusResponse<200, PageBuild>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/builds/{build_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PageBuild]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PageBuild]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a DNS health check for GitHub Pages
@@ -29997,14 +32365,20 @@ export async function reposGetPagesHealthCheck<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<PagesHealthCheck | EmptyObject> {
+): Promise<
+  | r.StatusResponse<200, PagesHealthCheck>
+  | r.StatusResponse<202, EmptyObject>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pages/health',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository projects
@@ -30023,7 +32397,14 @@ export async function projectsListForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Project[]> {
+): Promise<
+  | r.StatusResponse<200, Project[]>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/projects',
     params,
@@ -30031,9 +32412,13 @@ export async function projectsListForRepo<FetcherData>(
     queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a repository project
@@ -30059,7 +32444,14 @@ export async function projectsCreateForRepo<FetcherData>(
     body?: string;
   },
   opts?: FetcherData,
-): Promise<Project> {
+): Promise<
+  | r.StatusResponse<201, Project>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/projects',
     params,
@@ -30067,9 +32459,13 @@ export async function projectsCreateForRepo<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * List pull requests
@@ -30094,7 +32490,11 @@ export async function pullsList<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestSimple[] | any> {
+): Promise<
+  | r.StatusResponse<200, PullRequestSimple[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls',
     params,
@@ -30110,11 +32510,15 @@ export async function pullsList<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_PullRequestSimple]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_PullRequestSimple]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a pull request
@@ -30176,7 +32580,11 @@ export async function pullsCreate<FetcherData>(
     issue?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequest> {
+): Promise<
+  | r.StatusResponse<201, PullRequest>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls',
     params,
@@ -30184,9 +32592,13 @@ export async function pullsCreate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_PullRequest]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_PullRequest]]] } },
+    },
+    true,
+  );
 }
 /**
  * List review comments in a repository
@@ -30206,7 +32618,7 @@ export async function pullsListReviewCommentsForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReviewComment[]> {
+): Promise<r.StatusResponse<200, PullRequestReviewComment[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments',
     params,
@@ -30214,13 +32626,17 @@ export async function pullsListReviewCommentsForRepo<FetcherData>(
     queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['loop'], ['ref', $date_PullRequestReviewComment]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_PullRequestReviewComment]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a review comment for a pull request
@@ -30236,18 +32652,25 @@ export async function pullsGetReviewComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReviewComment> {
+): Promise<
+  | r.StatusResponse<200, PullRequestReviewComment>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Update a review comment for a pull request
@@ -30269,7 +32692,7 @@ export async function pullsUpdateReviewComment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<PullRequestReviewComment> {
+): Promise<r.StatusResponse<200, PullRequestReviewComment>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}',
     params,
@@ -30277,11 +32700,15 @@ export async function pullsUpdateReviewComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Delete a review comment for a pull request
@@ -30297,14 +32724,14 @@ export async function pullsDeleteReviewComment<FetcherData>(
     comment_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List reactions for a pull request review comment
@@ -30331,7 +32758,17 @@ export async function reactionsListForPullRequestReviewComment<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<
+  | r.StatusResponse<200, Reaction[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions',
     params,
@@ -30339,9 +32776,13 @@ export async function reactionsListForPullRequestReviewComment<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for a pull request review comment
@@ -30372,7 +32813,18 @@ export async function reactionsCreateForPullRequestReviewComment<FetcherData>(
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<
+  | r.StatusResponse<200, Reaction>
+  | r.StatusResponse<201, Reaction>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions',
     params,
@@ -30380,10 +32832,14 @@ export async function reactionsCreateForPullRequestReviewComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a pull request comment reaction
@@ -30404,14 +32860,14 @@ export async function reactionsDeleteForPullRequestComment<FetcherData>(
     reaction_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a pull request
@@ -30466,16 +32922,25 @@ export async function pullsGet<FetcherData>(
     pull_number: number;
   },
   opts?: FetcherData,
-): Promise<PullRequest | any> {
+): Promise<
+  | r.StatusResponse<200, PullRequest>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequest]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequest]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a pull request
@@ -30521,7 +32986,11 @@ export async function pullsUpdate<FetcherData>(
     maintainer_can_modify?: boolean;
   },
   opts?: FetcherData,
-): Promise<PullRequest> {
+): Promise<
+  | r.StatusResponse<200, PullRequest>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}',
     params,
@@ -30529,9 +32998,13 @@ export async function pullsUpdate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequest]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequest]]] } },
+    },
+    true,
+  );
 }
 /**
  * List review comments on a pull request
@@ -30552,7 +33025,7 @@ export async function pullsListReviewComments<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReviewComment[]> {
+): Promise<r.StatusResponse<200, PullRequestReviewComment[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/comments',
     params,
@@ -30560,13 +33033,17 @@ export async function pullsListReviewComments<FetcherData>(
     queryParams: ['sort', 'direction', 'since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['loop'], ['ref', $date_PullRequestReviewComment]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_PullRequestReviewComment]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a review comment for a pull request
@@ -30642,7 +33119,11 @@ export async function pullsCreateReviewComment<FetcherData>(
     in_reply_to?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReviewComment> {
+): Promise<
+  | r.StatusResponse<201, PullRequestReviewComment>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/comments',
     params,
@@ -30650,11 +33131,15 @@ export async function pullsCreateReviewComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': {
-      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '201': {
+        transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a reply for a review comment
@@ -30687,7 +33172,10 @@ export async function pullsCreateReplyForReviewComment<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<PullRequestReviewComment> {
+): Promise<
+  | r.StatusResponse<201, PullRequestReviewComment>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies',
     params,
@@ -30695,11 +33183,15 @@ export async function pullsCreateReplyForReviewComment<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': {
-      transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '201': {
+        transforms: { date: [[['ref', $date_PullRequestReviewComment]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * List commits on a pull request
@@ -30718,7 +33210,7 @@ export async function pullsListCommits<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Commit[]> {
+): Promise<r.StatusResponse<200, Commit[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/commits',
     params,
@@ -30726,7 +33218,7 @@ export async function pullsListCommits<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List pull requests files
@@ -30744,7 +33236,11 @@ export async function pullsListFiles<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<DiffEntry[]> {
+): Promise<
+  | r.StatusResponse<200, DiffEntry[]>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<500, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/files',
     params,
@@ -30752,7 +33248,7 @@ export async function pullsListFiles<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check if a pull request has been merged
@@ -30767,14 +33263,14 @@ export async function pullsCheckIfMerged<FetcherData>(
     pull_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/merge',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Merge a pull request
@@ -30814,7 +33310,26 @@ export async function pullsMerge<FetcherData>(
     merge_method?: 'merge' | 'squash' | 'rebase';
   } | null,
   opts?: FetcherData,
-): Promise<PullRequestMergeResult> {
+): Promise<
+  | r.StatusResponse<200, PullRequestMergeResult>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      405,
+      {
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+  | r.StatusResponse<
+      409,
+      {
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/merge',
     params,
@@ -30822,7 +33337,7 @@ export async function pullsMerge<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List requested reviewers for a pull request
@@ -30839,7 +33354,7 @@ export async function pullsListRequestedReviewers<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReviewRequest> {
+): Promise<r.StatusResponse<200, PullRequestReviewRequest>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers',
     params,
@@ -30847,7 +33362,7 @@ export async function pullsListRequestedReviewers<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Request reviewers for a pull request
@@ -30868,9 +33383,13 @@ export async function pullsRequestReviewers<FetcherData>(
     repo: string;
     pull_number: number;
   },
-  body: any | any,
+  body: unknown | unknown,
   opts?: FetcherData,
-): Promise<PullRequestSimple> {
+): Promise<
+  | r.StatusResponse<201, PullRequestSimple>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers',
     params,
@@ -30878,9 +33397,13 @@ export async function pullsRequestReviewers<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_PullRequestSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_PullRequestSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * Remove requested reviewers from a pull request
@@ -30905,7 +33428,10 @@ export async function pullsRemoveRequestedReviewers<FetcherData>(
     team_reviewers?: string[];
   },
   opts?: FetcherData,
-): Promise<PullRequestSimple> {
+): Promise<
+  | r.StatusResponse<200, PullRequestSimple>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers',
     params,
@@ -30913,9 +33439,13 @@ export async function pullsRemoveRequestedReviewers<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequestSimple]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequestSimple]]] } },
+    },
+    true,
+  );
 }
 /**
  * List reviews for a pull request
@@ -30933,7 +33463,7 @@ export async function pullsListReviews<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReview[]> {
+): Promise<r.StatusResponse<200, PullRequestReview[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews',
     params,
@@ -30941,11 +33471,15 @@ export async function pullsListReviews<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_PullRequestReview]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_PullRequestReview]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a review for a pull request
@@ -31028,7 +33562,11 @@ export async function pullsCreateReview<FetcherData>(
     }[];
   },
   opts?: FetcherData,
-): Promise<PullRequestReview> {
+): Promise<
+  | r.StatusResponse<200, PullRequestReview>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews',
     params,
@@ -31036,9 +33574,13 @@ export async function pullsCreateReview<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a review for a pull request
@@ -31054,16 +33596,22 @@ export async function pullsGetReview<FetcherData>(
     review_id: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReview> {
+): Promise<
+  r.StatusResponse<200, PullRequestReview> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a review for a pull request
@@ -31086,7 +33634,10 @@ export async function pullsUpdateReview<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<PullRequestReview> {
+): Promise<
+  | r.StatusResponse<200, PullRequestReview>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
     params,
@@ -31094,9 +33645,13 @@ export async function pullsUpdateReview<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a pending review for a pull request
@@ -31112,16 +33667,24 @@ export async function pullsDeletePendingReview<FetcherData>(
     review_id: number;
   },
   opts?: FetcherData,
-): Promise<PullRequestReview> {
+): Promise<
+  | r.StatusResponse<200, PullRequestReview>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
+    },
+    true,
+  );
 }
 /**
  * List comments for a pull request review
@@ -31140,7 +33703,9 @@ export async function pullsListCommentsForReview<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<ReviewComment[]> {
+): Promise<
+  r.StatusResponse<200, ReviewComment[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments',
     params,
@@ -31148,9 +33713,15 @@ export async function pullsListCommentsForReview<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_ReviewComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_ReviewComment]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Dismiss a review for a pull request
@@ -31179,7 +33750,11 @@ export async function pullsDismissReview<FetcherData>(
     event?: string;
   },
   opts?: FetcherData,
-): Promise<PullRequestReview> {
+): Promise<
+  | r.StatusResponse<200, PullRequestReview>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals',
     params,
@@ -31187,9 +33762,13 @@ export async function pullsDismissReview<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
+    },
+    true,
+  );
 }
 /**
  * Submit a review for a pull request
@@ -31215,7 +33794,12 @@ export async function pullsSubmitReview<FetcherData>(
     event: 'APPROVE' | 'REQUEST_CHANGES' | 'COMMENT';
   },
   opts?: FetcherData,
-): Promise<PullRequestReview> {
+): Promise<
+  | r.StatusResponse<200, PullRequestReview>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events',
     params,
@@ -31223,9 +33807,13 @@ export async function pullsSubmitReview<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PullRequestReview]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a pull request branch
@@ -31248,10 +33836,24 @@ export async function pullsUpdateBranch<FetcherData>(
     expected_head_sha?: string;
   } | null,
   opts?: FetcherData,
-): Promise<{
-  message?: string;
-  url?: string;
-}> {
+): Promise<
+  | r.StatusResponse<
+      202,
+      {
+        message?: string;
+        url?: string;
+      }
+    >
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
     params,
@@ -31259,7 +33861,7 @@ export async function pullsUpdateBranch<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a repository README
@@ -31278,7 +33880,11 @@ export async function reposGetReadme<FetcherData>(
     ref?: string;
   },
   opts?: FetcherData,
-): Promise<ContentFile> {
+): Promise<
+  | r.StatusResponse<200, ContentFile>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/readme',
     params,
@@ -31286,7 +33892,7 @@ export async function reposGetReadme<FetcherData>(
     queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a repository README for a directory
@@ -31306,7 +33912,11 @@ export async function reposGetReadmeInDirectory<FetcherData>(
     ref?: string;
   },
   opts?: FetcherData,
-): Promise<ContentFile> {
+): Promise<
+  | r.StatusResponse<200, ContentFile>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/readme/{dir}',
     params,
@@ -31314,7 +33924,7 @@ export async function reposGetReadmeInDirectory<FetcherData>(
     queryParams: ['ref'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List releases
@@ -31336,7 +33946,9 @@ export async function reposListReleases<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Release[]> {
+): Promise<
+  r.StatusResponse<200, Release[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases',
     params,
@@ -31344,9 +33956,13 @@ export async function reposListReleases<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Release]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Release]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a release
@@ -31399,7 +34015,11 @@ export async function reposCreateRelease<FetcherData>(
     discussion_category_name?: string;
   },
   opts?: FetcherData,
-): Promise<Release> {
+): Promise<
+  | r.StatusResponse<201, Release>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases',
     params,
@@ -31407,9 +34027,13 @@ export async function reposCreateRelease<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Release]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Release]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a release asset
@@ -31427,16 +34051,31 @@ export async function reposGetReleaseAsset<FetcherData>(
     asset_id: number;
   },
   opts?: FetcherData,
-): Promise<ReleaseAsset | any> {
+): Promise<
+  | r.StatusResponse<200, ReleaseAsset>
+  | r.StatusResponse<302, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/assets/{asset_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a release asset
@@ -31466,7 +34105,7 @@ export async function reposUpdateReleaseAsset<FetcherData>(
     state?: string;
   },
   opts?: FetcherData,
-): Promise<ReleaseAsset> {
+): Promise<r.StatusResponse<200, ReleaseAsset>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/assets/{asset_id}',
     params,
@@ -31474,9 +34113,13 @@ export async function reposUpdateReleaseAsset<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a release asset
@@ -31491,14 +34134,14 @@ export async function reposDeleteReleaseAsset<FetcherData>(
     asset_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/assets/{asset_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the latest release
@@ -31517,16 +34160,20 @@ export async function reposGetLatestRelease<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<Release> {
+): Promise<r.StatusResponse<200, Release>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/latest',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Release]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Release]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a release by tag name
@@ -31542,16 +34189,20 @@ export async function reposGetReleaseByTag<FetcherData>(
     tag: string;
   },
   opts?: FetcherData,
-): Promise<Release> {
+): Promise<r.StatusResponse<200, Release> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/tags/{tag}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Release]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Release]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a release
@@ -31568,16 +34219,20 @@ export async function reposGetRelease<FetcherData>(
     release_id: number;
   },
   opts?: FetcherData,
-): Promise<Release> {
+): Promise<r.StatusResponse<200, Release> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Release]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Release]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a release
@@ -31623,7 +34278,7 @@ export async function reposUpdateRelease<FetcherData>(
     discussion_category_name?: string;
   },
   opts?: FetcherData,
-): Promise<Release> {
+): Promise<r.StatusResponse<200, Release> | r.StatusResponse<404, BasicError>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}',
     params,
@@ -31631,9 +34286,13 @@ export async function reposUpdateRelease<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Release]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Release]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a release
@@ -31649,14 +34308,14 @@ export async function reposDeleteRelease<FetcherData>(
     release_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List release assets
@@ -31673,7 +34332,7 @@ export async function reposListReleaseAssets<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<ReleaseAsset[]> {
+): Promise<r.StatusResponse<200, ReleaseAsset[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}/assets',
     params,
@@ -31681,9 +34340,15 @@ export async function reposListReleaseAssets<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_ReleaseAsset]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_ReleaseAsset]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Upload a release asset
@@ -31734,9 +34399,9 @@ export async function reposUploadReleaseAsset<FetcherData>(
     name: string;
     label?: string;
   },
-  body: any,
+  body: unknown,
   opts?: FetcherData,
-): Promise<ReleaseAsset> {
+): Promise<r.StatusResponse<201, ReleaseAsset>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}/assets',
     params,
@@ -31745,9 +34410,13 @@ export async function reposUploadReleaseAsset<FetcherData>(
     queryParams: ['name', 'label'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_ReleaseAsset]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for a release
@@ -31770,7 +34439,18 @@ export async function reactionsCreateForRelease<FetcherData>(
     content: '+1' | 'laugh' | 'heart' | 'hooray' | 'rocket' | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<
+  | r.StatusResponse<200, Reaction>
+  | r.StatusResponse<201, Reaction>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/releases/{release_id}/reactions',
     params,
@@ -31778,10 +34458,14 @@ export async function reactionsCreateForRelease<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Reaction]]] } },
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * List secret scanning alerts for a repository
@@ -31804,7 +34488,18 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
     per_page?: number;
   },
   opts?: FetcherData,
-): Promise<SecretScanningAlert[]> {
+): Promise<
+  | r.StatusResponse<200, SecretScanningAlert[]>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/secret-scanning/alerts',
     params,
@@ -31812,11 +34507,15 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
     queryParams: ['state', 'secret_type', 'page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_SecretScanningAlert]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_SecretScanningAlert]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a secret scanning alert
@@ -31836,16 +34535,31 @@ export async function secretScanningGetAlert<FetcherData>(
     alert_number: AlertNumber;
   },
   opts?: FetcherData,
-): Promise<SecretScanningAlert> {
+): Promise<
+  | r.StatusResponse<200, SecretScanningAlert>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_SecretScanningAlert]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_SecretScanningAlert]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a secret scanning alert
@@ -31869,7 +34583,19 @@ export async function secretScanningUpdateAlert<FetcherData>(
     resolution?: SecretScanningAlertResolution;
   },
   opts?: FetcherData,
-): Promise<SecretScanningAlert> {
+): Promise<
+  | r.StatusResponse<200, SecretScanningAlert>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<422, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}',
     params,
@@ -31877,9 +34603,13 @@ export async function secretScanningUpdateAlert<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_SecretScanningAlert]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_SecretScanningAlert]]] } },
+    },
+    true,
+  );
 }
 /**
  * List stargazers
@@ -31899,7 +34629,10 @@ export async function activityListStargazersForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[] | Stargazer[]> {
+): Promise<
+  | r.StatusResponse<200, SimpleUser[] | Stargazer[]>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stargazers',
     params,
@@ -31907,13 +34640,17 @@ export async function activityListStargazersForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['select', [[['loop'], ['ref', $date_Stargazer]]]]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['select', [[['loop'], ['ref', $date_Stargazer]]]]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get the weekly commit activity
@@ -31928,14 +34665,18 @@ export async function reposGetCodeFrequencyStats<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<CodeFrequencyStat[] | any | any> {
+): Promise<
+  | r.StatusResponse<200, CodeFrequencyStat[]>
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<204, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/code_frequency',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the last year of commit activity
@@ -31951,14 +34692,18 @@ export async function reposGetCommitActivityStats<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<CommitActivity[] | any | any> {
+): Promise<
+  | r.StatusResponse<200, CommitActivity[]>
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<204, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/commit_activity',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get all contributor commit activity
@@ -31981,14 +34726,18 @@ export async function reposGetContributorsStats<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<ContributorActivity[] | any | any> {
+): Promise<
+  | r.StatusResponse<200, ContributorActivity[]>
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<204, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/contributors',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the weekly commit count
@@ -32007,14 +34756,16 @@ export async function reposGetParticipationStats<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<ParticipationStats> {
+): Promise<
+  r.StatusResponse<200, ParticipationStats> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/participation',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the hourly commit count for each day
@@ -32037,14 +34788,16 @@ export async function reposGetPunchCardStats<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<CodeFrequencyStat[] | any> {
+): Promise<
+  r.StatusResponse<200, CodeFrequencyStat[]> | r.StatusResponse<204, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/stats/punch_card',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a commit status
@@ -32085,7 +34838,7 @@ export async function reposCreateCommitStatus<FetcherData>(
     context?: string;
   },
   opts?: FetcherData,
-): Promise<Status> {
+): Promise<r.StatusResponse<201, Status>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/statuses/{sha}',
     params,
@@ -32093,7 +34846,7 @@ export async function reposCreateCommitStatus<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List watchers
@@ -32110,7 +34863,7 @@ export async function activityListWatchersForRepo<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<r.StatusResponse<200, SimpleUser[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscribers',
     params,
@@ -32118,7 +34871,7 @@ export async function activityListWatchersForRepo<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a repository subscription
@@ -32132,16 +34885,26 @@ export async function activityGetRepoSubscription<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<RepositorySubscription> {
+): Promise<
+  | r.StatusResponse<200, RepositorySubscription>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscription',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_RepositorySubscription]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_RepositorySubscription]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Set a repository subscription
@@ -32168,7 +34931,7 @@ export async function activitySetRepoSubscription<FetcherData>(
     ignored?: boolean;
   },
   opts?: FetcherData,
-): Promise<RepositorySubscription> {
+): Promise<r.StatusResponse<200, RepositorySubscription>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscription',
     params,
@@ -32176,9 +34939,15 @@ export async function activitySetRepoSubscription<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_RepositorySubscription]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_RepositorySubscription]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * Delete a repository subscription
@@ -32195,14 +34964,14 @@ export async function activityDeleteRepoSubscription<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/subscription',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository tags
@@ -32218,7 +34987,7 @@ export async function reposListTags<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Tag[]> {
+): Promise<r.StatusResponse<200, Tag[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/tags',
     params,
@@ -32226,7 +34995,7 @@ export async function reposListTags<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Download a repository archive (tar)
@@ -32248,14 +35017,14 @@ export async function reposDownloadTarballArchive<FetcherData>(
     ref: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<302, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/tarball/{ref}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repository teams
@@ -32271,7 +35040,7 @@ export async function reposListTeams<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<r.StatusResponse<200, Team[]>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/teams',
     params,
@@ -32279,7 +35048,7 @@ export async function reposListTeams<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get all repository topics
@@ -32295,7 +35064,17 @@ export async function reposGetAllTopics<FetcherData>(
     per_page?: number;
   },
   opts?: FetcherData,
-): Promise<Topic> {
+): Promise<
+  | r.StatusResponse<200, Topic>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/topics',
     params,
@@ -32303,7 +35082,7 @@ export async function reposGetAllTopics<FetcherData>(
     queryParams: ['page', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Replace all repository topics
@@ -32323,7 +35102,18 @@ export async function reposReplaceAllTopics<FetcherData>(
     names: string[];
   },
   opts?: FetcherData,
-): Promise<Topic> {
+): Promise<
+  | r.StatusResponse<200, Topic>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/topics',
     params,
@@ -32331,7 +35121,7 @@ export async function reposReplaceAllTopics<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get repository clones
@@ -32348,7 +35138,9 @@ export async function reposGetClones<FetcherData>(
     per?: '' | 'day' | 'week';
   },
   opts?: FetcherData,
-): Promise<CloneTraffic> {
+): Promise<
+  r.StatusResponse<200, CloneTraffic> | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/clones',
     params,
@@ -32356,9 +35148,13 @@ export async function reposGetClones<FetcherData>(
     queryParams: ['per'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_CloneTraffic]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CloneTraffic]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get top referral paths
@@ -32373,14 +35169,16 @@ export async function reposGetTopPaths<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<ContentTraffic[]> {
+): Promise<
+  r.StatusResponse<200, ContentTraffic[]> | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/popular/paths',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get top referral sources
@@ -32395,14 +35193,16 @@ export async function reposGetTopReferrers<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<ReferrerTraffic[]> {
+): Promise<
+  r.StatusResponse<200, ReferrerTraffic[]> | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/popular/referrers',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get page views
@@ -32419,7 +35219,9 @@ export async function reposGetViews<FetcherData>(
     per?: '' | 'day' | 'week';
   },
   opts?: FetcherData,
-): Promise<ViewTraffic> {
+): Promise<
+  r.StatusResponse<200, ViewTraffic> | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/traffic/views',
     params,
@@ -32427,9 +35229,13 @@ export async function reposGetViews<FetcherData>(
     queryParams: ['per'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ViewTraffic]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ViewTraffic]]] } },
+    },
+    true,
+  );
 }
 /**
  * Transfer a repository
@@ -32457,7 +35263,7 @@ export async function reposTransfer<FetcherData>(
     team_ids?: number[];
   },
   opts?: FetcherData,
-): Promise<MinimalRepository> {
+): Promise<r.StatusResponse<202, MinimalRepository>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/transfer',
     params,
@@ -32465,9 +35271,13 @@ export async function reposTransfer<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '202': { transforms: { date: [[['ref', $date_MinimalRepository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '202': { transforms: { date: [[['ref', $date_MinimalRepository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Check if vulnerability alerts are enabled for a repository
@@ -32484,14 +35294,14 @@ export async function reposCheckVulnerabilityAlerts<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/vulnerability-alerts',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Enable vulnerability alerts
@@ -32508,14 +35318,14 @@ export async function reposEnableVulnerabilityAlerts<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/vulnerability-alerts',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Disable vulnerability alerts
@@ -32532,14 +35342,14 @@ export async function reposDisableVulnerabilityAlerts<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/vulnerability-alerts',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Download a repository archive (zip)
@@ -32561,14 +35371,14 @@ export async function reposDownloadZipballArchive<FetcherData>(
     ref: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<302, unknown>> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/zipball/{ref}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a repository using a template
@@ -32619,7 +35429,7 @@ export async function reposCreateUsingTemplate<FetcherData>(
     private?: boolean;
   },
   opts?: FetcherData,
-): Promise<Repository> {
+): Promise<r.StatusResponse<201, Repository>> {
   const req = await ctx.createRequest({
     path: '/repos/{template_owner}/{template_repo}/generate',
     params,
@@ -32627,9 +35437,13 @@ export async function reposCreateUsingTemplate<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Repository]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public repositories
@@ -32650,7 +35464,11 @@ export async function reposListPublic<FetcherData>(
     since?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[] | any> {
+): Promise<
+  | r.StatusResponse<200, MinimalRepository[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/repositories',
     params,
@@ -32658,11 +35476,15 @@ export async function reposListPublic<FetcherData>(
     queryParams: ['since'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * List environment secrets
@@ -32681,10 +35503,15 @@ export async function actionsListEnvironmentSecrets<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<{
-  total_count: number;
-  secrets: ActionsSecret[];
-}> {
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      secrets: ActionsSecret[];
+    }
+  >
+> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets',
     params,
@@ -32692,13 +35519,19 @@ export async function actionsListEnvironmentSecrets<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['access', 'secrets'], ['loop'], ['ref', $date_ActionsSecret]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'secrets'], ['loop'], ['ref', $date_ActionsSecret]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get an environment public key
@@ -32716,14 +35549,14 @@ export async function actionsGetEnvironmentPublicKey<FetcherData>(
     environment_name: string;
   },
   opts?: FetcherData,
-): Promise<ActionsPublicKey> {
+): Promise<r.StatusResponse<200, ActionsPublicKey>> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/public-key',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an environment secret
@@ -32740,16 +35573,20 @@ export async function actionsGetEnvironmentSecret<FetcherData>(
     secret_name: string;
   },
   opts?: FetcherData,
-): Promise<ActionsSecret> {
+): Promise<r.StatusResponse<200, ActionsSecret>> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_ActionsSecret]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ActionsSecret]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create or update an environment secret
@@ -32872,7 +35709,9 @@ export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
     key_id?: string;
   },
   opts?: FetcherData,
-): Promise<EmptyObject | any> {
+): Promise<
+  r.StatusResponse<201, EmptyObject> | r.StatusResponse<204, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}',
     params,
@@ -32880,7 +35719,7 @@ export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete an environment secret
@@ -32897,14 +35736,14 @@ export async function actionsDeleteEnvironmentSecret<FetcherData>(
     secret_name: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List provisioned SCIM groups for an enterprise
@@ -32924,7 +35763,7 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise<
     excludedAttributes?: string;
   },
   opts?: FetcherData,
-): Promise<ScimGroupListEnterprise> {
+): Promise<r.StatusResponse<200, ScimGroupListEnterprise>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups',
     params,
@@ -32932,7 +35771,7 @@ export async function enterpriseAdminListProvisionedGroupsEnterprise<
     queryParams: ['startIndex', 'count', 'filter', 'excludedAttributes'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Provision a SCIM enterprise group and invite users
@@ -32968,7 +35807,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseGroup<
     }[];
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseGroup> {
+): Promise<r.StatusResponse<201, ScimEnterpriseGroup>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups',
     params,
@@ -32976,7 +35815,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseGroup<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get SCIM provisioning information for an enterprise group
@@ -32994,7 +35833,7 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseGrou
     excludedAttributes?: string;
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseGroup> {
+): Promise<r.StatusResponse<200, ScimEnterpriseGroup>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
     params,
@@ -33002,7 +35841,7 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseGrou
     queryParams: ['excludedAttributes'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set SCIM information for a provisioned enterprise group
@@ -33041,7 +35880,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup
     }[];
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseGroup> {
+): Promise<r.StatusResponse<200, ScimEnterpriseGroup>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
     params,
@@ -33049,7 +35888,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseGroup
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update an attribute for a SCIM enterprise group
@@ -33081,11 +35920,11 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseGroup<
     Operations: {
       op: 'add' | 'Add' | 'remove' | 'Remove' | 'replace' | 'Replace';
       path?: string;
-      value?: string | any | any[];
+      value?: string | unknown | unknown[];
     }[];
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseGroup> {
+): Promise<r.StatusResponse<200, ScimEnterpriseGroup>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
     params,
@@ -33093,7 +35932,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseGroup<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a SCIM group from an enterprise
@@ -33108,14 +35947,14 @@ export async function enterpriseAdminDeleteScimGroupFromEnterprise<FetcherData>(
     scim_group_id: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List SCIM provisioned identities for an enterprise
@@ -33168,7 +36007,7 @@ export async function enterpriseAdminListProvisionedIdentitiesEnterprise<
     filter?: string;
   },
   opts?: FetcherData,
-): Promise<ScimUserListEnterprise> {
+): Promise<r.StatusResponse<200, ScimUserListEnterprise>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users',
     params,
@@ -33176,7 +36015,7 @@ export async function enterpriseAdminListProvisionedIdentitiesEnterprise<
     queryParams: ['startIndex', 'count', 'filter'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Provision and invite a SCIM enterprise user
@@ -33242,7 +36081,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseUser<
     }[];
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseUser> {
+): Promise<r.StatusResponse<201, ScimEnterpriseUser>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users',
     params,
@@ -33250,7 +36089,7 @@ export async function enterpriseAdminProvisionAndInviteEnterpriseUser<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get SCIM provisioning information for an enterprise user
@@ -33267,14 +36106,14 @@ export async function enterpriseAdminGetProvisioningInformationForEnterpriseUser
     scim_user_id: string;
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseUser> {
+): Promise<r.StatusResponse<200, ScimEnterpriseUser>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set SCIM information for a provisioned enterprise user
@@ -33346,7 +36185,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser<
     }[];
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseUser> {
+): Promise<r.StatusResponse<200, ScimEnterpriseUser>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
     params,
@@ -33354,7 +36193,7 @@ export async function enterpriseAdminSetInformationForProvisionedEnterpriseUser<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update an attribute for a SCIM enterprise user
@@ -33402,10 +36241,10 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseUser<
     /**
      * Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2).
      */
-    Operations: any[];
+    Operations: unknown[];
   },
   opts?: FetcherData,
-): Promise<ScimEnterpriseUser> {
+): Promise<r.StatusResponse<200, ScimEnterpriseUser>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
     params,
@@ -33413,7 +36252,7 @@ export async function enterpriseAdminUpdateAttributeForEnterpriseUser<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a SCIM user from an enterprise
@@ -33428,14 +36267,14 @@ export async function enterpriseAdminDeleteUserFromEnterprise<FetcherData>(
     scim_user_id: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List SCIM provisioned identities
@@ -33485,7 +36324,13 @@ export async function scimListProvisionedIdentities<FetcherData>(
     filter?: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<400, ScimError>
+  | r.StatusResponse<403, ScimError>
+  | r.StatusResponse<404, ScimError>
+> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users',
     params,
@@ -33493,7 +36338,7 @@ export async function scimListProvisionedIdentities<FetcherData>(
     queryParams: ['startIndex', 'count', 'filter'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Provision and invite a SCIM user
@@ -33554,7 +36399,15 @@ export async function scimProvisionAndInviteUser<FetcherData>(
     active?: boolean;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<201, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<400, ScimError>
+  | r.StatusResponse<403, ScimError>
+  | r.StatusResponse<404, ScimError>
+  | r.StatusResponse<409, ScimError>
+  | r.StatusResponse<500, ScimError>
+> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users',
     params,
@@ -33562,7 +36415,7 @@ export async function scimProvisionAndInviteUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get SCIM provisioning information for a user
@@ -33576,14 +36429,19 @@ export async function scimGetProvisioningInformationForUser<FetcherData>(
     scim_user_id: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, ScimError>
+  | r.StatusResponse<404, ScimError>
+> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update a provisioned organization membership
@@ -33654,7 +36512,12 @@ export async function scimSetInformationForProvisionedUser<FetcherData>(
     }[];
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, ScimError>
+  | r.StatusResponse<404, ScimError>
+> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
     params,
@@ -33662,7 +36525,7 @@ export async function scimSetInformationForProvisionedUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update an attribute for a SCIM user
@@ -33731,7 +36594,14 @@ export async function scimUpdateAttributeForUser<FetcherData>(
     }[];
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<400, ScimError>
+  | r.StatusResponse<403, ScimError>
+  | r.StatusResponse<404, ScimError>
+  | r.StatusResponse<429, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
     params,
@@ -33739,7 +36609,7 @@ export async function scimUpdateAttributeForUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a SCIM user from an organization
@@ -33753,14 +36623,19 @@ export async function scimDeleteUserFromOrg<FetcherData>(
     scim_user_id: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, ScimError>
+  | r.StatusResponse<404, ScimError>
+> {
   const req = await ctx.createRequest({
     path: '/scim/v2/organizations/{org}/Users/{scim_user_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Search code
@@ -33809,12 +36684,25 @@ export async function searchCode<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      incomplete_results: boolean;
-      items: CodeSearchResultItem[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        incomplete_results: boolean;
+        items: CodeSearchResultItem[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
 > {
   const req = await ctx.createRequest({
     path: '/search/code',
@@ -33823,15 +36711,23 @@ export async function searchCode<FetcherData>(
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'items'], ['loop'], ['ref', $date_CodeSearchResultItem]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'items'],
+              ['loop'],
+              ['ref', $date_CodeSearchResultItem],
+            ],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Search commits
@@ -33863,12 +36759,22 @@ export async function searchCommits<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      incomplete_results: boolean;
-      items: CommitSearchResultItem[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        incomplete_results: boolean;
+        items: CommitSearchResultItem[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
 > {
   const req = await ctx.createRequest({
     path: '/search/commits',
@@ -33877,19 +36783,23 @@ export async function searchCommits<FetcherData>(
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
-            ['access', 'items'],
-            ['loop'],
-            ['ref', $date_CommitSearchResultItem],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'items'],
+              ['loop'],
+              ['ref', $date_CommitSearchResultItem],
+            ],
           ],
-        ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Search issues and pull requests
@@ -33945,12 +36855,25 @@ export async function searchIssuesAndPullRequests<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      incomplete_results: boolean;
-      items: IssueSearchResultItem[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        incomplete_results: boolean;
+        items: IssueSearchResultItem[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
 > {
   const req = await ctx.createRequest({
     path: '/search/issues',
@@ -33959,15 +36882,23 @@ export async function searchIssuesAndPullRequests<FetcherData>(
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'items'], ['loop'], ['ref', $date_IssueSearchResultItem]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'items'],
+              ['loop'],
+              ['ref', $date_IssueSearchResultItem],
+            ],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Search labels
@@ -34002,12 +36933,18 @@ export async function searchLabels<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      incomplete_results: boolean;
-      items: LabelSearchResultItem[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        incomplete_results: boolean;
+        items: LabelSearchResultItem[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
 > {
   const req = await ctx.createRequest({
     path: '/search/labels',
@@ -34016,7 +36953,7 @@ export async function searchLabels<FetcherData>(
     queryParams: ['repository_id', 'q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Search repositories
@@ -34057,12 +36994,24 @@ export async function searchRepos<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      incomplete_results: boolean;
-      items: RepoSearchResultItem[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        incomplete_results: boolean;
+        items: RepoSearchResultItem[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
 > {
   const req = await ctx.createRequest({
     path: '/search/repositories',
@@ -34071,15 +37020,23 @@ export async function searchRepos<FetcherData>(
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'items'], ['loop'], ['ref', $date_RepoSearchResultItem]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'items'],
+              ['loop'],
+              ['ref', $date_RepoSearchResultItem],
+            ],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Search topics
@@ -34113,12 +37070,22 @@ export async function searchTopics<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      incomplete_results: boolean;
-      items: TopicSearchResultItem[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        incomplete_results: boolean;
+        items: TopicSearchResultItem[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
 > {
   const req = await ctx.createRequest({
     path: '/search/topics',
@@ -34127,15 +37094,23 @@ export async function searchTopics<FetcherData>(
     queryParams: ['q', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'items'], ['loop'], ['ref', $date_TopicSearchResultItem]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'items'],
+              ['loop'],
+              ['ref', $date_TopicSearchResultItem],
+            ],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Search users
@@ -34170,12 +37145,24 @@ export async function searchUsers<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      incomplete_results: boolean;
-      items: UserSearchResultItem[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        incomplete_results: boolean;
+        items: UserSearchResultItem[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
 > {
   const req = await ctx.createRequest({
     path: '/search/users',
@@ -34184,15 +37171,23 @@ export async function searchUsers<FetcherData>(
     queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'items'], ['loop'], ['ref', $date_UserSearchResultItem]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'items'],
+              ['loop'],
+              ['ref', $date_UserSearchResultItem],
+            ],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a team (Legacy)
@@ -34209,16 +37204,22 @@ export async function teamsGetLegacy<FetcherData>(
     team_id: number;
   },
   opts?: FetcherData,
-): Promise<TeamFull> {
+): Promise<
+  r.StatusResponse<200, TeamFull> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a team (Legacy)
@@ -34271,7 +37272,13 @@ export async function teamsUpdateLegacy<FetcherData>(
     parent_team_id?: number | null;
   },
   opts?: FetcherData,
-): Promise<TeamFull> {
+): Promise<
+  | r.StatusResponse<200, TeamFull>
+  | r.StatusResponse<201, TeamFull>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}',
     params,
@@ -34279,10 +37286,14 @@ export async function teamsUpdateLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
-    '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamFull]]] } },
+      '201': { transforms: { date: [[['ref', $date_TeamFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a team (Legacy)
@@ -34304,14 +37315,18 @@ export async function teamsDeleteLegacy<FetcherData>(
     team_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List discussions (Legacy)
@@ -34334,7 +37349,7 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion[]> {
+): Promise<r.StatusResponse<200, TeamDiscussion[]>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions',
     params,
@@ -34342,11 +37357,15 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
     queryParams: ['direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussion]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_TeamDiscussion]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a discussion (Legacy)
@@ -34389,7 +37408,7 @@ export async function teamsCreateDiscussionLegacy<FetcherData>(
     private?: boolean;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion> {
+): Promise<r.StatusResponse<201, TeamDiscussion>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions',
     params,
@@ -34397,9 +37416,13 @@ export async function teamsCreateDiscussionLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a discussion (Legacy)
@@ -34420,16 +37443,20 @@ export async function teamsGetDiscussionLegacy<FetcherData>(
     discussion_number: number;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion> {
+): Promise<r.StatusResponse<200, TeamDiscussion>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a discussion (Legacy)
@@ -34461,7 +37488,7 @@ export async function teamsUpdateDiscussionLegacy<FetcherData>(
     body?: string;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussion> {
+): Promise<r.StatusResponse<200, TeamDiscussion>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}',
     params,
@@ -34469,9 +37496,13 @@ export async function teamsUpdateDiscussionLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a discussion (Legacy)
@@ -34493,14 +37524,14 @@ export async function teamsDeleteDiscussionLegacy<FetcherData>(
     discussion_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List discussion comments (Legacy)
@@ -34525,7 +37556,7 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment[]> {
+): Promise<r.StatusResponse<200, TeamDiscussionComment[]>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments',
     params,
@@ -34533,11 +37564,17 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
     queryParams: ['direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_TeamDiscussionComment]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_TeamDiscussionComment]]],
+        },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Create a discussion comment (Legacy)
@@ -34573,7 +37610,7 @@ export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment> {
+): Promise<r.StatusResponse<201, TeamDiscussionComment>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments',
     params,
@@ -34581,9 +37618,13 @@ export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a discussion comment (Legacy)
@@ -34606,16 +37647,20 @@ export async function teamsGetDiscussionCommentLegacy<FetcherData>(
     comment_number: number;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment> {
+): Promise<r.StatusResponse<200, TeamDiscussionComment>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update a discussion comment (Legacy)
@@ -34644,7 +37689,7 @@ export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
     body: string;
   },
   opts?: FetcherData,
-): Promise<TeamDiscussionComment> {
+): Promise<r.StatusResponse<200, TeamDiscussionComment>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}',
     params,
@@ -34652,9 +37697,13 @@ export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamDiscussionComment]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a discussion comment (Legacy)
@@ -34677,14 +37726,14 @@ export async function teamsDeleteDiscussionCommentLegacy<FetcherData>(
     comment_number: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List reactions for a team discussion comment (Legacy)
@@ -34719,7 +37768,7 @@ export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<r.StatusResponse<200, Reaction[]>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions',
     params,
@@ -34727,9 +37776,13 @@ export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for a team discussion comment (Legacy)
@@ -34770,7 +37823,7 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy<
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<r.StatusResponse<201, Reaction>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions',
     params,
@@ -34778,9 +37831,13 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * List reactions for a team discussion (Legacy)
@@ -34813,7 +37870,7 @@ export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Reaction[]> {
+): Promise<r.StatusResponse<200, Reaction[]>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/reactions',
     params,
@@ -34821,9 +37878,13 @@ export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
     queryParams: ['content', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create reaction for a team discussion (Legacy)
@@ -34860,7 +37921,7 @@ export async function reactionsCreateForTeamDiscussionLegacy<FetcherData>(
       | 'eyes';
   },
   opts?: FetcherData,
-): Promise<Reaction> {
+): Promise<r.StatusResponse<201, Reaction>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/discussions/{discussion_number}/reactions',
     params,
@@ -34868,9 +37929,13 @@ export async function reactionsCreateForTeamDiscussionLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Reaction]]] } },
+    },
+    true,
+  );
 }
 /**
  * List pending team invitations (Legacy)
@@ -34894,7 +37959,7 @@ export async function teamsListPendingInvitationsLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrganizationInvitation[]> {
+): Promise<r.StatusResponse<200, OrganizationInvitation[]>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/invitations',
     params,
@@ -34902,7 +37967,7 @@ export async function teamsListPendingInvitationsLegacy<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List team members (Legacy)
@@ -34924,7 +37989,9 @@ export async function teamsListMembersLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<
+  r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members',
     params,
@@ -34932,7 +37999,7 @@ export async function teamsListMembersLegacy<FetcherData>(
     queryParams: ['role', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get team member (Legacy)
@@ -34954,14 +38021,14 @@ export async function teamsGetMemberLegacy<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add team member (Legacy)
@@ -35001,14 +38068,19 @@ export async function teamsAddMemberLegacy<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<422, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove team member (Legacy)
@@ -35044,14 +38116,14 @@ export async function teamsRemoveMemberLegacy<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/members/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get team membership for a user (Legacy)
@@ -35082,14 +38154,16 @@ export async function teamsGetMembershipForUserLegacy<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<TeamMembership> {
+): Promise<
+  r.StatusResponse<200, TeamMembership> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/memberships/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add or update team membership for a user (Legacy)
@@ -35142,7 +38216,12 @@ export async function teamsAddOrUpdateMembershipForUserLegacy<FetcherData>(
     role?: 'member' | 'maintainer';
   },
   opts?: FetcherData,
-): Promise<TeamMembership> {
+): Promise<
+  | r.StatusResponse<200, TeamMembership>
+  | r.StatusResponse<403, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/memberships/{username}',
     params,
@@ -35150,7 +38229,7 @@ export async function teamsAddOrUpdateMembershipForUserLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove team membership for a user (Legacy)
@@ -35184,14 +38263,14 @@ export async function teamsRemoveMembershipForUserLegacy<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<403, unknown>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/memberships/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List team projects (Legacy)
@@ -35213,7 +38292,17 @@ export async function teamsListProjectsLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<TeamProject[]> {
+): Promise<
+  | r.StatusResponse<200, TeamProject[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects',
     params,
@@ -35221,7 +38310,7 @@ export async function teamsListProjectsLegacy<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check team permissions for a project (Legacy)
@@ -35243,14 +38332,24 @@ export async function teamsCheckPermissionsForProjectLegacy<FetcherData>(
     project_id: number;
   },
   opts?: FetcherData,
-): Promise<TeamProject> {
+): Promise<
+  | r.StatusResponse<200, TeamProject>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects/{project_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add or update team project permissions (Legacy)
@@ -35283,7 +38382,25 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
     permission?: 'read' | 'write' | 'admin';
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<
+      403,
+      {
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects/{project_id}',
     params,
@@ -35291,7 +38408,7 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a project from a team (Legacy)
@@ -35315,14 +38432,25 @@ export async function teamsRemoveProjectLegacy<FetcherData>(
     project_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/projects/{project_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List team repositories (Legacy)
@@ -35341,7 +38469,9 @@ export async function teamsListReposLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<
+  r.StatusResponse<200, MinimalRepository[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos',
     params,
@@ -35349,11 +38479,15 @@ export async function teamsListReposLegacy<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Check team permissions for a repository (Legacy)
@@ -35379,16 +38513,24 @@ export async function teamsCheckPermissionsForRepoLegacy<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<TeamRepository | any> {
+): Promise<
+  | r.StatusResponse<200, TeamRepository>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_TeamRepository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_TeamRepository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Add or update team repository permissions (Legacy)
@@ -35428,7 +38570,11 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy<FetcherData>(
     permission?: 'pull' | 'push' | 'admin';
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos/{owner}/{repo}',
     params,
@@ -35436,7 +38582,7 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a repository from a team (Legacy)
@@ -35460,14 +38606,14 @@ export async function teamsRemoveRepoLegacy<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/repos/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List IdP groups for a team (Legacy)
@@ -35491,14 +38637,18 @@ export async function teamsListIdpGroupsForLegacy<FetcherData>(
     team_id: number;
   },
   opts?: FetcherData,
-): Promise<GroupMapping> {
+): Promise<
+  | r.StatusResponse<200, GroupMapping>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/team-sync/group-mappings',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create or update IdP group connections (Legacy)
@@ -35559,7 +38709,11 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy<FetcherData>(
     synced_at?: string;
   },
   opts?: FetcherData,
-): Promise<GroupMapping> {
+): Promise<
+  | r.StatusResponse<200, GroupMapping>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/team-sync/group-mappings',
     params,
@@ -35567,7 +38721,7 @@ export async function teamsCreateOrUpdateIdpGroupConnectionsLegacy<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List child teams (Legacy)
@@ -35586,7 +38740,12 @@ export async function teamsListChildLegacy<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Team[]> {
+): Promise<
+  | r.StatusResponse<200, Team[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/teams/{team_id}/teams',
     params,
@@ -35594,7 +38753,7 @@ export async function teamsListChildLegacy<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get the authenticated user
@@ -35610,27 +38769,36 @@ export async function usersGetAuthenticated<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<(PrivateUser | PublicUser) | any> {
+): Promise<
+  | r.StatusResponse<200, PrivateUser | PublicUser>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
             [
-              'select',
-              [[['ref', $date_PrivateUser]], [['ref', $date_PublicUser]]],
+              [
+                'select',
+                [[['ref', $date_PrivateUser]], [['ref', $date_PublicUser]]],
+              ],
             ],
           ],
-        ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Update the authenticated user
@@ -35684,7 +38852,14 @@ export async function usersUpdateAuthenticated<FetcherData>(
     bio?: string;
   },
   opts?: FetcherData,
-): Promise<PrivateUser | any> {
+): Promise<
+  | r.StatusResponse<200, PrivateUser>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user',
     params,
@@ -35692,9 +38867,13 @@ export async function usersUpdateAuthenticated<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PrivateUser]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PrivateUser]]] } },
+    },
+    true,
+  );
 }
 /**
  * List users blocked by the authenticated user
@@ -35706,14 +38885,27 @@ export async function usersListBlockedByAuthenticated<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<SimpleUser[] | any> {
+): Promise<
+  | r.StatusResponse<200, SimpleUser[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+> {
   const req = await ctx.createRequest({
     path: '/user/blocks',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check if a user is blocked by the authenticated user
@@ -35726,14 +38918,20 @@ export async function usersCheckBlocked<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/blocks/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Block a user
@@ -35746,14 +38944,21 @@ export async function usersBlock<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/blocks/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unblock a user
@@ -35766,14 +38971,20 @@ export async function usersUnblock<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/blocks/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Set primary email visibility for the authenticated user
@@ -35793,7 +39004,14 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated<
     visibility: 'public' | 'private';
   },
   opts?: FetcherData,
-): Promise<Email[] | any> {
+): Promise<
+  | r.StatusResponse<200, Email[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/email/visibility',
     params,
@@ -35801,7 +39019,7 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticated<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List email addresses for the authenticated user
@@ -35817,7 +39035,13 @@ export async function usersListEmailsForAuthenticated<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Email[] | any> {
+): Promise<
+  | r.StatusResponse<200, Email[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/emails',
     params,
@@ -35825,7 +39049,7 @@ export async function usersListEmailsForAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Add an email address for the authenticated user
@@ -35847,7 +39071,14 @@ export async function usersAddEmailForAuthenticated<FetcherData>(
     | string[]
     | string,
   opts?: FetcherData,
-): Promise<Email[] | any> {
+): Promise<
+  | r.StatusResponse<201, Email[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/emails',
     params,
@@ -35855,7 +39086,7 @@ export async function usersAddEmailForAuthenticated<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete an email address for the authenticated user
@@ -35876,7 +39107,14 @@ export async function usersDeleteEmailForAuthenticated<FetcherData>(
     | string[]
     | string,
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/emails',
     params,
@@ -35884,7 +39122,7 @@ export async function usersDeleteEmailForAuthenticated<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List followers of the authenticated user
@@ -35899,7 +39137,12 @@ export async function usersListFollowersForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[] | any> {
+): Promise<
+  | r.StatusResponse<200, SimpleUser[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/followers',
     params,
@@ -35907,7 +39150,7 @@ export async function usersListFollowersForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List the people the authenticated user follows
@@ -35922,7 +39165,12 @@ export async function usersListFollowedByAuthenticated<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[] | any> {
+): Promise<
+  | r.StatusResponse<200, SimpleUser[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/following',
     params,
@@ -35930,7 +39178,7 @@ export async function usersListFollowedByAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check if a person is followed by the authenticated user
@@ -35943,14 +39191,20 @@ export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/following/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Follow a user
@@ -35968,14 +39222,20 @@ export async function usersFollow<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/following/{username}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unfollow a user
@@ -35990,14 +39250,20 @@ export async function usersUnfollow<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/following/{username}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List GPG keys for the authenticated user
@@ -36013,7 +39279,13 @@ export async function usersListGpgKeysForAuthenticated<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<GpgKey[] | any> {
+): Promise<
+  | r.StatusResponse<200, GpgKey[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys',
     params,
@@ -36021,9 +39293,13 @@ export async function usersListGpgKeysForAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_GpgKey]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_GpgKey]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a GPG key for the authenticated user
@@ -36043,7 +39319,14 @@ export async function usersCreateGpgKeyForAuthenticated<FetcherData>(
     armored_public_key: string;
   },
   opts?: FetcherData,
-): Promise<GpgKey | any> {
+): Promise<
+  | r.StatusResponse<201, GpgKey>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys',
     params,
@@ -36051,9 +39334,13 @@ export async function usersCreateGpgKeyForAuthenticated<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_GpgKey]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_GpgKey]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a GPG key for the authenticated user
@@ -36068,16 +39355,26 @@ export async function usersGetGpgKeyForAuthenticated<FetcherData>(
     gpg_key_id: number;
   },
   opts?: FetcherData,
-): Promise<GpgKey | any> {
+): Promise<
+  | r.StatusResponse<200, GpgKey>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys/{gpg_key_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_GpgKey]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_GpgKey]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a GPG key for the authenticated user
@@ -36093,14 +39390,21 @@ export async function usersDeleteGpgKeyForAuthenticated<FetcherData>(
     gpg_key_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/gpg_keys/{gpg_key_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List app installations accessible to the user access token
@@ -36128,11 +39432,23 @@ export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      installations: Installation[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        installations: Installation[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
 > {
   const req = await ctx.createRequest({
     path: '/user/installations',
@@ -36141,15 +39457,23 @@ export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'installations'], ['loop'], ['ref', $date_Installation]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'installations'],
+              ['loop'],
+              ['ref', $date_Installation],
+            ],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * List repositories accessible to the user access token
@@ -36180,12 +39504,17 @@ export async function appsListInstallationReposForAuthenticatedUser<
   },
   opts?: FetcherData,
 ): Promise<
-  | {
-      total_count: number;
-      repository_selection?: string;
-      repositories: Repository[];
-    }
-  | any
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        repository_selection?: string;
+        repositories: Repository[];
+      }
+    >
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
 > {
   const req = await ctx.createRequest({
     path: '/user/installations/{installation_id}/repositories',
@@ -36194,15 +39523,19 @@ export async function appsListInstallationReposForAuthenticatedUser<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
-        ],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [['access', 'repositories'], ['loop'], ['ref', $date_Repository]],
+          ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Add a repository to an app installation
@@ -36223,14 +39556,19 @@ export async function appsAddRepoToInstallation<FetcherData>(
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/installations/{installation_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Remove a repository from an app installation
@@ -36251,14 +39589,19 @@ export async function appsRemoveRepoFromInstallation<FetcherData>(
     repository_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/installations/{installation_id}/repositories/{repository_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get interaction restrictions for your public repositories
@@ -36272,20 +39615,27 @@ export async function interactionsGetRestrictionsForAuthenticatedUser<
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<(InteractionLimitResponse | any) | any> {
+): Promise<
+  | r.StatusResponse<200, InteractionLimitResponse | unknown>
+  | r.StatusResponse<204, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/user/interaction-limits',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['select', [[['ref', $date_InteractionLimitResponse]]]]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * Set interaction restrictions for your public repositories
@@ -36302,7 +39652,10 @@ export async function interactionsSetRestrictionsForAuthenticatedUser<
   params: {},
   body: InteractionLimit,
   opts?: FetcherData,
-): Promise<InteractionLimitResponse> {
+): Promise<
+  | r.StatusResponse<200, InteractionLimitResponse>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/interaction-limits',
     params,
@@ -36310,11 +39663,15 @@ export async function interactionsSetRestrictionsForAuthenticatedUser<
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_InteractionLimitResponse]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Remove interaction restrictions from your public repositories
@@ -36328,14 +39685,14 @@ export async function interactionsRemoveRestrictionsForAuthenticatedUser<
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/user/interaction-limits',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List user account issues assigned to the authenticated user
@@ -36371,7 +39728,11 @@ export async function issuesListForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Issue[] | any> {
+): Promise<
+  | r.StatusResponse<200, Issue[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/issues',
     params,
@@ -36388,9 +39749,13 @@ export async function issuesListForAuthenticatedUser<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public SSH keys for the authenticated user
@@ -36407,7 +39772,13 @@ export async function usersListPublicSshKeysForAuthenticated<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Key[] | any> {
+): Promise<
+  | r.StatusResponse<200, Key[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/keys',
     params,
@@ -36415,9 +39786,13 @@ export async function usersListPublicSshKeysForAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Key]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Key]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a public SSH key for the authenticated user
@@ -36442,7 +39817,14 @@ export async function usersCreatePublicSshKeyForAuthenticated<FetcherData>(
     key: string;
   },
   opts?: FetcherData,
-): Promise<Key | any> {
+): Promise<
+  | r.StatusResponse<201, Key>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/keys',
     params,
@@ -36450,9 +39832,13 @@ export async function usersCreatePublicSshKeyForAuthenticated<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Key]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Key]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a public SSH key for the authenticated user
@@ -36468,16 +39854,26 @@ export async function usersGetPublicSshKeyForAuthenticated<FetcherData>(
     key_id: number;
   },
   opts?: FetcherData,
-): Promise<Key | any> {
+): Promise<
+  | r.StatusResponse<200, Key>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/keys/{key_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Key]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Key]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a public SSH key for the authenticated user
@@ -36493,14 +39889,20 @@ export async function usersDeletePublicSshKeyForAuthenticated<FetcherData>(
     key_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/keys/{key_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List subscriptions for the authenticated user
@@ -36518,7 +39920,12 @@ export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<UserMarketplacePurchase[] | any> {
+): Promise<
+  | r.StatusResponse<200, UserMarketplacePurchase[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/marketplace_purchases',
     params,
@@ -36526,13 +39933,17 @@ export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['loop'], ['ref', $date_UserMarketplacePurchase]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_UserMarketplacePurchase]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * List subscriptions for the authenticated user (stubbed)
@@ -36552,7 +39963,11 @@ export async function appsListSubscriptionsForAuthenticatedUserStubbed<
     page?: number;
   },
   opts?: FetcherData,
-): Promise<UserMarketplacePurchase[] | any> {
+): Promise<
+  | r.StatusResponse<200, UserMarketplacePurchase[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/marketplace_purchases/stubbed',
     params,
@@ -36560,13 +39975,17 @@ export async function appsListSubscriptionsForAuthenticatedUserStubbed<
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [[['loop'], ['ref', $date_UserMarketplacePurchase]]],
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_UserMarketplacePurchase]]],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * List organization memberships for the authenticated user
@@ -36581,7 +40000,13 @@ export async function orgsListMembershipsForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrgMembership[] | any> {
+): Promise<
+  | r.StatusResponse<200, OrgMembership[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/memberships/orgs',
     params,
@@ -36589,7 +40014,7 @@ export async function orgsListMembershipsForAuthenticatedUser<FetcherData>(
     queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get an organization membership for the authenticated user
@@ -36602,14 +40027,18 @@ export async function orgsGetMembershipForAuthenticatedUser<FetcherData>(
     org: string;
   },
   opts?: FetcherData,
-): Promise<OrgMembership> {
+): Promise<
+  | r.StatusResponse<200, OrgMembership>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/memberships/orgs/{org}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Update an organization membership for the authenticated user
@@ -36628,7 +40057,12 @@ export async function orgsUpdateMembershipForAuthenticatedUser<FetcherData>(
     state: 'active';
   },
   opts?: FetcherData,
-): Promise<OrgMembership> {
+): Promise<
+  | r.StatusResponse<200, OrgMembership>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/memberships/orgs/{org}',
     params,
@@ -36636,7 +40070,7 @@ export async function orgsUpdateMembershipForAuthenticatedUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List user migrations
@@ -36651,7 +40085,12 @@ export async function migrationsListForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Migration[] | any> {
+): Promise<
+  | r.StatusResponse<200, Migration[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/migrations',
     params,
@@ -36659,9 +40098,13 @@ export async function migrationsListForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Migration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Migration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Start a user migration
@@ -36694,7 +40137,13 @@ export async function migrationsStartForAuthenticatedUser<FetcherData>(
     repositories: string[];
   },
   opts?: FetcherData,
-): Promise<Migration | any> {
+): Promise<
+  | r.StatusResponse<201, Migration>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/migrations',
     params,
@@ -36702,9 +40151,13 @@ export async function migrationsStartForAuthenticatedUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Migration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Migration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a user migration status
@@ -36730,7 +40183,13 @@ export async function migrationsGetStatusForAuthenticatedUser<FetcherData>(
     exclude?: string[];
   },
   opts?: FetcherData,
-): Promise<Migration | any> {
+): Promise<
+  | r.StatusResponse<200, Migration>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}',
     params,
@@ -36738,9 +40197,13 @@ export async function migrationsGetStatusForAuthenticatedUser<FetcherData>(
     queryParams: ['exclude'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Migration]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Migration]]] } },
+    },
+    true,
+  );
 }
 /**
  * Download a user migration archive
@@ -36779,14 +40242,19 @@ export async function migrationsGetArchiveForAuthenticatedUser<FetcherData>(
     migration_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<302, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Delete a user migration archive
@@ -36804,14 +40272,20 @@ export async function migrationsDeleteArchiveForAuthenticatedUser<FetcherData>(
     migration_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/archive',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unlock a user repository
@@ -36830,14 +40304,20 @@ export async function migrationsUnlockRepoForAuthenticatedUser<FetcherData>(
     repo_name: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/repos/{repo_name}/lock',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repositories for a user migration
@@ -36853,7 +40333,9 @@ export async function migrationsListReposForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<
+  r.StatusResponse<200, MinimalRepository[]> | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/migrations/{migration_id}/repositories',
     params,
@@ -36861,11 +40343,15 @@ export async function migrationsListReposForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * List organizations for the authenticated user
@@ -36887,7 +40373,12 @@ export async function orgsListForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrganizationSimple[] | any> {
+): Promise<
+  | r.StatusResponse<200, OrganizationSimple[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/orgs',
     params,
@@ -36895,7 +40386,7 @@ export async function orgsListForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a package for the authenticated user
@@ -36921,16 +40412,20 @@ export async function packagesGetPackageForAuthenticatedUser<FetcherData>(
     package_name: string;
   },
   opts?: FetcherData,
-): Promise<Package> {
+): Promise<r.StatusResponse<200, Package>> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Package]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Package]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a package for the authenticated user
@@ -36957,14 +40452,19 @@ export async function packagesDeletePackageForAuthenticatedUser<FetcherData>(
     package_name: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Restore a package for the authenticated user
@@ -36996,7 +40496,12 @@ export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
     token?: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/restore',
     params,
@@ -37004,7 +40509,7 @@ export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
     queryParams: ['token'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get all package versions for a package owned by the authenticated user
@@ -37035,7 +40540,12 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
     state?: 'active' | 'deleted';
   },
   opts?: FetcherData,
-): Promise<PackageVersion[]> {
+): Promise<
+  | r.StatusResponse<200, PackageVersion[]>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions',
     params,
@@ -37043,11 +40553,15 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
     queryParams: ['page', 'per_page', 'state'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a package version for the authenticated user
@@ -37076,16 +40590,20 @@ export async function packagesGetPackageVersionForAuthenticatedUser<
     package_version_id: number;
   },
   opts?: FetcherData,
-): Promise<PackageVersion> {
+): Promise<r.StatusResponse<200, PackageVersion>> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
+    },
+    true,
+  );
 }
 /**
  * Delete a package version for the authenticated user
@@ -37116,14 +40634,19 @@ export async function packagesDeletePackageVersionForAuthenticatedUser<
     package_version_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Restore a package version for the authenticated user
@@ -37159,14 +40682,19 @@ export async function packagesRestorePackageVersionForAuthenticatedUser<
     package_version_id: number;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore',
     params,
     method: r.HttpMethod.POST,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Create a user project
@@ -37189,7 +40717,20 @@ export async function projectsCreateForAuthenticatedUser<FetcherData>(
     body?: string | null;
   },
   opts?: FetcherData,
-): Promise<Project | any> {
+): Promise<
+  | r.StatusResponse<201, Project>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/user/projects',
     params,
@@ -37197,9 +40738,13 @@ export async function projectsCreateForAuthenticatedUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public email addresses for the authenticated user
@@ -37217,7 +40762,13 @@ export async function usersListPublicEmailsForAuthenticated<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Email[] | any> {
+): Promise<
+  | r.StatusResponse<200, Email[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/public_emails',
     params,
@@ -37225,7 +40776,7 @@ export async function usersListPublicEmailsForAuthenticated<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repositories for the authenticated user
@@ -37251,7 +40802,13 @@ export async function reposListForAuthenticatedUser<FetcherData>(
     before?: Date;
   },
   opts?: FetcherData,
-): Promise<Repository[] | any> {
+): Promise<
+  | r.StatusResponse<200, Repository[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/repos',
     params,
@@ -37269,9 +40826,13 @@ export async function reposListForAuthenticatedUser<FetcherData>(
     ],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Repository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Repository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a repository for the authenticated user
@@ -37385,7 +40946,15 @@ export async function reposCreateForAuthenticatedUser<FetcherData>(
     is_template?: boolean;
   },
   opts?: FetcherData,
-): Promise<Repository | any> {
+): Promise<
+  | r.StatusResponse<201, Repository>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/user/repos',
     params,
@@ -37393,9 +40962,13 @@ export async function reposCreateForAuthenticatedUser<FetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '201': { transforms: { date: [[['ref', $date_Repository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Repository]]] } },
+    },
+    true,
+  );
 }
 /**
  * List repository invitations for the authenticated user
@@ -37410,7 +40983,13 @@ export async function reposListInvitationsForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<RepositoryInvitation[] | any> {
+): Promise<
+  | r.StatusResponse<200, RepositoryInvitation[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/repository_invitations',
     params,
@@ -37418,11 +40997,15 @@ export async function reposListInvitationsForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_RepositoryInvitation]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_RepositoryInvitation]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Accept a repository invitation
@@ -37435,14 +41018,20 @@ export async function reposAcceptInvitation<FetcherData>(
     invitation_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/repository_invitations/{invitation_id}',
     params,
     method: r.HttpMethod.PATCH,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Decline a repository invitation
@@ -37455,14 +41044,20 @@ export async function reposDeclineInvitation<FetcherData>(
     invitation_id: number;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/repository_invitations/{invitation_id}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repositories starred by the authenticated user
@@ -37482,7 +41077,12 @@ export async function activityListReposStarredByAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Repository[] | any> {
+): Promise<
+  | r.StatusResponse<200, Repository[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/starred',
     params,
@@ -37490,9 +41090,13 @@ export async function activityListReposStarredByAuthenticatedUser<FetcherData>(
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Repository]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Repository]]] } },
+    },
+    true,
+  );
 }
 /**
  * Check if a repository is starred by the authenticated user
@@ -37508,14 +41112,20 @@ export async function activityCheckRepoIsStarredByAuthenticatedUser<
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/starred/{owner}/{repo}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Star a repository for the authenticated user
@@ -37531,14 +41141,20 @@ export async function activityStarRepoForAuthenticatedUser<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/starred/{owner}/{repo}',
     params,
     method: r.HttpMethod.PUT,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Unstar a repository for the authenticated user
@@ -37552,14 +41168,20 @@ export async function activityUnstarRepoForAuthenticatedUser<FetcherData>(
     repo: string;
   },
   opts?: FetcherData,
-): Promise<any | any> {
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/starred/{owner}/{repo}',
     params,
     method: r.HttpMethod.DELETE,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repositories watched by the authenticated user
@@ -37574,7 +41196,12 @@ export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[] | any> {
+): Promise<
+  | r.StatusResponse<200, MinimalRepository[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/subscriptions',
     params,
@@ -37582,11 +41209,15 @@ export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * List teams for the authenticated user
@@ -37604,7 +41235,12 @@ export async function teamsListForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<TeamFull[] | any> {
+): Promise<
+  | r.StatusResponse<200, TeamFull[]>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/user/teams',
     params,
@@ -37612,9 +41248,13 @@ export async function teamsListForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_TeamFull]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_TeamFull]]] } },
+    },
+    true,
+  );
 }
 /**
  * List users
@@ -37634,7 +41274,9 @@ export async function usersList<FetcherData>(
     per_page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[] | any> {
+): Promise<
+  r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<304, unknown>
+> {
   const req = await ctx.createRequest({
     path: '/users',
     params,
@@ -37642,7 +41284,7 @@ export async function usersList<FetcherData>(
     queryParams: ['since', 'per_page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a user
@@ -37673,27 +41315,35 @@ export async function usersGetByUsername<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<(PrivateUser | PublicUser) | any> {
+): Promise<
+  | r.StatusResponse<200, PrivateUser | PublicUser>
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/users/{username}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
             [
-              'select',
-              [[['ref', $date_PrivateUser]], [['ref', $date_PublicUser]]],
+              [
+                'select',
+                [[['ref', $date_PrivateUser]], [['ref', $date_PublicUser]]],
+              ],
             ],
           ],
-        ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * List events for the authenticated user
@@ -37709,7 +41359,7 @@ export async function activityListEventsForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[]> {
+): Promise<r.StatusResponse<200, Event[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/events',
     params,
@@ -37717,9 +41367,13 @@ export async function activityListEventsForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List organization events for the authenticated user
@@ -37736,7 +41390,7 @@ export async function activityListOrgEventsForAuthenticatedUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[]> {
+): Promise<r.StatusResponse<200, Event[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/events/orgs/{org}',
     params,
@@ -37744,9 +41398,13 @@ export async function activityListOrgEventsForAuthenticatedUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public events for a user
@@ -37761,7 +41419,7 @@ export async function activityListPublicEventsForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[]> {
+): Promise<r.StatusResponse<200, Event[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/events/public',
     params,
@@ -37769,9 +41427,13 @@ export async function activityListPublicEventsForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List followers of a user
@@ -37787,7 +41449,7 @@ export async function usersListFollowersForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<r.StatusResponse<200, SimpleUser[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/followers',
     params,
@@ -37795,7 +41457,7 @@ export async function usersListFollowersForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List the people a user follows
@@ -37811,7 +41473,7 @@ export async function usersListFollowingForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<SimpleUser[]> {
+): Promise<r.StatusResponse<200, SimpleUser[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/following',
     params,
@@ -37819,7 +41481,7 @@ export async function usersListFollowingForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Check if a user follows another user
@@ -37833,14 +41495,14 @@ export async function usersCheckFollowingForUser<FetcherData>(
     target_user: string;
   },
   opts?: FetcherData,
-): Promise<any> {
+): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<404, unknown>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/following/{target_user}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List gists for a user
@@ -37857,7 +41519,9 @@ export async function gistsListForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<BaseGist[]> {
+): Promise<
+  r.StatusResponse<200, BaseGist[]> | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/users/{username}/gists',
     params,
@@ -37865,9 +41529,13 @@ export async function gistsListForUser<FetcherData>(
     queryParams: ['since', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_BaseGist]]] } },
+    },
+    true,
+  );
 }
 /**
  * List GPG keys for a user
@@ -37883,7 +41551,7 @@ export async function usersListGpgKeysForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<GpgKey[]> {
+): Promise<r.StatusResponse<200, GpgKey[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/gpg_keys',
     params,
@@ -37891,9 +41559,13 @@ export async function usersListGpgKeysForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_GpgKey]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_GpgKey]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get contextual information for a user
@@ -37920,7 +41592,11 @@ export async function usersGetContextForUser<FetcherData>(
     subject_id?: string;
   },
   opts?: FetcherData,
-): Promise<Hovercard> {
+): Promise<
+  | r.StatusResponse<200, Hovercard>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/users/{username}/hovercard',
     params,
@@ -37928,7 +41604,7 @@ export async function usersGetContextForUser<FetcherData>(
     queryParams: ['subject_type', 'subject_id'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a user installation for the authenticated app
@@ -37946,16 +41622,20 @@ export async function appsGetUserInstallation<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<Installation> {
+): Promise<r.StatusResponse<200, Installation>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/installation',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Installation]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Installation]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public keys for a user
@@ -37971,7 +41651,7 @@ export async function usersListPublicKeysForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<KeySimple[]> {
+): Promise<r.StatusResponse<200, KeySimple[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/keys',
     params,
@@ -37979,7 +41659,7 @@ export async function usersListPublicKeysForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List organizations for a user
@@ -38002,7 +41682,7 @@ export async function orgsListForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<OrganizationSimple[]> {
+): Promise<r.StatusResponse<200, OrganizationSimple[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/orgs',
     params,
@@ -38010,7 +41690,7 @@ export async function orgsListForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get a package for a user
@@ -38037,16 +41717,20 @@ export async function packagesGetPackageForUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<Package> {
+): Promise<r.StatusResponse<200, Package>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/packages/{package_type}/{package_name}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_Package]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Package]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get all package versions for a package owned by a user
@@ -38075,18 +41759,27 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
     username: string;
   },
   opts?: FetcherData,
-): Promise<PackageVersion[]> {
+): Promise<
+  | r.StatusResponse<200, PackageVersion[]>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
   const req = await ctx.createRequest({
     path: '/users/{username}/packages/{package_type}/{package_name}/versions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_PackageVersion]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get a package version for a user
@@ -38114,16 +41807,20 @@ export async function packagesGetPackageVersionForUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<PackageVersion> {
+): Promise<r.StatusResponse<200, PackageVersion>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_PackageVersion]]] } },
+    },
+    true,
+  );
 }
 /**
  * List user projects
@@ -38139,7 +41836,17 @@ export async function projectsListForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Project[]> {
+): Promise<
+  | r.StatusResponse<200, Project[]>
+  | r.StatusResponse<
+      415,
+      {
+        message: string;
+        documentation_url: string;
+      }
+    >
+  | r.StatusResponse<422, ValidationError>
+> {
   const req = await ctx.createRequest({
     path: '/users/{username}/projects',
     params,
@@ -38147,9 +41854,13 @@ export async function projectsListForUser<FetcherData>(
     queryParams: ['state', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Project]]] } },
+    },
+    true,
+  );
 }
 /**
  * List events received by the authenticated user
@@ -38166,7 +41877,7 @@ export async function activityListReceivedEventsForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[]> {
+): Promise<r.StatusResponse<200, Event[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/received_events',
     params,
@@ -38174,9 +41885,13 @@ export async function activityListReceivedEventsForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List public events received by a user
@@ -38191,7 +41906,7 @@ export async function activityListReceivedPublicEventsForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<Event[]> {
+): Promise<r.StatusResponse<200, Event[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/received_events/public',
     params,
@@ -38199,9 +41914,13 @@ export async function activityListReceivedPublicEventsForUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
-  });
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Event]]] } },
+    },
+    true,
+  );
 }
 /**
  * List repositories for a user
@@ -38221,7 +41940,7 @@ export async function reposListForUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<r.StatusResponse<200, MinimalRepository[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/repos',
     params,
@@ -38229,11 +41948,15 @@ export async function reposListForUser<FetcherData>(
     queryParams: ['type', 'sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get GitHub Actions billing for a user
@@ -38256,14 +41979,14 @@ export async function billingGetGithubActionsBillingUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<ActionsBillingUsage> {
+): Promise<r.StatusResponse<200, ActionsBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/settings/billing/actions',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get GitHub Packages billing for a user
@@ -38284,14 +42007,14 @@ export async function billingGetGithubPackagesBillingUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<PackagesBillingUsage> {
+): Promise<r.StatusResponse<200, PackagesBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/settings/billing/packages',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get shared storage billing for a user
@@ -38312,14 +42035,14 @@ export async function billingGetSharedStorageBillingUser<FetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<CombinedBillingUsage> {
+): Promise<r.StatusResponse<200, CombinedBillingUsage>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/settings/billing/shared-storage',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List repositories starred by a user
@@ -38340,7 +42063,7 @@ export async function activityListReposStarredByUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<StarredRepository[] | Repository[]> {
+): Promise<r.StatusResponse<200, StarredRepository[] | Repository[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/starred',
     params,
@@ -38348,23 +42071,27 @@ export async function activityListReposStarredByUser<FetcherData>(
     queryParams: ['sort', 'direction', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: {
-        date: [
-          [
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
             [
-              'select',
               [
-                [['loop'], ['ref', $date_StarredRepository]],
-                [['loop'], ['ref', $date_Repository]],
+                'select',
+                [
+                  [['loop'], ['ref', $date_StarredRepository]],
+                  [['loop'], ['ref', $date_Repository]],
+                ],
               ],
             ],
           ],
-        ],
+        },
       },
     },
-  });
+    true,
+  );
 }
 /**
  * List repositories watched by a user
@@ -38380,7 +42107,7 @@ export async function activityListReposWatchedByUser<FetcherData>(
     page?: number;
   },
   opts?: FetcherData,
-): Promise<MinimalRepository[]> {
+): Promise<r.StatusResponse<200, MinimalRepository[]>> {
   const req = await ctx.createRequest({
     path: '/users/{username}/subscriptions',
     params,
@@ -38388,11 +42115,15 @@ export async function activityListReposWatchedByUser<FetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {
-    '200': {
-      transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_MinimalRepository]]] },
+      },
     },
-  });
+    true,
+  );
 }
 /**
  * Get the Zen of GitHub
@@ -38403,12 +42134,12 @@ export async function metaGetZen<FetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<string> {
+): Promise<r.StatusResponse<200, string>> {
   const req = await ctx.createRequest({
     path: '/zen',
     params,
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {});
+  return ctx.handleResponse(res, {}, true);
 }
