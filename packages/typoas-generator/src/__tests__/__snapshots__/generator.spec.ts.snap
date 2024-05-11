@@ -52,12 +52,12 @@ export type ApiResponse = {
     type?: string;
     message?: string;
 };
-const $date_Order = (): r.TransformField[] => [[['access', "shipDate"], ['this']]];
+const $date_Order = (): r.TransformField[] => [[['access', 'shipDate'], ['this']]];
 export type AuthMethods = {
     petstore_auth?: r.OAuth2SecurityAuthentication;
     api_key?: r.ApiKeySecurityAuthentication;
 };
-export function configureAuth(params?: r.CreateContextParams<AuthMethods>["authProviders"]): AuthMethods {
+export function configureAuth(params?: r.CreateContextParams<AuthMethods>['authProviders']): AuthMethods {
     return { petstore_auth: params?.petstore_auth && new r.OAuth2SecurityAuthentication({}, params.petstore_auth), api_key: params?.api_key && new r.ApiKeySecurityAuthentication({ name: 'api_key', in: 'header' }, params.api_key) };
 }
 export function createContext<FetcherData>(params?: r.CreateContextParams<AuthMethods, FetcherData>): r.Context<AuthMethods, FetcherData> { return new r.Context<AuthMethods, FetcherData>({
@@ -65,131 +65,131 @@ export function createContext<FetcherData>(params?: r.CreateContextParams<AuthMe
     authMethods: configureAuth(params?.authProviders),
     ...params
 }); }
-export async function updatePet<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: Pet, opts?: FetcherData): Promise<Pet> {
+export async function updatePet<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: Pet, opts?: FetcherData): Promise<r.StatusResponse<200, Pet> | r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown> | r.StatusResponse<405, unknown>> {
     const req = await ctx.createRequest({
         path: '/pet',
         params,
         method: r.HttpMethod.PUT,
         body,
-        auth: ["petstore_auth"]
+        auth: ['petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
-export async function addPet<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: Pet, opts?: FetcherData): Promise<Pet> {
+export async function addPet<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: Pet, opts?: FetcherData): Promise<r.StatusResponse<200, Pet> | r.StatusResponse<405, unknown>> {
     const req = await ctx.createRequest({
         path: '/pet',
         params,
         method: r.HttpMethod.POST,
         body,
-        auth: ["petstore_auth"]
+        auth: ['petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function findPetsByStatus<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     status?: 'available' | 'pending' | 'sold';
-}, opts?: FetcherData): Promise<Pet[]> {
+}, opts?: FetcherData): Promise<r.StatusResponse<200, Pet[]> | r.StatusResponse<400, unknown>> {
     const req = await ctx.createRequest({
         path: '/pet/findByStatus',
         params,
         method: r.HttpMethod.GET,
         queryParams: [
-            "status"
+            'status'
         ],
-        auth: ["petstore_auth"]
+        auth: ['petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function findPetsByTags<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     tags?: string[];
-}, opts?: FetcherData): Promise<Pet[]> {
+}, opts?: FetcherData): Promise<r.StatusResponse<200, Pet[]> | r.StatusResponse<400, unknown>> {
     const req = await ctx.createRequest({
         path: '/pet/findByTags',
         params,
         method: r.HttpMethod.GET,
         queryParams: [
-            "tags"
+            'tags'
         ],
-        auth: ["petstore_auth"]
+        auth: ['petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function getPetById<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     petId: number;
-}, opts?: FetcherData): Promise<Pet> {
+}, opts?: FetcherData): Promise<r.StatusResponse<200, Pet> | r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
     const req = await ctx.createRequest({
         path: '/pet/{petId}',
         params,
         method: r.HttpMethod.GET,
-        auth: ["api_key", "petstore_auth"]
+        auth: ['api_key', 'petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function updatePetWithForm<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     petId: number;
     name?: string;
     status?: string;
-}, opts?: FetcherData): Promise<unknown> {
+}, opts?: FetcherData): Promise<r.StatusResponse<405, unknown>> {
     const req = await ctx.createRequest({
         path: '/pet/{petId}',
         params,
         method: r.HttpMethod.POST,
         queryParams: [
-            "name",
-            "status"
+            'name',
+            'status'
         ],
-        auth: ["petstore_auth"]
+        auth: ['petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function deletePet<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     api_key?: string;
     petId: number;
-}, opts?: FetcherData): Promise<unknown> {
+}, opts?: FetcherData): Promise<r.StatusResponse<400, unknown>> {
     const req = await ctx.createRequest({
         path: '/pet/{petId}',
         params,
         method: r.HttpMethod.DELETE,
-        auth: ["petstore_auth"]
+        auth: ['petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function uploadFile<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     petId: number;
     additionalMetadata?: string;
-}, body: Blob, opts?: FetcherData): Promise<ApiResponse> {
+}, body: Blob, opts?: FetcherData): Promise<r.StatusResponse<200, ApiResponse>> {
     const req = await ctx.createRequest({
         path: '/pet/{petId}/uploadImage',
         params,
         method: r.HttpMethod.POST,
         body,
         queryParams: [
-            "additionalMetadata"
+            'additionalMetadata'
         ],
-        auth: ["petstore_auth"]
+        auth: ['petstore_auth']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
-export async function getInventory<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, opts?: FetcherData): Promise<{
+export async function getInventory<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, opts?: FetcherData): Promise<r.StatusResponse<200, {
     [key: string]: number;
-}> {
+}>> {
     const req = await ctx.createRequest({
         path: '/store/inventory',
         params,
         method: r.HttpMethod.GET,
-        auth: ["api_key"]
+        auth: ['api_key']
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
-export async function placeOrder<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: Order, opts?: FetcherData): Promise<Order> {
+export async function placeOrder<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: Order, opts?: FetcherData): Promise<r.StatusResponse<200, Order> | r.StatusResponse<405, unknown>> {
     const req = await ctx.createRequest({
         path: '/store/order',
         params,
@@ -199,11 +199,11 @@ export async function placeOrder<FetcherData>(ctx: r.Context<AuthMethods, Fetche
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
         '200': { transforms: { date: [[['ref', $date_Order]]] } }
-    });
+    }, true);
 }
 export async function getOrderById<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     orderId: number;
-}, opts?: FetcherData): Promise<Order> {
+}, opts?: FetcherData): Promise<r.StatusResponse<200, Order> | r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
     const req = await ctx.createRequest({
         path: '/store/order/{orderId}',
         params,
@@ -212,20 +212,20 @@ export async function getOrderById<FetcherData>(ctx: r.Context<AuthMethods, Fetc
     const res = await ctx.sendRequest(req, opts);
     return ctx.handleResponse(res, {
         '200': { transforms: { date: [[['ref', $date_Order]]] } }
-    });
+    }, true);
 }
 export async function deleteOrder<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     orderId: number;
-}, opts?: FetcherData): Promise<unknown> {
+}, opts?: FetcherData): Promise<r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
     const req = await ctx.createRequest({
         path: '/store/order/{orderId}',
         params,
         method: r.HttpMethod.DELETE
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
-export async function createUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: User, opts?: FetcherData): Promise<User> {
+export async function createUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: User, opts?: FetcherData): Promise<r.StatusResponse<'default', User>> {
     const req = await ctx.createRequest({
         path: '/user',
         params,
@@ -233,9 +233,9 @@ export async function createUser<FetcherData>(ctx: r.Context<AuthMethods, Fetche
         body
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
-export async function createUsersWithListInput<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: User[], opts?: FetcherData): Promise<User> {
+export async function createUsersWithListInput<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, body: User[], opts?: FetcherData): Promise<r.StatusResponse<200, User> | r.StatusResponse<'default', unknown>> {
     const req = await ctx.createRequest({
         path: '/user/createWithList',
         params,
@@ -243,47 +243,47 @@ export async function createUsersWithListInput<FetcherData>(ctx: r.Context<AuthM
         body
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function loginUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     username?: string;
     password?: string;
-}, opts?: FetcherData): Promise<string> {
+}, opts?: FetcherData): Promise<r.StatusResponse<200, string> | r.StatusResponse<400, unknown>> {
     const req = await ctx.createRequest({
         path: '/user/login',
         params,
         method: r.HttpMethod.GET,
         queryParams: [
-            "username",
-            "password"
+            'username',
+            'password'
         ]
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
-export async function logoutUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, opts?: FetcherData): Promise<any> {
+export async function logoutUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, opts?: FetcherData): Promise<r.StatusResponse<'default', unknown>> {
     const req = await ctx.createRequest({
         path: '/user/logout',
         params,
         method: r.HttpMethod.GET
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function getUserByName<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     username: string;
-}, opts?: FetcherData): Promise<User> {
+}, opts?: FetcherData): Promise<r.StatusResponse<200, User> | r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
     const req = await ctx.createRequest({
         path: '/user/{username}',
         params,
         method: r.HttpMethod.GET
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function updateUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     username: string;
-}, body: User, opts?: FetcherData): Promise<any> {
+}, body: User, opts?: FetcherData): Promise<r.StatusResponse<'default', unknown>> {
     const req = await ctx.createRequest({
         path: '/user/{username}',
         params,
@@ -291,18 +291,18 @@ export async function updateUser<FetcherData>(ctx: r.Context<AuthMethods, Fetche
         body
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 export async function deleteUser<FetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {
     username: string;
-}, opts?: FetcherData): Promise<unknown> {
+}, opts?: FetcherData): Promise<r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
     const req = await ctx.createRequest({
         path: '/user/{username}',
         params,
         method: r.HttpMethod.DELETE
     });
     const res = await ctx.sendRequest(req, opts);
-    return ctx.handleResponse(res, {});
+    return ctx.handleResponse(res, {}, true);
 }
 "
 `;
@@ -327,7 +327,7 @@ export type Pet = {
     photoUrls: string[];
     status?: PetStatus;
 };
-const $date_Order = (): r.TransformField[] => [[['access', "shipDate"], ['this']]];
+const $date_Order = (): r.TransformField[] => [[['access', 'shipDate'], ['this']]];
 export type AuthMethods = {};
 export function createContext<FetcherData>(params?: r.CreateContextParams<AuthMethods, FetcherData>): r.Context<AuthMethods, FetcherData> { return new r.Context<AuthMethods, FetcherData>({
     serverConfiguration: new r.ServerConfiguration('/api/v3', {}),

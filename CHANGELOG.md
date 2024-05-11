@@ -3,6 +3,11 @@
 ## Unreleased
 
 - Add `-p,--prettier` option to the cli to format the generated code with prettier [#51](https://github.com/Embraser01/typoas/pull/51)
+- **BREAKING**: Generate all responses types (fixes [#57](https://github.com/Embraser01/typoas/issues/57)) [#60](https://github.com/Embraser01/typoas/pull/60)
+  - Functions will not throw on non-2XX http status anymore
+  - Instead, users will have to check themselves or use the ok helper function
+
+> The reason behind this is to allow easier error handling with better error typing. It also improves multiple success response handling (for complex usage mainly)
 
 ## 3.1.7 - 2024-02-23, 2024-04-17
 

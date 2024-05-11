@@ -1,4 +1,4 @@
-import { ServerConfiguration, wrapApi } from '@typoas/runtime';
+import { ok, ServerConfiguration, wrapApi } from '@typoas/runtime';
 import { pullsList, createContext as createGithubContext } from './github';
 import {
   findPetsByStatus,
@@ -12,17 +12,49 @@ const petstoreCtx = createPetstoreContext({
   ),
 });
 
-findPetsByStatus(petstoreCtx, { status: 'available' })
-  .then((resp) => console.log('Available pets', resp))
-  .catch((err) => console.error('Error while loading available pets', err));
-
 const githubCtx = createGithubContext();
 const ghClient = wrapApi(githubCtx, { pullsList });
 
-ghClient
-  .pullsList({
+async function main() {
+  try {
+    const pets = await ok(
+      findPetsByStatus(petstoreCtx, { status: 'available' }),
+    );
+    console.log(`Found ${pets.length} pets available`);
+  } catch (e) {
+    console.error('Error while loading pets', e);
+  }
+
+  try {
+    const yarnPRs = await ok(
+      ghClient.pullsList({ repo: 'berry', owner: 'yarnpkg' }),
+      200,
+    );
+    console.log(`Found ${yarnPRs.length} yarn PRs opened`);
+  } catch (e) {
+    console.error('Error while loading yarn PRs', e);
+  }
+
+  try {
+    const error = await ok(
+      ghClient.pullsList({ repo: 'berry', owner: 'yarnpkg' }),
+      422,
+    );
+    console.log(`Found ${error.errors?.length} errors`);
+  } catch (e) {
+    console.error('Error while loading yarn PRs');
+  }
+
+  const yarnPRsRes = await ghClient.pullsList({
     repo: 'berry',
     owner: 'yarnpkg',
-  })
-  .then((resp) => console.log('Yarn PRs', resp))
-  .catch((err) => console.error('Error while loading yarn PRs', err));
+  });
+
+  if (yarnPRsRes.ok && yarnPRsRes.status === 200) {
+    console.log(`Found ${yarnPRsRes.data.length} PRs`);
+  } else if (yarnPRsRes.status === 422) {
+    console.log('Error while loading PRs', yarnPRsRes.data.message);
+  }
+}
+
+main();

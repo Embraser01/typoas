@@ -26,7 +26,7 @@ export function getQueryParams(
     if (!usedParams.has(parameter.name)) {
       usedParams.add(parameter.name);
       if (parameter.in === 'query') {
-        strings.push(factory.createStringLiteral(parameter.name));
+        strings.push(factory.createStringLiteral(parameter.name, true));
       }
     }
   }

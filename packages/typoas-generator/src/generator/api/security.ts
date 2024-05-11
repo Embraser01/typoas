@@ -58,7 +58,7 @@ export function createConfigureAuthFunction(
             factory.createTypeReferenceNode(AUTH_TYPE_NAME),
           ]),
           factory.createLiteralTypeNode(
-            factory.createStringLiteral('authProviders'),
+            factory.createStringLiteral('authProviders', true),
           ),
         ),
       ),
@@ -78,7 +78,7 @@ export function createConfigureAuthFunction(
                     ? factory.createElementAccessChain(
                         factory.createIdentifier('params'),
                         factory.createToken(SyntaxKind.QuestionDotToken),
-                        factory.createStringLiteral(name),
+                        factory.createStringLiteral(name, true),
                       )
                     : factory.createPropertyAccessChain(
                         factory.createIdentifier('params'),
@@ -90,7 +90,7 @@ export function createConfigureAuthFunction(
                     isInvalidES6IdentifierName(name)
                       ? factory.createElementAccessExpression(
                           factory.createIdentifier('params'),
-                          factory.createStringLiteral(name),
+                          factory.createStringLiteral(name, true),
                         )
                       : factory.createPropertyAccessExpression(
                           factory.createIdentifier('params'),

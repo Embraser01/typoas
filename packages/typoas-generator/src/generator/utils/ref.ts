@@ -14,6 +14,7 @@ export enum ExportedRef {
   HttpBasicSecurityAuthentication = 'HttpBasicSecurityAuthentication',
   HttpBearerSecurityAuthentication = 'HttpBearerSecurityAuthentication',
   OAuth2SecurityAuthentication = 'OAuth2SecurityAuthentication',
+  StatusResponse = 'StatusResponse',
 }
 
 export function createRuntimeRefProperty(exportedRef: ExportedRef): Expression {

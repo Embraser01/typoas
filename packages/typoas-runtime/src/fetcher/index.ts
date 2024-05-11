@@ -25,7 +25,7 @@ export class IsomorphicFetchHttpLibrary<T = unknown> implements Fetcher<T> {
       method,
       body,
     });
-    const headers: { [name: string]: string } = {};
+    const headers: Record<string, string> = {};
     resp.headers.forEach((value: string, name: string) => {
       headers[name] = value;
     });

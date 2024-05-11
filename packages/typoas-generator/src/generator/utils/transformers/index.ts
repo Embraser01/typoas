@@ -72,7 +72,7 @@ export function createFromRawTransforms(
           if (type === TransformType.REF) {
             items.push(factory.createIdentifier(data));
           } else if (typeof data === 'string') {
-            items.push(factory.createStringLiteral(data));
+            items.push(factory.createStringLiteral(data, true));
           } else if (Array.isArray(data)) {
             items.push(createFromRawTransforms(data, ctx));
           }

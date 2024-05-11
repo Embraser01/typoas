@@ -106,28 +106,50 @@ export function createOperationReturnType(
   operation: OperationObject,
   ctx: Context,
 ): TypeReferenceNode {
-  const responses = uniqWith(getSuccessResponses(operation), (a, b) => {
-    if (isReferenceObject(a) && isReferenceObject(b) && a.$ref === b.$ref) {
-      return true;
-    }
-    if (isReferenceObject(a) || isReferenceObject(b)) {
-      return false;
-    }
-    return isEqual(
-      getContentTypeSchema(a.content, ctx),
-      getContentTypeSchema(b.content, ctx),
-    );
-  });
+  if (!ctx.isFullResponseMode()) {
+    const responses = uniqWith(getSuccessResponses(operation), (a, b) => {
+      if (isReferenceObject(a) && isReferenceObject(b) && a.$ref === b.$ref) {
+        return true;
+      }
+      if (isReferenceObject(a) || isReferenceObject(b)) {
+        return false;
+      }
+      return isEqual(
+        getContentTypeSchema(a.content, ctx),
+        getContentTypeSchema(b.content, ctx),
+      );
+    });
 
-  const node = ctx.generateAnyInsteadOfUnknown()
-    ? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword)
-    : factory.createKeywordTypeNode(SyntaxKind.UnknownKeyword);
+    const node = ctx.generateAnyInsteadOfUnknown()
+      ? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword)
+      : factory.createKeywordTypeNode(SyntaxKind.UnknownKeyword);
+
+    return factory.createTypeReferenceNode(
+      factory.createIdentifier('Promise'),
+      [
+        !responses.length
+          ? node
+          : factory.createUnionTypeNode(
+              responses.map((r) => createSchemaTypeFromResponse(r, ctx)),
+            ),
+      ],
+    );
+  }
+
+  const responses = Object.entries(operation.responses || {})
+    .sort() // Default sort is ok here because we want numbers first
+    .map(([statusCode, r]) =>
+      createRuntimeRefType(ExportedRef.StatusResponse, [
+        factory.createLiteralTypeNode(
+          /^\d+$/.test(statusCode)
+            ? factory.createNumericLiteral(statusCode)
+            : factory.createStringLiteral(statusCode, true),
+        ),
+        createSchemaTypeFromResponse(r, ctx),
+      ]),
+    );
 
   return factory.createTypeReferenceNode(factory.createIdentifier('Promise'), [
-    !responses.length
-      ? node
-      : factory.createUnionTypeNode(
-          responses.map((r) => createSchemaTypeFromResponse(r, ctx)),
-        ),
+    factory.createUnionTypeNode(responses),
   ]);
 }

@@ -90,7 +90,7 @@ export function createOperationBody(
                               factory.createIdentifier('auth'),
                               factory.createArrayLiteralExpression(
                                 [...securities.values()].map((s) =>
-                                  factory.createStringLiteral(s),
+                                  factory.createStringLiteral(s, true),
                                 ),
                                 false,
                               ),
@@ -157,6 +157,7 @@ export function createOperationBody(
             createOperationResponseHandlers(operation, ctx),
             true,
           ),
+          ...(ctx.isFullResponseMode() ? [factory.createTrue()] : []),
         ],
       ),
     ),

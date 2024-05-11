@@ -77,6 +77,7 @@ Here is a short list of supported command line options:
     -o, --output [path]            Path where to write the generated TS file
     -e,--generate-enums            Generate enums instead of literal string types where possible
     -p,--prettier                  If set, the generated file will be formatted with Prettier
+    -r,--full-response-mode        Enabled by default, generate functions that only throws on network errors, can be disabled using --no-full-response-mode
     --js-doc, --no-js-doc          Whether to add JS Doc to the generated code (default: true)
     --wrap-lines-at                Define a maximum width for JS Doc comments, 0 to disable (default: 120)
     --only-types                   Use it to only generate types in #components/schemas/
@@ -131,18 +132,29 @@ writeFileSync('./src/client.ts', data, 'utf8');
 Once the file is generated you'll be able to use it like this:
 
 ```typescript
-import { ServerConfiguration } from '@typoas/runtime';
+import { ServerConfiguration, ok } from '@typoas/runtime';
+// Client generated from:
+// yarn dlx @typoas/cli generate -i https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.yaml -o client.ts
 import { createContext, pullsList } from './client';
 
 const ctx = createContext();
 
-pullsList(ctx, {
-  repo: 'typoas',
-  owner: 'embraser01',
-})
-  .then((list) => console.log('List of PRs', list))
-  .catch((err) => console.error('Error while getting PRs', err));
+// By default, returns a StatusResponse that contains statusCode, data and headers.
+const res = await pullsList(ctx, { repo: 'typoas', owner: 'embraser01' });
+if (res.ok) {
+  res.data.forEach((pr) => console.log(pr.title));
+}
+
+// An helper `ok` function can help throw on non 2xx status code and return the data
+// The second argument is an optional expected status code (useful when multiple success status code are possible)
+const prs = await ok(
+  pullsList(ctx, { repo: 'typoas', owner: 'embraser01' }),
+  200,
+);
 ```
+
+> You can directly generate functions that throw on non 2xx status code by using the `--no-full-response-mode` option.
+> This feature may be removed in the future and isn't the recommended way.
 
 You can customize multiple things in the `createContext` function.
 

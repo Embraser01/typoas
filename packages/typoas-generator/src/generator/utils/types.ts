@@ -19,7 +19,11 @@ export function createTypeFromSchema(
   schemaOrRef: SchemaObjectOAS30 | SchemaObject | ReferenceObject | undefined,
   ctx: Context,
 ): TypeNode {
-  let node: TypeNode = factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+  let node: TypeNode = factory.createKeywordTypeNode(
+    ctx.generateAnyInsteadOfUnknown()
+      ? SyntaxKind.AnyKeyword
+      : SyntaxKind.UnknownKeyword,
+  );
 
   if (!schemaOrRef) {
     return node;

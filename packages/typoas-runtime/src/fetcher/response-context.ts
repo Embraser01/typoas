@@ -3,7 +3,7 @@ import type { HttpFile, ResponseBody } from './types';
 export class ResponseContext {
   public constructor(
     public httpStatusCode: number,
-    public headers: { [key: string]: string },
+    public headers: Record<string, string>,
     public body: ResponseBody,
   ) {}
 
