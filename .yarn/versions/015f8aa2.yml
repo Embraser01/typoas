@@ -1,0 +1,4 @@
+releases:
+  "@typoas/cli": major
+  "@typoas/generator": major
+  "@typoas/runtime": major
