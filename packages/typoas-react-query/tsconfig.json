@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "commonjs",
+    "target": "ES2019",
+    "declaration": true,
+    "lib": ["ES2019", "DOM"],
+    "outDir": "lib",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules", "lib"]
+}

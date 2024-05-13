@@ -1,0 +1,45 @@
+{
+  "name": "@typoas/react-query",
+  "version": "3.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/embraser01/typoas",
+    "directory": "packages/typoas-react-query"
+  },
+  "main": "./src/index.ts",
+  "scripts": {
+    "prepack": "tsc",
+    "start": "ts-node ./src/bin.ts",
+    "test:types": "tsc --noEmit",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@tanstack/react-query": "^5.35.5",
+    "@testing-library/react": "^15.0.7",
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@typoas/runtime": "workspace:^",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.35.5",
+    "@typoas/runtime": "workspace:^"
+  },
+  "files": [
+    "/lib/**/*.js",
+    "/lib/**/*.d.ts",
+    "!/lib/**/__tests__/*"
+  ],
+  "publishConfig": {
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts"
+  }
+}
