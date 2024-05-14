@@ -50,6 +50,13 @@ export class RequestContext {
   }
 
   /**
+   * Return the url parsed object.
+   */
+  public getRawUrl(): ParsedUrl {
+    return this.url;
+  }
+
+  /**
    * Replaces the url set in the constructor with this url.
    *
    */
