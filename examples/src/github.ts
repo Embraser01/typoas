@@ -570,6 +570,11 @@ export type HookDeliveryItem = {
    * @example 123
    */
   repository_id: number | null;
+  /**
+   * Time when the webhook delivery was throttled.
+   * @example "2021-05-12T20:33:44Z"
+   */
+  throttled_at?: Date | null;
 };
 /**
  * Scim Error
@@ -658,6 +663,11 @@ export type HookDelivery = {
    * @example 123
    */
   repository_id: number | null;
+  /**
+   * Time when the webhook delivery was throttled.
+   * @example "2021-05-12T20:33:44Z"
+   */
+  throttled_at?: Date | null;
   /**
    * The URL target of the delivery.
    * @example "https://www.example.com"
@@ -26577,12 +26587,6 @@ export type WebhookFork = {
     contributors_url: string;
     created_at: number | Date;
     /**
-     * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
-     */
-    custom_properties?: {
-      [key: string]: any;
-    };
-    /**
      * The default branch of the repository.
      */
     default_branch: string;
@@ -34812,6 +34816,7 @@ export type WebhookPageBuild = {
 export type WebhookPersonalAccessTokenRequestApproved = {
   action: 'approved';
   personal_access_token_request: PersonalAccessTokenRequest;
+  enterprise?: EnterpriseWebhooks;
   organization: OrganizationSimpleWebhooks;
   sender: SimpleUserWebhooks;
   installation: SimpleInstallation;
@@ -34822,6 +34827,7 @@ export type WebhookPersonalAccessTokenRequestApproved = {
 export type WebhookPersonalAccessTokenRequestCancelled = {
   action: 'cancelled';
   personal_access_token_request: PersonalAccessTokenRequest;
+  enterprise?: EnterpriseWebhooks;
   organization: OrganizationSimpleWebhooks;
   sender: SimpleUserWebhooks;
   installation: SimpleInstallation;
@@ -34832,9 +34838,10 @@ export type WebhookPersonalAccessTokenRequestCancelled = {
 export type WebhookPersonalAccessTokenRequestCreated = {
   action: 'created';
   personal_access_token_request: PersonalAccessTokenRequest;
+  enterprise?: EnterpriseWebhooks;
   organization: OrganizationSimpleWebhooks;
   sender: SimpleUserWebhooks;
-  installation: SimpleInstallation;
+  installation?: SimpleInstallation;
 };
 /**
  * personal_access_token_request denied event
@@ -34843,6 +34850,7 @@ export type WebhookPersonalAccessTokenRequestDenied = {
   action: 'denied';
   personal_access_token_request: PersonalAccessTokenRequest;
   organization: OrganizationSimpleWebhooks;
+  enterprise?: EnterpriseWebhooks;
   sender: SimpleUserWebhooks;
   installation: SimpleInstallation;
 };
@@ -63417,9 +63425,11 @@ const $date_Integration = (): r.TransformField[] => [
 ];
 const $date_HookDeliveryItem = (): r.TransformField[] => [
   [['access', 'delivered_at'], ['this']],
+  [['access', 'throttled_at'], ['this']],
 ];
 const $date_HookDelivery = (): r.TransformField[] => [
   [['access', 'delivered_at'], ['this']],
+  [['access', 'throttled_at'], ['this']],
 ];
 const $date_Enterprise = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -66890,6 +66900,34 @@ const $date_WebhookPageBuild = (): r.TransformField[] => [
     ['ref', $date_RepositoryWebhooks],
   ],
 ];
+const $date_WebhookPersonalAccessTokenRequestApproved =
+  (): r.TransformField[] => [
+    [
+      ['access', 'enterprise'],
+      ['ref', $date_EnterpriseWebhooks],
+    ],
+  ];
+const $date_WebhookPersonalAccessTokenRequestCancelled =
+  (): r.TransformField[] => [
+    [
+      ['access', 'enterprise'],
+      ['ref', $date_EnterpriseWebhooks],
+    ],
+  ];
+const $date_WebhookPersonalAccessTokenRequestCreated =
+  (): r.TransformField[] => [
+    [
+      ['access', 'enterprise'],
+      ['ref', $date_EnterpriseWebhooks],
+    ],
+  ];
+const $date_WebhookPersonalAccessTokenRequestDenied =
+  (): r.TransformField[] => [
+    [
+      ['access', 'enterprise'],
+      ['ref', $date_EnterpriseWebhooks],
+    ],
+  ];
 const $date_WebhookPing = (): r.TransformField[] => [
   [['access', 'hook'], ['access', 'created_at'], ['this']],
   [['access', 'hook'], ['access', 'updated_at'], ['this']],
@@ -70050,7 +70088,7 @@ const $date_WebhookWorkflowRunRequested = (): r.TransformField[] => [
   [['access', 'workflow_run'], ['access', 'updated_at'], ['this']],
 ];
 export type AuthMethods = {};
-export function createContext<FetcherData>(
+export function createContext<FetcherData extends r.BaseFetcherData>(
   params?: r.CreateContextParams<AuthMethods, FetcherData>,
 ): r.Context<AuthMethods, FetcherData> {
   return new r.Context<AuthMethods, FetcherData>({
@@ -70068,7 +70106,7 @@ export function createContext<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/meta/meta#github-api-root}
  * Tags: meta
  */
-export async function metaRoot<FetcherData>(
+export async function metaRoot<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -70094,7 +70132,9 @@ export async function metaRoot<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/security-advisories/global-advisories#list-global-security-advisories}
  * Tags: security-advisories
  */
-export async function securityAdvisoriesListGlobalAdvisories<FetcherData>(
+export async function securityAdvisoriesListGlobalAdvisories<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ghsa_id?: string;
@@ -70160,7 +70200,9 @@ export async function securityAdvisoriesListGlobalAdvisories<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/security-advisories/global-advisories#get-a-global-security-advisory}
  * Tags: security-advisories
  */
-export async function securityAdvisoriesGetGlobalAdvisory<FetcherData>(
+export async function securityAdvisoriesGetGlobalAdvisory<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ghsa_id: string;
@@ -70196,7 +70238,9 @@ export async function securityAdvisoriesGetGlobalAdvisory<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetAuthenticated<FetcherData>(
+export async function appsGetAuthenticated<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -70224,7 +70268,9 @@ export async function appsGetAuthenticated<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#create-a-github-app-from-a-manifest}
  * Tags: apps
  */
-export async function appsCreateFromManifest<FetcherData>(
+export async function appsCreateFromManifest<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     code: string;
@@ -70273,7 +70319,9 @@ export async function appsCreateFromManifest<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/webhooks#get-a-webhook-configuration-for-an-app}
  * Tags: apps
  */
-export async function appsGetWebhookConfigForApp<FetcherData>(
+export async function appsGetWebhookConfigForApp<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -70297,7 +70345,9 @@ export async function appsGetWebhookConfigForApp<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/webhooks#update-a-webhook-configuration-for-an-app}
  * Tags: apps
  */
-export async function appsUpdateWebhookConfigForApp<FetcherData>(
+export async function appsUpdateWebhookConfigForApp<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -70327,7 +70377,9 @@ export async function appsUpdateWebhookConfigForApp<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/webhooks#list-deliveries-for-an-app-webhook}
  * Tags: apps
  */
-export async function appsListWebhookDeliveries<FetcherData>(
+export async function appsListWebhookDeliveries<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -70367,7 +70419,9 @@ export async function appsListWebhookDeliveries<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/webhooks#get-a-delivery-for-an-app-webhook}
  * Tags: apps
  */
-export async function appsGetWebhookDelivery<FetcherData>(
+export async function appsGetWebhookDelivery<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     delivery_id: number;
@@ -70402,7 +70456,9 @@ export async function appsGetWebhookDelivery<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/webhooks#redeliver-a-delivery-for-an-app-webhook}
  * Tags: apps
  */
-export async function appsRedeliverWebhookDelivery<FetcherData>(
+export async function appsRedeliverWebhookDelivery<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     delivery_id: number;
@@ -70428,7 +70484,7 @@ export async function appsRedeliverWebhookDelivery<FetcherData>(
  * Tags: apps
  */
 export async function appsListInstallationRequestsForAuthenticatedApp<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -70470,7 +70526,9 @@ export async function appsListInstallationRequestsForAuthenticatedApp<
  * Learn more at {@link https://docs.github.com/rest/apps/apps#list-installations-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsListInstallations<FetcherData>(
+export async function appsListInstallations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -70507,7 +70565,9 @@ export async function appsListInstallations<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-an-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetInstallation<FetcherData>(
+export async function appsGetInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
@@ -70542,7 +70602,9 @@ export async function appsGetInstallation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#delete-an-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsDeleteInstallation<FetcherData>(
+export async function appsDeleteInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
@@ -70589,7 +70651,9 @@ export async function appsDeleteInstallation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#create-an-installation-access-token-for-an-app}
  * Tags: apps
  */
-export async function appsCreateInstallationAccessToken<FetcherData>(
+export async function appsCreateInstallationAccessToken<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
@@ -70644,7 +70708,9 @@ export async function appsCreateInstallationAccessToken<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#suspend-an-app-installation}
  * Tags: apps
  */
-export async function appsSuspendInstallation<FetcherData>(
+export async function appsSuspendInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
@@ -70669,7 +70735,9 @@ export async function appsSuspendInstallation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#unsuspend-an-app-installation}
  * Tags: apps
  */
-export async function appsUnsuspendInstallation<FetcherData>(
+export async function appsUnsuspendInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     installation_id: number;
@@ -70687,17 +70755,19 @@ export async function appsUnsuspendInstallation<FetcherData>(
 /**
  * Delete an app authorization
  * OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must use [Basic
- * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
- * this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also
- * provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
- * Deleting
- * an application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the
- * application will have no access to the user's account and will no longer be listed on [the application authorizations
- * settings screen within GitHub](https://github.com/settings/applications#authorized).
+ * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and
+ * password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner
+ * will be deleted.
+ * Deleting an application's grant will also delete all OAuth tokens associated with the application for
+ * the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the
+ * application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#delete-an-app-authorization}
  * Tags: apps
  */
-export async function appsDeleteAuthorization<FetcherData>(
+export async function appsDeleteAuthorization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
@@ -70726,13 +70796,13 @@ export async function appsDeleteAuthorization<FetcherData>(
  * OAuth applications and GitHub applications with OAuth authorizations can use this API method for checking OAuth token
  * validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this
  * particular endpoint. You must use [Basic
- * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) to use this
- * endpoint, where the username is the application `client_id` and the password is its `client_secret`. Invalid tokens will
- * return `404 NOT FOUND`.
+ * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * to use this endpoint, where the username is the application `client_id` and the password is its `client_secret`. Invalid
+ * tokens will return `404 NOT FOUND`.
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#check-a-token}
  * Tags: apps
  */
-export async function appsCheckToken<FetcherData>(
+export async function appsCheckToken<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
@@ -70769,13 +70839,13 @@ export async function appsCheckToken<FetcherData>(
  * OAuth applications and GitHub applications with OAuth authorizations can use this API method to reset a valid OAuth
  * token without end-user involvement. Applications must save the "token" property in the response because changes take
  * effect immediately. You must use [Basic
- * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
- * this endpoint, using the application's `client_id` and `client_secret` as the username and password. Invalid tokens will
- * return `404 NOT FOUND`.
+ * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password.
+ * Invalid tokens will return `404 NOT FOUND`.
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#reset-a-token}
  * Tags: apps
  */
-export async function appsResetToken<FetcherData>(
+export async function appsResetToken<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
@@ -70809,12 +70879,12 @@ export async function appsResetToken<FetcherData>(
  * Delete an app token
  * OAuth  or GitHub application owners can revoke a single token for an OAuth application or a GitHub application with an
  * OAuth authorization. You must use [Basic
- * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing
- * this endpoint, using the application's `client_id` and `client_secret` as the username and password.
+ * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password.
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#delete-an-app-token}
  * Tags: apps
  */
-export async function appsDeleteToken<FetcherData>(
+export async function appsDeleteToken<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
@@ -70849,14 +70919,14 @@ export async function appsDeleteToken<FetcherData>(
  * return `404 NOT FOUND`.
  *
  * You must use [Basic
- * Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication)
- * when accessing
- * this endpoint, using the `client_id` and `client_secret` of the GitHub App
+ * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * when
+ * accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App
  * as the username and password.
  * Learn more at {@link https://docs.github.com/rest/apps/apps#create-a-scoped-access-token}
  * Tags: apps
  */
-export async function appsScopeToken<FetcherData>(
+export async function appsScopeToken<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_id: string;
@@ -70921,7 +70991,7 @@ export async function appsScopeToken<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-an-app}
  * Tags: apps
  */
-export async function appsGetBySlug<FetcherData>(
+export async function appsGetBySlug<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     app_slug: string;
@@ -70953,7 +71023,9 @@ export async function appsGetBySlug<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/classroom/classroom#get-an-assignment}
  * Tags: classroom
  */
-export async function classroomGetAnAssignment<FetcherData>(
+export async function classroomGetAnAssignment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     assignment_id: number;
@@ -70984,7 +71056,7 @@ export async function classroomGetAnAssignment<FetcherData>(
  * Tags: classroom
  */
 export async function classroomListAcceptedAssigmentsForAnAssignment<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -71020,7 +71092,9 @@ export async function classroomListAcceptedAssigmentsForAnAssignment<
  * Learn more at {@link https://docs.github.com/rest/classroom/classroom#get-assignment-grades}
  * Tags: classroom
  */
-export async function classroomGetAssignmentGrades<FetcherData>(
+export async function classroomGetAssignmentGrades<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     assignment_id: number;
@@ -71045,7 +71119,9 @@ export async function classroomGetAssignmentGrades<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/classroom/classroom#list-classrooms}
  * Tags: classroom
  */
-export async function classroomListClassrooms<FetcherData>(
+export async function classroomListClassrooms<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     page?: number;
@@ -71069,7 +71145,9 @@ export async function classroomListClassrooms<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/classroom/classroom#get-a-classroom}
  * Tags: classroom
  */
-export async function classroomGetAClassroom<FetcherData>(
+export async function classroomGetAClassroom<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     classroom_id: number;
@@ -71093,7 +71171,9 @@ export async function classroomGetAClassroom<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/classroom/classroom#list-assignments-for-a-classroom}
  * Tags: classroom
  */
-export async function classroomListAssignmentsForAClassroom<FetcherData>(
+export async function classroomListAssignmentsForAClassroom<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     classroom_id: number;
@@ -71127,7 +71207,9 @@ export async function classroomListAssignmentsForAClassroom<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codes-of-conduct/codes-of-conduct#get-all-codes-of-conduct}
  * Tags: codes-of-conduct
  */
-export async function codesOfConductGetAllCodesOfConduct<FetcherData>(
+export async function codesOfConductGetAllCodesOfConduct<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -71148,7 +71230,9 @@ export async function codesOfConductGetAllCodesOfConduct<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codes-of-conduct/codes-of-conduct#get-a-code-of-conduct}
  * Tags: codes-of-conduct
  */
-export async function codesOfConductGetConductCode<FetcherData>(
+export async function codesOfConductGetConductCode<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     key: string;
@@ -71173,7 +71257,7 @@ export async function codesOfConductGetConductCode<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/emojis/emojis#get-emojis}
  * Tags: emojis
  */
-export async function emojisGet<FetcherData>(
+export async function emojisGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -71212,17 +71296,17 @@ export async function emojisGet<FetcherData>(
  * they must have
  * telemetry enabled in their IDE.
  *
- * Only the owners and billing managers of enterprises with a Copilot Business or
- * Enterprise subscription can view Copilot usage
- * metrics for the enterprise.
+ * Only owners and billing managers can view Copilot usage metrics for the
+ * enterprise.
  *
- * OAuth app tokens and personal access tokens
- * (classic) need the `copilot`, `manage_billing:copilot`, `admin:enterprise`, or `manage_billing:enterprise` scope to use
- * this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or
+ * `read:enterprise` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-enterprise-members}
  * Tags: copilot
  */
-export async function copilotUsageMetricsForEnterprise<FetcherData>(
+export async function copilotUsageMetricsForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
@@ -71265,7 +71349,9 @@ export async function copilotUsageMetricsForEnterprise<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-an-enterprise}
  * Tags: dependabot
  */
-export async function dependabotListAlertsForEnterprise<FetcherData>(
+export async function dependabotListAlertsForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
@@ -71338,7 +71424,9 @@ export async function dependabotListAlertsForEnterprise<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-enterprise}
  * Tags: secret-scanning
  */
-export async function secretScanningListAlertsForEnterprise<FetcherData>(
+export async function secretScanningListAlertsForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
@@ -71401,7 +71489,9 @@ export async function secretScanningListAlertsForEnterprise<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events}
  * Tags: activity
  */
-export async function activityListPublicEvents<FetcherData>(
+export async function activityListPublicEvents<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -71463,12 +71553,12 @@ export async function activityListPublicEvents<FetcherData>(
  *
  * **Note**:
  * Private feeds are only returned when [authenticating via Basic
- * Auth](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs
- * use the older, non revocable auth tokens.
+ * Auth](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) since
+ * current feed URIs use the older, non revocable auth tokens.
  * Learn more at {@link https://docs.github.com/rest/activity/feeds#get-feeds}
  * Tags: activity
  */
-export async function activityGetFeeds<FetcherData>(
+export async function activityGetFeeds<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -71487,7 +71577,7 @@ export async function activityGetFeeds<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#list-gists-for-the-authenticated-user}
  * Tags: gists
  */
-export async function gistsList<FetcherData>(
+export async function gistsList<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: Date;
@@ -71524,7 +71614,7 @@ export async function gistsList<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#create-a-gist}
  * Tags: gists
  */
-export async function gistsCreate<FetcherData>(
+export async function gistsCreate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -71585,7 +71675,7 @@ export async function gistsCreate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#list-public-gists}
  * Tags: gists
  */
-export async function gistsListPublic<FetcherData>(
+export async function gistsListPublic<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: Date;
@@ -71620,7 +71710,7 @@ export async function gistsListPublic<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#list-starred-gists}
  * Tags: gists
  */
-export async function gistsListStarred<FetcherData>(
+export async function gistsListStarred<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: Date;
@@ -71664,7 +71754,7 @@ export async function gistsListStarred<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#get-a-gist}
  * Tags: gists
  */
-export async function gistsGet<FetcherData>(
+export async function gistsGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -71722,7 +71812,7 @@ export async function gistsGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#update-a-gist}
  * Tags: gists
  */
-export async function gistsUpdate<FetcherData>(
+export async function gistsUpdate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -71786,7 +71876,7 @@ export async function gistsUpdate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#delete-a-gist}
  * Tags: gists
  */
-export async function gistsDelete<FetcherData>(
+export async function gistsDelete<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -71821,7 +71911,7 @@ export async function gistsDelete<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/comments#list-gist-comments}
  * Tags: gists
  */
-export async function gistsListComments<FetcherData>(
+export async function gistsListComments<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -71865,7 +71955,7 @@ export async function gistsListComments<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/comments#create-a-gist-comment}
  * Tags: gists
  */
-export async function gistsCreateComment<FetcherData>(
+export async function gistsCreateComment<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -71914,7 +72004,7 @@ export async function gistsCreateComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/comments#get-a-gist-comment}
  * Tags: gists
  */
-export async function gistsGetComment<FetcherData>(
+export async function gistsGetComment<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -71967,7 +72057,7 @@ export async function gistsGetComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/comments#update-a-gist-comment}
  * Tags: gists
  */
-export async function gistsUpdateComment<FetcherData>(
+export async function gistsUpdateComment<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72004,7 +72094,7 @@ export async function gistsUpdateComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/comments#delete-a-gist-comment}
  * Tags: gists
  */
-export async function gistsDeleteComment<FetcherData>(
+export async function gistsDeleteComment<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72030,7 +72120,7 @@ export async function gistsDeleteComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#list-gist-commits}
  * Tags: gists
  */
-export async function gistsListCommits<FetcherData>(
+export async function gistsListCommits<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72064,7 +72154,7 @@ export async function gistsListCommits<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#list-gist-forks}
  * Tags: gists
  */
-export async function gistsListForks<FetcherData>(
+export async function gistsListForks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72098,7 +72188,7 @@ export async function gistsListForks<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#fork-a-gist}
  * Tags: gists
  */
-export async function gistsFork<FetcherData>(
+export async function gistsFork<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72130,7 +72220,9 @@ export async function gistsFork<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#check-if-a-gist-is-starred}
  * Tags: gists
  */
-export async function gistsCheckIsStarred<FetcherData>(
+export async function gistsCheckIsStarred<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72157,7 +72249,7 @@ export async function gistsCheckIsStarred<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#star-a-gist}
  * Tags: gists
  */
-export async function gistsStar<FetcherData>(
+export async function gistsStar<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72182,7 +72274,7 @@ export async function gistsStar<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#unstar-a-gist}
  * Tags: gists
  */
-export async function gistsUnstar<FetcherData>(
+export async function gistsUnstar<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72217,7 +72309,7 @@ export async function gistsUnstar<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#get-a-gist-revision}
  * Tags: gists
  */
-export async function gistsGetRevision<FetcherData>(
+export async function gistsGetRevision<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gist_id: string;
@@ -72251,7 +72343,9 @@ export async function gistsGetRevision<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gitignore/gitignore#get-all-gitignore-templates}
  * Tags: gitignore
  */
-export async function gitignoreGetAllTemplates<FetcherData>(
+export async function gitignoreGetAllTemplates<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -72276,7 +72370,9 @@ export async function gitignoreGetAllTemplates<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gitignore/gitignore#get-a-gitignore-template}
  * Tags: gitignore
  */
-export async function gitignoreGetTemplate<FetcherData>(
+export async function gitignoreGetTemplate<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     name: string;
@@ -72299,7 +72395,9 @@ export async function gitignoreGetTemplate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-app-installation}
  * Tags: apps
  */
-export async function appsListReposAccessibleToInstallation<FetcherData>(
+export async function appsListReposAccessibleToInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -72355,7 +72453,9 @@ export async function appsListReposAccessibleToInstallation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/installations#revoke-an-installation-access-token}
  * Tags: apps
  */
-export async function appsRevokeInstallationAccessToken<FetcherData>(
+export async function appsRevokeInstallationAccessToken<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -72401,7 +72501,7 @@ export async function appsRevokeInstallationAccessToken<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
-export async function issuesList<FetcherData>(
+export async function issuesList<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     filter?:
@@ -72465,7 +72565,9 @@ export async function issuesList<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/licenses/licenses#get-all-commonly-used-licenses}
  * Tags: licenses
  */
-export async function licensesGetAllCommonlyUsed<FetcherData>(
+export async function licensesGetAllCommonlyUsed<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     featured?: boolean;
@@ -72492,7 +72594,7 @@ export async function licensesGetAllCommonlyUsed<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/licenses/licenses#get-a-license}
  * Tags: licenses
  */
-export async function licensesGet<FetcherData>(
+export async function licensesGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     license: string;
@@ -72517,7 +72619,7 @@ export async function licensesGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/markdown/markdown#render-a-markdown-document}
  * Tags: markdown
  */
-export async function markdownRender<FetcherData>(
+export async function markdownRender<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -72555,7 +72657,7 @@ export async function markdownRender<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/markdown/markdown#render-a-markdown-document-in-raw-mode}
  * Tags: markdown
  */
-export async function markdownRenderRaw<FetcherData>(
+export async function markdownRenderRaw<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: string,
@@ -72579,12 +72681,14 @@ export async function markdownRenderRaw<FetcherData>(
  * GitHub Apps must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint. OAuth apps must use [basic
- * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
- * client ID and client secret to access this endpoint.
+ * authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * with their client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#get-a-subscription-plan-for-an-account}
  * Tags: apps
  */
-export async function appsGetSubscriptionPlanForAccount<FetcherData>(
+export async function appsGetSubscriptionPlanForAccount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account_id: number;
@@ -72610,12 +72714,12 @@ export async function appsGetSubscriptionPlanForAccount<FetcherData>(
  * GitHub Apps must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint. OAuth apps must use [basic
- * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
- * client ID and client secret to access this endpoint.
+ * authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * with their client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#list-plans}
  * Tags: apps
  */
-export async function appsListPlans<FetcherData>(
+export async function appsListPlans<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -72646,12 +72750,14 @@ export async function appsListPlans<FetcherData>(
  * GitHub Apps must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint. OAuth apps must use [basic
- * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
- * client ID and client secret to access this endpoint.
+ * authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * with their client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#list-accounts-for-a-plan}
  * Tags: apps
  */
-export async function appsListAccountsForPlan<FetcherData>(
+export async function appsListAccountsForPlan<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     plan_id: number;
@@ -72685,12 +72791,14 @@ export async function appsListAccountsForPlan<FetcherData>(
  * GitHub Apps must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint. OAuth apps must use [basic
- * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
- * client ID and client secret to access this endpoint.
+ * authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * with their client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#get-a-subscription-plan-for-an-account-stubbed}
  * Tags: apps
  */
-export async function appsGetSubscriptionPlanForAccountStubbed<FetcherData>(
+export async function appsGetSubscriptionPlanForAccountStubbed<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account_id: number;
@@ -72716,12 +72824,14 @@ export async function appsGetSubscriptionPlanForAccountStubbed<FetcherData>(
  * GitHub Apps must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint. OAuth apps must use [basic
- * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
- * client ID and client secret to access this endpoint.
+ * authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * with their client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#list-plans-stubbed}
  * Tags: apps
  */
-export async function appsListPlansStubbed<FetcherData>(
+export async function appsListPlansStubbed<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -72751,12 +72861,14 @@ export async function appsListPlansStubbed<FetcherData>(
  * GitHub Apps must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint. OAuth apps must use [basic
- * authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) with their
- * client ID and client secret to access this endpoint.
+ * authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
+ * with their client ID and client secret to access this endpoint.
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#list-accounts-for-a-plan-stubbed}
  * Tags: apps
  */
-export async function appsListAccountsForPlanStubbed<FetcherData>(
+export async function appsListAccountsForPlanStubbed<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     plan_id: number;
@@ -72796,7 +72908,7 @@ export async function appsListAccountsForPlanStubbed<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/meta/meta#get-apiname-meta-information}
  * Tags: meta
  */
-export async function metaGet<FetcherData>(
+export async function metaGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -72816,7 +72928,9 @@ export async function metaGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events-for-a-network-of-repositories}
  * Tags: activity
  */
-export async function activityListPublicEventsForRepoNetwork<FetcherData>(
+export async function activityListPublicEventsForRepoNetwork<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -72854,7 +72968,7 @@ export async function activityListPublicEventsForRepoNetwork<FetcherData>(
  * Tags: activity
  */
 export async function activityListNotificationsForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -72905,7 +73019,9 @@ export async function activityListNotificationsForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/activity/notifications#mark-notifications-as-read}
  * Tags: activity
  */
-export async function activityMarkNotificationsAsRead<FetcherData>(
+export async function activityMarkNotificationsAsRead<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -72946,7 +73062,7 @@ export async function activityMarkNotificationsAsRead<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/notifications#get-a-thread}
  * Tags: activity
  */
-export async function activityGetThread<FetcherData>(
+export async function activityGetThread<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
@@ -72979,7 +73095,9 @@ export async function activityGetThread<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/notifications#mark-a-thread-as-read}
  * Tags: activity
  */
-export async function activityMarkThreadAsRead<FetcherData>(
+export async function activityMarkThreadAsRead<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
@@ -73005,7 +73123,9 @@ export async function activityMarkThreadAsRead<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/notifications#mark-a-thread-as-done}
  * Tags: activity
  */
-export async function activityMarkThreadAsDone<FetcherData>(
+export async function activityMarkThreadAsDone<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
@@ -73032,7 +73152,7 @@ export async function activityMarkThreadAsDone<FetcherData>(
  * Tags: activity
  */
 export async function activityGetThreadSubscriptionForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73074,7 +73194,9 @@ export async function activityGetThreadSubscriptionForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/activity/notifications#set-a-thread-subscription}
  * Tags: activity
  */
-export async function activitySetThreadSubscription<FetcherData>(
+export async function activitySetThreadSubscription<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
@@ -73117,7 +73239,9 @@ export async function activitySetThreadSubscription<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/notifications#delete-a-thread-subscription}
  * Tags: activity
  */
-export async function activityDeleteThreadSubscription<FetcherData>(
+export async function activityDeleteThreadSubscription<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     thread_id: number;
@@ -73143,7 +73267,7 @@ export async function activityDeleteThreadSubscription<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/meta/meta#get-octocat}
  * Tags: meta
  */
-export async function metaGetOctocat<FetcherData>(
+export async function metaGetOctocat<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     s?: string;
@@ -73170,7 +73294,7 @@ export async function metaGetOctocat<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-organizations}
  * Tags: orgs
  */
-export async function orgsList<FetcherData>(
+export async function orgsList<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: number;
@@ -73227,7 +73351,7 @@ export async function orgsList<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#get-an-organization}
  * Tags: orgs
  */
-export async function orgsGet<FetcherData>(
+export async function orgsGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73289,7 +73413,7 @@ export async function orgsGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#update-an-organization}
  * Tags: orgs
  */
-export async function orgsUpdate<FetcherData>(
+export async function orgsUpdate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73477,7 +73601,7 @@ export async function orgsUpdate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#delete-an-organization}
  * Tags: orgs
  */
-export async function orgsDelete<FetcherData>(
+export async function orgsDelete<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73507,7 +73631,9 @@ export async function orgsDelete<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/cache#get-github-actions-cache-usage-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetActionsCacheUsageForOrg<FetcherData>(
+export async function actionsGetActionsCacheUsageForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73533,7 +73659,9 @@ export async function actionsGetActionsCacheUsageForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/cache#list-repositories-with-github-actions-cache-usage-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetActionsCacheUsageByRepoForOrg<FetcherData>(
+export async function actionsGetActionsCacheUsageByRepoForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73568,7 +73696,9 @@ export async function actionsGetActionsCacheUsageByRepoForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#get-the-customization-template-for-an-oidc-subject-claim-for-an-organization}
  * Tags: oidc
  */
-export async function oidcGetOidcCustomSubTemplateForOrg<FetcherData>(
+export async function oidcGetOidcCustomSubTemplateForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73592,7 +73722,9 @@ export async function oidcGetOidcCustomSubTemplateForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#set-the-customization-template-for-an-oidc-subject-claim-for-an-organization}
  * Tags: oidc
  */
-export async function oidcUpdateOidcCustomSubTemplateForOrg<FetcherData>(
+export async function oidcUpdateOidcCustomSubTemplateForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73623,7 +73755,7 @@ export async function oidcUpdateOidcCustomSubTemplateForOrg<FetcherData>(
  * Tags: actions
  */
 export async function actionsGetGithubActionsPermissionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73649,7 +73781,7 @@ export async function actionsGetGithubActionsPermissionsOrganization<
  * Tags: actions
  */
 export async function actionsSetGithubActionsPermissionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73682,7 +73814,7 @@ export async function actionsSetGithubActionsPermissionsOrganization<
  * Tags: actions
  */
 export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73734,7 +73866,7 @@ export async function actionsListSelectedRepositoriesEnabledGithubActionsOrganiz
  * Tags: actions
  */
 export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73770,7 +73902,7 @@ export async function actionsSetSelectedRepositoriesEnabledGithubActionsOrganiza
  * Tags: actions
  */
 export async function actionsEnableSelectedRepositoryGithubActionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73800,7 +73932,7 @@ export async function actionsEnableSelectedRepositoryGithubActionsOrganization<
  * Tags: actions
  */
 export async function actionsDisableSelectedRepositoryGithubActionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73828,7 +73960,9 @@ export async function actionsDisableSelectedRepositoryGithubActionsOrganization<
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-allowed-actions-and-reusable-workflows-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetAllowedActionsOrganization<FetcherData>(
+export async function actionsGetAllowedActionsOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73854,7 +73988,9 @@ export async function actionsGetAllowedActionsOrganization<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-allowed-actions-and-reusable-workflows-for-an-organization}
  * Tags: actions
  */
-export async function actionsSetAllowedActionsOrganization<FetcherData>(
+export async function actionsSetAllowedActionsOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -73886,7 +74022,7 @@ export async function actionsSetAllowedActionsOrganization<FetcherData>(
  * Tags: actions
  */
 export async function actionsGetGithubActionsDefaultWorkflowPermissionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73917,7 +74053,7 @@ export async function actionsGetGithubActionsDefaultWorkflowPermissionsOrganizat
  * Tags: actions
  */
 export async function actionsSetGithubActionsDefaultWorkflowPermissionsOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -73947,7 +74083,9 @@ export async function actionsSetGithubActionsDefaultWorkflowPermissionsOrganizat
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-an-organization}
  * Tags: actions
  */
-export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
+export async function actionsListSelfHostedRunnersForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     name?: string;
@@ -73986,7 +74124,9 @@ export async function actionsListSelfHostedRunnersForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-runner-applications-for-an-organization}
  * Tags: actions
  */
-export async function actionsListRunnerApplicationsForOrg<FetcherData>(
+export async function actionsListRunnerApplicationsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74014,7 +74154,9 @@ export async function actionsListRunnerApplicationsForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization}
  * Tags: actions
  */
-export async function actionsGenerateRunnerJitconfigForOrg<FetcherData>(
+export async function actionsGenerateRunnerJitconfigForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74083,7 +74225,9 @@ export async function actionsGenerateRunnerJitconfigForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization}
  * Tags: actions
  */
-export async function actionsCreateRegistrationTokenForOrg<FetcherData>(
+export async function actionsCreateRegistrationTokenForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74125,7 +74269,9 @@ export async function actionsCreateRegistrationTokenForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-remove-token-for-an-organization}
  * Tags: actions
  */
-export async function actionsCreateRemoveTokenForOrg<FetcherData>(
+export async function actionsCreateRemoveTokenForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74158,7 +74304,9 @@ export async function actionsCreateRemoveTokenForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
-export async function actionsGetSelfHostedRunnerForOrg<FetcherData>(
+export async function actionsGetSelfHostedRunnerForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74188,7 +74336,9 @@ export async function actionsGetSelfHostedRunnerForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-an-organization}
  * Tags: actions
  */
-export async function actionsDeleteSelfHostedRunnerFromOrg<FetcherData>(
+export async function actionsDeleteSelfHostedRunnerFromOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74216,7 +74366,9 @@ export async function actionsDeleteSelfHostedRunnerFromOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-labels-for-a-self-hosted-runner-for-an-organization}
  * Tags: actions
  */
-export async function actionsListLabelsForSelfHostedRunnerForOrg<FetcherData>(
+export async function actionsListLabelsForSelfHostedRunnerForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74254,7 +74406,7 @@ export async function actionsListLabelsForSelfHostedRunnerForOrg<FetcherData>(
  * Tags: actions
  */
 export async function actionsAddCustomLabelsToSelfHostedRunnerForOrg<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -74303,7 +74455,7 @@ export async function actionsAddCustomLabelsToSelfHostedRunnerForOrg<
  * Tags: actions
  */
 export async function actionsSetCustomLabelsForSelfHostedRunnerForOrg<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -74352,7 +74504,7 @@ export async function actionsSetCustomLabelsForSelfHostedRunnerForOrg<
  * Tags: actions
  */
 export async function actionsRemoveAllCustomLabelsFromSelfHostedRunnerForOrg<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -74397,7 +74549,7 @@ export async function actionsRemoveAllCustomLabelsFromSelfHostedRunnerForOrg<
  * Tags: actions
  */
 export async function actionsRemoveCustomLabelFromSelfHostedRunnerForOrg<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -74439,7 +74591,9 @@ export async function actionsRemoveCustomLabelFromSelfHostedRunnerForOrg<
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-organization-secrets}
  * Tags: actions
  */
-export async function actionsListOrgSecrets<FetcherData>(
+export async function actionsListOrgSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74495,7 +74649,9 @@ export async function actionsListOrgSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-organization-public-key}
  * Tags: actions
  */
-export async function actionsGetOrgPublicKey<FetcherData>(
+export async function actionsGetOrgPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74523,7 +74679,9 @@ export async function actionsGetOrgPublicKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-organization-secret}
  * Tags: actions
  */
-export async function actionsGetOrgSecret<FetcherData>(
+export async function actionsGetOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74563,7 +74721,9 @@ export async function actionsGetOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret}
  * Tags: actions
  */
-export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
+export async function actionsCreateOrUpdateOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74613,7 +74773,9 @@ export async function actionsCreateOrUpdateOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#delete-an-organization-secret}
  * Tags: actions
  */
-export async function actionsDeleteOrgSecret<FetcherData>(
+export async function actionsDeleteOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74643,7 +74805,9 @@ export async function actionsDeleteOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
-export async function actionsListSelectedReposForOrgSecret<FetcherData>(
+export async function actionsListSelectedReposForOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74703,7 +74867,9 @@ export async function actionsListSelectedReposForOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#set-selected-repositories-for-an-organization-secret}
  * Tags: actions
  */
-export async function actionsSetSelectedReposForOrgSecret<FetcherData>(
+export async function actionsSetSelectedReposForOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74743,7 +74909,9 @@ export async function actionsSetSelectedReposForOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#add-selected-repository-to-an-organization-secret}
  * Tags: actions
  */
-export async function actionsAddSelectedRepoToOrgSecret<FetcherData>(
+export async function actionsAddSelectedRepoToOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74777,7 +74945,9 @@ export async function actionsAddSelectedRepoToOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#remove-selected-repository-from-an-organization-secret}
  * Tags: actions
  */
-export async function actionsRemoveSelectedRepoFromOrgSecret<FetcherData>(
+export async function actionsRemoveSelectedRepoFromOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74806,7 +74976,9 @@ export async function actionsRemoveSelectedRepoFromOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-organization-variables}
  * Tags: actions
  */
-export async function actionsListOrgVariables<FetcherData>(
+export async function actionsListOrgVariables<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74861,7 +75033,9 @@ export async function actionsListOrgVariables<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#create-an-organization-variable}
  * Tags: actions
  */
-export async function actionsCreateOrgVariable<FetcherData>(
+export async function actionsCreateOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74908,7 +75082,9 @@ export async function actionsCreateOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#get-an-organization-variable}
  * Tags: actions
  */
-export async function actionsGetOrgVariable<FetcherData>(
+export async function actionsGetOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74945,7 +75121,9 @@ export async function actionsGetOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#update-an-organization-variable}
  * Tags: actions
  */
-export async function actionsUpdateOrgVariable<FetcherData>(
+export async function actionsUpdateOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -74993,7 +75171,9 @@ export async function actionsUpdateOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#delete-an-organization-variable}
  * Tags: actions
  */
-export async function actionsDeleteOrgVariable<FetcherData>(
+export async function actionsDeleteOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75023,7 +75203,9 @@ export async function actionsDeleteOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-selected-repositories-for-an-organization-variable}
  * Tags: actions
  */
-export async function actionsListSelectedReposForOrgVariable<FetcherData>(
+export async function actionsListSelectedReposForOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75083,7 +75265,9 @@ export async function actionsListSelectedReposForOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#set-selected-repositories-for-an-organization-variable}
  * Tags: actions
  */
-export async function actionsSetSelectedReposForOrgVariable<FetcherData>(
+export async function actionsSetSelectedReposForOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75121,7 +75305,9 @@ export async function actionsSetSelectedReposForOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#add-selected-repository-to-an-organization-variable}
  * Tags: actions
  */
-export async function actionsAddSelectedRepoToOrgVariable<FetcherData>(
+export async function actionsAddSelectedRepoToOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75154,7 +75340,9 @@ export async function actionsAddSelectedRepoToOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#remove-selected-repository-from-an-organization-variable}
  * Tags: actions
  */
-export async function actionsRemoveSelectedRepoFromOrgVariable<FetcherData>(
+export async function actionsRemoveSelectedRepoFromOrgVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75177,7 +75365,9 @@ export async function actionsRemoveSelectedRepoFromOrgVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/blocking#list-users-blocked-by-an-organization}
  * Tags: orgs
  */
-export async function orgsListBlockedUsers<FetcherData>(
+export async function orgsListBlockedUsers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75202,7 +75392,9 @@ export async function orgsListBlockedUsers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/blocking#check-if-a-user-is-blocked-by-an-organization}
  * Tags: orgs
  */
-export async function orgsCheckBlockedUser<FetcherData>(
+export async function orgsCheckBlockedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75225,7 +75417,7 @@ export async function orgsCheckBlockedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/blocking#block-a-user-from-an-organization}
  * Tags: orgs
  */
-export async function orgsBlockUser<FetcherData>(
+export async function orgsBlockUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75249,7 +75441,7 @@ export async function orgsBlockUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/blocking#unblock-a-user-from-an-organization}
  * Tags: orgs
  */
-export async function orgsUnblockUser<FetcherData>(
+export async function orgsUnblockUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75281,7 +75473,9 @@ export async function orgsUnblockUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization}
  * Tags: code-scanning
  */
-export async function codeScanningListAlertsForOrg<FetcherData>(
+export async function codeScanningListAlertsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75348,7 +75542,9 @@ export async function codeScanningListAlertsForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-the-organization}
  * Tags: codespaces
  */
-export async function codespacesListInOrganization<FetcherData>(
+export async function codespacesListInOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -75401,7 +75597,9 @@ export async function codespacesListInOrganization<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces}
  * Tags: codespaces
  */
-export async function codespacesSetCodespacesAccess<FetcherData>(
+export async function codespacesSetCodespacesAccess<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75454,7 +75652,9 @@ export async function codespacesSetCodespacesAccess<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#add-users-to-codespaces-access-for-an-organization}
  * Tags: codespaces
  */
-export async function codespacesSetCodespacesAccessUsers<FetcherData>(
+export async function codespacesSetCodespacesAccessUsers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75499,7 +75699,9 @@ export async function codespacesSetCodespacesAccessUsers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#remove-users-from-codespaces-access-for-an-organization}
  * Tags: codespaces
  */
-export async function codespacesDeleteCodespacesAccessUsers<FetcherData>(
+export async function codespacesDeleteCodespacesAccessUsers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75539,7 +75741,9 @@ export async function codespacesDeleteCodespacesAccessUsers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#list-organization-secrets}
  * Tags: codespaces
  */
-export async function codespacesListOrgSecrets<FetcherData>(
+export async function codespacesListOrgSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75590,7 +75794,9 @@ export async function codespacesListOrgSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-public-key}
  * Tags: codespaces
  */
-export async function codespacesGetOrgPublicKey<FetcherData>(
+export async function codespacesGetOrgPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75614,7 +75820,9 @@ export async function codespacesGetOrgPublicKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-secret}
  * Tags: codespaces
  */
-export async function codespacesGetOrgSecret<FetcherData>(
+export async function codespacesGetOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75648,7 +75856,9 @@ export async function codespacesGetOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret}
  * Tags: codespaces
  */
-export async function codespacesCreateOrUpdateOrgSecret<FetcherData>(
+export async function codespacesCreateOrUpdateOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75697,7 +75907,9 @@ export async function codespacesCreateOrUpdateOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#delete-an-organization-secret}
  * Tags: codespaces
  */
-export async function codespacesDeleteOrgSecret<FetcherData>(
+export async function codespacesDeleteOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75723,7 +75935,9 @@ export async function codespacesDeleteOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#list-selected-repositories-for-an-organization-secret}
  * Tags: codespaces
  */
-export async function codespacesListSelectedReposForOrgSecret<FetcherData>(
+export async function codespacesListSelectedReposForOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75780,7 +75994,9 @@ export async function codespacesListSelectedReposForOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#set-selected-repositories-for-an-organization-secret}
  * Tags: codespaces
  */
-export async function codespacesSetSelectedReposForOrgSecret<FetcherData>(
+export async function codespacesSetSelectedReposForOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75817,7 +76033,9 @@ export async function codespacesSetSelectedReposForOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#add-selected-repository-to-an-organization-secret}
  * Tags: codespaces
  */
-export async function codespacesAddSelectedRepoToOrgSecret<FetcherData>(
+export async function codespacesAddSelectedRepoToOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75852,7 +76070,9 @@ export async function codespacesAddSelectedRepoToOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organization-secrets#remove-selected-repository-from-an-organization-secret}
  * Tags: codespaces
  */
-export async function codespacesRemoveSelectedRepoFromOrgSecret<FetcherData>(
+export async function codespacesRemoveSelectedRepoFromOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75893,7 +76113,9 @@ export async function codespacesRemoveSelectedRepoFromOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-information-and-settings-for-an-organization}
  * Tags: copilot
  */
-export async function copilotGetCopilotOrganizationDetails<FetcherData>(
+export async function copilotGetCopilotOrganizationDetails<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -75931,7 +76153,9 @@ export async function copilotGetCopilotOrganizationDetails<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#list-all-copilot-seat-assignments-for-an-organization}
  * Tags: copilot
  */
-export async function copilotListCopilotSeats<FetcherData>(
+export async function copilotListCopilotSeats<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76004,7 +76228,9 @@ export async function copilotListCopilotSeats<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#add-teams-to-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
-export async function copilotAddCopilotSeatsForTeams<FetcherData>(
+export async function copilotAddCopilotSeatsForTeams<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76064,7 +76290,9 @@ export async function copilotAddCopilotSeatsForTeams<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#remove-teams-from-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
-export async function copilotCancelCopilotSeatAssignmentForTeams<FetcherData>(
+export async function copilotCancelCopilotSeatAssignmentForTeams<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76126,7 +76354,9 @@ export async function copilotCancelCopilotSeatAssignmentForTeams<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#add-users-to-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
-export async function copilotAddCopilotSeatsForUsers<FetcherData>(
+export async function copilotAddCopilotSeatsForUsers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76186,7 +76416,9 @@ export async function copilotAddCopilotSeatsForUsers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#remove-users-from-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
-export async function copilotCancelCopilotSeatAssignmentForUsers<FetcherData>(
+export async function copilotCancelCopilotSeatAssignmentForUsers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76237,17 +76469,18 @@ export async function copilotCancelCopilotSeatAssignmentForUsers<FetcherData>(
  * end user to be counted towards these metrics,
  * they must have telemetry enabled in their IDE.
  *
- * Copilot Business or
- * Copilot Enterprise organization owners, and owners and billing managers of their parent enterprises, can view
- * Copilot
- * usage metrics.
+ * Organization owners, and
+ * owners and billing managers of the parent enterprise, can view Copilot usage metrics.
  *
- * OAuth app tokens and personal access tokens (classic) need the `copilot`, `manage_billing:copilot`,
- * `admin:org`, `admin:enterprise`, or `manage_billing:enterprise` scope to use this endpoint.
+ * OAuth app tokens and personal
+ * access tokens (classic) need either the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-organization-members}
  * Tags: copilot
  */
-export async function copilotUsageMetricsForOrg<FetcherData>(
+export async function copilotUsageMetricsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76286,7 +76519,9 @@ export async function copilotUsageMetricsForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization}
  * Tags: dependabot
  */
-export async function dependabotListAlertsForOrg<FetcherData>(
+export async function dependabotListAlertsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76354,7 +76589,9 @@ export async function dependabotListAlertsForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#list-organization-secrets}
  * Tags: dependabot
  */
-export async function dependabotListOrgSecrets<FetcherData>(
+export async function dependabotListOrgSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76406,7 +76643,9 @@ export async function dependabotListOrgSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-an-organization-public-key}
  * Tags: dependabot
  */
-export async function dependabotGetOrgPublicKey<FetcherData>(
+export async function dependabotGetOrgPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76430,7 +76669,9 @@ export async function dependabotGetOrgPublicKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-an-organization-secret}
  * Tags: dependabot
  */
-export async function dependabotGetOrgSecret<FetcherData>(
+export async function dependabotGetOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76466,7 +76707,9 @@ export async function dependabotGetOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret}
  * Tags: dependabot
  */
-export async function dependabotCreateOrUpdateOrgSecret<FetcherData>(
+export async function dependabotCreateOrUpdateOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76512,7 +76755,9 @@ export async function dependabotCreateOrUpdateOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#delete-an-organization-secret}
  * Tags: dependabot
  */
-export async function dependabotDeleteOrgSecret<FetcherData>(
+export async function dependabotDeleteOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76538,7 +76783,9 @@ export async function dependabotDeleteOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#list-selected-repositories-for-an-organization-secret}
  * Tags: dependabot
  */
-export async function dependabotListSelectedReposForOrgSecret<FetcherData>(
+export async function dependabotListSelectedReposForOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76594,7 +76841,9 @@ export async function dependabotListSelectedReposForOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#set-selected-repositories-for-an-organization-secret}
  * Tags: dependabot
  */
-export async function dependabotSetSelectedReposForOrgSecret<FetcherData>(
+export async function dependabotSetSelectedReposForOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76630,7 +76879,9 @@ export async function dependabotSetSelectedReposForOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#add-selected-repository-to-an-organization-secret}
  * Tags: dependabot
  */
-export async function dependabotAddSelectedRepoToOrgSecret<FetcherData>(
+export async function dependabotAddSelectedRepoToOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76660,7 +76911,9 @@ export async function dependabotAddSelectedRepoToOrgSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#remove-selected-repository-from-an-organization-secret}
  * Tags: dependabot
  */
-export async function dependabotRemoveSelectedRepoFromOrgSecret<FetcherData>(
+export async function dependabotRemoveSelectedRepoFromOrgSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76688,7 +76941,7 @@ export async function dependabotRemoveSelectedRepoFromOrgSecret<FetcherData>(
  * Tags: packages
  */
 export async function packagesListDockerMigrationConflictingPackagesForOrganization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -76719,7 +76972,9 @@ export async function packagesListDockerMigrationConflictingPackagesForOrganizat
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-organization-events}
  * Tags: activity
  */
-export async function activityListPublicOrgEvents<FetcherData>(
+export async function activityListPublicOrgEvents<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76750,7 +77005,9 @@ export async function activityListPublicOrgEvents<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#list-failed-organization-invitations}
  * Tags: orgs
  */
-export async function orgsListFailedInvitations<FetcherData>(
+export async function orgsListFailedInvitations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76782,7 +77039,7 @@ export async function orgsListFailedInvitations<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#list-organization-webhooks}
  * Tags: orgs
  */
-export async function orgsListWebhooks<FetcherData>(
+export async function orgsListWebhooks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76821,7 +77078,7 @@ export async function orgsListWebhooks<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#create-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsCreateWebhook<FetcherData>(
+export async function orgsCreateWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76899,7 +77156,7 @@ export async function orgsCreateWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#get-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsGetWebhook<FetcherData>(
+export async function orgsGetWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -76942,7 +77199,7 @@ export async function orgsGetWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#update-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsUpdateWebhook<FetcherData>(
+export async function orgsUpdateWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77008,7 +77265,7 @@ export async function orgsUpdateWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#delete-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsDeleteWebhook<FetcherData>(
+export async function orgsDeleteWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77039,7 +77296,9 @@ export async function orgsDeleteWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#get-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
-export async function orgsGetWebhookConfigForOrg<FetcherData>(
+export async function orgsGetWebhookConfigForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77070,7 +77329,9 @@ export async function orgsGetWebhookConfigForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#update-a-webhook-configuration-for-an-organization}
  * Tags: orgs
  */
-export async function orgsUpdateWebhookConfigForOrg<FetcherData>(
+export async function orgsUpdateWebhookConfigForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77107,7 +77368,9 @@ export async function orgsUpdateWebhookConfigForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#list-deliveries-for-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsListWebhookDeliveries<FetcherData>(
+export async function orgsListWebhookDeliveries<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77153,7 +77416,9 @@ export async function orgsListWebhookDeliveries<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#get-a-webhook-delivery-for-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsGetWebhookDelivery<FetcherData>(
+export async function orgsGetWebhookDelivery<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77194,7 +77459,9 @@ export async function orgsGetWebhookDelivery<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#redeliver-a-delivery-for-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsRedeliverWebhookDelivery<FetcherData>(
+export async function orgsRedeliverWebhookDelivery<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77230,7 +77497,7 @@ export async function orgsRedeliverWebhookDelivery<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#ping-an-organization-webhook}
  * Tags: orgs
  */
-export async function orgsPingWebhook<FetcherData>(
+export async function orgsPingWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77256,7 +77523,9 @@ export async function orgsPingWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-an-organization-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetOrgInstallation<FetcherData>(
+export async function appsGetOrgInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77290,7 +77559,9 @@ export async function appsGetOrgInstallation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-app-installations-for-an-organization}
  * Tags: orgs
  */
-export async function orgsListAppInstallations<FetcherData>(
+export async function orgsListAppInstallations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77339,7 +77610,9 @@ export async function orgsListAppInstallations<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/interactions/orgs#get-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
-export async function interactionsGetRestrictionsForOrg<FetcherData>(
+export async function interactionsGetRestrictionsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77372,7 +77645,9 @@ export async function interactionsGetRestrictionsForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/interactions/orgs#set-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
-export async function interactionsSetRestrictionsForOrg<FetcherData>(
+export async function interactionsSetRestrictionsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77407,7 +77682,9 @@ export async function interactionsSetRestrictionsForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/interactions/orgs#remove-interaction-restrictions-for-an-organization}
  * Tags: interactions
  */
-export async function interactionsRemoveRestrictionsForOrg<FetcherData>(
+export async function interactionsRemoveRestrictionsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77424,13 +77701,18 @@ export async function interactionsRemoveRestrictionsForOrg<FetcherData>(
 }
 /**
  * List pending organization invitations
- * The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the
- * following values: `direct_member`, `admin`, `billing_manager`, or `hiring_manager`. If the invitee is not a GitHub
+ * The return hash contains a `role` field which refers to the Organization
+ * Invitation role and will be one of the
+ * following values: `direct_member`, `admin`,
+ * `billing_manager`, or `hiring_manager`. If the invitee is not a
+ * GitHub
  * member, the `login` field in the return hash will be `null`.
  * Learn more at {@link https://docs.github.com/rest/orgs/members#list-pending-organization-invitations}
  * Tags: orgs
  */
-export async function orgsListPendingInvitations<FetcherData>(
+export async function orgsListPendingInvitations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77466,13 +77748,16 @@ export async function orgsListPendingInvitations<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
  * and
  * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/orgs/members#create-an-organization-invitation}
  * Tags: orgs
  */
-export async function orgsCreateInvitation<FetcherData>(
+export async function orgsCreateInvitation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77525,7 +77810,9 @@ export async function orgsCreateInvitation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#cancel-an-organization-invitation}
  * Tags: orgs
  */
-export async function orgsCancelInvitation<FetcherData>(
+export async function orgsCancelInvitation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77552,7 +77839,9 @@ export async function orgsCancelInvitation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#list-organization-invitation-teams}
  * Tags: orgs
  */
-export async function orgsListInvitationTeams<FetcherData>(
+export async function orgsListInvitationTeams<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77600,7 +77889,7 @@ export async function orgsListInvitationTeams<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-organization-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
-export async function issuesListForOrg<FetcherData>(
+export async function issuesListForOrg<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77652,7 +77941,7 @@ export async function issuesListForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#list-organization-members}
  * Tags: orgs
  */
-export async function orgsListMembers<FetcherData>(
+export async function orgsListMembers<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77680,7 +77969,9 @@ export async function orgsListMembers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#check-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsCheckMembershipForUser<FetcherData>(
+export async function orgsCheckMembershipForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77707,7 +77998,7 @@ export async function orgsCheckMembershipForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#remove-an-organization-member}
  * Tags: orgs
  */
-export async function orgsRemoveMember<FetcherData>(
+export async function orgsRemoveMember<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77732,7 +78023,9 @@ export async function orgsRemoveMember<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-a-user-in-organization}
  * Tags: codespaces
  */
-export async function codespacesGetCodespacesForUserInOrg<FetcherData>(
+export async function codespacesGetCodespacesForUserInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -77785,7 +78078,9 @@ export async function codespacesGetCodespacesForUserInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#delete-a-codespace-from-the-organization}
  * Tags: codespaces
  */
-export async function codespacesDeleteFromOrganization<FetcherData>(
+export async function codespacesDeleteFromOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77818,7 +78113,9 @@ export async function codespacesDeleteFromOrganization<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/organizations#stop-a-codespace-for-an-organization-user}
  * Tags: codespaces
  */
-export async function codespacesStopInOrganization<FetcherData>(
+export async function codespacesStopInOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77863,7 +78160,9 @@ export async function codespacesStopInOrganization<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-assignment-details-for-a-user}
  * Tags: copilot
  */
-export async function copilotGetCopilotSeatDetailsForUser<FetcherData>(
+export async function copilotGetCopilotSeatDetailsForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77899,7 +78198,9 @@ export async function copilotGetCopilotSeatDetailsForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#get-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsGetMembershipForUser<FetcherData>(
+export async function orgsGetMembershipForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77942,7 +78243,9 @@ export async function orgsGetMembershipForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#set-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsSetMembershipForUser<FetcherData>(
+export async function orgsSetMembershipForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -77983,7 +78286,9 @@ export async function orgsSetMembershipForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#remove-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsRemoveMembershipForUser<FetcherData>(
+export async function orgsRemoveMembershipForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78012,7 +78317,9 @@ export async function orgsRemoveMembershipForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/orgs#list-organization-migrations}
  * Tags: migrations
  */
-export async function migrationsListForOrg<FetcherData>(
+export async function migrationsListForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78043,7 +78350,9 @@ export async function migrationsListForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/orgs#start-an-organization-migration}
  * Tags: migrations
  */
-export async function migrationsStartForOrg<FetcherData>(
+export async function migrationsStartForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78127,7 +78436,9 @@ export async function migrationsStartForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/orgs#get-an-organization-migration-status}
  * Tags: migrations
  */
-export async function migrationsGetStatusForOrg<FetcherData>(
+export async function migrationsGetStatusForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78159,7 +78470,9 @@ export async function migrationsGetStatusForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/orgs#download-an-organization-migration-archive}
  * Tags: migrations
  */
-export async function migrationsDownloadArchiveForOrg<FetcherData>(
+export async function migrationsDownloadArchiveForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78181,7 +78494,9 @@ export async function migrationsDownloadArchiveForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/orgs#delete-an-organization-migration-archive}
  * Tags: migrations
  */
-export async function migrationsDeleteArchiveForOrg<FetcherData>(
+export async function migrationsDeleteArchiveForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78205,7 +78520,9 @@ export async function migrationsDeleteArchiveForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/orgs#unlock-an-organization-repository}
  * Tags: migrations
  */
-export async function migrationsUnlockRepoForOrg<FetcherData>(
+export async function migrationsUnlockRepoForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78228,7 +78545,9 @@ export async function migrationsUnlockRepoForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/orgs#list-repositories-in-an-organization-migration}
  * Tags: migrations
  */
-export async function migrationsListReposForOrg<FetcherData>(
+export async function migrationsListReposForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78280,7 +78599,9 @@ export async function migrationsListReposForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-organization-fine-grained-permissions-for-an-organization}
  * Tags: orgs
  */
-export async function orgsListOrganizationFineGrainedPermissions<FetcherData>(
+export async function orgsListOrganizationFineGrainedPermissions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78317,7 +78638,7 @@ export async function orgsListOrganizationFineGrainedPermissions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#get-all-organization-roles-for-an-organization}
  * Tags: orgs
  */
-export async function orgsListOrgRoles<FetcherData>(
+export async function orgsListOrgRoles<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78379,7 +78700,9 @@ export async function orgsListOrgRoles<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#create-a-custom-organization-role}
  * Tags: orgs
  */
-export async function orgsCreateCustomOrganizationRole<FetcherData>(
+export async function orgsCreateCustomOrganizationRole<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78434,7 +78757,9 @@ export async function orgsCreateCustomOrganizationRole<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-team}
  * Tags: orgs
  */
-export async function orgsRevokeAllOrgRolesTeam<FetcherData>(
+export async function orgsRevokeAllOrgRolesTeam<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78464,7 +78789,9 @@ export async function orgsRevokeAllOrgRolesTeam<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-team}
  * Tags: orgs
  */
-export async function orgsAssignTeamToOrgRole<FetcherData>(
+export async function orgsAssignTeamToOrgRole<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78499,7 +78826,9 @@ export async function orgsAssignTeamToOrgRole<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-team}
  * Tags: orgs
  */
-export async function orgsRevokeOrgRoleTeam<FetcherData>(
+export async function orgsRevokeOrgRoleTeam<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78530,7 +78859,9 @@ export async function orgsRevokeOrgRoleTeam<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-user}
  * Tags: orgs
  */
-export async function orgsRevokeAllOrgRolesUser<FetcherData>(
+export async function orgsRevokeAllOrgRolesUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78560,7 +78891,9 @@ export async function orgsRevokeAllOrgRolesUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-user}
  * Tags: orgs
  */
-export async function orgsAssignUserToOrgRole<FetcherData>(
+export async function orgsAssignUserToOrgRole<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78595,7 +78928,9 @@ export async function orgsAssignUserToOrgRole<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-user}
  * Tags: orgs
  */
-export async function orgsRevokeOrgRoleUser<FetcherData>(
+export async function orgsRevokeOrgRoleUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78630,7 +78965,7 @@ export async function orgsRevokeOrgRoleUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#get-an-organization-role}
  * Tags: orgs
  */
-export async function orgsGetOrgRole<FetcherData>(
+export async function orgsGetOrgRole<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78675,7 +79010,9 @@ export async function orgsGetOrgRole<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#update-a-custom-organization-role}
  * Tags: orgs
  */
-export async function orgsPatchCustomOrganizationRole<FetcherData>(
+export async function orgsPatchCustomOrganizationRole<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78735,7 +79072,9 @@ export async function orgsPatchCustomOrganizationRole<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#delete-a-custom-organization-role}
  * Tags: orgs
  */
-export async function orgsDeleteCustomOrganizationRole<FetcherData>(
+export async function orgsDeleteCustomOrganizationRole<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78765,7 +79104,9 @@ export async function orgsDeleteCustomOrganizationRole<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-teams-that-are-assigned-to-an-organization-role}
  * Tags: orgs
  */
-export async function orgsListOrgRoleTeams<FetcherData>(
+export async function orgsListOrgRoleTeams<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78802,7 +79143,9 @@ export async function orgsListOrgRoleTeams<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-users-that-are-assigned-to-an-organization-role}
  * Tags: orgs
  */
-export async function orgsListOrgRoleUsers<FetcherData>(
+export async function orgsListOrgRoleUsers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78831,7 +79174,9 @@ export async function orgsListOrgRoleUsers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/outside-collaborators#list-outside-collaborators-for-an-organization}
  * Tags: orgs
  */
-export async function orgsListOutsideCollaborators<FetcherData>(
+export async function orgsListOutsideCollaborators<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78862,7 +79207,9 @@ export async function orgsListOutsideCollaborators<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/outside-collaborators#convert-an-organization-member-to-outside-collaborator}
  * Tags: orgs
  */
-export async function orgsConvertMemberToOutsideCollaborator<FetcherData>(
+export async function orgsConvertMemberToOutsideCollaborator<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78896,7 +79243,9 @@ export async function orgsConvertMemberToOutsideCollaborator<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/outside-collaborators#remove-outside-collaborator-from-an-organization}
  * Tags: orgs
  */
-export async function orgsRemoveOutsideCollaborator<FetcherData>(
+export async function orgsRemoveOutsideCollaborator<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -78933,7 +79282,9 @@ export async function orgsRemoveOutsideCollaborator<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-an-organization}
  * Tags: packages
  */
-export async function packagesListPackagesForOrganization<FetcherData>(
+export async function packagesListPackagesForOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -78982,7 +79333,9 @@ export async function packagesListPackagesForOrganization<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-an-organization}
  * Tags: packages
  */
-export async function packagesGetPackageForOrganization<FetcherData>(
+export async function packagesGetPackageForOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -79030,7 +79383,9 @@ export async function packagesGetPackageForOrganization<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-an-organization}
  * Tags: packages
  */
-export async function packagesDeletePackageForOrg<FetcherData>(
+export async function packagesDeletePackageForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -79083,7 +79438,9 @@ export async function packagesDeletePackageForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-an-organization}
  * Tags: packages
  */
-export async function packagesRestorePackageForOrg<FetcherData>(
+export async function packagesRestorePackageForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -79125,7 +79482,7 @@ export async function packagesRestorePackageForOrg<FetcherData>(
  * Tags: packages
  */
 export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -79178,7 +79535,9 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-an-organization}
  * Tags: packages
  */
-export async function packagesGetPackageVersionForOrganization<FetcherData>(
+export async function packagesGetPackageVersionForOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -79227,7 +79586,9 @@ export async function packagesGetPackageVersionForOrganization<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-package-version-for-an-organization}
  * Tags: packages
  */
-export async function packagesDeletePackageVersionForOrg<FetcherData>(
+export async function packagesDeletePackageVersionForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -79282,7 +79643,9 @@ export async function packagesDeletePackageVersionForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-package-version-for-an-organization}
  * Tags: packages
  */
-export async function packagesRestorePackageVersionForOrg<FetcherData>(
+export async function packagesRestorePackageVersionForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -79320,7 +79683,9 @@ export async function packagesRestorePackageVersionForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-requests-to-access-organization-resources-with-fine-grained-personal-access-tokens}
  * Tags: orgs
  */
-export async function orgsListPatGrantRequests<FetcherData>(
+export async function orgsListPatGrantRequests<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79370,7 +79735,9 @@ export async function orgsListPatGrantRequests<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#review-requests-to-access-organization-resources-with-fine-grained-personal-access-tokens}
  * Tags: orgs
  */
-export async function orgsReviewPatGrantRequestsInBulk<FetcherData>(
+export async function orgsReviewPatGrantRequestsInBulk<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79415,7 +79782,9 @@ export async function orgsReviewPatGrantRequestsInBulk<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#review-a-request-to-access-organization-resources-with-a-fine-grained-personal-access-token}
  * Tags: orgs
  */
-export async function orgsReviewPatGrantRequest<FetcherData>(
+export async function orgsReviewPatGrantRequest<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79457,7 +79826,9 @@ export async function orgsReviewPatGrantRequest<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-repositories-requested-to-be-accessed-by-a-fine-grained-personal-access-token}
  * Tags: orgs
  */
-export async function orgsListPatGrantRequestRepositories<FetcherData>(
+export async function orgsListPatGrantRequestRepositories<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79498,7 +79869,7 @@ export async function orgsListPatGrantRequestRepositories<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-fine-grained-personal-access-tokens-with-access-to-organization-resources}
  * Tags: orgs
  */
-export async function orgsListPatGrants<FetcherData>(
+export async function orgsListPatGrants<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79548,7 +79919,9 @@ export async function orgsListPatGrants<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#update-the-access-to-organization-resources-via-fine-grained-personal-access-tokens}
  * Tags: orgs
  */
-export async function orgsUpdatePatAccesses<FetcherData>(
+export async function orgsUpdatePatAccesses<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79590,7 +79963,9 @@ export async function orgsUpdatePatAccesses<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#update-the-access-a-fine-grained-personal-access-token-has-to-organization-resources}
  * Tags: orgs
  */
-export async function orgsUpdatePatAccess<FetcherData>(
+export async function orgsUpdatePatAccess<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79627,7 +80002,9 @@ export async function orgsUpdatePatAccess<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/personal-access-tokens#list-repositories-a-fine-grained-personal-access-token-has-access-to}
  * Tags: orgs
  */
-export async function orgsListPatGrantRepositories<FetcherData>(
+export async function orgsListPatGrantRepositories<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79666,7 +80043,7 @@ export async function orgsListPatGrantRepositories<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#list-organization-projects}
  * Tags: projects
  */
-export async function projectsListForOrg<FetcherData>(
+export async function projectsListForOrg<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79702,7 +80079,9 @@ export async function projectsListForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#create-an-organization-project}
  * Tags: projects
  */
-export async function projectsCreateForOrg<FetcherData>(
+export async function projectsCreateForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79748,7 +80127,9 @@ export async function projectsCreateForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization}
  * Tags: orgs
  */
-export async function orgsGetAllCustomProperties<FetcherData>(
+export async function orgsGetAllCustomProperties<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79779,7 +80160,9 @@ export async function orgsGetAllCustomProperties<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization}
  * Tags: orgs
  */
-export async function orgsCreateOrUpdateCustomProperties<FetcherData>(
+export async function orgsCreateOrUpdateCustomProperties<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79812,7 +80195,9 @@ export async function orgsCreateOrUpdateCustomProperties<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#get-a-custom-property-for-an-organization}
  * Tags: orgs
  */
-export async function orgsGetCustomProperty<FetcherData>(
+export async function orgsGetCustomProperty<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79844,7 +80229,9 @@ export async function orgsGetCustomProperty<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization}
  * Tags: orgs
  */
-export async function orgsCreateOrUpdateCustomProperty<FetcherData>(
+export async function orgsCreateOrUpdateCustomProperty<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79901,7 +80288,9 @@ export async function orgsCreateOrUpdateCustomProperty<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization}
  * Tags: orgs
  */
-export async function orgsRemoveCustomProperty<FetcherData>(
+export async function orgsRemoveCustomProperty<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79929,7 +80318,9 @@ export async function orgsRemoveCustomProperty<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#list-custom-property-values-for-organization-repositories}
  * Tags: orgs
  */
-export async function orgsListCustomPropertiesValuesForRepos<FetcherData>(
+export async function orgsListCustomPropertiesValuesForRepos<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -79973,7 +80364,7 @@ export async function orgsListCustomPropertiesValuesForRepos<FetcherData>(
  * Tags: orgs
  */
 export async function orgsCreateOrUpdateCustomPropertiesValuesForRepos<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -80011,7 +80402,9 @@ export async function orgsCreateOrUpdateCustomPropertiesValuesForRepos<
  * Learn more at {@link https://docs.github.com/rest/orgs/members#list-public-organization-members}
  * Tags: orgs
  */
-export async function orgsListPublicMembers<FetcherData>(
+export async function orgsListPublicMembers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80035,7 +80428,9 @@ export async function orgsListPublicMembers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#check-public-organization-membership-for-a-user}
  * Tags: orgs
  */
-export async function orgsCheckPublicMembershipForUser<FetcherData>(
+export async function orgsCheckPublicMembershipForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80061,7 +80456,9 @@ export async function orgsCheckPublicMembershipForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#set-public-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsSetPublicMembershipForAuthenticatedUser<FetcherData>(
+export async function orgsSetPublicMembershipForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80085,7 +80482,7 @@ export async function orgsSetPublicMembershipForAuthenticatedUser<FetcherData>(
  * Tags: orgs
  */
 export async function orgsRemovePublicMembershipForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -80113,7 +80510,7 @@ export async function orgsRemovePublicMembershipForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-organization-repositories}
  * Tags: repos
  */
-export async function reposListForOrg<FetcherData>(
+export async function reposListForOrg<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80152,7 +80549,7 @@ export async function reposListForOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-an-organization-repository}
  * Tags: repos
  */
-export async function reposCreateInOrg<FetcherData>(
+export async function reposCreateInOrg<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80311,7 +80708,9 @@ export async function reposCreateInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/rules#get-all-organization-repository-rulesets}
  * Tags: repos
  */
-export async function reposGetOrgRulesets<FetcherData>(
+export async function reposGetOrgRulesets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80347,7 +80746,9 @@ export async function reposGetOrgRulesets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/rules#create-an-organization-repository-ruleset}
  * Tags: repos
  */
-export async function reposCreateOrgRuleset<FetcherData>(
+export async function reposCreateOrgRuleset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80404,7 +80805,9 @@ export async function reposCreateOrgRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/rule-suites#list-organization-rule-suites}
  * Tags: repos
  */
-export async function reposGetOrgRuleSuites<FetcherData>(
+export async function reposGetOrgRuleSuites<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80452,7 +80855,9 @@ export async function reposGetOrgRuleSuites<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/rule-suites#get-an-organization-rule-suite}
  * Tags: repos
  */
-export async function reposGetOrgRuleSuite<FetcherData>(
+export async function reposGetOrgRuleSuite<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80484,7 +80889,7 @@ export async function reposGetOrgRuleSuite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/rules#get-an-organization-repository-ruleset}
  * Tags: repos
  */
-export async function reposGetOrgRuleset<FetcherData>(
+export async function reposGetOrgRuleset<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80516,7 +80921,9 @@ export async function reposGetOrgRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/rules#update-an-organization-repository-ruleset}
  * Tags: repos
  */
-export async function reposUpdateOrgRuleset<FetcherData>(
+export async function reposUpdateOrgRuleset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80571,7 +80978,9 @@ export async function reposUpdateOrgRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/rules#delete-an-organization-repository-ruleset}
  * Tags: repos
  */
-export async function reposDeleteOrgRuleset<FetcherData>(
+export async function reposDeleteOrgRuleset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80604,7 +81013,9 @@ export async function reposDeleteOrgRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-organization}
  * Tags: secret-scanning
  */
-export async function secretScanningListAlertsForOrg<FetcherData>(
+export async function secretScanningListAlertsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80675,7 +81086,7 @@ export async function secretScanningListAlertsForOrg<FetcherData>(
  * Tags: security-advisories
  */
 export async function securityAdvisoriesListOrgRepositoryAdvisories<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -80724,7 +81135,9 @@ export async function securityAdvisoriesListOrgRepositoryAdvisories<
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#list-security-manager-teams}
  * Tags: orgs
  */
-export async function orgsListSecurityManagerTeams<FetcherData>(
+export async function orgsListSecurityManagerTeams<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80752,7 +81165,9 @@ export async function orgsListSecurityManagerTeams<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#add-a-security-manager-team}
  * Tags: orgs
  */
-export async function orgsAddSecurityManagerTeam<FetcherData>(
+export async function orgsAddSecurityManagerTeam<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80782,7 +81197,9 @@ export async function orgsAddSecurityManagerTeam<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#remove-a-security-manager-team}
  * Tags: orgs
  */
-export async function orgsRemoveSecurityManagerTeam<FetcherData>(
+export async function orgsRemoveSecurityManagerTeam<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80813,7 +81230,9 @@ export async function orgsRemoveSecurityManagerTeam<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-actions-billing-for-an-organization}
  * Tags: billing
  */
-export async function billingGetGithubActionsBillingOrg<FetcherData>(
+export async function billingGetGithubActionsBillingOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80841,7 +81260,9 @@ export async function billingGetGithubActionsBillingOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-packages-billing-for-an-organization}
  * Tags: billing
  */
-export async function billingGetGithubPackagesBillingOrg<FetcherData>(
+export async function billingGetGithubPackagesBillingOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80869,7 +81290,9 @@ export async function billingGetGithubPackagesBillingOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-shared-storage-billing-for-an-organization}
  * Tags: billing
  */
-export async function billingGetSharedStorageBillingOrg<FetcherData>(
+export async function billingGetSharedStorageBillingOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80890,7 +81313,7 @@ export async function billingGetSharedStorageBillingOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-teams}
  * Tags: teams
  */
-export async function teamsList<FetcherData>(
+export async function teamsList<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -80922,7 +81345,7 @@ export async function teamsList<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#create-a-team}
  * Tags: teams
  */
-export async function teamsCreate<FetcherData>(
+export async function teamsCreate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81004,7 +81427,7 @@ export async function teamsCreate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#get-a-team-by-name}
  * Tags: teams
  */
-export async function teamsGetByName<FetcherData>(
+export async function teamsGetByName<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81037,7 +81460,7 @@ export async function teamsGetByName<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#update-a-team}
  * Tags: teams
  */
-export async function teamsUpdateInOrg<FetcherData>(
+export async function teamsUpdateInOrg<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81113,7 +81536,7 @@ export async function teamsUpdateInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#delete-a-team}
  * Tags: teams
  */
-export async function teamsDeleteInOrg<FetcherData>(
+export async function teamsDeleteInOrg<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81141,7 +81564,9 @@ export async function teamsDeleteInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#list-discussions}
  * Tags: teams
  */
-export async function teamsListDiscussionsInOrg<FetcherData>(
+export async function teamsListDiscussionsInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81177,7 +81602,8 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -81189,7 +81615,9 @@ export async function teamsListDiscussionsInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#create-a-discussion}
  * Tags: teams
  */
-export async function teamsCreateDiscussionInOrg<FetcherData>(
+export async function teamsCreateDiscussionInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81238,7 +81666,9 @@ export async function teamsCreateDiscussionInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#get-a-discussion}
  * Tags: teams
  */
-export async function teamsGetDiscussionInOrg<FetcherData>(
+export async function teamsGetDiscussionInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81274,7 +81704,9 @@ export async function teamsGetDiscussionInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#update-a-discussion}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionInOrg<FetcherData>(
+export async function teamsUpdateDiscussionInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81320,7 +81752,9 @@ export async function teamsUpdateDiscussionInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#delete-a-discussion}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionInOrg<FetcherData>(
+export async function teamsDeleteDiscussionInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81349,7 +81783,9 @@ export async function teamsDeleteDiscussionInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments}
  * Tags: teams
  */
-export async function teamsListDiscussionCommentsInOrg<FetcherData>(
+export async function teamsListDiscussionCommentsInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81387,7 +81823,8 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -81400,7 +81837,9 @@ export async function teamsListDiscussionCommentsInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
+export async function teamsCreateDiscussionCommentInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81442,7 +81881,9 @@ export async function teamsCreateDiscussionCommentInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsGetDiscussionCommentInOrg<FetcherData>(
+export async function teamsGetDiscussionCommentInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81478,7 +81919,9 @@ export async function teamsGetDiscussionCommentInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
+export async function teamsUpdateDiscussionCommentInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81521,7 +81964,9 @@ export async function teamsUpdateDiscussionCommentInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionCommentInOrg<FetcherData>(
+export async function teamsDeleteDiscussionCommentInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81553,7 +81998,9 @@ export async function teamsDeleteDiscussionCommentInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
+export async function reactionsListForTeamDiscussionCommentInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81606,7 +82053,9 @@ export async function reactionsListForTeamDiscussionCommentInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
+export async function reactionsCreateForTeamDiscussionCommentInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81660,7 +82109,9 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-team-discussion-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForTeamDiscussionComment<FetcherData>(
+export async function reactionsDeleteForTeamDiscussionComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81692,7 +82143,9 @@ export async function reactionsDeleteForTeamDiscussionComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
+export async function reactionsListForTeamDiscussionInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81743,7 +82196,9 @@ export async function reactionsListForTeamDiscussionInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion}
  * Tags: reactions
  */
-export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
+export async function reactionsCreateForTeamDiscussionInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81795,7 +82250,9 @@ export async function reactionsCreateForTeamDiscussionInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-team-discussion-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForTeamDiscussion<FetcherData>(
+export async function reactionsDeleteForTeamDiscussion<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81824,7 +82281,9 @@ export async function reactionsDeleteForTeamDiscussion<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#list-pending-team-invitations}
  * Tags: teams
  */
-export async function teamsListPendingInvitationsInOrg<FetcherData>(
+export async function teamsListPendingInvitationsInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81852,7 +82311,9 @@ export async function teamsListPendingInvitationsInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#list-team-members}
  * Tags: teams
  */
-export async function teamsListMembersInOrg<FetcherData>(
+export async function teamsListMembersInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81891,7 +82352,9 @@ export async function teamsListMembersInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#get-team-membership-for-a-user}
  * Tags: teams
  */
-export async function teamsGetMembershipForUserInOrg<FetcherData>(
+export async function teamsGetMembershipForUserInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81942,7 +82405,9 @@ export async function teamsGetMembershipForUserInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user}
  * Tags: teams
  */
-export async function teamsAddOrUpdateMembershipForUserInOrg<FetcherData>(
+export async function teamsAddOrUpdateMembershipForUserInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -81995,7 +82460,9 @@ export async function teamsAddOrUpdateMembershipForUserInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user}
  * Tags: teams
  */
-export async function teamsRemoveMembershipForUserInOrg<FetcherData>(
+export async function teamsRemoveMembershipForUserInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82021,7 +82488,9 @@ export async function teamsRemoveMembershipForUserInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-projects}
  * Tags: teams
  */
-export async function teamsListProjectsInOrg<FetcherData>(
+export async function teamsListProjectsInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82050,7 +82519,9 @@ export async function teamsListProjectsInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForProjectInOrg<FetcherData>(
+export async function teamsCheckPermissionsForProjectInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82080,7 +82551,9 @@ export async function teamsCheckPermissionsForProjectInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions}
  * Tags: teams
  */
-export async function teamsAddOrUpdateProjectPermissionsInOrg<FetcherData>(
+export async function teamsAddOrUpdateProjectPermissionsInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82125,7 +82598,9 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team}
  * Tags: teams
  */
-export async function teamsRemoveProjectInOrg<FetcherData>(
+export async function teamsRemoveProjectInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82151,7 +82626,9 @@ export async function teamsRemoveProjectInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-repositories}
  * Tags: teams
  */
-export async function teamsListReposInOrg<FetcherData>(
+export async function teamsListReposInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82185,22 +82662,24 @@ export async function teamsListReposInOrg<FetcherData>(
  *
  * You can also get information about the specified repository,
  * including what permissions the team grants on it, by passing the following custom [media
- * type](https://docs.github.com/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept
- * header.
+ * type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types/) via the
+ * `application/vnd.github.v3.repository+json` accept header.
  *
- * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
+ * If a team doesn't have permission for the repository, you
+ * will receive a `404 Not Found` response status.
  *
- * If
- * the repository is private, you must have at least `read` permission for that repository, and your token must have the
- * `repo` or `admin:org` scope. Otherwise, you will receive a `404 Not Found` response status.
+ * If the repository is private, you must have at least `read` permission
+ * for that repository, and your token must have the `repo` or `admin:org` scope. Otherwise, you will receive a `404 Not
+ * Found` response status.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `GET
+ * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForRepoInOrg<FetcherData>(
+export async function teamsCheckPermissionsForRepoInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82247,7 +82726,9 @@ export async function teamsCheckPermissionsForRepoInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-repository-permissions}
  * Tags: teams
  */
-export async function teamsAddOrUpdateRepoPermissionsInOrg<FetcherData>(
+export async function teamsAddOrUpdateRepoPermissionsInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82285,7 +82766,9 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-repository-from-a-team}
  * Tags: teams
  */
-export async function teamsRemoveRepoInOrg<FetcherData>(
+export async function teamsRemoveRepoInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82312,7 +82795,9 @@ export async function teamsRemoveRepoInOrg<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-child-teams}
  * Tags: teams
  */
-export async function teamsListChildInOrg<FetcherData>(
+export async function teamsListChildInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -82346,7 +82831,7 @@ export async function teamsListChildInOrg<FetcherData>(
  * Tags: orgs
  */
 export async function orgsEnableOrDisableSecurityProductOnAllOrgRepos<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -82379,7 +82864,7 @@ export async function orgsEnableOrDisableSecurityProductOnAllOrgRepos<
  * Learn more at {@link https://docs.github.com/rest/projects/cards#get-a-project-card}
  * Tags: projects
  */
-export async function projectsGetCard<FetcherData>(
+export async function projectsGetCard<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
@@ -82411,7 +82896,7 @@ export async function projectsGetCard<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/cards#update-an-existing-project-card}
  * Tags: projects
  */
-export async function projectsUpdateCard<FetcherData>(
+export async function projectsUpdateCard<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
@@ -82457,7 +82942,7 @@ export async function projectsUpdateCard<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/cards#delete-a-project-card}
  * Tags: projects
  */
-export async function projectsDeleteCard<FetcherData>(
+export async function projectsDeleteCard<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
@@ -82490,7 +82975,7 @@ export async function projectsDeleteCard<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/cards#move-a-project-card}
  * Tags: projects
  */
-export async function projectsMoveCard<FetcherData>(
+export async function projectsMoveCard<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card_id: number;
@@ -82554,7 +83039,7 @@ export async function projectsMoveCard<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/columns#get-a-project-column}
  * Tags: projects
  */
-export async function projectsGetColumn<FetcherData>(
+export async function projectsGetColumn<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
@@ -82586,7 +83071,9 @@ export async function projectsGetColumn<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/columns#update-an-existing-project-column}
  * Tags: projects
  */
-export async function projectsUpdateColumn<FetcherData>(
+export async function projectsUpdateColumn<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
@@ -82626,7 +83113,9 @@ export async function projectsUpdateColumn<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/columns#delete-a-project-column}
  * Tags: projects
  */
-export async function projectsDeleteColumn<FetcherData>(
+export async function projectsDeleteColumn<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
@@ -82652,7 +83141,7 @@ export async function projectsDeleteColumn<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/cards#list-project-cards}
  * Tags: projects
  */
-export async function projectsListCards<FetcherData>(
+export async function projectsListCards<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
@@ -82687,7 +83176,7 @@ export async function projectsListCards<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/cards#create-a-project-card}
  * Tags: projects
  */
-export async function projectsCreateCard<FetcherData>(
+export async function projectsCreateCard<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
@@ -82752,7 +83241,7 @@ export async function projectsCreateCard<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/columns#move-a-project-column}
  * Tags: projects
  */
-export async function projectsMoveColumn<FetcherData>(
+export async function projectsMoveColumn<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     column_id: number;
@@ -82788,7 +83277,7 @@ export async function projectsMoveColumn<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#get-a-project}
  * Tags: projects
  */
-export async function projectsGet<FetcherData>(
+export async function projectsGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -82821,7 +83310,7 @@ export async function projectsGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#update-a-project}
  * Tags: projects
  */
-export async function projectsUpdate<FetcherData>(
+export async function projectsUpdate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -82889,7 +83378,7 @@ export async function projectsUpdate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#delete-a-project}
  * Tags: projects
  */
-export async function projectsDelete<FetcherData>(
+export async function projectsDelete<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -82927,7 +83416,9 @@ export async function projectsDelete<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#list-project-collaborators}
  * Tags: projects
  */
-export async function projectsListCollaborators<FetcherData>(
+export async function projectsListCollaborators<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -82960,7 +83451,9 @@ export async function projectsListCollaborators<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#add-project-collaborator}
  * Tags: projects
  */
-export async function projectsAddCollaborator<FetcherData>(
+export async function projectsAddCollaborator<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -82999,7 +83492,9 @@ export async function projectsAddCollaborator<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#remove-user-as-a-collaborator}
  * Tags: projects
  */
-export async function projectsRemoveCollaborator<FetcherData>(
+export async function projectsRemoveCollaborator<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -83030,7 +83525,9 @@ export async function projectsRemoveCollaborator<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#get-project-permission-for-a-user}
  * Tags: projects
  */
-export async function projectsGetPermissionForUser<FetcherData>(
+export async function projectsGetPermissionForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -83059,7 +83556,9 @@ export async function projectsGetPermissionForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/columns#list-project-columns}
  * Tags: projects
  */
-export async function projectsListColumns<FetcherData>(
+export async function projectsListColumns<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -83096,7 +83595,9 @@ export async function projectsListColumns<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/columns#create-a-project-column}
  * Tags: projects
  */
-export async function projectsCreateColumn<FetcherData>(
+export async function projectsCreateColumn<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     project_id: number;
@@ -83166,15 +83667,15 @@ export async function projectsCreateColumn<FetcherData>(
  * *
  * The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version.
  * For more information about API versions, see "[API
- * Versions](https://docs.github.com/rest/overview/api-versions)."
+ * Versions](https://docs.github.com/rest/about-the-rest-api/api-versions)."
  *
- * **Note:** The `rate` object is deprecated. If you're
- * writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object.
- * The `core` object contains the same information that is present in the `rate` object.
+ * **Note:** The `rate` object is deprecated. If
+ * you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate`
+ * object. The `core` object contains the same information that is present in the `rate` object.
  * Learn more at {@link https://docs.github.com/rest/rate-limit/rate-limit#get-rate-limit-status-for-the-authenticated-user}
  * Tags: rate-limit
  */
-export async function rateLimitGet<FetcherData>(
+export async function rateLimitGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -83203,7 +83704,7 @@ export async function rateLimitGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#get-a-repository}
  * Tags: repos
  */
-export async function reposGet<FetcherData>(
+export async function reposGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83237,7 +83738,7 @@ export async function reposGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#update-a-repository}
  * Tags: repos
  */
-export async function reposUpdate<FetcherData>(
+export async function reposUpdate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83438,7 +83939,7 @@ export async function reposUpdate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#delete-a-repository}
  * Tags: repos
  */
-export async function reposDelete<FetcherData>(
+export async function reposDelete<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83476,7 +83977,9 @@ export async function reposDelete<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#list-artifacts-for-a-repository}
  * Tags: actions
  */
-export async function actionsListArtifactsForRepo<FetcherData>(
+export async function actionsListArtifactsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83525,7 +84028,7 @@ export async function actionsListArtifactsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#get-an-artifact}
  * Tags: actions
  */
-export async function actionsGetArtifact<FetcherData>(
+export async function actionsGetArtifact<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83556,7 +84059,9 @@ export async function actionsGetArtifact<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#delete-an-artifact}
  * Tags: actions
  */
-export async function actionsDeleteArtifact<FetcherData>(
+export async function actionsDeleteArtifact<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83584,7 +84089,9 @@ export async function actionsDeleteArtifact<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#download-an-artifact}
  * Tags: actions
  */
-export async function actionsDownloadArtifact<FetcherData>(
+export async function actionsDownloadArtifact<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83616,7 +84123,9 @@ export async function actionsDownloadArtifact<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/cache#get-github-actions-cache-usage-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetActionsCacheUsage<FetcherData>(
+export async function actionsGetActionsCacheUsage<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83641,7 +84150,9 @@ export async function actionsGetActionsCacheUsage<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/cache#list-github-actions-caches-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetActionsCacheList<FetcherData>(
+export async function actionsGetActionsCacheList<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83681,7 +84192,9 @@ export async function actionsGetActionsCacheList<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/cache#delete-github-actions-caches-for-a-repository-using-a-cache-key}
  * Tags: actions
  */
-export async function actionsDeleteActionsCacheByKey<FetcherData>(
+export async function actionsDeleteActionsCacheByKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83715,7 +84228,9 @@ export async function actionsDeleteActionsCacheByKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/cache#delete-a-github-actions-cache-for-a-repository-using-a-cache-id}
  * Tags: actions
  */
-export async function actionsDeleteActionsCacheById<FetcherData>(
+export async function actionsDeleteActionsCacheById<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83743,7 +84258,9 @@ export async function actionsDeleteActionsCacheById<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#get-a-job-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetJobForWorkflowRun<FetcherData>(
+export async function actionsGetJobForWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83780,7 +84297,9 @@ export async function actionsGetJobForWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#download-job-logs-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsDownloadJobLogsForWorkflowRun<FetcherData>(
+export async function actionsDownloadJobLogsForWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83806,7 +84325,9 @@ export async function actionsDownloadJobLogsForWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run}
  * Tags: actions
  */
-export async function actionsReRunJobForWorkflowRun<FetcherData>(
+export async function actionsReRunJobForWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83841,7 +84362,9 @@ export async function actionsReRunJobForWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#get-the-customization-template-for-an-oidc-subject-claim-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetCustomOidcSubClaimForRepo<FetcherData>(
+export async function actionsGetCustomOidcSubClaimForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83870,7 +84393,9 @@ export async function actionsGetCustomOidcSubClaimForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/oidc#set-the-customization-template-for-an-oidc-subject-claim-for-a-repository}
  * Tags: actions
  */
-export async function actionsSetCustomOidcSubClaimForRepo<FetcherData>(
+export async function actionsSetCustomOidcSubClaimForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83915,7 +84440,9 @@ export async function actionsSetCustomOidcSubClaimForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-repository-organization-secrets}
  * Tags: actions
  */
-export async function actionsListRepoOrganizationSecrets<FetcherData>(
+export async function actionsListRepoOrganizationSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -83966,7 +84493,9 @@ export async function actionsListRepoOrganizationSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-repository-organization-variables}
  * Tags: actions
  */
-export async function actionsListRepoOrganizationVariables<FetcherData>(
+export async function actionsListRepoOrganizationVariables<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84015,7 +84544,9 @@ export async function actionsListRepoOrganizationVariables<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-github-actions-permissions-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetGithubActionsPermissionsRepository<FetcherData>(
+export async function actionsGetGithubActionsPermissionsRepository<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84040,7 +84571,9 @@ export async function actionsGetGithubActionsPermissionsRepository<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-github-actions-permissions-for-a-repository}
  * Tags: actions
  */
-export async function actionsSetGithubActionsPermissionsRepository<FetcherData>(
+export async function actionsSetGithubActionsPermissionsRepository<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84075,7 +84608,9 @@ export async function actionsSetGithubActionsPermissionsRepository<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-the-level-of-access-for-workflows-outside-of-the-repository}
  * Tags: actions
  */
-export async function actionsGetWorkflowAccessToRepository<FetcherData>(
+export async function actionsGetWorkflowAccessToRepository<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84105,7 +84640,9 @@ export async function actionsGetWorkflowAccessToRepository<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-the-level-of-access-for-workflows-outside-of-the-repository}
  * Tags: actions
  */
-export async function actionsSetWorkflowAccessToRepository<FetcherData>(
+export async function actionsSetWorkflowAccessToRepository<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84134,7 +84671,9 @@ export async function actionsSetWorkflowAccessToRepository<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#get-allowed-actions-and-reusable-workflows-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetAllowedActionsRepository<FetcherData>(
+export async function actionsGetAllowedActionsRepository<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84161,7 +84700,9 @@ export async function actionsGetAllowedActionsRepository<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/permissions#set-allowed-actions-and-reusable-workflows-for-a-repository}
  * Tags: actions
  */
-export async function actionsSetAllowedActionsRepository<FetcherData>(
+export async function actionsSetAllowedActionsRepository<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84194,7 +84735,7 @@ export async function actionsSetAllowedActionsRepository<FetcherData>(
  * Tags: actions
  */
 export async function actionsGetGithubActionsDefaultWorkflowPermissionsRepository<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -84226,7 +84767,7 @@ export async function actionsGetGithubActionsDefaultWorkflowPermissionsRepositor
  * Tags: actions
  */
 export async function actionsSetGithubActionsDefaultWorkflowPermissionsRepository<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -84256,7 +84797,9 @@ export async function actionsSetGithubActionsDefaultWorkflowPermissionsRepositor
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-a-repository}
  * Tags: actions
  */
-export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
+export async function actionsListSelfHostedRunnersForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     name?: string;
@@ -84296,7 +84839,9 @@ export async function actionsListSelfHostedRunnersForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-runner-applications-for-a-repository}
  * Tags: actions
  */
-export async function actionsListRunnerApplicationsForRepo<FetcherData>(
+export async function actionsListRunnerApplicationsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84324,7 +84869,9 @@ export async function actionsListRunnerApplicationsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-a-repository}
  * Tags: actions
  */
-export async function actionsGenerateRunnerJitconfigForRepo<FetcherData>(
+export async function actionsGenerateRunnerJitconfigForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84393,7 +84940,9 @@ export async function actionsGenerateRunnerJitconfigForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-registration-token-for-a-repository}
  * Tags: actions
  */
-export async function actionsCreateRegistrationTokenForRepo<FetcherData>(
+export async function actionsCreateRegistrationTokenForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84435,7 +84984,9 @@ export async function actionsCreateRegistrationTokenForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#create-a-remove-token-for-a-repository}
  * Tags: actions
  */
-export async function actionsCreateRemoveTokenForRepo<FetcherData>(
+export async function actionsCreateRemoveTokenForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84469,7 +85020,9 @@ export async function actionsCreateRemoveTokenForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
-export async function actionsGetSelfHostedRunnerForRepo<FetcherData>(
+export async function actionsGetSelfHostedRunnerForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84498,7 +85051,9 @@ export async function actionsGetSelfHostedRunnerForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-a-repository}
  * Tags: actions
  */
-export async function actionsDeleteSelfHostedRunnerFromRepo<FetcherData>(
+export async function actionsDeleteSelfHostedRunnerFromRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84527,7 +85082,9 @@ export async function actionsDeleteSelfHostedRunnerFromRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runners#list-labels-for-a-self-hosted-runner-for-a-repository}
  * Tags: actions
  */
-export async function actionsListLabelsForSelfHostedRunnerForRepo<FetcherData>(
+export async function actionsListLabelsForSelfHostedRunnerForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84566,7 +85123,7 @@ export async function actionsListLabelsForSelfHostedRunnerForRepo<FetcherData>(
  * Tags: actions
  */
 export async function actionsAddCustomLabelsToSelfHostedRunnerForRepo<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -84615,7 +85172,7 @@ export async function actionsAddCustomLabelsToSelfHostedRunnerForRepo<
  * Tags: actions
  */
 export async function actionsSetCustomLabelsForSelfHostedRunnerForRepo<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -84664,7 +85221,7 @@ export async function actionsSetCustomLabelsForSelfHostedRunnerForRepo<
  * Tags: actions
  */
 export async function actionsRemoveAllCustomLabelsFromSelfHostedRunnerForRepo<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -84709,7 +85266,7 @@ export async function actionsRemoveAllCustomLabelsFromSelfHostedRunnerForRepo<
  * Tags: actions
  */
 export async function actionsRemoveCustomLabelFromSelfHostedRunnerForRepo<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -84755,7 +85312,9 @@ export async function actionsRemoveCustomLabelFromSelfHostedRunnerForRepo<
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-repository}
  * Tags: actions
  */
-export async function actionsListWorkflowRunsForRepo<FetcherData>(
+export async function actionsListWorkflowRunsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84838,7 +85397,9 @@ export async function actionsListWorkflowRunsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetWorkflowRun<FetcherData>(
+export async function actionsGetWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84874,7 +85435,9 @@ export async function actionsGetWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#delete-a-workflow-run}
  * Tags: actions
  */
-export async function actionsDeleteWorkflowRun<FetcherData>(
+export async function actionsDeleteWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84900,7 +85463,9 @@ export async function actionsDeleteWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-the-review-history-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetReviewsForRun<FetcherData>(
+export async function actionsGetReviewsForRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84936,7 +85501,9 @@ export async function actionsGetReviewsForRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#approve-a-workflow-run-for-a-fork-pull-request}
  * Tags: actions
  */
-export async function actionsApproveWorkflowRun<FetcherData>(
+export async function actionsApproveWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -84968,7 +85535,9 @@ export async function actionsApproveWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/artifacts#list-workflow-run-artifacts}
  * Tags: actions
  */
-export async function actionsListWorkflowRunArtifacts<FetcherData>(
+export async function actionsListWorkflowRunArtifacts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85018,7 +85587,9 @@ export async function actionsListWorkflowRunArtifacts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-a-workflow-run-attempt}
  * Tags: actions
  */
-export async function actionsGetWorkflowRunAttempt<FetcherData>(
+export async function actionsGetWorkflowRunAttempt<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85059,7 +85630,9 @@ export async function actionsGetWorkflowRunAttempt<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run-attempt}
  * Tags: actions
  */
-export async function actionsListJobsForWorkflowRunAttempt<FetcherData>(
+export async function actionsListJobsForWorkflowRunAttempt<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85113,7 +85686,9 @@ export async function actionsListJobsForWorkflowRunAttempt<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#download-workflow-run-attempt-logs}
  * Tags: actions
  */
-export async function actionsDownloadWorkflowRunAttemptLogs<FetcherData>(
+export async function actionsDownloadWorkflowRunAttemptLogs<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85140,7 +85715,9 @@ export async function actionsDownloadWorkflowRunAttemptLogs<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#cancel-a-workflow-run}
  * Tags: actions
  */
-export async function actionsCancelWorkflowRun<FetcherData>(
+export async function actionsCancelWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85176,7 +85753,9 @@ export async function actionsCancelWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#review-custom-deployment-protection-rules-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsReviewCustomGatesForRun<FetcherData>(
+export async function actionsReviewCustomGatesForRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85208,7 +85787,9 @@ export async function actionsReviewCustomGatesForRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#force-cancel-a-workflow-run}
  * Tags: actions
  */
-export async function actionsForceCancelWorkflowRun<FetcherData>(
+export async function actionsForceCancelWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85241,7 +85822,9 @@ export async function actionsForceCancelWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsListJobsForWorkflowRun<FetcherData>(
+export async function actionsListJobsForWorkflowRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85294,7 +85877,9 @@ export async function actionsListJobsForWorkflowRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#download-workflow-run-logs}
  * Tags: actions
  */
-export async function actionsDownloadWorkflowRunLogs<FetcherData>(
+export async function actionsDownloadWorkflowRunLogs<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85320,7 +85905,9 @@ export async function actionsDownloadWorkflowRunLogs<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#delete-workflow-run-logs}
  * Tags: actions
  */
-export async function actionsDeleteWorkflowRunLogs<FetcherData>(
+export async function actionsDeleteWorkflowRunLogs<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85353,7 +85940,9 @@ export async function actionsDeleteWorkflowRunLogs<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsGetPendingDeploymentsForRun<FetcherData>(
+export async function actionsGetPendingDeploymentsForRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85390,7 +85979,9 @@ export async function actionsGetPendingDeploymentsForRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#review-pending-deployments-for-a-workflow-run}
  * Tags: actions
  */
-export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
+export async function actionsReviewPendingDeploymentsForRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85444,7 +86035,9 @@ export async function actionsReviewPendingDeploymentsForRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#re-run-a-workflow}
  * Tags: actions
  */
-export async function actionsReRunWorkflow<FetcherData>(
+export async function actionsReRunWorkflow<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85477,7 +86070,9 @@ export async function actionsReRunWorkflow<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#re-run-failed-jobs-from-a-workflow-run}
  * Tags: actions
  */
-export async function actionsReRunWorkflowFailedJobs<FetcherData>(
+export async function actionsReRunWorkflowFailedJobs<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85518,7 +86113,9 @@ export async function actionsReRunWorkflowFailedJobs<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#get-workflow-run-usage}
  * Tags: actions
  */
-export async function actionsGetWorkflowRunUsage<FetcherData>(
+export async function actionsGetWorkflowRunUsage<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85548,7 +86145,9 @@ export async function actionsGetWorkflowRunUsage<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-repository-secrets}
  * Tags: actions
  */
-export async function actionsListRepoSecrets<FetcherData>(
+export async function actionsListRepoSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85600,7 +86199,9 @@ export async function actionsListRepoSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-a-repository-public-key}
  * Tags: actions
  */
-export async function actionsGetRepoPublicKey<FetcherData>(
+export async function actionsGetRepoPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85628,7 +86229,9 @@ export async function actionsGetRepoPublicKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-a-repository-secret}
  * Tags: actions
  */
-export async function actionsGetRepoSecret<FetcherData>(
+export async function actionsGetRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85666,7 +86269,9 @@ export async function actionsGetRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#create-or-update-a-repository-secret}
  * Tags: actions
  */
-export async function actionsCreateOrUpdateRepoSecret<FetcherData>(
+export async function actionsCreateOrUpdateRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85708,7 +86313,9 @@ export async function actionsCreateOrUpdateRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#delete-a-repository-secret}
  * Tags: actions
  */
-export async function actionsDeleteRepoSecret<FetcherData>(
+export async function actionsDeleteRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85736,7 +86343,9 @@ export async function actionsDeleteRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-repository-variables}
  * Tags: actions
  */
-export async function actionsListRepoVariables<FetcherData>(
+export async function actionsListRepoVariables<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85787,7 +86396,9 @@ export async function actionsListRepoVariables<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#create-a-repository-variable}
  * Tags: actions
  */
-export async function actionsCreateRepoVariable<FetcherData>(
+export async function actionsCreateRepoVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85825,7 +86436,9 @@ export async function actionsCreateRepoVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#get-a-repository-variable}
  * Tags: actions
  */
-export async function actionsGetRepoVariable<FetcherData>(
+export async function actionsGetRepoVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85860,7 +86473,9 @@ export async function actionsGetRepoVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#update-a-repository-variable}
  * Tags: actions
  */
-export async function actionsUpdateRepoVariable<FetcherData>(
+export async function actionsUpdateRepoVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85900,7 +86515,9 @@ export async function actionsUpdateRepoVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#delete-a-repository-variable}
  * Tags: actions
  */
-export async function actionsDeleteRepoVariable<FetcherData>(
+export async function actionsDeleteRepoVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85928,7 +86545,9 @@ export async function actionsDeleteRepoVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#list-repository-workflows}
  * Tags: actions
  */
-export async function actionsListRepoWorkflows<FetcherData>(
+export async function actionsListRepoWorkflows<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -85978,7 +86597,7 @@ export async function actionsListRepoWorkflows<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#get-a-workflow}
  * Tags: actions
  */
-export async function actionsGetWorkflow<FetcherData>(
+export async function actionsGetWorkflow<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86011,7 +86630,9 @@ export async function actionsGetWorkflow<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#disable-a-workflow}
  * Tags: actions
  */
-export async function actionsDisableWorkflow<FetcherData>(
+export async function actionsDisableWorkflow<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86044,7 +86665,9 @@ export async function actionsDisableWorkflow<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event}
  * Tags: actions
  */
-export async function actionsCreateWorkflowDispatch<FetcherData>(
+export async function actionsCreateWorkflowDispatch<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86084,7 +86707,9 @@ export async function actionsCreateWorkflowDispatch<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#enable-a-workflow}
  * Tags: actions
  */
-export async function actionsEnableWorkflow<FetcherData>(
+export async function actionsEnableWorkflow<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86115,7 +86740,9 @@ export async function actionsEnableWorkflow<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-workflow}
  * Tags: actions
  */
-export async function actionsListWorkflowRuns<FetcherData>(
+export async function actionsListWorkflowRuns<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86208,7 +86835,9 @@ export async function actionsListWorkflowRuns<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/workflows#get-workflow-usage}
  * Tags: actions
  */
-export async function actionsGetWorkflowUsage<FetcherData>(
+export async function actionsGetWorkflowUsage<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86237,7 +86866,9 @@ export async function actionsGetWorkflowUsage<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repository-activities}
  * Tags: repos
  */
-export async function reposListActivities<FetcherData>(
+export async function reposListActivities<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86294,7 +86925,9 @@ export async function reposListActivities<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/assignees#list-assignees}
  * Tags: issues
  */
-export async function issuesListAssignees<FetcherData>(
+export async function issuesListAssignees<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86326,7 +86959,9 @@ export async function issuesListAssignees<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/assignees#check-if-a-user-can-be-assigned}
  * Tags: issues
  */
-export async function issuesCheckUserCanBeAssigned<FetcherData>(
+export async function issuesCheckUserCanBeAssigned<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86352,7 +86987,7 @@ export async function issuesCheckUserCanBeAssigned<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/autolinks#get-all-autolinks-of-a-repository}
  * Tags: repos
  */
-export async function reposListAutolinks<FetcherData>(
+export async function reposListAutolinks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86374,7 +87009,9 @@ export async function reposListAutolinks<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/autolinks#create-an-autolink-reference-for-a-repository}
  * Tags: repos
  */
-export async function reposCreateAutolink<FetcherData>(
+export async function reposCreateAutolink<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86417,7 +87054,7 @@ export async function reposCreateAutolink<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/autolinks#get-an-autolink-reference-of-a-repository}
  * Tags: repos
  */
-export async function reposGetAutolink<FetcherData>(
+export async function reposGetAutolink<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86445,7 +87082,9 @@ export async function reposGetAutolink<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/autolinks#delete-an-autolink-reference-from-a-repository}
  * Tags: repos
  */
-export async function reposDeleteAutolink<FetcherData>(
+export async function reposDeleteAutolink<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86470,7 +87109,9 @@ export async function reposDeleteAutolink<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#check-if-automated-security-fixes-are-enabled-for-a-repository}
  * Tags: repos
  */
-export async function reposCheckAutomatedSecurityFixes<FetcherData>(
+export async function reposCheckAutomatedSecurityFixes<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86497,7 +87138,9 @@ export async function reposCheckAutomatedSecurityFixes<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#enable-automated-security-fixes}
  * Tags: repos
  */
-export async function reposEnableAutomatedSecurityFixes<FetcherData>(
+export async function reposEnableAutomatedSecurityFixes<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86521,7 +87164,9 @@ export async function reposEnableAutomatedSecurityFixes<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#disable-automated-security-fixes}
  * Tags: repos
  */
-export async function reposDisableAutomatedSecurityFixes<FetcherData>(
+export async function reposDisableAutomatedSecurityFixes<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86542,7 +87187,7 @@ export async function reposDisableAutomatedSecurityFixes<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branches#list-branches}
  * Tags: repos
  */
-export async function reposListBranches<FetcherData>(
+export async function reposListBranches<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86569,7 +87214,7 @@ export async function reposListBranches<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branches#get-a-branch}
  * Tags: repos
  */
-export async function reposGetBranch<FetcherData>(
+export async function reposGetBranch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86599,7 +87244,9 @@ export async function reposGetBranch<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-branch-protection}
  * Tags: repos
  */
-export async function reposGetBranchProtection<FetcherData>(
+export async function reposGetBranchProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86635,7 +87282,9 @@ export async function reposGetBranchProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#update-branch-protection}
  * Tags: repos
  */
-export async function reposUpdateBranchProtection<FetcherData>(
+export async function reposUpdateBranchProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86807,7 +87456,9 @@ export async function reposUpdateBranchProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#delete-branch-protection}
  * Tags: repos
  */
-export async function reposDeleteBranchProtection<FetcherData>(
+export async function reposDeleteBranchProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86833,7 +87484,9 @@ export async function reposDeleteBranchProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-admin-branch-protection}
  * Tags: repos
  */
-export async function reposGetAdminBranchProtection<FetcherData>(
+export async function reposGetAdminBranchProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86862,7 +87515,9 @@ export async function reposGetAdminBranchProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#set-admin-branch-protection}
  * Tags: repos
  */
-export async function reposSetAdminBranchProtection<FetcherData>(
+export async function reposSetAdminBranchProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86891,7 +87546,9 @@ export async function reposSetAdminBranchProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#delete-admin-branch-protection}
  * Tags: repos
  */
-export async function reposDeleteAdminBranchProtection<FetcherData>(
+export async function reposDeleteAdminBranchProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86917,7 +87574,9 @@ export async function reposDeleteAdminBranchProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-pull-request-review-protection}
  * Tags: repos
  */
-export async function reposGetPullRequestReviewProtection<FetcherData>(
+export async function reposGetPullRequestReviewProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -86959,7 +87618,9 @@ export async function reposGetPullRequestReviewProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#update-pull-request-review-protection}
  * Tags: repos
  */
-export async function reposUpdatePullRequestReviewProtection<FetcherData>(
+export async function reposUpdatePullRequestReviewProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87051,7 +87712,9 @@ export async function reposUpdatePullRequestReviewProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#delete-pull-request-review-protection}
  * Tags: repos
  */
-export async function reposDeletePullRequestReviewProtection<FetcherData>(
+export async function reposDeletePullRequestReviewProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87085,7 +87748,9 @@ export async function reposDeletePullRequestReviewProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-commit-signature-protection}
  * Tags: repos
  */
-export async function reposGetCommitSignatureProtection<FetcherData>(
+export async function reposGetCommitSignatureProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87117,7 +87782,9 @@ export async function reposGetCommitSignatureProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#create-commit-signature-protection}
  * Tags: repos
  */
-export async function reposCreateCommitSignatureProtection<FetcherData>(
+export async function reposCreateCommitSignatureProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87150,7 +87817,9 @@ export async function reposCreateCommitSignatureProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#delete-commit-signature-protection}
  * Tags: repos
  */
-export async function reposDeleteCommitSignatureProtection<FetcherData>(
+export async function reposDeleteCommitSignatureProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87176,7 +87845,9 @@ export async function reposDeleteCommitSignatureProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-status-checks-protection}
  * Tags: repos
  */
-export async function reposGetStatusChecksProtection<FetcherData>(
+export async function reposGetStatusChecksProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87207,7 +87878,9 @@ export async function reposGetStatusChecksProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#update-status-check-protection}
  * Tags: repos
  */
-export async function reposUpdateStatusCheckProtection<FetcherData>(
+export async function reposUpdateStatusCheckProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87263,7 +87936,9 @@ export async function reposUpdateStatusCheckProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#remove-status-check-protection}
  * Tags: repos
  */
-export async function reposRemoveStatusCheckProtection<FetcherData>(
+export async function reposRemoveStatusCheckProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87289,7 +87964,9 @@ export async function reposRemoveStatusCheckProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-all-status-check-contexts}
  * Tags: repos
  */
-export async function reposGetAllStatusCheckContexts<FetcherData>(
+export async function reposGetAllStatusCheckContexts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87317,7 +87994,9 @@ export async function reposGetAllStatusCheckContexts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#add-status-check-contexts}
  * Tags: repos
  */
-export async function reposAddStatusCheckContexts<FetcherData>(
+export async function reposAddStatusCheckContexts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87357,7 +88036,9 @@ export async function reposAddStatusCheckContexts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#set-status-check-contexts}
  * Tags: repos
  */
-export async function reposSetStatusCheckContexts<FetcherData>(
+export async function reposSetStatusCheckContexts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87396,7 +88077,9 @@ export async function reposSetStatusCheckContexts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#remove-status-check-contexts}
  * Tags: repos
  */
-export async function reposRemoveStatusCheckContexts<FetcherData>(
+export async function reposRemoveStatusCheckContexts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87440,7 +88123,9 @@ export async function reposRemoveStatusCheckContexts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-access-restrictions}
  * Tags: repos
  */
-export async function reposGetAccessRestrictions<FetcherData>(
+export async function reposGetAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87471,7 +88156,9 @@ export async function reposGetAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#delete-access-restrictions}
  * Tags: repos
  */
-export async function reposDeleteAccessRestrictions<FetcherData>(
+export async function reposDeleteAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87501,7 +88188,9 @@ export async function reposDeleteAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-apps-with-access-to-the-protected-branch}
  * Tags: repos
  */
-export async function reposGetAppsWithAccessToProtectedBranch<FetcherData>(
+export async function reposGetAppsWithAccessToProtectedBranch<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87539,7 +88228,9 @@ export async function reposGetAppsWithAccessToProtectedBranch<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#add-app-access-restrictions}
  * Tags: repos
  */
-export async function reposAddAppAccessRestrictions<FetcherData>(
+export async function reposAddAppAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87587,7 +88278,9 @@ export async function reposAddAppAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#set-app-access-restrictions}
  * Tags: repos
  */
-export async function reposSetAppAccessRestrictions<FetcherData>(
+export async function reposSetAppAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87634,7 +88327,9 @@ export async function reposSetAppAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#remove-app-access-restrictions}
  * Tags: repos
  */
-export async function reposRemoveAppAccessRestrictions<FetcherData>(
+export async function reposRemoveAppAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87679,7 +88374,9 @@ export async function reposRemoveAppAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-teams-with-access-to-the-protected-branch}
  * Tags: repos
  */
-export async function reposGetTeamsWithAccessToProtectedBranch<FetcherData>(
+export async function reposGetTeamsWithAccessToProtectedBranch<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87708,7 +88405,9 @@ export async function reposGetTeamsWithAccessToProtectedBranch<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#add-team-access-restrictions}
  * Tags: repos
  */
-export async function reposAddTeamAccessRestrictions<FetcherData>(
+export async function reposAddTeamAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87749,7 +88448,9 @@ export async function reposAddTeamAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#set-team-access-restrictions}
  * Tags: repos
  */
-export async function reposSetTeamAccessRestrictions<FetcherData>(
+export async function reposSetTeamAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87789,7 +88490,9 @@ export async function reposSetTeamAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#remove-team-access-restrictions}
  * Tags: repos
  */
-export async function reposRemoveTeamAccessRestrictions<FetcherData>(
+export async function reposRemoveTeamAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87828,7 +88531,9 @@ export async function reposRemoveTeamAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-users-with-access-to-the-protected-branch}
  * Tags: repos
  */
-export async function reposGetUsersWithAccessToProtectedBranch<FetcherData>(
+export async function reposGetUsersWithAccessToProtectedBranch<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87867,7 +88572,9 @@ export async function reposGetUsersWithAccessToProtectedBranch<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#add-user-access-restrictions}
  * Tags: repos
  */
-export async function reposAddUserAccessRestrictions<FetcherData>(
+export async function reposAddUserAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87915,7 +88622,9 @@ export async function reposAddUserAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#set-user-access-restrictions}
  * Tags: repos
  */
-export async function reposSetUserAccessRestrictions<FetcherData>(
+export async function reposSetUserAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -87963,7 +88672,9 @@ export async function reposSetUserAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#remove-user-access-restrictions}
  * Tags: repos
  */
-export async function reposRemoveUserAccessRestrictions<FetcherData>(
+export async function reposRemoveUserAccessRestrictions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88009,7 +88720,7 @@ export async function reposRemoveUserAccessRestrictions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branches#rename-a-branch}
  * Tags: repos
  */
-export async function reposRenameBranch<FetcherData>(
+export async function reposRenameBranch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88054,7 +88765,7 @@ export async function reposRenameBranch<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/runs#create-a-check-run}
  * Tags: checks
  */
-export async function checksCreate<FetcherData>(
+export async function checksCreate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88091,7 +88802,7 @@ export async function checksCreate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/runs#get-a-check-run}
  * Tags: checks
  */
-export async function checksGet<FetcherData>(
+export async function checksGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88127,7 +88838,7 @@ export async function checksGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/runs#update-a-check-run}
  * Tags: checks
  */
-export async function checksUpdate<FetcherData>(
+export async function checksUpdate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88161,7 +88872,9 @@ export async function checksUpdate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-run-annotations}
  * Tags: checks
  */
-export async function checksListAnnotations<FetcherData>(
+export async function checksListAnnotations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88196,7 +88909,7 @@ export async function checksListAnnotations<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/runs#rerequest-a-check-run}
  * Tags: checks
  */
-export async function checksRerequestRun<FetcherData>(
+export async function checksRerequestRun<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88234,7 +88947,7 @@ export async function checksRerequestRun<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/suites#create-a-check-suite}
  * Tags: checks
  */
-export async function checksCreateSuite<FetcherData>(
+export async function checksCreateSuite<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88276,7 +88989,9 @@ export async function checksCreateSuite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites}
  * Tags: checks
  */
-export async function checksSetSuitesPreferences<FetcherData>(
+export async function checksSetSuitesPreferences<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88328,7 +89043,7 @@ export async function checksSetSuitesPreferences<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/suites#get-a-check-suite}
  * Tags: checks
  */
-export async function checksGetSuite<FetcherData>(
+export async function checksGetSuite<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88364,7 +89079,7 @@ export async function checksGetSuite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-runs-in-a-check-suite}
  * Tags: checks
  */
-export async function checksListForSuite<FetcherData>(
+export async function checksListForSuite<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88416,7 +89131,9 @@ export async function checksListForSuite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/suites#rerequest-a-check-suite}
  * Tags: checks
  */
-export async function checksRerequestSuite<FetcherData>(
+export async function checksRerequestSuite<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88448,7 +89165,9 @@ export async function checksRerequestSuite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningListAlertsForRepo<FetcherData>(
+export async function codeScanningListAlertsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88517,7 +89236,9 @@ export async function codeScanningListAlertsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-alert}
  * Tags: code-scanning
  */
-export async function codeScanningGetAlert<FetcherData>(
+export async function codeScanningGetAlert<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88562,7 +89283,9 @@ export async function codeScanningGetAlert<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-alert}
  * Tags: code-scanning
  */
-export async function codeScanningUpdateAlert<FetcherData>(
+export async function codeScanningUpdateAlert<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88613,7 +89336,9 @@ export async function codeScanningUpdateAlert<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-instances-of-a-code-scanning-alert}
  * Tags: code-scanning
  */
-export async function codeScanningListAlertInstances<FetcherData>(
+export async function codeScanningListAlertInstances<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88673,7 +89398,9 @@ export async function codeScanningListAlertInstances<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningListRecentAnalyses<FetcherData>(
+export async function codeScanningListRecentAnalyses<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88760,7 +89487,9 @@ export async function codeScanningListRecentAnalyses<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningGetAnalysis<FetcherData>(
+export async function codeScanningGetAnalysis<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88890,7 +89619,9 @@ export async function codeScanningGetAnalysis<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#delete-a-code-scanning-analysis-from-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningDeleteAnalysis<FetcherData>(
+export async function codeScanningDeleteAnalysis<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88932,7 +89663,9 @@ export async function codeScanningDeleteAnalysis<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-codeql-databases-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningListCodeqlDatabases<FetcherData>(
+export async function codeScanningListCodeqlDatabases<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -88978,18 +89711,21 @@ export async function codeScanningListCodeqlDatabases<FetcherData>(
  * database. To
  * download the CodeQL database binary content, set the `Accept` header of the request
  * to
- * [`application/zip`](https://docs.github.com/rest/overview/media-types), and make sure
- * your HTTP client is configured to
- * follow redirects or use the `Location` header
- * to make a second request to get the redirect URL.
+ * [`application/zip`](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types), and
+ * make sure
+ * your HTTP client is configured to follow redirects or use the `Location` header
+ * to make a second request to
+ * get the redirect URL.
  *
- * OAuth app tokens and
- * personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public
- * repositories, or the `public_repo` scope to use this endpoint with only public repositories.
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use
+ * this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public
+ * repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-codeql-database-for-a-repository}
  * Tags: code-scanning
  */
-export async function codeScanningGetCodeqlDatabase<FetcherData>(
+export async function codeScanningGetCodeqlDatabase<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89045,7 +89781,9 @@ export async function codeScanningGetCodeqlDatabase<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#create-a-codeql-variant-analysis}
  * Tags: code-scanning
  */
-export async function codeScanningCreateVariantAnalysis<FetcherData>(
+export async function codeScanningCreateVariantAnalysis<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89093,7 +89831,9 @@ export async function codeScanningCreateVariantAnalysis<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-the-summary-of-a-codeql-variant-analysis}
  * Tags: code-scanning
  */
-export async function codeScanningGetVariantAnalysis<FetcherData>(
+export async function codeScanningGetVariantAnalysis<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89139,7 +89879,9 @@ export async function codeScanningGetVariantAnalysis<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-the-analysis-status-of-a-repository-in-a-codeql-variant-analysis}
  * Tags: code-scanning
  */
-export async function codeScanningGetVariantAnalysisRepoTask<FetcherData>(
+export async function codeScanningGetVariantAnalysisRepoTask<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89179,7 +89921,9 @@ export async function codeScanningGetVariantAnalysisRepoTask<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-default-setup-configuration}
  * Tags: code-scanning
  */
-export async function codeScanningGetDefaultSetup<FetcherData>(
+export async function codeScanningGetDefaultSetup<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89225,7 +89969,9 @@ export async function codeScanningGetDefaultSetup<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-default-setup-configuration}
  * Tags: code-scanning
  */
-export async function codeScanningUpdateDefaultSetup<FetcherData>(
+export async function codeScanningUpdateDefaultSetup<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89329,7 +90075,9 @@ export async function codeScanningUpdateDefaultSetup<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#upload-an-analysis-as-sarif-data}
  * Tags: code-scanning
  */
-export async function codeScanningUploadSarif<FetcherData>(
+export async function codeScanningUploadSarif<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89395,7 +90143,9 @@ export async function codeScanningUploadSarif<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload}
  * Tags: code-scanning
  */
-export async function codeScanningGetSarif<FetcherData>(
+export async function codeScanningGetSarif<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89436,7 +90186,9 @@ export async function codeScanningGetSarif<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-codeowners-errors}
  * Tags: repos
  */
-export async function reposCodeownersErrors<FetcherData>(
+export async function reposCodeownersErrors<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89466,7 +90218,7 @@ export async function reposCodeownersErrors<FetcherData>(
  * Tags: codespaces
  */
 export async function codespacesListInRepositoryForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -89519,7 +90271,9 @@ export async function codespacesListInRepositoryForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-in-a-repository}
  * Tags: codespaces
  */
-export async function codespacesCreateWithRepoForAuthenticatedUser<FetcherData>(
+export async function codespacesCreateWithRepoForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89616,7 +90370,7 @@ export async function codespacesCreateWithRepoForAuthenticatedUser<FetcherData>(
  * Tags: codespaces
  */
 export async function codespacesListDevcontainersInRepositoryForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -89662,7 +90416,9 @@ export async function codespacesListDevcontainersInRepositoryForAuthenticatedUse
  * Learn more at {@link https://docs.github.com/rest/codespaces/machines#list-available-machine-types-for-a-repository}
  * Tags: codespaces
  */
-export async function codespacesRepoMachinesForAuthenticatedUser<FetcherData>(
+export async function codespacesRepoMachinesForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89705,7 +90461,7 @@ export async function codespacesRepoMachinesForAuthenticatedUser<FetcherData>(
  * Tags: codespaces
  */
 export async function codespacesPreFlightWithRepoForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -89748,7 +90504,9 @@ export async function codespacesPreFlightWithRepoForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#check-if-permissions-defined-by-a-devcontainer-have-been-accepted-by-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesCheckPermissionsForDevcontainer<FetcherData>(
+export async function codespacesCheckPermissionsForDevcontainer<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89791,7 +90549,9 @@ export async function codespacesCheckPermissionsForDevcontainer<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#list-repository-secrets}
  * Tags: codespaces
  */
-export async function codespacesListRepoSecrets<FetcherData>(
+export async function codespacesListRepoSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89847,7 +90607,9 @@ export async function codespacesListRepoSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-public-key}
  * Tags: codespaces
  */
-export async function codespacesGetRepoPublicKey<FetcherData>(
+export async function codespacesGetRepoPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89872,7 +90634,9 @@ export async function codespacesGetRepoPublicKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-secret}
  * Tags: codespaces
  */
-export async function codespacesGetRepoSecret<FetcherData>(
+export async function codespacesGetRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89907,7 +90671,9 @@ export async function codespacesGetRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#create-or-update-a-repository-secret}
  * Tags: codespaces
  */
-export async function codespacesCreateOrUpdateRepoSecret<FetcherData>(
+export async function codespacesCreateOrUpdateRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89946,7 +90712,9 @@ export async function codespacesCreateOrUpdateRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#delete-a-repository-secret}
  * Tags: codespaces
  */
-export async function codespacesDeleteRepoSecret<FetcherData>(
+export async function codespacesDeleteRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -89981,7 +90749,9 @@ export async function codespacesDeleteRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#list-repository-collaborators}
  * Tags: repos
  */
-export async function reposListCollaborators<FetcherData>(
+export async function reposListCollaborators<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90020,7 +90790,9 @@ export async function reposListCollaborators<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#check-if-a-user-is-a-repository-collaborator}
  * Tags: repos
  */
-export async function reposCheckCollaborator<FetcherData>(
+export async function reposCheckCollaborator<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90042,7 +90814,8 @@ export async function reposCheckCollaborator<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -90085,7 +90858,9 @@ export async function reposCheckCollaborator<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#add-a-repository-collaborator}
  * Tags: repos
  */
-export async function reposAddCollaborator<FetcherData>(
+export async function reposAddCollaborator<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90158,7 +90933,9 @@ export async function reposAddCollaborator<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#remove-a-repository-collaborator}
  * Tags: repos
  */
-export async function reposRemoveCollaborator<FetcherData>(
+export async function reposRemoveCollaborator<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90195,7 +90972,9 @@ export async function reposRemoveCollaborator<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#get-repository-permissions-for-a-user}
  * Tags: repos
  */
-export async function reposGetCollaboratorPermissionLevel<FetcherData>(
+export async function reposGetCollaboratorPermissionLevel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90236,7 +91015,9 @@ export async function reposGetCollaboratorPermissionLevel<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/comments#list-commit-comments-for-a-repository}
  * Tags: repos
  */
-export async function reposListCommitCommentsForRepo<FetcherData>(
+export async function reposListCommitCommentsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90283,7 +91064,9 @@ export async function reposListCommitCommentsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/comments#get-a-commit-comment}
  * Tags: repos
  */
-export async function reposGetCommitComment<FetcherData>(
+export async function reposGetCommitComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90329,7 +91112,9 @@ export async function reposGetCommitComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/comments#update-a-commit-comment}
  * Tags: repos
  */
-export async function reposUpdateCommitComment<FetcherData>(
+export async function reposUpdateCommitComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90366,7 +91151,9 @@ export async function reposUpdateCommitComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/comments#delete-a-commit-comment}
  * Tags: repos
  */
-export async function reposDeleteCommitComment<FetcherData>(
+export async function reposDeleteCommitComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90389,7 +91176,9 @@ export async function reposDeleteCommitComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-commit-comment}
  * Tags: reactions
  */
-export async function reactionsListForCommitComment<FetcherData>(
+export async function reactionsListForCommitComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90433,7 +91222,9 @@ export async function reactionsListForCommitComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-commit-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForCommitComment<FetcherData>(
+export async function reactionsCreateForCommitComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90486,7 +91277,9 @@ export async function reactionsCreateForCommitComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-a-commit-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForCommitComment<FetcherData>(
+export async function reactionsDeleteForCommitComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90554,7 +91347,7 @@ export async function reactionsDeleteForCommitComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/commits#list-commits}
  * Tags: repos
  */
-export async function reposListCommits<FetcherData>(
+export async function reposListCommits<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90606,7 +91399,9 @@ export async function reposListCommits<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/commits#list-branches-for-head-commit}
  * Tags: repos
  */
-export async function reposListBranchesForHeadCommit<FetcherData>(
+export async function reposListBranchesForHeadCommit<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90648,7 +91443,9 @@ export async function reposListBranchesForHeadCommit<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/comments#list-commit-comments}
  * Tags: repos
  */
-export async function reposListCommentsForCommit<FetcherData>(
+export async function reposListCommentsForCommit<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90683,7 +91480,8 @@ export async function reposListCommentsForCommit<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -90704,7 +91502,9 @@ export async function reposListCommentsForCommit<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/comments#create-a-commit-comment}
  * Tags: repos
  */
-export async function reposCreateCommitComment<FetcherData>(
+export async function reposCreateCommitComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90760,7 +91560,9 @@ export async function reposCreateCommitComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/commits#list-pull-requests-associated-with-a-commit}
  * Tags: repos
  */
-export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
+export async function reposListPullRequestsAssociatedWithCommit<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90861,7 +91663,7 @@ export async function reposListPullRequestsAssociatedWithCommit<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/commits#get-a-commit}
  * Tags: repos
  */
-export async function reposGetCommit<FetcherData>(
+export async function reposGetCommit<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90915,7 +91717,7 @@ export async function reposGetCommit<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-runs-for-a-git-reference}
  * Tags: checks
  */
-export async function checksListForRef<FetcherData>(
+export async function checksListForRef<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -90978,7 +91780,9 @@ export async function checksListForRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/checks/suites#list-check-suites-for-a-git-reference}
  * Tags: checks
  */
-export async function checksListSuitesForRef<FetcherData>(
+export async function checksListSuitesForRef<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91036,7 +91840,9 @@ export async function checksListSuitesForRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/statuses#get-the-combined-status-for-a-specific-reference}
  * Tags: repos
  */
-export async function reposGetCombinedStatusForRef<FetcherData>(
+export async function reposGetCombinedStatusForRef<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91075,7 +91881,9 @@ export async function reposGetCombinedStatusForRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/statuses#list-commit-statuses-for-a-reference}
  * Tags: repos
  */
-export async function reposListCommitStatusesForRef<FetcherData>(
+export async function reposListCommitStatusesForRef<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91119,7 +91927,9 @@ export async function reposListCommitStatusesForRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/community#get-community-profile-metrics}
  * Tags: repos
  */
-export async function reposGetCommunityProfileMetrics<FetcherData>(
+export async function reposGetCommunityProfileMetrics<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91178,7 +91988,7 @@ export async function reposGetCommunityProfileMetrics<FetcherData>(
  * parameter (`per_page` or `page`) to paginate the results. When using pagination:
  *
  * - The list of changed files is only
- * shown on the first page of results, but it includes all changed files for the entire comparison.
+ * shown on the first page of results, and it includes up to 300 changed files for the entire comparison.
  * - The results are
  * returned in chronological order, but the last commit in the returned list may not be the most recent one in the entire
  * set if there are more pages of results.
@@ -91235,7 +92045,9 @@ export async function reposGetCommunityProfileMetrics<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/commits#compare-two-commits}
  * Tags: repos
  */
-export async function reposCompareCommits<FetcherData>(
+export async function reposCompareCommits<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91323,7 +92135,7 @@ export async function reposCompareCommits<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/contents#get-repository-content}
  * Tags: repos
  */
-export async function reposGetContent<FetcherData>(
+export async function reposGetContent<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91364,7 +92176,9 @@ export async function reposGetContent<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/contents#create-or-update-file-contents}
  * Tags: repos
  */
-export async function reposCreateOrUpdateFileContents<FetcherData>(
+export async function reposCreateOrUpdateFileContents<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91461,7 +92275,7 @@ export async function reposCreateOrUpdateFileContents<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/contents#delete-a-file}
  * Tags: repos
  */
-export async function reposDeleteFile<FetcherData>(
+export async function reposDeleteFile<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91545,7 +92359,9 @@ export async function reposDeleteFile<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repository-contributors}
  * Tags: repos
  */
-export async function reposListContributors<FetcherData>(
+export async function reposListContributors<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91577,7 +92393,9 @@ export async function reposListContributors<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository}
  * Tags: dependabot
  */
-export async function dependabotListAlertsForRepo<FetcherData>(
+export async function dependabotListAlertsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91645,7 +92463,7 @@ export async function dependabotListAlertsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#get-a-dependabot-alert}
  * Tags: dependabot
  */
-export async function dependabotGetAlert<FetcherData>(
+export async function dependabotGetAlert<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91685,7 +92503,9 @@ export async function dependabotGetAlert<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/alerts#update-a-dependabot-alert}
  * Tags: dependabot
  */
-export async function dependabotUpdateAlert<FetcherData>(
+export async function dependabotUpdateAlert<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91746,7 +92566,9 @@ export async function dependabotUpdateAlert<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#list-repository-secrets}
  * Tags: dependabot
  */
-export async function dependabotListRepoSecrets<FetcherData>(
+export async function dependabotListRepoSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91797,7 +92619,9 @@ export async function dependabotListRepoSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key}
  * Tags: dependabot
  */
-export async function dependabotGetRepoPublicKey<FetcherData>(
+export async function dependabotGetRepoPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91822,7 +92646,9 @@ export async function dependabotGetRepoPublicKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#get-a-repository-secret}
  * Tags: dependabot
  */
-export async function dependabotGetRepoSecret<FetcherData>(
+export async function dependabotGetRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91857,7 +92683,9 @@ export async function dependabotGetRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#create-or-update-a-repository-secret}
  * Tags: dependabot
  */
-export async function dependabotCreateOrUpdateRepoSecret<FetcherData>(
+export async function dependabotCreateOrUpdateRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91896,7 +92724,9 @@ export async function dependabotCreateOrUpdateRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependabot/secrets#delete-a-repository-secret}
  * Tags: dependabot
  */
-export async function dependabotDeleteRepoSecret<FetcherData>(
+export async function dependabotDeleteRepoSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91920,7 +92750,9 @@ export async function dependabotDeleteRepoSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependency-graph/dependency-review#get-a-diff-of-the-dependencies-between-commits}
  * Tags: dependency-graph
  */
-export async function dependencyGraphDiffRange<FetcherData>(
+export async function dependencyGraphDiffRange<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91949,7 +92781,9 @@ export async function dependencyGraphDiffRange<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependency-graph/sboms#export-a-software-bill-of-materials-sbom-for-a-repository}
  * Tags: dependency-graph
  */
-export async function dependencyGraphExportSbom<FetcherData>(
+export async function dependencyGraphExportSbom<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -91980,7 +92814,9 @@ export async function dependencyGraphExportSbom<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/dependency-graph/dependency-submission#create-a-snapshot-of-dependencies-for-a-repository}
  * Tags: dependency-graph
  */
-export async function dependencyGraphCreateRepositorySnapshot<FetcherData>(
+export async function dependencyGraphCreateRepositorySnapshot<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92026,7 +92862,9 @@ export async function dependencyGraphCreateRepositorySnapshot<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/deployments#list-deployments}
  * Tags: repos
  */
-export async function reposListDeployments<FetcherData>(
+export async function reposListDeployments<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92133,7 +92971,9 @@ export async function reposListDeployments<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/deployments#create-a-deployment}
  * Tags: repos
  */
-export async function reposCreateDeployment<FetcherData>(
+export async function reposCreateDeployment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92213,7 +93053,7 @@ export async function reposCreateDeployment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/deployments#get-a-deployment}
  * Tags: repos
  */
-export async function reposGetDeployment<FetcherData>(
+export async function reposGetDeployment<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92260,7 +93100,9 @@ export async function reposGetDeployment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/deployments#delete-a-deployment}
  * Tags: repos
  */
-export async function reposDeleteDeployment<FetcherData>(
+export async function reposDeleteDeployment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92287,7 +93129,9 @@ export async function reposDeleteDeployment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/statuses#list-deployment-statuses}
  * Tags: repos
  */
-export async function reposListDeploymentStatuses<FetcherData>(
+export async function reposListDeploymentStatuses<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92326,7 +93170,9 @@ export async function reposListDeploymentStatuses<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/statuses#create-a-deployment-status}
  * Tags: repos
  */
-export async function reposCreateDeploymentStatus<FetcherData>(
+export async function reposCreateDeploymentStatus<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92396,7 +93242,9 @@ export async function reposCreateDeploymentStatus<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/statuses#get-a-deployment-status}
  * Tags: repos
  */
-export async function reposGetDeploymentStatus<FetcherData>(
+export async function reposGetDeploymentStatus<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92442,7 +93290,9 @@ export async function reposGetDeploymentStatus<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-dispatch-event}
  * Tags: repos
  */
-export async function reposCreateDispatchEvent<FetcherData>(
+export async function reposCreateDispatchEvent<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92486,7 +93336,9 @@ export async function reposCreateDispatchEvent<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#list-environments}
  * Tags: repos
  */
-export async function reposGetAllEnvironments<FetcherData>(
+export async function reposGetAllEnvironments<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92542,7 +93394,9 @@ export async function reposGetAllEnvironments<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#get-an-environment}
  * Tags: repos
  */
-export async function reposGetEnvironment<FetcherData>(
+export async function reposGetEnvironment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92583,7 +93437,9 @@ export async function reposGetEnvironment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#create-or-update-an-environment}
  * Tags: repos
  */
-export async function reposCreateOrUpdateEnvironment<FetcherData>(
+export async function reposCreateOrUpdateEnvironment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92633,7 +93489,9 @@ export async function reposCreateOrUpdateEnvironment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#delete-an-environment}
  * Tags: repos
  */
-export async function reposDeleteAnEnvironment<FetcherData>(
+export async function reposDeleteAnEnvironment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92662,7 +93520,9 @@ export async function reposDeleteAnEnvironment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#list-deployment-branch-policies}
  * Tags: repos
  */
-export async function reposListDeploymentBranchPolicies<FetcherData>(
+export async function reposListDeploymentBranchPolicies<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92703,7 +93563,9 @@ export async function reposListDeploymentBranchPolicies<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#create-a-deployment-branch-policy}
  * Tags: repos
  */
-export async function reposCreateDeploymentBranchPolicy<FetcherData>(
+export async function reposCreateDeploymentBranchPolicy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92738,7 +93600,9 @@ export async function reposCreateDeploymentBranchPolicy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#get-a-deployment-branch-policy}
  * Tags: repos
  */
-export async function reposGetDeploymentBranchPolicy<FetcherData>(
+export async function reposGetDeploymentBranchPolicy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92765,7 +93629,9 @@ export async function reposGetDeploymentBranchPolicy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#update-a-deployment-branch-policy}
  * Tags: repos
  */
-export async function reposUpdateDeploymentBranchPolicy<FetcherData>(
+export async function reposUpdateDeploymentBranchPolicy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92794,7 +93660,9 @@ export async function reposUpdateDeploymentBranchPolicy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/branch-policies#delete-a-deployment-branch-policy}
  * Tags: repos
  */
-export async function reposDeleteDeploymentBranchPolicy<FetcherData>(
+export async function reposDeleteDeploymentBranchPolicy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92827,7 +93695,9 @@ export async function reposDeleteDeploymentBranchPolicy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#get-all-deployment-protection-rules-for-an-environment}
  * Tags: repos
  */
-export async function reposGetAllDeploymentProtectionRules<FetcherData>(
+export async function reposGetAllDeploymentProtectionRules<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     environment_name: string;
@@ -92872,7 +93742,9 @@ export async function reposGetAllDeploymentProtectionRules<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#create-a-custom-deployment-protection-rule-on-an-environment}
  * Tags: repos
  */
-export async function reposCreateDeploymentProtectionRule<FetcherData>(
+export async function reposCreateDeploymentProtectionRule<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     environment_name: string;
@@ -92913,7 +93785,9 @@ export async function reposCreateDeploymentProtectionRule<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#list-custom-deployment-rule-integrations-available-for-an-environment}
  * Tags: repos
  */
-export async function reposListCustomDeploymentRuleIntegrations<FetcherData>(
+export async function reposListCustomDeploymentRuleIntegrations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     environment_name: string;
@@ -92960,7 +93834,9 @@ export async function reposListCustomDeploymentRuleIntegrations<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#get-a-custom-deployment-protection-rule}
  * Tags: repos
  */
-export async function reposGetCustomDeploymentProtectionRule<FetcherData>(
+export async function reposGetCustomDeploymentProtectionRule<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -92990,7 +93866,9 @@ export async function reposGetCustomDeploymentProtectionRule<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#disable-a-custom-protection-rule-for-an-environment}
  * Tags: repos
  */
-export async function reposDisableDeploymentProtectionRule<FetcherData>(
+export async function reposDisableDeploymentProtectionRule<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     environment_name: string;
@@ -93021,7 +93899,9 @@ export async function reposDisableDeploymentProtectionRule<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#list-environment-secrets}
  * Tags: actions
  */
-export async function actionsListEnvironmentSecrets<FetcherData>(
+export async function actionsListEnvironmentSecrets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93074,7 +93954,9 @@ export async function actionsListEnvironmentSecrets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-environment-public-key}
  * Tags: actions
  */
-export async function actionsGetEnvironmentPublicKey<FetcherData>(
+export async function actionsGetEnvironmentPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93103,7 +93985,9 @@ export async function actionsGetEnvironmentPublicKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#get-an-environment-secret}
  * Tags: actions
  */
-export async function actionsGetEnvironmentSecret<FetcherData>(
+export async function actionsGetEnvironmentSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93142,7 +94026,9 @@ export async function actionsGetEnvironmentSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#create-or-update-an-environment-secret}
  * Tags: actions
  */
-export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
+export async function actionsCreateOrUpdateEnvironmentSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93185,7 +94071,9 @@ export async function actionsCreateOrUpdateEnvironmentSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/secrets#delete-an-environment-secret}
  * Tags: actions
  */
-export async function actionsDeleteEnvironmentSecret<FetcherData>(
+export async function actionsDeleteEnvironmentSecret<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93214,7 +94102,9 @@ export async function actionsDeleteEnvironmentSecret<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#list-environment-variables}
  * Tags: actions
  */
-export async function actionsListEnvironmentVariables<FetcherData>(
+export async function actionsListEnvironmentVariables<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93266,7 +94156,9 @@ export async function actionsListEnvironmentVariables<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#create-an-environment-variable}
  * Tags: actions
  */
-export async function actionsCreateEnvironmentVariable<FetcherData>(
+export async function actionsCreateEnvironmentVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93306,7 +94198,9 @@ export async function actionsCreateEnvironmentVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#get-an-environment-variable}
  * Tags: actions
  */
-export async function actionsGetEnvironmentVariable<FetcherData>(
+export async function actionsGetEnvironmentVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93342,7 +94236,9 @@ export async function actionsGetEnvironmentVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#update-an-environment-variable}
  * Tags: actions
  */
-export async function actionsUpdateEnvironmentVariable<FetcherData>(
+export async function actionsUpdateEnvironmentVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93383,7 +94279,9 @@ export async function actionsUpdateEnvironmentVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/actions/variables#delete-an-environment-variable}
  * Tags: actions
  */
-export async function actionsDeleteEnvironmentVariable<FetcherData>(
+export async function actionsDeleteEnvironmentVariable<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93408,7 +94306,9 @@ export async function actionsDeleteEnvironmentVariable<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-repository-events}
  * Tags: activity
  */
-export async function activityListRepoEvents<FetcherData>(
+export async function activityListRepoEvents<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93438,7 +94338,7 @@ export async function activityListRepoEvents<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/forks#list-forks}
  * Tags: repos
  */
-export async function reposListForks<FetcherData>(
+export async function reposListForks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93482,7 +94382,7 @@ export async function reposListForks<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/forks#create-a-fork}
  * Tags: repos
  */
-export async function reposCreateFork<FetcherData>(
+export async function reposCreateFork<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93530,7 +94430,7 @@ export async function reposCreateFork<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/blobs#create-a-blob}
  * Tags: git
  */
-export async function gitCreateBlob<FetcherData>(
+export async function gitCreateBlob<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93582,7 +94482,7 @@ export async function gitCreateBlob<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/blobs#get-a-blob}
  * Tags: git
  */
-export async function gitGetBlob<FetcherData>(
+export async function gitGetBlob<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93658,7 +94558,7 @@ export async function gitGetBlob<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/commits#create-a-commit}
  * Tags: git
  */
-export async function gitCreateCommit<FetcherData>(
+export async function gitCreateCommit<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93793,7 +94693,7 @@ export async function gitCreateCommit<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/commits#get-a-commit-object}
  * Tags: git
  */
-export async function gitGetCommit<FetcherData>(
+export async function gitGetCommit<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93841,7 +94741,9 @@ export async function gitGetCommit<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/refs#list-matching-references}
  * Tags: git
  */
-export async function gitListMatchingRefs<FetcherData>(
+export async function gitListMatchingRefs<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93873,7 +94775,7 @@ export async function gitListMatchingRefs<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/refs#get-a-reference}
  * Tags: git
  */
-export async function gitGetRef<FetcherData>(
+export async function gitGetRef<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93901,7 +94803,7 @@ export async function gitGetRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/refs#create-a-reference}
  * Tags: git
  */
-export async function gitCreateRef<FetcherData>(
+export async function gitCreateRef<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93939,7 +94841,7 @@ export async function gitCreateRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/refs#update-a-reference}
  * Tags: git
  */
-export async function gitUpdateRef<FetcherData>(
+export async function gitUpdateRef<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -93977,7 +94879,7 @@ export async function gitUpdateRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/refs#delete-a-reference}
  * Tags: git
  */
-export async function gitDeleteRef<FetcherData>(
+export async function gitDeleteRef<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94054,7 +94956,7 @@ export async function gitDeleteRef<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/tags#create-a-tag-object}
  * Tags: git
  */
-export async function gitCreateTag<FetcherData>(
+export async function gitCreateTag<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94160,7 +95062,7 @@ export async function gitCreateTag<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/tags#get-a-tag}
  * Tags: git
  */
-export async function gitGetTag<FetcherData>(
+export async function gitGetTag<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94197,7 +95099,7 @@ export async function gitGetTag<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/trees#create-a-tree}
  * Tags: git
  */
-export async function gitCreateTree<FetcherData>(
+export async function gitCreateTree<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94270,7 +95172,7 @@ export async function gitCreateTree<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/git/trees#get-a-tree}
  * Tags: git
  */
-export async function gitGetTree<FetcherData>(
+export async function gitGetTree<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94300,7 +95202,7 @@ export async function gitGetTree<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#list-repository-webhooks}
  * Tags: repos
  */
-export async function reposListWebhooks<FetcherData>(
+export async function reposListWebhooks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94333,7 +95235,7 @@ export async function reposListWebhooks<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#create-a-repository-webhook}
  * Tags: repos
  */
-export async function reposCreateWebhook<FetcherData>(
+export async function reposCreateWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94396,7 +95298,7 @@ export async function reposCreateWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#get-a-repository-webhook}
  * Tags: repos
  */
-export async function reposGetWebhook<FetcherData>(
+export async function reposGetWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94428,7 +95330,7 @@ export async function reposGetWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#update-a-repository-webhook}
  * Tags: repos
  */
-export async function reposUpdateWebhook<FetcherData>(
+export async function reposUpdateWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94485,7 +95387,7 @@ export async function reposUpdateWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#delete-a-repository-webhook}
  * Tags: repos
  */
-export async function reposDeleteWebhook<FetcherData>(
+export async function reposDeleteWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94512,7 +95414,9 @@ export async function reposDeleteWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#get-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
-export async function reposGetWebhookConfigForRepo<FetcherData>(
+export async function reposGetWebhookConfigForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94539,7 +95443,9 @@ export async function reposGetWebhookConfigForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#update-a-webhook-configuration-for-a-repository}
  * Tags: repos
  */
-export async function reposUpdateWebhookConfigForRepo<FetcherData>(
+export async function reposUpdateWebhookConfigForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94569,7 +95475,9 @@ export async function reposUpdateWebhookConfigForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#list-deliveries-for-a-repository-webhook}
  * Tags: repos
  */
-export async function reposListWebhookDeliveries<FetcherData>(
+export async function reposListWebhookDeliveries<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94608,7 +95516,9 @@ export async function reposListWebhookDeliveries<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#get-a-delivery-for-a-repository-webhook}
  * Tags: repos
  */
-export async function reposGetWebhookDelivery<FetcherData>(
+export async function reposGetWebhookDelivery<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94642,7 +95552,9 @@ export async function reposGetWebhookDelivery<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#redeliver-a-delivery-for-a-repository-webhook}
  * Tags: repos
  */
-export async function reposRedeliverWebhookDelivery<FetcherData>(
+export async function reposRedeliverWebhookDelivery<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94670,7 +95582,7 @@ export async function reposRedeliverWebhookDelivery<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#ping-a-repository-webhook}
  * Tags: repos
  */
-export async function reposPingWebhook<FetcherData>(
+export async function reposPingWebhook<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94697,7 +95609,9 @@ export async function reposPingWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#test-the-push-repository-webhook}
  * Tags: repos
  */
-export async function reposTestPushWebhook<FetcherData>(
+export async function reposTestPushWebhook<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94792,7 +95706,9 @@ export async function reposTestPushWebhook<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#get-an-import-status}
  * Tags: migrations
  */
-export async function migrationsGetImportStatus<FetcherData>(
+export async function migrationsGetImportStatus<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94827,7 +95743,9 @@ export async function migrationsGetImportStatus<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#start-an-import}
  * Tags: migrations
  */
-export async function migrationsStartImport<FetcherData>(
+export async function migrationsStartImport<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94891,7 +95809,9 @@ export async function migrationsStartImport<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#update-an-import}
  * Tags: migrations
  */
-export async function migrationsUpdateImport<FetcherData>(
+export async function migrationsUpdateImport<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94939,7 +95859,9 @@ export async function migrationsUpdateImport<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#cancel-an-import}
  * Tags: migrations
  */
-export async function migrationsCancelImport<FetcherData>(
+export async function migrationsCancelImport<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -94973,7 +95895,9 @@ export async function migrationsCancelImport<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#get-commit-authors}
  * Tags: migrations
  */
-export async function migrationsGetCommitAuthors<FetcherData>(
+export async function migrationsGetCommitAuthors<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95008,7 +95932,9 @@ export async function migrationsGetCommitAuthors<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#map-a-commit-author}
  * Tags: migrations
  */
-export async function migrationsMapCommitAuthor<FetcherData>(
+export async function migrationsMapCommitAuthor<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95052,7 +95978,9 @@ export async function migrationsMapCommitAuthor<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#get-large-files}
  * Tags: migrations
  */
-export async function migrationsGetLargeFiles<FetcherData>(
+export async function migrationsGetLargeFiles<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95088,7 +96016,9 @@ export async function migrationsGetLargeFiles<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#update-git-lfs-preference}
  * Tags: migrations
  */
-export async function migrationsSetLfsPreference<FetcherData>(
+export async function migrationsSetLfsPreference<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95126,7 +96056,9 @@ export async function migrationsSetLfsPreference<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-a-repository-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetRepoInstallation<FetcherData>(
+export async function appsGetRepoInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95159,7 +96091,9 @@ export async function appsGetRepoInstallation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/interactions/repos#get-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
-export async function interactionsGetRestrictionsForRepo<FetcherData>(
+export async function interactionsGetRestrictionsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95194,7 +96128,9 @@ export async function interactionsGetRestrictionsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/interactions/repos#set-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
-export async function interactionsSetRestrictionsForRepo<FetcherData>(
+export async function interactionsSetRestrictionsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95232,7 +96168,9 @@ export async function interactionsSetRestrictionsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/interactions/repos#remove-interaction-restrictions-for-a-repository}
  * Tags: interactions
  */
-export async function interactionsRemoveRestrictionsForRepo<FetcherData>(
+export async function interactionsRemoveRestrictionsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95255,7 +96193,9 @@ export async function interactionsRemoveRestrictionsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/invitations#list-repository-invitations}
  * Tags: repos
  */
-export async function reposListInvitations<FetcherData>(
+export async function reposListInvitations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95287,7 +96227,9 @@ export async function reposListInvitations<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/invitations#update-a-repository-invitation}
  * Tags: repos
  */
-export async function reposUpdateInvitation<FetcherData>(
+export async function reposUpdateInvitation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95322,7 +96264,9 @@ export async function reposUpdateInvitation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/invitations#delete-a-repository-invitation}
  * Tags: repos
  */
-export async function reposDeleteInvitation<FetcherData>(
+export async function reposDeleteInvitation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95368,7 +96312,7 @@ export async function reposDeleteInvitation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-repository-issues}
  * Tags: issues
  */
-export async function issuesListForRepo<FetcherData>(
+export async function issuesListForRepo<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95428,7 +96372,8 @@ export async function issuesListForRepo<FetcherData>(
  * triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
  * and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
@@ -95449,7 +96394,7 @@ export async function issuesListForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#create-an-issue}
  * Tags: issues
  */
-export async function issuesCreate<FetcherData>(
+export async function issuesCreate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95541,7 +96486,9 @@ export async function issuesCreate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/comments#list-issue-comments-for-a-repository}
  * Tags: issues
  */
-export async function issuesListCommentsForRepo<FetcherData>(
+export async function issuesListCommentsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95595,7 +96542,7 @@ export async function issuesListCommentsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/comments#get-an-issue-comment}
  * Tags: issues
  */
-export async function issuesGetComment<FetcherData>(
+export async function issuesGetComment<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95640,7 +96587,9 @@ export async function issuesGetComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/comments#update-an-issue-comment}
  * Tags: issues
  */
-export async function issuesUpdateComment<FetcherData>(
+export async function issuesUpdateComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95679,7 +96628,9 @@ export async function issuesUpdateComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/comments#delete-an-issue-comment}
  * Tags: issues
  */
-export async function issuesDeleteComment<FetcherData>(
+export async function issuesDeleteComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95702,7 +96653,9 @@ export async function issuesDeleteComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment}
  * Tags: reactions
  */
-export async function reactionsListForIssueComment<FetcherData>(
+export async function reactionsListForIssueComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95746,7 +96699,9 @@ export async function reactionsListForIssueComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForIssueComment<FetcherData>(
+export async function reactionsCreateForIssueComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95799,7 +96754,9 @@ export async function reactionsCreateForIssueComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-an-issue-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForIssueComment<FetcherData>(
+export async function reactionsDeleteForIssueComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95823,7 +96780,9 @@ export async function reactionsDeleteForIssueComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/events#list-issue-events-for-a-repository}
  * Tags: issues
  */
-export async function issuesListEventsForRepo<FetcherData>(
+export async function issuesListEventsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95856,7 +96815,7 @@ export async function issuesListEventsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/events#get-an-issue-event}
  * Tags: issues
  */
-export async function issuesGetEvent<FetcherData>(
+export async function issuesGetEvent<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95924,7 +96883,7 @@ export async function issuesGetEvent<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#get-an-issue}
  * Tags: issues
  */
-export async function issuesGet<FetcherData>(
+export async function issuesGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -95973,7 +96932,7 @@ export async function issuesGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#update-an-issue}
  * Tags: issues
  */
-export async function issuesUpdate<FetcherData>(
+export async function issuesUpdate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96058,7 +97017,7 @@ export async function issuesUpdate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/assignees#add-assignees-to-an-issue}
  * Tags: issues
  */
-export async function issuesAddAssignees<FetcherData>(
+export async function issuesAddAssignees<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96094,7 +97053,9 @@ export async function issuesAddAssignees<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/assignees#remove-assignees-from-an-issue}
  * Tags: issues
  */
-export async function issuesRemoveAssignees<FetcherData>(
+export async function issuesRemoveAssignees<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96135,7 +97096,9 @@ export async function issuesRemoveAssignees<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/assignees#check-if-a-user-can-be-assigned-to-a-issue}
  * Tags: issues
  */
-export async function issuesCheckUserCanBeAssignedToIssue<FetcherData>(
+export async function issuesCheckUserCanBeAssignedToIssue<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96176,7 +97139,7 @@ export async function issuesCheckUserCanBeAssignedToIssue<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/comments#list-issue-comments}
  * Tags: issues
  */
-export async function issuesListComments<FetcherData>(
+export async function issuesListComments<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96219,12 +97182,14 @@ export async function issuesListComments<FetcherData>(
  * Creating
  * content too quickly using this endpoint may result in secondary rate limiting.
  * For more information, see "[Rate limits
- * for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
- * and "[Best
- * practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ * for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * This
- * endpoint supports the following custom media types. For more information, see "[Media
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
  * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
  * -
@@ -96239,7 +97204,9 @@ export async function issuesListComments<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/comments#create-an-issue-comment}
  * Tags: issues
  */
-export async function issuesCreateComment<FetcherData>(
+export async function issuesCreateComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96281,7 +97248,7 @@ export async function issuesCreateComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/events#list-issue-events}
  * Tags: issues
  */
-export async function issuesListEvents<FetcherData>(
+export async function issuesListEvents<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96310,7 +97277,9 @@ export async function issuesListEvents<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#list-labels-for-an-issue}
  * Tags: issues
  */
-export async function issuesListLabelsOnIssue<FetcherData>(
+export async function issuesListLabelsOnIssue<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96341,7 +97310,7 @@ export async function issuesListLabelsOnIssue<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#add-labels-to-an-issue}
  * Tags: issues
  */
-export async function issuesAddLabels<FetcherData>(
+export async function issuesAddLabels<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96388,7 +97357,7 @@ export async function issuesAddLabels<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#set-labels-for-an-issue}
  * Tags: issues
  */
-export async function issuesSetLabels<FetcherData>(
+export async function issuesSetLabels<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96435,7 +97404,9 @@ export async function issuesSetLabels<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#remove-all-labels-from-an-issue}
  * Tags: issues
  */
-export async function issuesRemoveAllLabels<FetcherData>(
+export async function issuesRemoveAllLabels<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96464,7 +97435,7 @@ export async function issuesRemoveAllLabels<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#remove-a-label-from-an-issue}
  * Tags: issues
  */
-export async function issuesRemoveLabel<FetcherData>(
+export async function issuesRemoveLabel<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96497,7 +97468,7 @@ export async function issuesRemoveLabel<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#lock-an-issue}
  * Tags: issues
  */
-export async function issuesLock<FetcherData>(
+export async function issuesLock<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96537,7 +97508,7 @@ export async function issuesLock<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/issues#unlock-an-issue}
  * Tags: issues
  */
-export async function issuesUnlock<FetcherData>(
+export async function issuesUnlock<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96564,7 +97535,9 @@ export async function issuesUnlock<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue}
  * Tags: reactions
  */
-export async function reactionsListForIssue<FetcherData>(
+export async function reactionsListForIssue<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96610,7 +97583,9 @@ export async function reactionsListForIssue<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue}
  * Tags: reactions
  */
-export async function reactionsCreateForIssue<FetcherData>(
+export async function reactionsCreateForIssue<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96663,7 +97638,9 @@ export async function reactionsCreateForIssue<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-an-issue-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForIssue<FetcherData>(
+export async function reactionsDeleteForIssue<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96687,7 +97664,9 @@ export async function reactionsDeleteForIssue<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/timeline#list-timeline-events-for-an-issue}
  * Tags: issues
  */
-export async function issuesListEventsForTimeline<FetcherData>(
+export async function issuesListEventsForTimeline<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96724,7 +97703,9 @@ export async function issuesListEventsForTimeline<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deploy-keys/deploy-keys#list-deploy-keys}
  * Tags: repos
  */
-export async function reposListDeployKeys<FetcherData>(
+export async function reposListDeployKeys<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96749,7 +97730,9 @@ export async function reposListDeployKeys<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deploy-keys/deploy-keys#create-a-deploy-key}
  * Tags: repos
  */
-export async function reposCreateDeployKey<FetcherData>(
+export async function reposCreateDeployKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96789,7 +97772,7 @@ export async function reposCreateDeployKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deploy-keys/deploy-keys#get-a-deploy-key}
  * Tags: repos
  */
-export async function reposGetDeployKey<FetcherData>(
+export async function reposGetDeployKey<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96814,7 +97797,9 @@ export async function reposGetDeployKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/deploy-keys/deploy-keys#delete-a-deploy-key}
  * Tags: repos
  */
-export async function reposDeleteDeployKey<FetcherData>(
+export async function reposDeleteDeployKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96837,7 +97822,9 @@ export async function reposDeleteDeployKey<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#list-labels-for-a-repository}
  * Tags: issues
  */
-export async function issuesListLabelsForRepo<FetcherData>(
+export async function issuesListLabelsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96863,7 +97850,7 @@ export async function issuesListLabelsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#create-a-label}
  * Tags: issues
  */
-export async function issuesCreateLabel<FetcherData>(
+export async function issuesCreateLabel<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96904,7 +97891,7 @@ export async function issuesCreateLabel<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#get-a-label}
  * Tags: issues
  */
-export async function issuesGetLabel<FetcherData>(
+export async function issuesGetLabel<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96927,7 +97914,7 @@ export async function issuesGetLabel<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#update-a-label}
  * Tags: issues
  */
-export async function issuesUpdateLabel<FetcherData>(
+export async function issuesUpdateLabel<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96965,7 +97952,7 @@ export async function issuesUpdateLabel<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#delete-a-label}
  * Tags: issues
  */
-export async function issuesDeleteLabel<FetcherData>(
+export async function issuesDeleteLabel<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -96989,7 +97976,7 @@ export async function issuesDeleteLabel<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repository-languages}
  * Tags: repos
  */
-export async function reposListLanguages<FetcherData>(
+export async function reposListLanguages<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97021,7 +98008,7 @@ export async function reposListLanguages<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/licenses/licenses#get-the-license-for-a-repository}
  * Tags: licenses
  */
-export async function licensesGetForRepo<FetcherData>(
+export async function licensesGetForRepo<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97047,7 +98034,7 @@ export async function licensesGetForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branches#sync-a-fork-branch-with-the-upstream-repository}
  * Tags: repos
  */
-export async function reposMergeUpstream<FetcherData>(
+export async function reposMergeUpstream<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97079,7 +98066,7 @@ export async function reposMergeUpstream<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/branches/branches#merge-a-branch}
  * Tags: repos
  */
-export async function reposMerge<FetcherData>(
+export async function reposMerge<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97123,7 +98110,9 @@ export async function reposMerge<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/milestones#list-milestones}
  * Tags: issues
  */
-export async function issuesListMilestones<FetcherData>(
+export async function issuesListMilestones<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97159,7 +98148,9 @@ export async function issuesListMilestones<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/milestones#create-a-milestone}
  * Tags: issues
  */
-export async function issuesCreateMilestone<FetcherData>(
+export async function issuesCreateMilestone<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97211,7 +98202,7 @@ export async function issuesCreateMilestone<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/milestones#get-a-milestone}
  * Tags: issues
  */
-export async function issuesGetMilestone<FetcherData>(
+export async function issuesGetMilestone<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97241,7 +98232,9 @@ export async function issuesGetMilestone<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/milestones#update-a-milestone}
  * Tags: issues
  */
-export async function issuesUpdateMilestone<FetcherData>(
+export async function issuesUpdateMilestone<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97290,7 +98283,9 @@ export async function issuesUpdateMilestone<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/milestones#delete-a-milestone}
  * Tags: issues
  */
-export async function issuesDeleteMilestone<FetcherData>(
+export async function issuesDeleteMilestone<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97313,7 +98308,9 @@ export async function issuesDeleteMilestone<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/issues/labels#list-labels-for-issues-in-a-milestone}
  * Tags: issues
  */
-export async function issuesListLabelsForMilestone<FetcherData>(
+export async function issuesListLabelsForMilestone<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97340,7 +98337,7 @@ export async function issuesListLabelsForMilestone<FetcherData>(
  * Tags: activity
  */
 export async function activityListRepoNotificationsForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -97388,7 +98385,9 @@ export async function activityListRepoNotificationsForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/activity/notifications#mark-repository-notifications-as-read}
  * Tags: activity
  */
-export async function activityMarkRepoNotificationsAsRead<FetcherData>(
+export async function activityMarkRepoNotificationsAsRead<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97429,7 +98428,7 @@ export async function activityMarkRepoNotificationsAsRead<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site}
  * Tags: repos
  */
-export async function reposGetPages<FetcherData>(
+export async function reposGetPages<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97464,7 +98463,9 @@ export async function reposGetPages<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#create-a-apiname-pages-site}
  * Tags: repos
  */
-export async function reposCreatePagesSite<FetcherData>(
+export async function reposCreatePagesSite<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97505,7 +98506,9 @@ export async function reposCreatePagesSite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#update-information-about-a-apiname-pages-site}
  * Tags: repos
  */
-export async function reposUpdateInformationAboutPagesSite<FetcherData>(
+export async function reposUpdateInformationAboutPagesSite<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97541,7 +98544,9 @@ export async function reposUpdateInformationAboutPagesSite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#delete-a-apiname-pages-site}
  * Tags: repos
  */
-export async function reposDeletePagesSite<FetcherData>(
+export async function reposDeletePagesSite<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97571,7 +98576,9 @@ export async function reposDeletePagesSite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#list-apiname-pages-builds}
  * Tags: repos
  */
-export async function reposListPagesBuilds<FetcherData>(
+export async function reposListPagesBuilds<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97608,7 +98615,9 @@ export async function reposListPagesBuilds<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#request-a-apiname-pages-build}
  * Tags: repos
  */
-export async function reposRequestPagesBuild<FetcherData>(
+export async function reposRequestPagesBuild<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97633,7 +98642,9 @@ export async function reposRequestPagesBuild<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-latest-pages-build}
  * Tags: repos
  */
-export async function reposGetLatestPagesBuild<FetcherData>(
+export async function reposGetLatestPagesBuild<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97664,7 +98675,7 @@ export async function reposGetLatestPagesBuild<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-apiname-pages-build}
  * Tags: repos
  */
-export async function reposGetPagesBuild<FetcherData>(
+export async function reposGetPagesBuild<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97695,7 +98706,9 @@ export async function reposGetPagesBuild<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#create-a-github-pages-deployment}
  * Tags: repos
  */
-export async function reposCreatePagesDeployment<FetcherData>(
+export async function reposCreatePagesDeployment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97750,7 +98763,9 @@ export async function reposCreatePagesDeployment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-the-status-of-a-github-pages-deployment}
  * Tags: repos
  */
-export async function reposGetPagesDeployment<FetcherData>(
+export async function reposGetPagesDeployment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97778,7 +98793,9 @@ export async function reposGetPagesDeployment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#cancel-a-github-pages-deployment}
  * Tags: repos
  */
-export async function reposCancelPagesDeployment<FetcherData>(
+export async function reposCancelPagesDeployment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97812,7 +98829,9 @@ export async function reposCancelPagesDeployment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pages/pages#get-a-dns-health-check-for-github-pages}
  * Tags: repos
  */
-export async function reposGetPagesHealthCheck<FetcherData>(
+export async function reposGetPagesHealthCheck<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97842,7 +98861,9 @@ export async function reposGetPagesHealthCheck<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#check-if-private-vulnerability-reporting-is-enabled-for-a-repository}
  * Tags: repos
  */
-export async function reposCheckPrivateVulnerabilityReporting<FetcherData>(
+export async function reposCheckPrivateVulnerabilityReporting<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97877,7 +98898,9 @@ export async function reposCheckPrivateVulnerabilityReporting<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#enable-private-vulnerability-reporting-for-a-repository}
  * Tags: repos
  */
-export async function reposEnablePrivateVulnerabilityReporting<FetcherData>(
+export async function reposEnablePrivateVulnerabilityReporting<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97901,7 +98924,9 @@ export async function reposEnablePrivateVulnerabilityReporting<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#disable-private-vulnerability-reporting-for-a-repository}
  * Tags: repos
  */
-export async function reposDisablePrivateVulnerabilityReporting<FetcherData>(
+export async function reposDisablePrivateVulnerabilityReporting<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97924,7 +98949,9 @@ export async function reposDisablePrivateVulnerabilityReporting<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#list-repository-projects}
  * Tags: projects
  */
-export async function projectsListForRepo<FetcherData>(
+export async function projectsListForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -97965,7 +98992,9 @@ export async function projectsListForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#create-a-repository-project}
  * Tags: projects
  */
-export async function projectsCreateForRepo<FetcherData>(
+export async function projectsCreateForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98013,7 +99042,9 @@ export async function projectsCreateForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/custom-properties#get-all-custom-property-values-for-a-repository}
  * Tags: repos
  */
-export async function reposGetCustomPropertiesValues<FetcherData>(
+export async function reposGetCustomPropertiesValues<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98044,7 +99075,9 @@ export async function reposGetCustomPropertiesValues<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository}
  * Tags: repos
  */
-export async function reposCreateOrUpdateCustomPropertiesValues<FetcherData>(
+export async function reposCreateOrUpdateCustomPropertiesValues<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98101,7 +99134,7 @@ export async function reposCreateOrUpdateCustomPropertiesValues<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#list-pull-requests}
  * Tags: pulls
  */
-export async function pullsList<FetcherData>(
+export async function pullsList<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98160,7 +99193,8 @@ export async function pullsList<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -98180,7 +99214,7 @@ export async function pullsList<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#create-a-pull-request}
  * Tags: pulls
  */
-export async function pullsCreate<FetcherData>(
+export async function pullsCreate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98265,7 +99299,9 @@ export async function pullsCreate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#list-review-comments-in-a-repository}
  * Tags: pulls
  */
-export async function pullsListReviewCommentsForRepo<FetcherData>(
+export async function pullsListReviewCommentsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98318,7 +99354,9 @@ export async function pullsListReviewCommentsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#get-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsGetReviewComment<FetcherData>(
+export async function pullsGetReviewComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98367,7 +99405,9 @@ export async function pullsGetReviewComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#update-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsUpdateReviewComment<FetcherData>(
+export async function pullsUpdateReviewComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98405,7 +99445,9 @@ export async function pullsUpdateReviewComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#delete-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsDeleteReviewComment<FetcherData>(
+export async function pullsDeleteReviewComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98429,7 +99471,9 @@ export async function pullsDeleteReviewComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-pull-request-review-comment}
  * Tags: reactions
  */
-export async function reactionsListForPullRequestReviewComment<FetcherData>(
+export async function reactionsListForPullRequestReviewComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98474,7 +99518,9 @@ export async function reactionsListForPullRequestReviewComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-pull-request-review-comment}
  * Tags: reactions
  */
-export async function reactionsCreateForPullRequestReviewComment<FetcherData>(
+export async function reactionsCreateForPullRequestReviewComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98527,7 +99573,9 @@ export async function reactionsCreateForPullRequestReviewComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-a-pull-request-comment-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForPullRequestComment<FetcherData>(
+export async function reactionsDeleteForPullRequestComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98585,7 +99633,7 @@ export async function reactionsDeleteForPullRequestComment<FetcherData>(
  * `merge_commit_sha` represents the commit that the base branch was updated to.
  *
  * Pass the appropriate [media
- * type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and
+ * type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types) to fetch diff and
  * patch formats.
  *
  * This endpoint supports the following custom media types. For more information, see "[Media
@@ -98607,7 +99655,7 @@ export async function reactionsDeleteForPullRequestComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#get-a-pull-request}
  * Tags: pulls
  */
-export async function pullsGet<FetcherData>(
+export async function pullsGet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98671,7 +99719,7 @@ export async function pullsGet<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#update-a-pull-request}
  * Tags: pulls
  */
-export async function pullsUpdate<FetcherData>(
+export async function pullsUpdate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98730,7 +99778,9 @@ export async function pullsUpdate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-from-a-pull-request}
  * Tags: codespaces
  */
-export async function codespacesCreateWithPrForAuthenticatedUser<FetcherData>(
+export async function codespacesCreateWithPrForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98833,7 +99883,9 @@ export async function codespacesCreateWithPrForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#list-review-comments-on-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListReviewComments<FetcherData>(
+export async function pullsListReviewComments<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98881,7 +99933,8 @@ export async function pullsListReviewComments<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
  * and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
@@ -98903,7 +99956,9 @@ export async function pullsListReviewComments<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#create-a-review-comment-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsCreateReviewComment<FetcherData>(
+export async function pullsCreateReviewComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -98986,7 +100041,8 @@ export async function pullsCreateReviewComment<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
  * and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
@@ -99008,7 +100064,9 @@ export async function pullsCreateReviewComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/comments#create-a-reply-for-a-review-comment}
  * Tags: pulls
  */
-export async function pullsCreateReplyForReviewComment<FetcherData>(
+export async function pullsCreateReplyForReviewComment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99067,7 +100125,7 @@ export async function pullsCreateReplyForReviewComment<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#list-commits-on-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListCommits<FetcherData>(
+export async function pullsListCommits<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99111,7 +100169,7 @@ export async function pullsListCommits<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#list-pull-requests-files}
  * Tags: pulls
  */
-export async function pullsListFiles<FetcherData>(
+export async function pullsListFiles<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99150,7 +100208,7 @@ export async function pullsListFiles<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#check-if-a-pull-request-has-been-merged}
  * Tags: pulls
  */
-export async function pullsCheckIfMerged<FetcherData>(
+export async function pullsCheckIfMerged<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99173,12 +100231,13 @@ export async function pullsCheckIfMerged<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#merge-a-pull-request}
  * Tags: pulls
  */
-export async function pullsMerge<FetcherData>(
+export async function pullsMerge<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99241,7 +100300,9 @@ export async function pullsMerge<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/review-requests#get-all-requested-reviewers-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListRequestedReviewers<FetcherData>(
+export async function pullsListRequestedReviewers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99264,12 +100325,15 @@ export async function pullsListRequestedReviewers<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/pulls/review-requests#request-reviewers-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsRequestReviewers<FetcherData>(
+export async function pullsRequestReviewers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99304,7 +100368,9 @@ export async function pullsRequestReviewers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/review-requests#remove-requested-reviewers-from-a-pull-request}
  * Tags: pulls
  */
-export async function pullsRemoveRequestedReviewers<FetcherData>(
+export async function pullsRemoveRequestedReviewers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99362,7 +100428,7 @@ export async function pullsRemoveRequestedReviewers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsListReviews<FetcherData>(
+export async function pullsListReviews<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99397,7 +100463,8 @@ export async function pullsListReviews<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -99434,7 +100501,7 @@ export async function pullsListReviews<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsCreateReview<FetcherData>(
+export async function pullsCreateReview<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99530,7 +100597,7 @@ export async function pullsCreateReview<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#get-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsGetReview<FetcherData>(
+export async function pullsGetReview<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99577,7 +100644,7 @@ export async function pullsGetReview<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#update-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsUpdateReview<FetcherData>(
+export async function pullsUpdateReview<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99632,7 +100699,9 @@ export async function pullsUpdateReview<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#delete-a-pending-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsDeletePendingReview<FetcherData>(
+export async function pullsDeletePendingReview<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99681,7 +100750,9 @@ export async function pullsDeletePendingReview<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#list-comments-for-a-pull-request-review}
  * Tags: pulls
  */
-export async function pullsListCommentsForReview<FetcherData>(
+export async function pullsListCommentsForReview<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99739,7 +100810,7 @@ export async function pullsListCommentsForReview<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#dismiss-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsDismissReview<FetcherData>(
+export async function pullsDismissReview<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99801,7 +100872,7 @@ export async function pullsDismissReview<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/reviews#submit-a-review-for-a-pull-request}
  * Tags: pulls
  */
-export async function pullsSubmitReview<FetcherData>(
+export async function pullsSubmitReview<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99848,7 +100919,7 @@ export async function pullsSubmitReview<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#update-a-pull-request-branch}
  * Tags: pulls
  */
-export async function pullsUpdateBranch<FetcherData>(
+export async function pullsUpdateBranch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99898,7 +100969,7 @@ export async function pullsUpdateBranch<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/contents#get-a-repository-readme}
  * Tags: repos
  */
-export async function reposGetReadme<FetcherData>(
+export async function reposGetReadme<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99936,7 +101007,9 @@ export async function reposGetReadme<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/contents#get-a-repository-readme-for-a-directory}
  * Tags: repos
  */
-export async function reposGetReadmeInDirectory<FetcherData>(
+export async function reposGetReadmeInDirectory<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -99970,7 +101043,7 @@ export async function reposGetReadmeInDirectory<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/releases#list-releases}
  * Tags: repos
  */
-export async function reposListReleases<FetcherData>(
+export async function reposListReleases<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100004,12 +101077,13 @@ export async function reposListReleases<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  * Learn more at {@link https://docs.github.com/rest/releases/releases#create-a-release}
  * Tags: repos
  */
-export async function reposCreateRelease<FetcherData>(
+export async function reposCreateRelease<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100078,12 +101152,15 @@ export async function reposCreateRelease<FetcherData>(
 /**
  * Get a release asset
  * To download the asset's binary content, set the `Accept` header of the request to
- * [`application/octet-stream`](https://docs.github.com/rest/overview/media-types). The API will either redirect the client
- * to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response.
+ * [`application/octet-stream`](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+ * The API will either redirect the client to the location, or stream it directly if possible. API clients should handle
+ * both a `200` or `302` response.
  * Learn more at {@link https://docs.github.com/rest/releases/assets#get-a-release-asset}
  * Tags: repos
  */
-export async function reposGetReleaseAsset<FetcherData>(
+export async function reposGetReleaseAsset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100116,7 +101193,9 @@ export async function reposGetReleaseAsset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/assets#update-a-release-asset}
  * Tags: repos
  */
-export async function reposUpdateReleaseAsset<FetcherData>(
+export async function reposUpdateReleaseAsset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100159,7 +101238,9 @@ export async function reposUpdateReleaseAsset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/assets#delete-a-release-asset}
  * Tags: repos
  */
-export async function reposDeleteReleaseAsset<FetcherData>(
+export async function reposDeleteReleaseAsset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100185,7 +101266,9 @@ export async function reposDeleteReleaseAsset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/releases#generate-release-notes-content-for-a-release}
  * Tags: repos
  */
-export async function reposGenerateReleaseNotes<FetcherData>(
+export async function reposGenerateReleaseNotes<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100232,7 +101315,9 @@ export async function reposGenerateReleaseNotes<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/releases#get-the-latest-release}
  * Tags: repos
  */
-export async function reposGetLatestRelease<FetcherData>(
+export async function reposGetLatestRelease<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100260,7 +101345,9 @@ export async function reposGetLatestRelease<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/releases#get-a-release-by-tag-name}
  * Tags: repos
  */
-export async function reposGetReleaseByTag<FetcherData>(
+export async function reposGetReleaseByTag<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100295,7 +101382,7 @@ export async function reposGetReleaseByTag<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/releases#get-a-release}
  * Tags: repos
  */
-export async function reposGetRelease<FetcherData>(
+export async function reposGetRelease<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100324,7 +101411,7 @@ export async function reposGetRelease<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/releases#update-a-release}
  * Tags: repos
  */
-export async function reposUpdateRelease<FetcherData>(
+export async function reposUpdateRelease<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100389,7 +101476,7 @@ export async function reposUpdateRelease<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/releases#delete-a-release}
  * Tags: repos
  */
-export async function reposDeleteRelease<FetcherData>(
+export async function reposDeleteRelease<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100411,7 +101498,9 @@ export async function reposDeleteRelease<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/assets#list-release-assets}
  * Tags: repos
  */
-export async function reposListReleaseAssets<FetcherData>(
+export async function reposListReleaseAssets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100481,7 +101570,9 @@ export async function reposListReleaseAssets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/releases/assets#upload-a-release-asset}
  * Tags: repos
  */
-export async function reposUploadReleaseAsset<FetcherData>(
+export async function reposUploadReleaseAsset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100517,7 +101608,9 @@ export async function reposUploadReleaseAsset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-release}
  * Tags: reactions
  */
-export async function reactionsListForRelease<FetcherData>(
+export async function reactionsListForRelease<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100553,7 +101646,9 @@ export async function reactionsListForRelease<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-release}
  * Tags: reactions
  */
-export async function reactionsCreateForRelease<FetcherData>(
+export async function reactionsCreateForRelease<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100598,7 +101693,9 @@ export async function reactionsCreateForRelease<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#delete-a-release-reaction}
  * Tags: reactions
  */
-export async function reactionsDeleteForRelease<FetcherData>(
+export async function reactionsDeleteForRelease<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100628,7 +101725,9 @@ export async function reactionsDeleteForRelease<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rules#get-rules-for-a-branch}
  * Tags: repos
  */
-export async function reposGetBranchRules<FetcherData>(
+export async function reposGetBranchRules<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100654,7 +101753,9 @@ export async function reposGetBranchRules<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rules#get-all-repository-rulesets}
  * Tags: repos
  */
-export async function reposGetRepoRulesets<FetcherData>(
+export async function reposGetRepoRulesets<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100692,7 +101793,9 @@ export async function reposGetRepoRulesets<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rules#create-a-repository-ruleset}
  * Tags: repos
  */
-export async function reposCreateRepoRuleset<FetcherData>(
+export async function reposCreateRepoRuleset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100749,7 +101852,9 @@ export async function reposCreateRepoRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rule-suites#list-repository-rule-suites}
  * Tags: repos
  */
-export async function reposGetRepoRuleSuites<FetcherData>(
+export async function reposGetRepoRuleSuites<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100798,7 +101903,9 @@ export async function reposGetRepoRuleSuites<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rule-suites#get-a-repository-rule-suite}
  * Tags: repos
  */
-export async function reposGetRepoRuleSuite<FetcherData>(
+export async function reposGetRepoRuleSuite<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100831,7 +101938,9 @@ export async function reposGetRepoRuleSuite<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rules#get-a-repository-ruleset}
  * Tags: repos
  */
-export async function reposGetRepoRuleset<FetcherData>(
+export async function reposGetRepoRuleset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100866,7 +101975,9 @@ export async function reposGetRepoRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rules#update-a-repository-ruleset}
  * Tags: repos
  */
-export async function reposUpdateRepoRuleset<FetcherData>(
+export async function reposUpdateRepoRuleset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100922,7 +102033,9 @@ export async function reposUpdateRepoRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/rules#delete-a-repository-ruleset}
  * Tags: repos
  */
-export async function reposDeleteRepoRuleset<FetcherData>(
+export async function reposDeleteRepoRuleset<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -100956,7 +102069,9 @@ export async function reposDeleteRepoRuleset<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-a-repository}
  * Tags: secret-scanning
  */
-export async function secretScanningListAlertsForRepo<FetcherData>(
+export async function secretScanningListAlertsForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101026,7 +102141,9 @@ export async function secretScanningListAlertsForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#get-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
-export async function secretScanningGetAlert<FetcherData>(
+export async function secretScanningGetAlert<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101074,7 +102191,9 @@ export async function secretScanningGetAlert<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#update-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
-export async function secretScanningUpdateAlert<FetcherData>(
+export async function secretScanningUpdateAlert<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101129,7 +102248,9 @@ export async function secretScanningUpdateAlert<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#list-locations-for-a-secret-scanning-alert}
  * Tags: secret-scanning
  */
-export async function secretScanningListLocationsForAlert<FetcherData>(
+export async function secretScanningListLocationsForAlert<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101174,7 +102295,9 @@ export async function secretScanningListLocationsForAlert<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#list-repository-security-advisories}
  * Tags: security-advisories
  */
-export async function securityAdvisoriesListRepositoryAdvisories<FetcherData>(
+export async function securityAdvisoriesListRepositoryAdvisories<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101221,7 +102344,9 @@ export async function securityAdvisoriesListRepositoryAdvisories<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#create-a-repository-security-advisory}
  * Tags: security-advisories
  */
-export async function securityAdvisoriesCreateRepositoryAdvisory<FetcherData>(
+export async function securityAdvisoriesCreateRepositoryAdvisory<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101260,7 +102385,7 @@ export async function securityAdvisoriesCreateRepositoryAdvisory<FetcherData>(
  * Tags: security-advisories
  */
 export async function securityAdvisoriesCreatePrivateVulnerabilityReport<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -101308,7 +102433,9 @@ export async function securityAdvisoriesCreatePrivateVulnerabilityReport<
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#get-a-repository-security-advisory}
  * Tags: security-advisories
  */
-export async function securityAdvisoriesGetRepositoryAdvisory<FetcherData>(
+export async function securityAdvisoriesGetRepositoryAdvisory<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101349,7 +102476,9 @@ export async function securityAdvisoriesGetRepositoryAdvisory<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#update-a-repository-security-advisory}
  * Tags: security-advisories
  */
-export async function securityAdvisoriesUpdateRepositoryAdvisory<FetcherData>(
+export async function securityAdvisoriesUpdateRepositoryAdvisory<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101398,7 +102527,7 @@ export async function securityAdvisoriesUpdateRepositoryAdvisory<FetcherData>(
  * Tags: security-advisories
  */
 export async function securityAdvisoriesCreateRepositoryAdvisoryCveRequest<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -101431,7 +102560,9 @@ export async function securityAdvisoriesCreateRepositoryAdvisoryCveRequest<
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#create-a-temporary-private-fork}
  * Tags: security-advisories
  */
-export async function securityAdvisoriesCreateFork<FetcherData>(
+export async function securityAdvisoriesCreateFork<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101473,7 +102604,9 @@ export async function securityAdvisoriesCreateFork<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/starring#list-stargazers}
  * Tags: activity
  */
-export async function activityListStargazersForRepo<FetcherData>(
+export async function activityListStargazersForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101516,7 +102649,9 @@ export async function activityListStargazersForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-the-weekly-commit-activity}
  * Tags: repos
  */
-export async function reposGetCodeFrequencyStats<FetcherData>(
+export async function reposGetCodeFrequencyStats<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101544,7 +102679,9 @@ export async function reposGetCodeFrequencyStats<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-the-last-year-of-commit-activity}
  * Tags: repos
  */
-export async function reposGetCommitActivityStats<FetcherData>(
+export async function reposGetCommitActivityStats<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101581,7 +102718,9 @@ export async function reposGetCommitActivityStats<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-all-contributor-commit-activity}
  * Tags: repos
  */
-export async function reposGetContributorsStats<FetcherData>(
+export async function reposGetContributorsStats<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101614,7 +102753,9 @@ export async function reposGetContributorsStats<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-the-weekly-commit-count}
  * Tags: repos
  */
-export async function reposGetParticipationStats<FetcherData>(
+export async function reposGetParticipationStats<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101646,7 +102787,9 @@ export async function reposGetParticipationStats<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-the-hourly-commit-count-for-each-day}
  * Tags: repos
  */
-export async function reposGetPunchCardStats<FetcherData>(
+export async function reposGetPunchCardStats<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101674,7 +102817,9 @@ export async function reposGetPunchCardStats<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/commits/statuses#create-a-commit-status}
  * Tags: repos
  */
-export async function reposCreateCommitStatus<FetcherData>(
+export async function reposCreateCommitStatus<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101719,7 +102864,9 @@ export async function reposCreateCommitStatus<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/watching#list-watchers}
  * Tags: activity
  */
-export async function activityListWatchersForRepo<FetcherData>(
+export async function activityListWatchersForRepo<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101744,7 +102891,9 @@ export async function activityListWatchersForRepo<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/watching#get-a-repository-subscription}
  * Tags: activity
  */
-export async function activityGetRepoSubscription<FetcherData>(
+export async function activityGetRepoSubscription<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101780,7 +102929,9 @@ export async function activityGetRepoSubscription<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/watching#set-a-repository-subscription}
  * Tags: activity
  */
-export async function activitySetRepoSubscription<FetcherData>(
+export async function activitySetRepoSubscription<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101823,7 +102974,9 @@ export async function activitySetRepoSubscription<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/watching#delete-a-repository-subscription}
  * Tags: activity
  */
-export async function activityDeleteRepoSubscription<FetcherData>(
+export async function activityDeleteRepoSubscription<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101844,7 +102997,7 @@ export async function activityDeleteRepoSubscription<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repository-tags}
  * Tags: repos
  */
-export async function reposListTags<FetcherData>(
+export async function reposListTags<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101864,15 +103017,22 @@ export async function reposListTags<FetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * List tag protection states for a repository
- * This returns the tag protection states of a repository.
+ * Deprecated - List tag protection states for a repository
+ * **Note**: This operation is deprecated and will be removed after August 30th 2024
+ * Use the "[Repository
+ * Rulesets](https://docs.github.com/rest/repos/rules#get-all-repository-rulesets)" endpoint instead.
  *
- * This information is only available to repository
- * administrators.
- * Learn more at {@link https://docs.github.com/rest/repos/tags#list-tag-protection-states-for-a-repository}
+ * This returns the tag
+ * protection states of a repository.
+ *
+ * This information is only available to repository administrators.
+ * @deprecated
+ * Learn more at {@link https://docs.github.com/rest/repos/tags#deprecated---list-tag-protection-states-for-a-repository}
  * Tags: repos
  */
-export async function reposListTagProtection<FetcherData>(
+export async function reposListTagProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101893,13 +103053,21 @@ export async function reposListTagProtection<FetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Create a tag protection state for a repository
- * This creates a tag protection state for a repository.
+ * Deprecated - Create a tag protection state for a repository
+ * **Note**: This operation is deprecated and will be removed after August 30th 2024
+ * Use the "[Repository
+ * Rulesets](https://docs.github.com/rest/repos/rules#create-a-repository-ruleset)" endpoint instead.
+ *
+ * This creates a tag
+ * protection state for a repository.
  * This endpoint is only available to repository administrators.
- * Learn more at {@link https://docs.github.com/rest/repos/tags#create-a-tag-protection-state-for-a-repository}
+ * @deprecated
+ * Learn more at {@link https://docs.github.com/rest/repos/tags#deprecated---create-a-tag-protection-state-for-a-repository}
  * Tags: repos
  */
-export async function reposCreateTagProtection<FetcherData>(
+export async function reposCreateTagProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101927,13 +103095,21 @@ export async function reposCreateTagProtection<FetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Delete a tag protection state for a repository
- * This deletes a tag protection state for a repository.
+ * Deprecated - Delete a tag protection state for a repository
+ * **Note**: This operation is deprecated and will be removed after August 30th 2024
+ * Use the "[Repository
+ * Rulesets](https://docs.github.com/rest/repos/rules#delete-a-repository-ruleset)" endpoint instead.
+ *
+ * This deletes a tag
+ * protection state for a repository.
  * This endpoint is only available to repository administrators.
- * Learn more at {@link https://docs.github.com/rest/repos/tags#delete-a-tag-protection-state-for-a-repository}
+ * @deprecated
+ * Learn more at {@link https://docs.github.com/rest/repos/tags#deprecated---delete-a-tag-protection-state-for-a-repository}
  * Tags: repos
  */
-export async function reposDeleteTagProtection<FetcherData>(
+export async function reposDeleteTagProtection<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101966,7 +103142,9 @@ export async function reposDeleteTagProtection<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/contents#download-a-repository-archive-tar}
  * Tags: repos
  */
-export async function reposDownloadTarballArchive<FetcherData>(
+export async function reposDownloadTarballArchive<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -101996,7 +103174,7 @@ export async function reposDownloadTarballArchive<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repository-teams}
  * Tags: repos
  */
-export async function reposListTeams<FetcherData>(
+export async function reposListTeams<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102020,7 +103198,7 @@ export async function reposListTeams<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#get-all-repository-topics}
  * Tags: repos
  */
-export async function reposGetAllTopics<FetcherData>(
+export async function reposGetAllTopics<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102044,7 +103222,9 @@ export async function reposGetAllTopics<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#replace-all-repository-topics}
  * Tags: repos
  */
-export async function reposReplaceAllTopics<FetcherData>(
+export async function reposReplaceAllTopics<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102078,7 +103258,7 @@ export async function reposReplaceAllTopics<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/traffic#get-repository-clones}
  * Tags: repos
  */
-export async function reposGetClones<FetcherData>(
+export async function reposGetClones<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102110,7 +103290,7 @@ export async function reposGetClones<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/traffic#get-top-referral-paths}
  * Tags: repos
  */
-export async function reposGetTopPaths<FetcherData>(
+export async function reposGetTopPaths<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102134,7 +103314,9 @@ export async function reposGetTopPaths<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/traffic#get-top-referral-sources}
  * Tags: repos
  */
-export async function reposGetTopReferrers<FetcherData>(
+export async function reposGetTopReferrers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102159,7 +103341,7 @@ export async function reposGetTopReferrers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/metrics/traffic#get-page-views}
  * Tags: repos
  */
-export async function reposGetViews<FetcherData>(
+export async function reposGetViews<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102194,7 +103376,7 @@ export async function reposGetViews<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#transfer-a-repository}
  * Tags: repos
  */
-export async function reposTransfer<FetcherData>(
+export async function reposTransfer<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102239,7 +103421,9 @@ export async function reposTransfer<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#check-if-vulnerability-alerts-are-enabled-for-a-repository}
  * Tags: repos
  */
-export async function reposCheckVulnerabilityAlerts<FetcherData>(
+export async function reposCheckVulnerabilityAlerts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102263,7 +103447,9 @@ export async function reposCheckVulnerabilityAlerts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#enable-vulnerability-alerts}
  * Tags: repos
  */
-export async function reposEnableVulnerabilityAlerts<FetcherData>(
+export async function reposEnableVulnerabilityAlerts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102289,7 +103475,9 @@ export async function reposEnableVulnerabilityAlerts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#disable-vulnerability-alerts}
  * Tags: repos
  */
-export async function reposDisableVulnerabilityAlerts<FetcherData>(
+export async function reposDisableVulnerabilityAlerts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102319,7 +103507,9 @@ export async function reposDisableVulnerabilityAlerts<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/contents#download-a-repository-archive-zip}
  * Tags: repos
  */
-export async function reposDownloadZipballArchive<FetcherData>(
+export async function reposDownloadZipballArchive<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -102349,7 +103539,9 @@ export async function reposDownloadZipballArchive<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-using-a-template}
  * Tags: repos
  */
-export async function reposCreateUsingTemplate<FetcherData>(
+export async function reposCreateUsingTemplate<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     template_owner: string;
@@ -102408,7 +103600,7 @@ export async function reposCreateUsingTemplate<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-public-repositories}
  * Tags: repos
  */
-export async function reposListPublic<FetcherData>(
+export async function reposListPublic<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: number;
@@ -102475,7 +103667,7 @@ export async function reposListPublic<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/search/search#search-code}
  * Tags: search
  */
-export async function searchCode<FetcherData>(
+export async function searchCode<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
@@ -102550,7 +103742,7 @@ export async function searchCode<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/search/search#search-commits}
  * Tags: search
  */
-export async function searchCommits<FetcherData>(
+export async function searchCommits<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
@@ -102627,7 +103819,9 @@ export async function searchCommits<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/search/search#search-issues-and-pull-requests}
  * Tags: search
  */
-export async function searchIssuesAndPullRequests<FetcherData>(
+export async function searchIssuesAndPullRequests<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
@@ -102715,7 +103909,7 @@ export async function searchIssuesAndPullRequests<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/search/search#search-labels}
  * Tags: search
  */
-export async function searchLabels<FetcherData>(
+export async function searchLabels<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     repository_id: number;
@@ -102772,7 +103966,7 @@ export async function searchLabels<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/search/search#search-repositories}
  * Tags: search
  */
-export async function searchRepos<FetcherData>(
+export async function searchRepos<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
@@ -102849,7 +104043,7 @@ export async function searchRepos<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/search/search#search-topics}
  * Tags: search
  */
-export async function searchTopics<FetcherData>(
+export async function searchTopics<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
@@ -102921,7 +104115,7 @@ export async function searchTopics<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/search/search#search-users}
  * Tags: search
  */
-export async function searchUsers<FetcherData>(
+export async function searchUsers<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     q: string;
@@ -102985,7 +104179,7 @@ export async function searchUsers<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#get-a-team-legacy}
  * Tags: teams
  */
-export async function teamsGetLegacy<FetcherData>(
+export async function teamsGetLegacy<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103022,7 +104216,7 @@ export async function teamsGetLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#update-a-team-legacy}
  * Tags: teams
  */
-export async function teamsUpdateLegacy<FetcherData>(
+export async function teamsUpdateLegacy<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103099,7 +104293,7 @@ export async function teamsUpdateLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#delete-a-team-legacy}
  * Tags: teams
  */
-export async function teamsDeleteLegacy<FetcherData>(
+export async function teamsDeleteLegacy<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103132,7 +104326,9 @@ export async function teamsDeleteLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#list-discussions-legacy}
  * Tags: teams
  */
-export async function teamsListDiscussionsLegacy<FetcherData>(
+export async function teamsListDiscussionsLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103171,7 +104367,8 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -103181,7 +104378,9 @@ export async function teamsListDiscussionsLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#create-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsCreateDiscussionLegacy<FetcherData>(
+export async function teamsCreateDiscussionLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103231,7 +104430,9 @@ export async function teamsCreateDiscussionLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#get-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsGetDiscussionLegacy<FetcherData>(
+export async function teamsGetDiscussionLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103268,7 +104469,9 @@ export async function teamsGetDiscussionLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#update-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionLegacy<FetcherData>(
+export async function teamsUpdateDiscussionLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103316,7 +104519,9 @@ export async function teamsUpdateDiscussionLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#delete-a-discussion-legacy}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionLegacy<FetcherData>(
+export async function teamsDeleteDiscussionLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103347,7 +104552,9 @@ export async function teamsDeleteDiscussionLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments-legacy}
  * Tags: teams
  */
-export async function teamsListDiscussionCommentsLegacy<FetcherData>(
+export async function teamsListDiscussionCommentsLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103389,7 +104596,8 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the API](https://docs.github.com/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
+ * limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
  * "[Best practices for using the REST
  * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
@@ -103399,7 +104607,9 @@ export async function teamsListDiscussionCommentsLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
+export async function teamsCreateDiscussionCommentLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103443,7 +104653,9 @@ export async function teamsCreateDiscussionCommentLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsGetDiscussionCommentLegacy<FetcherData>(
+export async function teamsGetDiscussionCommentLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103481,7 +104693,9 @@ export async function teamsGetDiscussionCommentLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
+export async function teamsUpdateDiscussionCommentLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103526,7 +104740,9 @@ export async function teamsUpdateDiscussionCommentLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment-legacy}
  * Tags: teams
  */
-export async function teamsDeleteDiscussionCommentLegacy<FetcherData>(
+export async function teamsDeleteDiscussionCommentLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103559,7 +104775,9 @@ export async function teamsDeleteDiscussionCommentLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment-legacy}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
+export async function reactionsListForTeamDiscussionCommentLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103614,7 +104832,7 @@ export async function reactionsListForTeamDiscussionCommentLegacy<FetcherData>(
  * Tags: reactions
  */
 export async function reactionsCreateForTeamDiscussionCommentLegacy<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -103668,7 +104886,9 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy<
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-legacy}
  * Tags: reactions
  */
-export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
+export async function reactionsListForTeamDiscussionLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103720,7 +104940,9 @@ export async function reactionsListForTeamDiscussionLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-legacy}
  * Tags: reactions
  */
-export async function reactionsCreateForTeamDiscussionLegacy<FetcherData>(
+export async function reactionsCreateForTeamDiscussionLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103771,7 +104993,9 @@ export async function reactionsCreateForTeamDiscussionLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#list-pending-team-invitations-legacy}
  * Tags: teams
  */
-export async function teamsListPendingInvitationsLegacy<FetcherData>(
+export async function teamsListPendingInvitationsLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103800,7 +105024,9 @@ export async function teamsListPendingInvitationsLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#list-team-members-legacy}
  * Tags: teams
  */
-export async function teamsListMembersLegacy<FetcherData>(
+export async function teamsListMembersLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103834,7 +105060,9 @@ export async function teamsListMembersLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#get-team-member-legacy}
  * Tags: teams
  */
-export async function teamsGetMemberLegacy<FetcherData>(
+export async function teamsGetMemberLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103881,7 +105109,9 @@ export async function teamsGetMemberLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#add-team-member-legacy}
  * Tags: teams
  */
-export async function teamsAddMemberLegacy<FetcherData>(
+export async function teamsAddMemberLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103929,7 +105159,9 @@ export async function teamsAddMemberLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#remove-team-member-legacy}
  * Tags: teams
  */
-export async function teamsRemoveMemberLegacy<FetcherData>(
+export async function teamsRemoveMemberLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -103967,7 +105199,9 @@ export async function teamsRemoveMemberLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#get-team-membership-for-a-user-legacy}
  * Tags: teams
  */
-export async function teamsGetMembershipForUserLegacy<FetcherData>(
+export async function teamsGetMembershipForUserLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104020,7 +105254,9 @@ export async function teamsGetMembershipForUserLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user-legacy}
  * Tags: teams
  */
-export async function teamsAddOrUpdateMembershipForUserLegacy<FetcherData>(
+export async function teamsAddOrUpdateMembershipForUserLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104074,7 +105310,9 @@ export async function teamsAddOrUpdateMembershipForUserLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user-legacy}
  * Tags: teams
  */
-export async function teamsRemoveMembershipForUserLegacy<FetcherData>(
+export async function teamsRemoveMembershipForUserLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104101,7 +105339,9 @@ export async function teamsRemoveMembershipForUserLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-projects-legacy}
  * Tags: teams
  */
-export async function teamsListProjectsLegacy<FetcherData>(
+export async function teamsListProjectsLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104134,7 +105374,9 @@ export async function teamsListProjectsLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project-legacy}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForProjectLegacy<FetcherData>(
+export async function teamsCheckPermissionsForProjectLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104166,7 +105408,9 @@ export async function teamsCheckPermissionsForProjectLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions-legacy}
  * Tags: teams
  */
-export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
+export async function teamsAddOrUpdateProjectPermissionsLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104214,7 +105458,9 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team-legacy}
  * Tags: teams
  */
-export async function teamsRemoveProjectLegacy<FetcherData>(
+export async function teamsRemoveProjectLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104243,7 +105489,9 @@ export async function teamsRemoveProjectLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-repositories-legacy}
  * Tags: teams
  */
-export async function teamsListReposLegacy<FetcherData>(
+export async function teamsListReposLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104282,12 +105530,16 @@ export async function teamsListReposLegacy<FetcherData>(
  *
  * You can also
  * get information about the specified repository, including what permissions the team grants on it, by passing the
- * following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
+ * following custom [media
+ * type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types/) via the `Accept`
+ * header:
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository-legacy}
  * Tags: teams
  */
-export async function teamsCheckPermissionsForRepoLegacy<FetcherData>(
+export async function teamsCheckPermissionsForRepoLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104333,7 +105585,9 @@ export async function teamsCheckPermissionsForRepoLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-repository-permissions-legacy}
  * Tags: teams
  */
-export async function teamsAddOrUpdateRepoPermissionsLegacy<FetcherData>(
+export async function teamsAddOrUpdateRepoPermissionsLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104375,7 +105629,9 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-repository-from-a-team-legacy}
  * Tags: teams
  */
-export async function teamsRemoveRepoLegacy<FetcherData>(
+export async function teamsRemoveRepoLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104401,7 +105657,9 @@ export async function teamsRemoveRepoLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-child-teams-legacy}
  * Tags: teams
  */
-export async function teamsListChildLegacy<FetcherData>(
+export async function teamsListChildLegacy<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     team_id: number;
@@ -104431,7 +105689,9 @@ export async function teamsListChildLegacy<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/users#get-the-authenticated-user}
  * Tags: users
  */
-export async function usersGetAuthenticated<FetcherData>(
+export async function usersGetAuthenticated<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -104474,7 +105734,9 @@ export async function usersGetAuthenticated<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/users#update-the-authenticated-user}
  * Tags: users
  */
-export async function usersUpdateAuthenticated<FetcherData>(
+export async function usersUpdateAuthenticated<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -104547,7 +105809,9 @@ export async function usersUpdateAuthenticated<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/blocking#list-users-blocked-by-the-authenticated-user}
  * Tags: users
  */
-export async function usersListBlockedByAuthenticatedUser<FetcherData>(
+export async function usersListBlockedByAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -104577,7 +105841,7 @@ export async function usersListBlockedByAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/blocking#check-if-a-user-is-blocked-by-the-authenticated-user}
  * Tags: users
  */
-export async function usersCheckBlocked<FetcherData>(
+export async function usersCheckBlocked<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -104604,7 +105868,7 @@ export async function usersCheckBlocked<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/blocking#block-a-user}
  * Tags: users
  */
-export async function usersBlock<FetcherData>(
+export async function usersBlock<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -104632,7 +105896,7 @@ export async function usersBlock<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/blocking#unblock-a-user}
  * Tags: users
  */
-export async function usersUnblock<FetcherData>(
+export async function usersUnblock<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -104662,7 +105926,9 @@ export async function usersUnblock<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#list-codespaces-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesListForAuthenticatedUser<FetcherData>(
+export async function codespacesListForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -104717,7 +105983,9 @@ export async function codespacesListForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesCreateForAuthenticatedUser<FetcherData>(
+export async function codespacesCreateForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body:
@@ -104855,7 +106123,9 @@ export async function codespacesCreateForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#list-secrets-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesListSecretsForAuthenticatedUser<FetcherData>(
+export async function codespacesListSecretsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -104904,7 +106174,9 @@ export async function codespacesListSecretsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#get-public-key-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesGetPublicKeyForAuthenticatedUser<FetcherData>(
+export async function codespacesGetPublicKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -104929,7 +106201,9 @@ export async function codespacesGetPublicKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#get-a-secret-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesGetSecretForAuthenticatedUser<FetcherData>(
+export async function codespacesGetSecretForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     secret_name: string;
@@ -104966,7 +106240,7 @@ export async function codespacesGetSecretForAuthenticatedUser<FetcherData>(
  * Tags: codespaces
  */
 export async function codespacesCreateOrUpdateSecretForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -105015,7 +106289,9 @@ export async function codespacesCreateOrUpdateSecretForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/codespaces/secrets#delete-a-secret-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesDeleteSecretForAuthenticatedUser<FetcherData>(
+export async function codespacesDeleteSecretForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     secret_name: string;
@@ -105043,7 +106319,7 @@ export async function codespacesDeleteSecretForAuthenticatedUser<FetcherData>(
  * Tags: codespaces
  */
 export async function codespacesListRepositoriesForSecretForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -105100,7 +106376,7 @@ export async function codespacesListRepositoriesForSecretForAuthenticatedUser<
  * Tags: codespaces
  */
 export async function codespacesSetRepositoriesForSecretForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -105142,7 +106418,7 @@ export async function codespacesSetRepositoriesForSecretForAuthenticatedUser<
  * Tags: codespaces
  */
 export async function codespacesAddRepositoryForSecretForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -105178,7 +106454,7 @@ export async function codespacesAddRepositoryForSecretForAuthenticatedUser<
  * Tags: codespaces
  */
 export async function codespacesRemoveRepositoryForSecretForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -105210,7 +106486,9 @@ export async function codespacesRemoveRepositoryForSecretForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#get-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesGetForAuthenticatedUser<FetcherData>(
+export async function codespacesGetForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     codespace_name: string;
@@ -105250,7 +106528,9 @@ export async function codespacesGetForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#update-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesUpdateForAuthenticatedUser<FetcherData>(
+export async function codespacesUpdateForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     codespace_name: string;
@@ -105300,7 +106580,9 @@ export async function codespacesUpdateForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#delete-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesDeleteForAuthenticatedUser<FetcherData>(
+export async function codespacesDeleteForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     codespace_name: string;
@@ -105335,7 +106617,9 @@ export async function codespacesDeleteForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#export-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesExportForAuthenticatedUser<FetcherData>(
+export async function codespacesExportForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     codespace_name: string;
@@ -105375,7 +106659,7 @@ export async function codespacesExportForAuthenticatedUser<FetcherData>(
  * Tags: codespaces
  */
 export async function codespacesGetExportDetailsForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -105413,7 +106697,7 @@ export async function codespacesGetExportDetailsForAuthenticatedUser<
  * Tags: codespaces
  */
 export async function codespacesCodespaceMachinesForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -105457,7 +106741,9 @@ export async function codespacesCodespaceMachinesForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#create-a-repository-from-an-unpublished-codespace}
  * Tags: codespaces
  */
-export async function codespacesPublishForAuthenticatedUser<FetcherData>(
+export async function codespacesPublishForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     codespace_name: string;
@@ -105506,7 +106792,9 @@ export async function codespacesPublishForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#start-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesStartForAuthenticatedUser<FetcherData>(
+export async function codespacesStartForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     codespace_name: string;
@@ -105546,7 +106834,9 @@ export async function codespacesStartForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/codespaces/codespaces#stop-a-codespace-for-the-authenticated-user}
  * Tags: codespaces
  */
-export async function codespacesStopForAuthenticatedUser<FetcherData>(
+export async function codespacesStopForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     codespace_name: string;
@@ -105584,7 +106874,7 @@ export async function codespacesStopForAuthenticatedUser<FetcherData>(
  * Tags: packages
  */
 export async function packagesListDockerMigrationConflictingPackagesForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
@@ -105611,7 +106901,7 @@ export async function packagesListDockerMigrationConflictingPackagesForAuthentic
  * Tags: users
  */
 export async function usersSetPrimaryEmailVisibilityForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
@@ -105649,7 +106939,9 @@ export async function usersSetPrimaryEmailVisibilityForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/users/emails#list-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListEmailsForAuthenticatedUser<FetcherData>(
+export async function usersListEmailsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -105678,7 +106970,9 @@ export async function usersListEmailsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/emails#add-an-email-address-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersAddEmailForAuthenticatedUser<FetcherData>(
+export async function usersAddEmailForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body:
@@ -105715,7 +107009,9 @@ export async function usersAddEmailForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/emails#delete-an-email-address-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeleteEmailForAuthenticatedUser<FetcherData>(
+export async function usersDeleteEmailForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body:
@@ -105751,7 +107047,9 @@ export async function usersDeleteEmailForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#list-followers-of-the-authenticated-user}
  * Tags: users
  */
-export async function usersListFollowersForAuthenticatedUser<FetcherData>(
+export async function usersListFollowersForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -105779,7 +107077,9 @@ export async function usersListFollowersForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#list-the-people-the-authenticated-user-follows}
  * Tags: users
  */
-export async function usersListFollowedByAuthenticatedUser<FetcherData>(
+export async function usersListFollowedByAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -105806,7 +107106,9 @@ export async function usersListFollowedByAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#check-if-a-person-is-followed-by-the-authenticated-user}
  * Tags: users
  */
-export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
+export async function usersCheckPersonIsFollowedByAuthenticated<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -105837,7 +107139,7 @@ export async function usersCheckPersonIsFollowedByAuthenticated<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#follow-a-user}
  * Tags: users
  */
-export async function usersFollow<FetcherData>(
+export async function usersFollow<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -105864,7 +107166,7 @@ export async function usersFollow<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#unfollow-a-user}
  * Tags: users
  */
-export async function usersUnfollow<FetcherData>(
+export async function usersUnfollow<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -105894,7 +107196,9 @@ export async function usersUnfollow<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#list-gpg-keys-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListGpgKeysForAuthenticatedUser<FetcherData>(
+export async function usersListGpgKeysForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -105932,7 +107236,9 @@ export async function usersListGpgKeysForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#create-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersCreateGpgKeyForAuthenticatedUser<FetcherData>(
+export async function usersCreateGpgKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -105978,7 +107284,9 @@ export async function usersCreateGpgKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#get-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersGetGpgKeyForAuthenticatedUser<FetcherData>(
+export async function usersGetGpgKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gpg_key_id: number;
@@ -106014,7 +107322,9 @@ export async function usersGetGpgKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#delete-a-gpg-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeleteGpgKeyForAuthenticatedUser<FetcherData>(
+export async function usersDeleteGpgKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     gpg_key_id: number;
@@ -106049,7 +107359,9 @@ export async function usersDeleteGpgKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/installations#list-app-installations-accessible-to-the-user-access-token}
  * Tags: apps
  */
-export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
+export async function appsListInstallationsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -106107,7 +107419,7 @@ export async function appsListInstallationsForAuthenticatedUser<FetcherData>(
  * Tags: apps
  */
 export async function appsListInstallationReposForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -106157,7 +107469,7 @@ export async function appsListInstallationReposForAuthenticatedUser<
  * Tags: apps
  */
 export async function appsAddRepoToInstallationForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -106187,7 +107499,7 @@ export async function appsAddRepoToInstallationForAuthenticatedUser<
  * Tags: apps
  */
 export async function appsRemoveRepoFromInstallationForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -106217,7 +107529,7 @@ export async function appsRemoveRepoFromInstallationForAuthenticatedUser<
  * Tags: interactions
  */
 export async function interactionsGetRestrictionsForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
@@ -106253,7 +107565,7 @@ export async function interactionsGetRestrictionsForAuthenticatedUser<
  * Tags: interactions
  */
 export async function interactionsSetRestrictionsForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
@@ -106287,7 +107599,7 @@ export async function interactionsSetRestrictionsForAuthenticatedUser<
  * Tags: interactions
  */
 export async function interactionsRemoveRestrictionsForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
@@ -106330,7 +107642,9 @@ export async function interactionsRemoveRestrictionsForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/issues/issues#list-user-account-issues-assigned-to-the-authenticated-user}
  * Tags: issues
  */
-export async function issuesListForAuthenticatedUser<FetcherData>(
+export async function issuesListForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     filter?:
@@ -106387,7 +107701,9 @@ export async function issuesListForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/keys#list-public-ssh-keys-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListPublicSshKeysForAuthenticatedUser<FetcherData>(
+export async function usersListPublicSshKeysForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -106425,7 +107741,9 @@ export async function usersListPublicSshKeysForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/keys#create-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersCreatePublicSshKeyForAuthenticatedUser<FetcherData>(
+export async function usersCreatePublicSshKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -106472,7 +107790,9 @@ export async function usersCreatePublicSshKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/keys#get-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersGetPublicSshKeyForAuthenticatedUser<FetcherData>(
+export async function usersGetPublicSshKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     key_id: number;
@@ -106508,7 +107828,9 @@ export async function usersGetPublicSshKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/keys#delete-a-public-ssh-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeletePublicSshKeyForAuthenticatedUser<FetcherData>(
+export async function usersDeletePublicSshKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     key_id: number;
@@ -106535,7 +107857,9 @@ export async function usersDeletePublicSshKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/marketplace#list-subscriptions-for-the-authenticated-user}
  * Tags: apps
  */
-export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
+export async function appsListSubscriptionsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -106574,7 +107898,7 @@ export async function appsListSubscriptionsForAuthenticatedUser<FetcherData>(
  * Tags: apps
  */
 export async function appsListSubscriptionsForAuthenticatedUserStubbed<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -106612,7 +107936,9 @@ export async function appsListSubscriptionsForAuthenticatedUserStubbed<
  * Learn more at {@link https://docs.github.com/rest/orgs/members#list-organization-memberships-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsListMembershipsForAuthenticatedUser<FetcherData>(
+export async function orgsListMembershipsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     state?: 'active' | 'pending';
@@ -106644,7 +107970,9 @@ export async function orgsListMembershipsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#get-an-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsGetMembershipForAuthenticatedUser<FetcherData>(
+export async function orgsGetMembershipForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -106670,7 +107998,9 @@ export async function orgsGetMembershipForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/members#update-an-organization-membership-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsUpdateMembershipForAuthenticatedUser<FetcherData>(
+export async function orgsUpdateMembershipForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
@@ -106703,7 +108033,9 @@ export async function orgsUpdateMembershipForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/users#list-user-migrations}
  * Tags: migrations
  */
-export async function migrationsListForAuthenticatedUser<FetcherData>(
+export async function migrationsListForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -106737,7 +108069,9 @@ export async function migrationsListForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/users#start-a-user-migration}
  * Tags: migrations
  */
-export async function migrationsStartForAuthenticatedUser<FetcherData>(
+export async function migrationsStartForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -106826,7 +108160,9 @@ export async function migrationsStartForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/users#get-a-user-migration-status}
  * Tags: migrations
  */
-export async function migrationsGetStatusForAuthenticatedUser<FetcherData>(
+export async function migrationsGetStatusForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
@@ -106886,7 +108222,9 @@ export async function migrationsGetStatusForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/users#download-a-user-migration-archive}
  * Tags: migrations
  */
-export async function migrationsGetArchiveForAuthenticatedUser<FetcherData>(
+export async function migrationsGetArchiveForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
@@ -106916,7 +108254,9 @@ export async function migrationsGetArchiveForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/users#delete-a-user-migration-archive}
  * Tags: migrations
  */
-export async function migrationsDeleteArchiveForAuthenticatedUser<FetcherData>(
+export async function migrationsDeleteArchiveForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
@@ -106947,7 +108287,9 @@ export async function migrationsDeleteArchiveForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/users#unlock-a-user-repository}
  * Tags: migrations
  */
-export async function migrationsUnlockRepoForAuthenticatedUser<FetcherData>(
+export async function migrationsUnlockRepoForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
@@ -106975,7 +108317,9 @@ export async function migrationsUnlockRepoForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/migrations/users#list-repositories-for-a-user-migration}
  * Tags: migrations
  */
-export async function migrationsListReposForAuthenticatedUser<FetcherData>(
+export async function migrationsListReposForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     migration_id: number;
@@ -107015,7 +108359,9 @@ export async function migrationsListReposForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-organizations-for-the-authenticated-user}
  * Tags: orgs
  */
-export async function orgsListForAuthenticatedUser<FetcherData>(
+export async function orgsListForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -107049,7 +108395,9 @@ export async function orgsListForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-the-authenticated-users-namespace}
  * Tags: packages
  */
-export async function packagesListPackagesForAuthenticatedUser<FetcherData>(
+export async function packagesListPackagesForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -107092,7 +108440,9 @@ export async function packagesListPackagesForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesGetPackageForAuthenticatedUser<FetcherData>(
+export async function packagesGetPackageForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -107133,7 +108483,9 @@ export async function packagesGetPackageForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesDeletePackageForAuthenticatedUser<FetcherData>(
+export async function packagesDeletePackageForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -107179,7 +108531,9 @@ export async function packagesDeletePackageForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-the-authenticated-user}
  * Tags: packages
  */
-export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
+export async function packagesRestorePackageForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -107221,7 +108575,7 @@ export async function packagesRestorePackageForAuthenticatedUser<FetcherData>(
  * Tags: packages
  */
 export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -107274,7 +108628,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
  * Tags: packages
  */
 export async function packagesGetPackageVersionForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -107321,7 +108675,7 @@ export async function packagesGetPackageVersionForAuthenticatedUser<
  * Tags: packages
  */
 export async function packagesDeletePackageVersionForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -107371,7 +108725,7 @@ export async function packagesDeletePackageVersionForAuthenticatedUser<
  * Tags: packages
  */
 export async function packagesRestorePackageVersionForAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -107407,7 +108761,9 @@ export async function packagesRestorePackageVersionForAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/projects/projects#create-a-user-project}
  * Tags: projects
  */
-export async function projectsCreateForAuthenticatedUser<FetcherData>(
+export async function projectsCreateForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -107458,7 +108814,9 @@ export async function projectsCreateForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/emails#list-public-email-addresses-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListPublicEmailsForAuthenticatedUser<FetcherData>(
+export async function usersListPublicEmailsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -107491,7 +108849,9 @@ export async function usersListPublicEmailsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repositories-for-the-authenticated-user}
  * Tags: repos
  */
-export async function reposListForAuthenticatedUser<FetcherData>(
+export async function reposListForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     visibility?: 'all' | 'public' | 'private';
@@ -107546,7 +108906,9 @@ export async function reposListForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user}
  * Tags: repos
  */
-export async function reposCreateForAuthenticatedUser<FetcherData>(
+export async function reposCreateForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -107707,7 +109069,9 @@ export async function reposCreateForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/invitations#list-repository-invitations-for-the-authenticated-user}
  * Tags: repos
  */
-export async function reposListInvitationsForAuthenticatedUser<FetcherData>(
+export async function reposListInvitationsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -107743,7 +109107,9 @@ export async function reposListInvitationsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/invitations#accept-a-repository-invitation}
  * Tags: repos
  */
-export async function reposAcceptInvitationForAuthenticatedUser<FetcherData>(
+export async function reposAcceptInvitationForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invitation_id: number;
@@ -107769,7 +109135,9 @@ export async function reposAcceptInvitationForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/collaborators/invitations#decline-a-repository-invitation}
  * Tags: repos
  */
-export async function reposDeclineInvitationForAuthenticatedUser<FetcherData>(
+export async function reposDeclineInvitationForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invitation_id: number;
@@ -107796,7 +109164,9 @@ export async function reposDeclineInvitationForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/social-accounts#list-social-accounts-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListSocialAccountsForAuthenticatedUser<FetcherData>(
+export async function usersListSocialAccountsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -107828,7 +109198,9 @@ export async function usersListSocialAccountsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/social-accounts#add-social-accounts-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersAddSocialAccountForAuthenticatedUser<FetcherData>(
+export async function usersAddSocialAccountForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -107865,7 +109237,9 @@ export async function usersAddSocialAccountForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/social-accounts#delete-social-accounts-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeleteSocialAccountForAuthenticatedUser<FetcherData>(
+export async function usersDeleteSocialAccountForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -107902,7 +109276,9 @@ export async function usersDeleteSocialAccountForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#list-ssh-signing-keys-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersListSshSigningKeysForAuthenticatedUser<FetcherData>(
+export async function usersListSshSigningKeysForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -107942,7 +109318,9 @@ export async function usersListSshSigningKeysForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#create-a-ssh-signing-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersCreateSshSigningKeyForAuthenticatedUser<FetcherData>(
+export async function usersCreateSshSigningKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: {
@@ -107989,7 +109367,9 @@ export async function usersCreateSshSigningKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#get-an-ssh-signing-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersGetSshSigningKeyForAuthenticatedUser<FetcherData>(
+export async function usersGetSshSigningKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ssh_signing_key_id: number;
@@ -108025,7 +109405,9 @@ export async function usersGetSshSigningKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#delete-an-ssh-signing-key-for-the-authenticated-user}
  * Tags: users
  */
-export async function usersDeleteSshSigningKeyForAuthenticatedUser<FetcherData>(
+export async function usersDeleteSshSigningKeyForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ssh_signing_key_id: number;
@@ -108059,7 +109441,9 @@ export async function usersDeleteSshSigningKeyForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/starring#list-repositories-starred-by-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListReposStarredByAuthenticatedUser<FetcherData>(
+export async function activityListReposStarredByAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     sort?: 'created' | 'updated';
@@ -108096,7 +109480,7 @@ export async function activityListReposStarredByAuthenticatedUser<FetcherData>(
  * Tags: activity
  */
 export async function activityCheckRepoIsStarredByAuthenticatedUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -108126,7 +109510,9 @@ export async function activityCheckRepoIsStarredByAuthenticatedUser<
  * Learn more at {@link https://docs.github.com/rest/activity/starring#star-a-repository-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityStarRepoForAuthenticatedUser<FetcherData>(
+export async function activityStarRepoForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -108154,7 +109540,9 @@ export async function activityStarRepoForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/starring#unstar-a-repository-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityUnstarRepoForAuthenticatedUser<FetcherData>(
+export async function activityUnstarRepoForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     owner: string;
@@ -108182,7 +109570,9 @@ export async function activityUnstarRepoForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/watching#list-repositories-watched-by-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
+export async function activityListWatchedReposForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -108226,7 +109616,9 @@ export async function activityListWatchedReposForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-teams-for-the-authenticated-user}
  * Tags: teams
  */
-export async function teamsListForAuthenticatedUser<FetcherData>(
+export async function teamsListForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     per_page?: number;
@@ -108265,7 +109657,7 @@ export async function teamsListForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/users#list-users}
  * Tags: users
  */
-export async function usersList<FetcherData>(
+export async function usersList<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     since?: number;
@@ -108301,7 +109693,7 @@ export async function usersList<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/users#get-a-user}
  * Tags: users
  */
-export async function usersGetByUsername<FetcherData>(
+export async function usersGetByUsername<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108347,7 +109739,7 @@ export async function usersGetByUsername<FetcherData>(
  * Tags: packages
  */
 export async function packagesListDockerMigrationConflictingPackagesForUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -108379,7 +109771,9 @@ export async function packagesListDockerMigrationConflictingPackagesForUser<
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-events-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListEventsForAuthenticatedUser<FetcherData>(
+export async function activityListEventsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108409,7 +109803,9 @@ export async function activityListEventsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-organization-events-for-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListOrgEventsForAuthenticatedUser<FetcherData>(
+export async function activityListOrgEventsForAuthenticatedUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108439,7 +109835,9 @@ export async function activityListOrgEventsForAuthenticatedUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events-for-a-user}
  * Tags: activity
  */
-export async function activityListPublicEventsForUser<FetcherData>(
+export async function activityListPublicEventsForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108469,7 +109867,9 @@ export async function activityListPublicEventsForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#list-followers-of-a-user}
  * Tags: users
  */
-export async function usersListFollowersForUser<FetcherData>(
+export async function usersListFollowersForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108493,7 +109893,9 @@ export async function usersListFollowersForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#list-the-people-a-user-follows}
  * Tags: users
  */
-export async function usersListFollowingForUser<FetcherData>(
+export async function usersListFollowingForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108516,7 +109918,9 @@ export async function usersListFollowingForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/followers#check-if-a-user-follows-another-user}
  * Tags: users
  */
-export async function usersCheckFollowingForUser<FetcherData>(
+export async function usersCheckFollowingForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108538,7 +109942,7 @@ export async function usersCheckFollowingForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/gists/gists#list-gists-for-a-user}
  * Tags: gists
  */
-export async function gistsListForUser<FetcherData>(
+export async function gistsListForUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108571,7 +109975,9 @@ export async function gistsListForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/gpg-keys#list-gpg-keys-for-a-user}
  * Tags: users
  */
-export async function usersListGpgKeysForUser<FetcherData>(
+export async function usersListGpgKeysForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108610,7 +110016,9 @@ export async function usersListGpgKeysForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/users#get-contextual-information-for-a-user}
  * Tags: users
  */
-export async function usersGetContextForUser<FetcherData>(
+export async function usersGetContextForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108642,7 +110050,9 @@ export async function usersGetContextForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-a-user-installation-for-the-authenticated-app}
  * Tags: apps
  */
-export async function appsGetUserInstallation<FetcherData>(
+export async function appsGetUserInstallation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108669,7 +110079,9 @@ export async function appsGetUserInstallation<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/keys#list-public-keys-for-a-user}
  * Tags: users
  */
-export async function usersListPublicKeysForUser<FetcherData>(
+export async function usersListPublicKeysForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108699,7 +110111,7 @@ export async function usersListPublicKeysForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-organizations-for-a-user}
  * Tags: orgs
  */
-export async function orgsListForUser<FetcherData>(
+export async function orgsListForUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -108729,7 +110141,9 @@ export async function orgsListForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-a-user}
  * Tags: packages
  */
-export async function packagesListPackagesForUser<FetcherData>(
+export async function packagesListPackagesForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -108778,7 +110192,9 @@ export async function packagesListPackagesForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-a-user}
  * Tags: packages
  */
-export async function packagesGetPackageForUser<FetcherData>(
+export async function packagesGetPackageForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -108825,7 +110241,9 @@ export async function packagesGetPackageForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-a-user}
  * Tags: packages
  */
-export async function packagesDeletePackageForUser<FetcherData>(
+export async function packagesDeletePackageForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -108878,7 +110296,9 @@ export async function packagesDeletePackageForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-a-user}
  * Tags: packages
  */
-export async function packagesRestorePackageForUser<FetcherData>(
+export async function packagesRestorePackageForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -108921,7 +110341,7 @@ export async function packagesRestorePackageForUser<FetcherData>(
  * Tags: packages
  */
 export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -108970,7 +110390,9 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-a-user}
  * Tags: packages
  */
-export async function packagesGetPackageVersionForUser<FetcherData>(
+export async function packagesGetPackageVersionForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -109018,7 +110440,9 @@ export async function packagesGetPackageVersionForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-package-version-for-a-user}
  * Tags: packages
  */
-export async function packagesDeletePackageVersionForUser<FetcherData>(
+export async function packagesDeletePackageVersionForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -109072,7 +110496,9 @@ export async function packagesDeletePackageVersionForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-package-version-for-a-user}
  * Tags: packages
  */
-export async function packagesRestorePackageVersionForUser<FetcherData>(
+export async function packagesRestorePackageVersionForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     package_type:
@@ -109107,7 +110533,9 @@ export async function packagesRestorePackageVersionForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/projects/projects#list-user-projects}
  * Tags: projects
  */
-export async function projectsListForUser<FetcherData>(
+export async function projectsListForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109141,7 +110569,9 @@ export async function projectsListForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-events-received-by-the-authenticated-user}
  * Tags: activity
  */
-export async function activityListReceivedEventsForUser<FetcherData>(
+export async function activityListReceivedEventsForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109170,7 +110600,9 @@ export async function activityListReceivedEventsForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events-received-by-a-user}
  * Tags: activity
  */
-export async function activityListReceivedPublicEventsForUser<FetcherData>(
+export async function activityListReceivedPublicEventsForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109200,7 +110632,7 @@ export async function activityListReceivedPublicEventsForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/repos/repos#list-repositories-for-a-user}
  * Tags: repos
  */
-export async function reposListForUser<FetcherData>(
+export async function reposListForUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109244,7 +110676,9 @@ export async function reposListForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-actions-billing-for-a-user}
  * Tags: billing
  */
-export async function billingGetGithubActionsBillingUser<FetcherData>(
+export async function billingGetGithubActionsBillingUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109272,7 +110706,9 @@ export async function billingGetGithubActionsBillingUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-github-packages-billing-for-a-user}
  * Tags: billing
  */
-export async function billingGetGithubPackagesBillingUser<FetcherData>(
+export async function billingGetGithubPackagesBillingUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109300,7 +110736,9 @@ export async function billingGetGithubPackagesBillingUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/billing/billing#get-shared-storage-billing-for-a-user}
  * Tags: billing
  */
-export async function billingGetSharedStorageBillingUser<FetcherData>(
+export async function billingGetSharedStorageBillingUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109321,7 +110759,9 @@ export async function billingGetSharedStorageBillingUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/social-accounts#list-social-accounts-for-a-user}
  * Tags: users
  */
-export async function usersListSocialAccountsForUser<FetcherData>(
+export async function usersListSocialAccountsForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109345,7 +110785,9 @@ export async function usersListSocialAccountsForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/users/ssh-signing-keys#list-ssh-signing-keys-for-a-user}
  * Tags: users
  */
-export async function usersListSshSigningKeysForUser<FetcherData>(
+export async function usersListSshSigningKeysForUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109383,7 +110825,9 @@ export async function usersListSshSigningKeysForUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user}
  * Tags: activity
  */
-export async function activityListReposStarredByUser<FetcherData>(
+export async function activityListReposStarredByUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109429,7 +110873,9 @@ export async function activityListReposStarredByUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/activity/watching#list-repositories-watched-by-a-user}
  * Tags: activity
  */
-export async function activityListReposWatchedByUser<FetcherData>(
+export async function activityListReposWatchedByUser<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -109461,7 +110907,7 @@ export async function activityListReposWatchedByUser<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/meta/meta#get-all-api-versions}
  * Tags: meta
  */
-export async function metaGetAllVersions<FetcherData>(
+export async function metaGetAllVersions<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -109482,7 +110928,7 @@ export async function metaGetAllVersions<FetcherData>(
  * Learn more at {@link https://docs.github.com/rest/meta/meta#get-the-zen-of-github}
  * Tags: meta
  */
-export async function metaGetZen<FetcherData>(
+export async function metaGetZen<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,

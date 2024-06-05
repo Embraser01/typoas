@@ -1,4 +1,9 @@
-import type { Fetcher, HttpMethod, SerializerOptions } from '../fetcher';
+import {
+  BaseFetcherData,
+  Fetcher,
+  HttpMethod,
+  SerializerOptions,
+} from '../fetcher';
 import type { TransformEntity } from '../transformers';
 import type { AuthProvider, SecurityAuthentication } from '../auth';
 import type { Transform } from '../transformers';
@@ -53,7 +58,7 @@ export type CreateRequestParams = {
 
 export type ContextParams<
   AuthModes extends Record<string, SecurityAuthentication>,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 > = {
   serverConfiguration: BaseServerConfiguration;
   authMethods: Partial<AuthModes>;
@@ -64,7 +69,7 @@ export type ContextParams<
 
 export type CreateContextParams<
   AuthModes extends Record<string, SecurityAuthentication>,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 > = Partial<
   Omit<ContextParams<AuthModes, FetcherData>, 'authMethods'> & {
     authProviders: {

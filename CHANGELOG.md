@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Add `-p,--prettier` option to the cli to format the generated code with prettier [#51](https://github.com/Embraser01/typoas/pull/51)
+- Add a new `@typoas/react-query` package to generate fully typed react-query hooks [#63](https://github.com/Embraser01/typoas/pull/63)
+- **BREAKING**: `FetcherData` must now extend `BaseFetcherData`. This change allow to have default options like `signal` for every request (fixes [#62](https://github.com/Embraser01/typoas/issues/62)) [#64](https://github.com/Embraser01/typoas/issues/64)
 - **BREAKING**: Generate all responses types (fixes [#57](https://github.com/Embraser01/typoas/issues/57)) [#60](https://github.com/Embraser01/typoas/pull/60)
   - Functions will not throw on non-2XX http status anymore
   - Instead, users will have to check themselves or use the ok helper function

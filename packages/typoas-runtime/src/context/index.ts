@@ -9,6 +9,7 @@ import { ApiException } from '../exception';
 import { applyTransform, Transform } from '../transformers';
 import { DateTransformer } from '../transformers';
 import {
+  BaseFetcherData,
   EnhancedHTTPStatus,
   Fetcher,
   IsomorphicFetchHttpLibrary,
@@ -31,7 +32,7 @@ const CONTENT_TYPE_HEADER = 'content-type';
 
 export class Context<
   AuthModes extends Record<string, SecurityAuthentication>,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 > {
   fetcher: Fetcher<FetcherData>;
   serializerOptions: SerializerOptions;

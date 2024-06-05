@@ -142,7 +142,7 @@ export function configureAuth(
       ),
   };
 }
-export function createContext<FetcherData>(
+export function createContext<FetcherData extends r.BaseFetcherData>(
   params?: r.CreateContextParams<AuthMethods, FetcherData>,
 ): r.Context<AuthMethods, FetcherData> {
   return new r.Context<AuthMethods, FetcherData>({
@@ -156,7 +156,7 @@ export function createContext<FetcherData>(
  * Update an existing pet by Id
  * Tags: pet
  */
-export async function updatePet<FetcherData>(
+export async function updatePet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: Pet,
@@ -182,7 +182,7 @@ export async function updatePet<FetcherData>(
  * Add a new pet to the store
  * Tags: pet
  */
-export async function addPet<FetcherData>(
+export async function addPet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: Pet,
@@ -203,7 +203,7 @@ export async function addPet<FetcherData>(
  * Multiple status values can be provided with comma separated strings
  * Tags: pet
  */
-export async function findPetsByStatus<FetcherData>(
+export async function findPetsByStatus<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     status?: 'available' | 'pending' | 'sold';
@@ -225,7 +225,7 @@ export async function findPetsByStatus<FetcherData>(
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  * Tags: pet
  */
-export async function findPetsByTags<FetcherData>(
+export async function findPetsByTags<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     tags?: string[];
@@ -247,7 +247,7 @@ export async function findPetsByTags<FetcherData>(
  * Returns a single pet
  * Tags: pet
  */
-export async function getPetById<FetcherData>(
+export async function getPetById<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     petId: number;
@@ -271,7 +271,7 @@ export async function getPetById<FetcherData>(
  * Updates a pet in the store with form data
  * Tags: pet
  */
-export async function updatePetWithForm<FetcherData>(
+export async function updatePetWithForm<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     petId: number;
@@ -294,7 +294,7 @@ export async function updatePetWithForm<FetcherData>(
  * Deletes a pet
  * Tags: pet
  */
-export async function deletePet<FetcherData>(
+export async function deletePet<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     api_key?: string;
@@ -315,7 +315,7 @@ export async function deletePet<FetcherData>(
  * uploads an image
  * Tags: pet
  */
-export async function uploadFile<FetcherData>(
+export async function uploadFile<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     petId: number;
@@ -340,7 +340,7 @@ export async function uploadFile<FetcherData>(
  * Returns a map of status codes to quantities
  * Tags: store
  */
-export async function getInventory<FetcherData>(
+export async function getInventory<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -366,7 +366,7 @@ export async function getInventory<FetcherData>(
  * Place a new order in the store
  * Tags: store
  */
-export async function placeOrder<FetcherData>(
+export async function placeOrder<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: Order,
@@ -392,7 +392,7 @@ export async function placeOrder<FetcherData>(
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  * Tags: store
  */
-export async function getOrderById<FetcherData>(
+export async function getOrderById<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     orderId: number;
@@ -422,7 +422,7 @@ export async function getOrderById<FetcherData>(
  * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
  * Tags: store
  */
-export async function deleteOrder<FetcherData>(
+export async function deleteOrder<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     orderId: number;
@@ -442,7 +442,7 @@ export async function deleteOrder<FetcherData>(
  * This can only be done by the logged in user.
  * Tags: user
  */
-export async function createUser<FetcherData>(
+export async function createUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: User,
@@ -462,7 +462,9 @@ export async function createUser<FetcherData>(
  * Creates list of users with given input array
  * Tags: user
  */
-export async function createUsersWithListInput<FetcherData>(
+export async function createUsersWithListInput<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: User[],
@@ -481,7 +483,7 @@ export async function createUsersWithListInput<FetcherData>(
  * Logs user into the system
  * Tags: user
  */
-export async function loginUser<FetcherData>(
+export async function loginUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username?: string;
@@ -502,7 +504,7 @@ export async function loginUser<FetcherData>(
  * Logs out current logged in user session
  * Tags: user
  */
-export async function logoutUser<FetcherData>(
+export async function logoutUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
@@ -519,7 +521,7 @@ export async function logoutUser<FetcherData>(
  * Get user by user name
  * Tags: user
  */
-export async function getUserByName<FetcherData>(
+export async function getUserByName<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -543,7 +545,7 @@ export async function getUserByName<FetcherData>(
  * This can only be done by the logged in user.
  * Tags: user
  */
-export async function updateUser<FetcherData>(
+export async function updateUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;
@@ -565,7 +567,7 @@ export async function updateUser<FetcherData>(
  * This can only be done by the logged in user.
  * Tags: user
  */
-export async function deleteUser<FetcherData>(
+export async function deleteUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     username: string;

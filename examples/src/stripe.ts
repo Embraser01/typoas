@@ -271,6 +271,10 @@ export type AccountCapabilities = {
    */
   fpx_payments?: 'active' | 'inactive' | 'pending';
   /**
+   * The status of the GB customer_balance payments (GBP currency) capability of the account, or whether the account can directly process GB customer_balance charges.
+   */
+  gb_bank_transfer_payments?: 'active' | 'inactive' | 'pending';
+  /**
    * The status of the giropay payments capability of the account, or whether the account can directly process giropay charges.
    */
   giropay_payments?: 'active' | 'inactive' | 'pending';
@@ -291,6 +295,10 @@ export type AccountCapabilities = {
    */
   jcb_payments?: 'active' | 'inactive' | 'pending';
   /**
+   * The status of the Japanese customer_balance payments (JPY currency) capability of the account, or whether the account can directly process Japanese customer_balance charges.
+   */
+  jp_bank_transfer_payments?: 'active' | 'inactive' | 'pending';
+  /**
    * The status of the Klarna payments capability of the account, or whether the account can directly process Klarna charges.
    */
   klarna_payments?: 'active' | 'inactive' | 'pending';
@@ -307,9 +315,13 @@ export type AccountCapabilities = {
    */
   link_payments?: 'active' | 'inactive' | 'pending';
   /**
-   * The status of the MobilepPay capability of the account, or whether the account can directly process MobilePay charges.
+   * The status of the MobilePay capability of the account, or whether the account can directly process MobilePay charges.
    */
   mobilepay_payments?: 'active' | 'inactive' | 'pending';
+  /**
+   * The status of the Mexican customer_balance payments (MXN currency) capability of the account, or whether the account can directly process Mexican customer_balance charges.
+   */
+  mx_bank_transfer_payments?: 'active' | 'inactive' | 'pending';
   /**
    * The status of the OXXO payments capability of the account, or whether the account can directly process OXXO charges.
    */
@@ -330,6 +342,10 @@ export type AccountCapabilities = {
    * The status of the RevolutPay capability of the account, or whether the account can directly process RevolutPay payments.
    */
   revolut_pay_payments?: 'active' | 'inactive' | 'pending';
+  /**
+   * The status of the SEPA customer_balance payments (EUR currency) capability of the account, or whether the account can directly process SEPA customer_balance charges.
+   */
+  sepa_bank_transfer_payments?: 'active' | 'inactive' | 'pending';
   /**
    * The status of the SEPA Direct Debits payments capability of the account, or whether the account can directly process SEPA Direct Debits charges.
    */
@@ -362,6 +378,10 @@ export type AccountCapabilities = {
    * The status of the US bank account ACH payments capability of the account, or whether the account can directly process US bank account charges.
    */
   us_bank_account_ach_payments?: 'active' | 'inactive' | 'pending';
+  /**
+   * The status of the US customer_balance payments (USD currency) capability of the account, or whether the account can directly process US customer_balance charges.
+   */
+  us_bank_transfer_payments?: 'active' | 'inactive' | 'pending';
   /**
    * The status of the Zip capability of the account, or whether the account can directly process Zip charges.
    */
@@ -762,7 +782,8 @@ export type AccountRequirementsError = {
     | 'verification_missing_directors'
     | 'verification_missing_executives'
     | 'verification_missing_owners'
-    | 'verification_requires_additional_memorandum_of_associations';
+    | 'verification_requires_additional_memorandum_of_associations'
+    | 'verification_requires_additional_proof_of_registration';
   /**
    * An informative message that indicates the error type and provides additional details about the error.
    */
@@ -1085,6 +1106,10 @@ export type ApplicationFee = {
    */
   currency: string;
   /**
+   * Polymorphic source of the application fee. Includes the ID of the object the application fee was created from.
+   */
+  fee_source?: PlatformEarningFeeSource | null;
+  /**
    * Unique identifier for the object.
    */
   id: string;
@@ -1275,6 +1300,10 @@ export type BalanceAmountNet = {
    * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
    */
   currency: string;
+  /**
+   * Breakdown of balance by destination.
+   */
+  net_available?: BalanceNetAvailable[];
   source_types?: BalanceAmountBySourceType;
 };
 /**
@@ -1285,6 +1314,20 @@ export type BalanceDetail = {
    * Funds that are available for use.
    */
   available: BalanceAmount[];
+};
+/**
+ * BalanceNetAvailable
+ */
+export type BalanceNetAvailable = {
+  /**
+   * Net balance amount, subtracting fees from platform-set pricing.
+   */
+  amount: number;
+  /**
+   * ID of the external account for this net balance (not expandable).
+   */
+  destination: string;
+  source_types?: BalanceAmountBySourceType;
 };
 /**
  * BalanceTransaction
@@ -1358,7 +1401,6 @@ export type BalanceTransaction = {
         | IssuingDispute
         | IssuingTransaction
         | Payout
-        | PlatformTaxFee
         | Refund
         | ReserveTransaction
         | TaxDeductedAtSource
@@ -2756,7 +2798,7 @@ export type CheckoutSession = {
    */
   object: 'checkout.session';
   /**
-   * The ID of the PaymentIntent for Checkout Sessions in `payment` mode.
+   * The ID of the PaymentIntent for Checkout Sessions in `payment` mode. You can't confirm or cancel the PaymentIntent for a Checkout Session. To cancel, [expire the Checkout Session](https://stripe.com/docs/api/checkout/sessions/expire) instead.
    */
   payment_intent?: (string | PaymentIntent) | null;
   /**
@@ -2803,7 +2845,7 @@ export type CheckoutSession = {
    */
   saved_payment_method_options?: PaymentPagesCheckoutSessionSavedPaymentMethodOptions | null;
   /**
-   * The ID of the SetupIntent for Checkout Sessions in `setup` mode.
+   * The ID of the SetupIntent for Checkout Sessions in `setup` mode. You can't confirm or cancel the SetupIntent for a Checkout Session. To cancel, [expire the Checkout Session](https://stripe.com/docs/api/checkout/sessions/expire) instead.
    */
   setup_intent?: (string | SetupIntent) | null;
   /**
@@ -4006,6 +4048,10 @@ export type ConnectEmbeddedPayoutsFeatures = {
    * Whether to allow payout schedule to be changed. Default `true` when Stripe owns Loss Liability, default `false` otherwise.
    */
   edit_payout_schedule: boolean;
+  /**
+   * Whether to allow platforms to control bank account collection for their connected accounts. This feature can only be false for custom accounts (or accounts where the platform is compliance owner). Otherwise, bank account collection is determined by compliance requirements.
+   */
+  external_account_collection: boolean;
   /**
    * Whether to allow creation of instant payouts. Default `true` when Stripe owns Loss Liability, default `false` otherwise.
    */
@@ -5836,11 +5882,12 @@ export type DisputeEvidenceDetails = {
  */
 export type DisputePaymentMethodDetails = {
   card?: DisputePaymentMethodDetailsCard;
+  klarna?: DisputePaymentMethodDetailsKlarna;
   paypal?: DisputePaymentMethodDetailsPaypal;
   /**
    * Payment method type.
    */
-  type: 'card' | 'paypal';
+  type: 'card' | 'klarna' | 'paypal';
 };
 /**
  * DisputePaymentMethodDetailsCard
@@ -5854,6 +5901,15 @@ export type DisputePaymentMethodDetailsCard = {
    * The card network's specific dispute reason code, which maps to one of Stripe's primary dispute categories to simplify response guidance. The [Network code map](https://stripe.com/docs/disputes/categories#network-code-map) lists all available dispute reason codes by network.
    */
   network_reason_code?: string | null;
+};
+/**
+ * DisputePaymentMethodDetailsKlarna
+ */
+export type DisputePaymentMethodDetailsKlarna = {
+  /**
+   * The reason for the dispute as defined by Klarna
+   */
+  reason_code?: string | null;
 };
 /**
  * DisputePaymentMethodDetailsPaypal
@@ -9076,6 +9132,30 @@ export type IssuingDispute = {
    */
   livemode: boolean;
   /**
+   * The enum that describes the dispute loss outcome. If the dispute is not lost, this field will be absent. New enum values may be added in the future, so be sure to handle unknown values.
+   */
+  loss_reason?:
+    | 'cardholder_authentication_issuer_liability'
+    | 'eci5_token_transaction_with_tavv'
+    | 'excess_disputes_in_timeframe'
+    | 'has_not_met_the_minimum_dispute_amount_requirements'
+    | 'invalid_duplicate_dispute'
+    | 'invalid_incorrect_amount_dispute'
+    | 'invalid_no_authorization'
+    | 'invalid_use_of_disputes'
+    | 'merchandise_delivered_or_shipped'
+    | 'merchandise_or_service_as_described'
+    | 'not_cancelled'
+    | 'other'
+    | 'refund_issued'
+    | 'submitted_beyond_allowable_time_limit'
+    | 'transaction_3ds_required'
+    | 'transaction_approved_after_prior_fraud_dispute'
+    | 'transaction_authorized'
+    | 'transaction_electronically_read'
+    | 'transaction_qualifies_for_visa_easy_payment_service'
+    | 'transaction_unattended';
+  /**
    * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
    */
   metadata: {
@@ -9157,7 +9237,7 @@ export type IssuingPersonalizationDesign = {
  * A Physical Bundle represents the bundle of physical items - card stock, carrier letter, and envelope - that is shipped to a cardholder when you create a physical card.
  */
 export type IssuingPhysicalBundle = {
-  features?: IssuingPhysicalBundleFeatures;
+  features: IssuingPhysicalBundleFeatures;
   /**
    * Unique identifier for the object.
    */
@@ -14488,6 +14568,7 @@ export type PaymentIntentTypeSpecificPaymentMethodOptionsClient = {
    * When enabled, using a card that is attached to a customer will require the CVC to be provided again (i.e. using the cvc_token parameter).
    */
   require_cvc_recollection?: boolean;
+  routing?: PaymentMethodOptionsCardPresentRouting;
   /**
    * Indicates that you intend to make future payments with this PaymentIntent's payment method.
    *
@@ -16822,7 +16903,7 @@ export type PaymentMethodDetailsKlarna = {
   payment_method_category?: string | null;
   /**
    * Preferred language of the Klarna authorization page that the customer is redirected to.
-   * Can be one of `de-AT`, `en-AT`, `nl-BE`, `fr-BE`, `en-BE`, `de-DE`, `en-DE`, `da-DK`, `en-DK`, `es-ES`, `en-ES`, `fi-FI`, `sv-FI`, `en-FI`, `en-GB`, `en-IE`, `it-IT`, `en-IT`, `nl-NL`, `en-NL`, `nb-NO`, `en-NO`, `sv-SE`, `en-SE`, `en-US`, `es-US`, `fr-FR`, `en-FR`, `cs-CZ`, `en-CZ`, `el-GR`, `en-GR`, `en-AU`, `en-NZ`, `en-CA`, `fr-CA`, `pl-PL`, `en-PL`, `pt-PT`, `en-PT`, `de-CH`, `fr-CH`, `it-CH`, or `en-CH`
+   * Can be one of `de-AT`, `en-AT`, `nl-BE`, `fr-BE`, `en-BE`, `de-DE`, `en-DE`, `da-DK`, `en-DK`, `es-ES`, `en-ES`, `fi-FI`, `sv-FI`, `en-FI`, `en-GB`, `en-IE`, `it-IT`, `en-IT`, `nl-NL`, `en-NL`, `nb-NO`, `en-NO`, `sv-SE`, `en-SE`, `en-US`, `es-US`, `fr-FR`, `en-FR`, `cs-CZ`, `en-CZ`, `ro-RO`, `en-RO`, `el-GR`, `en-GR`, `en-AU`, `en-NZ`, `en-CA`, `fr-CA`, `pl-PL`, `en-PL`, `pt-PT`, `en-PT`, `de-CH`, `fr-CH`, `it-CH`, or `en-CH`
    */
   preferred_locale?: string | null;
 };
@@ -17606,6 +17687,16 @@ export type PaymentMethodOptionsCardPresent = {
    * Request ability to [increment](https://stripe.com/docs/terminal/features/incremental-authorizations) this PaymentIntent if the combination of MCC and card brand is eligible. Check [incremental_authorization_supported](https://stripe.com/docs/api/charges/object#charge_object-payment_method_details-card_present-incremental_authorization_supported) in the [Confirm](https://stripe.com/docs/api/payment_intents/confirm) response to verify support.
    */
   request_incremental_authorization_support?: boolean | null;
+  routing?: PaymentMethodOptionsCardPresentRouting;
+};
+/**
+ * payment_method_options_card_present_routing
+ */
+export type PaymentMethodOptionsCardPresentRouting = {
+  /**
+   * Requested routing priority
+   */
+  requested_priority?: ('domestic' | 'international') | null;
 };
 /**
  * payment_method_options_cashapp
@@ -18303,6 +18394,10 @@ export type PaymentPagesCheckoutSessionCustomFields = {
  */
 export type PaymentPagesCheckoutSessionCustomFieldsDropdown = {
   /**
+   * The value that will pre-fill on the payment page.
+   */
+  default_value?: string | null;
+  /**
    * The options available for the customer to select. Up to 200 options allowed.
    */
   options: PaymentPagesCheckoutSessionCustomFieldsOption[];
@@ -18328,6 +18423,10 @@ export type PaymentPagesCheckoutSessionCustomFieldsLabel = {
  * PaymentPagesCheckoutSessionCustomFieldsNumeric
  */
 export type PaymentPagesCheckoutSessionCustomFieldsNumeric = {
+  /**
+   * The value that will pre-fill the field on the payment page.
+   */
+  default_value?: string | null;
   /**
    * The maximum character length constraint for the customer's input.
    */
@@ -18358,6 +18457,10 @@ export type PaymentPagesCheckoutSessionCustomFieldsOption = {
  * PaymentPagesCheckoutSessionCustomFieldsText
  */
 export type PaymentPagesCheckoutSessionCustomFieldsText = {
+  /**
+   * The value that will pre-fill the field on the payment page.
+   */
+  default_value?: string | null;
   /**
    * The maximum character length constraint for the customer's input.
    */
@@ -18501,9 +18604,13 @@ export type PaymentPagesCheckoutSessionPhoneNumberCollection = {
  */
 export type PaymentPagesCheckoutSessionSavedPaymentMethodOptions = {
   /**
-   * Controls which payment methods are eligible to be redisplayed to returning customers. Corresponds to `allow_redisplay` on the payment method.
+   * Uses the `allow_redisplay` value of each saved payment method to filter the set presented to a returning customer. By default, only saved payment methods with ’allow_redisplay: ‘always’ are shown in Checkout.
    */
   allow_redisplay_filters?: ('always' | 'limited' | 'unspecified')[] | null;
+  /**
+   * Enable customers to choose if they wish to remove their saved payment methods. Disabled by default.
+   */
+  payment_method_remove?: ('disabled' | 'enabled') | null;
   /**
    * Enable customers to choose if they wish to save their payment method for future use. Disabled by default.
    */
@@ -18940,6 +19047,14 @@ export type Payout = {
    * The amount (in cents (or local equivalent)) that transfers to your bank account or debit card.
    */
   amount: number;
+  /**
+   * The application fee (if any) for the payout. [See the Connect documentation](https://stripe.com/docs/connect/instant-payouts#monetization-and-fees) for details.
+   */
+  application_fee?: (string | ApplicationFee) | null;
+  /**
+   * The amount of the application fee (if any) requested for the payout. [See the Connect documentation](https://stripe.com/docs/connect/instant-payouts#monetization-and-fees) for details.
+   */
+  application_fee_amount?: number | null;
   /**
    * Date that you can expect the payout to arrive in the bank. This factors in delays to account for weekends or bank holidays.
    */
@@ -19404,29 +19519,21 @@ export type PlanTier = {
   up_to?: number | null;
 };
 /**
- * PlatformTax
+ * PlatformEarningFeeSource
  */
-export type PlatformTaxFee = {
+export type PlatformEarningFeeSource = {
   /**
-   * The Connected account that incurred this charge.
+   * Charge ID that created this application fee.
    */
-  account: string;
+  charge?: string;
   /**
-   * Unique identifier for the object.
+   * Payout ID that created this application fee.
    */
-  id: string;
+  payout?: string;
   /**
-   * String representing the object's type. Objects of the same type share the same value.
+   * Type of object that created the application fee, either `charge` or `payout`.
    */
-  object: 'platform_tax_fee';
-  /**
-   * The payment object that caused this tax to be inflicted.
-   */
-  source_transaction: string;
-  /**
-   * The type of tax (VAT).
-   */
-  type: string;
+  type: 'charge' | 'payout';
 };
 /**
  * PortalBusinessProfile
@@ -19925,7 +20032,7 @@ export type Product = {
    */
   shippable?: boolean | null;
   /**
-   * Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used.
+   * Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used. Only used for subscription payments.
    */
   statement_descriptor?: string | null;
   /**
@@ -24821,6 +24928,7 @@ export type TerminalConfiguration = {
    */
   object: 'terminal.configuration';
   offline?: TerminalConfigurationConfigurationResourceOfflineConfig;
+  stripe_s700?: TerminalConfigurationConfigurationResourceDeviceTypeSpecificConfig;
   tipping?: TerminalConfigurationConfigurationResourceTipping;
   verifone_p400?: TerminalConfigurationConfigurationResourceDeviceTypeSpecificConfig;
 };
@@ -27372,7 +27480,7 @@ export function configureAuth(
       new r.HttpBearerSecurityAuthentication(params.bearerAuth),
   };
 }
-export function createContext<FetcherData>(
+export function createContext<FetcherData extends r.BaseFetcherData>(
   params?: r.CreateContextParams<AuthMethods, FetcherData>,
 ): r.Context<AuthMethods, FetcherData> {
   return new r.Context<AuthMethods, FetcherData>({
@@ -27387,7 +27495,7 @@ export function createContext<FetcherData>(
 /**
  * <p>Retrieves the details of an account.</p>
  */
-export async function getAccount<FetcherData>(
+export async function getAccount<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -27412,7 +27520,7 @@ export async function getAccount<FetcherData>(
  * <p>Creates an AccountLink object that includes a single-use Stripe URL that the platform can redirect their user to in
  * order to take them through the Connect Onboarding flow.</p>
  */
-export async function postAccountLinks<FetcherData>(
+export async function postAccountLinks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -27434,7 +27542,9 @@ export async function postAccountLinks<FetcherData>(
  * <p>Creates a AccountSession object that includes a single-use token that the platform can use on their front-end to
  * grant client-side API access.</p>
  */
-export async function postAccountSessions<FetcherData>(
+export async function postAccountSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -27456,7 +27566,7 @@ export async function postAccountSessions<FetcherData>(
  * <p>Returns a list of accounts connected to your platform via <a href="/docs/connect">Connect</a>. If you’re not a
  * platform, the list is empty.</p>
  */
-export async function getAccounts<FetcherData>(
+export async function getAccounts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -27525,7 +27635,7 @@ export async function getAccounts<FetcherData>(
  * You can prefill any information on the
  * account.</p>
  */
-export async function postAccounts<FetcherData>(
+export async function postAccounts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -27557,7 +27667,9 @@ export async function postAccounts<FetcherData>(
  * <p>If you want to delete your own account, use the <a
  * href="https://dashboard.stripe.com/settings/account">account information tab in your account settings</a> instead.</p>
  */
-export async function deleteAccountsAccount<FetcherData>(
+export async function deleteAccountsAccount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27580,7 +27692,7 @@ export async function deleteAccountsAccount<FetcherData>(
 /**
  * <p>Retrieves the details of an account.</p>
  */
-export async function getAccountsAccount<FetcherData>(
+export async function getAccountsAccount<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27627,7 +27739,9 @@ export async function getAccountsAccount<FetcherData>(
  * <a
  * href="/docs/connect/updating-accounts">Connect</a> documentation to learn more about updating accounts.</p>
  */
-export async function postAccountsAccount<FetcherData>(
+export async function postAccountsAccount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27650,7 +27764,9 @@ export async function postAccountsAccount<FetcherData>(
 /**
  * <p>Create an external account for a given account.</p>
  */
-export async function postAccountsAccountBankAccounts<FetcherData>(
+export async function postAccountsAccountBankAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27673,7 +27789,9 @@ export async function postAccountsAccountBankAccounts<FetcherData>(
 /**
  * <p>Delete a specified external account for a given account.</p>
  */
-export async function deleteAccountsAccountBankAccountsId<FetcherData>(
+export async function deleteAccountsAccountBankAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27698,7 +27816,9 @@ export async function deleteAccountsAccountBankAccountsId<FetcherData>(
 /**
  * <p>Retrieve a specified external account for a given account.</p>
  */
-export async function getAccountsAccountBankAccountsId<FetcherData>(
+export async function getAccountsAccountBankAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27736,7 +27856,9 @@ export async function getAccountsAccountBankAccountsId<FetcherData>(
  * re-enable a disabled bank account by performing an update call without providing any
  * arguments or changes.</p>
  */
-export async function postAccountsAccountBankAccountsId<FetcherData>(
+export async function postAccountsAccountBankAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27761,7 +27883,9 @@ export async function postAccountsAccountBankAccountsId<FetcherData>(
  * <p>Returns a list of capabilities associated with the account. The capabilities are returned sorted by creation date,
  * with the most recent capability appearing first.</p>
  */
-export async function getAccountsAccountCapabilities<FetcherData>(
+export async function getAccountsAccountCapabilities<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27804,7 +27928,9 @@ export async function getAccountsAccountCapabilities<FetcherData>(
 /**
  * <p>Retrieves information about the specified Account Capability.</p>
  */
-export async function getAccountsAccountCapabilitiesCapability<FetcherData>(
+export async function getAccountsAccountCapabilitiesCapability<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27831,7 +27957,9 @@ export async function getAccountsAccountCapabilitiesCapability<FetcherData>(
  * <p>Updates an existing Account Capability. Request or remove a capability by updating its <code>requested</code>
  * parameter.</p>
  */
-export async function postAccountsAccountCapabilitiesCapability<FetcherData>(
+export async function postAccountsAccountCapabilitiesCapability<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27855,7 +27983,9 @@ export async function postAccountsAccountCapabilitiesCapability<FetcherData>(
 /**
  * <p>List external accounts for an account.</p>
  */
-export async function getAccountsAccountExternalAccounts<FetcherData>(
+export async function getAccountsAccountExternalAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27911,7 +28041,9 @@ export async function getAccountsAccountExternalAccounts<FetcherData>(
 /**
  * <p>Create an external account for a given account.</p>
  */
-export async function postAccountsAccountExternalAccounts<FetcherData>(
+export async function postAccountsAccountExternalAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27934,7 +28066,9 @@ export async function postAccountsAccountExternalAccounts<FetcherData>(
 /**
  * <p>Delete a specified external account for a given account.</p>
  */
-export async function deleteAccountsAccountExternalAccountsId<FetcherData>(
+export async function deleteAccountsAccountExternalAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27959,7 +28093,9 @@ export async function deleteAccountsAccountExternalAccountsId<FetcherData>(
 /**
  * <p>Retrieve a specified external account for a given account.</p>
  */
-export async function getAccountsAccountExternalAccountsId<FetcherData>(
+export async function getAccountsAccountExternalAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -27997,7 +28133,9 @@ export async function getAccountsAccountExternalAccountsId<FetcherData>(
  * re-enable a disabled bank account by performing an update call without providing any
  * arguments or changes.</p>
  */
-export async function postAccountsAccountExternalAccountsId<FetcherData>(
+export async function postAccountsAccountExternalAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28025,7 +28163,9 @@ export async function postAccountsAccountExternalAccountsId<FetcherData>(
  * create login links for accounts that use the <a href="/connect/express-dashboard">Express Dashboard</a> and are
  * connected to your platform</strong>.</p>
  */
-export async function postAccountsAccountLoginLinks<FetcherData>(
+export async function postAccountsAccountLoginLinks<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28049,7 +28189,9 @@ export async function postAccountsAccountLoginLinks<FetcherData>(
  * <p>Returns a list of people associated with the account’s legal entity. The people are returned sorted by creation date,
  * with the most recent people appearing first.</p>
  */
-export async function getAccountsAccountPeople<FetcherData>(
+export async function getAccountsAccountPeople<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28108,7 +28250,9 @@ export async function getAccountsAccountPeople<FetcherData>(
 /**
  * <p>Creates a new person.</p>
  */
-export async function postAccountsAccountPeople<FetcherData>(
+export async function postAccountsAccountPeople<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28131,7 +28275,9 @@ export async function postAccountsAccountPeople<FetcherData>(
  * account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is
  * using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>
  */
-export async function deleteAccountsAccountPeoplePerson<FetcherData>(
+export async function deleteAccountsAccountPeoplePerson<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28155,7 +28301,9 @@ export async function deleteAccountsAccountPeoplePerson<FetcherData>(
 /**
  * <p>Retrieves an existing person.</p>
  */
-export async function getAccountsAccountPeoplePerson<FetcherData>(
+export async function getAccountsAccountPeoplePerson<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28179,7 +28327,9 @@ export async function getAccountsAccountPeoplePerson<FetcherData>(
 /**
  * <p>Updates an existing person.</p>
  */
-export async function postAccountsAccountPeoplePerson<FetcherData>(
+export async function postAccountsAccountPeoplePerson<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28202,7 +28352,9 @@ export async function postAccountsAccountPeoplePerson<FetcherData>(
  * <p>Returns a list of people associated with the account’s legal entity. The people are returned sorted by creation date,
  * with the most recent people appearing first.</p>
  */
-export async function getAccountsAccountPersons<FetcherData>(
+export async function getAccountsAccountPersons<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28261,7 +28413,9 @@ export async function getAccountsAccountPersons<FetcherData>(
 /**
  * <p>Creates a new person.</p>
  */
-export async function postAccountsAccountPersons<FetcherData>(
+export async function postAccountsAccountPersons<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28284,7 +28438,9 @@ export async function postAccountsAccountPersons<FetcherData>(
  * account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is
  * using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>
  */
-export async function deleteAccountsAccountPersonsPerson<FetcherData>(
+export async function deleteAccountsAccountPersonsPerson<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28308,7 +28464,9 @@ export async function deleteAccountsAccountPersonsPerson<FetcherData>(
 /**
  * <p>Retrieves an existing person.</p>
  */
-export async function getAccountsAccountPersonsPerson<FetcherData>(
+export async function getAccountsAccountPersonsPerson<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28332,7 +28490,9 @@ export async function getAccountsAccountPersonsPerson<FetcherData>(
 /**
  * <p>Updates an existing person.</p>
  */
-export async function postAccountsAccountPersonsPerson<FetcherData>(
+export async function postAccountsAccountPersonsPerson<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28359,7 +28519,9 @@ export async function postAccountsAccountPersonsPerson<FetcherData>(
  * rejected. Test-mode accounts can be rejected at any time. Live-mode accounts can only be rejected after all balances are
  * zero.</p>
  */
-export async function postAccountsAccountReject<FetcherData>(
+export async function postAccountsAccountReject<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -28382,7 +28544,7 @@ export async function postAccountsAccountReject<FetcherData>(
 /**
  * <p>List apple pay domains.</p>
  */
-export async function getApplePayDomains<FetcherData>(
+export async function getApplePayDomains<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     domain_name?: string;
@@ -28434,7 +28596,9 @@ export async function getApplePayDomains<FetcherData>(
 /**
  * <p>Create an apple pay domain.</p>
  */
-export async function postApplePayDomains<FetcherData>(
+export async function postApplePayDomains<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -28455,7 +28619,9 @@ export async function postApplePayDomains<FetcherData>(
 /**
  * <p>Delete an apple pay domain.</p>
  */
-export async function deleteApplePayDomainsDomain<FetcherData>(
+export async function deleteApplePayDomainsDomain<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     domain: string;
@@ -28479,7 +28645,9 @@ export async function deleteApplePayDomainsDomain<FetcherData>(
 /**
  * <p>Retrieve an apple pay domain.</p>
  */
-export async function getApplePayDomainsDomain<FetcherData>(
+export async function getApplePayDomainsDomain<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     domain: string;
@@ -28505,7 +28673,7 @@ export async function getApplePayDomainsDomain<FetcherData>(
  * <p>Returns a list of application fees you’ve previously collected. The application fees are returned in sorted order,
  * with the most recent fees appearing first.</p>
  */
-export async function getApplicationFees<FetcherData>(
+export async function getApplicationFees<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge?: string;
@@ -28567,7 +28735,9 @@ export async function getApplicationFees<FetcherData>(
  * <p>By default, you can see the 10 most recent refunds stored directly on the application fee object, but you can also
  * retrieve details about a specific refund stored on the application fee.</p>
  */
-export async function getApplicationFeesFeeRefundsId<FetcherData>(
+export async function getApplicationFeesFeeRefundsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -28596,7 +28766,9 @@ export async function getApplicationFeesFeeRefundsId<FetcherData>(
  *
  * <p>This request only accepts metadata as an argument.</p>
  */
-export async function postApplicationFeesFeeRefundsId<FetcherData>(
+export async function postApplicationFeesFeeRefundsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     fee: string;
@@ -28621,7 +28793,9 @@ export async function postApplicationFeesFeeRefundsId<FetcherData>(
  * <p>Retrieves the details of an application fee that your account has collected. The same information is returned when
  * refunding the application fee.</p>
  */
-export async function getApplicationFeesId<FetcherData>(
+export async function getApplicationFeesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -28643,7 +28817,9 @@ export async function getApplicationFeesId<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
 }
-export async function postApplicationFeesIdRefund<FetcherData>(
+export async function postApplicationFeesIdRefund<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -28668,7 +28844,9 @@ export async function postApplicationFeesIdRefund<FetcherData>(
  * always available by default on the application fee object. If you need more than those 10, you can use this API method
  * and the <code>limit</code> and <code>starting_after</code> parameters to page through additional refunds.</p>
  */
-export async function getApplicationFeesIdRefunds<FetcherData>(
+export async function getApplicationFeesIdRefunds<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -28729,7 +28907,9 @@ export async function getApplicationFeesIdRefunds<FetcherData>(
  * application fee,
  * or when trying to refund more money than is left on an application fee.</p>
  */
-export async function postApplicationFeesIdRefunds<FetcherData>(
+export async function postApplicationFeesIdRefunds<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -28752,7 +28932,7 @@ export async function postApplicationFeesIdRefunds<FetcherData>(
 /**
  * <p>List all secrets stored on the given scope.</p>
  */
-export async function getAppsSecrets<FetcherData>(
+export async function getAppsSecrets<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -28807,7 +28987,7 @@ export async function getAppsSecrets<FetcherData>(
 /**
  * <p>Create or replace a secret in the secret store.</p>
  */
-export async function postAppsSecrets<FetcherData>(
+export async function postAppsSecrets<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -28828,7 +29008,9 @@ export async function postAppsSecrets<FetcherData>(
 /**
  * <p>Deletes a secret from the secret store by name and scope.</p>
  */
-export async function postAppsSecretsDelete<FetcherData>(
+export async function postAppsSecretsDelete<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -28849,7 +29031,7 @@ export async function postAppsSecretsDelete<FetcherData>(
 /**
  * <p>Finds a secret in the secret store by name and scope.</p>
  */
-export async function getAppsSecretsFind<FetcherData>(
+export async function getAppsSecretsFind<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -28881,7 +29063,7 @@ export async function getAppsSecretsFind<FetcherData>(
  * request, see <a href="/docs/connect/account-balances#accounting-for-negative-balances">Accounting for negative
  * balances</a>.</p>
  */
-export async function getBalance<FetcherData>(
+export async function getBalance<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -28909,7 +29091,7 @@ export async function getBalance<FetcherData>(
  * <p>Note
  * that this endpoint was previously called “Balance history” and used the path <code>/v1/balance/history</code>.</p>
  */
-export async function getBalanceHistory<FetcherData>(
+export async function getBalanceHistory<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -28979,7 +29161,9 @@ export async function getBalanceHistory<FetcherData>(
  * <p>Note that this endpoint previously used the path
  * <code>/v1/balance/history/:id</code>.</p>
  */
-export async function getBalanceHistoryId<FetcherData>(
+export async function getBalanceHistoryId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -29008,7 +29192,9 @@ export async function getBalanceHistoryId<FetcherData>(
  * <p>Note
  * that this endpoint was previously called “Balance history” and used the path <code>/v1/balance/history</code>.</p>
  */
-export async function getBalanceTransactions<FetcherData>(
+export async function getBalanceTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -29078,7 +29264,9 @@ export async function getBalanceTransactions<FetcherData>(
  * <p>Note that this endpoint previously used the path
  * <code>/v1/balance/history/:id</code>.</p>
  */
-export async function getBalanceTransactionsId<FetcherData>(
+export async function getBalanceTransactionsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -29103,7 +29291,9 @@ export async function getBalanceTransactionsId<FetcherData>(
 /**
  * <p>Creates a billing meter event adjustment</p>
  */
-export async function postBillingMeterEventAdjustments<FetcherData>(
+export async function postBillingMeterEventAdjustments<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -29125,7 +29315,9 @@ export async function postBillingMeterEventAdjustments<FetcherData>(
 /**
  * <p>Creates a billing meter event</p>
  */
-export async function postBillingMeterEvents<FetcherData>(
+export async function postBillingMeterEvents<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -29146,7 +29338,7 @@ export async function postBillingMeterEvents<FetcherData>(
 /**
  * <p>Retrieve a list of billing meters.</p>
  */
-export async function getBillingMeters<FetcherData>(
+export async function getBillingMeters<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -29198,7 +29390,7 @@ export async function getBillingMeters<FetcherData>(
 /**
  * <p>Creates a billing meter</p>
  */
-export async function postBillingMeters<FetcherData>(
+export async function postBillingMeters<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -29219,7 +29411,7 @@ export async function postBillingMeters<FetcherData>(
 /**
  * <p>Retrieves a billing meter given an ID</p>
  */
-export async function getBillingMetersId<FetcherData>(
+export async function getBillingMetersId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -29244,7 +29436,9 @@ export async function getBillingMetersId<FetcherData>(
 /**
  * <p>Updates a billing meter</p>
  */
-export async function postBillingMetersId<FetcherData>(
+export async function postBillingMetersId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -29267,7 +29461,9 @@ export async function postBillingMetersId<FetcherData>(
 /**
  * <p>Deactivates a billing meter</p>
  */
-export async function postBillingMetersIdDeactivate<FetcherData>(
+export async function postBillingMetersIdDeactivate<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -29290,7 +29486,9 @@ export async function postBillingMetersIdDeactivate<FetcherData>(
 /**
  * <p>Retrieve a list of billing meter event summaries.</p>
  */
-export async function getBillingMetersIdEventSummaries<FetcherData>(
+export async function getBillingMetersIdEventSummaries<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -29349,7 +29547,9 @@ export async function getBillingMetersIdEventSummaries<FetcherData>(
 /**
  * <p>Reactivates a billing meter</p>
  */
-export async function postBillingMetersIdReactivate<FetcherData>(
+export async function postBillingMetersIdReactivate<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -29372,7 +29572,9 @@ export async function postBillingMetersIdReactivate<FetcherData>(
 /**
  * <p>Returns a list of configurations that describe the functionality of the customer portal.</p>
  */
-export async function getBillingPortalConfigurations<FetcherData>(
+export async function getBillingPortalConfigurations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -29426,7 +29628,9 @@ export async function getBillingPortalConfigurations<FetcherData>(
 /**
  * <p>Creates a configuration that describes the functionality and behavior of a PortalSession</p>
  */
-export async function postBillingPortalConfigurations<FetcherData>(
+export async function postBillingPortalConfigurations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -29448,7 +29652,9 @@ export async function postBillingPortalConfigurations<FetcherData>(
 /**
  * <p>Retrieves a configuration that describes the functionality of the customer portal.</p>
  */
-export async function getBillingPortalConfigurationsConfiguration<FetcherData>(
+export async function getBillingPortalConfigurationsConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     configuration: string;
@@ -29474,7 +29680,9 @@ export async function getBillingPortalConfigurationsConfiguration<FetcherData>(
 /**
  * <p>Updates a configuration that describes the functionality of the customer portal.</p>
  */
-export async function postBillingPortalConfigurationsConfiguration<FetcherData>(
+export async function postBillingPortalConfigurationsConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     configuration: string;
@@ -29498,7 +29706,9 @@ export async function postBillingPortalConfigurationsConfiguration<FetcherData>(
 /**
  * <p>Creates a session of the customer portal.</p>
  */
-export async function postBillingPortalSessions<FetcherData>(
+export async function postBillingPortalSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -29521,7 +29731,7 @@ export async function postBillingPortalSessions<FetcherData>(
  * <p>Returns a list of charges you’ve previously created. The charges are returned in sorted order, with the most recent
  * charges appearing first.</p>
  */
-export async function getCharges<FetcherData>(
+export async function getCharges<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -29590,7 +29800,7 @@ export async function getCharges<FetcherData>(
  * object used to request
  * payment.</p>
  */
-export async function postCharges<FetcherData>(
+export async function postCharges<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -29615,7 +29825,7 @@ export async function postCharges<FetcherData>(
  * up
  * to an hour behind during outages. Search functionality is not available to merchants in India.</p>
  */
-export async function getChargesSearch<FetcherData>(
+export async function getChargesSearch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -29661,7 +29871,7 @@ export async function getChargesSearch<FetcherData>(
  * from your previous request, and Stripe will return the corresponding charge information. The same information is
  * returned when creating or refunding the charge.</p>
  */
-export async function getChargesCharge<FetcherData>(
+export async function getChargesCharge<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29685,7 +29895,7 @@ export async function getChargesCharge<FetcherData>(
  * <p>Updates the specified charge by setting the values of the parameters passed. Any parameters not provided will be left
  * unchanged.</p>
  */
-export async function postChargesCharge<FetcherData>(
+export async function postChargesCharge<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29714,7 +29924,9 @@ export async function postChargesCharge<FetcherData>(
  * <p>Don’t use this method to capture a PaymentIntent-initiated charge. Use <a
  * href="/docs/api/payment_intents/capture">Capture a PaymentIntent</a>.</p>
  */
-export async function postChargesChargeCapture<FetcherData>(
+export async function postChargesChargeCapture<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29735,7 +29947,9 @@ export async function postChargesChargeCapture<FetcherData>(
 /**
  * <p>Retrieve a dispute for a specified charge.</p>
  */
-export async function getChargesChargeDispute<FetcherData>(
+export async function getChargesChargeDispute<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29757,7 +29971,9 @@ export async function getChargesChargeDispute<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
 }
-export async function postChargesChargeDispute<FetcherData>(
+export async function postChargesChargeDispute<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29777,7 +29993,9 @@ export async function postChargesChargeDispute<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
 }
-export async function postChargesChargeDisputeClose<FetcherData>(
+export async function postChargesChargeDisputeClose<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29814,7 +30032,9 @@ export async function postChargesChargeDisputeClose<FetcherData>(
  * called on an already-refunded charge,
  * or when you attempt to refund more money than is left on a charge.</p>
  */
-export async function postChargesChargeRefund<FetcherData>(
+export async function postChargesChargeRefund<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29837,7 +30057,9 @@ export async function postChargesChargeRefund<FetcherData>(
  * available by default on the charge object. If you need more than those 10, you can use this API method and the
  * <code>limit</code> and <code>starting_after</code> parameters to page through additional refunds.</p>
  */
-export async function getChargesChargeRefunds<FetcherData>(
+export async function getChargesChargeRefunds<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29901,7 +30123,9 @@ export async function getChargesChargeRefunds<FetcherData>(
  * or when
  * trying to refund more money than is left on a charge.</p>
  */
-export async function postChargesChargeRefunds<FetcherData>(
+export async function postChargesChargeRefunds<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29922,7 +30146,9 @@ export async function postChargesChargeRefunds<FetcherData>(
 /**
  * <p>Retrieves the details of an existing refund.</p>
  */
-export async function getChargesChargeRefundsRefund<FetcherData>(
+export async function getChargesChargeRefundsRefund<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29946,7 +30172,9 @@ export async function getChargesChargeRefundsRefund<FetcherData>(
 /**
  * <p>Update a specified refund.</p>
  */
-export async function postChargesChargeRefundsRefund<FetcherData>(
+export async function postChargesChargeRefundsRefund<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge: string;
@@ -29968,7 +30196,9 @@ export async function postChargesChargeRefundsRefund<FetcherData>(
 /**
  * <p>Returns a list of Checkout Sessions.</p>
  */
-export async function getCheckoutSessions<FetcherData>(
+export async function getCheckoutSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -30041,7 +30271,9 @@ export async function getCheckoutSessions<FetcherData>(
 /**
  * <p>Creates a Session object.</p>
  */
-export async function postCheckoutSessions<FetcherData>(
+export async function postCheckoutSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -30062,7 +30294,9 @@ export async function postCheckoutSessions<FetcherData>(
 /**
  * <p>Retrieves a Session object.</p>
  */
-export async function getCheckoutSessionsSession<FetcherData>(
+export async function getCheckoutSessionsSession<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -30090,7 +30324,9 @@ export async function getCheckoutSessionsSession<FetcherData>(
  * <p>After it expires, a customer
  * can’t complete a Session and customers loading the Session see a message saying the Session is expired.</p>
  */
-export async function postCheckoutSessionsSessionExpire<FetcherData>(
+export async function postCheckoutSessionsSessionExpire<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     session: string;
@@ -30114,7 +30350,9 @@ export async function postCheckoutSessionsSessionExpire<FetcherData>(
  * <p>When retrieving a Checkout Session, there is an includable <strong>line_items</strong> property containing the first
  * handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>
  */
-export async function getCheckoutSessionsSessionLineItems<FetcherData>(
+export async function getCheckoutSessionsSessionLineItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -30165,7 +30403,7 @@ export async function getCheckoutSessionsSessionLineItems<FetcherData>(
  * most recently created
  * orders appearing first.</p>
  */
-export async function getClimateOrders<FetcherData>(
+export async function getClimateOrders<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -30212,7 +30450,7 @@ export async function getClimateOrders<FetcherData>(
  * after creation
  * and payment will be deducted your Stripe balance.</p>
  */
-export async function postClimateOrders<FetcherData>(
+export async function postClimateOrders<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -30233,7 +30471,9 @@ export async function postClimateOrders<FetcherData>(
 /**
  * <p>Retrieves the details of a Climate order object with the given ID.</p>
  */
-export async function getClimateOrdersOrder<FetcherData>(
+export async function getClimateOrdersOrder<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -30258,7 +30498,9 @@ export async function getClimateOrdersOrder<FetcherData>(
 /**
  * <p>Updates the specified order by setting the values of the parameters passed.</p>
  */
-export async function postClimateOrdersOrder<FetcherData>(
+export async function postClimateOrdersOrder<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     order: string;
@@ -30287,7 +30529,9 @@ export async function postClimateOrdersOrder<FetcherData>(
  * provides 90 days advance
  * notice and refunds the <code>amount_total</code>.</p>
  */
-export async function postClimateOrdersOrderCancel<FetcherData>(
+export async function postClimateOrdersOrderCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     order: string;
@@ -30310,7 +30554,7 @@ export async function postClimateOrdersOrderCancel<FetcherData>(
 /**
  * <p>Lists all available Climate product objects.</p>
  */
-export async function getClimateProducts<FetcherData>(
+export async function getClimateProducts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -30355,7 +30599,9 @@ export async function getClimateProducts<FetcherData>(
 /**
  * <p>Retrieves the details of a Climate product with the given ID.</p>
  */
-export async function getClimateProductsProduct<FetcherData>(
+export async function getClimateProductsProduct<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -30380,7 +30626,9 @@ export async function getClimateProductsProduct<FetcherData>(
 /**
  * <p>Lists all available Climate supplier objects.</p>
  */
-export async function getClimateSuppliers<FetcherData>(
+export async function getClimateSuppliers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -30425,7 +30673,9 @@ export async function getClimateSuppliers<FetcherData>(
 /**
  * <p>Retrieves a Climate supplier object.</p>
  */
-export async function getClimateSuppliersSupplier<FetcherData>(
+export async function getClimateSuppliersSupplier<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -30450,7 +30700,9 @@ export async function getClimateSuppliersSupplier<FetcherData>(
 /**
  * <p>Retrieves an existing ConfirmationToken object</p>
  */
-export async function getConfirmationTokensConfirmationToken<FetcherData>(
+export async function getConfirmationTokensConfirmationToken<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     confirmation_token: string;
@@ -30475,7 +30727,7 @@ export async function getConfirmationTokensConfirmationToken<FetcherData>(
 /**
  * <p>Lists all Country Spec objects available in the API.</p>
  */
-export async function getCountrySpecs<FetcherData>(
+export async function getCountrySpecs<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -30520,7 +30772,9 @@ export async function getCountrySpecs<FetcherData>(
 /**
  * <p>Returns a Country Spec for a given Country code.</p>
  */
-export async function getCountrySpecsCountry<FetcherData>(
+export async function getCountrySpecsCountry<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     country: string;
@@ -30545,7 +30799,7 @@ export async function getCountrySpecsCountry<FetcherData>(
 /**
  * <p>Returns a list of your coupons.</p>
  */
-export async function getCoupons<FetcherData>(
+export async function getCoupons<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -30613,7 +30867,7 @@ export async function getCoupons<FetcherData>(
  * <currency>300</currency> will have a final total of <currency>100</currency> if a coupon with an <code>amount_off</code>
  * of <amount>200</amount> is applied to it.</p>
  */
-export async function postCoupons<FetcherData>(
+export async function postCoupons<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -30634,7 +30888,9 @@ export async function postCoupons<FetcherData>(
  * Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means
  * that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>
  */
-export async function deleteCouponsCoupon<FetcherData>(
+export async function deleteCouponsCoupon<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     coupon: string;
@@ -30657,7 +30913,7 @@ export async function deleteCouponsCoupon<FetcherData>(
 /**
  * <p>Retrieves the coupon with the given ID.</p>
  */
-export async function getCouponsCoupon<FetcherData>(
+export async function getCouponsCoupon<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     coupon: string;
@@ -30681,7 +30937,7 @@ export async function getCouponsCoupon<FetcherData>(
  * <p>Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not
  * editable.</p>
  */
-export async function postCouponsCoupon<FetcherData>(
+export async function postCouponsCoupon<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     coupon: string;
@@ -30702,7 +30958,7 @@ export async function postCouponsCoupon<FetcherData>(
 /**
  * <p>Returns a list of credit notes.</p>
  */
-export async function getCreditNotes<FetcherData>(
+export async function getCreditNotes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -30788,7 +31044,7 @@ export async function getCreditNotes<FetcherData>(
  * <code>post_payment_credit_notes_amount</code> depending on its <code>status</code> at the time of credit note
  * creation.</p>
  */
-export async function postCreditNotes<FetcherData>(
+export async function postCreditNotes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -30809,7 +31065,9 @@ export async function postCreditNotes<FetcherData>(
 /**
  * <p>Get a preview of a credit note without creating it.</p>
  */
-export async function getCreditNotesPreview<FetcherData>(
+export async function getCreditNotesPreview<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     amount?: number;
@@ -30884,7 +31142,9 @@ export async function getCreditNotesPreview<FetcherData>(
  * <p>When retrieving a credit note preview, you’ll get a <strong>lines</strong> property containing the first handful of
  * those items. This URL you can retrieve the full (paginated) list of line items.</p>
  */
-export async function getCreditNotesPreviewLines<FetcherData>(
+export async function getCreditNotesPreviewLines<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     amount?: number;
@@ -30986,7 +31246,9 @@ export async function getCreditNotesPreviewLines<FetcherData>(
  * <p>When retrieving a credit note, you’ll get a <strong>lines</strong> property containing the first handful of those
  * items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>
  */
-export async function getCreditNotesCreditNoteLines<FetcherData>(
+export async function getCreditNotesCreditNoteLines<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     credit_note: string;
@@ -31035,7 +31297,7 @@ export async function getCreditNotesCreditNoteLines<FetcherData>(
 /**
  * <p>Retrieves the credit note object with the given identifier.</p>
  */
-export async function getCreditNotesId<FetcherData>(
+export async function getCreditNotesId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -31060,7 +31322,7 @@ export async function getCreditNotesId<FetcherData>(
 /**
  * <p>Updates an existing credit note.</p>
  */
-export async function postCreditNotesId<FetcherData>(
+export async function postCreditNotesId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -31084,7 +31346,9 @@ export async function postCreditNotesId<FetcherData>(
  * <p>Marks a credit note as void. Learn more about <a href="/docs/billing/invoices/credit-notes#voiding">voiding credit
  * notes</a>.</p>
  */
-export async function postCreditNotesIdVoid<FetcherData>(
+export async function postCreditNotesIdVoid<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -31108,7 +31372,9 @@ export async function postCreditNotesIdVoid<FetcherData>(
  * <p>Creates a customer session object that includes a single-use client secret that you can use on your front-end to
  * grant client-side API access for certain customer resources.</p>
  */
-export async function postCustomerSessions<FetcherData>(
+export async function postCustomerSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -31130,7 +31396,7 @@ export async function postCustomerSessions<FetcherData>(
  * <p>Returns a list of your customers. The customers are returned sorted by creation date, with the most recent customers
  * appearing first.</p>
  */
-export async function getCustomers<FetcherData>(
+export async function getCustomers<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -31193,7 +31459,7 @@ export async function getCustomers<FetcherData>(
 /**
  * <p>Creates a new customer object.</p>
  */
-export async function postCustomers<FetcherData>(
+export async function postCustomers<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -31220,7 +31486,7 @@ export async function postCustomers<FetcherData>(
  * up
  * to an hour behind during outages. Search functionality is not available to merchants in India.</p>
  */
-export async function getCustomersSearch<FetcherData>(
+export async function getCustomersSearch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -31265,7 +31531,9 @@ export async function getCustomersSearch<FetcherData>(
  * <p>Permanently deletes a customer. It cannot be undone. Also immediately cancels any active subscriptions on the
  * customer.</p>
  */
-export async function deleteCustomersCustomer<FetcherData>(
+export async function deleteCustomersCustomer<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31288,7 +31556,9 @@ export async function deleteCustomersCustomer<FetcherData>(
 /**
  * <p>Retrieves a Customer object.</p>
  */
-export async function getCustomersCustomer<FetcherData>(
+export async function getCustomersCustomer<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31323,7 +31593,9 @@ export async function getCustomersCustomer<FetcherData>(
  *
  * <p>This request accepts mostly the same arguments as the customer creation call.</p>
  */
-export async function postCustomersCustomer<FetcherData>(
+export async function postCustomersCustomer<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31346,7 +31618,9 @@ export async function postCustomersCustomer<FetcherData>(
 /**
  * <p>Returns a list of transactions that updated the customer’s <a href="/docs/billing/customer/balance">balances</a>.</p>
  */
-export async function getCustomersCustomerBalanceTransactions<FetcherData>(
+export async function getCustomersCustomerBalanceTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31396,7 +31670,9 @@ export async function getCustomersCustomerBalanceTransactions<FetcherData>(
  * <p>Creates an immutable transaction that updates the customer’s credit <a
  * href="/docs/billing/customer/balance">balance</a>.</p>
  */
-export async function postCustomersCustomerBalanceTransactions<FetcherData>(
+export async function postCustomersCustomerBalanceTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31422,7 +31698,7 @@ export async function postCustomersCustomerBalanceTransactions<FetcherData>(
  * href="/docs/billing/customer/balance">balances</a>.</p>
  */
 export async function getCustomersCustomerBalanceTransactionsTransaction<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -31452,7 +31728,7 @@ export async function getCustomersCustomerBalanceTransactionsTransaction<
  * <code>metadata</code>.</p>
  */
 export async function postCustomersCustomerBalanceTransactionsTransaction<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -31481,7 +31757,9 @@ export async function postCustomersCustomerBalanceTransactionsTransaction<
  * <code>limit</code> and <code>starting_after</code> parameters to page through additional bank accounts.</p>
  * @deprecated
  */
-export async function getCustomersCustomerBankAccounts<FetcherData>(
+export async function getCustomersCustomerBankAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31537,7 +31815,9 @@ export async function getCustomersCustomerBankAccounts<FetcherData>(
  * To change the default, you should <a href="/docs/api#update_customer">update the
  * customer</a> to have a new <code>default_source</code>.</p>
  */
-export async function postCustomersCustomerBankAccounts<FetcherData>(
+export async function postCustomersCustomerBankAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31560,7 +31840,9 @@ export async function postCustomersCustomerBankAccounts<FetcherData>(
 /**
  * <p>Delete a specified source for a given customer.</p>
  */
-export async function deleteCustomersCustomerBankAccountsId<FetcherData>(
+export async function deleteCustomersCustomerBankAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31587,7 +31869,9 @@ export async function deleteCustomersCustomerBankAccountsId<FetcherData>(
  * retrieve details about a specific bank account stored on the Stripe account.</p>
  * @deprecated
  */
-export async function getCustomersCustomerBankAccountsId<FetcherData>(
+export async function getCustomersCustomerBankAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31613,7 +31897,9 @@ export async function getCustomersCustomerBankAccountsId<FetcherData>(
 /**
  * <p>Update a specified source for a given customer.</p>
  */
-export async function postCustomersCustomerBankAccountsId<FetcherData>(
+export async function postCustomersCustomerBankAccountsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31638,7 +31924,9 @@ export async function postCustomersCustomerBankAccountsId<FetcherData>(
 /**
  * <p>Verify a specified bank account for a given customer.</p>
  */
-export async function postCustomersCustomerBankAccountsIdVerify<FetcherData>(
+export async function postCustomersCustomerBankAccountsIdVerify<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31667,7 +31955,9 @@ export async function postCustomersCustomerBankAccountsIdVerify<FetcherData>(
  * and <code>starting_after</code> parameters to page through additional cards.</p>
  * @deprecated
  */
-export async function getCustomersCustomerCards<FetcherData>(
+export async function getCustomersCustomerCards<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31720,7 +32010,9 @@ export async function getCustomersCustomerCards<FetcherData>(
  * To change the default, you should <a href="/docs/api#update_customer">update the
  * customer</a> to have a new <code>default_source</code>.</p>
  */
-export async function postCustomersCustomerCards<FetcherData>(
+export async function postCustomersCustomerCards<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31743,7 +32035,9 @@ export async function postCustomersCustomerCards<FetcherData>(
 /**
  * <p>Delete a specified source for a given customer.</p>
  */
-export async function deleteCustomersCustomerCardsId<FetcherData>(
+export async function deleteCustomersCustomerCardsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31770,7 +32064,9 @@ export async function deleteCustomersCustomerCardsId<FetcherData>(
  * specific card stored on the customer.</p>
  * @deprecated
  */
-export async function getCustomersCustomerCardsId<FetcherData>(
+export async function getCustomersCustomerCardsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31794,7 +32090,9 @@ export async function getCustomersCustomerCardsId<FetcherData>(
 /**
  * <p>Update a specified source for a given customer.</p>
  */
-export async function postCustomersCustomerCardsId<FetcherData>(
+export async function postCustomersCustomerCardsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31819,7 +32117,9 @@ export async function postCustomersCustomerCardsId<FetcherData>(
 /**
  * <p>Retrieves a customer’s cash balance.</p>
  */
-export async function getCustomersCustomerCashBalance<FetcherData>(
+export async function getCustomersCustomerCashBalance<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31844,7 +32144,9 @@ export async function getCustomersCustomerCashBalance<FetcherData>(
 /**
  * <p>Changes the settings on a customer’s cash balance.</p>
  */
-export async function postCustomersCustomerCashBalance<FetcherData>(
+export async function postCustomersCustomerCashBalance<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31868,7 +32170,9 @@ export async function postCustomersCustomerCashBalance<FetcherData>(
  * <p>Returns a list of transactions that modified the customer’s <a href="/docs/payments/customer-balance">cash
  * balance</a>.</p>
  */
-export async function getCustomersCustomerCashBalanceTransactions<FetcherData>(
+export async function getCustomersCustomerCashBalanceTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31919,7 +32223,7 @@ export async function getCustomersCustomerCashBalanceTransactions<FetcherData>(
  * href="/docs/payments/customer-balance">cash balance</a>.</p>
  */
 export async function getCustomersCustomerCashBalanceTransactionsTransaction<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -31947,7 +32251,9 @@ export async function getCustomersCustomerCashBalanceTransactionsTransaction<
 /**
  * <p>Removes the currently applied discount on a customer.</p>
  */
-export async function deleteCustomersCustomerDiscount<FetcherData>(
+export async function deleteCustomersCustomerDiscount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31967,7 +32273,9 @@ export async function deleteCustomersCustomerDiscount<FetcherData>(
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
 }
-export async function getCustomersCustomerDiscount<FetcherData>(
+export async function getCustomersCustomerDiscount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -31996,7 +32304,9 @@ export async function getCustomersCustomerDiscount<FetcherData>(
  * same
  * funding instructions will be retrieved. In other words, we will return the same funding instructions each time.</p>
  */
-export async function postCustomersCustomerFundingInstructions<FetcherData>(
+export async function postCustomersCustomerFundingInstructions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32020,7 +32330,9 @@ export async function postCustomersCustomerFundingInstructions<FetcherData>(
 /**
  * <p>Returns a list of PaymentMethods for a given Customer</p>
  */
-export async function getCustomersCustomerPaymentMethods<FetcherData>(
+export async function getCustomersCustomerPaymentMethods<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     allow_redisplay?: 'always' | 'limited' | 'unspecified';
@@ -32111,7 +32423,7 @@ export async function getCustomersCustomerPaymentMethods<FetcherData>(
  * <p>Retrieves a PaymentMethod object for a given Customer.</p>
  */
 export async function getCustomersCustomerPaymentMethodsPaymentMethod<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -32138,7 +32450,9 @@ export async function getCustomersCustomerPaymentMethodsPaymentMethod<
 /**
  * <p>List sources for a specified customer.</p>
  */
-export async function getCustomersCustomerSources<FetcherData>(
+export async function getCustomersCustomerSources<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32201,7 +32515,9 @@ export async function getCustomersCustomerSources<FetcherData>(
  * To change the default, you should <a href="/docs/api#update_customer">update the
  * customer</a> to have a new <code>default_source</code>.</p>
  */
-export async function postCustomersCustomerSources<FetcherData>(
+export async function postCustomersCustomerSources<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32224,7 +32540,9 @@ export async function postCustomersCustomerSources<FetcherData>(
 /**
  * <p>Delete a specified source for a given customer.</p>
  */
-export async function deleteCustomersCustomerSourcesId<FetcherData>(
+export async function deleteCustomersCustomerSourcesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32249,7 +32567,9 @@ export async function deleteCustomersCustomerSourcesId<FetcherData>(
 /**
  * <p>Retrieve a specified source for a given customer.</p>
  */
-export async function getCustomersCustomerSourcesId<FetcherData>(
+export async function getCustomersCustomerSourcesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32275,7 +32595,9 @@ export async function getCustomersCustomerSourcesId<FetcherData>(
 /**
  * <p>Update a specified source for a given customer.</p>
  */
-export async function postCustomersCustomerSourcesId<FetcherData>(
+export async function postCustomersCustomerSourcesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32300,7 +32622,9 @@ export async function postCustomersCustomerSourcesId<FetcherData>(
 /**
  * <p>Verify a specified bank account for a given customer.</p>
  */
-export async function postCustomersCustomerSourcesIdVerify<FetcherData>(
+export async function postCustomersCustomerSourcesIdVerify<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32326,7 +32650,9 @@ export async function postCustomersCustomerSourcesIdVerify<FetcherData>(
  * always available by default on the customer object. If you need more than those 10, you can use the limit and
  * starting_after parameters to page through additional subscriptions.</p>
  */
-export async function getCustomersCustomerSubscriptions<FetcherData>(
+export async function getCustomersCustomerSubscriptions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32375,7 +32701,9 @@ export async function getCustomersCustomerSubscriptions<FetcherData>(
 /**
  * <p>Creates a new subscription on an existing customer.</p>
  */
-export async function postCustomersCustomerSubscriptions<FetcherData>(
+export async function postCustomersCustomerSubscriptions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32414,7 +32742,7 @@ export async function postCustomersCustomerSubscriptions<FetcherData>(
  * to cancel the subscription at all.</p>
  */
 export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedId<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -32440,7 +32768,7 @@ export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedId<
  * <p>Retrieves the subscription with the given ID.</p>
  */
 export async function getCustomersCustomerSubscriptionsSubscriptionExposedId<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -32470,7 +32798,7 @@ export async function getCustomersCustomerSubscriptionsSubscriptionExposedId<
  * will be calculated, use the <a href="#upcoming_invoice">upcoming invoice</a> endpoint.</p>
  */
 export async function postCustomersCustomerSubscriptionsSubscriptionExposedId<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -32496,7 +32824,7 @@ export async function postCustomersCustomerSubscriptionsSubscriptionExposedId<
  * <p>Removes the currently applied discount on a customer.</p>
  */
 export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedIdDiscount<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -32519,7 +32847,7 @@ export async function deleteCustomersCustomerSubscriptionsSubscriptionExposedIdD
   return ctx.handleResponse(res, {}, true);
 }
 export async function getCustomersCustomerSubscriptionsSubscriptionExposedIdDiscount<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -32546,7 +32874,9 @@ export async function getCustomersCustomerSubscriptionsSubscriptionExposedIdDisc
 /**
  * <p>Returns a list of tax IDs for a customer.</p>
  */
-export async function getCustomersCustomerTaxIds<FetcherData>(
+export async function getCustomersCustomerTaxIds<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32595,7 +32925,9 @@ export async function getCustomersCustomerTaxIds<FetcherData>(
 /**
  * <p>Creates a new <code>tax_id</code> object for a customer.</p>
  */
-export async function postCustomersCustomerTaxIds<FetcherData>(
+export async function postCustomersCustomerTaxIds<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32616,7 +32948,9 @@ export async function postCustomersCustomerTaxIds<FetcherData>(
 /**
  * <p>Deletes an existing <code>tax_id</code> object.</p>
  */
-export async function deleteCustomersCustomerTaxIdsId<FetcherData>(
+export async function deleteCustomersCustomerTaxIdsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32640,7 +32974,9 @@ export async function deleteCustomersCustomerTaxIdsId<FetcherData>(
 /**
  * <p>Retrieves the <code>tax_id</code> object with the given identifier.</p>
  */
-export async function getCustomersCustomerTaxIdsId<FetcherData>(
+export async function getCustomersCustomerTaxIdsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32664,7 +33000,7 @@ export async function getCustomersCustomerTaxIdsId<FetcherData>(
 /**
  * <p>Returns a list of your disputes.</p>
  */
-export async function getDisputes<FetcherData>(
+export async function getDisputes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge?: string;
@@ -32727,7 +33063,7 @@ export async function getDisputes<FetcherData>(
 /**
  * <p>Retrieves the dispute with the given ID.</p>
  */
-export async function getDisputesDispute<FetcherData>(
+export async function getDisputesDispute<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     dispute: string;
@@ -32759,7 +33095,9 @@ export async function getDisputesDispute<FetcherData>(
  * winning your dispute. To figure out which evidence fields to provide, see our <a href="/docs/disputes/categories">guide
  * to dispute types</a>.</p>
  */
-export async function postDisputesDispute<FetcherData>(
+export async function postDisputesDispute<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     dispute: string;
@@ -32786,7 +33124,9 @@ export async function postDisputesDispute<FetcherData>(
  * <p>The status of the dispute will change from <code>needs_response</code> to
  * <code>lost</code>. <em>Closing a dispute is irreversible</em>.</p>
  */
-export async function postDisputesDisputeClose<FetcherData>(
+export async function postDisputesDisputeClose<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     dispute: string;
@@ -32809,7 +33149,9 @@ export async function postDisputesDisputeClose<FetcherData>(
 /**
  * <p>Retrieve a list of active entitlements for a customer</p>
  */
-export async function getEntitlementsActiveEntitlements<FetcherData>(
+export async function getEntitlementsActiveEntitlements<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer: string;
@@ -32861,7 +33203,9 @@ export async function getEntitlementsActiveEntitlements<FetcherData>(
 /**
  * <p>Retrieve an active entitlement</p>
  */
-export async function getEntitlementsActiveEntitlementsId<FetcherData>(
+export async function getEntitlementsActiveEntitlementsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -32887,7 +33231,9 @@ export async function getEntitlementsActiveEntitlementsId<FetcherData>(
 /**
  * <p>Retrieve a list of features</p>
  */
-export async function getEntitlementsFeatures<FetcherData>(
+export async function getEntitlementsFeatures<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     archived?: boolean;
@@ -32941,7 +33287,9 @@ export async function getEntitlementsFeatures<FetcherData>(
 /**
  * <p>Creates a feature</p>
  */
-export async function postEntitlementsFeatures<FetcherData>(
+export async function postEntitlementsFeatures<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -32963,7 +33311,9 @@ export async function postEntitlementsFeatures<FetcherData>(
 /**
  * <p>Retrieves a feature</p>
  */
-export async function getEntitlementsFeaturesId<FetcherData>(
+export async function getEntitlementsFeaturesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -32989,7 +33339,9 @@ export async function getEntitlementsFeaturesId<FetcherData>(
 /**
  * <p>Update a feature’s metadata or permanently deactivate it.</p>
  */
-export async function postEntitlementsFeaturesId<FetcherData>(
+export async function postEntitlementsFeaturesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -33013,7 +33365,7 @@ export async function postEntitlementsFeaturesId<FetcherData>(
 /**
  * <p>Creates a short-lived API key for a given resource.</p>
  */
-export async function postEphemeralKeys<FetcherData>(
+export async function postEphemeralKeys<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -33034,7 +33386,9 @@ export async function postEphemeralKeys<FetcherData>(
 /**
  * <p>Invalidates a short-lived API key for a given resource.</p>
  */
-export async function deleteEphemeralKeysKey<FetcherData>(
+export async function deleteEphemeralKeysKey<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     key: string;
@@ -33059,7 +33413,7 @@ export async function deleteEphemeralKeysKey<FetcherData>(
  * time, specified in <a href="https://docs.stripe.com/api/events/object">event object</a> <code>api_version</code>
  * attribute (not according to your current Stripe API version or <code>Stripe-Version</code> header).</p>
  */
-export async function getEvents<FetcherData>(
+export async function getEvents<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -33125,7 +33479,7 @@ export async function getEvents<FetcherData>(
  * <p>Retrieves the details of an event. Supply the unique identifier of the event, which you might have received in a
  * webhook.</p>
  */
-export async function getEventsId<FetcherData>(
+export async function getEventsId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -33149,7 +33503,7 @@ export async function getEventsId<FetcherData>(
  * <p>Returns a list of objects that contain the rates at which foreign currencies are converted to one another. Only shows
  * the currencies for which Stripe supports.</p>
  */
-export async function getExchangeRates<FetcherData>(
+export async function getExchangeRates<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -33194,7 +33548,9 @@ export async function getExchangeRates<FetcherData>(
 /**
  * <p>Retrieves the exchange rates from the given currency to every supported currency.</p>
  */
-export async function getExchangeRatesRateId<FetcherData>(
+export async function getExchangeRatesRateId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -33219,7 +33575,7 @@ export async function getExchangeRatesRateId<FetcherData>(
 /**
  * <p>Returns a list of file links.</p>
  */
-export async function getFileLinks<FetcherData>(
+export async function getFileLinks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -33285,7 +33641,7 @@ export async function getFileLinks<FetcherData>(
 /**
  * <p>Creates a new file link object.</p>
  */
-export async function postFileLinks<FetcherData>(
+export async function postFileLinks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -33306,7 +33662,7 @@ export async function postFileLinks<FetcherData>(
 /**
  * <p>Retrieves the file link with the given ID.</p>
  */
-export async function getFileLinksLink<FetcherData>(
+export async function getFileLinksLink<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -33331,7 +33687,7 @@ export async function getFileLinksLink<FetcherData>(
 /**
  * <p>Updates an existing file link object. Expired links can no longer be updated.</p>
  */
-export async function postFileLinksLink<FetcherData>(
+export async function postFileLinksLink<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     link: string;
@@ -33355,7 +33711,7 @@ export async function postFileLinksLink<FetcherData>(
  * <p>Returns a list of the files that your account has access to. Stripe sorts and returns the files by their creation
  * dates, placing the most recently created files at the top.</p>
  */
-export async function getFiles<FetcherData>(
+export async function getFiles<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -33435,7 +33791,7 @@ export async function getFiles<FetcherData>(
  * <p>All of Stripe’s officially supported
  * Client libraries support sending <code>multipart/form-data</code>.</p>
  */
-export async function postFiles<FetcherData>(
+export async function postFiles<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -33455,7 +33811,7 @@ export async function postFiles<FetcherData>(
  * <p>Retrieves the details of an existing file object. After you supply a unique file ID, Stripe returns the corresponding
  * file object. Learn how to <a href="/docs/file-upload#download-file-contents">access file contents</a>.</p>
  */
-export async function getFilesFile<FetcherData>(
+export async function getFilesFile<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -33478,7 +33834,9 @@ export async function getFilesFile<FetcherData>(
 /**
  * <p>Returns a list of Financial Connections <code>Account</code> objects.</p>
  */
-export async function getFinancialConnectionsAccounts<FetcherData>(
+export async function getFinancialConnectionsAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account_holder?: {
@@ -33538,7 +33896,9 @@ export async function getFinancialConnectionsAccounts<FetcherData>(
 /**
  * <p>Retrieves the details of an Financial Connections <code>Account</code>.</p>
  */
-export async function getFinancialConnectionsAccountsAccount<FetcherData>(
+export async function getFinancialConnectionsAccountsAccount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -33566,7 +33926,7 @@ export async function getFinancialConnectionsAccountsAccount<FetcherData>(
  * associated with the account (e.g. balances, transactions).</p>
  */
 export async function postFinancialConnectionsAccountsAccountDisconnect<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -33591,7 +33951,9 @@ export async function postFinancialConnectionsAccountsAccountDisconnect<
 /**
  * <p>Lists all owners for a given <code>Account</code></p>
  */
-export async function getFinancialConnectionsAccountsAccountOwners<FetcherData>(
+export async function getFinancialConnectionsAccountsAccountOwners<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -33648,7 +34010,7 @@ export async function getFinancialConnectionsAccountsAccountOwners<FetcherData>(
  * <p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>
  */
 export async function postFinancialConnectionsAccountsAccountRefresh<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -33674,7 +34036,7 @@ export async function postFinancialConnectionsAccountsAccountRefresh<
  * <p>Subscribes to periodic refreshes of data associated with a Financial Connections <code>Account</code>.</p>
  */
 export async function postFinancialConnectionsAccountsAccountSubscribe<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -33700,7 +34062,7 @@ export async function postFinancialConnectionsAccountsAccountSubscribe<
  * <p>Unsubscribes from periodic refreshes of data associated with a Financial Connections <code>Account</code>.</p>
  */
 export async function postFinancialConnectionsAccountsAccountUnsubscribe<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -33726,7 +34088,9 @@ export async function postFinancialConnectionsAccountsAccountUnsubscribe<
  * <p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s
  * <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>
  */
-export async function postFinancialConnectionsSessions<FetcherData>(
+export async function postFinancialConnectionsSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -33748,7 +34112,9 @@ export async function postFinancialConnectionsSessions<FetcherData>(
 /**
  * <p>Retrieves the details of a Financial Connections <code>Session</code></p>
  */
-export async function getFinancialConnectionsSessionsSession<FetcherData>(
+export async function getFinancialConnectionsSessionsSession<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -33774,7 +34140,9 @@ export async function getFinancialConnectionsSessionsSession<FetcherData>(
 /**
  * <p>Returns a list of Financial Connections <code>Transaction</code> objects.</p>
  */
-export async function getFinancialConnectionsTransactions<FetcherData>(
+export async function getFinancialConnectionsTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -33843,7 +34211,7 @@ export async function getFinancialConnectionsTransactions<FetcherData>(
  * <p>Retrieves the details of a Financial Connections <code>Transaction</code></p>
  */
 export async function getFinancialConnectionsTransactionsTransaction<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -33870,7 +34238,9 @@ export async function getFinancialConnectionsTransactionsTransaction<
 /**
  * <p>Lists all ForwardingRequest objects.</p>
  */
-export async function getForwardingRequests<FetcherData>(
+export async function getForwardingRequests<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?: {
@@ -33927,7 +34297,9 @@ export async function getForwardingRequests<FetcherData>(
 /**
  * <p>Creates a ForwardingRequest object.</p>
  */
-export async function postForwardingRequests<FetcherData>(
+export async function postForwardingRequests<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -33948,7 +34320,9 @@ export async function postForwardingRequests<FetcherData>(
 /**
  * <p>Retrieves a ForwardingRequest object.</p>
  */
-export async function getForwardingRequestsId<FetcherData>(
+export async function getForwardingRequestsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -33973,7 +34347,9 @@ export async function getForwardingRequestsId<FetcherData>(
 /**
  * <p>List all verification reports.</p>
  */
-export async function getIdentityVerificationReports<FetcherData>(
+export async function getIdentityVerificationReports<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_reference_id?: string;
@@ -34038,7 +34414,9 @@ export async function getIdentityVerificationReports<FetcherData>(
 /**
  * <p>Retrieves an existing VerificationReport</p>
  */
-export async function getIdentityVerificationReportsReport<FetcherData>(
+export async function getIdentityVerificationReportsReport<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -34064,7 +34442,9 @@ export async function getIdentityVerificationReportsReport<FetcherData>(
 /**
  * <p>Returns a list of VerificationSessions</p>
  */
-export async function getIdentityVerificationSessions<FetcherData>(
+export async function getIdentityVerificationSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_reference_id?: string;
@@ -34137,7 +34517,9 @@ export async function getIdentityVerificationSessions<FetcherData>(
  * <p>Related guide: <a href="/docs/identity/verify-identity-documents">Verify your users’ identity
  * documents</a></p>
  */
-export async function postIdentityVerificationSessions<FetcherData>(
+export async function postIdentityVerificationSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -34164,7 +34546,9 @@ export async function postIdentityVerificationSessions<FetcherData>(
  * <code>client_secret</code> or <code>url</code>
  * to allow re-submission.</p>
  */
-export async function getIdentityVerificationSessionsSession<FetcherData>(
+export async function getIdentityVerificationSessionsSession<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -34194,7 +34578,9 @@ export async function getIdentityVerificationSessionsSession<FetcherData>(
  * this method to update the
  * verification check and options.</p>
  */
-export async function postIdentityVerificationSessionsSession<FetcherData>(
+export async function postIdentityVerificationSessionsSession<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     session: string;
@@ -34223,7 +34609,7 @@ export async function postIdentityVerificationSessionsSession<FetcherData>(
  * cannot be undone. <a href="/docs/identity/verification-sessions#cancel">Learn more</a>.</p>
  */
 export async function postIdentityVerificationSessionsSessionCancel<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -34278,7 +34664,7 @@ export async function postIdentityVerificationSessionsSessionCancel<
  * more</a>.</p>
  */
 export async function postIdentityVerificationSessionsSessionRedact<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -34304,7 +34690,7 @@ export async function postIdentityVerificationSessionsSessionRedact<
  * <p>Returns a list of your invoice items. Invoice items are returned sorted by creation date, with the most recently
  * created invoice items appearing first.</p>
  */
-export async function getInvoiceitems<FetcherData>(
+export async function getInvoiceitems<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -34370,7 +34756,7 @@ export async function getInvoiceitems<FetcherData>(
  * <p>Creates an item to be added to a draft invoice (up to 250 items per invoice). If no invoice is specified, the item
  * will be on the next invoice created for the customer specified.</p>
  */
-export async function postInvoiceitems<FetcherData>(
+export async function postInvoiceitems<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -34392,7 +34778,9 @@ export async function postInvoiceitems<FetcherData>(
  * <p>Deletes an invoice item, removing it from an invoice. Deleting invoice items is only possible when they’re not
  * attached to invoices, or if it’s attached to a draft invoice.</p>
  */
-export async function deleteInvoiceitemsInvoiceitem<FetcherData>(
+export async function deleteInvoiceitemsInvoiceitem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoiceitem: string;
@@ -34415,7 +34803,9 @@ export async function deleteInvoiceitemsInvoiceitem<FetcherData>(
 /**
  * <p>Retrieves the invoice item with the given ID.</p>
  */
-export async function getInvoiceitemsInvoiceitem<FetcherData>(
+export async function getInvoiceitemsInvoiceitem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -34441,7 +34831,9 @@ export async function getInvoiceitemsInvoiceitem<FetcherData>(
  * <p>Updates the amount or description of an invoice item on an upcoming invoice. Updating an invoice item is only
  * possible before the invoice it’s attached to is closed.</p>
  */
-export async function postInvoiceitemsInvoiceitem<FetcherData>(
+export async function postInvoiceitemsInvoiceitem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoiceitem: string;
@@ -34465,7 +34857,7 @@ export async function postInvoiceitemsInvoiceitem<FetcherData>(
  * <p>You can list all invoices, or list the invoices for a specific customer. The invoices are returned sorted by creation
  * date, with the most recently created invoices appearing first.</p>
  */
-export async function getInvoices<FetcherData>(
+export async function getInvoices<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     collection_method?: 'charge_automatically' | 'send_invoice';
@@ -34543,7 +34935,7 @@ export async function getInvoices<FetcherData>(
  * href="#finalize_invoice">finalize</a> the invoice, which allows you to <a href="#pay_invoice">pay</a> or <a
  * href="#send_invoice">send</a> the invoice to your customers.</p>
  */
-export async function postInvoices<FetcherData>(
+export async function postInvoices<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -34582,7 +34974,9 @@ export async function postInvoices<FetcherData>(
  * conversion calculations use the latest exchange rates. Exchange rates may vary between the time of the preview and the
  * time of the actual invoice creation. <a href="https://docs.stripe.com/currencies/conversions">Learn more</a></p>
  */
-export async function postInvoicesCreatePreview<FetcherData>(
+export async function postInvoicesCreatePreview<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -34609,7 +35003,7 @@ export async function postInvoicesCreatePreview<FetcherData>(
  * up
  * to an hour behind during outages. Search functionality is not available to merchants in India.</p>
  */
-export async function getInvoicesSearch<FetcherData>(
+export async function getInvoicesSearch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -34671,7 +35065,9 @@ export async function getInvoicesSearch<FetcherData>(
  * conversion calculations use the latest exchange rates. Exchange rates may vary between the time of the preview and the
  * time of the actual invoice creation. <a href="https://docs.stripe.com/currencies/conversions">Learn more</a></p>
  */
-export async function getInvoicesUpcoming<FetcherData>(
+export async function getInvoicesUpcoming<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     automatic_tax?: {
@@ -35142,7 +35538,9 @@ export async function getInvoicesUpcoming<FetcherData>(
  * items and the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line
  * items.</p>
  */
-export async function getInvoicesUpcomingLines<FetcherData>(
+export async function getInvoicesUpcomingLines<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     automatic_tax?: {
@@ -35640,7 +36038,9 @@ export async function getInvoicesUpcomingLines<FetcherData>(
  * a draft state will fail; once an invoice has been finalized or if an invoice is for a subscription, it must be <a
  * href="#void_invoice">voided</a>.</p>
  */
-export async function deleteInvoicesInvoice<FetcherData>(
+export async function deleteInvoicesInvoice<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35663,7 +36063,7 @@ export async function deleteInvoicesInvoice<FetcherData>(
 /**
  * <p>Retrieves the invoice with the given ID.</p>
  */
-export async function getInvoicesInvoice<FetcherData>(
+export async function getInvoicesInvoice<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -35698,7 +36098,9 @@ export async function getInvoicesInvoice<FetcherData>(
  * pass
  * <code>auto_advance=false</code>.</p>
  */
-export async function postInvoicesInvoice<FetcherData>(
+export async function postInvoicesInvoice<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35722,7 +36124,9 @@ export async function postInvoicesInvoice<FetcherData>(
  * <p>Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you’d like to
  * finalize a draft invoice manually, you can do so using this method.</p>
  */
-export async function postInvoicesInvoiceFinalize<FetcherData>(
+export async function postInvoicesInvoiceFinalize<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35747,7 +36151,9 @@ export async function postInvoicesInvoiceFinalize<FetcherData>(
  * the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line
  * items.</p>
  */
-export async function getInvoicesInvoiceLines<FetcherData>(
+export async function getInvoicesInvoiceLines<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -35802,7 +36208,9 @@ export async function getInvoicesInvoiceLines<FetcherData>(
  * Updating an invoice’s
  * line item is only possible before the invoice is finalized.</p>
  */
-export async function postInvoicesInvoiceLinesLineItemId<FetcherData>(
+export async function postInvoicesInvoiceLinesLineItemId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35827,7 +36235,9 @@ export async function postInvoicesInvoiceLinesLineItemId<FetcherData>(
  * <p>Marking an invoice as uncollectible is useful for keeping track of bad debts that can be written off for accounting
  * purposes.</p>
  */
-export async function postInvoicesInvoiceMarkUncollectible<FetcherData>(
+export async function postInvoicesInvoiceMarkUncollectible<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35853,7 +36263,9 @@ export async function postInvoicesInvoiceMarkUncollectible<FetcherData>(
  * if you’d like to attempt payment on an invoice out of the normal collection schedule or for some other reason, you can
  * do so.</p>
  */
-export async function postInvoicesInvoicePay<FetcherData>(
+export async function postInvoicesInvoicePay<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35882,7 +36294,9 @@ export async function postInvoicesInvoicePay<FetcherData>(
  * <p>Requests made in test-mode result in
  * no emails being sent, despite sending an <code>invoice.sent</code> event.</p>
  */
-export async function postInvoicesInvoiceSend<FetcherData>(
+export async function postInvoicesInvoiceSend<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35912,7 +36326,9 @@ export async function postInvoicesInvoiceSend<FetcherData>(
  * href="#create_invoice">issue another invoice</a> or <a href="#create_credit_note">credit note</a> instead. Stripe
  * recommends that you consult with your legal counsel for advice specific to your business.</p>
  */
-export async function postInvoicesInvoiceVoid<FetcherData>(
+export async function postInvoicesInvoiceVoid<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     invoice: string;
@@ -35936,7 +36352,9 @@ export async function postInvoicesInvoiceVoid<FetcherData>(
  * <p>Returns a list of Issuing <code>Authorization</code> objects. The objects are sorted in descending order by creation
  * date, with the most recently created object appearing first.</p>
  */
-export async function getIssuingAuthorizations<FetcherData>(
+export async function getIssuingAuthorizations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card?: string;
@@ -36001,7 +36419,9 @@ export async function getIssuingAuthorizations<FetcherData>(
 /**
  * <p>Retrieves an Issuing <code>Authorization</code> object.</p>
  */
-export async function getIssuingAuthorizationsAuthorization<FetcherData>(
+export async function getIssuingAuthorizationsAuthorization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     authorization: string;
@@ -36028,7 +36448,9 @@ export async function getIssuingAuthorizationsAuthorization<FetcherData>(
  * <p>Updates the specified Issuing <code>Authorization</code> object by setting the values of the parameters passed. Any
  * parameters not provided will be left unchanged.</p>
  */
-export async function postIssuingAuthorizationsAuthorization<FetcherData>(
+export async function postIssuingAuthorizationsAuthorization<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     authorization: string;
@@ -36058,7 +36480,7 @@ export async function postIssuingAuthorizationsAuthorization<FetcherData>(
  * @deprecated
  */
 export async function postIssuingAuthorizationsAuthorizationApprove<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -36089,7 +36511,7 @@ export async function postIssuingAuthorizationsAuthorizationApprove<
  * @deprecated
  */
 export async function postIssuingAuthorizationsAuthorizationDecline<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -36115,7 +36537,9 @@ export async function postIssuingAuthorizationsAuthorizationDecline<
  * <p>Returns a list of Issuing <code>Cardholder</code> objects. The objects are sorted in descending order by creation
  * date, with the most recently created object appearing first.</p>
  */
-export async function getIssuingCardholders<FetcherData>(
+export async function getIssuingCardholders<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -36182,7 +36606,9 @@ export async function getIssuingCardholders<FetcherData>(
 /**
  * <p>Creates a new Issuing <code>Cardholder</code> object that can be issued cards.</p>
  */
-export async function postIssuingCardholders<FetcherData>(
+export async function postIssuingCardholders<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -36203,7 +36629,9 @@ export async function postIssuingCardholders<FetcherData>(
 /**
  * <p>Retrieves an Issuing <code>Cardholder</code> object.</p>
  */
-export async function getIssuingCardholdersCardholder<FetcherData>(
+export async function getIssuingCardholdersCardholder<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     cardholder: string;
@@ -36229,7 +36657,9 @@ export async function getIssuingCardholdersCardholder<FetcherData>(
  * <p>Updates the specified Issuing <code>Cardholder</code> object by setting the values of the parameters passed. Any
  * parameters not provided will be left unchanged.</p>
  */
-export async function postIssuingCardholdersCardholder<FetcherData>(
+export async function postIssuingCardholdersCardholder<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     cardholder: string;
@@ -36253,7 +36683,7 @@ export async function postIssuingCardholdersCardholder<FetcherData>(
  * <p>Returns a list of Issuing <code>Card</code> objects. The objects are sorted in descending order by creation date,
  * with the most recently created object appearing first.</p>
  */
-export async function getIssuingCards<FetcherData>(
+export async function getIssuingCards<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     cardholder?: string;
@@ -36326,7 +36756,7 @@ export async function getIssuingCards<FetcherData>(
 /**
  * <p>Creates an Issuing <code>Card</code> object.</p>
  */
-export async function postIssuingCards<FetcherData>(
+export async function postIssuingCards<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -36347,7 +36777,9 @@ export async function postIssuingCards<FetcherData>(
 /**
  * <p>Retrieves an Issuing <code>Card</code> object.</p>
  */
-export async function getIssuingCardsCard<FetcherData>(
+export async function getIssuingCardsCard<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card: string;
@@ -36373,7 +36805,9 @@ export async function getIssuingCardsCard<FetcherData>(
  * <p>Updates the specified Issuing <code>Card</code> object by setting the values of the parameters passed. Any parameters
  * not provided will be left unchanged.</p>
  */
-export async function postIssuingCardsCard<FetcherData>(
+export async function postIssuingCardsCard<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card: string;
@@ -36397,7 +36831,7 @@ export async function postIssuingCardsCard<FetcherData>(
  * <p>Returns a list of Issuing <code>Dispute</code> objects. The objects are sorted in descending order by creation date,
  * with the most recently created object appearing first.</p>
  */
-export async function getIssuingDisputes<FetcherData>(
+export async function getIssuingDisputes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -36463,7 +36897,9 @@ export async function getIssuingDisputes<FetcherData>(
  * href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute reasons and evidence</a> for more details
  * about evidence requirements.</p>
  */
-export async function postIssuingDisputes<FetcherData>(
+export async function postIssuingDisputes<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -36484,7 +36920,9 @@ export async function postIssuingDisputes<FetcherData>(
 /**
  * <p>Retrieves an Issuing <code>Dispute</code> object.</p>
  */
-export async function getIssuingDisputesDispute<FetcherData>(
+export async function getIssuingDisputesDispute<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     dispute: string;
@@ -36511,7 +36949,9 @@ export async function getIssuingDisputesDispute<FetcherData>(
  * parameters not provided will be left unchanged. Properties on the <code>evidence</code> object can be unset by passing
  * in an empty string.</p>
  */
-export async function postIssuingDisputesDispute<FetcherData>(
+export async function postIssuingDisputesDispute<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     dispute: string;
@@ -36536,7 +36976,9 @@ export async function postIssuingDisputesDispute<FetcherData>(
  * the dispute’s reason are present. For more details, see <a
  * href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute reasons and evidence</a>.</p>
  */
-export async function postIssuingDisputesDisputeSubmit<FetcherData>(
+export async function postIssuingDisputesDisputeSubmit<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     dispute: string;
@@ -36560,7 +37002,9 @@ export async function postIssuingDisputesDisputeSubmit<FetcherData>(
  * <p>Returns a list of personalization design objects. The objects are sorted in descending order by creation date, with
  * the most recently created object appearing first.</p>
  */
-export async function getIssuingPersonalizationDesigns<FetcherData>(
+export async function getIssuingPersonalizationDesigns<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -36619,7 +37063,9 @@ export async function getIssuingPersonalizationDesigns<FetcherData>(
 /**
  * <p>Creates a personalization design object.</p>
  */
-export async function postIssuingPersonalizationDesigns<FetcherData>(
+export async function postIssuingPersonalizationDesigns<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -36642,7 +37088,7 @@ export async function postIssuingPersonalizationDesigns<FetcherData>(
  * <p>Retrieves a personalization design object.</p>
  */
 export async function getIssuingPersonalizationDesignsPersonalizationDesign<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -36670,7 +37116,7 @@ export async function getIssuingPersonalizationDesignsPersonalizationDesign<
  * <p>Updates a card personalization object.</p>
  */
 export async function postIssuingPersonalizationDesignsPersonalizationDesign<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -36696,7 +37142,9 @@ export async function postIssuingPersonalizationDesignsPersonalizationDesign<
  * <p>Returns a list of physical bundle objects. The objects are sorted in descending order by creation date, with the most
  * recently created object appearing first.</p>
  */
-export async function getIssuingPhysicalBundles<FetcherData>(
+export async function getIssuingPhysicalBundles<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -36750,7 +37198,9 @@ export async function getIssuingPhysicalBundles<FetcherData>(
 /**
  * <p>Retrieves a physical bundle object.</p>
  */
-export async function getIssuingPhysicalBundlesPhysicalBundle<FetcherData>(
+export async function getIssuingPhysicalBundlesPhysicalBundle<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -36776,7 +37226,9 @@ export async function getIssuingPhysicalBundlesPhysicalBundle<FetcherData>(
 /**
  * <p>Retrieves an Issuing <code>Settlement</code> object.</p>
  */
-export async function getIssuingSettlementsSettlement<FetcherData>(
+export async function getIssuingSettlementsSettlement<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -36802,7 +37254,9 @@ export async function getIssuingSettlementsSettlement<FetcherData>(
  * <p>Updates the specified Issuing <code>Settlement</code> object by setting the values of the parameters passed. Any
  * parameters not provided will be left unchanged.</p>
  */
-export async function postIssuingSettlementsSettlement<FetcherData>(
+export async function postIssuingSettlementsSettlement<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     settlement: string;
@@ -36825,7 +37279,7 @@ export async function postIssuingSettlementsSettlement<FetcherData>(
 /**
  * <p>Lists all Issuing <code>Token</code> objects for a given card.</p>
  */
-export async function getIssuingTokens<FetcherData>(
+export async function getIssuingTokens<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card: string;
@@ -36888,7 +37342,9 @@ export async function getIssuingTokens<FetcherData>(
 /**
  * <p>Retrieves an Issuing <code>Token</code> object.</p>
  */
-export async function getIssuingTokensToken<FetcherData>(
+export async function getIssuingTokensToken<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -36913,7 +37369,9 @@ export async function getIssuingTokensToken<FetcherData>(
 /**
  * <p>Attempts to update the specified Issuing <code>Token</code> object to the status specified.</p>
  */
-export async function postIssuingTokensToken<FetcherData>(
+export async function postIssuingTokensToken<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     token: string;
@@ -36937,7 +37395,9 @@ export async function postIssuingTokensToken<FetcherData>(
  * <p>Returns a list of Issuing <code>Transaction</code> objects. The objects are sorted in descending order by creation
  * date, with the most recently created object appearing first.</p>
  */
-export async function getIssuingTransactions<FetcherData>(
+export async function getIssuingTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card?: string;
@@ -37002,7 +37462,9 @@ export async function getIssuingTransactions<FetcherData>(
 /**
  * <p>Retrieves an Issuing <code>Transaction</code> object.</p>
  */
-export async function getIssuingTransactionsTransaction<FetcherData>(
+export async function getIssuingTransactionsTransaction<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -37028,7 +37490,9 @@ export async function getIssuingTransactionsTransaction<FetcherData>(
  * <p>Updates the specified Issuing <code>Transaction</code> object by setting the values of the parameters passed. Any
  * parameters not provided will be left unchanged.</p>
  */
-export async function postIssuingTransactionsTransaction<FetcherData>(
+export async function postIssuingTransactionsTransaction<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     transaction: string;
@@ -37052,7 +37516,9 @@ export async function postIssuingTransactionsTransaction<FetcherData>(
  * <p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s
  * <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>
  */
-export async function postLinkAccountSessions<FetcherData>(
+export async function postLinkAccountSessions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -37074,7 +37540,9 @@ export async function postLinkAccountSessions<FetcherData>(
 /**
  * <p>Retrieves the details of a Financial Connections <code>Session</code></p>
  */
-export async function getLinkAccountSessionsSession<FetcherData>(
+export async function getLinkAccountSessionsSession<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -37100,7 +37568,7 @@ export async function getLinkAccountSessionsSession<FetcherData>(
 /**
  * <p>Returns a list of Financial Connections <code>Account</code> objects.</p>
  */
-export async function getLinkedAccounts<FetcherData>(
+export async function getLinkedAccounts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account_holder?: {
@@ -37160,7 +37628,9 @@ export async function getLinkedAccounts<FetcherData>(
 /**
  * <p>Retrieves the details of an Financial Connections <code>Account</code>.</p>
  */
-export async function getLinkedAccountsAccount<FetcherData>(
+export async function getLinkedAccountsAccount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -37187,7 +37657,9 @@ export async function getLinkedAccountsAccount<FetcherData>(
  * <p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data
  * associated with the account (e.g. balances, transactions).</p>
  */
-export async function postLinkedAccountsAccountDisconnect<FetcherData>(
+export async function postLinkedAccountsAccountDisconnect<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -37211,7 +37683,9 @@ export async function postLinkedAccountsAccountDisconnect<FetcherData>(
 /**
  * <p>Lists all owners for a given <code>Account</code></p>
  */
-export async function getLinkedAccountsAccountOwners<FetcherData>(
+export async function getLinkedAccountsAccountOwners<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -37267,7 +37741,9 @@ export async function getLinkedAccountsAccountOwners<FetcherData>(
 /**
  * <p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>
  */
-export async function postLinkedAccountsAccountRefresh<FetcherData>(
+export async function postLinkedAccountsAccountRefresh<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     account: string;
@@ -37291,7 +37767,7 @@ export async function postLinkedAccountsAccountRefresh<FetcherData>(
 /**
  * <p>Retrieves a Mandate object.</p>
  */
-export async function getMandatesMandate<FetcherData>(
+export async function getMandatesMandate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -37316,7 +37792,7 @@ export async function getMandatesMandate<FetcherData>(
 /**
  * <p>Returns a list of PaymentIntents.</p>
  */
-export async function getPaymentIntents<FetcherData>(
+export async function getPaymentIntents<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -37391,7 +37867,7 @@ export async function getPaymentIntents<FetcherData>(
  * supply
  * <code>confirm=true</code>.</p>
  */
-export async function postPaymentIntents<FetcherData>(
+export async function postPaymentIntents<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -37419,7 +37895,9 @@ export async function postPaymentIntents<FetcherData>(
  * to an hour behind during outages. Search functionality is not
  * available to merchants in India.</p>
  */
-export async function getPaymentIntentsSearch<FetcherData>(
+export async function getPaymentIntentsSearch<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -37470,7 +37948,9 @@ export async function getPaymentIntentsSearch<FetcherData>(
  * a PaymentIntent with a publishable key, it only returns a subset of properties. Refer to the <a
  * href="#payment_intent_object">payment intent</a> object reference for more details.</p>
  */
-export async function getPaymentIntentsIntent<FetcherData>(
+export async function getPaymentIntentsIntent<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_secret?: string;
@@ -37505,7 +37985,9 @@ export async function getPaymentIntentsIntent<FetcherData>(
  * properties through
  * the <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>
  */
-export async function postPaymentIntentsIntent<FetcherData>(
+export async function postPaymentIntentsIntent<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -37528,7 +38010,9 @@ export async function postPaymentIntentsIntent<FetcherData>(
 /**
  * <p>Manually reconcile the remaining amount for a <code>customer_balance</code> PaymentIntent.</p>
  */
-export async function postPaymentIntentsIntentApplyCustomerBalance<FetcherData>(
+export async function postPaymentIntentsIntentApplyCustomerBalance<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -37561,7 +38045,9 @@ export async function postPaymentIntentsIntentApplyCustomerBalance<FetcherData>(
  * <p>You can’t cancel the PaymentIntent for a Checkout Session. <a
  * href="/docs/api/checkout/sessions/expire">Expire the Checkout Session</a> instead.</p>
  */
-export async function postPaymentIntentsIntentCancel<FetcherData>(
+export async function postPaymentIntentsIntentCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -37591,7 +38077,9 @@ export async function postPaymentIntentsIntentCancel<FetcherData>(
  * <p>Learn more about <a href="/docs/payments/capture-later">separate authorization and
  * capture</a>.</p>
  */
-export async function postPaymentIntentsIntentCapture<FetcherData>(
+export async function postPaymentIntentsIntentCapture<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -37648,7 +38136,9 @@ export async function postPaymentIntentsIntentCapture<FetcherData>(
  * the next payment
  * attempt.</p>
  */
-export async function postPaymentIntentsIntentConfirm<FetcherData>(
+export async function postPaymentIntentsIntentConfirm<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -37707,7 +38197,7 @@ export async function postPaymentIntentsIntentConfirm<FetcherData>(
  * href="/docs/terminal/features/incremental-authorizations">incremental authorizations</a>.</p>
  */
 export async function postPaymentIntentsIntentIncrementAuthorization<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -37731,7 +38221,9 @@ export async function postPaymentIntentsIntentIncrementAuthorization<
 /**
  * <p>Verifies microdeposits on a PaymentIntent object.</p>
  */
-export async function postPaymentIntentsIntentVerifyMicrodeposits<FetcherData>(
+export async function postPaymentIntentsIntentVerifyMicrodeposits<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -37754,7 +38246,7 @@ export async function postPaymentIntentsIntentVerifyMicrodeposits<FetcherData>(
 /**
  * <p>Returns a list of your payment links.</p>
  */
-export async function getPaymentLinks<FetcherData>(
+export async function getPaymentLinks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -37806,7 +38298,7 @@ export async function getPaymentLinks<FetcherData>(
 /**
  * <p>Creates a payment link.</p>
  */
-export async function postPaymentLinks<FetcherData>(
+export async function postPaymentLinks<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -37827,7 +38319,9 @@ export async function postPaymentLinks<FetcherData>(
 /**
  * <p>Retrieve a payment link.</p>
  */
-export async function getPaymentLinksPaymentLink<FetcherData>(
+export async function getPaymentLinksPaymentLink<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -37852,7 +38346,9 @@ export async function getPaymentLinksPaymentLink<FetcherData>(
 /**
  * <p>Updates a payment link.</p>
  */
-export async function postPaymentLinksPaymentLink<FetcherData>(
+export async function postPaymentLinksPaymentLink<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payment_link: string;
@@ -37876,7 +38372,9 @@ export async function postPaymentLinksPaymentLink<FetcherData>(
  * <p>When retrieving a payment link, there is an includable <strong>line_items</strong> property containing the first
  * handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>
  */
-export async function getPaymentLinksPaymentLinkLineItems<FetcherData>(
+export async function getPaymentLinksPaymentLinkLineItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -37925,7 +38423,9 @@ export async function getPaymentLinksPaymentLinkLineItems<FetcherData>(
 /**
  * <p>List payment method configurations</p>
  */
-export async function getPaymentMethodConfigurations<FetcherData>(
+export async function getPaymentMethodConfigurations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     application?: string | '';
@@ -37977,7 +38477,9 @@ export async function getPaymentMethodConfigurations<FetcherData>(
 /**
  * <p>Creates a payment method configuration</p>
  */
-export async function postPaymentMethodConfigurations<FetcherData>(
+export async function postPaymentMethodConfigurations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -37999,7 +38501,9 @@ export async function postPaymentMethodConfigurations<FetcherData>(
 /**
  * <p>Retrieve payment method configuration</p>
  */
-export async function getPaymentMethodConfigurationsConfiguration<FetcherData>(
+export async function getPaymentMethodConfigurationsConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     configuration: string;
@@ -38025,7 +38529,9 @@ export async function getPaymentMethodConfigurationsConfiguration<FetcherData>(
 /**
  * <p>Update payment method configuration</p>
  */
-export async function postPaymentMethodConfigurationsConfiguration<FetcherData>(
+export async function postPaymentMethodConfigurationsConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     configuration: string;
@@ -38049,7 +38555,9 @@ export async function postPaymentMethodConfigurationsConfiguration<FetcherData>(
 /**
  * <p>Lists the details of existing payment method domains.</p>
  */
-export async function getPaymentMethodDomains<FetcherData>(
+export async function getPaymentMethodDomains<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     domain_name?: string;
@@ -38103,7 +38611,9 @@ export async function getPaymentMethodDomains<FetcherData>(
 /**
  * <p>Creates a payment method domain.</p>
  */
-export async function postPaymentMethodDomains<FetcherData>(
+export async function postPaymentMethodDomains<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -38125,7 +38635,9 @@ export async function postPaymentMethodDomains<FetcherData>(
 /**
  * <p>Retrieves the details of an existing payment method domain.</p>
  */
-export async function getPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
+export async function getPaymentMethodDomainsPaymentMethodDomain<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -38151,7 +38663,9 @@ export async function getPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
 /**
  * <p>Updates an existing payment method domain.</p>
  */
-export async function postPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
+export async function postPaymentMethodDomainsPaymentMethodDomain<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payment_method_domain: string;
@@ -38186,7 +38700,7 @@ export async function postPaymentMethodDomainsPaymentMethodDomain<FetcherData>(
  * href="/docs/payments/payment-methods/pmd-registration">Payment method domains</a>.</p>
  */
 export async function postPaymentMethodDomainsPaymentMethodDomainValidate<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -38213,7 +38727,7 @@ export async function postPaymentMethodDomainsPaymentMethodDomainValidate<
  * for payments, you should use the <a href="/docs/api/payment_methods/customer_list">List a Customer’s PaymentMethods</a>
  * API instead.</p>
  */
-export async function getPaymentMethods<FetcherData>(
+export async function getPaymentMethods<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer?: string;
@@ -38308,7 +38822,7 @@ export async function getPaymentMethods<FetcherData>(
  * or the <a href="/docs/payments/save-and-reuse">SetupIntent</a> API to collect payment method details ahead of a future
  * payment.</p>
  */
-export async function postPaymentMethods<FetcherData>(
+export async function postPaymentMethods<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -38330,7 +38844,9 @@ export async function postPaymentMethods<FetcherData>(
  * <p>Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer,
  * you should use <a href="/docs/api/payment_methods/customer">Retrieve a Customer’s PaymentMethods</a></p>
  */
-export async function getPaymentMethodsPaymentMethod<FetcherData>(
+export async function getPaymentMethodsPaymentMethod<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -38355,7 +38871,9 @@ export async function getPaymentMethodsPaymentMethod<FetcherData>(
 /**
  * <p>Updates a PaymentMethod object. A PaymentMethod must be attached a customer to be updated.</p>
  */
-export async function postPaymentMethodsPaymentMethod<FetcherData>(
+export async function postPaymentMethodsPaymentMethod<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payment_method: string;
@@ -38400,7 +38918,9 @@ export async function postPaymentMethodsPaymentMethod<FetcherData>(
  * on
  * the Customer to the PaymentMethod’s ID.</p>
  */
-export async function postPaymentMethodsPaymentMethodAttach<FetcherData>(
+export async function postPaymentMethodsPaymentMethodAttach<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payment_method: string;
@@ -38424,7 +38944,9 @@ export async function postPaymentMethodsPaymentMethodAttach<FetcherData>(
  * <p>Detaches a PaymentMethod object from a Customer. After a PaymentMethod is detached, it can no longer be used for a
  * payment or re-attached to a Customer.</p>
  */
-export async function postPaymentMethodsPaymentMethodDetach<FetcherData>(
+export async function postPaymentMethodsPaymentMethodDetach<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payment_method: string;
@@ -38448,7 +38970,7 @@ export async function postPaymentMethodsPaymentMethodDetach<FetcherData>(
  * <p>Returns a list of existing payouts sent to third-party bank accounts or payouts that Stripe sent to you. The payouts
  * return in sorted order, with the most recently created payouts appearing first.</p>
  */
-export async function getPayouts<FetcherData>(
+export async function getPayouts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     arrival_date?:
@@ -38529,7 +39051,7 @@ export async function getPayouts<FetcherData>(
  * that the payout draws from. The <a href="#balance_object">balance object</a> details available and pending amounts by
  * source type.</p>
  */
-export async function postPayouts<FetcherData>(
+export async function postPayouts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -38549,7 +39071,7 @@ export async function postPayouts<FetcherData>(
  * <p>Retrieves the details of an existing payout. Supply the unique payout ID from either a payout creation request or the
  * payout list. Stripe returns the corresponding payout information.</p>
  */
-export async function getPayoutsPayout<FetcherData>(
+export async function getPayoutsPayout<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -38573,7 +39095,7 @@ export async function getPayoutsPayout<FetcherData>(
  * <p>Updates the specified payout by setting the values of the parameters you pass. We don’t change parameters that you
  * don’t provide. This request only accepts the metadata as arguments.</p>
  */
-export async function postPayoutsPayout<FetcherData>(
+export async function postPayoutsPayout<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payout: string;
@@ -38595,7 +39117,9 @@ export async function postPayoutsPayout<FetcherData>(
  * <p>You can cancel a previously created payout if its status is <code>pending</code>. Stripe refunds the funds to your
  * available balance. You can’t cancel automatic Stripe payouts.</p>
  */
-export async function postPayoutsPayoutCancel<FetcherData>(
+export async function postPayoutsPayoutCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payout: string;
@@ -38622,7 +39146,9 @@ export async function postPayoutsPayoutCancel<FetcherData>(
  * <code>/v1/payouts/:id/reverse</code>, you confirm that the authorized signatory of the selected bank account authorizes
  * the debit on the bank account and that no other authorization is required.</p>
  */
-export async function postPayoutsPayoutReverse<FetcherData>(
+export async function postPayoutsPayoutReverse<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     payout: string;
@@ -38643,7 +39169,7 @@ export async function postPayoutsPayoutReverse<FetcherData>(
 /**
  * <p>Returns a list of your plans.</p>
  */
-export async function getPlans<FetcherData>(
+export async function getPlans<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -38710,7 +39236,7 @@ export async function getPlans<FetcherData>(
  * <p>You can now model subscriptions more flexibly using the <a href="#prices">Prices API</a>. It replaces the Plans API
  * and is backwards compatible to simplify your migration.</p>
  */
-export async function postPlans<FetcherData>(
+export async function postPlans<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -38729,7 +39255,7 @@ export async function postPlans<FetcherData>(
 /**
  * <p>Deleting plans means new subscribers can’t be added. Existing subscribers aren’t affected.</p>
  */
-export async function deletePlansPlan<FetcherData>(
+export async function deletePlansPlan<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     plan: string;
@@ -38752,7 +39278,7 @@ export async function deletePlansPlan<FetcherData>(
 /**
  * <p>Retrieves the plan with the given ID.</p>
  */
-export async function getPlansPlan<FetcherData>(
+export async function getPlansPlan<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -38776,7 +39302,7 @@ export async function getPlansPlan<FetcherData>(
  * <p>Updates the specified plan by setting the values of the parameters passed. Any parameters not provided are left
  * unchanged. By design, you cannot change a plan’s ID, amount, currency, or billing cycle.</p>
  */
-export async function postPlansPlan<FetcherData>(
+export async function postPlansPlan<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     plan: string;
@@ -38798,7 +39324,7 @@ export async function postPlansPlan<FetcherData>(
  * <p>Returns a list of your active prices, excluding <a href="/docs/products-prices/pricing-models#inline-pricing">inline
  * prices</a>. For the list of inactive prices, set <code>active</code> to false.</p>
  */
-export async function getPrices<FetcherData>(
+export async function getPrices<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -38876,7 +39402,7 @@ export async function getPrices<FetcherData>(
 /**
  * <p>Creates a new price for an existing product. The price can be recurring or one-time.</p>
  */
-export async function postPrices<FetcherData>(
+export async function postPrices<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -38901,7 +39427,7 @@ export async function postPrices<FetcherData>(
  * up
  * to an hour behind during outages. Search functionality is not available to merchants in India.</p>
  */
-export async function getPricesSearch<FetcherData>(
+export async function getPricesSearch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -38945,7 +39471,7 @@ export async function getPricesSearch<FetcherData>(
 /**
  * <p>Retrieves the price with the given ID.</p>
  */
-export async function getPricesPrice<FetcherData>(
+export async function getPricesPrice<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -38969,7 +39495,7 @@ export async function getPricesPrice<FetcherData>(
  * <p>Updates the specified price by setting the values of the parameters passed. Any parameters not provided are left
  * unchanged.</p>
  */
-export async function postPricesPrice<FetcherData>(
+export async function postPricesPrice<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     price: string;
@@ -38991,7 +39517,7 @@ export async function postPricesPrice<FetcherData>(
  * <p>Returns a list of your products. The products are returned sorted by creation date, with the most recently created
  * products appearing first.</p>
  */
-export async function getProducts<FetcherData>(
+export async function getProducts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -39061,7 +39587,7 @@ export async function getProducts<FetcherData>(
 /**
  * <p>Creates a new product object.</p>
  */
-export async function postProducts<FetcherData>(
+export async function postProducts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -39088,7 +39614,7 @@ export async function postProducts<FetcherData>(
  * up
  * to an hour behind during outages. Search functionality is not available to merchants in India.</p>
  */
-export async function getProductsSearch<FetcherData>(
+export async function getProductsSearch<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -39133,7 +39659,7 @@ export async function getProductsSearch<FetcherData>(
  * <p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting
  * a product with <code>type=good</code> is only possible if it has no SKUs associated with it.</p>
  */
-export async function deleteProductsId<FetcherData>(
+export async function deleteProductsId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -39157,7 +39683,7 @@ export async function deleteProductsId<FetcherData>(
  * <p>Retrieves the details of an existing product. Supply the unique product ID from either a product creation request or
  * the product list, and Stripe will return the corresponding product information.</p>
  */
-export async function getProductsId<FetcherData>(
+export async function getProductsId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -39183,7 +39709,7 @@ export async function getProductsId<FetcherData>(
  * <p>Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left
  * unchanged.</p>
  */
-export async function postProductsId<FetcherData>(
+export async function postProductsId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -39206,7 +39732,9 @@ export async function postProductsId<FetcherData>(
 /**
  * <p>Retrieve a list of features for a product</p>
  */
-export async function getProductsProductFeatures<FetcherData>(
+export async function getProductsProductFeatures<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -39252,7 +39780,9 @@ export async function getProductsProductFeatures<FetcherData>(
 /**
  * <p>Creates a product_feature, which represents a feature attachment to a product</p>
  */
-export async function postProductsProductFeatures<FetcherData>(
+export async function postProductsProductFeatures<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     product: string;
@@ -39275,7 +39805,9 @@ export async function postProductsProductFeatures<FetcherData>(
 /**
  * <p>Deletes the feature attachment to a product</p>
  */
-export async function deleteProductsProductFeaturesId<FetcherData>(
+export async function deleteProductsProductFeaturesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -39300,7 +39832,9 @@ export async function deleteProductsProductFeaturesId<FetcherData>(
 /**
  * <p>Retrieves a product_feature, which represents a feature attachment to a product</p>
  */
-export async function getProductsProductFeaturesId<FetcherData>(
+export async function getProductsProductFeaturesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -39326,7 +39860,7 @@ export async function getProductsProductFeaturesId<FetcherData>(
 /**
  * <p>Returns a list of your promotion codes.</p>
  */
-export async function getPromotionCodes<FetcherData>(
+export async function getPromotionCodes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -39394,7 +39928,7 @@ export async function getPromotionCodes<FetcherData>(
  * <p>A promotion code points to a coupon. You can optionally restrict the code to a specific customer, redemption limit,
  * and expiration date.</p>
  */
-export async function postPromotionCodes<FetcherData>(
+export async function postPromotionCodes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -39416,7 +39950,9 @@ export async function postPromotionCodes<FetcherData>(
  * <p>Retrieves the promotion code with the given ID. In order to retrieve a promotion code by the customer-facing
  * <code>code</code> use <a href="/docs/api/promotion_codes/list">list</a> with the desired <code>code</code>.</p>
  */
-export async function getPromotionCodesPromotionCode<FetcherData>(
+export async function getPromotionCodesPromotionCode<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -39442,7 +39978,9 @@ export async function getPromotionCodesPromotionCode<FetcherData>(
  * <p>Updates the specified promotion code by setting the values of the parameters passed. Most fields are, by design, not
  * editable.</p>
  */
-export async function postPromotionCodesPromotionCode<FetcherData>(
+export async function postPromotionCodesPromotionCode<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     promotion_code: string;
@@ -39465,7 +40003,7 @@ export async function postPromotionCodesPromotionCode<FetcherData>(
 /**
  * <p>Returns a list of your quotes.</p>
  */
-export async function getQuotes<FetcherData>(
+export async function getQuotes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     customer?: string;
@@ -39523,7 +40061,7 @@ export async function getQuotes<FetcherData>(
  * <code>footer</code>, and <code>expires_at</code> can be set in the dashboard via the <a
  * href="https://dashboard.stripe.com/settings/billing/quote">quote template</a>.</p>
  */
-export async function postQuotes<FetcherData>(
+export async function postQuotes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -39542,7 +40080,7 @@ export async function postQuotes<FetcherData>(
 /**
  * <p>Retrieves the quote with the given ID.</p>
  */
-export async function getQuotesQuote<FetcherData>(
+export async function getQuotesQuote<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -39565,7 +40103,7 @@ export async function getQuotesQuote<FetcherData>(
 /**
  * <p>A quote models prices and services for a customer.</p>
  */
-export async function postQuotesQuote<FetcherData>(
+export async function postQuotesQuote<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     quote: string;
@@ -39586,7 +40124,9 @@ export async function postQuotesQuote<FetcherData>(
 /**
  * <p>Accepts the specified quote.</p>
  */
-export async function postQuotesQuoteAccept<FetcherData>(
+export async function postQuotesQuoteAccept<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     quote: string;
@@ -39607,7 +40147,9 @@ export async function postQuotesQuoteAccept<FetcherData>(
 /**
  * <p>Cancels the quote.</p>
  */
-export async function postQuotesQuoteCancel<FetcherData>(
+export async function postQuotesQuoteCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     quote: string;
@@ -39631,7 +40173,9 @@ export async function postQuotesQuoteCancel<FetcherData>(
  * property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated)
  * list of upfront line items.</p>
  */
-export async function getQuotesQuoteComputedUpfrontLineItems<FetcherData>(
+export async function getQuotesQuoteComputedUpfrontLineItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -39680,7 +40224,9 @@ export async function getQuotesQuoteComputedUpfrontLineItems<FetcherData>(
 /**
  * <p>Finalizes the quote.</p>
  */
-export async function postQuotesQuoteFinalize<FetcherData>(
+export async function postQuotesQuoteFinalize<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     quote: string;
@@ -39702,7 +40248,9 @@ export async function postQuotesQuoteFinalize<FetcherData>(
  * <p>When retrieving a quote, there is an includable <strong>line_items</strong> property containing the first handful of
  * those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>
  */
-export async function getQuotesQuoteLineItems<FetcherData>(
+export async function getQuotesQuoteLineItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -39752,7 +40300,7 @@ export async function getQuotesQuoteLineItems<FetcherData>(
  * <p>Download the PDF for a finalized quote. Explanation for special handling can be found <a
  * href="https://docs.corp.stripe.com/quotes/overview#quote_pdf">here</a></p>
  */
-export async function getQuotesQuotePdf<FetcherData>(
+export async function getQuotesQuotePdf<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -39777,7 +40325,9 @@ export async function getQuotesQuotePdf<FetcherData>(
 /**
  * <p>Returns a list of early fraud warnings.</p>
  */
-export async function getRadarEarlyFraudWarnings<FetcherData>(
+export async function getRadarEarlyFraudWarnings<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge?: string;
@@ -39843,7 +40393,9 @@ export async function getRadarEarlyFraudWarnings<FetcherData>(
  * <p>Please refer to the <a
  * href="#early_fraud_warning_object">early fraud warning</a> object reference for more details.</p>
  */
-export async function getRadarEarlyFraudWarningsEarlyFraudWarning<FetcherData>(
+export async function getRadarEarlyFraudWarningsEarlyFraudWarning<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     early_fraud_warning: string;
@@ -39870,7 +40422,9 @@ export async function getRadarEarlyFraudWarningsEarlyFraudWarning<FetcherData>(
  * <p>Returns a list of <code>ValueListItem</code> objects. The objects are sorted in descending order by creation date,
  * with the most recently created object appearing first.</p>
  */
-export async function getRadarValueListItems<FetcherData>(
+export async function getRadarValueListItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -39933,7 +40487,9 @@ export async function getRadarValueListItems<FetcherData>(
 /**
  * <p>Creates a new <code>ValueListItem</code> object, which is added to the specified parent value list.</p>
  */
-export async function postRadarValueListItems<FetcherData>(
+export async function postRadarValueListItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -39954,7 +40510,9 @@ export async function postRadarValueListItems<FetcherData>(
 /**
  * <p>Deletes a <code>ValueListItem</code> object, removing it from its parent value list.</p>
  */
-export async function deleteRadarValueListItemsItem<FetcherData>(
+export async function deleteRadarValueListItemsItem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     item: string;
@@ -39978,7 +40536,9 @@ export async function deleteRadarValueListItemsItem<FetcherData>(
 /**
  * <p>Retrieves a <code>ValueListItem</code> object.</p>
  */
-export async function getRadarValueListItemsItem<FetcherData>(
+export async function getRadarValueListItemsItem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -40004,7 +40564,7 @@ export async function getRadarValueListItemsItem<FetcherData>(
  * <p>Returns a list of <code>ValueList</code> objects. The objects are sorted in descending order by creation date, with
  * the most recently created object appearing first.</p>
  */
-export async function getRadarValueLists<FetcherData>(
+export async function getRadarValueLists<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     alias?: string;
@@ -40067,7 +40627,9 @@ export async function getRadarValueLists<FetcherData>(
 /**
  * <p>Creates a new <code>ValueList</code> object, which can then be referenced in rules.</p>
  */
-export async function postRadarValueLists<FetcherData>(
+export async function postRadarValueLists<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -40089,7 +40651,9 @@ export async function postRadarValueLists<FetcherData>(
  * <p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a
  * value list must not be referenced in any rules.</p>
  */
-export async function deleteRadarValueListsValueList<FetcherData>(
+export async function deleteRadarValueListsValueList<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     value_list: string;
@@ -40113,7 +40677,9 @@ export async function deleteRadarValueListsValueList<FetcherData>(
 /**
  * <p>Retrieves a <code>ValueList</code> object.</p>
  */
-export async function getRadarValueListsValueList<FetcherData>(
+export async function getRadarValueListsValueList<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -40139,7 +40705,9 @@ export async function getRadarValueListsValueList<FetcherData>(
  * <p>Updates a <code>ValueList</code> object by setting the values of the parameters passed. Any parameters not provided
  * will be left unchanged. Note that <code>item_type</code> is immutable.</p>
  */
-export async function postRadarValueListsValueList<FetcherData>(
+export async function postRadarValueListsValueList<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     value_list: string;
@@ -40163,7 +40731,7 @@ export async function postRadarValueListsValueList<FetcherData>(
  * <p>Returns a list of all refunds you created. We return the refunds in sorted order, with the most recent refunds
  * appearing first The 10 most recent refunds are always available by default on the Charge object.</p>
  */
-export async function getRefunds<FetcherData>(
+export async function getRefunds<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     charge?: string;
@@ -40241,7 +40809,7 @@ export async function getRefunds<FetcherData>(
  * or when
  * trying to refund more money than is left on a charge.</p>
  */
-export async function postRefunds<FetcherData>(
+export async function postRefunds<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -40260,7 +40828,7 @@ export async function postRefunds<FetcherData>(
 /**
  * <p>Retrieves the details of an existing refund.</p>
  */
-export async function getRefundsRefund<FetcherData>(
+export async function getRefundsRefund<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -40286,7 +40854,7 @@ export async function getRefundsRefund<FetcherData>(
  *
  * <p>This request only accepts <code>metadata</code> as an argument.</p>
  */
-export async function postRefundsRefund<FetcherData>(
+export async function postRefundsRefund<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     refund: string;
@@ -40310,7 +40878,9 @@ export async function postRefundsRefund<FetcherData>(
  * <p>You can’t cancel refunds in other states.
  * Only refunds for payment methods that require customer action can enter the <code>requires_action</code> state.</p>
  */
-export async function postRefundsRefundCancel<FetcherData>(
+export async function postRefundsRefundCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     refund: string;
@@ -40331,7 +40901,9 @@ export async function postRefundsRefundCancel<FetcherData>(
 /**
  * <p>Returns a list of Report Runs, with the most recent appearing first.</p>
  */
-export async function getReportingReportRuns<FetcherData>(
+export async function getReportingReportRuns<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -40391,7 +40963,9 @@ export async function getReportingReportRuns<FetcherData>(
  * <p>Creates a new object and begin running the report. (Certain report types require a <a
  * href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.)</p>
  */
-export async function postReportingReportRuns<FetcherData>(
+export async function postReportingReportRuns<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -40412,7 +40986,9 @@ export async function postReportingReportRuns<FetcherData>(
 /**
  * <p>Retrieves the details of an existing Report Run.</p>
  */
-export async function getReportingReportRunsReportRun<FetcherData>(
+export async function getReportingReportRunsReportRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -40437,7 +41013,9 @@ export async function getReportingReportRunsReportRun<FetcherData>(
 /**
  * <p>Returns a full list of Report Types.</p>
  */
-export async function getReportingReportTypes<FetcherData>(
+export async function getReportingReportTypes<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -40480,7 +41058,9 @@ export async function getReportingReportTypes<FetcherData>(
  * <p>Retrieves the details of a Report Type. (Certain report types require a <a
  * href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.)</p>
  */
-export async function getReportingReportTypesReportType<FetcherData>(
+export async function getReportingReportTypesReportType<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -40507,7 +41087,7 @@ export async function getReportingReportTypesReportType<FetcherData>(
  * <p>Returns a list of <code>Review</code> objects that have <code>open</code> set to <code>true</code>. The objects are
  * sorted in descending order by creation date, with the most recently created object appearing first.</p>
  */
-export async function getReviews<FetcherData>(
+export async function getReviews<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -40566,7 +41146,7 @@ export async function getReviews<FetcherData>(
 /**
  * <p>Retrieves a <code>Review</code> object.</p>
  */
-export async function getReviewsReview<FetcherData>(
+export async function getReviewsReview<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -40589,7 +41169,9 @@ export async function getReviewsReview<FetcherData>(
 /**
  * <p>Approves a <code>Review</code> object, closing it and removing it from the list of reviews.</p>
  */
-export async function postReviewsReviewApprove<FetcherData>(
+export async function postReviewsReviewApprove<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     review: string;
@@ -40610,7 +41192,7 @@ export async function postReviewsReviewApprove<FetcherData>(
 /**
  * <p>Returns a list of SetupAttempts that associate with a provided SetupIntent.</p>
  */
-export async function getSetupAttempts<FetcherData>(
+export async function getSetupAttempts<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -40671,7 +41253,7 @@ export async function getSetupAttempts<FetcherData>(
 /**
  * <p>Returns a list of SetupIntents.</p>
  */
-export async function getSetupIntents<FetcherData>(
+export async function getSetupIntents<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     attach_to_self?: boolean;
@@ -40741,7 +41323,7 @@ export async function getSetupIntents<FetcherData>(
  * it to collect any required permissions to charge the payment method
  * later.</p>
  */
-export async function postSetupIntents<FetcherData>(
+export async function postSetupIntents<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -40769,7 +41351,9 @@ export async function postSetupIntents<FetcherData>(
  * with a publishable key, only a subset of properties will be returned. Please refer to the <a
  * href="#setup_intent_object">SetupIntent</a> object reference for more details.</p>
  */
-export async function getSetupIntentsIntent<FetcherData>(
+export async function getSetupIntentsIntent<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_secret?: string;
@@ -40795,7 +41379,9 @@ export async function getSetupIntentsIntent<FetcherData>(
 /**
  * <p>Updates a SetupIntent object.</p>
  */
-export async function postSetupIntentsIntent<FetcherData>(
+export async function postSetupIntentsIntent<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -40820,9 +41406,12 @@ export async function postSetupIntentsIntent<FetcherData>(
  * <code>requires_confirmation</code>, or <code>requires_action</code>. </p>
  *
  * <p>After you cancel it, setup is abandoned
- * and any operations on the SetupIntent fail with an error.</p>
+ * and any operations on the SetupIntent fail with an error. You can’t cancel the SetupIntent for a Checkout Session. <a
+ * href="/docs/api/checkout/sessions/expire">Expire the Checkout Session</a> instead.</p>
  */
-export async function postSetupIntentsIntentCancel<FetcherData>(
+export async function postSetupIntentsIntentCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -40864,7 +41453,9 @@ export async function postSetupIntentsIntentCancel<FetcherData>(
  * confirmation limit is
  * reached.</p>
  */
-export async function postSetupIntentsIntentConfirm<FetcherData>(
+export async function postSetupIntentsIntentConfirm<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -40887,7 +41478,9 @@ export async function postSetupIntentsIntentConfirm<FetcherData>(
 /**
  * <p>Verifies microdeposits on a SetupIntent object.</p>
  */
-export async function postSetupIntentsIntentVerifyMicrodeposits<FetcherData>(
+export async function postSetupIntentsIntentVerifyMicrodeposits<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     intent: string;
@@ -40910,7 +41503,7 @@ export async function postSetupIntentsIntentVerifyMicrodeposits<FetcherData>(
 /**
  * <p>Returns a list of your shipping rates.</p>
  */
-export async function getShippingRates<FetcherData>(
+export async function getShippingRates<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -40973,7 +41566,7 @@ export async function getShippingRates<FetcherData>(
 /**
  * <p>Creates a new shipping rate object.</p>
  */
-export async function postShippingRates<FetcherData>(
+export async function postShippingRates<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -40994,7 +41587,9 @@ export async function postShippingRates<FetcherData>(
 /**
  * <p>Returns the shipping rate object with the given ID.</p>
  */
-export async function getShippingRatesShippingRateToken<FetcherData>(
+export async function getShippingRatesShippingRateToken<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -41019,7 +41614,9 @@ export async function getShippingRatesShippingRateToken<FetcherData>(
 /**
  * <p>Updates an existing shipping rate object.</p>
  */
-export async function postShippingRatesShippingRateToken<FetcherData>(
+export async function postShippingRatesShippingRateToken<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     shipping_rate_token: string;
@@ -41042,7 +41639,9 @@ export async function postShippingRatesShippingRateToken<FetcherData>(
 /**
  * <p>Returns a list of scheduled query runs.</p>
  */
-export async function getSigmaScheduledQueryRuns<FetcherData>(
+export async function getSigmaScheduledQueryRuns<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -41087,7 +41686,9 @@ export async function getSigmaScheduledQueryRuns<FetcherData>(
 /**
  * <p>Retrieves the details of an scheduled query run.</p>
  */
-export async function getSigmaScheduledQueryRunsScheduledQueryRun<FetcherData>(
+export async function getSigmaScheduledQueryRunsScheduledQueryRun<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -41112,7 +41713,7 @@ export async function getSigmaScheduledQueryRunsScheduledQueryRun<FetcherData>(
 /**
  * <p>Creates a new source object.</p>
  */
-export async function postSources<FetcherData>(
+export async function postSources<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -41132,7 +41733,7 @@ export async function postSources<FetcherData>(
  * <p>Retrieves an existing source object. Supply the unique source ID from a source creation request and Stripe will
  * return the corresponding up-to-date source object information.</p>
  */
-export async function getSourcesSource<FetcherData>(
+export async function getSourcesSource<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     client_secret?: string;
@@ -41161,7 +41762,7 @@ export async function getSourcesSource<FetcherData>(
  * possible to update type specific information for selected payment methods. Please refer to our <a
  * href="/docs/sources">payment method guides</a> for more detail.</p>
  */
-export async function postSourcesSource<FetcherData>(
+export async function postSourcesSource<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     source: string;
@@ -41183,7 +41784,7 @@ export async function postSourcesSource<FetcherData>(
  * <p>Retrieves a new Source MandateNotification.</p>
  */
 export async function getSourcesSourceMandateNotificationsMandateNotification<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -41211,7 +41812,9 @@ export async function getSourcesSourceMandateNotificationsMandateNotification<
 /**
  * <p>List source transactions for a given source.</p>
  */
-export async function getSourcesSourceSourceTransactions<FetcherData>(
+export async function getSourcesSourceSourceTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -41259,7 +41862,7 @@ export async function getSourcesSourceSourceTransactions<FetcherData>(
  * source transaction ID and Stripe will return the corresponding up-to-date source object information.</p>
  */
 export async function getSourcesSourceSourceTransactionsSourceTransaction<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -41286,7 +41889,9 @@ export async function getSourcesSourceSourceTransactionsSourceTransaction<
 /**
  * <p>Verify a given source.</p>
  */
-export async function postSourcesSourceVerify<FetcherData>(
+export async function postSourcesSourceVerify<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     source: string;
@@ -41307,7 +41912,9 @@ export async function postSourcesSourceVerify<FetcherData>(
 /**
  * <p>Returns a list of your subscription items for a given subscription.</p>
  */
-export async function getSubscriptionItems<FetcherData>(
+export async function getSubscriptionItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -41359,7 +41966,9 @@ export async function getSubscriptionItems<FetcherData>(
 /**
  * <p>Adds a new item to an existing subscription. No existing items will be changed or replaced.</p>
  */
-export async function postSubscriptionItems<FetcherData>(
+export async function postSubscriptionItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -41381,7 +41990,9 @@ export async function postSubscriptionItems<FetcherData>(
  * <p>Deletes an item from the subscription. Removing a subscription item from a subscription will not cancel the
  * subscription.</p>
  */
-export async function deleteSubscriptionItemsItem<FetcherData>(
+export async function deleteSubscriptionItemsItem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     item: string;
@@ -41405,7 +42016,9 @@ export async function deleteSubscriptionItemsItem<FetcherData>(
 /**
  * <p>Retrieves the subscription item with the given ID.</p>
  */
-export async function getSubscriptionItemsItem<FetcherData>(
+export async function getSubscriptionItemsItem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -41430,7 +42043,9 @@ export async function getSubscriptionItemsItem<FetcherData>(
 /**
  * <p>Updates the plan or quantity of an item on a current subscription.</p>
  */
-export async function postSubscriptionItemsItem<FetcherData>(
+export async function postSubscriptionItemsItem<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     item: string;
@@ -41461,7 +42076,7 @@ export async function postSubscriptionItemsItem<FetcherData>(
  * billing period ends.</p>
  */
 export async function getSubscriptionItemsSubscriptionItemUsageRecordSummaries<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -41526,7 +42141,7 @@ export async function getSubscriptionItemsSubscriptionItemUsageRecordSummaries<
  * metered billing to have a <a href="https://stripe.com/docs/billing/subscriptions/tiers">tiered pricing</a> model.</p>
  */
 export async function postSubscriptionItemsSubscriptionItemUsageRecords<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -41550,7 +42165,9 @@ export async function postSubscriptionItemsSubscriptionItemUsageRecords<
 /**
  * <p>Retrieves the list of your subscription schedules.</p>
  */
-export async function getSubscriptionSchedules<FetcherData>(
+export async function getSubscriptionSchedules<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     canceled_at?:
@@ -41640,7 +42257,9 @@ export async function getSubscriptionSchedules<FetcherData>(
 /**
  * <p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>
  */
-export async function postSubscriptionSchedules<FetcherData>(
+export async function postSubscriptionSchedules<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -41663,7 +42282,9 @@ export async function postSubscriptionSchedules<FetcherData>(
  * <p>Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule
  * identifier that was returned upon subscription schedule creation.</p>
  */
-export async function getSubscriptionSchedulesSchedule<FetcherData>(
+export async function getSubscriptionSchedulesSchedule<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -41689,7 +42310,9 @@ export async function getSubscriptionSchedulesSchedule<FetcherData>(
 /**
  * <p>Updates an existing subscription schedule.</p>
  */
-export async function postSubscriptionSchedulesSchedule<FetcherData>(
+export async function postSubscriptionSchedulesSchedule<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     schedule: string;
@@ -41715,7 +42338,9 @@ export async function postSubscriptionSchedulesSchedule<FetcherData>(
  * active subscription). A subscription schedule can only be canceled if its status is <code>not_started</code> or
  * <code>active</code>.</p>
  */
-export async function postSubscriptionSchedulesScheduleCancel<FetcherData>(
+export async function postSubscriptionSchedulesScheduleCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     schedule: string;
@@ -41742,7 +42367,9 @@ export async function postSubscriptionSchedulesScheduleCancel<FetcherData>(
  * If the subscription schedule is currently associated with a subscription, releasing it will remove its
  * <code>subscription</code> property and set the subscription’s ID to the <code>released_subscription</code> property.</p>
  */
-export async function postSubscriptionSchedulesScheduleRelease<FetcherData>(
+export async function postSubscriptionSchedulesScheduleRelease<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     schedule: string;
@@ -41767,7 +42394,7 @@ export async function postSubscriptionSchedulesScheduleRelease<FetcherData>(
  * <p>By default, returns a list of subscriptions that have not been canceled. In order to list canceled subscriptions,
  * specify <code>status=canceled</code>.</p>
  */
-export async function getSubscriptions<FetcherData>(
+export async function getSubscriptions<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     automatic_tax?: {
@@ -41880,7 +42507,7 @@ export async function getSubscriptions<FetcherData>(
  * Schedules provide the flexibility to model more complex billing configurations that change over
  * time.</p>
  */
-export async function postSubscriptions<FetcherData>(
+export async function postSubscriptions<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -41907,7 +42534,9 @@ export async function postSubscriptions<FetcherData>(
  * up
  * to an hour behind during outages. Search functionality is not available to merchants in India.</p>
  */
-export async function getSubscriptionsSearch<FetcherData>(
+export async function getSubscriptionsSearch<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -41963,7 +42592,9 @@ export async function getSubscriptionsSearch<FetcherData>(
  * automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check
  * for unpaid invoices before allowing the customer to cancel the subscription at all.</p>
  */
-export async function deleteSubscriptionsSubscriptionExposedId<FetcherData>(
+export async function deleteSubscriptionsSubscriptionExposedId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     subscription_exposed_id: string;
@@ -41986,7 +42617,9 @@ export async function deleteSubscriptionsSubscriptionExposedId<FetcherData>(
 /**
  * <p>Retrieves the subscription with the given ID.</p>
  */
-export async function getSubscriptionsSubscriptionExposedId<FetcherData>(
+export async function getSubscriptionsSubscriptionExposedId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -42054,7 +42687,9 @@ export async function getSubscriptionsSubscriptionExposedId<FetcherData>(
  * in an hour may result in <a href="/docs/rate-limits">rate limiting</a>. If you need to bill for a frequently changing
  * quantity, consider integrating <a href="/docs/billing/subscriptions/usage-based">usage-based billing</a> instead.</p>
  */
-export async function postSubscriptionsSubscriptionExposedId<FetcherData>(
+export async function postSubscriptionsSubscriptionExposedId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     subscription_exposed_id: string;
@@ -42078,7 +42713,7 @@ export async function postSubscriptionsSubscriptionExposedId<FetcherData>(
  * <p>Removes the currently applied discount on a subscription.</p>
  */
 export async function deleteSubscriptionsSubscriptionExposedIdDiscount<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -42105,7 +42740,9 @@ export async function deleteSubscriptionsSubscriptionExposedIdDiscount<
  * If payment succeeds the subscription will become <code>active</code>, and if payment fails the subscription will be
  * <code>past_due</code>. The resumption invoice will void automatically if not paid by the expiration date.</p>
  */
-export async function postSubscriptionsSubscriptionResume<FetcherData>(
+export async function postSubscriptionsSubscriptionResume<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     subscription: string;
@@ -42128,7 +42765,9 @@ export async function postSubscriptionsSubscriptionResume<FetcherData>(
 /**
  * <p>Calculates tax based on input and returns a Tax <code>Calculation</code> object.</p>
  */
-export async function postTaxCalculations<FetcherData>(
+export async function postTaxCalculations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42149,7 +42788,9 @@ export async function postTaxCalculations<FetcherData>(
 /**
  * <p>Retrieves the line items of a persisted tax calculation as a collection.</p>
  */
-export async function getTaxCalculationsCalculationLineItems<FetcherData>(
+export async function getTaxCalculationsCalculationLineItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     calculation: string;
@@ -42198,7 +42839,9 @@ export async function getTaxCalculationsCalculationLineItems<FetcherData>(
 /**
  * <p>Returns a list of Tax <code>Registration</code> objects.</p>
  */
-export async function getTaxRegistrations<FetcherData>(
+export async function getTaxRegistrations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -42250,7 +42893,9 @@ export async function getTaxRegistrations<FetcherData>(
 /**
  * <p>Creates a new Tax <code>Registration</code> object.</p>
  */
-export async function postTaxRegistrations<FetcherData>(
+export async function postTaxRegistrations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42271,7 +42916,9 @@ export async function postTaxRegistrations<FetcherData>(
 /**
  * <p>Returns a Tax <code>Registration</code> object.</p>
  */
-export async function getTaxRegistrationsId<FetcherData>(
+export async function getTaxRegistrationsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -42299,7 +42946,9 @@ export async function getTaxRegistrationsId<FetcherData>(
  * <p>A registration cannot be deleted after it has been
  * created. If you wish to end a registration you may do so by setting <code>expires_at</code>.</p>
  */
-export async function postTaxRegistrationsId<FetcherData>(
+export async function postTaxRegistrationsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -42322,7 +42971,7 @@ export async function postTaxRegistrationsId<FetcherData>(
 /**
  * <p>Retrieves Tax <code>Settings</code> for a merchant.</p>
  */
-export async function getTaxSettings<FetcherData>(
+export async function getTaxSettings<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -42347,7 +42996,7 @@ export async function getTaxSettings<FetcherData>(
  * <p>Updates Tax <code>Settings</code> parameters used in tax calculations. All parameters are editable but none can be
  * removed once set.</p>
  */
-export async function postTaxSettings<FetcherData>(
+export async function postTaxSettings<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42366,9 +43015,12 @@ export async function postTaxSettings<FetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * <p>Creates a Tax <code>Transaction</code> from a calculation.</p>
+ * <p>Creates a Tax Transaction from a calculation, if that calculation hasn’t expired. Calculations expire after 90
+ * days.</p>
  */
-export async function postTaxTransactionsCreateFromCalculation<FetcherData>(
+export async function postTaxTransactionsCreateFromCalculation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42389,7 +43041,9 @@ export async function postTaxTransactionsCreateFromCalculation<FetcherData>(
 /**
  * <p>Partially or fully reverses a previously created <code>Transaction</code>.</p>
  */
-export async function postTaxTransactionsCreateReversal<FetcherData>(
+export async function postTaxTransactionsCreateReversal<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42410,7 +43064,9 @@ export async function postTaxTransactionsCreateReversal<FetcherData>(
 /**
  * <p>Retrieves a Tax <code>Transaction</code> object.</p>
  */
-export async function getTaxTransactionsTransaction<FetcherData>(
+export async function getTaxTransactionsTransaction<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -42435,7 +43091,9 @@ export async function getTaxTransactionsTransaction<FetcherData>(
 /**
  * <p>Retrieves the line items of a committed standalone transaction as a collection.</p>
  */
-export async function getTaxTransactionsTransactionLineItems<FetcherData>(
+export async function getTaxTransactionsTransactionLineItems<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -42485,7 +43143,7 @@ export async function getTaxTransactionsTransactionLineItems<FetcherData>(
  * <p>A list of <a href="https://stripe.com/docs/tax/tax-categories">all tax codes available</a> to add to Products in
  * order to allow specific tax calculations.</p>
  */
-export async function getTaxCodes<FetcherData>(
+export async function getTaxCodes<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -42531,7 +43189,7 @@ export async function getTaxCodes<FetcherData>(
  * <p>Retrieves the details of an existing tax code. Supply the unique tax code ID and Stripe will return the corresponding
  * tax code information.</p>
  */
-export async function getTaxCodesId<FetcherData>(
+export async function getTaxCodesId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -42556,7 +43214,7 @@ export async function getTaxCodesId<FetcherData>(
 /**
  * <p>Returns a list of tax IDs.</p>
  */
-export async function getTaxIds<FetcherData>(
+export async function getTaxIds<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -42615,7 +43273,7 @@ export async function getTaxIds<FetcherData>(
 /**
  * <p>Creates a new account or customer <code>tax_id</code> object.</p>
  */
-export async function postTaxIds<FetcherData>(
+export async function postTaxIds<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42634,7 +43292,7 @@ export async function postTaxIds<FetcherData>(
 /**
  * <p>Deletes an existing account or customer <code>tax_id</code> object.</p>
  */
-export async function deleteTaxIdsId<FetcherData>(
+export async function deleteTaxIdsId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -42657,7 +43315,7 @@ export async function deleteTaxIdsId<FetcherData>(
 /**
  * <p>Retrieves an account or customer <code>tax_id</code> object.</p>
  */
-export async function getTaxIdsId<FetcherData>(
+export async function getTaxIdsId<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -42681,7 +43339,7 @@ export async function getTaxIdsId<FetcherData>(
  * <p>Returns a list of your tax rates. Tax rates are returned sorted by creation date, with the most recently created tax
  * rates appearing first.</p>
  */
-export async function getTaxRates<FetcherData>(
+export async function getTaxRates<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     active?: boolean;
@@ -42744,7 +43402,7 @@ export async function getTaxRates<FetcherData>(
 /**
  * <p>Creates a new tax rate.</p>
  */
-export async function postTaxRates<FetcherData>(
+export async function postTaxRates<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42765,7 +43423,7 @@ export async function postTaxRates<FetcherData>(
 /**
  * <p>Retrieves a tax rate with the given ID</p>
  */
-export async function getTaxRatesTaxRate<FetcherData>(
+export async function getTaxRatesTaxRate<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -42790,7 +43448,9 @@ export async function getTaxRatesTaxRate<FetcherData>(
 /**
  * <p>Updates an existing tax rate.</p>
  */
-export async function postTaxRatesTaxRate<FetcherData>(
+export async function postTaxRatesTaxRate<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     tax_rate: string;
@@ -42813,7 +43473,9 @@ export async function postTaxRatesTaxRate<FetcherData>(
 /**
  * <p>Returns a list of <code>Configuration</code> objects.</p>
  */
-export async function getTerminalConfigurations<FetcherData>(
+export async function getTerminalConfigurations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -42865,7 +43527,9 @@ export async function getTerminalConfigurations<FetcherData>(
 /**
  * <p>Creates a new <code>Configuration</code> object.</p>
  */
-export async function postTerminalConfigurations<FetcherData>(
+export async function postTerminalConfigurations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42887,7 +43551,9 @@ export async function postTerminalConfigurations<FetcherData>(
 /**
  * <p>Deletes a <code>Configuration</code> object.</p>
  */
-export async function deleteTerminalConfigurationsConfiguration<FetcherData>(
+export async function deleteTerminalConfigurationsConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     configuration: string;
@@ -42911,7 +43577,9 @@ export async function deleteTerminalConfigurationsConfiguration<FetcherData>(
 /**
  * <p>Retrieves a <code>Configuration</code> object.</p>
  */
-export async function getTerminalConfigurationsConfiguration<FetcherData>(
+export async function getTerminalConfigurationsConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     configuration: string;
@@ -42937,7 +43605,9 @@ export async function getTerminalConfigurationsConfiguration<FetcherData>(
 /**
  * <p>Updates a new <code>Configuration</code> object.</p>
  */
-export async function postTerminalConfigurationsConfiguration<FetcherData>(
+export async function postTerminalConfigurationsConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     configuration: string;
@@ -42962,7 +43632,9 @@ export async function postTerminalConfigurationsConfiguration<FetcherData>(
  * <p>To connect to a reader the Stripe Terminal SDK needs to retrieve a short-lived connection token from Stripe, proxied
  * through your server. On your backend, add an endpoint that creates and returns a connection token.</p>
  */
-export async function postTerminalConnectionTokens<FetcherData>(
+export async function postTerminalConnectionTokens<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -42984,7 +43656,9 @@ export async function postTerminalConnectionTokens<FetcherData>(
 /**
  * <p>Returns a list of <code>Location</code> objects.</p>
  */
-export async function getTerminalLocations<FetcherData>(
+export async function getTerminalLocations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -43031,7 +43705,9 @@ export async function getTerminalLocations<FetcherData>(
  * For further details, including which address fields are required in each
  * country, see the <a href="/docs/terminal/fleet/locations">Manage locations</a> guide.</p>
  */
-export async function postTerminalLocations<FetcherData>(
+export async function postTerminalLocations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -43052,7 +43728,9 @@ export async function postTerminalLocations<FetcherData>(
 /**
  * <p>Deletes a <code>Location</code> object.</p>
  */
-export async function deleteTerminalLocationsLocation<FetcherData>(
+export async function deleteTerminalLocationsLocation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     location: string;
@@ -43076,7 +43754,9 @@ export async function deleteTerminalLocationsLocation<FetcherData>(
 /**
  * <p>Retrieves a <code>Location</code> object.</p>
  */
-export async function getTerminalLocationsLocation<FetcherData>(
+export async function getTerminalLocationsLocation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -43103,7 +43783,9 @@ export async function getTerminalLocationsLocation<FetcherData>(
  * <p>Updates a <code>Location</code> object by setting the values of the parameters passed. Any parameters not provided
  * will be left unchanged.</p>
  */
-export async function postTerminalLocationsLocation<FetcherData>(
+export async function postTerminalLocationsLocation<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     location: string;
@@ -43127,7 +43809,7 @@ export async function postTerminalLocationsLocation<FetcherData>(
 /**
  * <p>Returns a list of <code>Reader</code> objects.</p>
  */
-export async function getTerminalReaders<FetcherData>(
+export async function getTerminalReaders<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     device_type?:
@@ -43195,7 +43877,9 @@ export async function getTerminalReaders<FetcherData>(
 /**
  * <p>Creates a new <code>Reader</code> object.</p>
  */
-export async function postTerminalReaders<FetcherData>(
+export async function postTerminalReaders<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -43216,7 +43900,9 @@ export async function postTerminalReaders<FetcherData>(
 /**
  * <p>Deletes a <code>Reader</code> object.</p>
  */
-export async function deleteTerminalReadersReader<FetcherData>(
+export async function deleteTerminalReadersReader<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     reader: string;
@@ -43240,7 +43926,9 @@ export async function deleteTerminalReadersReader<FetcherData>(
 /**
  * <p>Retrieves a <code>Reader</code> object.</p>
  */
-export async function getTerminalReadersReader<FetcherData>(
+export async function getTerminalReadersReader<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -43267,7 +43955,9 @@ export async function getTerminalReadersReader<FetcherData>(
  * <p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will
  * be left unchanged.</p>
  */
-export async function postTerminalReadersReader<FetcherData>(
+export async function postTerminalReadersReader<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     reader: string;
@@ -43291,7 +43981,9 @@ export async function postTerminalReadersReader<FetcherData>(
 /**
  * <p>Cancels the current reader action.</p>
  */
-export async function postTerminalReadersReaderCancelAction<FetcherData>(
+export async function postTerminalReadersReaderCancelAction<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     reader: string;
@@ -43315,7 +44007,7 @@ export async function postTerminalReadersReaderCancelAction<FetcherData>(
  * <p>Initiates a payment flow on a Reader.</p>
  */
 export async function postTerminalReadersReaderProcessPaymentIntent<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43339,7 +44031,9 @@ export async function postTerminalReadersReaderProcessPaymentIntent<
 /**
  * <p>Initiates a setup intent flow on a Reader.</p>
  */
-export async function postTerminalReadersReaderProcessSetupIntent<FetcherData>(
+export async function postTerminalReadersReaderProcessSetupIntent<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     reader: string;
@@ -43362,7 +44056,9 @@ export async function postTerminalReadersReaderProcessSetupIntent<FetcherData>(
 /**
  * <p>Initiates a refund on a Reader</p>
  */
-export async function postTerminalReadersReaderRefundPayment<FetcherData>(
+export async function postTerminalReadersReaderRefundPayment<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     reader: string;
@@ -43385,7 +44081,9 @@ export async function postTerminalReadersReaderRefundPayment<FetcherData>(
 /**
  * <p>Sets reader display to show cart details.</p>
  */
-export async function postTerminalReadersReaderSetReaderDisplay<FetcherData>(
+export async function postTerminalReadersReaderSetReaderDisplay<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     reader: string;
@@ -43408,7 +44106,9 @@ export async function postTerminalReadersReaderSetReaderDisplay<FetcherData>(
 /**
  * <p>Creates a test mode Confirmation Token server side for your integration tests.</p>
  */
-export async function postTestHelpersConfirmationTokens<FetcherData>(
+export async function postTestHelpersConfirmationTokens<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -43430,7 +44130,7 @@ export async function postTestHelpersConfirmationTokens<FetcherData>(
  * <p>Create an incoming testmode bank transfer</p>
  */
 export async function postTestHelpersCustomersCustomerFundCashBalance<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43455,7 +44155,9 @@ export async function postTestHelpersCustomersCustomerFundCashBalance<
 /**
  * <p>Create a test-mode authorization.</p>
  */
-export async function postTestHelpersIssuingAuthorizations<FetcherData>(
+export async function postTestHelpersIssuingAuthorizations<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -43478,7 +44180,7 @@ export async function postTestHelpersIssuingAuthorizations<FetcherData>(
  * <p>Capture a test-mode authorization.</p>
  */
 export async function postTestHelpersIssuingAuthorizationsAuthorizationCapture<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43504,7 +44206,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationCapture<
  * <p>Expire a test-mode Authorization.</p>
  */
 export async function postTestHelpersIssuingAuthorizationsAuthorizationExpire<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43530,7 +44232,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationExpire<
  * <p>Increment a test-mode Authorization.</p>
  */
 export async function postTestHelpersIssuingAuthorizationsAuthorizationIncrement<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43556,7 +44258,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationIncrement
  * <p>Reverse a test-mode Authorization.</p>
  */
 export async function postTestHelpersIssuingAuthorizationsAuthorizationReverse<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43582,7 +44284,7 @@ export async function postTestHelpersIssuingAuthorizationsAuthorizationReverse<
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>delivered</code>.</p>
  */
 export async function postTestHelpersIssuingCardsCardShippingDeliver<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43606,7 +44308,9 @@ export async function postTestHelpersIssuingCardsCardShippingDeliver<
 /**
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>
  */
-export async function postTestHelpersIssuingCardsCardShippingFail<FetcherData>(
+export async function postTestHelpersIssuingCardsCardShippingFail<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card: string;
@@ -43630,7 +44334,7 @@ export async function postTestHelpersIssuingCardsCardShippingFail<FetcherData>(
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>returned</code>.</p>
  */
 export async function postTestHelpersIssuingCardsCardShippingReturn<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43654,7 +44358,9 @@ export async function postTestHelpersIssuingCardsCardShippingReturn<
 /**
  * <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>
  */
-export async function postTestHelpersIssuingCardsCardShippingShip<FetcherData>(
+export async function postTestHelpersIssuingCardsCardShippingShip<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     card: string;
@@ -43678,7 +44384,7 @@ export async function postTestHelpersIssuingCardsCardShippingShip<FetcherData>(
  * <p>Updates the <code>status</code> of the specified testmode personalization design object to <code>active</code>.</p>
  */
 export async function postTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43704,7 +44410,7 @@ export async function postTestHelpersIssuingPersonalizationDesignsPersonalizatio
  * <p>Updates the <code>status</code> of the specified testmode personalization design object to <code>inactive</code>.</p>
  */
 export async function postTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43730,7 +44436,7 @@ export async function postTestHelpersIssuingPersonalizationDesignsPersonalizatio
  * <p>Updates the <code>status</code> of the specified testmode personalization design object to <code>rejected</code>.</p>
  */
 export async function postTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43756,7 +44462,7 @@ export async function postTestHelpersIssuingPersonalizationDesignsPersonalizatio
  * <p>Allows the user to capture an arbitrary amount, also known as a forced capture.</p>
  */
 export async function postTestHelpersIssuingTransactionsCreateForceCapture<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
@@ -43779,7 +44485,7 @@ export async function postTestHelpersIssuingTransactionsCreateForceCapture<
  * <p>Allows the user to refund an arbitrary amount, also known as a unlinked refund.</p>
  */
 export async function postTestHelpersIssuingTransactionsCreateUnlinkedRefund<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
@@ -43802,7 +44508,7 @@ export async function postTestHelpersIssuingTransactionsCreateUnlinkedRefund<
  * <p>Refund a test-mode Transaction.</p>
  */
 export async function postTestHelpersIssuingTransactionsTransactionRefund<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43826,7 +44532,9 @@ export async function postTestHelpersIssuingTransactionsTransactionRefund<
 /**
  * <p>Expire a refund with a status of <code>requires_action</code>.</p>
  */
-export async function postTestHelpersRefundsRefundExpire<FetcherData>(
+export async function postTestHelpersRefundsRefundExpire<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     refund: string;
@@ -43849,7 +44557,7 @@ export async function postTestHelpersRefundsRefundExpire<FetcherData>(
  * refunding a transaction.</p>
  */
 export async function postTestHelpersTerminalReadersReaderPresentPaymentMethod<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -43873,7 +44581,9 @@ export async function postTestHelpersTerminalReadersReaderPresentPaymentMethod<
 /**
  * <p>Returns a list of your test clocks.</p>
  */
-export async function getTestHelpersTestClocks<FetcherData>(
+export async function getTestHelpersTestClocks<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -43918,7 +44628,9 @@ export async function getTestHelpersTestClocks<FetcherData>(
 /**
  * <p>Creates a new test clock that can be attached to new customers and quotes.</p>
  */
-export async function postTestHelpersTestClocks<FetcherData>(
+export async function postTestHelpersTestClocks<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -43940,7 +44652,9 @@ export async function postTestHelpersTestClocks<FetcherData>(
 /**
  * <p>Deletes a test clock.</p>
  */
-export async function deleteTestHelpersTestClocksTestClock<FetcherData>(
+export async function deleteTestHelpersTestClocksTestClock<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     test_clock: string;
@@ -43964,7 +44678,9 @@ export async function deleteTestHelpersTestClocksTestClock<FetcherData>(
 /**
  * <p>Retrieves a test clock.</p>
  */
-export async function getTestHelpersTestClocksTestClock<FetcherData>(
+export async function getTestHelpersTestClocksTestClock<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -43991,7 +44707,9 @@ export async function getTestHelpersTestClocksTestClock<FetcherData>(
  * <p>Starts advancing a test clock to a specified time in the future. Advancement is done when status changes to
  * <code>Ready</code>.</p>
  */
-export async function postTestHelpersTestClocksTestClockAdvance<FetcherData>(
+export async function postTestHelpersTestClocksTestClockAdvance<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     test_clock: string;
@@ -44017,7 +44735,7 @@ export async function postTestHelpersTestClocksTestClockAdvance<FetcherData>(
  * be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryInboundTransfersIdFail<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44044,7 +44762,7 @@ export async function postTestHelpersTreasuryInboundTransfersIdFail<
  * InboundTransfer must already be in the <code>succeeded</code> state.</p>
  */
 export async function postTestHelpersTreasuryInboundTransfersIdReturn<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44071,7 +44789,7 @@ export async function postTestHelpersTreasuryInboundTransfersIdReturn<
  * already be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryInboundTransfersIdSucceed<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44097,7 +44815,9 @@ export async function postTestHelpersTreasuryInboundTransfersIdSucceed<
  * <p>Updates a test mode created OutboundPayment with tracking details. The OutboundPayment must not be cancelable, and
  * cannot be in the <code>canceled</code> or <code>failed</code> states.</p>
  */
-export async function postTestHelpersTreasuryOutboundPaymentsId<FetcherData>(
+export async function postTestHelpersTreasuryOutboundPaymentsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -44123,7 +44843,7 @@ export async function postTestHelpersTreasuryOutboundPaymentsId<FetcherData>(
  * be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryOutboundPaymentsIdFail<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44150,7 +44870,7 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdFail<
  * be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryOutboundPaymentsIdPost<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44177,7 +44897,7 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdPost<
  * be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryOutboundPaymentsIdReturn<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44204,7 +44924,7 @@ export async function postTestHelpersTreasuryOutboundPaymentsIdReturn<
  * cannot be in the <code>canceled</code> or <code>failed</code> states.</p>
  */
 export async function postTestHelpersTreasuryOutboundTransfersOutboundTransfer<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44231,7 +44951,7 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransfer<
  * be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferFail<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44258,7 +44978,7 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferFa
  * be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferPost<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44285,7 +45005,7 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferPo
  * already be in the <code>processing</code> state.</p>
  */
 export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferReturn<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -44311,7 +45031,9 @@ export async function postTestHelpersTreasuryOutboundTransfersOutboundTransferRe
  * <p>Use this endpoint to simulate a test mode ReceivedCredit initiated by a third party. In live mode, you can’t directly
  * create ReceivedCredits initiated by third parties.</p>
  */
-export async function postTestHelpersTreasuryReceivedCredits<FetcherData>(
+export async function postTestHelpersTreasuryReceivedCredits<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -44334,7 +45056,9 @@ export async function postTestHelpersTreasuryReceivedCredits<FetcherData>(
  * <p>Use this endpoint to simulate a test mode ReceivedDebit initiated by a third party. In live mode, you can’t directly
  * create ReceivedDebits initiated by third parties.</p>
  */
-export async function postTestHelpersTreasuryReceivedDebits<FetcherData>(
+export async function postTestHelpersTreasuryReceivedDebits<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -44361,7 +45085,7 @@ export async function postTestHelpersTreasuryReceivedDebits<FetcherData>(
  * href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a> is
  * <code>application</code>, which includes Custom accounts.</p>
  */
-export async function postTokens<FetcherData>(
+export async function postTokens<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -44380,7 +45104,7 @@ export async function postTokens<FetcherData>(
 /**
  * <p>Retrieves the token with the given ID.</p>
  */
-export async function getTokensToken<FetcherData>(
+export async function getTokensToken<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -44403,7 +45127,7 @@ export async function getTokensToken<FetcherData>(
 /**
  * <p>Returns a list of top-ups.</p>
  */
-export async function getTopups<FetcherData>(
+export async function getTopups<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     amount?:
@@ -44473,7 +45197,7 @@ export async function getTopups<FetcherData>(
 /**
  * <p>Top up the balance of an account</p>
  */
-export async function postTopups<FetcherData>(
+export async function postTopups<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -44493,7 +45217,7 @@ export async function postTopups<FetcherData>(
  * <p>Retrieves the details of a top-up that has previously been created. Supply the unique top-up ID that was returned
  * from your previous request, and Stripe will return the corresponding top-up information.</p>
  */
-export async function getTopupsTopup<FetcherData>(
+export async function getTopupsTopup<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -44516,7 +45240,7 @@ export async function getTopupsTopup<FetcherData>(
 /**
  * <p>Updates the metadata of a top-up. Other top-up details are not editable by design.</p>
  */
-export async function postTopupsTopup<FetcherData>(
+export async function postTopupsTopup<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     topup: string;
@@ -44537,7 +45261,9 @@ export async function postTopupsTopup<FetcherData>(
 /**
  * <p>Cancels a top-up. Only pending top-ups can be canceled.</p>
  */
-export async function postTopupsTopupCancel<FetcherData>(
+export async function postTopupsTopupCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     topup: string;
@@ -44559,7 +45285,7 @@ export async function postTopupsTopupCancel<FetcherData>(
  * <p>Returns a list of existing transfers sent to connected accounts. The transfers are returned in sorted order, with the
  * most recently created transfers appearing first.</p>
  */
-export async function getTransfers<FetcherData>(
+export async function getTransfers<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -44627,7 +45353,7 @@ export async function getTransfers<FetcherData>(
  * href="#balance">Stripe balance</a> must be able to cover the transfer amount, or you’ll receive an “Insufficient Funds”
  * error.</p>
  */
-export async function postTransfers<FetcherData>(
+export async function postTransfers<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -44650,7 +45376,9 @@ export async function postTransfers<FetcherData>(
  * always available by default on the transfer object. If you need more than those 10, you can use this API method and the
  * <code>limit</code> and <code>starting_after</code> parameters to page through additional reversals.</p>
  */
-export async function getTransfersIdReversals<FetcherData>(
+export async function getTransfersIdReversals<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -44706,7 +45434,9 @@ export async function getTransfersIdReversals<FetcherData>(
  * <p>Once entirely reversed, a transfer can’t be reversed again. This method will return an error when
  * called on an already-reversed transfer, or when trying to reverse more money than is left on a transfer.</p>
  */
-export async function postTransfersIdReversals<FetcherData>(
+export async function postTransfersIdReversals<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -44730,7 +45460,9 @@ export async function postTransfersIdReversals<FetcherData>(
  * <p>Retrieves the details of an existing transfer. Supply the unique transfer ID from either a transfer creation request
  * or the transfer list, and Stripe will return the corresponding transfer information.</p>
  */
-export async function getTransfersTransfer<FetcherData>(
+export async function getTransfersTransfer<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -44758,7 +45490,9 @@ export async function getTransfersTransfer<FetcherData>(
  *
  * <p>This request accepts only metadata as an argument.</p>
  */
-export async function postTransfersTransfer<FetcherData>(
+export async function postTransfersTransfer<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     transfer: string;
@@ -44782,7 +45516,9 @@ export async function postTransfersTransfer<FetcherData>(
  * <p>By default, you can see the 10 most recent reversals stored directly on the transfer object, but you can also
  * retrieve details about a specific reversal stored on the transfer.</p>
  */
-export async function getTransfersTransferReversalsId<FetcherData>(
+export async function getTransfersTransferReversalsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -44811,7 +45547,9 @@ export async function getTransfersTransferReversalsId<FetcherData>(
  *
  * <p>This request only accepts metadata and description as arguments.</p>
  */
-export async function postTransfersTransferReversalsId<FetcherData>(
+export async function postTransfersTransferReversalsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -44835,7 +45573,9 @@ export async function postTransfersTransferReversalsId<FetcherData>(
 /**
  * <p>Returns a list of CreditReversals.</p>
  */
-export async function getTreasuryCreditReversals<FetcherData>(
+export async function getTreasuryCreditReversals<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -44894,7 +45634,9 @@ export async function getTreasuryCreditReversals<FetcherData>(
 /**
  * <p>Reverses a ReceivedCredit and creates a CreditReversal object.</p>
  */
-export async function postTreasuryCreditReversals<FetcherData>(
+export async function postTreasuryCreditReversals<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -44917,7 +45659,9 @@ export async function postTreasuryCreditReversals<FetcherData>(
  * <p>Retrieves the details of an existing CreditReversal by passing the unique CreditReversal ID from either the
  * CreditReversal creation request or CreditReversal list</p>
  */
-export async function getTreasuryCreditReversalsCreditReversal<FetcherData>(
+export async function getTreasuryCreditReversalsCreditReversal<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     credit_reversal: string;
@@ -44943,7 +45687,9 @@ export async function getTreasuryCreditReversalsCreditReversal<FetcherData>(
 /**
  * <p>Returns a list of DebitReversals.</p>
  */
-export async function getTreasuryDebitReversals<FetcherData>(
+export async function getTreasuryDebitReversals<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -45004,7 +45750,9 @@ export async function getTreasuryDebitReversals<FetcherData>(
 /**
  * <p>Reverses a ReceivedDebit and creates a DebitReversal object.</p>
  */
-export async function postTreasuryDebitReversals<FetcherData>(
+export async function postTreasuryDebitReversals<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -45026,7 +45774,9 @@ export async function postTreasuryDebitReversals<FetcherData>(
 /**
  * <p>Retrieves a DebitReversal object.</p>
  */
-export async function getTreasuryDebitReversalsDebitReversal<FetcherData>(
+export async function getTreasuryDebitReversalsDebitReversal<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     debit_reversal: string;
@@ -45052,7 +45802,9 @@ export async function getTreasuryDebitReversalsDebitReversal<FetcherData>(
 /**
  * <p>Returns a list of FinancialAccounts.</p>
  */
-export async function getTreasuryFinancialAccounts<FetcherData>(
+export async function getTreasuryFinancialAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -45111,7 +45863,9 @@ export async function getTreasuryFinancialAccounts<FetcherData>(
 /**
  * <p>Creates a new FinancialAccount. For now, each connected account can only have one FinancialAccount.</p>
  */
-export async function postTreasuryFinancialAccounts<FetcherData>(
+export async function postTreasuryFinancialAccounts<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -45133,7 +45887,9 @@ export async function postTreasuryFinancialAccounts<FetcherData>(
 /**
  * <p>Retrieves the details of a FinancialAccount.</p>
  */
-export async function getTreasuryFinancialAccountsFinancialAccount<FetcherData>(
+export async function getTreasuryFinancialAccountsFinancialAccount<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -45160,7 +45916,7 @@ export async function getTreasuryFinancialAccountsFinancialAccount<FetcherData>(
  * <p>Updates the details of a FinancialAccount.</p>
  */
 export async function postTreasuryFinancialAccountsFinancialAccount<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -45186,7 +45942,7 @@ export async function postTreasuryFinancialAccountsFinancialAccount<
  * <p>Retrieves Features information associated with the FinancialAccount.</p>
  */
 export async function getTreasuryFinancialAccountsFinancialAccountFeatures<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -45214,7 +45970,7 @@ export async function getTreasuryFinancialAccountsFinancialAccountFeatures<
  * <p>Updates the Features associated with a FinancialAccount.</p>
  */
 export async function postTreasuryFinancialAccountsFinancialAccountFeatures<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -45239,7 +45995,9 @@ export async function postTreasuryFinancialAccountsFinancialAccountFeatures<
 /**
  * <p>Returns a list of InboundTransfers sent from the specified FinancialAccount.</p>
  */
-export async function getTreasuryInboundTransfers<FetcherData>(
+export async function getTreasuryInboundTransfers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -45296,7 +46054,9 @@ export async function getTreasuryInboundTransfers<FetcherData>(
 /**
  * <p>Creates an InboundTransfer.</p>
  */
-export async function postTreasuryInboundTransfers<FetcherData>(
+export async function postTreasuryInboundTransfers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -45318,7 +46078,9 @@ export async function postTreasuryInboundTransfers<FetcherData>(
 /**
  * <p>Retrieves the details of an existing InboundTransfer.</p>
  */
-export async function getTreasuryInboundTransfersId<FetcherData>(
+export async function getTreasuryInboundTransfersId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -45345,7 +46107,7 @@ export async function getTreasuryInboundTransfersId<FetcherData>(
  * <p>Cancels an InboundTransfer.</p>
  */
 export async function postTreasuryInboundTransfersInboundTransferCancel<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -45370,7 +46132,9 @@ export async function postTreasuryInboundTransfersInboundTransferCancel<
 /**
  * <p>Returns a list of OutboundPayments sent from the specified FinancialAccount.</p>
  */
-export async function getTreasuryOutboundPayments<FetcherData>(
+export async function getTreasuryOutboundPayments<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -45438,7 +46202,9 @@ export async function getTreasuryOutboundPayments<FetcherData>(
 /**
  * <p>Creates an OutboundPayment.</p>
  */
-export async function postTreasuryOutboundPayments<FetcherData>(
+export async function postTreasuryOutboundPayments<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -45461,7 +46227,9 @@ export async function postTreasuryOutboundPayments<FetcherData>(
  * <p>Retrieves the details of an existing OutboundPayment by passing the unique OutboundPayment ID from either the
  * OutboundPayment creation request or OutboundPayment list.</p>
  */
-export async function getTreasuryOutboundPaymentsId<FetcherData>(
+export async function getTreasuryOutboundPaymentsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -45487,7 +46255,9 @@ export async function getTreasuryOutboundPaymentsId<FetcherData>(
 /**
  * <p>Cancel an OutboundPayment.</p>
  */
-export async function postTreasuryOutboundPaymentsIdCancel<FetcherData>(
+export async function postTreasuryOutboundPaymentsIdCancel<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     id: string;
@@ -45511,7 +46281,9 @@ export async function postTreasuryOutboundPaymentsIdCancel<FetcherData>(
 /**
  * <p>Returns a list of OutboundTransfers sent from the specified FinancialAccount.</p>
  */
-export async function getTreasuryOutboundTransfers<FetcherData>(
+export async function getTreasuryOutboundTransfers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -45568,7 +46340,9 @@ export async function getTreasuryOutboundTransfers<FetcherData>(
 /**
  * <p>Creates an OutboundTransfer.</p>
  */
-export async function postTreasuryOutboundTransfers<FetcherData>(
+export async function postTreasuryOutboundTransfers<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -45591,7 +46365,9 @@ export async function postTreasuryOutboundTransfers<FetcherData>(
  * <p>Retrieves the details of an existing OutboundTransfer by passing the unique OutboundTransfer ID from either the
  * OutboundTransfer creation request or OutboundTransfer list.</p>
  */
-export async function getTreasuryOutboundTransfersOutboundTransfer<FetcherData>(
+export async function getTreasuryOutboundTransfersOutboundTransfer<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -45618,7 +46394,7 @@ export async function getTreasuryOutboundTransfersOutboundTransfer<FetcherData>(
  * <p>An OutboundTransfer can be canceled if the funds have not yet been paid out.</p>
  */
 export async function postTreasuryOutboundTransfersOutboundTransferCancel<
-  FetcherData,
+  FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
@@ -45643,7 +46419,9 @@ export async function postTreasuryOutboundTransfersOutboundTransferCancel<
 /**
  * <p>Returns a list of ReceivedCredits.</p>
  */
-export async function getTreasuryReceivedCredits<FetcherData>(
+export async function getTreasuryReceivedCredits<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -45709,7 +46487,9 @@ export async function getTreasuryReceivedCredits<FetcherData>(
  * <p>Retrieves the details of an existing ReceivedCredit by passing the unique ReceivedCredit ID from the ReceivedCredit
  * list.</p>
  */
-export async function getTreasuryReceivedCreditsId<FetcherData>(
+export async function getTreasuryReceivedCreditsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -45735,7 +46515,9 @@ export async function getTreasuryReceivedCreditsId<FetcherData>(
 /**
  * <p>Returns a list of ReceivedDebits.</p>
  */
-export async function getTreasuryReceivedDebits<FetcherData>(
+export async function getTreasuryReceivedDebits<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -45793,7 +46575,9 @@ export async function getTreasuryReceivedDebits<FetcherData>(
  * <p>Retrieves the details of an existing ReceivedDebit by passing the unique ReceivedDebit ID from the ReceivedDebit
  * list</p>
  */
-export async function getTreasuryReceivedDebitsId<FetcherData>(
+export async function getTreasuryReceivedDebitsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -45819,7 +46603,9 @@ export async function getTreasuryReceivedDebitsId<FetcherData>(
 /**
  * <p>Retrieves a list of TransactionEntry objects.</p>
  */
-export async function getTreasuryTransactionEntries<FetcherData>(
+export async function getTreasuryTransactionEntries<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -45896,7 +46682,9 @@ export async function getTreasuryTransactionEntries<FetcherData>(
 /**
  * <p>Retrieves a TransactionEntry object.</p>
  */
-export async function getTreasuryTransactionEntriesId<FetcherData>(
+export async function getTreasuryTransactionEntriesId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -45922,7 +46710,9 @@ export async function getTreasuryTransactionEntriesId<FetcherData>(
 /**
  * <p>Retrieves a list of Transaction objects.</p>
  */
-export async function getTreasuryTransactions<FetcherData>(
+export async function getTreasuryTransactions<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     created?:
@@ -46001,7 +46791,9 @@ export async function getTreasuryTransactions<FetcherData>(
 /**
  * <p>Retrieves the details of an existing Transaction.</p>
  */
-export async function getTreasuryTransactionsId<FetcherData>(
+export async function getTreasuryTransactionsId<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -46027,7 +46819,9 @@ export async function getTreasuryTransactionsId<FetcherData>(
 /**
  * <p>Returns a list of your webhook endpoints.</p>
  */
-export async function getWebhookEndpoints<FetcherData>(
+export async function getWebhookEndpoints<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     ending_before?: string;
@@ -46077,7 +46871,9 @@ export async function getWebhookEndpoints<FetcherData>(
  * endpoints in the <a href="https://dashboard.stripe.com/account/webhooks">webhooks settings</a> section of the
  * Dashboard.</p>
  */
-export async function postWebhookEndpoints<FetcherData>(
+export async function postWebhookEndpoints<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   body: unknown,
@@ -46099,7 +46895,9 @@ export async function postWebhookEndpoints<FetcherData>(
  * <p>You can also delete webhook endpoints via the <a href="https://dashboard.stripe.com/account/webhooks">webhook
  * endpoint management</a> page of the Stripe dashboard.</p>
  */
-export async function deleteWebhookEndpointsWebhookEndpoint<FetcherData>(
+export async function deleteWebhookEndpointsWebhookEndpoint<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     webhook_endpoint: string;
@@ -46123,7 +46921,9 @@ export async function deleteWebhookEndpointsWebhookEndpoint<FetcherData>(
 /**
  * <p>Retrieves the webhook endpoint with the given ID.</p>
  */
-export async function getWebhookEndpointsWebhookEndpoint<FetcherData>(
+export async function getWebhookEndpointsWebhookEndpoint<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     expand?: string[];
@@ -46149,7 +46949,9 @@ export async function getWebhookEndpointsWebhookEndpoint<FetcherData>(
  * <p>Updates the webhook endpoint. You may edit the <code>url</code>, the list of <code>enabled_events</code>, and the
  * status of your endpoint.</p>
  */
-export async function postWebhookEndpointsWebhookEndpoint<FetcherData>(
+export async function postWebhookEndpointsWebhookEndpoint<
+  FetcherData extends r.BaseFetcherData,
+>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     webhook_endpoint: string;

@@ -1,15 +1,19 @@
 import { RequestContext } from './request-context';
 import { ResponseContext } from './response-context';
+import { BaseFetcherData } from './types';
 
 export * from './types';
 
 export { RequestContext, ResponseContext };
 
-export interface Fetcher<T = unknown> {
+export interface Fetcher<T extends BaseFetcherData> {
   send(request: RequestContext, options?: T): Promise<ResponseContext>;
 }
 
-export class IsomorphicFetchHttpLibrary<T = unknown> implements Fetcher<T> {
+export class IsomorphicFetchHttpLibrary<
+  T extends BaseFetcherData = BaseFetcherData,
+> implements Fetcher<T>
+{
   public async send(
     request: RequestContext,
     options: T,

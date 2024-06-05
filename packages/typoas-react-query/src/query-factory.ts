@@ -8,7 +8,12 @@ import {
   hashKey,
   DefaultError,
 } from '@tanstack/react-query';
-import { Context, ok, SuccessfulStatus } from '@typoas/runtime';
+import {
+  BaseFetcherData,
+  Context,
+  ok,
+  SuccessfulStatus,
+} from '@typoas/runtime';
 import { useApiContext } from './api-context';
 import { getUniqueFunctionName } from './func-names';
 import { TypoasFuncStatusType, TypoasReturnType } from './types';
@@ -20,7 +25,7 @@ export type TypoasQueryOptions<
   Func extends TypoasQueryFunction<FetcherData>,
   S extends TypoasFuncStatusType<Func>,
   TError,
-  FetcherData,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 > = Omit<
   | UseQueryOptions<
       TypoasReturnType<Func, S>,
@@ -47,7 +52,7 @@ export type TypoasQueryOptions<
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type TypoasQueryFunction<FetcherData> = (
+export type TypoasQueryFunction<FetcherData extends BaseFetcherData> = (
   ctx: Context<never, FetcherData>,
   params: any,
   opts?: FetcherData,
@@ -66,7 +71,7 @@ export function createQueryHook<
   S extends TypoasFuncStatusType<Func> = TypoasFuncStatusType<Func> &
     SuccessfulStatus,
   TError = DefaultError,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 >(
   func: Func,
   baseOptions: Omit<
