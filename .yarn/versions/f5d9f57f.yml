@@ -1,0 +1,3 @@
+releases:
+  "@typoas/react-query": major
+  "@typoas/runtime": patch

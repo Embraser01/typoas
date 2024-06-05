@@ -15,6 +15,7 @@ Main features are:
 - Fully typed and fully customizable
 - References `$ref` handling (including cyclic refs)
 - **Tree Shaking** out of the box
+- **React Query** integration
 - Support for `allOf`, `oneOf` and `anyOf` schemas.
 - Automatically convert `format: 'date-time'` to JS `Date`
 - Handle **API Key**, **HTTP Config** and **OAuth2**<sup>1</sup> auth security schemes
@@ -27,11 +28,12 @@ Main features are:
 > <sup>1</sup>: OAuth2 scheme does not handle flows to retrieve an `accessToken`.  
 > You need to provide your own `accessToken` through the `provider.getConfig()` function.
 
-The project is split into 3 parts:
+The project is split into 4 packages:
 
 - [`@typoas/generator`](./packages/typoas-generator) is used to generate the API specific code.
 - [`@typoas/cli`](./packages/typoas-cli) is a CLI entry point built on top of `@typoas/generator`.
 - [`@typoas/runtime`](./packages/typoas-runtime) is the package that will be used by the generated code.
+- [`@typoas/react-query`](./packages/typoas-react-query) integrates _Typoas_ with [React Query](https://tanstack.com/query/latest).
 
 ---
 
@@ -44,6 +46,7 @@ The project is split into 3 parts:
     - [Customize fetch implementation](#customize-fetch-implementation)
     - [Handling authentification](#handling-authentification)
     - [Customizing the serialization](#customizing-the-serialization)
+  - [Using with React Query](#using-with-react-query)
 - [Examples](#examples)
 - [Notes](#notes)
   - [External references](#external-references)
@@ -263,6 +266,10 @@ The `getConfig` function should return the configuration needed to authenticate 
 You can switch some serialization options by passing a `serializerOptions` object to the `createContext` function.
 
 > Not every serialization option is supported. See [#11](https://github.com/Embraser01/typoas/issues/11) for more information.
+
+### Using with React Query
+
+Documentation is available in the [`@typoas/react-query`](./packages/typoas-react-query) package.
 
 ## Examples
 

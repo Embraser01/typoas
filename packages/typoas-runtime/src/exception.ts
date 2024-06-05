@@ -33,17 +33,20 @@ export class ApiException<T = unknown> extends Error {
  */
 export async function ok<
   R extends StatusResponse<EnhancedHTTPStatus>,
-  S extends Extract<EnhancedHTTPStatus, number> = Extract<
-    SuccessfulStatus,
-    number
-  >,
->(
-  res: Promise<R>,
-  successStatus?: S,
-): Promise<R extends StatusResponse<S, infer D> ? D : never> {
+  S extends EnhancedHTTPStatus = SuccessfulStatus,
+>(res: Promise<R>, successStatus?: S): Promise<SpecificStatusResponse<R, S>> {
   const r = await res;
 
-  const valid = successStatus === undefined ? r.ok : r.status === successStatus;
+  let valid: boolean;
+  if (successStatus === undefined || successStatus === 'default') {
+    valid = r.ok;
+  } else if (successStatus === '2XX') {
+    valid = r.status >= 200 && r.status < 300;
+  } else if (successStatus === '3XX') {
+    valid = r.status >= 300 && r.status < 400;
+  } else {
+    valid = r.status === successStatus;
+  }
 
   if (valid) {
     // @ts-expect-error Data will be inferred by TS
@@ -51,3 +54,13 @@ export async function ok<
   }
   throw new ApiException(r.status, r.data);
 }
+
+/**
+ * Extracts the data type depending on a specific status code.
+ */
+export type SpecificStatusResponse<R, S extends EnhancedHTTPStatus> =
+  R extends StatusResponse<infer AvailableStatus, infer D>
+    ? S extends AvailableStatus
+      ? Extract<R, StatusResponse<S, D>>['data']
+      : never
+    : never;

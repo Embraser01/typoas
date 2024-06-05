@@ -6,7 +6,6 @@ module.exports = {
     node: true,
   },
   plugins: ['jest', '@typescript-eslint'],
-  ignorePatterns: ['**/dist/'],
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
 };
