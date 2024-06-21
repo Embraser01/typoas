@@ -5,13 +5,18 @@ import {
   useMutation,
   UseMutationResult,
 } from '@tanstack/react-query';
-import { Context, ok, SuccessfulStatus } from '@typoas/runtime';
+import {
+  BaseFetcherData,
+  Context,
+  ok,
+  SuccessfulStatus,
+} from '@typoas/runtime';
 import { useApiContext } from './api-context';
 import { TypoasFuncStatusType, TypoasReturnType } from './types';
 
 export type TypoasMutationVariables<
   Func extends TypoasMutationFunction<FetcherData>,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 > = FetcherData extends Parameters<Func>[3]
   ? [Parameters<Func>[1], Parameters<Func>[2]]
   : [Parameters<Func>[1]];
@@ -23,7 +28,7 @@ export type TypoasMutationOptions<
   Func extends TypoasMutationFunction<FetcherData>,
   S extends TypoasFuncStatusType<Func>,
   TError = DefaultError,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 > = UseMutationOptions<
   TypoasReturnType<Func, S>,
   TError,
@@ -34,7 +39,7 @@ export type TypoasMutationOptions<
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type TypoasMutationFunction<FetcherData = unknown> =
+export type TypoasMutationFunction<FetcherData extends BaseFetcherData> =
   | ((
       ctx: Context<never, FetcherData>,
       params: any,
@@ -63,7 +68,7 @@ export function createMutationHook<
   S extends TypoasFuncStatusType<Func> = TypoasFuncStatusType<Func> &
     SuccessfulStatus,
   TError = unknown,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 >(
   func: Func,
   baseOptions: Omit<

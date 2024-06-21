@@ -18,7 +18,13 @@ export function createContextFactory(
     undefined,
     'createContext',
     ctx.hasFetcherOptions()
-      ? [factory.createTypeParameterDeclaration(undefined, FETCHER_DATA_NAME)]
+      ? [
+          factory.createTypeParameterDeclaration(
+            undefined,
+            FETCHER_DATA_NAME,
+            createRuntimeRefType(ExportedRef.BaseFetcherData),
+          ),
+        ]
       : undefined,
     [
       factory.createParameterDeclaration(

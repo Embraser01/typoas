@@ -169,3 +169,7 @@ export type StatusResponse<
   // When using ranges or default, we can't now the specific status code.
   status: S extends string ? number : S;
 };
+
+export type BaseFetcherData = {
+  signal?: AbortSignal;
+};

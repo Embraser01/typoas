@@ -10,7 +10,12 @@ import {
   Optional,
   InfiniteData,
 } from '@tanstack/react-query';
-import { Context, ok, SuccessfulStatus } from '@typoas/runtime';
+import {
+  BaseFetcherData,
+  Context,
+  ok,
+  SuccessfulStatus,
+} from '@typoas/runtime';
 import { useApiContext } from './api-context';
 import { getUniqueFunctionName } from './func-names';
 import { TypoasFuncStatusType, TypoasReturnType } from './types';
@@ -23,7 +28,7 @@ export type TypoasInfiniteQueryOptions<
   S extends TypoasFuncStatusType<Func>,
   TError = DefaultError,
   TPageParam = unknown,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 > = (
   | UseInfiniteQueryOptions<
       TypoasReturnType<Func, S>,
@@ -53,7 +58,7 @@ export type TypoasInfiniteQueryOptions<
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type TypoasInfiniteQueryFunction<FetcherData = unknown> = (
+export type TypoasInfiniteQueryFunction<FetcherData extends BaseFetcherData> = (
   ctx: Context<never, FetcherData>,
   params: any,
   opts?: FetcherData,
@@ -79,7 +84,7 @@ export function createInfiniteQueryHook<
     SuccessfulStatus,
   TError = unknown,
   TPageParam extends Record<string, unknown> = NonNullable<unknown>,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 >(
   func: Func,
   baseOptions: Optional<

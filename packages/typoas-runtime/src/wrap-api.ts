@@ -1,9 +1,10 @@
 import { Context } from './context';
 import { SecurityAuthentication } from './auth';
+import { BaseFetcherData } from './fetcher';
 
 type ApiFunction<
   AuthModes extends Record<string, SecurityAuthentication>,
-  FetcherData,
+  FetcherData extends BaseFetcherData,
 > =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | ((ctx: Context<AuthModes, FetcherData>, params: any) => Promise<unknown>)
@@ -30,13 +31,13 @@ type WithoutContext<T> = T extends (
 
 type WrapApiEndpoints<
   AuthModes extends Record<string, SecurityAuthentication>,
-  FetcherData,
+  FetcherData extends BaseFetcherData,
 > = Record<string, ApiFunction<AuthModes, FetcherData>>;
 
 type WithoutContextObject<
   T extends WrapApiEndpoints<AuthModes, FetcherData>,
   AuthModes extends Record<string, SecurityAuthentication>,
-  FetcherData,
+  FetcherData extends BaseFetcherData,
 > = {
   [key in keyof T]: WithoutContext<T[key]>;
 };
@@ -44,7 +45,7 @@ type WithoutContextObject<
 export function wrapApi<
   T extends WrapApiEndpoints<AuthModes, FetcherData>,
   AuthModes extends Record<string, SecurityAuthentication>,
-  FetcherData = unknown,
+  FetcherData extends BaseFetcherData = BaseFetcherData,
 >(
   context: Context<AuthModes>,
   endpoints: T,

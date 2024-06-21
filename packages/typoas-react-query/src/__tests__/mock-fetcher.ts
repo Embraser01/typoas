@@ -1,6 +1,6 @@
-import { Fetcher, ResponseContext } from '@typoas/runtime';
+import { BaseFetcherData, Fetcher, ResponseContext } from '@typoas/runtime';
 
-export class MockFetcher implements Fetcher {
+export class MockFetcher implements Fetcher<BaseFetcherData> {
   private data: unknown = undefined;
 
   private resQueue: unknown[] = [];

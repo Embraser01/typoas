@@ -8,7 +8,11 @@ import {
 } from './declaration';
 import { createOperationBody } from './function-body';
 import { GlobalParameters } from './types';
-import { FETCHER_DATA_NAME } from '../../utils/ref';
+import {
+  createRuntimeRefType,
+  ExportedRef,
+  FETCHER_DATA_NAME,
+} from '../../utils/ref';
 
 export function createOperation(
   operation: OperationObject,
@@ -44,7 +48,13 @@ export function createOperation(
     undefined,
     sanitizeOperationIdName(operation.operationId || `${path}/${method}`),
     ctx.hasFetcherOptions()
-      ? [factory.createTypeParameterDeclaration(undefined, FETCHER_DATA_NAME)]
+      ? [
+          factory.createTypeParameterDeclaration(
+            undefined,
+            FETCHER_DATA_NAME,
+            createRuntimeRefType(ExportedRef.BaseFetcherData),
+          ),
+        ]
       : undefined,
     createOperationDeclaration(operation, ctx, { baseParameters }),
     createOperationReturnType(operation, ctx),
