@@ -2,7 +2,11 @@ import { createOperation } from './operation';
 import { addJSDocToNode } from '../comments/fields';
 import { getJSDocFromOperation } from '../comments/operation';
 import { Context } from '../../context';
-import { OpenAPIObject, PathItemObject } from 'openapi3-ts/oas31';
+import {
+  OpenAPIObject,
+  OperationObject,
+  PathItemObject,
+} from 'openapi3-ts/oas31';
 import { FunctionDeclaration } from 'typescript';
 
 const HTTP_METHOD = new Set([
@@ -25,7 +29,7 @@ export function createOperationList(
       const baseParameters = item.parameters || [];
       const ops = Object.entries(item).filter(([method]) =>
         HTTP_METHOD.has(method),
-      );
+      ) as [string, OperationObject][];
 
       return ops.map(([method, op]) => {
         const opMethod = createOperation(op, p, method, ctx, {

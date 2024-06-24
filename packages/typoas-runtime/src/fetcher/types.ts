@@ -44,8 +44,7 @@ export type SerializerOptions = {
 export interface ResponseBody {
   text(): Promise<string>;
   binary(): Promise<Blob>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  json(): Promise<any>;
+  json(): Promise<unknown>;
 }
 
 /**

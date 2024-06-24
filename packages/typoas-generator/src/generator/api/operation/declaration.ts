@@ -1,4 +1,9 @@
-import { isReferenceObject, OperationObject } from 'openapi3-ts/oas31';
+import {
+  isReferenceObject,
+  OperationObject,
+  ReferenceObject,
+  ResponseObject,
+} from 'openapi3-ts/oas31';
 import {
   factory,
   ParameterDeclaration,
@@ -138,7 +143,8 @@ export function createOperationReturnType(
 
   const responses = Object.entries(operation.responses || {})
     .sort() // Default sort is ok here because we want numbers first
-    .map(([statusCode, r]) =>
+    // Cast here because ResponsesObject allow any for some reason (Hack for allowing ISpecificationExtension)
+    .map(([statusCode, r]: [string, ResponseObject | ReferenceObject]) =>
       createRuntimeRefType(ExportedRef.StatusResponse, [
         factory.createLiteralTypeNode(
           /^\d+$/.test(statusCode)

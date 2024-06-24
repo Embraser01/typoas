@@ -48,7 +48,7 @@ describe('createInfiniteQueryHook', () => {
       expect(result.current.data?.pages[0].map((d) => d.id)).toEqual([1, 2]);
     });
 
-    result.current.fetchNextPage();
+    void result.current.fetchNextPage();
 
     await waitFor(() => {
       expect(result.current.data?.pages.length).toEqual(2);

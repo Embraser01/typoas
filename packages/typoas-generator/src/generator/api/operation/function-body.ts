@@ -2,7 +2,12 @@ import { Context } from '../../../context';
 import { getQueryParams } from './query-params';
 import { createRuntimeRefProperty, ExportedRef } from '../../utils/ref';
 import { GlobalParameters } from './types';
-import { isReferenceObject, OperationObject } from 'openapi3-ts/oas31';
+import {
+  isReferenceObject,
+  OperationObject,
+  ReferenceObject,
+  ResponseObject,
+} from 'openapi3-ts/oas31';
 import {
   Block,
   factory,
@@ -170,8 +175,10 @@ export function createOperationResponseHandlers(
   ctx: Context,
 ): ObjectLiteralElementLike[] {
   const responses = Object.entries(operation.responses || {});
+
+  // Cast here because ResponsesObject allow any for some reason (Hack for allowing ISpecificationExtension)
   return responses
-    .map(([code, res]) => {
+    .map(([code, res]: [string, ResponseObject | ReferenceObject]) => {
       if (isReferenceObject(res)) {
         const ref = ctx.resolveReference('responses', res.$ref);
         if (!ref) {

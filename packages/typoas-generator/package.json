@@ -16,21 +16,21 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "openapi3-ts": "^4.2.2",
-    "typescript": "^5.3.3"
+    "openapi3-ts": "^4.3.3",
+    "typescript": "~5.5.4"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.24",
+    "@types/lodash": "^4.17.7",
+    "@types/node": "^20.16.1",
     "@types/regenerate": "^1.4.3",
     "@unicode/unicode-9.0.0": "^1.5.2",
     "jest": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "regenerate": "^1.4.2",
-    "ts-jest": "^29.1.2",
+    "ts-jest": "^29.2.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "~5.5.4"
   },
   "files": [
     "/lib/**/*.js",

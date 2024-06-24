@@ -68,7 +68,7 @@ describe('getSchemaTransforms', () => {
     ).toEqual([]);
   });
 
-  it('should handle anyOf ', () => {
+  it('should handle anyOf', () => {
     expect(
       getSchemaTransforms(TransformerType.DATE, {
         anyOf: [
@@ -92,7 +92,7 @@ describe('getSchemaTransforms', () => {
     ]);
   });
 
-  it('should handle allOf ', () => {
+  it('should handle allOf', () => {
     expect(
       getSchemaTransforms(TransformerType.DATE, {
         allOf: [
@@ -116,7 +116,7 @@ describe('getSchemaTransforms', () => {
     ]);
   });
 
-  it('should handle oneOf ', () => {
+  it('should handle oneOf', () => {
     expect(
       getSchemaTransforms(TransformerType.DATE, {
         oneOf: [

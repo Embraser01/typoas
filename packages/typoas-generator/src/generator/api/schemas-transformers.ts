@@ -4,6 +4,7 @@ import { Context } from '../../context';
 import {
   TransformerType,
   TransformField,
+  TransformType,
 } from '../utils/transformers/leaf-transformer-base';
 import {
   createFromRawTransforms,
@@ -15,10 +16,10 @@ import { createRuntimeRefType, ExportedRef } from '../utils/ref';
 function hasTransforms(fields: TransformField[]): boolean {
   for (const field of fields) {
     const [t, val] = field[field.length - 1];
-    if (t === 'this') {
+    if (t === TransformType.THIS) {
       return true;
     }
-    if (t === 'select' && hasTransforms(val)) {
+    if (t === TransformType.SELECT && hasTransforms(val)) {
       return true;
     }
   }
@@ -37,11 +38,11 @@ function filterUnknownRefs(
   for (const field of fields) {
     const [t, val] = field[field.length - 1];
     // Remove field if ref isn't used
-    if (t === 'ref' && !simpleTransforms.has(val)) {
+    if (t === TransformType.REF && !simpleTransforms.has(val)) {
       changed = true;
       fields.splice(fields.indexOf(field), 1);
       // If select, recursive check each field set
-    } else if (t === 'select') {
+    } else if (t === TransformType.SELECT) {
       changed ||= filterUnknownRefs(val, simpleTransforms);
       if (!val.length) {
         fields.splice(fields.indexOf(field), 1);

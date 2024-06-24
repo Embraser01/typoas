@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { BaseFetcherData, Fetcher, ResponseContext } from '@typoas/runtime';
 
 export class MockFetcher implements Fetcher<BaseFetcherData> {

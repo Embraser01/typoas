@@ -93,10 +93,9 @@ function findTransformsInternal(
     );
   }
 
-  if (schema.oneOf || schema.anyOf || schema.allOf) {
-    const arr = schema.oneOf || schema.anyOf || schema.allOf;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const subTransforms = arr!.flatMap(
+  const multiSchemas = schema.oneOf || schema.anyOf || schema.allOf;
+  if (multiSchemas) {
+    const subTransforms = multiSchemas.flatMap(
       (subSchema: SchemaObject | ReferenceObject) =>
         findTransformsInternal(
           type,

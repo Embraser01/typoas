@@ -44,12 +44,10 @@ export function createTypeFromSchema(
     return factory.createTypeReferenceNode(factory.createIdentifier('Blob'));
   }
 
-  let sEnum = null;
+  let sEnum: unknown[] | null = null;
   if (schema.enum) {
     sEnum = schema.enum;
-    // @ts-expect-error OpenAPI doesn't support const, but we do as a bonus.
   } else if (schema.const) {
-    // @ts-expect-error OpenAPI doesn't support const, but we do as a bonus.
     sEnum = [schema.const];
   }
 
@@ -64,7 +62,7 @@ export function createTypeFromSchema(
           if (typeof e === 'number') {
             return factory.createNumericLiteral(e);
           }
-          return factory.createStringLiteral(e, true);
+          return factory.createStringLiteral(e as string, true);
         })
         .map((e) => factory.createLiteralTypeNode(e)),
     );
@@ -111,7 +109,6 @@ export function createTypeFromSchema(
 
         if (hasProperties) {
           node = factory.createTypeLiteralNode(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             Object.entries(schema.properties!).map(([key, val]) => {
               const field = factory.createPropertySignature(
                 undefined,
