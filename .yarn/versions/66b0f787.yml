@@ -1,5 +1,0 @@
-releases:
-  "@typoas/generator": patch
-
-declined:
-  - "@typoas/cli"

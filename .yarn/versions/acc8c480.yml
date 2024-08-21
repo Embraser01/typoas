@@ -1,7 +1,0 @@
-releases:
-  "@typoas/cli": patch
-  "@typoas/generator": patch
-
-declined:
-  - "@typoas/react-query"
-  - "@typoas/runtime"
