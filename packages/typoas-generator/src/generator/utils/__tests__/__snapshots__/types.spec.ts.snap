@@ -30,6 +30,8 @@ exports[`create type from schema should handle primitive boolean enums 1`] = `"t
 
 exports[`create type from schema should handle primitive boolean schema 1`] = `"boolean"`;
 
+exports[`create type from schema should handle primitive negative number enums 1`] = `"-1 | 6"`;
+
 exports[`create type from schema should handle primitive number enums 1`] = `"1 | 6"`;
 
 exports[`create type from schema should handle primitive number schema 1`] = `"number"`;

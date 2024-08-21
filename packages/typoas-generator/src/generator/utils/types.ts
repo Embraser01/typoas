@@ -60,7 +60,14 @@ export function createTypeFromSchema(
             return e ? factory.createTrue() : factory.createFalse();
           }
           if (typeof e === 'number') {
-            return factory.createNumericLiteral(e);
+            const literal = factory.createNumericLiteral(Math.abs(e));
+            if (e >= 0) {
+              return literal;
+            }
+            return factory.createPrefixUnaryExpression(
+              SyntaxKind.MinusToken,
+              literal,
+            );
           }
           return factory.createStringLiteral(e as string, true);
         })
