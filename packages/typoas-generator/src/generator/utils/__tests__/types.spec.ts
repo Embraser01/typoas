@@ -78,6 +78,14 @@ describe('create type from schema', () => {
     expect(getStringFromNode(node)).toMatchSnapshot();
   });
 
+  it('should handle primitive negative number enums', () => {
+    const schema: SchemaObject = { type: 'number', enum: [-1, 6] };
+
+    const node = createTypeFromSchema(schema, new Context());
+
+    expect(getStringFromNode(node)).toMatchSnapshot();
+  });
+
   it('should handle dates', () => {
     const schema: SchemaObject = { type: 'string', format: 'date-time' };
 
