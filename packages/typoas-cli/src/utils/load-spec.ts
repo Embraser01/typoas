@@ -14,7 +14,7 @@ export async function loadRemoteFile(url: URL): Promise<string> {
     const request = http.request(url, (response) => {
       const allChunks: Buffer[] = [];
 
-      response.on('data', (chunk) => allChunks.push(chunk));
+      response.on('data', (chunk: Buffer) => allChunks.push(chunk));
       response.on('end', () => resolve(Buffer.concat(allChunks).toString()));
       response.on('error', reject);
     });

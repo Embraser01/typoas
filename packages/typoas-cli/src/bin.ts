@@ -4,4 +4,4 @@ import cli from './index';
 
 const [, , ...args] = process.argv;
 
-cli.runExit(args, Cli.defaultContext);
+void cli.runExit(args, Cli.defaultContext);

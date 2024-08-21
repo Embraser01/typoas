@@ -63,8 +63,6 @@ describe('create type from schema', () => {
   });
 
   it('should handle const string', () => {
-    // @ts-expect-error const is not supported by openapi3, but we still
-    // have support for it
     const schema: SchemaObject = { type: 'string', const: 'a' };
 
     const node = createTypeFromSchema(schema, new Context());

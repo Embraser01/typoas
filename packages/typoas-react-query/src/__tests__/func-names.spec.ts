@@ -4,15 +4,14 @@ import { _resetFuncNames, getUniqueFunctionName } from '../func-names';
 describe('getUniqueFunctionName', () => {
   beforeEach(() => _resetFuncNames());
 
-  it('should return function name', async () => {
+  it('should return function name', () => {
     function testA() {}
 
     expect(getUniqueFunctionName(testA)).toBe('testA');
   });
 
-  it('should append a random suffix if 2 functions with the same name', async () => {
+  it('should append a random suffix if 2 functions with the same name', () => {
     {
-      // eslint-disable-next-line no-inner-declarations
       function testA() {}
       getUniqueFunctionName(testA);
     }
@@ -21,7 +20,7 @@ describe('getUniqueFunctionName', () => {
     expect(getUniqueFunctionName(testA)).toMatch(/testA_.{0,7}/);
   });
 
-  it('should not reuse name', async () => {
+  it('should not reuse name', () => {
     function testB() {}
     function testA() {}
 

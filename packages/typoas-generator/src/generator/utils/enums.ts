@@ -22,6 +22,7 @@ export function canConvertSchemaToEnum(
   }
   return (
     schema.enum !== undefined &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     schema.enum.every((e) => ![null, '', undefined].includes(e)) &&
     !(schema as SchemaObjectOAS30).nullable
   );
@@ -31,11 +32,10 @@ export function createEnumMembersFromSchema(
   schema: SchemaObject,
 ): EnumMember[] {
   if (canConvertSchemaToEnum(schema)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return schema.enum!.map((e) => {
       return factory.createEnumMember(
-        factory.createIdentifier(screamingSnakeCase(e)),
-        factory.createStringLiteral(e, true),
+        factory.createIdentifier(screamingSnakeCase(e as string)),
+        factory.createStringLiteral(e as string, true),
       );
     });
   }

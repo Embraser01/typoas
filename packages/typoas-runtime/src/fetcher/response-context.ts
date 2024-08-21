@@ -44,7 +44,7 @@ export class ResponseContext {
     const contentType = this.headers['content-type'] || '';
     try {
       return new File([data], fileName, { type: contentType });
-    } catch (error) {
+    } catch {
       /** Fallback for when the File constructor is not available */
       return Object.assign(data, {
         name: fileName,

@@ -16,5 +16,8 @@ export function getSuccessResponses(
   if (operation.responses.default && successResponses.length === 0) {
     return [operation.responses.default];
   }
-  return successResponses.map((k) => operation.responses![k]);
+  return successResponses.map(
+    // Cast here because ResponsesObject allow any for some reason (Hack for allowing ISpecificationExtension)
+    (k) => operation.responses?.[k] as ResponseObject | ReferenceObject,
+  );
 }

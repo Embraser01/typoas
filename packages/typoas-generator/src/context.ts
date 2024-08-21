@@ -126,21 +126,26 @@ export class Context {
 
   private addToMap(
     name: string,
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     spec: ReferenceObject | any,
     map: ComponentRegistry<any>,
   ): void {
     if (map.has(name)) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (spec.$ref) {
       // TODO Warning
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     map.set(name, { imports: [], name, spec });
   }
 
   initComponents(components: ComponentsObject): void {
     Object.entries(components).forEach(([type, value]) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       Object.entries(value).forEach(([name, spec]) =>
         // @ts-expect-error This[type] is not handled by TS
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.addToMap(name, spec, this[type]),
       ),
     );

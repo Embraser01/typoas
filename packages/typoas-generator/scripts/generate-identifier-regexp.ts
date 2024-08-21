@@ -9,9 +9,9 @@ const version = '9.0.0';
 
 // Set up a shorthand function to import Unicode data.
 async function get(what: string): Promise<number[]> {
-  const { default: codePoints } = await import(
+  const { default: codePoints } = (await import(
     `@unicode/unicode-${version}/${what}/code-points.js`
-  );
+  )) as { default: number[] };
   return codePoints;
 }
 
@@ -48,4 +48,4 @@ export const es6IdentifierRegexp =
   await writeFile('./src/generator/utils/identifier-regexps.ts', fileContent);
 }
 
-main();
+void main();

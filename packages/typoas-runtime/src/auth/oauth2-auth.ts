@@ -1,34 +1,9 @@
 import type { AuthProvider, SecurityAuthentication } from './base';
 import type { RequestContext } from '../fetcher';
 
-export type OAuth2Configuration = {
-  // We don't actually need to have any configuration for OAuth2
-  // because we only use the already generated accessToken.
-  //
-  // flows: {
-  //   authorizationCode?: {
-  //     refreshUrl?: string;
-  //     scopes: Record<string, string>;
-  //     authorizationUrl: string;
-  //     tokenUrl: string;
-  //   };
-  //   implicit?: {
-  //     refreshUrl?: string;
-  //     scopes: Record<string, string>;
-  //     authorizationUrl: string;
-  //   };
-  //   password?: {
-  //     refreshUrl?: string;
-  //     scopes: Record<string, string>;
-  //     tokenUrl: string;
-  //   };
-  //   clientCredentials?: {
-  //     refreshUrl?: string;
-  //     scopes: Record<string, string>;
-  //     tokenUrl: string;
-  //   };
-  // };
-};
+// We don't actually need to have any configuration for OAuth2
+// because we only use the already generated accessToken.
+export type OAuth2Configuration = Record<string, never>;
 
 export type BaseFlowConfig = {
   accessToken: string;
