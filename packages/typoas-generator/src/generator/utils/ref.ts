@@ -14,6 +14,7 @@ export enum ExportedRef {
   HttpBasicSecurityAuthentication = 'HttpBasicSecurityAuthentication',
   HttpBearerSecurityAuthentication = 'HttpBearerSecurityAuthentication',
   OAuth2SecurityAuthentication = 'OAuth2SecurityAuthentication',
+  OpenIdConnectSecurityAuthentication = 'OpenIdConnectSecurityAuthentication',
   StatusResponse = 'StatusResponse',
   BaseFetcherData = 'BaseFetcherData',
 }

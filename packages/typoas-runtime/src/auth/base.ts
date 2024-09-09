@@ -15,3 +15,12 @@ export interface SecurityAuthentication {
 export interface AuthProvider<T> {
   getConfig(): Promise<T | null> | T | null;
 }
+
+/**
+ * Configuration for the OAuth2 and OIDC authentication scheme.
+ */
+export type BaseFlowConfig = {
+  accessToken: string;
+  // Allow overriding the token type (default: Bearer)
+  tokenType?: string;
+};

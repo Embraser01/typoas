@@ -52,6 +52,11 @@ export function createConfigTypeFromSecurityScheme(
     case 'oauth2':
       return createRuntimeRefType(ExportedRef.OAuth2SecurityAuthentication);
     case 'openIdConnect':
+      return createRuntimeRefType(
+        ExportedRef.OpenIdConnectSecurityAuthentication,
+      );
+    default:
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`Unsupported security scheme '${securityScheme.type}'`);
   }
 }
@@ -123,6 +128,15 @@ export function createRuntimeSecurityClass(
         [factory.createObjectLiteralExpression(args), authProviderExpression],
       );
     case 'openIdConnect':
+      return factory.createNewExpression(
+        createRuntimeRefProperty(
+          ExportedRef.OpenIdConnectSecurityAuthentication,
+        ),
+        undefined,
+        [factory.createObjectLiteralExpression(args), authProviderExpression],
+      );
+    default:
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`Unsupported security scheme '${securityScheme.type}'`);
   }
 }

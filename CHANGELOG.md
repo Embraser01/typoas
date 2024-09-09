@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add support for `openIdConnect` security scheme type (fixes [#69](https://github.com/Embraser01/typoas/pull/69)) [#70](https://github.com/Embraser01/typoas/pull/70)
+
 ---
 
 ## 4.0.0 - 2024-08-21

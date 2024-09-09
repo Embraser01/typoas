@@ -1,0 +1,7 @@
+releases:
+  "@typoas/cli": minor
+  "@typoas/generator": minor
+  "@typoas/runtime": minor
+
+declined:
+  - "@typoas/react-query"
