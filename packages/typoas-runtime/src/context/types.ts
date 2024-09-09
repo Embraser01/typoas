@@ -5,7 +5,11 @@ import {
   SerializerOptions,
 } from '../fetcher';
 import type { TransformEntity } from '../transformers';
-import type { AuthProvider, SecurityAuthentication } from '../auth';
+import {
+  AuthProvider,
+  OpenIdConnectSecurityAuthentication,
+  SecurityAuthentication,
+} from '../auth';
 import type { Transform } from '../transformers';
 import type { BaseServerConfiguration } from '../configuration';
 import type {
@@ -89,7 +93,9 @@ export type AuthProviderConfig<T extends SecurityAuthentication> =
         ? BearerAuthConfig
         : T extends OAuth2SecurityAuthentication
           ? BaseFlowConfig
-          : never;
+          : T extends OpenIdConnectSecurityAuthentication
+            ? BaseFlowConfig
+            : never;
 
 export type ResponseHandler = {
   transforms?: TransformEntity;

@@ -5,13 +5,15 @@ import type {
 } from './base';
 import type { RequestContext } from '../fetcher';
 
-// We don't actually need to have any configuration for OAuth2
+// We don't actually need to have any configuration for OpenIdConnect
 // because we only use the already generated accessToken.
-export type OAuth2Configuration = Record<string, never>;
+export type OpenIdConnectConfiguration = Record<string, never>;
 
-export class OAuth2SecurityAuthentication implements SecurityAuthentication {
+export class OpenIdConnectSecurityAuthentication
+  implements SecurityAuthentication
+{
   constructor(
-    private config: OAuth2Configuration,
+    private config: OpenIdConnectConfiguration,
     private provider?: AuthProvider<BaseFlowConfig>,
   ) {}
 

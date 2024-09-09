@@ -18,14 +18,14 @@ Main features are:
 - **React Query** integration
 - Support for `allOf`, `oneOf` and `anyOf` schemas.
 - Automatically convert `format: 'date-time'` to JS `Date`
-- Handle **API Key**, **HTTP Config** and **OAuth2**<sup>1</sup> auth security schemes
+- Handle **API Key**, **HTTP Config**, **OAuth2**<sup>1</sup> and **OIDC**<sup>1</sup> auth security schemes
 - JSDoc for schemas and operations
 - Uses `fetch` api (can be customized)
 - Non JSON content type support
 - Small bundle size
 - And more...
 
-> <sup>1</sup>: OAuth2 scheme does not handle flows to retrieve an `accessToken`.  
+> <sup>1</sup>: OAuth2 and OpenIDConnect scheme do not handle flows to retrieve an `accessToken`.  
 > You need to provide your own `accessToken` through the `provider.getConfig()` function.
 
 The project is split into 4 packages:
@@ -253,11 +253,12 @@ const ctx = createContext({
 });
 ```
 
-It supports 4 types of security schemes:
+It supports 5 types of security schemes:
 
 - `apiKey` mode
 - `http` bearer and basic mode
 - `oauth2` mode
+- `openIdConnect` mode
 
 The `getConfig` function should return the configuration needed to authenticate the request. Returning `null` will skip the authentification.
 
