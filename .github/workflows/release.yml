@@ -34,5 +34,5 @@ jobs:
           PRERELEASE: ${{ inputs.prerelease }}
         with:
           script: |
-            const script = require('./scripts/release-from-ci.js')
+            const script = require('./scripts/release-from-ci.cjs')
             await script({ github, context, exec });
