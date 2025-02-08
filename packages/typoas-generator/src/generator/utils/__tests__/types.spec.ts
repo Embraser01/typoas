@@ -200,6 +200,85 @@ describe('create type from schema', () => {
       expect(getStringFromNode(node)).toMatchSnapshot();
     });
 
+    it('should handle patternProperties', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        patternProperties: {
+          '^test': { type: 'string' },
+        },
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle patternProperties with additionalProperties = true', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        additionalProperties: true,
+        patternProperties: {
+          '^test': { type: 'string' },
+        },
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle patternProperties with additionalProperties = schema', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        additionalProperties: { type: 'number' },
+        patternProperties: {
+          '^test': { type: 'string' },
+        },
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle multiple patterns with patternProperties', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        additionalProperties: { type: 'number' },
+        patternProperties: {
+          '^test-a': { type: 'string' },
+          '^test-b': {
+            type: 'object',
+            properties: { a: { type: 'boolean' } },
+          },
+        },
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle unevaluatedProperties', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        unevaluatedProperties: { type: 'number' },
+
+        allOf: [{ type: 'object', properties: { a: { type: 'string' } } }],
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle unevaluatedProperties boolean', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        unevaluatedProperties: true,
+
+        allOf: [{ type: 'object', properties: { a: { type: 'string' } } }],
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
     it('should handle anyOf', () => {
       const schema: SchemaObject = {
         anyOf: [

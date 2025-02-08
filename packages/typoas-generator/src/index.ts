@@ -4,6 +4,7 @@ import {
   isSchemaObject,
   OpenAPIObject,
 } from 'openapi3-ts/oas31';
+import './libs.d';
 import {
   createPrinter,
   factory,
