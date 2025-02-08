@@ -1,5 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`create full specs should allow overrides if possible 1`] = `
+"import * as r from '@typoas/runtime';
+import type { PetStatus } from './overrides';
+export type Order = {
+    id?: number;
+    petId?: number;
+    shipDate?: Date;
+    status?: 'placed' | 'approved' | 'delivered';
+    complete?: boolean;
+};
+export type Pet = {
+    id?: number;
+    name: string;
+    photoUrls: string[];
+    status?: PetStatus;
+};
+const $date_Order = (): r.TransformField[] => [[['access', 'shipDate'], ['this']]];
+export type AuthMethods = {};
+export function createContext<FetcherData extends r.BaseFetcherData>(params?: r.CreateContextParams<AuthMethods, FetcherData>): r.Context<AuthMethods, FetcherData> { return new r.Context<AuthMethods, FetcherData>({
+    serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
+    authMethods: {},
+    ...params
+}); }
+"
+`;
+
 exports[`create full specs should generate client 1`] = `
 "import * as r from '@typoas/runtime';
 export type Order = {

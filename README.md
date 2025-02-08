@@ -20,6 +20,7 @@ Main features are:
 - Automatically convert `format: 'date-time'` to JS `Date`
 - Handle **API Key**, **HTTP Config**, **OAuth2**<sup>1</sup> and **OIDC**<sup>1</sup> auth security schemes
 - JSDoc for schemas and operations
+- Override system for generated types
 - Uses `fetch` api (can be customized)
 - Non JSON content type support
 - Small bundle size
@@ -49,6 +50,7 @@ The project is split into 4 packages:
   - [Using with React Query](#using-with-react-query)
 - [Examples](#examples)
 - [Notes](#notes)
+  - [Overrides](#overrides)
   - [External references](#external-references)
   - [Parameters serialization](#parameters-serialization)
   - [Migrating from v1 to v2](#migrating-from-v1-to-v2)
@@ -85,6 +87,8 @@ Here is a short list of supported command line options:
     --wrap-lines-at                Define a maximum width for JS Doc comments, 0 to disable (default: 120)
     --only-types                   Use it to only generate types in #components/schemas/
     --no-fetcher-options           Use it to disable the additional param added to every operations
+    --override                     You can define a list of types that will be imported from a custom file instead of being generated. Must be used with --override-import
+    --override-import              Path to the file that will be imported to resolve overrides
     --version                      Output the version number
     -h, --help                     Display help for command
 ```
@@ -279,6 +283,38 @@ You can find examples in the [`examples`](./examples) folder.
 ## Notes
 
 Here is some notes on some known issues.
+
+### Overrides
+
+Sometimes you may want to override some of the generated types.
+For example, Typoas will not generate Template Literal Types or Generics as it's hard to be defined in an OpenAPI spec.
+
+This works by listing the types you want to override and giving the import path you want to use.
+
+For example, if you want to override the PetStore `Category` type of your spec:
+
+```typescript
+// my-overrides.ts
+export type Category = {
+  id?: number;
+  name?: string;
+  description?: string;
+};
+```
+
+When you generate the client, you can pass the `--overrides` option:
+
+```bash
+yarn dlx @typoas/cli generate -i my-spec.json -o src/client.ts --override-import my-overrides.ts --override Category
+```
+
+This will not generate the `Category` type but import it from the `my-overrides.ts` file. This allows easy customization of generated types.
+
+There are a couple of things to note:
+
+- The override name is the **sanitized** name of the type. You can first generate the client and see the generated types to know the name.
+- _Typoas_ will not check the override file. If the file isn't there or the type isn't exported, it will throw a TypeScript error.
+- You will have to export the type yourself, _Typoas_ will not do it for you (contrary to the generated types).
 
 ### External references
 

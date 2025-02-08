@@ -78,7 +78,24 @@ export class GenerateCommand extends Command {
       'Use it to disable the additional param added to every operations.',
   });
 
+  overrides = Option.Array('--override', {
+    description:
+      'You can define a list of types that will be imported from a custom file instead of being generated. ' +
+      'Must be used with --override-import',
+  });
+
+  overrideImport = Option.String('--override-import', {
+    description: 'Path to the file that will be imported to resolve overrides',
+  });
+
   async execute(): Promise<void> {
+    if (this.overrides?.length && !this.overrideImport) {
+      this.context.stderr.write(
+        'Error: --override-import is required when using --override\n',
+      );
+      return;
+    }
+
     const specs = await loadSpec(this.input);
 
     this.context.stdout.write(`Info: Generating spec '${specs.info.title}'\n`);
@@ -90,6 +107,9 @@ export class GenerateCommand extends Command {
       anyInsteadOfUnknown: this.anyInsteadOfUnknown,
       wrapLinesAt: this.wrapLinesAt,
       fullResponseMode: this.fullResponseMode,
+      overrides: this.overrideImport
+        ? { import: this.overrideImport, list: this.overrides || [] }
+        : undefined,
     });
 
     let content = getStringFromSourceFile(src);

@@ -4,7 +4,7 @@ import {
   isSchemaObject,
   OpenAPIObject,
 } from 'openapi3-ts/oas31';
-import './libs.d';
+import './libs';
 import {
   createPrinter,
   factory,
@@ -35,29 +35,62 @@ export function createSchemaComponents(
   schemas: Exclude<ComponentsObject['schemas'], undefined>,
   ctx: Context,
 ): Statement[] {
-  return Object.entries(schemas).map(([key, schema]) => {
+  const statements: Statement[] = [];
+  const overrides = new Set<string>();
+
+  for (const [key, schema] of Object.entries(schemas)) {
+    const sainKey = sanitizeTypeIdentifier(key);
     let node: Statement;
 
-    if (ctx.generateEnums() && canConvertSchemaToEnum(schema)) {
-      node = factory.createEnumDeclaration(
-        [factory.createModifier(SyntaxKind.ExportKeyword)],
-        factory.createIdentifier(sanitizeTypeIdentifier(key)),
-        createEnumMembersFromSchema(schema),
-      );
+    if (ctx.getOverrideImport() && ctx.hasOverride(sainKey)) {
+      overrides.add(sainKey);
     } else {
-      node = factory.createTypeAliasDeclaration(
-        [factory.createModifier(SyntaxKind.ExportKeyword)],
-        factory.createIdentifier(sanitizeTypeIdentifier(key)),
-        undefined,
-        createTypeFromSchema(schema, ctx),
-      );
-    }
+      if (ctx.generateEnums() && canConvertSchemaToEnum(schema)) {
+        node = factory.createEnumDeclaration(
+          [factory.createModifier(SyntaxKind.ExportKeyword)],
+          factory.createIdentifier(sainKey),
+          createEnumMembersFromSchema(schema),
+        );
+      } else {
+        node = factory.createTypeAliasDeclaration(
+          [factory.createModifier(SyntaxKind.ExportKeyword)],
+          factory.createIdentifier(sainKey),
+          undefined,
+          createTypeFromSchema(schema, ctx),
+        );
+      }
 
-    if (ctx.hasJSDoc() && isSchemaObject(schema)) {
-      addJSDocToNode(node, getJSDocFromSchema(schema));
+      if (ctx.hasJSDoc() && isSchemaObject(schema)) {
+        addJSDocToNode(node, getJSDocFromSchema(schema));
+      }
+      statements.push(node);
     }
-    return node;
-  });
+  }
+
+  // Handle overrides if needed
+  if (overrides.size) {
+    statements.unshift(
+      factory.createImportDeclaration(
+        undefined,
+        factory.createImportClause(
+          true,
+          undefined,
+          factory.createNamedImports(
+            Array.from(overrides).map((name) =>
+              factory.createImportSpecifier(
+                false,
+                undefined,
+                factory.createIdentifier(name),
+              ),
+            ),
+          ),
+        ),
+        factory.createStringLiteral(ctx.getOverrideImport()!, true),
+      ),
+    );
+  }
+
+  return statements;
 }
 
 export function generateClient(

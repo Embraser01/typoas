@@ -82,6 +82,35 @@ export type Vulnerability = {
    */
   vulnerable_functions: string[] | null;
 };
+export type CvssSeverities = {
+  cvss_v3?: {
+    /**
+     * The CVSS 3 vector string.
+     */
+    vector_string: string | null;
+    /**
+     * The CVSS 3 score.
+     */
+    score: number | null;
+  } | null;
+  cvss_v4?: {
+    /**
+     * The CVSS 4 vector string.
+     */
+    vector_string: string | null;
+    /**
+     * The CVSS 4 score.
+     */
+    score: number | null;
+  } | null;
+} | null;
+/**
+ * The EPSS scores as calculated by the [Exploit Prediction Scoring System](https://www.first.org/epss).
+ */
+export type SecurityAdvisoryEpss = {
+  percentage?: number;
+  percentile?: number;
+} | null;
 /**
  * Simple User
  * A GitHub user.
@@ -162,6 +191,10 @@ export type SimpleUser = {
    * @example "\"2020-07-09T00:17:55Z\""
    */
   starred_at?: string;
+  /**
+   * @example "public"
+   */
+  user_view_type?: string;
 };
 /**
  * The type of credit the user is receiving.
@@ -270,6 +303,8 @@ export type GlobalAdvisory = {
      */
     score: number | null;
   } | null;
+  cvss_severities?: CvssSeverities;
+  epss?: SecurityAdvisoryEpss;
   cwes:
     | {
         /**
@@ -312,86 +347,51 @@ export type ValidationErrorSimple = {
   errors?: string[];
 };
 /**
- * Simple User
- * A GitHub user.
+ * Enterprise
+ * An enterprise on GitHub.
  */
-export type NullableSimpleUser = {
-  name?: string | null;
-  email?: string | null;
+export type Enterprise = {
   /**
-   * @example "octocat"
+   * A short description of the enterprise.
    */
-  login: string;
+  description?: string | null;
   /**
-   * @example 1
-   */
-  id: number;
-  /**
-   * @example "MDQ6VXNlcjE="
-   */
-  node_id: string;
-  /**
-   * @example "https://github.com/images/error/octocat_happy.gif"
-   */
-  avatar_url: string;
-  /**
-   * @example "41d064eb2195891e12d0413f63227ea7"
-   */
-  gravatar_id: string | null;
-  /**
-   * @example "https://api.github.com/users/octocat"
-   */
-  url: string;
-  /**
-   * @example "https://github.com/octocat"
+   * @example "https://github.com/enterprises/octo-business"
    */
   html_url: string;
   /**
-   * @example "https://api.github.com/users/octocat/followers"
+   * The enterprise's website URL.
    */
-  followers_url: string;
+  website_url?: string | null;
   /**
-   * @example "https://api.github.com/users/octocat/following{/other_user}"
+   * Unique identifier of the enterprise
+   * @example 42
    */
-  following_url: string;
+  id: number;
   /**
-   * @example "https://api.github.com/users/octocat/gists{/gist_id}"
+   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
    */
-  gists_url: string;
+  node_id: string;
   /**
-   * @example "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+   * The name of the enterprise.
+   * @example "Octo Business"
    */
-  starred_url: string;
+  name: string;
   /**
-   * @example "https://api.github.com/users/octocat/subscriptions"
+   * The slug url identifier for the enterprise.
+   * @example "octo-business"
    */
-  subscriptions_url: string;
+  slug: string;
   /**
-   * @example "https://api.github.com/users/octocat/orgs"
+   * @example "2019-01-26T19:01:12Z"
    */
-  organizations_url: string;
+  created_at: Date | null;
   /**
-   * @example "https://api.github.com/users/octocat/repos"
+   * @example "2019-01-26T19:14:43Z"
    */
-  repos_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/events{/privacy}"
-   */
-  events_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/received_events"
-   */
-  received_events_url: string;
-  /**
-   * @example "User"
-   */
-  type: string;
-  site_admin: boolean;
-  /**
-   * @example "\"2020-07-09T00:17:55Z\""
-   */
-  starred_at?: string;
-} | null;
+  updated_at: Date | null;
+  avatar_url: string;
+};
 /**
  * GitHub app
  * GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub.
@@ -411,7 +411,11 @@ export type Integration = {
    * @example "MDExOkludGVncmF0aW9uMQ=="
    */
   node_id: string;
-  owner: NullableSimpleUser;
+  /**
+   * @example "\"Iv1.25b5d1e65ffc4022\""
+   */
+  client_id?: string;
+  owner: SimpleUser | Enterprise;
   /**
    * The name of the GitHub app
    * @example "Probot Owners"
@@ -468,10 +472,6 @@ export type Integration = {
    * @example 5
    */
   installations_count?: number;
-  /**
-   * @example "\"Iv1.25b5d1e65ffc4022\""
-   */
-  client_id?: string;
   /**
    * @example "\"1d4b2097ac622ba702d19de498f005747a8b21d3\""
    */
@@ -678,13 +678,13 @@ export type HookDelivery = {
      * The request headers sent with the webhook delivery.
      */
     headers: {
-      [key: string]: any;
+      [key: string]: unknown;
     } | null;
     /**
      * The webhook payload.
      */
     payload: {
-      [key: string]: any;
+      [key: string]: unknown;
     } | null;
   };
   response: {
@@ -692,59 +692,13 @@ export type HookDelivery = {
      * The response headers received when the delivery was made.
      */
     headers: {
-      [key: string]: any;
+      [key: string]: unknown;
     } | null;
     /**
      * The response payload received.
      */
     payload: string | null;
   };
-};
-/**
- * Enterprise
- * An enterprise on GitHub.
- */
-export type Enterprise = {
-  /**
-   * A short description of the enterprise.
-   */
-  description?: string | null;
-  /**
-   * @example "https://github.com/enterprises/octo-business"
-   */
-  html_url: string;
-  /**
-   * The enterprise's website URL.
-   */
-  website_url?: string | null;
-  /**
-   * Unique identifier of the enterprise
-   * @example 42
-   */
-  id: number;
-  /**
-   * @example "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
-   */
-  node_id: string;
-  /**
-   * The name of the enterprise.
-   * @example "Octo Business"
-   */
-  name: string;
-  /**
-   * The slug url identifier for the enterprise.
-   * @example "octo-business"
-   */
-  slug: string;
-  /**
-   * @example "2019-01-26T19:01:12Z"
-   */
-  created_at: Date | null;
-  /**
-   * @example "2019-01-26T19:14:43Z"
-   */
-  updated_at: Date | null;
-  avatar_url: string;
 };
 /**
  * Integration Installation Request
@@ -892,7 +846,7 @@ export type AppPermissions = {
    */
   organization_custom_properties?: 'read' | 'write' | 'admin';
   /**
-   * The level of permission to grant the access token for managing access to GitHub Copilot for members of an organization with a Copilot Business subscription. This property is in beta and is subject to change.
+   * The level of permission to grant the access token for managing access to GitHub Copilot for members of an organization with a Copilot Business subscription. This property is in public preview and is subject to change.
    */
   organization_copilot_seat_management?: 'write';
   /**
@@ -920,7 +874,7 @@ export type AppPermissions = {
    */
   organization_plan?: 'read';
   /**
-   * The level of permission to grant the access token to manage organization projects and projects beta (where available).
+   * The level of permission to grant the access token to manage organization projects and projects public preview (where available).
    */
   organization_projects?: 'read' | 'write' | 'admin';
   /**
@@ -972,6 +926,91 @@ export type AppPermissions = {
    */
   starring?: 'read' | 'write';
 };
+/**
+ * Simple User
+ * A GitHub user.
+ */
+export type NullableSimpleUser = {
+  name?: string | null;
+  email?: string | null;
+  /**
+   * @example "octocat"
+   */
+  login: string;
+  /**
+   * @example 1
+   */
+  id: number;
+  /**
+   * @example "MDQ6VXNlcjE="
+   */
+  node_id: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   */
+  avatar_url: string;
+  /**
+   * @example "41d064eb2195891e12d0413f63227ea7"
+   */
+  gravatar_id: string | null;
+  /**
+   * @example "https://api.github.com/users/octocat"
+   */
+  url: string;
+  /**
+   * @example "https://github.com/octocat"
+   */
+  html_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/followers"
+   */
+  followers_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/following{/other_user}"
+   */
+  following_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/gists{/gist_id}"
+   */
+  gists_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+   */
+  starred_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/subscriptions"
+   */
+  subscriptions_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/orgs"
+   */
+  organizations_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/repos"
+   */
+  repos_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/events{/privacy}"
+   */
+  events_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/received_events"
+   */
+  received_events_url: string;
+  /**
+   * @example "User"
+   */
+  type: string;
+  site_admin: boolean;
+  /**
+   * @example "\"2020-07-09T00:17:55Z\""
+   */
+  starred_at?: string;
+  /**
+   * @example "public"
+   */
+  user_view_type?: string;
+} | null;
 /**
  * Installation
  * Installation
@@ -1399,7 +1438,7 @@ export type Repository = {
    */
   allow_update_branch?: boolean;
   /**
-   * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+   * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
    * @deprecated
    */
   use_squash_pr_title_as_default?: boolean;
@@ -1972,241 +2011,151 @@ export type CodeOfConduct = {
   html_url: string | null;
 };
 /**
- * Copilot Usage Metrics
- * Summary of Copilot usage.
+ * A code security configuration
  */
-export type CopilotUsageMetrics = {
+export type CodeSecurityConfiguration = {
   /**
-   * The date for which the usage metrics are reported, in `YYYY-MM-DD` format.
+   * The ID of the code security configuration
    */
-  day: string;
+  id?: number;
   /**
-   * The total number of Copilot code completion suggestions shown to users.
+   * The name of the code security configuration. Must be unique within the organization.
    */
-  total_suggestions_count?: number;
+  name?: string;
   /**
-   * The total number of Copilot code completion suggestions accepted by users.
+   * The type of the code security configuration.
    */
-  total_acceptances_count?: number;
+  target_type?: 'global' | 'organization' | 'enterprise';
   /**
-   * The total number of lines of code completions suggested by Copilot.
+   * A description of the code security configuration
    */
-  total_lines_suggested?: number;
+  description?: string;
   /**
-   * The total number of lines of code completions accepted by users.
+   * The enablement status of GitHub Advanced Security
    */
-  total_lines_accepted?: number;
+  advanced_security?: 'enabled' | 'disabled';
   /**
-   * The total number of users who were shown Copilot code completion suggestions during the day specified.
+   * The enablement status of Dependency Graph
    */
-  total_active_users?: number;
+  dependency_graph?: 'enabled' | 'disabled' | 'not_set';
   /**
-   * The total instances of users who accepted code suggested by Copilot Chat in the IDE (panel and inline).
+   * The enablement status of Automatic dependency submission
    */
-  total_chat_acceptances?: number;
+  dependency_graph_autosubmit_action?: 'enabled' | 'disabled' | 'not_set';
   /**
-   * The total number of chat turns (prompt and response pairs) sent between users and Copilot Chat in the IDE.
+   * Feature options for Automatic dependency submission
    */
-  total_chat_turns?: number;
-  /**
-   * The total number of users who interacted with Copilot Chat in the IDE during the day specified.
-   */
-  total_active_chat_users?: number;
-  /**
-   * Breakdown of Copilot code completions usage by language and editor
-   */
-  breakdown:
-    | ({
-        /**
-         * The language in which Copilot suggestions were shown to users in the specified editor.
-         */
-        language?: string;
-        /**
-         * The editor in which Copilot suggestions were shown to users for the specified language.
-         */
-        editor?: string;
-        /**
-         * The number of Copilot suggestions shown to users in the editor specified during the day specified.
-         */
-        suggestions_count?: number;
-        /**
-         * The number of Copilot suggestions accepted by users in the editor specified during the day specified.
-         */
-        acceptances_count?: number;
-        /**
-         * The number of lines of code suggested by Copilot in the editor specified during the day specified.
-         */
-        lines_suggested?: number;
-        /**
-         * The number of lines of code accepted by users in the editor specified during the day specified.
-         */
-        lines_accepted?: number;
-        /**
-         * The number of users who were shown Copilot completion suggestions in the editor specified during the day specified.
-         */
-        active_users?: number;
-      } & {
-        [key: string]: any;
-      })[]
-    | null;
-};
-/**
- * The security alert number.
- */
-export type AlertNumber = number;
-/**
- * Details for the vulnerable package.
- */
-export type DependabotAlertPackage = {
-  /**
-   * The package's language or package management ecosystem.
-   */
-  ecosystem: string;
-  /**
-   * The unique package name within its ecosystem.
-   */
-  name: string;
-};
-/**
- * Details pertaining to one vulnerable version range for the advisory.
- */
-export type DependabotAlertSecurityVulnerability = {
-  package: DependabotAlertPackage;
-  /**
-   * The severity of the vulnerability.
-   */
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  /**
-   * Conditions that identify vulnerable versions of this vulnerability's package.
-   */
-  vulnerable_version_range: string;
-  /**
-   * Details pertaining to the package version that patches this vulnerability.
-   */
-  first_patched_version: {
+  dependency_graph_autosubmit_action_options?: {
     /**
-     * The package version that patches this vulnerability.
+     * Whether to use runners labeled with 'dependency-submission' or standard GitHub runners.
      */
-    identifier: string;
-  } | null;
-};
-/**
- * Details for the GitHub Security Advisory.
- */
-export type DependabotAlertSecurityAdvisory = {
-  /**
-   * The unique GitHub Security Advisory ID assigned to the advisory.
-   */
-  ghsa_id: string;
-  /**
-   * The unique CVE ID assigned to the advisory.
-   */
-  cve_id: string | null;
-  /**
-   * A short, plain text summary of the advisory.
-   */
-  summary: string;
-  /**
-   * A long-form Markdown-supported description of the advisory.
-   */
-  description: string;
-  /**
-   * Vulnerable version range information for the advisory.
-   */
-  vulnerabilities: DependabotAlertSecurityVulnerability[];
-  /**
-   * The severity of the advisory.
-   */
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  /**
-   * Details for the advisory pertaining to the Common Vulnerability Scoring System.
-   */
-  cvss: {
-    /**
-     * The overall CVSS score of the advisory.
-     */
-    score: number;
-    /**
-     * The full CVSS vector string for the advisory.
-     */
-    vector_string: string | null;
+    labeled_runners?: boolean;
   };
   /**
-   * Details for the advisory pertaining to Common Weakness Enumeration.
+   * The enablement status of Dependabot alerts
    */
-  cwes: {
-    /**
-     * The unique CWE ID.
-     */
-    cwe_id: string;
-    /**
-     * The short, plain text name of the CWE.
-     */
-    name: string;
-  }[];
+  dependabot_alerts?: 'enabled' | 'disabled' | 'not_set';
   /**
-   * Values that identify this advisory among security information sources.
+   * The enablement status of Dependabot security updates
    */
-  identifiers: {
+  dependabot_security_updates?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * The enablement status of code scanning default setup
+   */
+  code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * Feature options for code scanning default setup
+   */
+  code_scanning_default_setup_options?: {
     /**
-     * The type of advisory identifier.
+     * Whether to use labeled runners or standard GitHub runners.
      */
-    type: 'CVE' | 'GHSA';
+    runner_type?: ('standard' | 'labeled' | 'not_set') | null;
     /**
-     * The value of the advisory identifer.
+     * The label of the runner to use for code scanning when runner_type is 'labeled'.
      */
-    value: string;
-  }[];
+    runner_label?: string | null;
+  } | null;
   /**
-   * Links to additional advisory information.
+   * The enablement status of secret scanning
    */
-  references: {
+  secret_scanning?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * The enablement status of secret scanning push protection
+   */
+  secret_scanning_push_protection?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * The enablement status of secret scanning delegated bypass
+   */
+  secret_scanning_delegated_bypass?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * Feature options for secret scanning delegated bypass
+   */
+  secret_scanning_delegated_bypass_options?: {
     /**
-     * The URL of the reference.
+     * The bypass reviewers for secret scanning delegated bypass
      */
-    url: string;
-  }[];
+    reviewers?: {
+      /**
+       * The ID of the team or role selected as a bypass reviewer
+       */
+      reviewer_id: number;
+      /**
+       * The type of the bypass reviewer
+       */
+      reviewer_type: 'TEAM' | 'ROLE';
+    }[];
+  };
   /**
-   * The time that the advisory was published in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   * The enablement status of secret scanning validity checks
    */
-  published_at: Date;
+  secret_scanning_validity_checks?: 'enabled' | 'disabled' | 'not_set';
   /**
-   * The time that the advisory was last modified in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   * The enablement status of secret scanning non-provider patterns
    */
-  updated_at: Date;
+  secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
   /**
-   * The time that the advisory was withdrawn in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   * The enablement status of private vulnerability reporting
    */
-  withdrawn_at: Date | null;
+  private_vulnerability_reporting?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * The enforcement status for a security configuration
+   */
+  enforcement?: 'enforced' | 'unenforced';
+  /**
+   * The URL of the configuration
+   */
+  url?: string;
+  /**
+   * The URL of the configuration
+   */
+  html_url?: string;
+  created_at?: Date;
+  updated_at?: Date;
 };
 /**
- * The REST API URL of the alert resource.
+ * Feature options for code scanning default setup
  */
-export type AlertUrl = string;
+export type CodeScanningDefaultSetupOptions = {
+  /**
+   * Whether to use labeled runners or standard GitHub runners.
+   */
+  runner_type?: 'standard' | 'labeled' | 'not_set';
+  /**
+   * The label of the runner to use for code scanning default setup when runner_type is 'labeled'.
+   */
+  runner_label?: string | null;
+} | null;
 /**
- * The GitHub URL of the alert resource.
+ * A list of default code security configurations
  */
-export type AlertHtmlUrl = string;
-/**
- * The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
- */
-export type AlertCreatedAt = Date;
-/**
- * The time that the alert was last updated in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
- */
-export type AlertUpdatedAt = Date;
-/**
- * The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
- */
-export type AlertDismissedAt = Date | null;
-/**
- * The time that the alert was no longer detected and was considered fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
- */
-export type AlertFixedAt = Date | null;
-/**
- * The time that the alert was auto-dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
- */
-export type AlertAutoDismissedAt = Date | null;
+export type CodeSecurityDefaultConfigurations = {
+  /**
+   * The visibility of newly created repositories for which the code security configuration will be applied to by default
+   */
+  default_for_new_repos?: 'public' | 'private_and_internal' | 'all';
+  configuration?: CodeSecurityConfiguration;
+}[];
 /**
  * Simple Repository
  * A GitHub repository.
@@ -2438,6 +2387,183 @@ export type SimpleRepository = {
   hooks_url: string;
 };
 /**
+ * Repositories associated with a code security configuration and attachment status
+ */
+export type CodeSecurityConfigurationRepositories = {
+  /**
+   * The attachment status of the code security configuration on the repository.
+   */
+  status?:
+    | 'attached'
+    | 'attaching'
+    | 'detached'
+    | 'removed'
+    | 'enforced'
+    | 'failed'
+    | 'updating'
+    | 'removed_by_enterprise';
+  repository?: SimpleRepository;
+};
+/**
+ * The security alert number.
+ */
+export type AlertNumber = number;
+/**
+ * Details for the vulnerable package.
+ */
+export type DependabotAlertPackage = {
+  /**
+   * The package's language or package management ecosystem.
+   */
+  ecosystem: string;
+  /**
+   * The unique package name within its ecosystem.
+   */
+  name: string;
+};
+/**
+ * Details pertaining to one vulnerable version range for the advisory.
+ */
+export type DependabotAlertSecurityVulnerability = {
+  package: DependabotAlertPackage;
+  /**
+   * The severity of the vulnerability.
+   */
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  /**
+   * Conditions that identify vulnerable versions of this vulnerability's package.
+   */
+  vulnerable_version_range: string;
+  /**
+   * Details pertaining to the package version that patches this vulnerability.
+   */
+  first_patched_version: {
+    /**
+     * The package version that patches this vulnerability.
+     */
+    identifier: string;
+  } | null;
+};
+/**
+ * Details for the GitHub Security Advisory.
+ */
+export type DependabotAlertSecurityAdvisory = {
+  /**
+   * The unique GitHub Security Advisory ID assigned to the advisory.
+   */
+  ghsa_id: string;
+  /**
+   * The unique CVE ID assigned to the advisory.
+   */
+  cve_id: string | null;
+  /**
+   * A short, plain text summary of the advisory.
+   */
+  summary: string;
+  /**
+   * A long-form Markdown-supported description of the advisory.
+   */
+  description: string;
+  /**
+   * Vulnerable version range information for the advisory.
+   */
+  vulnerabilities: DependabotAlertSecurityVulnerability[];
+  /**
+   * The severity of the advisory.
+   */
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  /**
+   * Details for the advisory pertaining to the Common Vulnerability Scoring System.
+   */
+  cvss: {
+    /**
+     * The overall CVSS score of the advisory.
+     */
+    score: number;
+    /**
+     * The full CVSS vector string for the advisory.
+     */
+    vector_string: string | null;
+  };
+  cvss_severities?: CvssSeverities;
+  epss?: SecurityAdvisoryEpss;
+  /**
+   * Details for the advisory pertaining to Common Weakness Enumeration.
+   */
+  cwes: {
+    /**
+     * The unique CWE ID.
+     */
+    cwe_id: string;
+    /**
+     * The short, plain text name of the CWE.
+     */
+    name: string;
+  }[];
+  /**
+   * Values that identify this advisory among security information sources.
+   */
+  identifiers: {
+    /**
+     * The type of advisory identifier.
+     */
+    type: 'CVE' | 'GHSA';
+    /**
+     * The value of the advisory identifer.
+     */
+    value: string;
+  }[];
+  /**
+   * Links to additional advisory information.
+   */
+  references: {
+    /**
+     * The URL of the reference.
+     */
+    url: string;
+  }[];
+  /**
+   * The time that the advisory was published in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   */
+  published_at: Date;
+  /**
+   * The time that the advisory was last modified in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   */
+  updated_at: Date;
+  /**
+   * The time that the advisory was withdrawn in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   */
+  withdrawn_at: Date | null;
+};
+/**
+ * The REST API URL of the alert resource.
+ */
+export type AlertUrl = string;
+/**
+ * The GitHub URL of the alert resource.
+ */
+export type AlertHtmlUrl = string;
+/**
+ * The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ */
+export type AlertCreatedAt = Date;
+/**
+ * The time that the alert was last updated in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ */
+export type AlertUpdatedAt = Date;
+/**
+ * The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ */
+export type AlertDismissedAt = Date | null;
+/**
+ * The time that the alert was no longer detected and was considered fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ */
+export type AlertFixedAt = Date | null;
+/**
+ * The time that the alert was auto-dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ */
+export type AlertAutoDismissedAt = Date | null;
+/**
  * A Dependabot alert.
  */
 export type DependabotAlertWithRepository = {
@@ -2528,7 +2654,7 @@ export type OrganizationSecretScanningAlert = {
   secret_type?: string;
   /**
    * User-friendly name for the detected secret, matching the `secret_type`.
-   * For a list of built-in patterns, see "[Secret scanning patterns](https://docs.github.com/code-security/secret-scanning/secret-scanning-patterns#supported-secrets-for-advanced-security)."
+   * For a list of built-in patterns, see "[Supported secret scanning patterns](https://docs.github.com/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets)."
    */
   secret_type_display_name?: string;
   /**
@@ -2545,6 +2671,19 @@ export type OrganizationSecretScanningAlert = {
    * The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
    */
   push_protection_bypassed_at?: Date | null;
+  push_protection_bypass_request_reviewer?: NullableSimpleUser;
+  /**
+   * An optional comment when reviewing a push protection bypass.
+   */
+  push_protection_bypass_request_reviewer_comment?: string | null;
+  /**
+   * An optional comment when requesting a push protection bypass.
+   */
+  push_protection_bypass_request_comment?: string | null;
+  /**
+   * The URL to a push protection bypass request.
+   */
+  push_protection_bypass_request_html_url?: string | null;
   /**
    * The comment that was optionally added when this alert was closed
    */
@@ -2553,6 +2692,14 @@ export type OrganizationSecretScanningAlert = {
    * The token status as of the latest validity check.
    */
   validity?: 'active' | 'inactive' | 'unknown';
+  /**
+   * Whether the secret was publicly leaked.
+   */
+  publicly_leaked?: boolean | null;
+  /**
+   * Whether the detected secret was found in multiple repositories in the same organization or enterprise.
+   */
+  multi_repo?: boolean | null;
 };
 /**
  * Actor
@@ -2656,7 +2803,11 @@ export type NullableIntegration = {
    * @example "MDExOkludGVncmF0aW9uMQ=="
    */
   node_id: string;
-  owner: NullableSimpleUser;
+  /**
+   * @example "\"Iv1.25b5d1e65ffc4022\""
+   */
+  client_id?: string;
+  owner: SimpleUser | Enterprise;
   /**
    * The name of the GitHub app
    * @example "Probot Owners"
@@ -2714,10 +2865,6 @@ export type NullableIntegration = {
    */
   installations_count?: number;
   /**
-   * @example "\"Iv1.25b5d1e65ffc4022\""
-   */
-  client_id?: string;
-  /**
    * @example "\"1d4b2097ac622ba702d19de498f005747a8b21d3\""
    */
   client_secret?: string;
@@ -2759,6 +2906,14 @@ export type ReactionRollup = {
   hooray: number;
   eyes: number;
   rocket: number;
+};
+/**
+ * Sub-issues Summary
+ */
+export type SubIssuesSummary = {
+  total: number;
+  completed: number;
+  percent_completed: number;
 };
 /**
  * Issue
@@ -2848,6 +3003,7 @@ export type Issue = {
   performed_via_github_app?: NullableIntegration;
   author_association: AuthorAssociation;
   reactions?: ReactionRollup;
+  sub_issues_summary?: SubIssuesSummary;
 };
 /**
  * Issue Comment
@@ -3008,6 +3164,11 @@ export type BaseGist = {
       language?: string;
       raw_url?: string;
       size?: number;
+      /**
+       * The encoding used for `content`. Currently, `"utf-8"` and `"base64"` are supported.
+       * @defaultValue "utf-8"
+       */
+      encoding?: string;
     };
   };
   public: boolean;
@@ -3015,6 +3176,7 @@ export type BaseGist = {
   updated_at: Date;
   description: string | null;
   comments: number;
+  comments_enabled?: boolean;
   user: NullableSimpleUser;
   comments_url: string;
   owner?: SimpleUser;
@@ -3029,6 +3191,7 @@ export type BaseGist = {
 export type PublicUser = {
   login: string;
   id: number;
+  user_view_type?: string;
   node_id: string;
   avatar_url: string;
   gravatar_id: string | null;
@@ -3066,7 +3229,6 @@ export type PublicUser = {
     space: number;
     private_repos: number;
   };
-  suspended_at?: Date | null;
   /**
    * @example 1
    */
@@ -3151,6 +3313,7 @@ export type GistSimple = {
     updated_at: Date;
     description: string | null;
     comments: number;
+    comments_enabled?: boolean;
     user: NullableSimpleUser;
     comments_url: string;
     owner?: NullableSimpleUser;
@@ -3175,6 +3338,11 @@ export type GistSimple = {
       size?: number;
       truncated?: boolean;
       content?: string;
+      /**
+       * The encoding used for `content`. Currently, `"utf-8"` and `"base64"` are supported.
+       * @defaultValue "utf-8"
+       */
+      encoding?: string;
     } | null;
   };
   public?: boolean;
@@ -3182,6 +3350,7 @@ export type GistSimple = {
   updated_at?: string;
   description?: string | null;
   comments?: number;
+  comments_enabled?: boolean;
   user?: string | null;
   comments_url?: string;
   owner?: SimpleUser;
@@ -3542,13 +3711,41 @@ export type ApiOverview = {
    *   "192.0.2.1"
    * ]
    */
+  codespaces?: string[];
+  /**
+   * @example
+   * [
+   *   "192.0.2.1"
+   * ]
+   */
   dependabot?: string[];
+  /**
+   * @example
+   * [
+   *   "192.0.2.1"
+   * ]
+   */
+  copilot?: string[];
   domains?: {
     website?: string[];
     codespaces?: string[];
     copilot?: string[];
     packages?: string[];
     actions?: string[];
+    actions_inbound?: {
+      full_domains?: string[];
+      wildcard_domains?: string[];
+    };
+    artifact_attestations?: {
+      /**
+       * @example
+       * [
+       *   "example"
+       * ]
+       */
+      trust_domain?: string;
+      services?: string[];
+    };
   };
 };
 export type SecurityAndAnalysis = {
@@ -3568,6 +3765,12 @@ export type SecurityAndAnalysis = {
     status?: 'enabled' | 'disabled';
   };
   secret_scanning_push_protection?: {
+    status?: 'enabled' | 'disabled';
+  };
+  secret_scanning_non_provider_patterns?: {
+    status?: 'enabled' | 'disabled';
+  };
+  secret_scanning_ai_detection?: {
     status?: 'enabled' | 'disabled';
   };
 } | null;
@@ -3925,6 +4128,54 @@ export type OrganizationSimple = {
    */
   description: string | null;
 };
+export type BillingUsageReport = {
+  usageItems?: {
+    /**
+     * Date of the usage line item.
+     */
+    date: string;
+    /**
+     * Product name.
+     */
+    product: string;
+    /**
+     * SKU name.
+     */
+    sku: string;
+    /**
+     * Quantity of the usage line item.
+     */
+    quantity: number;
+    /**
+     * Unit type of the usage line item.
+     */
+    unitType: string;
+    /**
+     * Price per unit of the usage line item.
+     */
+    pricePerUnit: number;
+    /**
+     * Gross amount of the usage line item.
+     */
+    grossAmount: number;
+    /**
+     * Discount amount of the usage line item.
+     */
+    discountAmount: number;
+    /**
+     * Net amount of the usage line item.
+     */
+    netAmount: number;
+    /**
+     * Name of the organization.
+     */
+    organizationName: string;
+    /**
+     * Name of the repository.
+     */
+    repositoryName?: string;
+  }[];
+};
 /**
  * Organization Full
  * Organization Full
@@ -4052,6 +4303,9 @@ export type OrganizationFull = {
    */
   disk_usage?: number | null;
   /**
+   * The number of collaborators on private repositories.
+   *
+   * This field may be null if the number of private repositories is over 50,000.
    * @example 8
    */
   collaborators?: number | null;
@@ -4106,44 +4360,57 @@ export type OrganizationFull = {
   members_can_fork_private_repositories?: boolean | null;
   web_commit_signoff_required?: boolean;
   /**
+   * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+   *
    * Whether GitHub Advanced Security is enabled for new repositories and repositories transferred to this organization.
    *
    * This field is only visible to organization owners or members of a team with the security manager role.
+   * @deprecated
    */
   advanced_security_enabled_for_new_repositories?: boolean;
   /**
-   * Whether GitHub Advanced Security is automatically enabled for new repositories and repositories transferred to
-   * this organization.
+   * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+   *
+   * Whether Dependabot alerts are automatically enabled for new repositories and repositories transferred to this organization.
    *
    * This field is only visible to organization owners or members of a team with the security manager role.
+   * @deprecated
    */
   dependabot_alerts_enabled_for_new_repositories?: boolean;
   /**
-   * Whether dependabot security updates are automatically enabled for new repositories and repositories transferred
-   * to this organization.
+   * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+   *
+   * Whether Dependabot security updates are automatically enabled for new repositories and repositories transferred to this organization.
    *
    * This field is only visible to organization owners or members of a team with the security manager role.
+   * @deprecated
    */
   dependabot_security_updates_enabled_for_new_repositories?: boolean;
   /**
-   * Whether dependency graph is automatically enabled for new repositories and repositories transferred to this
-   * organization.
+   * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+   *
+   * Whether dependency graph is automatically enabled for new repositories and repositories transferred to this organization.
    *
    * This field is only visible to organization owners or members of a team with the security manager role.
+   * @deprecated
    */
   dependency_graph_enabled_for_new_repositories?: boolean;
   /**
-   * Whether secret scanning is automatically enabled for new repositories and repositories transferred to this
-   * organization.
+   * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+   *
+   * Whether secret scanning is automatically enabled for new repositories and repositories transferred to this organization.
    *
    * This field is only visible to organization owners or members of a team with the security manager role.
+   * @deprecated
    */
   secret_scanning_enabled_for_new_repositories?: boolean;
   /**
-   * Whether secret scanning push protection is automatically enabled for new repositories and repositories
-   * transferred to this organization.
+   * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+   *
+   * Whether secret scanning push protection is automatically enabled for new repositories and repositories transferred to this organization.
    *
    * This field is only visible to organization owners or members of a team with the security manager role.
+   * @deprecated
    */
   secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
   /**
@@ -4161,6 +4428,10 @@ export type OrganizationFull = {
   created_at: Date;
   updated_at: Date;
   archived_at: Date | null;
+  /**
+   * Controls whether or not deploy keys may be added and used for repositories in the organization.
+   */
+  deploy_keys_enabled_for_repositories?: boolean;
 };
 export type ActionsCacheUsageOrgEnterprise = {
   /**
@@ -4192,6 +4463,184 @@ export type ActionsCacheUsageByRepository = {
    * @example 3
    */
   active_caches_count: number;
+};
+/**
+ * GitHub-hosted runner image details.
+ * Provides details of a hosted runner image
+ */
+export type NullableActionsHostedRunnerPoolImage = {
+  /**
+   * The ID of the image. Use this ID for the `image` parameter when creating a new larger runner.
+   * @example "ubuntu-20.04"
+   */
+  id: string;
+  /**
+   * Image size in GB.
+   * @example 86
+   */
+  size_gb: number;
+  /**
+   * Display name for this image.
+   * @example 20.04
+   */
+  display_name: string;
+  /**
+   * The image provider.
+   */
+  source: 'github' | 'partner' | 'custom';
+  /**
+   * The image version of the hosted runner pool.
+   * @example "latest"
+   */
+  version: string;
+} | null;
+/**
+ * Github-owned VM details.
+ * Provides details of a particular machine spec.
+ */
+export type ActionsHostedRunnerMachineSpec = {
+  /**
+   * The ID used for the `size` parameter when creating a new runner.
+   * @example "8-core"
+   */
+  id: string;
+  /**
+   * The number of cores.
+   * @example 8
+   */
+  cpu_cores: number;
+  /**
+   * The available RAM for the machine spec.
+   * @example 32
+   */
+  memory_gb: number;
+  /**
+   * The available SSD storage for the machine spec.
+   * @example 300
+   */
+  storage_gb: number;
+};
+/**
+ * Public IP for a GitHub-hosted larger runners.
+ * Provides details of Public IP for a GitHub-hosted larger runners
+ */
+export type PublicIp = {
+  /**
+   * Whether public IP is enabled.
+   * @example true
+   */
+  enabled?: boolean;
+  /**
+   * The prefix for the public IP.
+   * @example "20.80.208.150"
+   */
+  prefix?: string;
+  /**
+   * The length of the IP prefix.
+   * @example 28
+   */
+  length?: number;
+};
+/**
+ * GitHub-hosted hosted runner
+ * A Github-hosted hosted runner.
+ */
+export type ActionsHostedRunner = {
+  /**
+   * The unique identifier of the hosted runner.
+   * @example 5
+   */
+  id: number;
+  /**
+   * The name of the hosted runner.
+   * @example "my-github-hosted-runner"
+   */
+  name: string;
+  /**
+   * The unique identifier of the group that the hosted runner belongs to.
+   * @example 2
+   */
+  runner_group_id?: number;
+  image_details: NullableActionsHostedRunnerPoolImage;
+  machine_size_details: ActionsHostedRunnerMachineSpec;
+  /**
+   * The status of the runner.
+   * @example "Ready"
+   */
+  status: 'Ready' | 'Provisioning' | 'Shutdown' | 'Deleting' | 'Stuck';
+  /**
+   * The operating system of the image.
+   * @example "linux-x64"
+   */
+  platform: string;
+  /**
+   * The maximum amount of hosted runners. Runners will not scale automatically above this number. Use this setting to limit your cost.
+   * @example 5
+   * @defaultValue 10
+   */
+  maximum_runners?: number;
+  /**
+   * Whether public IP is enabled for the hosted runners.
+   * @example true
+   */
+  public_ip_enabled: boolean;
+  /**
+   * The public IP ranges when public IP is enabled for the hosted runners.
+   */
+  public_ips?: PublicIp[];
+  /**
+   * The time at which the runner was last used, in ISO 8601 format.
+   * @example "2022-10-09T23:39:01Z"
+   */
+  last_active_on?: Date | null;
+};
+/**
+ * GitHub-hosted runner image details.
+ * Provides details of a hosted runner image
+ */
+export type ActionsHostedRunnerImage = {
+  /**
+   * The ID of the image. Use this ID for the `image` parameter when creating a new larger runner.
+   * @example "ubuntu-20.04"
+   */
+  id: string;
+  /**
+   * The operating system of the image.
+   * @example "linux-x64"
+   */
+  platform: string;
+  /**
+   * Image size in GB.
+   * @example 86
+   */
+  size_gb: number;
+  /**
+   * Display name for this image.
+   * @example 20.04
+   */
+  display_name: string;
+  /**
+   * The image provider.
+   */
+  source: 'github' | 'partner' | 'custom';
+};
+export type ActionsHostedRunnerLimits = {
+  /**
+   * Static public IP Limits for GitHub-hosted Hosted Runners.
+   * Provides details of static public IP limits for GitHub-hosted Hosted Runners
+   */
+  public_ips: {
+    /**
+     * The maximum number of static public IP addresses that can be used for Hosted Runners.
+     * @example 50
+     */
+    maximum: number;
+    /**
+     * The current number of static public IP addresses in use by Hosted Runners.
+     * @example 17
+     */
+    current_usage: number;
+  };
 };
 /**
  * Actions OIDC Subject customization
@@ -4249,7 +4698,8 @@ export type SelectedActions = {
   /**
    * Specifies a list of string-matching patterns to allow specific action(s) and reusable workflow(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`.
    *
-   * **Note**: The `patterns_allowed` setting only applies to public repositories.
+   * > [!NOTE]
+   * > The `patterns_allowed` setting only applies to public repositories.
    */
   patterns_allowed?: string[];
 };
@@ -4271,6 +4721,37 @@ export type ActionsGetDefaultWorkflowPermissions = {
 export type ActionsSetDefaultWorkflowPermissions = {
   default_workflow_permissions?: ActionsDefaultWorkflowPermissions;
   can_approve_pull_request_reviews?: ActionsCanApprovePullRequestReviews;
+};
+export type RunnerGroupsOrg = {
+  id: number;
+  name: string;
+  visibility: string;
+  default: boolean;
+  /**
+   * Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`
+   */
+  selected_repositories_url?: string;
+  runners_url: string;
+  hosted_runners_url?: string;
+  /**
+   * The identifier of a hosted compute network configuration.
+   */
+  network_configuration_id?: string;
+  inherited: boolean;
+  inherited_allows_public_repositories?: boolean;
+  allows_public_repositories: boolean;
+  /**
+   * If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.
+   */
+  workflow_restrictions_read_only?: boolean;
+  /**
+   * If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.
+   */
+  restricted_to_workflows?: boolean;
+  /**
+   * List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.
+   */
+  selected_workflows?: string[];
 };
 /**
  * Self hosted runner label
@@ -4322,6 +4803,7 @@ export type Runner = {
   status: string;
   busy: boolean;
   labels: RunnerLabel[];
+  ephemeral?: boolean;
 };
 /**
  * Runner Application
@@ -4497,16 +4979,12 @@ export type AlertInstancesUrl = string;
 /**
  * State of a code scanning alert.
  */
-export enum CodeScanningAlertState {
-  OPEN = 'open',
-  DISMISSED = 'dismissed',
-  FIXED = 'fixed',
-}
+export type CodeScanningAlertState = ('open' | 'dismissed' | 'fixed') | null;
 /**
  * **Required when the state is dismissed.** The reason for dismissing or closing the alert.
  */
 export type CodeScanningAlertDismissedReason =
-  | (null | 'false positive' | "won't fix" | 'used in tests')
+  | ('false positive' | "won't fix" | 'used in tests')
   | null;
 /**
  * The dismissal comment associated with the dismissal of the alert.
@@ -4522,10 +5000,6 @@ export type CodeScanningAlertRuleSummary = {
    */
   name?: string;
   /**
-   * A set of tags applicable for the rule.
-   */
-  tags?: string[] | null;
-  /**
    * The severity of the alert.
    */
   severity?: ('none' | 'note' | 'warning' | 'error') | null;
@@ -4537,6 +5011,22 @@ export type CodeScanningAlertRuleSummary = {
    * A short description of the rule used to detect the alert.
    */
   description?: string;
+  /**
+   * A description of the rule used to detect the alert.
+   */
+  full_description?: string;
+  /**
+   * A set of tags applicable for the rule.
+   */
+  tags?: string[] | null;
+  /**
+   * Detailed documentation for the rule as GitHub Flavored Markdown.
+   */
+  help?: string | null;
+  /**
+   * A link to the documentation for the rule used to detect the alert.
+   */
+  help_uri?: string | null;
 };
 /**
  * The version of the tool used to generate the code scanning analysis.
@@ -4919,8 +5409,8 @@ export type CopilotSeatBreakdown = {
   inactive_this_cycle?: number;
 };
 /**
- * Copilot Business Organization Details
- * Information about the seat breakdown and policies set for an organization with a Copilot Business subscription.
+ * Copilot Organization Details
+ * Information about the seat breakdown and policies set for an organization with a Copilot Business or Copilot Enterprise subscription.
  */
 export type CopilotOrganizationDetails = {
   seat_breakdown: CopilotSeatBreakdown;
@@ -4948,9 +5438,67 @@ export type CopilotOrganizationDetails = {
     | 'assign_selected'
     | 'disabled'
     | 'unconfigured';
+  /**
+   * The Copilot plan of the organization, or the parent enterprise, when applicable.
+   */
+  plan_type?: 'business' | 'enterprise' | 'unknown';
 } & {
-  [key: string]: any;
+  [key: string]: unknown;
 };
+/**
+ * Organization Simple
+ * A GitHub organization.
+ */
+export type NullableOrganizationSimple = {
+  /**
+   * @example "github"
+   */
+  login: string;
+  /**
+   * @example 1
+   */
+  id: number;
+  /**
+   * @example "MDEyOk9yZ2FuaXphdGlvbjE="
+   */
+  node_id: string;
+  /**
+   * @example "https://api.github.com/orgs/github"
+   */
+  url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/repos"
+   */
+  repos_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/events"
+   */
+  events_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/hooks"
+   */
+  hooks_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/issues"
+   */
+  issues_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/members{/member}"
+   */
+  members_url: string;
+  /**
+   * @example "https://api.github.com/orgs/github/public_members{/member}"
+   */
+  public_members_url: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   */
+  avatar_url: string;
+  /**
+   * @example "A great organization"
+   */
+  description: string | null;
+} | null;
 /**
  * Team Simple
  * Groups of organization members that gives permissions on specified repositories.
@@ -5047,93 +5595,45 @@ export type Team = {
   parent: NullableTeamSimple;
 };
 /**
- * Organization
- * GitHub account for managing multiple users, teams, and repositories
+ * Enterprise Team
+ * Group of enterprise owners and/or members
  */
-export type Organization = {
-  /**
-   * Unique login name of the organization
-   * @example "new-org"
-   */
-  login: string;
-  /**
-   * URL for the organization
-   * @example "https://api.github.com/orgs/github"
-   */
-  url: string;
+export type EnterpriseTeam = {
   id: number;
-  node_id: string;
-  repos_url: string;
-  events_url: string;
-  hooks_url: string;
-  issues_url: string;
-  members_url: string;
-  public_members_url: string;
-  avatar_url: string;
-  description: string | null;
+  name: string;
+  slug: string;
+  url: string;
   /**
-   * Display blog url for the organization
-   * @example "blog.example-org.com"
+   * @example "disabled | all"
    */
-  blog?: string;
+  sync_to_organizations: string;
+  /**
+   * @example "62ab9291-fae2-468e-974b-7e45096d5021"
+   */
+  group_id?: string | null;
+  /**
+   * @example "Justice League"
+   */
+  group_name?: string | null;
+  /**
+   * @example "https://github.com/enterprises/dc/teams/justice-league"
+   */
   html_url: string;
-  /**
-   * Display name for the organization
-   * @example "New Org"
-   */
-  name?: string;
-  /**
-   * Display company name for the organization
-   * @example "Acme corporation"
-   */
-  company?: string;
-  /**
-   * Display location for the organization
-   * @example "Berlin, Germany"
-   */
-  location?: string;
-  /**
-   * Display email for the organization
-   * @example "org@example.com"
-   */
-  email?: string;
-  /**
-   * Specifies if organization projects are enabled for this org
-   */
-  has_organization_projects: boolean;
-  /**
-   * Specifies if repository projects are enabled for repositories that belong to this org
-   */
-  has_repository_projects: boolean;
-  is_verified?: boolean;
-  public_repos: number;
-  public_gists: number;
-  followers: number;
-  following: number;
-  type: string;
+  members_url: string;
   created_at: Date;
   updated_at: Date;
-  plan?: {
-    name?: string;
-    space?: number;
-    private_repos?: number;
-    filled_seats?: number;
-    seats?: number;
-  };
 };
 /**
  * Copilot Business Seat Detail
  * Information about a Copilot Business seat assignment for a user, team, or organization.
  */
 export type CopilotSeatDetails = {
+  assignee: SimpleUser;
+  organization?: NullableOrganizationSimple;
   /**
-   * The assignee that has been granted access to GitHub Copilot.
+   * The team through which the assignee is granted access to GitHub Copilot, if applicable.
    */
-  assignee: SimpleUser | Team | Organization;
-  /**
-   * The team that granted access to GitHub Copilot to the assignee. This will be null if the user was assigned a seat individually.
-   */
-  assigning_team?: Team | null;
+  assigning_team?: (Team | EnterpriseTeam) | null;
   /**
    * The pending cancellation date for the seat, in `YYYY-MM-DD` format. This will be null unless the assignee's Copilot access has been canceled during the current billing cycle. If the seat has been cancelled, this corresponds to the start of the organization's next billing cycle.
    */
@@ -5151,9 +5651,350 @@ export type CopilotSeatDetails = {
    */
   created_at: Date;
   /**
-   * Timestamp of when the assignee's GitHub Copilot access was last updated, in ISO 8601 format.
+   * **Closing down notice:** This field is no longer relevant and is closing down. Use the `created_at` field to determine when the assignee was last granted access to GitHub Copilot. Timestamp of when the assignee's GitHub Copilot access was last updated, in ISO 8601 format.
+   * @deprecated
    */
   updated_at?: Date;
+  /**
+   * The Copilot plan of the organization, or the parent enterprise, when applicable.
+   */
+  plan_type?: 'business' | 'enterprise' | 'unknown';
+};
+/**
+ * Usage metrics for Copilot editor code completions in the IDE.
+ */
+export type CopilotIdeCodeCompletions =
+  | ({
+      /**
+       * Number of users who accepted at least one Copilot code suggestion, across all active editors. Includes both full and partial acceptances.
+       */
+      total_engaged_users?: number;
+      /**
+       * Code completion metrics for active languages.
+       */
+      languages?: {
+        /**
+         * Name of the language used for Copilot code completion suggestions.
+         */
+        name?: string;
+        /**
+         * Number of users who accepted at least one Copilot code completion suggestion for the given language. Includes both full and partial acceptances.
+         */
+        total_engaged_users?: number;
+      }[];
+      editors?: ({
+        /**
+         * Name of the given editor.
+         */
+        name?: string;
+        /**
+         * Number of users who accepted at least one Copilot code completion suggestion for the given editor. Includes both full and partial acceptances.
+         */
+        total_engaged_users?: number;
+        /**
+         * List of model metrics for custom models and the default model.
+         */
+        models?: {
+          /**
+           * Name of the model used for Copilot code completion suggestions. If the default model is used will appear as 'default'.
+           */
+          name?: string;
+          /**
+           * Indicates whether a model is custom or default.
+           */
+          is_custom_model?: boolean;
+          /**
+           * The training date for the custom model.
+           */
+          custom_model_training_date?: string | null;
+          /**
+           * Number of users who accepted at least one Copilot code completion suggestion for the given editor, for the given language and model. Includes both full and partial acceptances.
+           */
+          total_engaged_users?: number;
+          /**
+           * Code completion metrics for active languages, for the given editor.
+           */
+          languages?: {
+            /**
+             * Name of the language used for Copilot code completion suggestions, for the given editor.
+             */
+            name?: string;
+            /**
+             * Number of users who accepted at least one Copilot code completion suggestion for the given editor, for the given language. Includes both full and partial acceptances.
+             */
+            total_engaged_users?: number;
+            /**
+             * The number of Copilot code suggestions generated for the given editor, for the given language.
+             */
+            total_code_suggestions?: number;
+            /**
+             * The number of Copilot code suggestions accepted for the given editor, for the given language. Includes both full and partial acceptances.
+             */
+            total_code_acceptances?: number;
+            /**
+             * The number of lines of code suggested by Copilot code completions for the given editor, for the given language.
+             */
+            total_code_lines_suggested?: number;
+            /**
+             * The number of lines of code accepted from Copilot code suggestions for the given editor, for the given language.
+             */
+            total_code_lines_accepted?: number;
+          }[];
+        }[];
+      } & {
+        [key: string]: unknown;
+      })[];
+    } & {
+      [key: string]: unknown;
+    })
+  | null;
+/**
+ * Usage metrics for Copilot Chat in the IDE.
+ */
+export type CopilotIdeChat =
+  | ({
+      /**
+       * Total number of users who prompted Copilot Chat in the IDE.
+       */
+      total_engaged_users?: number;
+      editors?: {
+        /**
+         * Name of the given editor.
+         */
+        name?: string;
+        /**
+         * The number of users who prompted Copilot Chat in the specified editor.
+         */
+        total_engaged_users?: number;
+        /**
+         * List of model metrics for custom models and the default model.
+         */
+        models?: {
+          /**
+           * Name of the model used for Copilot Chat. If the default model is used will appear as 'default'.
+           */
+          name?: string;
+          /**
+           * Indicates whether a model is custom or default.
+           */
+          is_custom_model?: boolean;
+          /**
+           * The training date for the custom model.
+           */
+          custom_model_training_date?: string | null;
+          /**
+           * The number of users who prompted Copilot Chat in the given editor and model.
+           */
+          total_engaged_users?: number;
+          /**
+           * The total number of chats initiated by users in the given editor and model.
+           */
+          total_chats?: number;
+          /**
+           * The number of times users accepted a code suggestion from Copilot Chat using the 'Insert Code' UI element, for the given editor.
+           */
+          total_chat_insertion_events?: number;
+          /**
+           * The number of times users copied a code suggestion from Copilot Chat using the keyboard, or the 'Copy' UI element, for the given editor.
+           */
+          total_chat_copy_events?: number;
+        }[];
+      }[];
+    } & {
+      [key: string]: unknown;
+    })
+  | null;
+/**
+ * Usage metrics for Copilot Chat in GitHub.com
+ */
+export type CopilotDotcomChat =
+  | ({
+      /**
+       * Total number of users who prompted Copilot Chat on github.com at least once.
+       */
+      total_engaged_users?: number;
+      /**
+       * List of model metrics for a custom models and the default model.
+       */
+      models?: {
+        /**
+         * Name of the model used for Copilot Chat. If the default model is used will appear as 'default'.
+         */
+        name?: string;
+        /**
+         * Indicates whether a model is custom or default.
+         */
+        is_custom_model?: boolean;
+        /**
+         * The training date for the custom model (if applicable).
+         */
+        custom_model_training_date?: string | null;
+        /**
+         * Total number of users who prompted Copilot Chat on github.com at least once for each model.
+         */
+        total_engaged_users?: number;
+        /**
+         * Total number of chats initiated by users on github.com.
+         */
+        total_chats?: number;
+      }[];
+    } & {
+      [key: string]: unknown;
+    })
+  | null;
+/**
+ * Usage metrics for Copilot for pull requests.
+ */
+export type CopilotDotcomPullRequests =
+  | ({
+      /**
+       * The number of users who used Copilot for Pull Requests on github.com to generate a pull request summary at least once.
+       */
+      total_engaged_users?: number;
+      /**
+       * Repositories in which users used Copilot for Pull Requests to generate pull request summaries
+       */
+      repositories?: {
+        /**
+         * Repository name
+         */
+        name?: string;
+        /**
+         * The number of users who generated pull request summaries using Copilot for Pull Requests in the given repository.
+         */
+        total_engaged_users?: number;
+        /**
+         * List of model metrics for custom models and the default model.
+         */
+        models?: {
+          /**
+           * Name of the model used for Copilot pull request summaries. If the default model is used will appear as 'default'.
+           */
+          name?: string;
+          /**
+           * Indicates whether a model is custom or default.
+           */
+          is_custom_model?: boolean;
+          /**
+           * The training date for the custom model.
+           */
+          custom_model_training_date?: string | null;
+          /**
+           * The number of pull request summaries generated using Copilot for Pull Requests in the given repository.
+           */
+          total_pr_summaries_created?: number;
+          /**
+           * The number of users who generated pull request summaries using Copilot for Pull Requests in the given repository and model.
+           */
+          total_engaged_users?: number;
+        }[];
+      }[];
+    } & {
+      [key: string]: unknown;
+    })
+  | null;
+/**
+ * Copilot Usage Metrics
+ * Copilot usage metrics for a given day.
+ */
+export type CopilotUsageMetricsDay = {
+  /**
+   * The date for which the usage metrics are aggregated, in `YYYY-MM-DD` format.
+   */
+  date: string;
+  /**
+   * The total number of Copilot users with activity belonging to any Copilot feature, globally, for the given day. Includes passive activity such as receiving a code suggestion, as well as engagement activity such as accepting a code suggestion or prompting chat. Does not include authentication events. Is not limited to the individual features detailed on the endpoint.
+   */
+  total_active_users?: number;
+  /**
+   * The total number of Copilot users who engaged with any Copilot feature, for the given day. Examples include but are not limited to accepting a code suggestion, prompting Copilot chat, or triggering a PR Summary. Does not include authentication events. Is not limited to the individual features detailed on the endpoint.
+   */
+  total_engaged_users?: number;
+  copilot_ide_code_completions?: CopilotIdeCodeCompletions;
+  copilot_ide_chat?: CopilotIdeChat;
+  copilot_dotcom_chat?: CopilotDotcomChat;
+  copilot_dotcom_pull_requests?: CopilotDotcomPullRequests;
+} & {
+  [key: string]: unknown;
+};
+/**
+ * Copilot Usage Metrics
+ * Summary of Copilot usage.
+ */
+export type CopilotUsageMetrics = {
+  /**
+   * The date for which the usage metrics are reported, in `YYYY-MM-DD` format.
+   */
+  day: string;
+  /**
+   * The total number of Copilot code completion suggestions shown to users.
+   */
+  total_suggestions_count?: number;
+  /**
+   * The total number of Copilot code completion suggestions accepted by users.
+   */
+  total_acceptances_count?: number;
+  /**
+   * The total number of lines of code completions suggested by Copilot.
+   */
+  total_lines_suggested?: number;
+  /**
+   * The total number of lines of code completions accepted by users.
+   */
+  total_lines_accepted?: number;
+  /**
+   * The total number of users who were shown Copilot code completion suggestions during the day specified.
+   */
+  total_active_users?: number;
+  /**
+   * The total instances of users who accepted code suggested by Copilot Chat in the IDE (panel and inline).
+   */
+  total_chat_acceptances?: number;
+  /**
+   * The total number of chat turns (prompt and response pairs) sent between users and Copilot Chat in the IDE.
+   */
+  total_chat_turns?: number;
+  /**
+   * The total number of users who interacted with Copilot Chat in the IDE during the day specified.
+   */
+  total_active_chat_users?: number;
+  /**
+   * Breakdown of Copilot code completions usage by language and editor
+   */
+  breakdown:
+    | ({
+        /**
+         * The language in which Copilot suggestions were shown to users in the specified editor.
+         */
+        language?: string;
+        /**
+         * The editor in which Copilot suggestions were shown to users for the specified language.
+         */
+        editor?: string;
+        /**
+         * The number of Copilot suggestions shown to users in the editor specified during the day specified.
+         */
+        suggestions_count?: number;
+        /**
+         * The number of Copilot suggestions accepted by users in the editor specified during the day specified.
+         */
+        acceptances_count?: number;
+        /**
+         * The number of lines of code suggested by Copilot in the editor specified during the day specified.
+         */
+        lines_suggested?: number;
+        /**
+         * The number of lines of code accepted by users in the editor specified during the day specified.
+         */
+        lines_accepted?: number;
+        /**
+         * The number of users who were shown Copilot completion suggestions in the editor specified during the day specified.
+         */
+        active_users?: number;
+      } & {
+        [key: string]: unknown;
+      })[]
+    | null;
 };
 /**
  * Dependabot Secret for an Organization
@@ -5575,6 +6416,81 @@ export type OrgHook = {
   type: string;
 };
 /**
+ * Route Stats
+ * API Insights usage route stats for an actor
+ */
+export type ApiInsightsRouteStats = {
+  /**
+   * The HTTP method
+   */
+  http_method?: string;
+  /**
+   * The API path's route template
+   */
+  api_route?: string;
+  /**
+   * The total number of requests within the queried time period
+   */
+  total_request_count?: number;
+  /**
+   * The total number of requests that were rate limited within the queried time period
+   */
+  rate_limited_request_count?: number;
+  last_rate_limited_timestamp?: string | null;
+  last_request_timestamp?: string;
+}[];
+/**
+ * Subject Stats
+ * API Insights usage subject stats for an organization
+ */
+export type ApiInsightsSubjectStats = {
+  subject_type?: string;
+  subject_name?: string;
+  subject_id?: number;
+  total_request_count?: number;
+  rate_limited_request_count?: number;
+  last_rate_limited_timestamp?: string | null;
+  last_request_timestamp?: string;
+}[];
+/**
+ * Summary Stats
+ * API Insights usage summary stats for an organization
+ */
+export type ApiInsightsSummaryStats = {
+  /**
+   * The total number of requests within the queried time period
+   */
+  total_request_count?: number;
+  /**
+   * The total number of requests that were rate limited within the queried time period
+   */
+  rate_limited_request_count?: number;
+};
+/**
+ * Time Stats
+ * API Insights usage time stats for an organization
+ */
+export type ApiInsightsTimeStats = {
+  timestamp?: string;
+  total_request_count?: number;
+  rate_limited_request_count?: number;
+}[];
+/**
+ * User Stats
+ * API Insights usage stats for a user
+ */
+export type ApiInsightsUserStats = {
+  actor_type?: string;
+  actor_name?: string;
+  actor_id?: number;
+  integration_id?: number | null;
+  oauth_application_id?: number | null;
+  total_request_count?: number;
+  rate_limited_request_count?: number;
+  last_rate_limited_timestamp?: string | null;
+  last_request_timestamp?: string;
+}[];
+/**
  * The type of GitHub user that can comment, open issues, or create pull requests while the interaction limit is in effect.
  * @example "collaborators_only"
  */
@@ -5698,14 +6614,6 @@ export type Migration = {
   exclude?: string[];
 };
 /**
- * Organization Fine-Grained Permission
- * A fine-grained permission that protects organization resources.
- */
-export type OrganizationFineGrainedPermission = {
-  name: string;
-  description: string;
-};
-/**
  * Organization Role
  * Organization roles
  */
@@ -5723,6 +6631,14 @@ export type OrganizationRole = {
    */
   description?: string | null;
   /**
+   * The system role from which this role inherits permissions.
+   */
+  base_role?: ('read' | 'triage' | 'write' | 'maintain' | 'admin') | null;
+  /**
+   * Source answers the question, "where did this role come from?"
+   */
+  source?: ('Organization' | 'Enterprise' | 'Predefined') | null;
+  /**
    * A list of permissions included in this role.
    */
   permissions: string[];
@@ -5735,6 +6651,200 @@ export type OrganizationRole = {
    * The date and time the role was last updated.
    */
   updated_at: Date;
+};
+/**
+ * A Role Assignment for a Team
+ * The Relationship a Team has with a role.
+ */
+export type TeamRoleAssignment = {
+  /**
+   * Determines if the team has a direct, indirect, or mixed relationship to a role
+   * @example "direct"
+   */
+  assignment?: 'direct' | 'indirect' | 'mixed';
+  id: number;
+  node_id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  privacy?: string;
+  notification_setting?: string;
+  permission: string;
+  permissions?: {
+    pull: boolean;
+    triage: boolean;
+    push: boolean;
+    maintain: boolean;
+    admin: boolean;
+  };
+  url: string;
+  /**
+   * @example "https://github.com/orgs/rails/teams/core"
+   */
+  html_url: string;
+  members_url: string;
+  repositories_url: string;
+  parent: NullableTeamSimple;
+};
+/**
+ * Team Simple
+ * Groups of organization members that gives permissions on specified repositories.
+ */
+export type TeamSimple = {
+  /**
+   * Unique identifier of the team
+   * @example 1
+   */
+  id: number;
+  /**
+   * @example "MDQ6VGVhbTE="
+   */
+  node_id: string;
+  /**
+   * URL for the team
+   * @example "https://api.github.com/organizations/1/team/1"
+   */
+  url: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/members{/member}"
+   */
+  members_url: string;
+  /**
+   * Name of the team
+   * @example "Justice League"
+   */
+  name: string;
+  /**
+   * Description of the team
+   * @example "A great team."
+   */
+  description: string | null;
+  /**
+   * Permission that the team will have for its repositories
+   * @example "admin"
+   */
+  permission: string;
+  /**
+   * The level of privacy this team should have
+   * @example "closed"
+   */
+  privacy?: string;
+  /**
+   * The notification setting the team has set
+   * @example "notifications_enabled"
+   */
+  notification_setting?: string;
+  /**
+   * @example "https://github.com/orgs/rails/teams/core"
+   */
+  html_url: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/repos"
+   */
+  repositories_url: string;
+  /**
+   * @example "justice-league"
+   */
+  slug: string;
+  /**
+   * Distinguished Name (DN) that team maps to within LDAP environment
+   * @example "uid=example,ou=users,dc=github,dc=com"
+   */
+  ldap_dn?: string;
+};
+/**
+ * A Role Assignment for a User
+ * The Relationship a User has with a role.
+ */
+export type UserRoleAssignment = {
+  /**
+   * Determines if the user has a direct, indirect, or mixed relationship to a role
+   * @example "direct"
+   */
+  assignment?: 'direct' | 'indirect' | 'mixed';
+  /**
+   * Team the user has gotten the role through
+   */
+  inherited_from?: TeamSimple[];
+  name?: string | null;
+  email?: string | null;
+  /**
+   * @example "octocat"
+   */
+  login: string;
+  /**
+   * @example 1
+   */
+  id: number;
+  /**
+   * @example "MDQ6VXNlcjE="
+   */
+  node_id: string;
+  /**
+   * @example "https://github.com/images/error/octocat_happy.gif"
+   */
+  avatar_url: string;
+  /**
+   * @example "41d064eb2195891e12d0413f63227ea7"
+   */
+  gravatar_id: string | null;
+  /**
+   * @example "https://api.github.com/users/octocat"
+   */
+  url: string;
+  /**
+   * @example "https://github.com/octocat"
+   */
+  html_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/followers"
+   */
+  followers_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/following{/other_user}"
+   */
+  following_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/gists{/gist_id}"
+   */
+  gists_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+   */
+  starred_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/subscriptions"
+   */
+  subscriptions_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/orgs"
+   */
+  organizations_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/repos"
+   */
+  repos_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/events{/privacy}"
+   */
+  events_url: string;
+  /**
+   * @example "https://api.github.com/users/octocat/received_events"
+   */
+  received_events_url: string;
+  /**
+   * @example "User"
+   */
+  type: string;
+  site_admin: boolean;
+  /**
+   * @example "\"2020-07-09T00:17:55Z\""
+   */
+  starred_at?: string;
+  /**
+   * @example "public"
+   */
+  user_view_type?: string;
 };
 /**
  * Package Version
@@ -5849,6 +6959,14 @@ export type OrganizationProgrammaticAccessGrantRequest = {
    */
   created_at: string;
   /**
+   * Unique identifier of the user's token. This field can also be found in audit log events and the organization's settings for their PAT grants.
+   */
+  token_id: number;
+  /**
+   * The name given to the user's token. This field can also be found in an organization's settings page for Active Tokens.
+   */
+  token_name: string;
+  /**
    * Whether the associated fine-grained personal access token has expired.
    */
   token_expired: boolean;
@@ -5867,7 +6985,7 @@ export type OrganizationProgrammaticAccessGrantRequest = {
  */
 export type OrganizationProgrammaticAccessGrant = {
   /**
-   * Unique identifier of the fine-grained personal access token. The `pat_id` used to get details about an approved fine-grained personal access token.
+   * Unique identifier of the fine-grained personal access token grant. The `pat_id` used to get details about an approved fine-grained personal access token.
    */
   id: number;
   owner: SimpleUser;
@@ -5898,6 +7016,14 @@ export type OrganizationProgrammaticAccessGrant = {
    */
   access_granted_at: string;
   /**
+   * Unique identifier of the user's token. This field can also be found in audit log events and the organization's settings for their PAT grants.
+   */
+  token_id: number;
+  /**
+   * The name given to the user's token. This field can also be found in an organization's settings page for Active Tokens.
+   */
+  token_name: string;
+  /**
    * Whether the associated fine-grained personal access token has expired.
    */
   token_expired: boolean;
@@ -5909,6 +7035,62 @@ export type OrganizationProgrammaticAccessGrant = {
    * Date and time when the associated fine-grained personal access token was last used for authentication.
    */
   token_last_used_at: string | null;
+};
+/**
+ * Organization private registry
+ * Private registry configuration for an organization
+ */
+export type OrgPrivateRegistryConfiguration = {
+  /**
+   * The name of the private registry configuration.
+   * @example "MAVEN_REPOSITORY_SECRET"
+   */
+  name: string;
+  /**
+   * The registry type.
+   */
+  registry_type: 'maven_repository';
+  /**
+   * The username to use when authenticating with the private registry.
+   * @example "monalisa"
+   */
+  username?: string | null;
+  /**
+   * Which type of organization repositories have access to the private registry.
+   */
+  visibility: 'all' | 'private' | 'selected';
+  created_at: Date;
+  updated_at: Date;
+};
+/**
+ * Organization private registry
+ * Private registry configuration for an organization
+ */
+export type OrgPrivateRegistryConfigurationWithSelectedRepositories = {
+  /**
+   * The name of the private registry configuration.
+   * @example "MAVEN_REPOSITORY_SECRET"
+   */
+  name: string;
+  /**
+   * The registry type.
+   */
+  registry_type: 'maven_repository';
+  /**
+   * The username to use when authenticating with the private registry.
+   * @example "monalisa"
+   */
+  username?: string;
+  /**
+   * Which type of organization repositories have access to the private registry. `selected` means only the repositories specified by `selected_repository_ids` can access the private registry.
+   */
+  visibility: 'all' | 'private' | 'selected';
+  /**
+   * An array of repository IDs that can access the organization private registry when `visibility` is set to `selected`.
+   */
+  selected_repository_ids?: number[];
+  created_at: Date;
+  updated_at: Date;
 };
 /**
  * Project
@@ -5980,16 +7162,25 @@ export type Project = {
  * Organization Custom Property
  * Custom property defined on an organization
  */
-export type OrgCustomProperty = {
+export type CustomProperty = {
   /**
    * The name of the property
    */
   property_name: string;
   /**
+   * The URL that can be used to fetch, update, or delete info about this property via the API.
+   */
+  url?: string;
+  /**
+   * The source type of the property
+   * @example "organization"
+   */
+  source_type?: 'organization' | 'enterprise';
+  /**
    * The type of the value for the property
    * @example "single_select"
    */
-  value_type: 'string' | 'single_select';
+  value_type: 'string' | 'single_select' | 'multi_select' | 'true_false';
   /**
    * Whether the property is required.
    */
@@ -6012,6 +7203,34 @@ export type OrgCustomProperty = {
    * @example "org_actors"
    */
   values_editable_by?: ('org_actors' | 'org_and_repo_actors') | null;
+};
+/**
+ * Custom Property Set Payload
+ * Custom property set payload
+ */
+export type CustomPropertySetPayload = {
+  /**
+   * The type of the value for the property
+   * @example "single_select"
+   */
+  value_type: 'string' | 'single_select' | 'multi_select' | 'true_false';
+  /**
+   * Whether the property is required.
+   */
+  required?: boolean;
+  /**
+   * Default value of the property
+   */
+  default_value?: (string | string[]) | null;
+  /**
+   * Short description of the property
+   */
+  description?: string | null;
+  /**
+   * An ordered list of the allowed values of the property.
+   * The property can have up to 200 allowed values.
+   */
+  allowed_values?: string[] | null;
 };
 /**
  * Custom Property Value
@@ -6379,7 +7598,7 @@ export type NullableRepository = {
    */
   allow_update_branch?: boolean;
   /**
-   * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+   * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
    * @deprecated
    */
   use_squash_pr_title_as_default?: boolean;
@@ -6836,7 +8055,7 @@ export type FullRepository = {
    * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
    */
   custom_properties?: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
 };
 /**
@@ -6866,9 +8085,10 @@ export type RepositoryRulesetBypassActor = {
     | 'Team'
     | 'DeployKey';
   /**
-   * When the specified actor can bypass the ruleset. `pull_request` means that an actor can only bypass rules on pull requests. `pull_request` is not applicable for the `DeployKey` actor type.
+   * When the specified actor can bypass the ruleset. `pull_request` means that an actor can only bypass rules on pull requests. `pull_request` is not applicable for the `DeployKey` actor type. Also, `pull_request` is only applicable to branch rulesets.
+   * @defaultValue "always"
    */
-  bypass_mode: 'always' | 'pull_request';
+  bypass_mode?: 'always' | 'pull_request';
 };
 /**
  * Repository ruleset conditions for ref names
@@ -6931,6 +8151,10 @@ export type RepositoryRulesetConditionsRepositoryPropertySpec = {
    * The values to match for the repository property
    */
   property_values: string[];
+  /**
+   * The source of the repository property. Defaults to 'custom' if not specified.
+   */
+  source?: 'custom' | 'system';
 };
 /**
  * Repository ruleset conditions for repository properties
@@ -6950,15 +8174,23 @@ export type RepositoryRulesetConditionsRepositoryPropertyTarget = {
 };
 /**
  * Organization ruleset conditions
- * Conditions for an organization ruleset. The conditions object should contain both `repository_name` and `ref_name` properties or both `repository_id` and `ref_name` properties.
+ * Conditions for an organization ruleset.
+ * The branch and tag rulesets conditions object should contain both `repository_name` and `ref_name` properties, or both `repository_id` and `ref_name` properties, or both `repository_property` and `ref_name` properties.
+ * The push rulesets conditions object does not require the `ref_name` property.
+ * For repository policy rulesets, the conditions object should only contain the `repository_name`, the `repository_id`, or the `repository_property`.
  */
-export type OrgRulesetConditions =
-  | (RepositoryRulesetConditions &
-      RepositoryRulesetConditionsRepositoryNameTarget)
-  | (RepositoryRulesetConditions &
-      RepositoryRulesetConditionsRepositoryIdTarget)
-  | (RepositoryRulesetConditions &
-      RepositoryRulesetConditionsRepositoryPropertyTarget);
+export type OrgRulesetConditions = unknown &
+  (
+    | (unknown &
+        (RepositoryRulesetConditions &
+          RepositoryRulesetConditionsRepositoryNameTarget))
+    | (unknown &
+        (RepositoryRulesetConditions &
+          RepositoryRulesetConditionsRepositoryIdTarget))
+    | (unknown &
+        (RepositoryRulesetConditions &
+          RepositoryRulesetConditionsRepositoryPropertyTarget))
+  );
 /**
  * creation
  * Only allow users with bypass permission to create matching refs.
@@ -6994,6 +8226,43 @@ export type RepositoryRuleRequiredLinearHistory = {
   type: 'required_linear_history';
 };
 /**
+ * merge_queue
+ * Merges must be performed via a merge queue.
+ */
+export type RepositoryRuleMergeQueue = {
+  type: 'merge_queue';
+  parameters?: {
+    /**
+     * Maximum time for a required status check to report a conclusion. After this much time has elapsed, checks that have not reported a conclusion will be assumed to have failed
+     */
+    check_response_timeout_minutes: number;
+    /**
+     * When set to ALLGREEN, the merge commit created by merge queue for each PR in the group must pass all required checks to merge. When set to HEADGREEN, only the commit at the head of the merge group, i.e. the commit containing changes from all of the PRs in the group, must pass its required checks to merge.
+     */
+    grouping_strategy: 'ALLGREEN' | 'HEADGREEN';
+    /**
+     * Limit the number of queued pull requests requesting checks and workflow runs at the same time.
+     */
+    max_entries_to_build: number;
+    /**
+     * The maximum number of PRs that will be merged together in a group.
+     */
+    max_entries_to_merge: number;
+    /**
+     * Method to use when merging changes from queued pull requests.
+     */
+    merge_method: 'MERGE' | 'SQUASH' | 'REBASE';
+    /**
+     * The minimum number of PRs that will be merged together in a group.
+     */
+    min_entries_to_merge: number;
+    /**
+     * The time merge queue should wait after the first PR is added to the queue for the minimum group size to be met. After this time has elapsed, the minimum group size will be ignored and a smaller group will be merged.
+     */
+    min_entries_to_merge_wait_minutes: number;
+  };
+};
+/**
  * required_deployments
  * Choose which environments must be successfully deployed to before refs can be pushed into a ref that matches this rule.
  */
@@ -7014,12 +8283,34 @@ export type RepositoryRuleRequiredSignatures = {
   type: 'required_signatures';
 };
 /**
+ * RequiredReviewerConfiguration
+ * A reviewing team, and file patterns describing which files they must approve changes to.
+ */
+export type RepositoryRuleParamsRequiredReviewerConfiguration = {
+  /**
+   * Array of file patterns. Pull requests which change matching files must be approved by the specified team. File patterns use the same syntax as `.gitignore` files.
+   */
+  file_patterns: string[];
+  /**
+   * Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional.
+   */
+  minimum_approvals: number;
+  /**
+   * Node ID of the team which must review changes to matching files.
+   */
+  reviewer_id: string;
+};
+/**
  * pull_request
  * Require all commits be made to a non-target branch and submitted via a pull request before they can be merged.
  */
 export type RepositoryRulePullRequest = {
   type: 'pull_request';
   parameters?: {
+    /**
+     * When merging pull requests, you can allow any combination of merge commits, squashing, or rebasing. At least one option must be enabled.
+     */
+    allowed_merge_methods?: string[];
     /**
      * New, reviewable commits pushed will dismiss previous pull request review approvals.
      */
@@ -7063,6 +8354,10 @@ export type RepositoryRuleParamsStatusCheckConfiguration = {
 export type RepositoryRuleRequiredStatusChecks = {
   type: 'required_status_checks';
   parameters?: {
+    /**
+     * Allow repositories and branches to be created if a check would otherwise prohibit it.
+     */
+    do_not_enforce_on_create?: boolean;
     /**
      * Status checks that are required.
      */
@@ -7249,6 +8544,10 @@ export type RepositoryRuleWorkflows = {
   type: 'workflows';
   parameters?: {
     /**
+     * Allow repositories and branches to be created if a check would otherwise prohibit it.
+     */
+    do_not_enforce_on_create?: boolean;
+    /**
      * Workflows that must pass for this rule to pass.
      */
     workflows: RepositoryRuleParamsWorkflowFileReference[];
@@ -7294,59 +8593,62 @@ export type RepositoryRuleCodeScanning = {
  * Repository Rule
  * A repository rule.
  */
-export type RepositoryRule =
-  | RepositoryRuleCreation
-  | RepositoryRuleUpdate
-  | RepositoryRuleDeletion
-  | RepositoryRuleRequiredLinearHistory
-  | RepositoryRuleRequiredDeployments
-  | RepositoryRuleRequiredSignatures
-  | RepositoryRulePullRequest
-  | RepositoryRuleRequiredStatusChecks
-  | RepositoryRuleNonFastForward
-  | RepositoryRuleCommitMessagePattern
-  | RepositoryRuleCommitAuthorEmailPattern
-  | RepositoryRuleCommitterEmailPattern
-  | RepositoryRuleBranchNamePattern
-  | RepositoryRuleTagNamePattern
-  | {
-      type: 'file_path_restriction';
-      parameters?: {
-        /**
-         * The file paths that are restricted from being pushed to the commit graph.
-         */
-        restricted_file_paths: string[];
-      };
-    }
-  | {
-      type: 'max_file_path_length';
-      parameters?: {
-        /**
-         * The maximum amount of characters allowed in file paths
-         */
-        max_file_path_length: number;
-      };
-    }
-  | {
-      type: 'file_extension_restriction';
-      parameters?: {
-        /**
-         * The file extensions that are restricted from being pushed to the commit graph.
-         */
-        restricted_file_extensions: string[];
-      };
-    }
-  | {
-      type: 'max_file_size';
-      parameters?: {
-        /**
-         * The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).
-         */
-        max_file_size: number;
-      };
-    }
-  | RepositoryRuleWorkflows
-  | RepositoryRuleCodeScanning;
+export type RepositoryRule = unknown &
+  (
+    | RepositoryRuleCreation
+    | RepositoryRuleUpdate
+    | RepositoryRuleDeletion
+    | RepositoryRuleRequiredLinearHistory
+    | RepositoryRuleMergeQueue
+    | RepositoryRuleRequiredDeployments
+    | RepositoryRuleRequiredSignatures
+    | RepositoryRulePullRequest
+    | RepositoryRuleRequiredStatusChecks
+    | RepositoryRuleNonFastForward
+    | RepositoryRuleCommitMessagePattern
+    | RepositoryRuleCommitAuthorEmailPattern
+    | RepositoryRuleCommitterEmailPattern
+    | RepositoryRuleBranchNamePattern
+    | RepositoryRuleTagNamePattern
+    | {
+        type: 'file_path_restriction';
+        parameters?: {
+          /**
+           * The file paths that are restricted from being pushed to the commit graph.
+           */
+          restricted_file_paths: string[];
+        };
+      }
+    | {
+        type: 'max_file_path_length';
+        parameters?: {
+          /**
+           * The maximum amount of characters allowed in file paths
+           */
+          max_file_path_length: number;
+        };
+      }
+    | {
+        type: 'file_extension_restriction';
+        parameters?: {
+          /**
+           * The file extensions that are restricted from being pushed to the commit graph.
+           */
+          restricted_file_extensions: string[];
+        };
+      }
+    | {
+        type: 'max_file_size';
+        parameters?: {
+          /**
+           * The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).
+           */
+          max_file_size: number;
+        };
+      }
+    | RepositoryRuleWorkflows
+    | RepositoryRuleCodeScanning
+  );
 /**
  * Repository ruleset
  * A set of rules to apply when specified conditions are met.
@@ -7362,14 +8664,12 @@ export type RepositoryRuleset = {
   name: string;
   /**
    * The target of the ruleset
-   *
-   * **Note**: The `push` target is in beta and is subject to change.
    */
-  target?: 'branch' | 'tag' | 'push';
+  target?: 'branch' | 'tag' | 'push' | 'repository';
   /**
    * The type of the source of the ruleset
    */
-  source_type?: 'Repository' | 'Organization';
+  source_type?: 'Repository' | 'Organization' | 'Enterprise';
   /**
    * The name of the source
    */
@@ -7397,7 +8697,7 @@ export type RepositoryRuleset = {
        * The html URL of the ruleset
        */
       href?: string;
-    };
+    } | null;
   };
   conditions?: (RepositoryRulesetConditions | OrgRulesetConditions) | null;
   rules?: RepositoryRule[];
@@ -7452,7 +8752,7 @@ export type RuleSuites = {
   /**
    * The result of the rule evaluations for rules with the `active` and `evaluate` enforcement statuses, demonstrating whether rules would pass or fail if all rules in the rule suite were `active`.
    */
-  evaluation_result?: 'pass' | 'fail';
+  evaluation_result?: 'pass' | 'fail' | 'bypass';
 }[];
 /**
  * Rule Suite
@@ -7500,9 +8800,9 @@ export type RuleSuite = {
    */
   result?: 'pass' | 'fail' | 'bypass';
   /**
-   * The result of the rule evaluations for rules with the `active` and `evaluate` enforcement statuses, demonstrating whether rules would pass or fail if all rules in the rule suite were `active`.
+   * The result of the rule evaluations for rules with the `active` and `evaluate` enforcement statuses, demonstrating whether rules would pass or fail if all rules in the rule suite were `active`. Null if no rules with `evaluate` enforcement status were run.
    */
-  evaluation_result?: 'pass' | 'fail';
+  evaluation_result?: ('pass' | 'fail' | 'bypass') | null;
   /**
    * Details on the evaluated rules.
    */
@@ -7534,9 +8834,9 @@ export type RuleSuite = {
      */
     rule_type?: string;
     /**
-     * Any associated details with the rule evaluation.
+     * The detailed failure message for the rule. Null if the rule passed.
      */
-    details?: string;
+    details?: string | null;
   }[];
 };
 /**
@@ -7668,6 +8968,7 @@ export type RepositoryAdvisory = {
      */
     score: number | null;
   } | null;
+  cvss_severities?: CvssSeverities;
   cwes:
     | {
         /**
@@ -7706,72 +9007,6 @@ export type RepositoryAdvisory = {
    * A temporary private fork of the advisory's repository for collaborating on a fix.
    */
   private_fork: SimpleRepository | null;
-};
-/**
- * Team Simple
- * Groups of organization members that gives permissions on specified repositories.
- */
-export type TeamSimple = {
-  /**
-   * Unique identifier of the team
-   * @example 1
-   */
-  id: number;
-  /**
-   * @example "MDQ6VGVhbTE="
-   */
-  node_id: string;
-  /**
-   * URL for the team
-   * @example "https://api.github.com/organizations/1/team/1"
-   */
-  url: string;
-  /**
-   * @example "https://api.github.com/organizations/1/team/1/members{/member}"
-   */
-  members_url: string;
-  /**
-   * Name of the team
-   * @example "Justice League"
-   */
-  name: string;
-  /**
-   * Description of the team
-   * @example "A great team."
-   */
-  description: string | null;
-  /**
-   * Permission that the team will have for its repositories
-   * @example "admin"
-   */
-  permission: string;
-  /**
-   * The level of privacy this team should have
-   * @example "closed"
-   */
-  privacy?: string;
-  /**
-   * The notification setting the team has set
-   * @example "notifications_enabled"
-   */
-  notification_setting?: string;
-  /**
-   * @example "https://github.com/orgs/rails/teams/core"
-   */
-  html_url: string;
-  /**
-   * @example "https://api.github.com/organizations/1/team/1/repos"
-   */
-  repositories_url: string;
-  /**
-   * @example "justice-league"
-   */
-  slug: string;
-  /**
-   * Distinguished Name (DN) that team maps to within LDAP environment
-   * @example "uid=example,ou=users,dc=github,dc=com"
-   */
-  ldap_dn?: string;
 };
 export type ActionsBillingUsage = {
   /**
@@ -7876,6 +9111,67 @@ export type CombinedBillingUsage = {
    * Estimated sum of free and paid storage space (GB) used in billing cycle.
    */
   estimated_storage_for_month: number;
+};
+/**
+ * Hosted compute network configuration
+ * A hosted compute network configuration.
+ */
+export type NetworkConfiguration = {
+  /**
+   * The unique identifier of the network configuration.
+   * @example "123ABC456DEF789"
+   */
+  id: string;
+  /**
+   * The name of the network configuration.
+   * @example "my-network-configuration"
+   */
+  name: string;
+  /**
+   * The hosted compute service the network configuration supports.
+   */
+  compute_service?: 'none' | 'actions' | 'codespaces';
+  /**
+   * The unique identifier of each network settings in the configuration.
+   * @example "123ABC456DEF789"
+   */
+  network_settings_ids?: string[];
+  /**
+   * The time at which the network configuration was created, in ISO 8601 format.
+   * @example "2024-04-26T11:31:07Z"
+   */
+  created_on: Date | null;
+};
+/**
+ * Hosted compute network settings resource
+ * A hosted compute network settings resource.
+ */
+export type NetworkSettings = {
+  /**
+   * The unique identifier of the network settings resource.
+   * @example "220F78DACB92BBFBC5E6F22DE1CCF52309D"
+   */
+  id: string;
+  /**
+   * The identifier of the network configuration that is using this settings resource.
+   * @example "934E208B3EE0BD60CF5F752C426BFB53562"
+   */
+  network_configuration_id?: string;
+  /**
+   * The name of the network settings resource.
+   * @example "my-network-settings"
+   */
+  name: string;
+  /**
+   * The subnet this network settings resource is configured for.
+   * @example "/subscriptions/14839728-3ad9-43ab-bd2b-fa6ad0f75e2a/resourceGroups/my-rg/providers/Microsoft.Network/virtualNetworks/my-vnet/subnets/my-subnet"
+   */
+  subnet_id: string;
+  /**
+   * The location of the subnet this network settings resource is configured for.
+   * @example "eastus"
+   */
+  region: string;
 };
 /**
  * Team Organization
@@ -8817,6 +10113,7 @@ export type RateLimitOverview = {
     actions_runner_registration?: RateLimit;
     scim?: RateLimit;
     dependency_snapshots?: RateLimit;
+    code_scanning_autofix?: RateLimit;
   };
   rate: RateLimit;
 };
@@ -9568,7 +10865,7 @@ export type Deployment = {
   task: string;
   payload:
     | {
-        [key: string]: any;
+        [key: string]: unknown;
       }
     | string;
   /**
@@ -9790,17 +11087,17 @@ export type Autolink = {
   is_alphanumeric: boolean;
 };
 /**
- * Check Automated Security Fixes
- * Check Automated Security Fixes
+ * Check Dependabot security updates
+ * Check Dependabot security updates
  */
 export type CheckAutomatedSecurityFixes = {
   /**
-   * Whether automated security fixes are enabled for the repository.
+   * Whether Dependabot security updates are enabled for the repository.
    * @example true
    */
   enabled: boolean;
   /**
-   * Whether automated security fixes are paused for the repository.
+   * Whether Dependabot security updates are paused for the repository.
    */
   paused: boolean;
 };
@@ -9931,6 +11228,7 @@ export type BranchRestrictionPolicy = {
     received_events_url?: string;
     type?: string;
     site_admin?: boolean;
+    user_view_type?: string;
   }[];
   teams: {
     id?: number;
@@ -10005,8 +11303,13 @@ export type BranchRestrictionPolicy = {
        */
       type?: string;
       site_admin?: boolean;
+      /**
+       * @example "public"
+       */
+      user_view_type?: string;
     };
     name?: string;
+    client_id?: string;
     description?: string;
     external_url?: string;
     html_url?: string;
@@ -10118,6 +11421,7 @@ export type Verification = {
   reason: string;
   payload: string | null;
   signature: string | null;
+  verified_at: string | null;
 };
 /**
  * Diff Entry
@@ -10225,8 +11529,8 @@ export type Commit = {
     };
     verification?: Verification;
   };
-  author: NullableSimpleUser;
-  committer: NullableSimpleUser;
+  author: (SimpleUser | EmptyObject) | null;
+  committer: (SimpleUser | EmptyObject) | null;
   parents: {
     /**
      * @example "7638417db6d59f3c431d3e1f261cc637155684cd"
@@ -10756,7 +12060,7 @@ export type CodeScanningAlertRule = {
    */
   description?: string;
   /**
-   * description of the rule used to detect the alert.
+   * A description of the rule used to detect the alert.
    */
   full_description?: string;
   /**
@@ -10796,6 +12100,51 @@ export enum CodeScanningAlertSetState {
   OPEN = 'open',
   DISMISSED = 'dismissed',
 }
+/**
+ * The status of an autofix.
+ */
+export enum CodeScanningAutofixStatus {
+  PENDING = 'pending',
+  ERROR = 'error',
+  SUCCESS = 'success',
+  OUTDATED = 'outdated',
+}
+/**
+ * The description of an autofix.
+ */
+export type CodeScanningAutofixDescription = string | null;
+/**
+ * The start time of an autofix in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+ */
+export type CodeScanningAutofixStartedAt = Date;
+export type CodeScanningAutofix = {
+  status: CodeScanningAutofixStatus;
+  description: CodeScanningAutofixDescription;
+  started_at: CodeScanningAutofixStartedAt;
+};
+/**
+ * Commit an autofix for a code scanning alert
+ */
+export type CodeScanningAutofixCommits = {
+  /**
+   * The Git reference of target branch for the commit. Branch needs to already exist.  For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
+   */
+  target_ref?: string;
+  /**
+   * Commit message to be used.
+   */
+  message?: string;
+} | null;
+export type CodeScanningAutofixCommitsResponse = {
+  /**
+   * The Git reference of target branch for the commit. For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
+   */
+  target_ref?: string;
+  /**
+   * SHA of commit with autofix.
+   */
+  sha?: string;
+};
 /**
  * An identifier for the upload.
  * @example "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53"
@@ -11091,6 +12440,7 @@ export type CodeScanningDefaultSetup = {
    * Languages to be analyzed.
    */
   languages?: (
+    | 'actions'
     | 'c-cpp'
     | 'csharp'
     | 'go'
@@ -11102,6 +12452,15 @@ export type CodeScanningDefaultSetup = {
     | 'typescript'
     | 'swift'
   )[];
+  /**
+   * Runner type to be used.
+   */
+  runner_type?: ('standard' | 'labeled') | null;
+  /**
+   * Runner label to be used if the runner type is labeled.
+   * @example "code-scanning"
+   */
+  runner_label?: string | null;
   /**
    * CodeQL query suite to be used.
    */
@@ -11125,6 +12484,15 @@ export type CodeScanningDefaultSetupUpdate = {
    */
   state?: 'configured' | 'not-configured';
   /**
+   * Runner type to be used.
+   */
+  runner_type?: 'standard' | 'labeled';
+  /**
+   * Runner label to be used if the runner type is labeled.
+   * @example "code-scanning"
+   */
+  runner_label?: string | null;
+  /**
    * CodeQL query suite to be used.
    */
   query_suite?: 'default' | 'extended';
@@ -11132,6 +12500,7 @@ export type CodeScanningDefaultSetupUpdate = {
    * CodeQL languages to be analyzed.
    */
   languages?: (
+    | 'actions'
     | 'c-cpp'
     | 'csharp'
     | 'go'
@@ -11186,6 +12555,24 @@ export type CodeScanningSarifsStatus = {
    * Any errors that ocurred during processing of the delivery.
    */
   errors?: string[] | null;
+};
+/**
+ * Code security configuration associated with a repository and attachment status
+ */
+export type CodeSecurityConfigurationForRepository = {
+  /**
+   * The attachment status of the code security configuration on the repository.
+   */
+  status?:
+    | 'attached'
+    | 'attaching'
+    | 'detached'
+    | 'removed'
+    | 'enforced'
+    | 'failed'
+    | 'updating'
+    | 'removed_by_enterprise';
+  configuration?: CodeSecurityConfiguration;
 };
 /**
  * CODEOWNERS errors
@@ -11382,6 +12769,10 @@ export type Collaborator = {
    * @example "admin"
    */
   role_name: string;
+  /**
+   * @example "public"
+   */
+  user_view_type?: string;
 };
 /**
  * Repository Invitation
@@ -11507,6 +12898,10 @@ export type NullableCollaborator = {
    * @example "admin"
    */
   role_name: string;
+  /**
+   * @example "public"
+   */
+  user_view_type?: string;
 } | null;
 /**
  * Repository Collaborator Permission
@@ -11887,6 +13282,7 @@ export type ContentTree = {
   name: string;
   path: string;
   sha: string;
+  content?: string;
   url: string;
   git_url: string | null;
   html_url: string | null;
@@ -11896,7 +13292,6 @@ export type ContentTree = {
     size: number;
     name: string;
     path: string;
-    content?: string;
     sha: string;
     url: string;
     git_url: string | null;
@@ -12058,6 +13453,27 @@ export type FileCommit = {
       reason?: string;
       signature?: string | null;
       payload?: string | null;
+      verified_at?: string | null;
+    };
+  };
+};
+/**
+ * The ID of the push protection bypass placeholder. This value is returned on any push protected routes.
+ */
+export type SecretScanningPushProtectionBypassPlaceholderId = string;
+/**
+ * Repository rule violation was detected
+ */
+export type RepositoryRuleViolationError = {
+  message?: string;
+  documentation_url?: string;
+  status?: string;
+  metadata?: {
+    secret_scanning?: {
+      bypass_placeholders?: {
+        placeholder_id?: SecretScanningPushProtectionBypassPlaceholderId;
+        token_type?: string;
+      }[];
     };
   };
 };
@@ -12087,6 +13503,7 @@ export type Contributor = {
   contributions: number;
   email?: string;
   name?: string;
+  user_view_type?: string;
 };
 /**
  * A Dependabot alert.
@@ -12224,6 +13641,11 @@ export type DependencyGraphSpdxSbom = {
      * @example "SPDX-2.3"
      */
     spdxVersion: string;
+    /**
+     * An optional comment about the SPDX document.
+     * @example "Exact versions could not be resolved for some packages. For more information: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/"
+     */
+    comment?: string;
     creationInfo: {
       /**
        * The date and time the SPDX document was created.
@@ -12246,12 +13668,8 @@ export type DependencyGraphSpdxSbom = {
      */
     dataLicense: string;
     /**
-     * The name of the repository that the SPDX document describes.
-     */
-    documentDescribes: string[];
-    /**
      * The namespace for the SPDX document.
-     * @example "https://github.com/example/dependency_graph/sbom-123"
+     * @example "https://spdx.org/spdxdocs/protobom/15e41dd2-f961-4f4d-b8dc-f8f57ad70d57"
      */
     documentNamespace: string;
     packages: {
@@ -12262,7 +13680,7 @@ export type DependencyGraphSpdxSbom = {
       SPDXID?: string;
       /**
        * The name of the package.
-       * @example "rubygems:github/github"
+       * @example "github/github"
        */
       name?: string;
       /**
@@ -12298,6 +13716,11 @@ export type DependencyGraphSpdxSbom = {
        * @example "NOASSERTION"
        */
       supplier?: string;
+      /**
+       * The copyright holders of the package, and any dates present with those notices, if available.
+       * @example "Copyright (c) 1985 GitHub.com"
+       */
+      copyrightText?: string;
       externalRefs?: {
         /**
          * The category of reference to an external resource this reference refers to.
@@ -12315,6 +13738,21 @@ export type DependencyGraphSpdxSbom = {
          */
         referenceType: string;
       }[];
+    }[];
+    relationships?: {
+      /**
+       * The type of relationship between the two SPDX elements.
+       * @example "DEPENDS_ON"
+       */
+      relationshipType?: string;
+      /**
+       * The SPDX identifier of the package that is the source of the relationship.
+       */
+      spdxElementId?: string;
+      /**
+       * The SPDX identifier of the package that is the target of the relationship.
+       */
+      relatedSpdxElement?: string;
     }[];
   };
 };
@@ -12479,7 +13917,7 @@ export type DeploymentStatus = {
    */
   environment?: string;
   /**
-   * Deprecated: the URL to associate with this status.
+   * Closing down notice: the URL to associate with this status.
    * @example "https://example.com/deployment/42/output"
    */
   target_url: string;
@@ -12835,6 +14273,7 @@ export type GitCommit = {
     reason: string;
     signature: string | null;
     payload: string | null;
+    verified_at: string | null;
   };
   html_url: string;
 };
@@ -13201,6 +14640,7 @@ export type NullableIssue = {
   performed_via_github_app?: NullableIntegration;
   author_association: AuthorAssociation;
   reactions?: ReactionRollup;
+  sub_issues_summary?: SubIssuesSummary;
 } | null;
 /**
  * Issue Event Label
@@ -13616,6 +15056,7 @@ export type IssueEventForIssue =
  */
 export type Label = {
   /**
+   * Unique identifier for the label.
    * @example 208045946
    */
   id: number;
@@ -13634,6 +15075,7 @@ export type Label = {
    */
   name: string;
   /**
+   * Optional description of the label, such as its purpose.
    * @example "Something isn't working"
    */
   description: string | null;
@@ -13643,6 +15085,7 @@ export type Label = {
    */
   color: string;
   /**
+   * Whether this label comes by default in a new repository.
    * @example true
    */
   default: boolean;
@@ -13781,6 +15224,7 @@ export type TimelineCommittedEvent = {
     reason: string;
     signature: string | null;
     payload: string | null;
+    verified_at: string | null;
   };
   html_url: string;
 };
@@ -13871,12 +15315,12 @@ export type PullRequestReviewComment = {
    */
   path: string;
   /**
-   * The line index in the diff to which the comment applies. This field is deprecated; use `line` instead.
+   * The line index in the diff to which the comment applies. This field is closing down; use `line` instead.
    * @example 1
    */
   position?: number;
   /**
-   * The index of the original line in the diff to which the comment applies. This field is deprecated; use `original_line` instead.
+   * The index of the original line in the diff to which the comment applies. This field is closing down; use `original_line` instead.
    * @example 4
    */
   original_position?: number;
@@ -14055,29 +15499,31 @@ export type StateChangeIssueEvent = {
  * Timeline Event
  * Timeline Event
  */
-export type TimelineIssueEvents =
-  | LabeledIssueEvent
-  | UnlabeledIssueEvent
-  | MilestonedIssueEvent
-  | DemilestonedIssueEvent
-  | RenamedIssueEvent
-  | ReviewRequestedIssueEvent
-  | ReviewRequestRemovedIssueEvent
-  | ReviewDismissedIssueEvent
-  | LockedIssueEvent
-  | AddedToProjectIssueEvent
-  | MovedColumnInProjectIssueEvent
-  | RemovedFromProjectIssueEvent
-  | ConvertedNoteToIssueIssueEvent
-  | TimelineCommentEvent
-  | TimelineCrossReferencedEvent
-  | TimelineCommittedEvent
-  | TimelineReviewedEvent
-  | TimelineLineCommentedEvent
-  | TimelineCommitCommentedEvent
-  | TimelineAssignedIssueEvent
-  | TimelineUnassignedIssueEvent
-  | StateChangeIssueEvent;
+export type TimelineIssueEvents = unknown &
+  (
+    | LabeledIssueEvent
+    | UnlabeledIssueEvent
+    | MilestonedIssueEvent
+    | DemilestonedIssueEvent
+    | RenamedIssueEvent
+    | ReviewRequestedIssueEvent
+    | ReviewRequestRemovedIssueEvent
+    | ReviewDismissedIssueEvent
+    | LockedIssueEvent
+    | AddedToProjectIssueEvent
+    | MovedColumnInProjectIssueEvent
+    | RemovedFromProjectIssueEvent
+    | ConvertedNoteToIssueIssueEvent
+    | TimelineCommentEvent
+    | TimelineCrossReferencedEvent
+    | TimelineCommittedEvent
+    | TimelineReviewedEvent
+    | TimelineLineCommentedEvent
+    | TimelineCommitCommentedEvent
+    | TimelineAssignedIssueEvent
+    | TimelineUnassignedIssueEvent
+    | StateChangeIssueEvent
+  );
 /**
  * Deploy Key
  * An SSH key granting access to a single repository.
@@ -14092,6 +15538,7 @@ export type DeployKey = {
   read_only: boolean;
   added_by?: string | null;
   last_used?: string | null;
+  enabled?: boolean;
 };
 /**
  * Language
@@ -14560,288 +16007,16 @@ export type PullRequest = {
   head: {
     label: string;
     ref: string;
-    repo: {
-      archive_url: string;
-      assignees_url: string;
-      blobs_url: string;
-      branches_url: string;
-      collaborators_url: string;
-      comments_url: string;
-      commits_url: string;
-      compare_url: string;
-      contents_url: string;
-      contributors_url: string;
-      deployments_url: string;
-      description: string | null;
-      downloads_url: string;
-      events_url: string;
-      fork: boolean;
-      forks_url: string;
-      full_name: string;
-      git_commits_url: string;
-      git_refs_url: string;
-      git_tags_url: string;
-      hooks_url: string;
-      html_url: string;
-      id: number;
-      node_id: string;
-      issue_comment_url: string;
-      issue_events_url: string;
-      issues_url: string;
-      keys_url: string;
-      labels_url: string;
-      languages_url: string;
-      merges_url: string;
-      milestones_url: string;
-      name: string;
-      notifications_url: string;
-      owner: {
-        avatar_url: string;
-        events_url: string;
-        followers_url: string;
-        following_url: string;
-        gists_url: string;
-        gravatar_id: string | null;
-        html_url: string;
-        id: number;
-        node_id: string;
-        login: string;
-        organizations_url: string;
-        received_events_url: string;
-        repos_url: string;
-        site_admin: boolean;
-        starred_url: string;
-        subscriptions_url: string;
-        type: string;
-        url: string;
-      };
-      private: boolean;
-      pulls_url: string;
-      releases_url: string;
-      stargazers_url: string;
-      statuses_url: string;
-      subscribers_url: string;
-      subscription_url: string;
-      tags_url: string;
-      teams_url: string;
-      trees_url: string;
-      url: string;
-      clone_url: string;
-      default_branch: string;
-      forks: number;
-      forks_count: number;
-      git_url: string;
-      has_downloads: boolean;
-      has_issues: boolean;
-      has_projects: boolean;
-      has_wiki: boolean;
-      has_pages: boolean;
-      has_discussions: boolean;
-      homepage: string | null;
-      language: string | null;
-      master_branch?: string;
-      archived: boolean;
-      disabled: boolean;
-      /**
-       * The repository visibility: public, private, or internal.
-       */
-      visibility?: string;
-      mirror_url: string | null;
-      open_issues: number;
-      open_issues_count: number;
-      permissions?: {
-        admin: boolean;
-        maintain?: boolean;
-        push: boolean;
-        triage?: boolean;
-        pull: boolean;
-      };
-      temp_clone_token?: string;
-      allow_merge_commit?: boolean;
-      allow_squash_merge?: boolean;
-      allow_rebase_merge?: boolean;
-      license: {
-        key: string;
-        name: string;
-        url: string | null;
-        spdx_id: string | null;
-        node_id: string;
-      } | null;
-      pushed_at: Date;
-      size: number;
-      ssh_url: string;
-      stargazers_count: number;
-      svn_url: string;
-      topics?: string[];
-      watchers: number;
-      watchers_count: number;
-      created_at: Date;
-      updated_at: Date;
-      allow_forking?: boolean;
-      is_template?: boolean;
-      web_commit_signoff_required?: boolean;
-    } | null;
+    repo: Repository;
     sha: string;
-    user: {
-      avatar_url: string;
-      events_url: string;
-      followers_url: string;
-      following_url: string;
-      gists_url: string;
-      gravatar_id: string | null;
-      html_url: string;
-      id: number;
-      node_id: string;
-      login: string;
-      organizations_url: string;
-      received_events_url: string;
-      repos_url: string;
-      site_admin: boolean;
-      starred_url: string;
-      subscriptions_url: string;
-      type: string;
-      url: string;
-    };
+    user: SimpleUser;
   };
   base: {
     label: string;
     ref: string;
-    repo: {
-      archive_url: string;
-      assignees_url: string;
-      blobs_url: string;
-      branches_url: string;
-      collaborators_url: string;
-      comments_url: string;
-      commits_url: string;
-      compare_url: string;
-      contents_url: string;
-      contributors_url: string;
-      deployments_url: string;
-      description: string | null;
-      downloads_url: string;
-      events_url: string;
-      fork: boolean;
-      forks_url: string;
-      full_name: string;
-      git_commits_url: string;
-      git_refs_url: string;
-      git_tags_url: string;
-      hooks_url: string;
-      html_url: string;
-      id: number;
-      is_template?: boolean;
-      node_id: string;
-      issue_comment_url: string;
-      issue_events_url: string;
-      issues_url: string;
-      keys_url: string;
-      labels_url: string;
-      languages_url: string;
-      merges_url: string;
-      milestones_url: string;
-      name: string;
-      notifications_url: string;
-      owner: {
-        avatar_url: string;
-        events_url: string;
-        followers_url: string;
-        following_url: string;
-        gists_url: string;
-        gravatar_id: string | null;
-        html_url: string;
-        id: number;
-        node_id: string;
-        login: string;
-        organizations_url: string;
-        received_events_url: string;
-        repos_url: string;
-        site_admin: boolean;
-        starred_url: string;
-        subscriptions_url: string;
-        type: string;
-        url: string;
-      };
-      private: boolean;
-      pulls_url: string;
-      releases_url: string;
-      stargazers_url: string;
-      statuses_url: string;
-      subscribers_url: string;
-      subscription_url: string;
-      tags_url: string;
-      teams_url: string;
-      trees_url: string;
-      url: string;
-      clone_url: string;
-      default_branch: string;
-      forks: number;
-      forks_count: number;
-      git_url: string;
-      has_downloads: boolean;
-      has_issues: boolean;
-      has_projects: boolean;
-      has_wiki: boolean;
-      has_pages: boolean;
-      has_discussions: boolean;
-      homepage: string | null;
-      language: string | null;
-      master_branch?: string;
-      archived: boolean;
-      disabled: boolean;
-      /**
-       * The repository visibility: public, private, or internal.
-       */
-      visibility?: string;
-      mirror_url: string | null;
-      open_issues: number;
-      open_issues_count: number;
-      permissions?: {
-        admin: boolean;
-        maintain?: boolean;
-        push: boolean;
-        triage?: boolean;
-        pull: boolean;
-      };
-      temp_clone_token?: string;
-      allow_merge_commit?: boolean;
-      allow_squash_merge?: boolean;
-      allow_rebase_merge?: boolean;
-      license: NullableLicenseSimple;
-      pushed_at: Date;
-      size: number;
-      ssh_url: string;
-      stargazers_count: number;
-      svn_url: string;
-      topics?: string[];
-      watchers: number;
-      watchers_count: number;
-      created_at: Date;
-      updated_at: Date;
-      allow_forking?: boolean;
-      web_commit_signoff_required?: boolean;
-    };
+    repo: Repository;
     sha: string;
-    user: {
-      avatar_url: string;
-      events_url: string;
-      followers_url: string;
-      following_url: string;
-      gists_url: string;
-      gravatar_id: string | null;
-      html_url: string;
-      id: number;
-      node_id: string;
-      login: string;
-      organizations_url: string;
-      received_events_url: string;
-      repos_url: string;
-      site_admin: boolean;
-      starred_url: string;
-      subscriptions_url: string;
-      type: string;
-      url: string;
-    };
+    user: SimpleUser;
   };
   _links: {
     comments: Link;
@@ -15173,23 +16348,26 @@ export type RepositoryRuleRulesetInfo = unknown;
  * Repository Rule
  * A repository rule with ruleset details.
  */
-export type RepositoryRuleDetailed =
-  | (RepositoryRuleCreation & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleUpdate & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleDeletion & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleRequiredLinearHistory & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleRequiredDeployments & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleRequiredSignatures & RepositoryRuleRulesetInfo)
-  | (RepositoryRulePullRequest & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleRequiredStatusChecks & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleNonFastForward & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleCommitMessagePattern & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleCommitAuthorEmailPattern & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleCommitterEmailPattern & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleBranchNamePattern & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleTagNamePattern & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleWorkflows & RepositoryRuleRulesetInfo)
-  | (RepositoryRuleCodeScanning & RepositoryRuleRulesetInfo);
+export type RepositoryRuleDetailed = unknown &
+  (
+    | (RepositoryRuleCreation & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleUpdate & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleDeletion & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleRequiredLinearHistory & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleMergeQueue & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleRequiredDeployments & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleRequiredSignatures & RepositoryRuleRulesetInfo)
+    | (RepositoryRulePullRequest & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleRequiredStatusChecks & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleNonFastForward & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleCommitMessagePattern & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleCommitAuthorEmailPattern & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleCommitterEmailPattern & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleBranchNamePattern & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleTagNamePattern & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleWorkflows & RepositoryRuleRulesetInfo)
+    | (RepositoryRuleCodeScanning & RepositoryRuleRulesetInfo)
+  );
 export type SecretScanningAlert = {
   number?: AlertNumber;
   created_at?: AlertCreatedAt;
@@ -15217,7 +16395,7 @@ export type SecretScanningAlert = {
   secret_type?: string;
   /**
    * User-friendly name for the detected secret, matching the `secret_type`.
-   * For a list of built-in patterns, see "[Secret scanning patterns](https://docs.github.com/code-security/secret-scanning/secret-scanning-patterns#supported-secrets-for-advanced-security)."
+   * For a list of built-in patterns, see "[Supported secret scanning patterns](https://docs.github.com/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets)."
    */
   secret_type_display_name?: string;
   /**
@@ -15233,10 +16411,31 @@ export type SecretScanningAlert = {
    * The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
    */
   push_protection_bypassed_at?: Date | null;
+  push_protection_bypass_request_reviewer?: NullableSimpleUser;
+  /**
+   * An optional comment when reviewing a push protection bypass.
+   */
+  push_protection_bypass_request_reviewer_comment?: string | null;
+  /**
+   * An optional comment when requesting a push protection bypass.
+   */
+  push_protection_bypass_request_comment?: string | null;
+  /**
+   * The URL to a push protection bypass request.
+   */
+  push_protection_bypass_request_html_url?: string | null;
   /**
    * The token status as of the latest validity check.
    */
   validity?: 'active' | 'inactive' | 'unknown';
+  /**
+   * Whether the detected secret was publicly leaked.
+   */
+  publicly_leaked?: boolean | null;
+  /**
+   * Whether the detected secret was found in multiple repositories under the same organization or enterprise.
+   */
+  multi_repo?: boolean | null;
 };
 /**
  * An optional comment when closing an alert. Cannot be updated or deleted. Must be `null` when changing `state` to `open`.
@@ -15398,7 +16597,7 @@ export type SecretScanningLocationDiscussionComment = {
 export type SecretScanningLocationPullRequestTitle = {
   /**
    * The API URL to get the pull request where the secret was detected.
-   * @example "https://api.github.com/repos/octocat/Hello-World/pull/2846"
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/2846"
    */
   pull_request_title_url: string;
 };
@@ -15408,7 +16607,7 @@ export type SecretScanningLocationPullRequestTitle = {
 export type SecretScanningLocationPullRequestBody = {
   /**
    * The API URL to get the pull request where the secret was detected.
-   * @example "https://api.github.com/repos/octocat/Hello-World/pull/2846"
+   * @example "https://api.github.com/repos/octocat/Hello-World/pulls/2846"
    */
   pull_request_body_url: string;
 };
@@ -15475,6 +16674,61 @@ export type SecretScanningLocation = {
     | SecretScanningLocationPullRequestComment
     | SecretScanningLocationPullRequestReview
     | SecretScanningLocationPullRequestReviewComment;
+};
+/**
+ * The reason for bypassing push protection.
+ */
+export enum SecretScanningPushProtectionBypassReason {
+  FALSE_POSITIVE = 'false_positive',
+  USED_IN_TESTS = 'used_in_tests',
+  WILL_FIX_LATER = 'will_fix_later',
+}
+export type SecretScanningPushProtectionBypass = {
+  reason?: SecretScanningPushProtectionBypassReason;
+  /**
+   * The time that the bypass will expire in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   */
+  expire_at?: Date | null;
+  /**
+   * The token type this bypass is for.
+   */
+  token_type?: string;
+};
+/**
+ * Information on a single scan performed by secret scanning on the repository
+ */
+export type SecretScanningScan = {
+  /**
+   * The type of scan
+   */
+  type?: string;
+  /**
+   * The state of the scan. Either "completed", "running", or "pending"
+   */
+  status?: string;
+  /**
+   * The time that the scan was completed. Empty if the scan is running
+   */
+  completed_at?: Date | null;
+  /**
+   * The time that the scan was started. Empty if the scan is pending
+   */
+  started_at?: Date | null;
+};
+export type SecretScanningScanHistory = {
+  incremental_scans?: SecretScanningScan[];
+  pattern_update_scans?: SecretScanningScan[];
+  backfill_scans?: SecretScanningScan[];
+  custom_pattern_backfill_scans?: (SecretScanningScan & {
+    /**
+     * Name of the custom pattern for custom pattern scans
+     */
+    pattern_name?: string;
+    /**
+     * Level at which the custom pattern is defined, one of "repository", "organization", or "enterprise"
+     */
+    pattern_scope?: string;
+  })[];
 };
 export type RepositoryAdvisoryCreate = {
   /**
@@ -16018,6 +17272,14 @@ export type IssueSearchResultItem = {
     default?: boolean;
     description?: string | null;
   }[];
+  /**
+   * Sub-issues Summary
+   */
+  sub_issues_summary?: {
+    total: number;
+    completed: number;
+    percent_completed: number;
+  };
   state: string;
   state_reason?: string | null;
   assignee: NullableSimpleUser;
@@ -16246,6 +17508,7 @@ export type UserSearchResultItem = {
   blog?: string | null;
   company?: string | null;
   suspended_at?: Date | null;
+  user_view_type?: string;
 };
 /**
  * Private User
@@ -16260,6 +17523,7 @@ export type PrivateUser = {
    * @example 1
    */
   id: number;
+  user_view_type?: string;
   /**
    * @example "MDQ6VXNlcjE="
    */
@@ -16405,7 +17669,6 @@ export type PrivateUser = {
     space: number;
     private_repos: number;
   };
-  suspended_at?: Date | null;
   business_plus?: boolean;
   ldap_dn?: string;
 };
@@ -16863,6 +18126,45 @@ export type StarredRepository = {
   repo: Repository;
 };
 /**
+ * Sigstore Bundle v0.1
+ * Sigstore Bundle v0.1
+ */
+export type SigstoreBundle0 = {
+  mediaType?: string;
+  verificationMaterial?: {
+    x509CertificateChain?: {
+      certificates?: {
+        rawBytes?: string;
+      }[];
+    };
+    tlogEntries?: {
+      logIndex?: string;
+      logId?: {
+        keyId?: string;
+      };
+      kindVersion?: {
+        kind?: string;
+        version?: string;
+      };
+      integratedTime?: string;
+      inclusionPromise?: {
+        signedEntryTimestamp?: string;
+      };
+      inclusionProof?: string | null;
+      canonicalizedBody?: string;
+    }[];
+    timestampVerificationData?: string | null;
+  };
+  dsseEnvelope?: {
+    payload?: string;
+    payloadType?: string;
+    signatures?: {
+      sig?: string;
+      keyid?: string;
+    }[];
+  };
+};
+/**
  * Hovercard
  * Hovercard
  */
@@ -17255,7 +18557,7 @@ export type RepositoryWebhooks = {
    * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
    */
   custom_properties?: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
   /**
    * Whether issues are enabled.
@@ -17478,7 +18780,7 @@ export type RepositoryWebhooks = {
    */
   allow_update_branch?: boolean;
   /**
-   * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+   * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
    * @deprecated
    */
   use_squash_pr_title_as_default?: boolean;
@@ -17541,87 +18843,6 @@ export type RepositoryWebhooks = {
   anonymous_access_enabled?: boolean;
 };
 /**
- * Simple User
- * The GitHub user that triggered the event. This property is included in every webhook payload.
- */
-export type SimpleUserWebhooks = {
-  name?: string | null;
-  email?: string | null;
-  /**
-   * @example "octocat"
-   */
-  login: string;
-  /**
-   * @example 1
-   */
-  id: number;
-  /**
-   * @example "MDQ6VXNlcjE="
-   */
-  node_id: string;
-  /**
-   * @example "https://github.com/images/error/octocat_happy.gif"
-   */
-  avatar_url: string;
-  /**
-   * @example "41d064eb2195891e12d0413f63227ea7"
-   */
-  gravatar_id: string | null;
-  /**
-   * @example "https://api.github.com/users/octocat"
-   */
-  url: string;
-  /**
-   * @example "https://github.com/octocat"
-   */
-  html_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/followers"
-   */
-  followers_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/following{/other_user}"
-   */
-  following_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/gists{/gist_id}"
-   */
-  gists_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/starred{/owner}{/repo}"
-   */
-  starred_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/subscriptions"
-   */
-  subscriptions_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/orgs"
-   */
-  organizations_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/repos"
-   */
-  repos_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/events{/privacy}"
-   */
-  events_url: string;
-  /**
-   * @example "https://api.github.com/users/octocat/received_events"
-   */
-  received_events_url: string;
-  /**
-   * @example "User"
-   */
-  type: string;
-  site_admin: boolean;
-  /**
-   * @example "\"2020-07-09T00:17:55Z\""
-   */
-  starred_at?: string;
-};
-/**
  * branch protection rule
  * The branch protection rule. Includes a `name` and all the [branch protection settings](https://docs.github.com/github/administering-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#about-branch-protection-settings) applied to branches that match the name. Binary settings are boolean. Multi-level configurations are one of `off`, `non_admins`, or `everyone`. Actor and build lists are arrays of strings.
  */
@@ -17641,6 +18862,14 @@ export type WebhooksRule = {
     | 'off'
     | 'non_admins'
     | 'everyone';
+  /**
+   * The enforcement level of the branch lock setting. `off` means the branch is not locked, `non_admins` means the branch is read-only for non_admins, and `everyone` means the branch is read-only for everyone.
+   */
+  lock_branch_enforcement_level: 'off' | 'non_admins' | 'everyone';
+  /**
+   * Whether users can pull changes from upstream when the branch is locked. Set to `true` to allow users to pull changes from upstream when the branch is locked. This setting is only applicable for forks.
+   */
+  lock_allows_fork_sync?: boolean;
   merge_queue_enforcement_level: 'off' | 'non_admins' | 'everyone';
   name: string;
   pull_request_reviews_enforcement_level: 'off' | 'non_admins' | 'everyone';
@@ -17830,6 +19059,7 @@ export type WebhooksDeployKey = {
   title: string;
   url: string;
   verified: boolean;
+  enabled?: boolean;
 };
 /**
  * Workflow
@@ -17865,6 +19095,7 @@ export type WebhooksApprover = {
   subscriptions_url?: string;
   type?: string;
   url?: string;
+  user_view_type?: string;
 };
 export type WebhooksReviewers = {
   /**
@@ -17930,6 +19161,7 @@ export type WebhooksUser = {
   subscriptions_url?: string;
   type?: 'Bot' | 'User' | 'Organization';
   url?: string;
+  user_view_type?: string;
 } | null;
 export type WebhooksAnswer = {
   /**
@@ -17995,6 +19227,7 @@ export type WebhooksAnswer = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -18029,6 +19262,7 @@ export type Discussion = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   answer_html_url: string | null;
   /**
@@ -18119,7 +19353,9 @@ export type Discussion = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
+  labels?: Label[];
 };
 export type WebhooksComment = {
   /**
@@ -18185,6 +19421,7 @@ export type WebhooksComment = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -18329,6 +19566,7 @@ export type WebhooksIssueComment = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -18375,6 +19613,7 @@ export type WebhooksIssue = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null;
   assignees: ({
     avatar_url?: string;
@@ -18398,6 +19637,7 @@ export type WebhooksIssue = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null)[];
   /**
    * AuthorAssociation
@@ -18477,6 +19717,7 @@ export type WebhooksIssue = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     description: string | null;
     due_on: Date | null;
@@ -18597,6 +19838,7 @@ export type WebhooksIssue = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * The set of permissions for the GitHub app
@@ -18668,6 +19910,14 @@ export type WebhooksIssue = {
   };
   repository_url: string;
   /**
+   * Sub-issues Summary
+   */
+  sub_issues_summary?: {
+    total: number;
+    completed: number;
+    percent_completed: number;
+  };
+  /**
    * State of the issue; either 'open' or 'closed'
    */
   state?: 'open' | 'closed';
@@ -18707,6 +19957,7 @@ export type WebhooksIssue = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -18742,6 +19993,7 @@ export type WebhooksMilestone = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null;
   description: string | null;
   due_on: Date | null;
@@ -18798,6 +20050,7 @@ export type WebhooksIssue2 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   assignees: ({
     avatar_url?: string;
@@ -18821,6 +20074,7 @@ export type WebhooksIssue2 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null)[];
   /**
    * AuthorAssociation
@@ -18900,6 +20154,7 @@ export type WebhooksIssue2 = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     description: string | null;
     due_on: Date | null;
@@ -19018,6 +20273,7 @@ export type WebhooksIssue2 = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * The set of permissions for the GitHub app
@@ -19089,6 +20345,14 @@ export type WebhooksIssue2 = {
   };
   repository_url: string;
   /**
+   * Sub-issues Summary
+   */
+  sub_issues_summary?: {
+    total: number;
+    completed: number;
+    percent_completed: number;
+  };
+  /**
    * State of the issue; either 'open' or 'closed'
    */
   state?: 'open' | 'closed';
@@ -19128,6 +20392,7 @@ export type WebhooksIssue2 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -19155,6 +20420,7 @@ export type WebhooksUserMannequin = {
   subscriptions_url?: string;
   type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
   url?: string;
+  user_view_type?: string;
 } | null;
 /**
  * Marketplace Purchase
@@ -19555,7 +20821,7 @@ export type NullableRepositoryWebhooks = {
    * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
    */
   custom_properties?: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
   /**
    * Whether issues are enabled.
@@ -19778,7 +21044,7 @@ export type NullableRepositoryWebhooks = {
    */
   allow_update_branch?: boolean;
   /**
-   * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+   * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
    * @deprecated
    */
   use_squash_pr_title_as_default?: boolean;
@@ -19873,6 +21139,7 @@ export type WebhooksMilestone3 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   description: string | null;
   due_on: Date | null;
@@ -19930,6 +21197,7 @@ export type WebhooksMembership = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -20018,6 +21286,14 @@ export type PersonalAccessTokenRequest = {
    */
   created_at: string;
   /**
+   * Unique identifier of the user's token. This field can also be found in audit log events and the organization's settings for their PAT grants.
+   */
+  token_id: number;
+  /**
+   * The name given to the user's token. This field can also be found in an organization's settings page for Active Tokens.
+   */
+  token_name: string;
+  /**
    * Whether the associated fine-grained personal access token has expired.
    */
   token_expired: boolean;
@@ -20068,6 +21344,7 @@ export type WebhooksProjectCard = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   /**
    * The project card's ID
@@ -20114,6 +21391,7 @@ export type WebhooksProject = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   html_url: string;
   id: number;
@@ -20223,6 +21501,60 @@ export type ProjectsV2Item = {
   archived_at: Date | null;
 };
 /**
+ * Projects v2 Single Select Option
+ * An option for a single select field
+ */
+export type ProjectsV2SingleSelectOption = {
+  id: string;
+  name: string;
+  color?: string | null;
+  description?: string | null;
+};
+/**
+ * Projects v2 Iteration Setting
+ * An iteration setting for an iteration field
+ */
+export type ProjectsV2IterationSetting = {
+  id: string;
+  title: string;
+  duration?: number | null;
+  start_date?: string | null;
+};
+/**
+ * Projects v2 Status Update
+ * An status update belonging to a project
+ */
+export type ProjectsV2StatusUpdate = {
+  id: number;
+  node_id: string;
+  project_node_id?: string;
+  creator?: SimpleUser;
+  /**
+   * @example "2022-04-28T12:00:00Z"
+   */
+  created_at: Date;
+  /**
+   * @example "2022-04-28T12:00:00Z"
+   */
+  updated_at: Date;
+  status?:
+    | ('INACTIVE' | 'ON_TRACK' | 'AT_RISK' | 'OFF_TRACK' | 'COMPLETE')
+    | null;
+  /**
+   * @example "2022-04-28"
+   */
+  start_date?: string;
+  /**
+   * @example "2022-04-28"
+   */
+  target_date?: string;
+  /**
+   * Body of the status update
+   * @example "The project is off to a great start!"
+   */
+  body?: string | null;
+};
+/**
  * The pull request number.
  */
 export type WebhooksNumber = number;
@@ -20266,7 +21598,7 @@ export type PullRequestWebhook = PullRequest & {
    */
   squash_merge_commit_title?: 'PR_TITLE' | 'COMMIT_OR_PR_TITLE';
   /**
-   * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.**
+   * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.**
    */
   use_squash_pr_title_as_default?: boolean;
 };
@@ -20353,6 +21685,7 @@ export type WebhooksPullRequest5 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null;
   assignees: ({
     avatar_url?: string;
@@ -20428,6 +21761,7 @@ export type WebhooksPullRequest5 = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * The merge method to use.
@@ -20610,6 +21944,7 @@ export type WebhooksPullRequest5 = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       permissions?: {
         admin: boolean;
@@ -20695,6 +22030,7 @@ export type WebhooksPullRequest5 = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   body: string | null;
@@ -20887,6 +22223,7 @@ export type WebhooksPullRequest5 = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       permissions?: {
         admin: boolean;
@@ -20972,6 +22309,7 @@ export type WebhooksPullRequest5 = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   html_url: string;
@@ -21030,6 +22368,7 @@ export type WebhooksPullRequest5 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null;
   /**
    * Milestone
@@ -21064,6 +22403,7 @@ export type WebhooksPullRequest5 = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     description: string | null;
     due_on: Date | null;
@@ -21272,6 +22612,7 @@ export type WebhooksPullRequest5 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -21439,6 +22780,7 @@ export type WebhooksReviewComment = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 /**
@@ -21514,6 +22856,7 @@ export type WebhooksReview = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
 };
 export type WebhooksNullableString = string | null;
@@ -21594,6 +22937,7 @@ export type WebhooksRelease = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   body: string | null;
   created_at: Date | null;
@@ -21716,6 +23060,7 @@ export type WebhooksRelease1 = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   body: string | null;
   created_at: Date | null;
@@ -21847,6 +23192,11 @@ export type SecretScanningAlertWebhook = {
    */
   secret_type?: string;
   /**
+   * User-friendly name for the detected secret, matching the `secret_type`.
+   * For a list of built-in patterns, see "[Supported secret scanning patterns](https://docs.github.com/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets)."
+   */
+  secret_type_display_name?: string;
+  /**
    * The token status as of the latest validity check.
    */
   validity?: 'active' | 'inactive' | 'unknown';
@@ -21859,6 +23209,27 @@ export type SecretScanningAlertWebhook = {
    * The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
    */
   push_protection_bypassed_at?: Date | null;
+  push_protection_bypass_request_reviewer?: NullableSimpleUser;
+  /**
+   * An optional comment when reviewing a push protection bypass.
+   */
+  push_protection_bypass_request_reviewer_comment?: string | null;
+  /**
+   * An optional comment when requesting a push protection bypass.
+   */
+  push_protection_bypass_request_comment?: string | null;
+  /**
+   * The URL to a push protection bypass request.
+   */
+  push_protection_bypass_request_html_url?: string | null;
+  /**
+   * Whether the detected secret was publicly leaked.
+   */
+  publicly_leaked?: boolean | null;
+  /**
+   * Whether the detected secret was found in multiple repositories in the same organization or business.
+   */
+  multi_repo?: boolean | null;
 };
 /**
  * The details of the security advisory, including summary, description, and severity.
@@ -21868,6 +23239,7 @@ export type WebhooksSecurityAdvisory = {
     score: number;
     vector_string: string | null;
   };
+  cvss_severities?: CvssSeverities;
   cwes: {
     cwe_id: string;
     name: string;
@@ -21919,6 +23291,7 @@ export type WebhooksSponsorship = {
     subscriptions_url?: string;
     type?: string;
     url?: string;
+    user_view_type?: string;
   };
   node_id: string;
   privacy_level: string;
@@ -21947,6 +23320,7 @@ export type WebhooksSponsorship = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   /**
    * User
@@ -21973,6 +23347,7 @@ export type WebhooksSponsorship = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   /**
    * Sponsorship Tier
@@ -22091,7 +23466,7 @@ export type WebhookBranchProtectionConfigurationDisabled = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * branch protection configuration enabled event
@@ -22102,7 +23477,7 @@ export type WebhookBranchProtectionConfigurationEnabled = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * branch protection rule created event
@@ -22114,7 +23489,7 @@ export type WebhookBranchProtectionRuleCreated = {
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   rule: WebhooksRule;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * branch protection rule deleted event
@@ -22126,7 +23501,7 @@ export type WebhookBranchProtectionRuleDeleted = {
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   rule: WebhooksRule;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * branch protection rule edited event
@@ -22152,6 +23527,18 @@ export type WebhookBranchProtectionRuleEdited = {
     linear_history_requirement_enforcement_level?: {
       from: 'off' | 'non_admins' | 'everyone';
     };
+    lock_branch_enforcement_level?: {
+      from: 'off' | 'non_admins' | 'everyone';
+    };
+    lock_allows_fork_sync?: {
+      from: boolean | null;
+    };
+    pull_request_reviews_enforcement_level?: {
+      from: 'off' | 'non_admins' | 'everyone';
+    };
+    require_last_push_approval?: {
+      from: boolean | null;
+    };
     required_status_checks?: {
       from: string[];
     };
@@ -22164,7 +23551,7 @@ export type WebhookBranchProtectionRuleEdited = {
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   rule: WebhooksRule;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Check Run Completed Event
@@ -22175,7 +23562,7 @@ export type WebhookCheckRunCompleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Check Run Completed Event
@@ -22196,7 +23583,7 @@ export type WebhookCheckRunCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Check Run Created Event
@@ -22226,7 +23613,7 @@ export type WebhookCheckRunRequestedAction = {
      */
     identifier?: string;
   };
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Check Run Requested Action Event
@@ -22247,7 +23634,7 @@ export type WebhookCheckRunRerequested = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Check Run Re-Requested Event
@@ -22340,6 +23727,10 @@ export type WebhookCheckSuiteCompleted = {
        */
       id: number | null;
       /**
+       * The client ID of the GitHub app
+       */
+      client_id?: string | null;
+      /**
        * The name of the GitHub app
        */
       name: string;
@@ -22369,6 +23760,7 @@ export type WebhookCheckSuiteCompleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -22539,7 +23931,7 @@ export type WebhookCheckSuiteCompleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * check_suite requested event
@@ -22623,6 +24015,10 @@ export type WebhookCheckSuiteRequested = {
        */
       id: number | null;
       /**
+       * Client ID of the GitHub app
+       */
+      client_id?: string | null;
+      /**
        * The name of the GitHub app
        */
       name: string;
@@ -22652,6 +24048,7 @@ export type WebhookCheckSuiteRequested = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -22814,7 +24211,7 @@ export type WebhookCheckSuiteRequested = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * check_suite rerequested event
@@ -22893,6 +24290,10 @@ export type WebhookCheckSuiteRerequested = {
        */
       id: number | null;
       /**
+       * The Client ID for the GitHub app
+       */
+      client_id?: string | null;
+      /**
        * The name of the GitHub app
        */
       name: string;
@@ -22922,6 +24323,7 @@ export type WebhookCheckSuiteRerequested = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -23083,7 +24485,7 @@ export type WebhookCheckSuiteRerequested = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * code_scanning_alert appeared_in_branch event
@@ -23127,13 +24529,19 @@ export type WebhookCodeScanningAlertAppearedInBranch = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
+    dismissed_comment?: CodeScanningAlertDismissedComment;
     /**
      * The reason for dismissing or closing the alert.
      */
     dismissed_reason:
       | ('false positive' | "won't fix" | 'used in tests' | null)
       | null;
+    /**
+     * The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    fixed_at?: unknown | null;
     /**
      * The GitHub URL of the alert resource.
      */
@@ -23194,9 +24602,9 @@ export type WebhookCodeScanningAlertAppearedInBranch = {
       severity: ('none' | 'note' | 'warning' | 'error' | null) | null;
     };
     /**
-     * State of a code scanning alert.
+     * State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
      */
-    state: 'open' | 'dismissed' | 'fixed';
+    state: ('open' | 'dismissed' | 'fixed') | null;
     tool: {
       /**
        * The name of the tool used to generate the code scanning analysis alert.
@@ -23215,7 +24623,7 @@ export type WebhookCodeScanningAlertAppearedInBranch = {
   organization?: OrganizationSimpleWebhooks;
   ref: WebhooksCodeScanningRef;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * code_scanning_alert closed_by_user event
@@ -23259,13 +24667,19 @@ export type WebhookCodeScanningAlertClosedByUser = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
+    dismissed_comment?: CodeScanningAlertDismissedComment;
     /**
      * The reason for dismissing or closing the alert.
      */
     dismissed_reason:
       | ('false positive' | "won't fix" | 'used in tests' | null)
       | null;
+    /**
+     * The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    fixed_at?: unknown | null;
     /**
      * The GitHub URL of the alert resource.
      */
@@ -23356,7 +24770,7 @@ export type WebhookCodeScanningAlertClosedByUser = {
   organization?: OrganizationSimpleWebhooks;
   ref: WebhooksCodeScanningRef;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * code_scanning_alert created event
@@ -23381,6 +24795,9 @@ export type WebhookCodeScanningAlertCreated = {
      * The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`.
      */
     dismissed_reason: unknown | null;
+    /**
+     * The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
     fixed_at?: unknown | null;
     /**
      * The GitHub URL of the alert resource.
@@ -23451,9 +24868,9 @@ export type WebhookCodeScanningAlertCreated = {
       tags?: string[] | null;
     };
     /**
-     * State of a code scanning alert.
+     * State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
      */
-    state: 'open' | 'dismissed';
+    state: ('open' | 'dismissed') | null;
     tool: {
       guid?: string | null;
       /**
@@ -23474,7 +24891,7 @@ export type WebhookCodeScanningAlertCreated = {
   organization?: OrganizationSimpleWebhooks;
   ref: WebhooksCodeScanningRef;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * code_scanning_alert fixed event
@@ -23518,13 +24935,19 @@ export type WebhookCodeScanningAlertFixed = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
+    dismissed_comment?: CodeScanningAlertDismissedComment;
     /**
      * The reason for dismissing or closing the alert.
      */
     dismissed_reason:
       | ('false positive' | "won't fix" | 'used in tests' | null)
       | null;
+    /**
+     * The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    fixed_at?: unknown | null;
     /**
      * The GitHub URL of the alert resource.
      */
@@ -23594,9 +25017,9 @@ export type WebhookCodeScanningAlertFixed = {
       tags?: string[] | null;
     };
     /**
-     * State of a code scanning alert.
+     * State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
      */
-    state: 'fixed';
+    state: 'fixed' | null;
     tool: {
       guid?: string | null;
       /**
@@ -23616,7 +25039,7 @@ export type WebhookCodeScanningAlertFixed = {
   organization?: OrganizationSimpleWebhooks;
   ref: WebhooksCodeScanningRef;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * code_scanning_alert reopened event
@@ -23636,10 +25059,15 @@ export type WebhookCodeScanningAlertReopened = {
      */
     dismissed_at: string | null;
     dismissed_by: unknown | null;
+    dismissed_comment?: CodeScanningAlertDismissedComment;
     /**
      * The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`.
      */
     dismissed_reason: string | null;
+    /**
+     * The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    fixed_at?: unknown | null;
     /**
      * The GitHub URL of the alert resource.
      */
@@ -23708,9 +25136,9 @@ export type WebhookCodeScanningAlertReopened = {
       tags?: string[] | null;
     };
     /**
-     * State of a code scanning alert.
+     * State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
      */
-    state: 'open' | 'dismissed' | 'fixed';
+    state: ('open' | 'dismissed' | 'fixed') | null;
     tool: {
       guid?: string | null;
       /**
@@ -23736,7 +25164,7 @@ export type WebhookCodeScanningAlertReopened = {
    */
   ref: string | null;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * code_scanning_alert reopened_by_user event
@@ -23756,10 +25184,15 @@ export type WebhookCodeScanningAlertReopenedByUser = {
      */
     dismissed_at: unknown | null;
     dismissed_by: unknown | null;
+    dismissed_comment?: CodeScanningAlertDismissedComment;
     /**
      * The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`.
      */
     dismissed_reason: unknown | null;
+    /**
+     * The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    fixed_at?: unknown | null;
     /**
      * The GitHub URL of the alert resource.
      */
@@ -23820,9 +25253,9 @@ export type WebhookCodeScanningAlertReopenedByUser = {
       severity: ('none' | 'note' | 'warning' | 'error' | null) | null;
     };
     /**
-     * State of a code scanning alert.
+     * State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
      */
-    state: 'open' | 'fixed';
+    state: ('open' | 'fixed') | null;
     tool: {
       /**
        * The name of the tool used to generate the code scanning analysis alert.
@@ -23841,7 +25274,7 @@ export type WebhookCodeScanningAlertReopenedByUser = {
   organization?: OrganizationSimpleWebhooks;
   ref: WebhooksCodeScanningRef;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * commit_comment created event
@@ -23852,7 +25285,7 @@ export type WebhookCommitCommentCreated = {
    */
   action: 'created';
   /**
-   * The [commit comment](https://docs.github.com/rest/commits/comments#get-a-commit-comment) resource.
+   * The [commit comment](${externalDocsUpapp/api/description/components/schemas/webhooks/issue-comment-created.yamlrl}/rest/commits/comments#get-a-commit-comment) resource.
    */
   comment: {
     /**
@@ -23940,13 +25373,14 @@ export type WebhookCommitCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   enterprise?: EnterpriseWebhooks;
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * create event
@@ -23970,18 +25404,18 @@ export type WebhookCreate = {
    */
   ref_type: 'tag' | 'branch';
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * custom property created event
  */
 export type WebhookCustomPropertyCreated = {
   action: 'created';
-  definition: OrgCustomProperty;
+  definition: CustomProperty;
   enterprise?: EnterpriseWebhooks;
   installation?: SimpleInstallation;
-  organization: OrganizationSimpleWebhooks;
-  sender?: SimpleUserWebhooks;
+  organization?: OrganizationSimpleWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * custom property deleted event
@@ -23996,19 +25430,19 @@ export type WebhookCustomPropertyDeleted = {
   };
   enterprise?: EnterpriseWebhooks;
   installation?: SimpleInstallation;
-  organization: OrganizationSimpleWebhooks;
-  sender?: SimpleUserWebhooks;
+  organization?: OrganizationSimpleWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * custom property updated event
  */
 export type WebhookCustomPropertyUpdated = {
   action: 'updated';
-  definition: OrgCustomProperty;
+  definition: CustomProperty;
   enterprise?: EnterpriseWebhooks;
   installation?: SimpleInstallation;
-  organization: OrganizationSimpleWebhooks;
-  sender?: SimpleUserWebhooks;
+  organization?: OrganizationSimpleWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * Custom property values updated event
@@ -24019,7 +25453,7 @@ export type WebhookCustomPropertyValuesUpdated = {
   installation?: SimpleInstallation;
   repository: RepositoryWebhooks;
   organization: OrganizationSimpleWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
   /**
    * The new custom property values for the repository.
    */
@@ -24043,7 +25477,7 @@ export type WebhookDelete = {
    */
   ref_type: 'tag' | 'branch';
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Dependabot alert auto-dismissed event
@@ -24055,7 +25489,7 @@ export type WebhookDependabotAlertAutoDismissed = {
   organization?: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Dependabot alert auto-reopened event
@@ -24067,7 +25501,7 @@ export type WebhookDependabotAlertAutoReopened = {
   organization?: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Dependabot alert created event
@@ -24079,7 +25513,7 @@ export type WebhookDependabotAlertCreated = {
   organization?: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Dependabot alert dismissed event
@@ -24091,7 +25525,7 @@ export type WebhookDependabotAlertDismissed = {
   organization?: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Dependabot alert fixed event
@@ -24103,7 +25537,7 @@ export type WebhookDependabotAlertFixed = {
   organization?: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Dependabot alert reintroduced event
@@ -24115,7 +25549,7 @@ export type WebhookDependabotAlertReintroduced = {
   organization?: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Dependabot alert reopened event
@@ -24127,7 +25561,7 @@ export type WebhookDependabotAlertReopened = {
   organization?: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * deploy_key created event
@@ -24139,7 +25573,7 @@ export type WebhookDeployKeyCreated = {
   key: WebhooksDeployKey;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * deploy_key deleted event
@@ -24151,7 +25585,7 @@ export type WebhookDeployKeyDeleted = {
   key: WebhooksDeployKey;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * deployment created event
@@ -24189,6 +25623,7 @@ export type WebhookDeploymentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     description: string | null;
     environment: string;
@@ -24294,6 +25729,7 @@ export type WebhookDeploymentCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -24355,7 +25791,7 @@ export type WebhookDeploymentCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow: WebhooksWorkflow;
   /**
    * Deployment Workflow Run
@@ -24386,6 +25822,7 @@ export type WebhookDeploymentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     artifacts_url?: string;
     cancel_url?: string;
@@ -24624,6 +26061,7 @@ export type WebhookDeploymentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     updated_at: Date;
     url: string;
@@ -24653,7 +26091,7 @@ export type WebhookDeploymentProtectionRuleRequested = {
   repository?: RepositoryWebhooks;
   organization?: OrganizationSimpleWebhooks;
   installation?: SimpleInstallation;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 export type WebhookDeploymentReviewApproved = {
   action: 'approved';
@@ -24664,7 +26102,7 @@ export type WebhookDeploymentReviewApproved = {
   organization: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   reviewers?: WebhooksReviewers;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   since: string;
   workflow_job_run?: WebhooksWorkflowJobRun;
   workflow_job_runs?: {
@@ -24706,6 +26144,7 @@ export type WebhookDeploymentReviewApproved = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     artifacts_url?: string;
     cancel_url?: string;
@@ -24783,6 +26222,7 @@ export type WebhookDeploymentReviewApproved = {
         subscriptions_url?: string;
         type?: string;
         url?: string;
+        user_view_type?: string;
       };
       private?: boolean;
       pulls_url?: string;
@@ -24895,6 +26335,7 @@ export type WebhookDeploymentReviewApproved = {
         subscriptions_url?: string;
         type?: string;
         url?: string;
+        user_view_type?: string;
       };
       private?: boolean;
       pulls_url?: string;
@@ -24944,6 +26385,7 @@ export type WebhookDeploymentReviewApproved = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     updated_at: Date;
     url: string;
@@ -24960,7 +26402,7 @@ export type WebhookDeploymentReviewRejected = {
   organization: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   reviewers?: WebhooksReviewers;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   since: string;
   workflow_job_run?: WebhooksWorkflowJobRun;
   workflow_job_runs?: {
@@ -25002,6 +26444,7 @@ export type WebhookDeploymentReviewRejected = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     artifacts_url?: string;
     cancel_url?: string;
@@ -25078,6 +26521,7 @@ export type WebhookDeploymentReviewRejected = {
         subscriptions_url?: string;
         type?: string;
         url?: string;
+        user_view_type?: string;
       };
       private?: boolean;
       pulls_url?: string;
@@ -25190,6 +26634,7 @@ export type WebhookDeploymentReviewRejected = {
         subscriptions_url?: string;
         type?: string;
         url?: string;
+        user_view_type?: string;
       };
       private?: boolean;
       pulls_url?: string;
@@ -25233,6 +26678,7 @@ export type WebhookDeploymentReviewRejected = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     updated_at: Date;
     url: string;
@@ -25275,10 +26721,11 @@ export type WebhookDeploymentReviewRequested = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     type?: 'User' | 'Team';
   }[];
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   since: string;
   workflow_job_run: {
     conclusion: unknown | null;
@@ -25319,6 +26766,7 @@ export type WebhookDeploymentReviewRequested = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     artifacts_url?: string;
     cancel_url?: string;
@@ -25395,6 +26843,7 @@ export type WebhookDeploymentReviewRequested = {
         subscriptions_url?: string;
         type?: string;
         url?: string;
+        user_view_type?: string;
       };
       private?: boolean;
       pulls_url?: string;
@@ -25507,6 +26956,7 @@ export type WebhookDeploymentReviewRequested = {
         subscriptions_url?: string;
         type?: string;
         url?: string;
+        user_view_type?: string;
       };
       private?: boolean;
       pulls_url?: string;
@@ -25556,6 +27006,7 @@ export type WebhookDeploymentReviewRequested = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     updated_at: Date;
     url: string;
@@ -25641,6 +27092,7 @@ export type WebhookDeploymentStatusCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     description: string | null;
     environment: string;
@@ -25746,6 +27198,7 @@ export type WebhookDeploymentStatusCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -25833,6 +27286,7 @@ export type WebhookDeploymentStatusCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     deployment_url: string;
     /**
@@ -25942,6 +27396,7 @@ export type WebhookDeploymentStatusCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -26005,7 +27460,7 @@ export type WebhookDeploymentStatusCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow?: WebhooksWorkflow;
   /**
    * Deployment Workflow Run
@@ -26036,6 +27491,7 @@ export type WebhookDeploymentStatusCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     artifacts_url?: string;
     cancel_url?: string;
@@ -26275,6 +27731,7 @@ export type WebhookDeploymentStatusCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     updated_at: Date;
     url: string;
@@ -26293,7 +27750,7 @@ export type WebhookDiscussionAnswered = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion category changed event
@@ -26321,7 +27778,7 @@ export type WebhookDiscussionCategoryChanged = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion closed event
@@ -26333,7 +27790,7 @@ export type WebhookDiscussionClosed = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion_comment created event
@@ -26346,7 +27803,7 @@ export type WebhookDiscussionCommentCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion_comment deleted event
@@ -26359,7 +27816,7 @@ export type WebhookDiscussionCommentDeleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion_comment edited event
@@ -26377,7 +27834,7 @@ export type WebhookDiscussionCommentEdited = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion created event
@@ -26389,7 +27846,7 @@ export type WebhookDiscussionCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion deleted event
@@ -26401,7 +27858,7 @@ export type WebhookDiscussionDeleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion edited event
@@ -26421,7 +27878,7 @@ export type WebhookDiscussionEdited = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion labeled event
@@ -26434,7 +27891,7 @@ export type WebhookDiscussionLabeled = {
   label: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion locked event
@@ -26446,7 +27903,7 @@ export type WebhookDiscussionLocked = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion pinned event
@@ -26458,7 +27915,7 @@ export type WebhookDiscussionPinned = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion reopened event
@@ -26470,7 +27927,7 @@ export type WebhookDiscussionReopened = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion transferred event
@@ -26486,7 +27943,7 @@ export type WebhookDiscussionTransferred = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion unanswered event
@@ -26497,7 +27954,7 @@ export type WebhookDiscussionUnanswered = {
   old_answer: WebhooksAnswer;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * discussion unlabeled event
@@ -26510,7 +27967,7 @@ export type WebhookDiscussionUnlabeled = {
   label: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion unlocked event
@@ -26522,7 +27979,7 @@ export type WebhookDiscussionUnlocked = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * discussion unpinned event
@@ -26534,7 +27991,7 @@ export type WebhookDiscussionUnpinned = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * fork event
@@ -26695,6 +28152,7 @@ export type WebhookFork = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     permissions?: {
       admin: boolean;
@@ -26836,14 +28294,14 @@ export type WebhookFork = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * github_app_authorization revoked event
  */
 export type WebhookGithubAppAuthorizationRevoked = {
   action: 'revoked';
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * gollum event
@@ -26879,7 +28337,7 @@ export type WebhookGollum = {
     title: string;
   }[];
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * installation created event
@@ -26892,7 +28350,7 @@ export type WebhookInstallationCreated = {
   repositories?: WebhooksRepositories;
   repository?: RepositoryWebhooks;
   requester?: WebhooksUser;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * installation deleted event
@@ -26905,7 +28363,7 @@ export type WebhookInstallationDeleted = {
   repositories?: WebhooksRepositories;
   repository?: RepositoryWebhooks;
   requester?: unknown | null;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * installation new_permissions_accepted event
@@ -26918,7 +28376,7 @@ export type WebhookInstallationNewPermissionsAccepted = {
   repositories?: WebhooksRepositories;
   repository?: RepositoryWebhooks;
   requester?: unknown | null;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * installation_repositories added event
@@ -26951,7 +28409,7 @@ export type WebhookInstallationRepositoriesAdded = {
   repository?: RepositoryWebhooks;
   repository_selection: WebhooksRepositorySelection;
   requester: WebhooksUser;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * installation_repositories removed event
@@ -26984,7 +28442,7 @@ export type WebhookInstallationRepositoriesRemoved = {
   repository?: RepositoryWebhooks;
   repository_selection: WebhooksRepositorySelection;
   requester: WebhooksUser;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * installation suspend event
@@ -26997,7 +28455,7 @@ export type WebhookInstallationSuspend = {
   repositories?: WebhooksRepositories;
   repository?: RepositoryWebhooks;
   requester?: unknown | null;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 export type WebhookInstallationTargetRenamed = {
   account: {
@@ -27037,6 +28495,7 @@ export type WebhookInstallationTargetRenamed = {
     updated_at?: string;
     url?: string;
     website_url?: unknown | null;
+    user_view_type?: string;
   };
   action: 'renamed';
   changes: {
@@ -27051,7 +28510,7 @@ export type WebhookInstallationTargetRenamed = {
   installation: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
   target_type: string;
 };
 /**
@@ -27065,7 +28524,7 @@ export type WebhookInstallationUnsuspend = {
   repositories?: WebhooksRepositories;
   repository?: RepositoryWebhooks;
   requester?: unknown | null;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issue_comment created event
@@ -27148,6 +28607,7 @@ export type WebhookIssueCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   enterprise?: EnterpriseWebhooks;
@@ -27184,6 +28644,7 @@ export type WebhookIssueCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -27207,6 +28668,7 @@ export type WebhookIssueCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -27286,6 +28748,7 @@ export type WebhookIssueCommentCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -27406,6 +28869,7 @@ export type WebhookIssueCommentCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -27477,6 +28941,14 @@ export type WebhookIssueCommentCreated = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -27516,6 +28988,7 @@ export type WebhookIssueCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   } & {
     active_lock_reason?: string | null;
@@ -27544,6 +29017,7 @@ export type WebhookIssueCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees?: (unknown | null)[];
     author_association?: string;
@@ -27623,7 +29097,7 @@ export type WebhookIssueCommentCreated = {
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issue_comment deleted event
@@ -27665,6 +29139,7 @@ export type WebhookIssueCommentDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -27688,6 +29163,7 @@ export type WebhookIssueCommentDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -27767,6 +29243,7 @@ export type WebhookIssueCommentDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -27885,6 +29362,7 @@ export type WebhookIssueCommentDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -27956,6 +29434,14 @@ export type WebhookIssueCommentDeleted = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -27995,6 +29481,7 @@ export type WebhookIssueCommentDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   } & {
     active_lock_reason?: string | null;
@@ -28023,6 +29510,7 @@ export type WebhookIssueCommentDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees?: (unknown | null)[];
     author_association?: string;
@@ -28098,11 +29586,12 @@ export type WebhookIssueCommentDeleted = {
       subscriptions_url?: string;
       type?: string;
       url?: string;
+      user_view_type?: string;
     };
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issue_comment edited event
@@ -28145,6 +29634,7 @@ export type WebhookIssueCommentEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -28168,6 +29658,7 @@ export type WebhookIssueCommentEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -28247,6 +29738,7 @@ export type WebhookIssueCommentEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -28367,6 +29859,7 @@ export type WebhookIssueCommentEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -28438,6 +29931,14 @@ export type WebhookIssueCommentEdited = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -28477,6 +29978,7 @@ export type WebhookIssueCommentEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   } & {
     active_lock_reason?: string | null;
@@ -28505,6 +30007,7 @@ export type WebhookIssueCommentEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees?: (unknown | null)[];
     author_association?: string;
@@ -28584,7 +30087,7 @@ export type WebhookIssueCommentEdited = {
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues assigned event
@@ -28600,7 +30103,7 @@ export type WebhookIssuesAssigned = {
   issue: WebhooksIssue;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues closed event
@@ -28644,6 +30147,7 @@ export type WebhookIssuesClosed = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -28667,6 +30171,7 @@ export type WebhookIssuesClosed = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -28746,6 +30251,7 @@ export type WebhookIssuesClosed = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -28867,6 +30373,7 @@ export type WebhookIssuesClosed = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -28938,6 +30445,14 @@ export type WebhookIssuesClosed = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -28977,6 +30492,7 @@ export type WebhookIssuesClosed = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   } & {
     active_lock_reason?: string | null;
@@ -29035,11 +30551,12 @@ export type WebhookIssuesClosed = {
       subscriptions_url?: string;
       type?: string;
       url?: string;
+      user_view_type?: string;
     };
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues deleted event
@@ -29081,6 +30598,7 @@ export type WebhookIssuesDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -29183,6 +30701,7 @@ export type WebhookIssuesDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -29302,6 +30821,7 @@ export type WebhookIssuesDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -29373,6 +30893,14 @@ export type WebhookIssuesDeleted = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -29412,11 +30940,12 @@ export type WebhookIssuesDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues demilestoned event
@@ -29560,6 +31089,7 @@ export type WebhookIssuesDemilestoned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -29678,6 +31208,7 @@ export type WebhookIssuesDemilestoned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -29749,6 +31280,14 @@ export type WebhookIssuesDemilestoned = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -29788,12 +31327,13 @@ export type WebhookIssuesDemilestoned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   milestone?: WebhooksMilestone;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues edited event
@@ -29852,6 +31392,7 @@ export type WebhookIssuesEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -29954,6 +31495,7 @@ export type WebhookIssuesEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -30075,6 +31617,7 @@ export type WebhookIssuesEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -30146,6 +31689,14 @@ export type WebhookIssuesEdited = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -30185,12 +31736,13 @@ export type WebhookIssuesEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   label?: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues labeled event
@@ -30232,6 +31784,7 @@ export type WebhookIssuesLabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -30334,6 +31887,7 @@ export type WebhookIssuesLabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -30454,6 +32008,7 @@ export type WebhookIssuesLabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -30525,6 +32080,14 @@ export type WebhookIssuesLabeled = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -30564,12 +32127,13 @@ export type WebhookIssuesLabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   label?: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues locked event
@@ -30611,6 +32175,7 @@ export type WebhookIssuesLocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -30634,6 +32199,7 @@ export type WebhookIssuesLocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -30713,6 +32279,7 @@ export type WebhookIssuesLocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -30833,6 +32400,7 @@ export type WebhookIssuesLocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -30904,6 +32472,14 @@ export type WebhookIssuesLocked = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -30943,11 +32519,12 @@ export type WebhookIssuesLocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues milestoned event
@@ -31091,6 +32668,7 @@ export type WebhookIssuesMilestoned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -31210,6 +32788,7 @@ export type WebhookIssuesMilestoned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -31281,6 +32860,14 @@ export type WebhookIssuesMilestoned = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -31320,12 +32907,13 @@ export type WebhookIssuesMilestoned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   milestone: WebhooksMilestone;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues opened event
@@ -31366,6 +32954,7 @@ export type WebhookIssuesOpened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       assignees: ({
         avatar_url?: string;
@@ -31389,6 +32978,7 @@ export type WebhookIssuesOpened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null)[];
       /**
        * AuthorAssociation
@@ -31468,6 +33058,7 @@ export type WebhookIssuesOpened = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         description: string | null;
         due_on: Date | null;
@@ -31586,6 +33177,7 @@ export type WebhookIssuesOpened = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         /**
          * The set of permissions for the GitHub app
@@ -31657,6 +33249,14 @@ export type WebhookIssuesOpened = {
       };
       repository_url: string;
       /**
+       * Sub-issues Summary
+       */
+      sub_issues_summary?: {
+        total: number;
+        completed: number;
+        percent_completed: number;
+      };
+      /**
        * State of the issue; either 'open' or 'closed'
        */
       state?: 'open' | 'closed';
@@ -31696,6 +33296,7 @@ export type WebhookIssuesOpened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     } | null;
     /**
@@ -31747,7 +33348,7 @@ export type WebhookIssuesOpened = {
        * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
        */
       custom_properties?: {
-        [key: string]: any;
+        [key: string]: unknown;
       };
       /**
        * The default branch of the repository.
@@ -31862,6 +33463,7 @@ export type WebhookIssuesOpened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       permissions?: {
         admin: boolean;
@@ -31938,6 +33540,7 @@ export type WebhookIssuesOpened = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -31961,6 +33564,7 @@ export type WebhookIssuesOpened = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -32040,6 +33644,7 @@ export type WebhookIssuesOpened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -32161,6 +33766,7 @@ export type WebhookIssuesOpened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -32232,6 +33838,14 @@ export type WebhookIssuesOpened = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -32271,11 +33885,12 @@ export type WebhookIssuesOpened = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues pinned event
@@ -32287,7 +33902,7 @@ export type WebhookIssuesPinned = {
   issue: WebhooksIssue2;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues reopened event
@@ -32431,6 +34046,7 @@ export type WebhookIssuesReopened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -32551,6 +34167,7 @@ export type WebhookIssuesReopened = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -32622,6 +34239,14 @@ export type WebhookIssuesReopened = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state: 'open' | 'closed';
@@ -32661,11 +34286,12 @@ export type WebhookIssuesReopened = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues transferred event
@@ -32706,6 +34332,7 @@ export type WebhookIssuesTransferred = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       assignees: ({
         avatar_url?: string;
@@ -32729,6 +34356,7 @@ export type WebhookIssuesTransferred = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null)[];
       /**
        * AuthorAssociation
@@ -32808,6 +34436,7 @@ export type WebhookIssuesTransferred = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         description: string | null;
         due_on: Date | null;
@@ -32926,6 +34555,7 @@ export type WebhookIssuesTransferred = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         /**
          * The set of permissions for the GitHub app
@@ -32997,6 +34627,14 @@ export type WebhookIssuesTransferred = {
       };
       repository_url: string;
       /**
+       * Sub-issues Summary
+       */
+      sub_issues_summary?: {
+        total: number;
+        completed: number;
+        percent_completed: number;
+      };
+      /**
        * State of the issue; either 'open' or 'closed'
        */
       state?: 'open' | 'closed';
@@ -33036,6 +34674,7 @@ export type WebhookIssuesTransferred = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     /**
@@ -33087,7 +34726,7 @@ export type WebhookIssuesTransferred = {
        * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
        */
       custom_properties?: {
-        [key: string]: any;
+        [key: string]: unknown;
       };
       /**
        * The default branch of the repository.
@@ -33202,6 +34841,7 @@ export type WebhookIssuesTransferred = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       permissions?: {
         admin: boolean;
@@ -33248,7 +34888,7 @@ export type WebhookIssuesTransferred = {
   issue: WebhooksIssue2;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues unassigned event
@@ -33264,7 +34904,7 @@ export type WebhookIssuesUnassigned = {
   issue: WebhooksIssue;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues unlabeled event
@@ -33277,7 +34917,7 @@ export type WebhookIssuesUnlabeled = {
   label?: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues unlocked event
@@ -33319,6 +34959,7 @@ export type WebhookIssuesUnlocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -33342,6 +34983,7 @@ export type WebhookIssuesUnlocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -33421,6 +35063,7 @@ export type WebhookIssuesUnlocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -33539,6 +35182,7 @@ export type WebhookIssuesUnlocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The set of permissions for the GitHub app
@@ -33610,6 +35254,14 @@ export type WebhookIssuesUnlocked = {
     };
     repository_url: string;
     /**
+     * Sub-issues Summary
+     */
+    sub_issues_summary?: {
+      total: number;
+      completed: number;
+      percent_completed: number;
+    };
+    /**
      * State of the issue; either 'open' or 'closed'
      */
     state?: 'open' | 'closed';
@@ -33649,11 +35301,12 @@ export type WebhookIssuesUnlocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * issues unpinned event
@@ -33665,7 +35318,7 @@ export type WebhookIssuesUnpinned = {
   issue: WebhooksIssue2;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * label created event
@@ -33677,7 +35330,7 @@ export type WebhookLabelCreated = {
   label: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * label deleted event
@@ -33689,7 +35342,7 @@ export type WebhookLabelDeleted = {
   label: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * label edited event
@@ -33724,7 +35377,7 @@ export type WebhookLabelEdited = {
   label: WebhooksLabel;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * marketplace_purchase cancelled event
@@ -33738,7 +35391,7 @@ export type WebhookMarketplacePurchaseCancelled = {
   organization?: OrganizationSimpleWebhooks;
   previous_marketplace_purchase?: WebhooksPreviousMarketplacePurchase;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * marketplace_purchase changed event
@@ -33779,7 +35432,7 @@ export type WebhookMarketplacePurchaseChanged = {
     unit_count: number;
   };
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * marketplace_purchase pending_change event
@@ -33820,7 +35473,7 @@ export type WebhookMarketplacePurchasePendingChange = {
     unit_count: number;
   };
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * marketplace_purchase pending_change_cancelled event
@@ -33861,7 +35514,7 @@ export type WebhookMarketplacePurchasePendingChangeCancelled = {
   organization?: OrganizationSimpleWebhooks;
   previous_marketplace_purchase?: WebhooksPreviousMarketplacePurchase;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * marketplace_purchase purchased event
@@ -33875,7 +35528,7 @@ export type WebhookMarketplacePurchasePurchased = {
   organization?: OrganizationSimpleWebhooks;
   previous_marketplace_purchase?: WebhooksPreviousMarketplacePurchase;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * member added event
@@ -33904,7 +35557,7 @@ export type WebhookMemberAdded = {
   member: WebhooksUser;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * member edited event
@@ -33931,7 +35584,7 @@ export type WebhookMemberEdited = {
   member: WebhooksUser;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * member removed event
@@ -33943,7 +35596,7 @@ export type WebhookMemberRemoved = {
   member: WebhooksUser;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * membership added event
@@ -33984,6 +35637,7 @@ export type WebhookMembershipAdded = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   team: WebhooksTeam;
 };
@@ -34026,6 +35680,7 @@ export type WebhookMembershipRemoved = {
     subscriptions_url?: string;
     type?: 'Bot' | 'User' | 'Organization';
     url?: string;
+    user_view_type?: string;
   } | null;
   team: WebhooksTeam;
 };
@@ -34035,7 +35690,7 @@ export type WebhookMergeGroupChecksRequested = {
   merge_group: MergeGroup;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 export type WebhookMergeGroupDestroyed = {
   action: 'destroyed';
@@ -34047,7 +35702,7 @@ export type WebhookMergeGroupDestroyed = {
   merge_group: MergeGroup;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * meta deleted event
@@ -34133,7 +35788,7 @@ export type WebhookMetaDeleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: NullableRepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * milestone closed event
@@ -34145,7 +35800,7 @@ export type WebhookMilestoneClosed = {
   milestone: WebhooksMilestone;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * milestone created event
@@ -34157,7 +35812,7 @@ export type WebhookMilestoneCreated = {
   milestone: WebhooksMilestone3;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * milestone deleted event
@@ -34169,7 +35824,7 @@ export type WebhookMilestoneDeleted = {
   milestone: WebhooksMilestone;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * milestone edited event
@@ -34204,7 +35859,7 @@ export type WebhookMilestoneEdited = {
   milestone: WebhooksMilestone;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * milestone opened event
@@ -34216,7 +35871,7 @@ export type WebhookMilestoneOpened = {
   milestone: WebhooksMilestone3;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * org_block blocked event
@@ -34228,7 +35883,7 @@ export type WebhookOrgBlockBlocked = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * org_block unblocked event
@@ -34240,7 +35895,7 @@ export type WebhookOrgBlockUnblocked = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * organization deleted event
@@ -34252,7 +35907,7 @@ export type WebhookOrganizationDeleted = {
   membership?: WebhooksMembership;
   organization: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * organization member_added event
@@ -34264,7 +35919,7 @@ export type WebhookOrganizationMemberAdded = {
   membership: WebhooksMembership;
   organization: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * organization member_invited event
@@ -34308,6 +35963,7 @@ export type WebhookOrganizationMemberInvited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     login: string | null;
     node_id: string;
@@ -34317,7 +35973,7 @@ export type WebhookOrganizationMemberInvited = {
   };
   organization: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   user?: WebhooksUser;
 };
 /**
@@ -34330,7 +35986,7 @@ export type WebhookOrganizationMemberRemoved = {
   membership: WebhooksMembership;
   organization: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * organization renamed event
@@ -34347,7 +36003,7 @@ export type WebhookOrganizationRenamed = {
   membership?: WebhooksMembership;
   organization: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Ruby Gems metadata
@@ -34414,6 +36070,7 @@ export type WebhookPackagePublished = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     package_type: string;
     package_version: {
@@ -34442,6 +36099,7 @@ export type WebhookPackagePublished = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       body?: string | unknown;
       body_html?: string;
@@ -34464,7 +36122,7 @@ export type WebhookPackagePublished = {
       installation_command: string;
       manifest?: string;
       metadata: {
-        [key: string]: any;
+        [key: string]: unknown;
       }[];
       name: string;
       npm_metadata?: {
@@ -34563,6 +36221,7 @@ export type WebhookPackagePublished = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         created_at: string;
         draft: boolean;
@@ -34594,7 +36253,7 @@ export type WebhookPackagePublished = {
     updated_at: string | null;
   };
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * package updated event
@@ -34640,6 +36299,7 @@ export type WebhookPackageUpdated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     package_type: string;
     package_version: {
@@ -34668,6 +36328,7 @@ export type WebhookPackageUpdated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       body: string;
       body_html: string;
@@ -34682,7 +36343,7 @@ export type WebhookPackageUpdated = {
       installation_command: string;
       manifest?: string;
       metadata: {
-        [key: string]: any;
+        [key: string]: unknown;
       }[];
       name: string;
       package_files: {
@@ -34726,6 +36387,7 @@ export type WebhookPackageUpdated = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         created_at: string;
         draft: boolean;
@@ -34757,7 +36419,7 @@ export type WebhookPackageUpdated = {
     updated_at: string;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * page_build event
@@ -34798,6 +36460,7 @@ export type WebhookPageBuild = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     status: string;
     updated_at: string;
@@ -34808,7 +36471,7 @@ export type WebhookPageBuild = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * personal_access_token_request approved event
@@ -34818,7 +36481,7 @@ export type WebhookPersonalAccessTokenRequestApproved = {
   personal_access_token_request: PersonalAccessTokenRequest;
   enterprise?: EnterpriseWebhooks;
   organization: OrganizationSimpleWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   installation: SimpleInstallation;
 };
 /**
@@ -34829,7 +36492,7 @@ export type WebhookPersonalAccessTokenRequestCancelled = {
   personal_access_token_request: PersonalAccessTokenRequest;
   enterprise?: EnterpriseWebhooks;
   organization: OrganizationSimpleWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   installation: SimpleInstallation;
 };
 /**
@@ -34840,7 +36503,7 @@ export type WebhookPersonalAccessTokenRequestCreated = {
   personal_access_token_request: PersonalAccessTokenRequest;
   enterprise?: EnterpriseWebhooks;
   organization: OrganizationSimpleWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   installation?: SimpleInstallation;
 };
 /**
@@ -34851,7 +36514,7 @@ export type WebhookPersonalAccessTokenRequestDenied = {
   personal_access_token_request: PersonalAccessTokenRequest;
   organization: OrganizationSimpleWebhooks;
   enterprise?: EnterpriseWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   installation: SimpleInstallation;
 };
 export type WebhookPing = {
@@ -34901,7 +36564,7 @@ export type WebhookPing = {
   hook_id?: number;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
   /**
    * Random string of GitHub zen.
    */
@@ -34931,7 +36594,7 @@ export type WebhookProjectCardConverted = {
   organization?: OrganizationSimpleWebhooks;
   project_card: WebhooksProjectCard;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project_card created event
@@ -34943,7 +36606,7 @@ export type WebhookProjectCardCreated = {
   organization?: OrganizationSimpleWebhooks;
   project_card: WebhooksProjectCard;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project_card deleted event
@@ -34991,6 +36654,7 @@ export type WebhookProjectCardDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * The project card's ID
@@ -35003,7 +36667,7 @@ export type WebhookProjectCardDeleted = {
     url: string;
   };
   repository?: NullableRepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project_card edited event
@@ -35020,7 +36684,7 @@ export type WebhookProjectCardEdited = {
   organization?: OrganizationSimpleWebhooks;
   project_card: WebhooksProjectCard;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project_card moved event
@@ -35070,6 +36734,7 @@ export type WebhookProjectCardMoved = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * The project card's ID
@@ -35114,7 +36779,7 @@ export type WebhookProjectCardMoved = {
     url?: string;
   };
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project closed event
@@ -35126,7 +36791,7 @@ export type WebhookProjectClosed = {
   organization?: OrganizationSimpleWebhooks;
   project: WebhooksProject;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project_column created event
@@ -35138,7 +36803,7 @@ export type WebhookProjectColumnCreated = {
   organization?: OrganizationSimpleWebhooks;
   project_column: WebhooksProjectColumn;
   repository?: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * project_column deleted event
@@ -35150,7 +36815,7 @@ export type WebhookProjectColumnDeleted = {
   organization?: OrganizationSimpleWebhooks;
   project_column: WebhooksProjectColumn;
   repository?: NullableRepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * project_column edited event
@@ -35167,7 +36832,7 @@ export type WebhookProjectColumnEdited = {
   organization?: OrganizationSimpleWebhooks;
   project_column: WebhooksProjectColumn;
   repository?: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * project_column moved event
@@ -35179,7 +36844,7 @@ export type WebhookProjectColumnMoved = {
   organization?: OrganizationSimpleWebhooks;
   project_column: WebhooksProjectColumn;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project created event
@@ -35191,7 +36856,7 @@ export type WebhookProjectCreated = {
   organization?: OrganizationSimpleWebhooks;
   project: WebhooksProject;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * project deleted event
@@ -35203,7 +36868,7 @@ export type WebhookProjectDeleted = {
   organization?: OrganizationSimpleWebhooks;
   project: WebhooksProject;
   repository?: NullableRepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * project edited event
@@ -35232,7 +36897,7 @@ export type WebhookProjectEdited = {
   organization?: OrganizationSimpleWebhooks;
   project: WebhooksProject;
   repository?: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * project reopened event
@@ -35244,7 +36909,7 @@ export type WebhookProjectReopened = {
   organization?: OrganizationSimpleWebhooks;
   project: WebhooksProject;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Project Closed Event
@@ -35254,7 +36919,7 @@ export type WebhookProjectsV2ProjectClosed = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2: ProjectsV2;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * A project was created
@@ -35264,7 +36929,7 @@ export type WebhookProjectsV2ProjectCreated = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2: ProjectsV2;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Project Deleted Event
@@ -35274,7 +36939,7 @@ export type WebhookProjectsV2ProjectDeleted = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2: ProjectsV2;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Project Edited Event
@@ -35302,7 +36967,7 @@ export type WebhookProjectsV2ProjectEdited = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2: ProjectsV2;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Item Archived Event
@@ -35313,7 +36978,7 @@ export type WebhookProjectsV2ItemArchived = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2_item: ProjectsV2Item;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Item Converted Event
@@ -35329,7 +36994,7 @@ export type WebhookProjectsV2ItemConverted = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2_item: ProjectsV2Item;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Item Created Event
@@ -35339,7 +37004,7 @@ export type WebhookProjectsV2ItemCreated = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2_item: ProjectsV2Item;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Item Deleted Event
@@ -35349,18 +37014,40 @@ export type WebhookProjectsV2ItemDeleted = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2_item: ProjectsV2Item;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Item Edited Event
  */
 export type WebhookProjectsV2ItemEdited = {
   action: 'edited';
+  /**
+   * The changes made to the item may involve modifications in the item's fields and draft issue body.
+   * It includes altered values for text, number, date, single select, and iteration fields, along with the GraphQL node ID of the changed field.
+   */
   changes?:
     | {
         field_value: {
           field_node_id?: string;
           field_type?: string;
+          field_name?: string;
+          project_number?: number;
+          from?:
+            | (
+                | string
+                | number
+                | ProjectsV2SingleSelectOption
+                | ProjectsV2IterationSetting
+              )
+            | null;
+          to?:
+            | (
+                | string
+                | number
+                | ProjectsV2SingleSelectOption
+                | ProjectsV2IterationSetting
+              )
+            | null;
         };
       }
     | {
@@ -35372,7 +37059,7 @@ export type WebhookProjectsV2ItemEdited = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2_item: ProjectsV2Item;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Item Reordered Event
@@ -35388,7 +37075,7 @@ export type WebhookProjectsV2ItemReordered = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2_item: ProjectsV2Item;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Item Restored Event
@@ -35399,7 +37086,7 @@ export type WebhookProjectsV2ItemRestored = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2_item: ProjectsV2Item;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Projects v2 Project Reopened Event
@@ -35409,7 +37096,59 @@ export type WebhookProjectsV2ProjectReopened = {
   installation?: SimpleInstallation;
   organization: OrganizationSimpleWebhooks;
   projects_v2: ProjectsV2;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
+};
+/**
+ * Projects v2 Status Update Created Event
+ */
+export type WebhookProjectsV2StatusUpdateCreated = {
+  action: 'created';
+  installation?: SimpleInstallation;
+  organization: OrganizationSimpleWebhooks;
+  projects_v2_status_update: ProjectsV2StatusUpdate;
+  sender: SimpleUser;
+};
+/**
+ * Projects v2 Status Update Deleted Event
+ */
+export type WebhookProjectsV2StatusUpdateDeleted = {
+  action: 'deleted';
+  installation?: SimpleInstallation;
+  organization: OrganizationSimpleWebhooks;
+  projects_v2_status_update: ProjectsV2StatusUpdate;
+  sender: SimpleUser;
+};
+/**
+ * Projects v2 Status Update Edited Event
+ */
+export type WebhookProjectsV2StatusUpdateEdited = {
+  action: 'edited';
+  changes?: {
+    body?: {
+      from?: string | null;
+      to?: string | null;
+    };
+    status?: {
+      from?:
+        | ('INACTIVE' | 'ON_TRACK' | 'AT_RISK' | 'OFF_TRACK' | 'COMPLETE')
+        | null;
+      to?:
+        | ('INACTIVE' | 'ON_TRACK' | 'AT_RISK' | 'OFF_TRACK' | 'COMPLETE')
+        | null;
+    };
+    start_date?: {
+      from?: string | null;
+      to?: string | null;
+    };
+    target_date?: {
+      from?: string | null;
+      to?: string | null;
+    };
+  };
+  installation?: SimpleInstallation;
+  organization: OrganizationSimpleWebhooks;
+  projects_v2_status_update: ProjectsV2StatusUpdate;
+  sender: SimpleUser;
 };
 /**
  * public event
@@ -35419,7 +37158,7 @@ export type WebhookPublic = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request assigned event
@@ -35514,6 +37253,7 @@ export type WebhookPullRequestAssigned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -35537,6 +37277,7 @@ export type WebhookPullRequestAssigned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -35589,6 +37330,7 @@ export type WebhookPullRequestAssigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -35771,6 +37513,7 @@ export type WebhookPullRequestAssigned = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -35819,7 +37562,7 @@ export type WebhookPullRequestAssigned = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -35856,6 +37599,7 @@ export type WebhookPullRequestAssigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -36048,6 +37792,7 @@ export type WebhookPullRequestAssigned = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -36096,7 +37841,7 @@ export type WebhookPullRequestAssigned = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -36133,6 +37878,7 @@ export type WebhookPullRequestAssigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -36191,6 +37937,7 @@ export type WebhookPullRequestAssigned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -36225,6 +37972,7 @@ export type WebhookPullRequestAssigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -36278,6 +38026,7 @@ export type WebhookPullRequestAssigned = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -36433,10 +38182,11 @@ export type WebhookPullRequestAssigned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request auto_merge_disabled event
@@ -36530,6 +38280,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -36605,6 +38356,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -36787,6 +38539,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -36835,7 +38588,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -36872,6 +38625,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -37064,6 +38818,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -37112,7 +38867,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -37149,6 +38904,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -37207,6 +38963,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -37241,6 +38998,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -37294,6 +39052,7 @@ export type WebhookPullRequestAutoMergeDisabled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -37449,11 +39208,12 @@ export type WebhookPullRequestAutoMergeDisabled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   reason: string;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request auto_merge_enabled event
@@ -37547,6 +39307,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -37622,6 +39383,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -37804,6 +39566,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -37852,7 +39615,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -37889,6 +39652,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -38081,6 +39845,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -38129,7 +39894,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -38166,6 +39931,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -38224,6 +39990,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -38258,6 +40025,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -38311,6 +40079,7 @@ export type WebhookPullRequestAutoMergeEnabled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -38466,11 +40235,12 @@ export type WebhookPullRequestAutoMergeEnabled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   reason?: string;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request closed event
@@ -38483,7 +40253,7 @@ export type WebhookPullRequestClosed = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: PullRequestWebhook;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request converted_to_draft event
@@ -38496,7 +40266,7 @@ export type WebhookPullRequestConvertedToDraft = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: PullRequestWebhook;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request demilestoned event
@@ -38509,7 +40279,7 @@ export type WebhookPullRequestDemilestoned = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: WebhooksPullRequest5;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * pull_request dequeued event
@@ -38603,6 +40373,7 @@ export type WebhookPullRequestDequeued = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -38678,6 +40449,7 @@ export type WebhookPullRequestDequeued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -38860,6 +40632,7 @@ export type WebhookPullRequestDequeued = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -38908,7 +40681,7 @@ export type WebhookPullRequestDequeued = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -38945,6 +40718,7 @@ export type WebhookPullRequestDequeued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -39137,6 +40911,7 @@ export type WebhookPullRequestDequeued = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -39185,7 +40960,7 @@ export type WebhookPullRequestDequeued = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -39222,6 +40997,7 @@ export type WebhookPullRequestDequeued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -39280,6 +41056,7 @@ export type WebhookPullRequestDequeued = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -39314,6 +41091,7 @@ export type WebhookPullRequestDequeued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -39367,6 +41145,7 @@ export type WebhookPullRequestDequeued = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -39522,11 +41301,24 @@ export type WebhookPullRequestDequeued = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
-  reason: string;
+  reason:
+    | 'UNKNOWN_REMOVAL_REASON'
+    | 'MANUAL'
+    | 'MERGE'
+    | 'MERGE_CONFLICT'
+    | 'CI_FAILURE'
+    | 'CI_TIMEOUT'
+    | 'ALREADY_MERGED'
+    | 'QUEUE_CLEARED'
+    | 'ROLL_BACK'
+    | 'BRANCH_PROTECTIONS'
+    | 'GIT_TREE_INVALID'
+    | 'INVALID_MERGE_COMMIT';
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request edited event
@@ -39564,7 +41356,7 @@ export type WebhookPullRequestEdited = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: PullRequestWebhook;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * pull_request enqueued event
@@ -39658,6 +41450,7 @@ export type WebhookPullRequestEnqueued = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -39733,6 +41526,7 @@ export type WebhookPullRequestEnqueued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -39915,6 +41709,7 @@ export type WebhookPullRequestEnqueued = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -39963,7 +41758,7 @@ export type WebhookPullRequestEnqueued = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -40000,6 +41795,7 @@ export type WebhookPullRequestEnqueued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -40192,6 +41988,7 @@ export type WebhookPullRequestEnqueued = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -40240,7 +42037,7 @@ export type WebhookPullRequestEnqueued = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -40277,6 +42074,7 @@ export type WebhookPullRequestEnqueued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -40335,6 +42133,7 @@ export type WebhookPullRequestEnqueued = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -40369,6 +42168,7 @@ export type WebhookPullRequestEnqueued = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -40422,6 +42222,7 @@ export type WebhookPullRequestEnqueued = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -40577,10 +42378,11 @@ export type WebhookPullRequestEnqueued = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request labeled event
@@ -40675,6 +42477,7 @@ export type WebhookPullRequestLabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -40750,6 +42553,7 @@ export type WebhookPullRequestLabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -40932,6 +42736,7 @@ export type WebhookPullRequestLabeled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -40980,7 +42785,7 @@ export type WebhookPullRequestLabeled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -41017,6 +42822,7 @@ export type WebhookPullRequestLabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -41209,6 +43015,7 @@ export type WebhookPullRequestLabeled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -41257,7 +43064,7 @@ export type WebhookPullRequestLabeled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -41294,6 +43101,7 @@ export type WebhookPullRequestLabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -41352,6 +43160,7 @@ export type WebhookPullRequestLabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -41386,6 +43195,7 @@ export type WebhookPullRequestLabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -41439,6 +43249,7 @@ export type WebhookPullRequestLabeled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -41594,10 +43405,11 @@ export type WebhookPullRequestLabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request locked event
@@ -41691,6 +43503,7 @@ export type WebhookPullRequestLocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -41766,6 +43579,7 @@ export type WebhookPullRequestLocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -41948,6 +43762,7 @@ export type WebhookPullRequestLocked = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -41996,7 +43811,7 @@ export type WebhookPullRequestLocked = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -42033,6 +43848,7 @@ export type WebhookPullRequestLocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -42225,6 +44041,7 @@ export type WebhookPullRequestLocked = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -42273,7 +44090,7 @@ export type WebhookPullRequestLocked = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -42310,6 +44127,7 @@ export type WebhookPullRequestLocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -42368,6 +44186,7 @@ export type WebhookPullRequestLocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -42402,6 +44221,7 @@ export type WebhookPullRequestLocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -42455,6 +44275,7 @@ export type WebhookPullRequestLocked = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -42610,10 +44431,11 @@ export type WebhookPullRequestLocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request milestoned event
@@ -42626,7 +44448,7 @@ export type WebhookPullRequestMilestoned = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: WebhooksPullRequest5;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * pull_request opened event
@@ -42639,7 +44461,7 @@ export type WebhookPullRequestOpened = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: PullRequestWebhook;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request ready_for_review event
@@ -42652,7 +44474,7 @@ export type WebhookPullRequestReadyForReview = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: PullRequestWebhook;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request reopened event
@@ -42665,7 +44487,7 @@ export type WebhookPullRequestReopened = {
   organization?: OrganizationSimpleWebhooks;
   pull_request: PullRequestWebhook;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request_review_comment created event
@@ -42837,6 +44659,7 @@ export type WebhookPullRequestReviewCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   enterprise?: EnterpriseWebhooks;
@@ -42921,6 +44744,7 @@ export type WebhookPullRequestReviewCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -42996,6 +44820,7 @@ export type WebhookPullRequestReviewCommentCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -43178,6 +45003,7 @@ export type WebhookPullRequestReviewCommentCreated = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -43226,7 +45052,7 @@ export type WebhookPullRequestReviewCommentCreated = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -43263,6 +45089,7 @@ export type WebhookPullRequestReviewCommentCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -43448,6 +45275,7 @@ export type WebhookPullRequestReviewCommentCreated = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -43496,7 +45324,7 @@ export type WebhookPullRequestReviewCommentCreated = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -43533,6 +45361,7 @@ export type WebhookPullRequestReviewCommentCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -43592,6 +45421,7 @@ export type WebhookPullRequestReviewCommentCreated = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -43641,6 +45471,7 @@ export type WebhookPullRequestReviewCommentCreated = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -43789,10 +45620,11 @@ export type WebhookPullRequestReviewCommentCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request_review_comment deleted event
@@ -43882,6 +45714,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -43957,6 +45790,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -44139,6 +45973,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -44187,7 +46022,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -44224,6 +46059,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -44409,6 +46245,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -44457,7 +46294,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -44494,6 +46331,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -44553,6 +46391,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -44602,6 +46441,7 @@ export type WebhookPullRequestReviewCommentDeleted = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -44750,10 +46590,11 @@ export type WebhookPullRequestReviewCommentDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request_review_comment edited event
@@ -44844,6 +46685,7 @@ export type WebhookPullRequestReviewCommentEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -44867,6 +46709,7 @@ export type WebhookPullRequestReviewCommentEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -44919,6 +46762,7 @@ export type WebhookPullRequestReviewCommentEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -45101,6 +46945,7 @@ export type WebhookPullRequestReviewCommentEdited = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -45149,7 +46994,7 @@ export type WebhookPullRequestReviewCommentEdited = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -45186,6 +47031,7 @@ export type WebhookPullRequestReviewCommentEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -45371,6 +47217,7 @@ export type WebhookPullRequestReviewCommentEdited = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -45419,7 +47266,7 @@ export type WebhookPullRequestReviewCommentEdited = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -45456,6 +47303,7 @@ export type WebhookPullRequestReviewCommentEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -45515,6 +47363,7 @@ export type WebhookPullRequestReviewCommentEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -45564,6 +47413,7 @@ export type WebhookPullRequestReviewCommentEdited = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -45711,11 +47561,12 @@ export type WebhookPullRequestReviewCommentEdited = {
       starred_url?: string;
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
+      user_view_type?: string;
       url?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request_review dismissed event
@@ -45807,6 +47658,7 @@ export type WebhookPullRequestReviewDismissed = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -45882,6 +47734,7 @@ export type WebhookPullRequestReviewDismissed = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -46064,6 +47917,7 @@ export type WebhookPullRequestReviewDismissed = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -46112,7 +47966,7 @@ export type WebhookPullRequestReviewDismissed = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -46149,6 +48003,7 @@ export type WebhookPullRequestReviewDismissed = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -46334,6 +48189,7 @@ export type WebhookPullRequestReviewDismissed = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -46382,7 +48238,7 @@ export type WebhookPullRequestReviewDismissed = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -46419,6 +48275,7 @@ export type WebhookPullRequestReviewDismissed = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -46478,6 +48335,7 @@ export type WebhookPullRequestReviewDismissed = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -46527,6 +48385,7 @@ export type WebhookPullRequestReviewDismissed = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -46675,6 +48534,7 @@ export type WebhookPullRequestReviewDismissed = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
@@ -46751,9 +48611,10 @@ export type WebhookPullRequestReviewDismissed = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request_review edited event
@@ -46853,6 +48714,7 @@ export type WebhookPullRequestReviewEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -46928,6 +48790,7 @@ export type WebhookPullRequestReviewEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -47091,6 +48954,7 @@ export type WebhookPullRequestReviewEdited = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -47153,6 +49017,7 @@ export type WebhookPullRequestReviewEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -47319,6 +49184,7 @@ export type WebhookPullRequestReviewEdited = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -47381,6 +49247,7 @@ export type WebhookPullRequestReviewEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -47440,6 +49307,7 @@ export type WebhookPullRequestReviewEdited = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -47489,6 +49357,7 @@ export type WebhookPullRequestReviewEdited = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -47637,11 +49506,12 @@ export type WebhookPullRequestReviewEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
   review: WebhooksReview;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request review_request_removed event
@@ -47739,6 +49609,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         assignees: ({
           avatar_url?: string;
@@ -47762,6 +49633,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)[];
         /**
          * AuthorAssociation
@@ -47814,6 +49686,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
           /**
            * The merge method to use.
@@ -47996,6 +49869,7 @@ export type WebhookPullRequestReviewRequestRemoved =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -48040,7 +49914,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -48077,6 +49951,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         body: string | null;
@@ -48269,6 +50144,7 @@ export type WebhookPullRequestReviewRequestRemoved =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -48320,7 +50196,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -48357,6 +50233,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         html_url: string;
@@ -48415,6 +50292,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         /**
          * Milestone
@@ -48449,6 +50327,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
           description: string | null;
           due_on: Date | null;
@@ -48502,6 +50381,7 @@ export type WebhookPullRequestReviewRequestRemoved =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null)
           | {
               deleted?: boolean;
@@ -48657,6 +50537,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
       };
       repository: RepositoryWebhooks;
@@ -48685,8 +50566,9 @@ export type WebhookPullRequestReviewRequestRemoved =
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
-      sender: SimpleUserWebhooks;
+      sender: SimpleUser;
     }
   | {
       action: 'review_request_removed';
@@ -48780,6 +50662,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         assignees: ({
           avatar_url?: string;
@@ -48803,6 +50686,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)[];
         /**
          * AuthorAssociation
@@ -48855,6 +50739,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
           /**
            * The merge method to use.
@@ -49037,6 +50922,7 @@ export type WebhookPullRequestReviewRequestRemoved =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -49088,7 +50974,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -49125,6 +51011,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         body: string | null;
@@ -49317,6 +51204,7 @@ export type WebhookPullRequestReviewRequestRemoved =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -49368,7 +51256,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -49405,6 +51293,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         html_url: string;
@@ -49463,6 +51352,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         /**
          * Milestone
@@ -49497,6 +51387,7 @@ export type WebhookPullRequestReviewRequestRemoved =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
           description: string | null;
           due_on: Date | null;
@@ -49550,6 +51441,7 @@ export type WebhookPullRequestReviewRequestRemoved =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null)
           | {
               deleted?: boolean;
@@ -49705,6 +51597,7 @@ export type WebhookPullRequestReviewRequestRemoved =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
       };
       repository: RepositoryWebhooks;
@@ -49769,7 +51662,7 @@ export type WebhookPullRequestReviewRequestRemoved =
          */
         url: string;
       };
-      sender: SimpleUserWebhooks;
+      sender: SimpleUser;
     };
 /**
  * pull_request review_requested event
@@ -49867,6 +51760,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null;
         assignees: ({
           avatar_url?: string;
@@ -49890,6 +51784,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)[];
         /**
          * AuthorAssociation
@@ -49942,6 +51837,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
           /**
            * The merge method to use.
@@ -50124,6 +52020,7 @@ export type WebhookPullRequestReviewRequested =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -50175,7 +52072,7 @@ export type WebhookPullRequestReviewRequested =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -50212,6 +52109,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         body: string | null;
@@ -50404,6 +52302,7 @@ export type WebhookPullRequestReviewRequested =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -50455,7 +52354,7 @@ export type WebhookPullRequestReviewRequested =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -50492,6 +52391,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         html_url: string;
@@ -50550,6 +52450,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         /**
          * Milestone
@@ -50584,6 +52485,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
             url?: string;
+            user_view_type?: string;
           } | null;
           description: string | null;
           due_on: Date | null;
@@ -50637,6 +52539,7 @@ export type WebhookPullRequestReviewRequested =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null)
           | {
               deleted?: boolean;
@@ -50792,6 +52695,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null;
       };
       repository: RepositoryWebhooks;
@@ -50820,8 +52724,9 @@ export type WebhookPullRequestReviewRequested =
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
-      sender: SimpleUserWebhooks;
+      sender: SimpleUser;
     }
   | {
       action: 'review_requested';
@@ -50915,6 +52820,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null;
         assignees: ({
           avatar_url?: string;
@@ -50938,6 +52844,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)[];
         /**
          * AuthorAssociation
@@ -50990,6 +52897,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
           /**
            * The merge method to use.
@@ -51172,6 +53080,7 @@ export type WebhookPullRequestReviewRequested =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -51223,7 +53132,7 @@ export type WebhookPullRequestReviewRequested =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -51260,6 +53169,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         body: string | null;
@@ -51452,6 +53362,7 @@ export type WebhookPullRequestReviewRequested =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null;
             permissions?: {
               admin: boolean;
@@ -51503,7 +53414,7 @@ export type WebhookPullRequestReviewRequested =
             updated_at: Date;
             url: string;
             /**
-             * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+             * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
              */
             use_squash_pr_title_as_default?: boolean;
             visibility: 'public' | 'private' | 'internal';
@@ -51540,6 +53451,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization';
             url?: string;
+            user_view_type?: string;
           } | null;
         };
         html_url: string;
@@ -51598,6 +53510,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         /**
          * Milestone
@@ -51632,6 +53545,7 @@ export type WebhookPullRequestReviewRequested =
             subscriptions_url?: string;
             type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
             url?: string;
+            user_view_type?: string;
           } | null;
           description: string | null;
           due_on: Date | null;
@@ -51685,6 +53599,7 @@ export type WebhookPullRequestReviewRequested =
               subscriptions_url?: string;
               type?: 'Bot' | 'User' | 'Organization';
               url?: string;
+              user_view_type?: string;
             } | null)
           | {
               deleted?: boolean;
@@ -51840,6 +53755,7 @@ export type WebhookPullRequestReviewRequested =
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null;
       };
       repository: RepositoryWebhooks;
@@ -51904,7 +53820,7 @@ export type WebhookPullRequestReviewRequested =
          */
         url?: string;
       };
-      sender: SimpleUserWebhooks;
+      sender: SimpleUser;
     };
 /**
  * pull_request_review submitted event
@@ -51996,6 +53912,7 @@ export type WebhookPullRequestReviewSubmitted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -52071,6 +53988,7 @@ export type WebhookPullRequestReviewSubmitted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -52253,6 +54171,7 @@ export type WebhookPullRequestReviewSubmitted = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -52301,7 +54220,7 @@ export type WebhookPullRequestReviewSubmitted = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -52338,6 +54257,7 @@ export type WebhookPullRequestReviewSubmitted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -52523,6 +54443,7 @@ export type WebhookPullRequestReviewSubmitted = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -52571,7 +54492,7 @@ export type WebhookPullRequestReviewSubmitted = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -52608,6 +54529,7 @@ export type WebhookPullRequestReviewSubmitted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -52667,6 +54589,7 @@ export type WebhookPullRequestReviewSubmitted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -52716,6 +54639,7 @@ export type WebhookPullRequestReviewSubmitted = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -52864,11 +54788,12 @@ export type WebhookPullRequestReviewSubmitted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
   review: WebhooksReview;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request_review_thread resolved event
@@ -52960,6 +54885,7 @@ export type WebhookPullRequestReviewThreadResolved = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -53035,6 +54961,7 @@ export type WebhookPullRequestReviewThreadResolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -53202,6 +55129,7 @@ export type WebhookPullRequestReviewThreadResolved = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -53268,6 +55196,7 @@ export type WebhookPullRequestReviewThreadResolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -53438,6 +55367,7 @@ export type WebhookPullRequestReviewThreadResolved = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -53504,6 +55434,7 @@ export type WebhookPullRequestReviewThreadResolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -53563,6 +55494,7 @@ export type WebhookPullRequestReviewThreadResolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -53612,6 +55544,7 @@ export type WebhookPullRequestReviewThreadResolved = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -53760,10 +55693,11 @@ export type WebhookPullRequestReviewThreadResolved = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
   thread: {
     comments: {
       _links: {
@@ -53926,6 +55860,7 @@ export type WebhookPullRequestReviewThreadResolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
     }[];
     node_id: string;
@@ -54021,6 +55956,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -54096,6 +56032,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -54263,6 +56200,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -54329,6 +56267,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -54499,6 +56438,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -54565,6 +56505,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -54624,6 +56565,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -54673,6 +56615,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -54821,10 +56764,11 @@ export type WebhookPullRequestReviewThreadUnresolved = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
   thread: {
     comments: {
       _links: {
@@ -54987,6 +56931,7 @@ export type WebhookPullRequestReviewThreadUnresolved = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     }[];
     node_id: string;
@@ -55086,6 +57031,7 @@ export type WebhookPullRequestSynchronize = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -55161,6 +57107,7 @@ export type WebhookPullRequestSynchronize = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -55343,6 +57290,7 @@ export type WebhookPullRequestSynchronize = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -55391,7 +57339,7 @@ export type WebhookPullRequestSynchronize = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -55428,6 +57376,7 @@ export type WebhookPullRequestSynchronize = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -55613,6 +57562,7 @@ export type WebhookPullRequestSynchronize = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -55661,7 +57611,7 @@ export type WebhookPullRequestSynchronize = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -55698,6 +57648,7 @@ export type WebhookPullRequestSynchronize = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -55756,6 +57707,7 @@ export type WebhookPullRequestSynchronize = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -55790,6 +57742,7 @@ export type WebhookPullRequestSynchronize = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -55843,6 +57796,7 @@ export type WebhookPullRequestSynchronize = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -55998,10 +57952,11 @@ export type WebhookPullRequestSynchronize = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request unassigned event
@@ -56096,6 +58051,7 @@ export type WebhookPullRequestUnassigned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -56171,6 +58127,7 @@ export type WebhookPullRequestUnassigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -56353,6 +58310,7 @@ export type WebhookPullRequestUnassigned = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -56401,7 +58359,7 @@ export type WebhookPullRequestUnassigned = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -56438,6 +58396,7 @@ export type WebhookPullRequestUnassigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -56630,6 +58589,7 @@ export type WebhookPullRequestUnassigned = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -56678,7 +58638,7 @@ export type WebhookPullRequestUnassigned = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -56715,6 +58675,7 @@ export type WebhookPullRequestUnassigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -56773,6 +58734,7 @@ export type WebhookPullRequestUnassigned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -56807,6 +58769,7 @@ export type WebhookPullRequestUnassigned = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -56860,6 +58823,7 @@ export type WebhookPullRequestUnassigned = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -57015,10 +58979,11 @@ export type WebhookPullRequestUnassigned = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * pull_request unlabeled event
@@ -57113,6 +59078,7 @@ export type WebhookPullRequestUnlabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -57188,6 +59154,7 @@ export type WebhookPullRequestUnlabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -57370,6 +59337,7 @@ export type WebhookPullRequestUnlabeled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -57418,7 +59386,7 @@ export type WebhookPullRequestUnlabeled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -57455,6 +59423,7 @@ export type WebhookPullRequestUnlabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -57640,6 +59609,7 @@ export type WebhookPullRequestUnlabeled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -57688,7 +59658,7 @@ export type WebhookPullRequestUnlabeled = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -57725,6 +59695,7 @@ export type WebhookPullRequestUnlabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -57783,6 +59754,7 @@ export type WebhookPullRequestUnlabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -57817,6 +59789,7 @@ export type WebhookPullRequestUnlabeled = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -57870,6 +59843,7 @@ export type WebhookPullRequestUnlabeled = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -58025,10 +59999,11 @@ export type WebhookPullRequestUnlabeled = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization' | 'Mannequin';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * pull_request unlocked event
@@ -58122,6 +60097,7 @@ export type WebhookPullRequestUnlocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     assignees: ({
       avatar_url?: string;
@@ -58197,6 +60173,7 @@ export type WebhookPullRequestUnlocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * The merge method to use.
@@ -58379,6 +60356,7 @@ export type WebhookPullRequestUnlocked = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -58427,7 +60405,7 @@ export type WebhookPullRequestUnlocked = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -58464,6 +60442,7 @@ export type WebhookPullRequestUnlocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     body: string | null;
@@ -58656,6 +60635,7 @@ export type WebhookPullRequestUnlocked = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
         permissions?: {
           admin: boolean;
@@ -58704,7 +60684,7 @@ export type WebhookPullRequestUnlocked = {
         updated_at: Date;
         url: string;
         /**
-         * Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+         * Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.
          */
         use_squash_pr_title_as_default?: boolean;
         visibility: 'public' | 'private' | 'internal';
@@ -58741,6 +60721,7 @@ export type WebhookPullRequestUnlocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
     };
     html_url: string;
@@ -58799,6 +60780,7 @@ export type WebhookPullRequestUnlocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     /**
      * Milestone
@@ -58833,6 +60815,7 @@ export type WebhookPullRequestUnlocked = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       description: string | null;
       due_on: Date | null;
@@ -58886,6 +60869,7 @@ export type WebhookPullRequestUnlocked = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null)
       | {
           deleted?: boolean;
@@ -59041,10 +61025,11 @@ export type WebhookPullRequestUnlocked = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
   };
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * push event
@@ -59266,7 +61251,7 @@ export type WebhookPush = {
      * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
      */
     custom_properties?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
     /**
      * The default branch of the repository.
@@ -59381,6 +61366,7 @@ export type WebhookPush = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     permissions?: {
       admin: boolean;
@@ -59421,7 +61407,7 @@ export type WebhookPush = {
      */
     web_commit_signoff_required?: boolean;
   };
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 export type WebhookRegistryPackagePublished = {
   action: 'published';
@@ -59455,6 +61441,7 @@ export type WebhookRegistryPackagePublished = {
       subscriptions_url: string;
       type: string;
       url: string;
+      user_view_type?: string;
     };
     package_type: string;
     package_version: {
@@ -59477,6 +61464,7 @@ export type WebhookRegistryPackagePublished = {
         subscriptions_url: string;
         type: string;
         url: string;
+        user_view_type?: string;
       };
       body?: string | unknown;
       body_html?: string;
@@ -59499,7 +61487,7 @@ export type WebhookRegistryPackagePublished = {
       installation_command: string;
       manifest?: string;
       metadata: {
-        [key: string]: any;
+        [key: string]: unknown;
       }[];
       name: string;
       npm_metadata?: {
@@ -59592,6 +61580,7 @@ export type WebhookRegistryPackagePublished = {
           subscriptions_url?: string;
           type?: string;
           url?: string;
+          user_view_type?: string;
         };
         created_at?: string;
         draft?: boolean;
@@ -59622,7 +61611,7 @@ export type WebhookRegistryPackagePublished = {
     updated_at: string | null;
   };
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 export type WebhookRegistryPackageUpdated = {
   action: 'updated';
@@ -59656,6 +61645,7 @@ export type WebhookRegistryPackageUpdated = {
       subscriptions_url: string;
       type: string;
       url: string;
+      user_view_type?: string;
     };
     package_type: string;
     package_version: {
@@ -59678,6 +61668,7 @@ export type WebhookRegistryPackageUpdated = {
         subscriptions_url: string;
         type: string;
         url: string;
+        user_view_type?: string;
       };
       body: string;
       body_html: string;
@@ -59692,7 +61683,7 @@ export type WebhookRegistryPackageUpdated = {
       installation_command: string;
       manifest?: string;
       metadata: {
-        [key: string]: any;
+        [key: string]: unknown;
       }[];
       name: string;
       package_files: {
@@ -59730,6 +61721,7 @@ export type WebhookRegistryPackageUpdated = {
           subscriptions_url: string;
           type: string;
           url: string;
+          user_view_type?: string;
         };
         created_at: string;
         draft: boolean;
@@ -59754,7 +61746,7 @@ export type WebhookRegistryPackageUpdated = {
     updated_at: string;
   };
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * release created event
@@ -59766,7 +61758,7 @@ export type WebhookReleaseCreated = {
   organization?: OrganizationSimpleWebhooks;
   release: WebhooksRelease;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * release deleted event
@@ -59778,7 +61770,7 @@ export type WebhookReleaseDeleted = {
   organization?: OrganizationSimpleWebhooks;
   release: WebhooksRelease;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * release edited event
@@ -59810,7 +61802,7 @@ export type WebhookReleaseEdited = {
   organization?: OrganizationSimpleWebhooks;
   release: WebhooksRelease;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * release prereleased event
@@ -59897,6 +61889,7 @@ export type WebhookReleasePrereleased = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     body: string | null;
     created_at: Date | null;
@@ -59943,7 +61936,7 @@ export type WebhookReleasePrereleased = {
     zipball_url: string | null;
   };
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * release published event
@@ -59955,7 +61948,7 @@ export type WebhookReleasePublished = {
   organization?: OrganizationSimpleWebhooks;
   release: WebhooksRelease1;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * release released event
@@ -59967,7 +61960,7 @@ export type WebhookReleaseReleased = {
   organization?: OrganizationSimpleWebhooks;
   release: WebhooksRelease;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * release unpublished event
@@ -59979,7 +61972,7 @@ export type WebhookReleaseUnpublished = {
   organization?: OrganizationSimpleWebhooks;
   release: WebhooksRelease1;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * Repository advisory published event
@@ -59991,7 +61984,7 @@ export type WebhookRepositoryAdvisoryPublished = {
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   repository_advisory: RepositoryAdvisory;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * Repository advisory reported event
@@ -60003,7 +61996,7 @@ export type WebhookRepositoryAdvisoryReported = {
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   repository_advisory: RepositoryAdvisory;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * repository archived event
@@ -60014,7 +62007,7 @@ export type WebhookRepositoryArchived = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository created event
@@ -60025,7 +62018,7 @@ export type WebhookRepositoryCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository deleted event
@@ -60036,7 +62029,7 @@ export type WebhookRepositoryDeleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository_dispatch event
@@ -60051,13 +62044,13 @@ export type WebhookRepositoryDispatchSample = {
    * The `client_payload` that was specified in the `POST /repos/{owner}/{repo}/dispatches` request body.
    */
   client_payload: {
-    [key: string]: any;
+    [key: string]: unknown;
   } | null;
   enterprise?: EnterpriseWebhooks;
   installation: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository edited event
@@ -60082,7 +62075,7 @@ export type WebhookRepositoryEdited = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository_import event
@@ -60092,7 +62085,7 @@ export type WebhookRepositoryImport = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   status: 'success' | 'cancelled' | 'failure';
 };
 /**
@@ -60104,7 +62097,7 @@ export type WebhookRepositoryPrivatized = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository publicized event
@@ -60115,7 +62108,7 @@ export type WebhookRepositoryPublicized = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository renamed event
@@ -60133,7 +62126,7 @@ export type WebhookRepositoryRenamed = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository ruleset created event
@@ -60145,7 +62138,7 @@ export type WebhookRepositoryRulesetCreated = {
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
   repository_ruleset: RepositoryRuleset;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository ruleset deleted event
@@ -60157,7 +62150,7 @@ export type WebhookRepositoryRulesetDeleted = {
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
   repository_ruleset: RepositoryRuleset;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository ruleset edited event
@@ -60216,7 +62209,7 @@ export type WebhookRepositoryRulesetEdited = {
       }[];
     };
   };
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository transferred event
@@ -60269,6 +62262,7 @@ export type WebhookRepositoryTransferred = {
           subscriptions_url?: string;
           type?: 'Bot' | 'User' | 'Organization';
           url?: string;
+          user_view_type?: string;
         } | null;
       };
     };
@@ -60277,7 +62271,7 @@ export type WebhookRepositoryTransferred = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository unarchived event
@@ -60288,7 +62282,7 @@ export type WebhookRepositoryUnarchived = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository_vulnerability_alert create event
@@ -60300,7 +62294,7 @@ export type WebhookRepositoryVulnerabilityAlertCreate = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository_vulnerability_alert dismiss event
@@ -60343,6 +62337,7 @@ export type WebhookRepositoryVulnerabilityAlertDismiss = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     external_identifier: string;
     external_reference: string | null;
@@ -60360,7 +62355,7 @@ export type WebhookRepositoryVulnerabilityAlertDismiss = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository_vulnerability_alert reopen event
@@ -60372,7 +62367,7 @@ export type WebhookRepositoryVulnerabilityAlertReopen = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * repository_vulnerability_alert resolve event
@@ -60431,7 +62426,7 @@ export type WebhookRepositoryVulnerabilityAlertResolve = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * secret_scanning_alert created event
@@ -60443,7 +62438,7 @@ export type WebhookSecretScanningAlertCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * Secret Scanning Alert Location Created Event
@@ -60455,7 +62450,7 @@ export type WebhookSecretScanningAlertLocationCreated = {
   location: SecretScanningLocation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * Secret Scanning Alert Location Created Event
@@ -60467,6 +62462,18 @@ export type WebhookSecretScanningAlertLocationCreatedFormEncoded = {
   payload: string;
 };
 /**
+ * secret_scanning_alert publicly leaked event
+ */
+export type WebhookSecretScanningAlertPubliclyLeaked = {
+  action: 'publicly_leaked';
+  alert: SecretScanningAlertWebhook;
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  repository: RepositoryWebhooks;
+  sender?: SimpleUser;
+};
+/**
  * secret_scanning_alert reopened event
  */
 export type WebhookSecretScanningAlertReopened = {
@@ -60476,7 +62483,7 @@ export type WebhookSecretScanningAlertReopened = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * secret_scanning_alert resolved event
@@ -60488,19 +62495,7 @@ export type WebhookSecretScanningAlertResolved = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
-};
-/**
- * secret_scanning_alert revoked event
- */
-export type WebhookSecretScanningAlertRevoked = {
-  action: 'revoked';
-  alert: SecretScanningAlertWebhook;
-  enterprise?: EnterpriseWebhooks;
-  installation?: SimpleInstallation;
-  organization?: OrganizationSimpleWebhooks;
-  repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * secret_scanning_alert validated event
@@ -60512,7 +62507,46 @@ export type WebhookSecretScanningAlertValidated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
+};
+/**
+ * secret_scanning_scan completed event
+ */
+export type WebhookSecretScanningScanCompleted = {
+  action: 'completed';
+  /**
+   * What type of scan was completed
+   */
+  type: 'backfill' | 'custom-pattern-backfill' | 'pattern-version-backfill';
+  /**
+   * What type of content was scanned
+   */
+  source: 'git' | 'issues' | 'pull-requests' | 'discussions' | 'wiki';
+  /**
+   * The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   */
+  started_at: Date;
+  /**
+   * The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+   */
+  completed_at: Date;
+  /**
+   * List of patterns that were updated. This will be empty for normal backfill scans or custom pattern updates
+   */
+  secret_types?: string[] | null;
+  /**
+   * If the scan was triggered by a custom pattern update, this will be the name of the pattern that was updated
+   */
+  custom_pattern_name?: string | null;
+  /**
+   * If the scan was triggered by a custom pattern update, this will be the scope of the pattern that was updated
+   */
+  custom_pattern_scope?: ('repository' | 'organization' | 'enterprise') | null;
+  repository?: RepositoryWebhooks;
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * security_advisory published event
@@ -60524,7 +62558,7 @@ export type WebhookSecurityAdvisoryPublished = {
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
   security_advisory: WebhooksSecurityAdvisory;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * security_advisory updated event
@@ -60536,7 +62570,7 @@ export type WebhookSecurityAdvisoryUpdated = {
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
   security_advisory: WebhooksSecurityAdvisory;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * security_advisory withdrawn event
@@ -60555,6 +62589,7 @@ export type WebhookSecurityAdvisoryWithdrawn = {
       score: number;
       vector_string: string | null;
     };
+    cvss_severities?: CvssSeverities;
     cwes: {
       cwe_id: string;
       name: string;
@@ -60585,7 +62620,7 @@ export type WebhookSecurityAdvisoryWithdrawn = {
     }[];
     withdrawn_at: string;
   };
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * security_and_analysis event
@@ -60600,7 +62635,7 @@ export type WebhookSecurityAndAnalysis = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: FullRepository;
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
 };
 /**
  * sponsorship cancelled event
@@ -60611,7 +62646,7 @@ export type WebhookSponsorshipCancelled = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   sponsorship: WebhooksSponsorship;
 };
 /**
@@ -60623,7 +62658,7 @@ export type WebhookSponsorshipCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   sponsorship: WebhooksSponsorship;
 };
 /**
@@ -60643,7 +62678,7 @@ export type WebhookSponsorshipEdited = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   sponsorship: WebhooksSponsorship;
 };
 /**
@@ -60656,7 +62691,7 @@ export type WebhookSponsorshipPendingCancellation = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   sponsorship: WebhooksSponsorship;
 };
 /**
@@ -60670,7 +62705,7 @@ export type WebhookSponsorshipPendingTierChange = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   sponsorship: WebhooksSponsorship;
 };
 /**
@@ -60683,7 +62718,7 @@ export type WebhookSponsorshipTierChanged = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository?: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   sponsorship: WebhooksSponsorship;
 };
 /**
@@ -60695,7 +62730,7 @@ export type WebhookStarCreated = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   /**
    * The time the star was created. This is a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. Will be `null` for the `deleted` action.
    */
@@ -60710,7 +62745,7 @@ export type WebhookStarDeleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   /**
    * The time the star was created. This is a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. Will be `null` for the `deleted` action.
    */
@@ -60814,6 +62849,7 @@ export type WebhookStatus = {
           | 'ocsp_pending';
         signature: string | null;
         verified: boolean;
+        verified_at: string | null;
       };
     };
     /**
@@ -60867,7 +62903,7 @@ export type WebhookStatus = {
   name: string;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   /**
    * The Commit SHA.
    */
@@ -60883,6 +62919,90 @@ export type WebhookStatus = {
   updated_at: string;
 };
 /**
+ * parent issue added event
+ */
+export type WebhookSubIssuesParentIssueAdded = {
+  action: 'parent_issue_added';
+  /**
+   * The ID of the parent issue.
+   */
+  parent_issue_id: number;
+  parent_issue: Issue;
+  parent_issue_repo: Repository;
+  /**
+   * The ID of the sub-issue.
+   */
+  sub_issue_id: number;
+  sub_issue: Issue;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  repository?: RepositoryWebhooks;
+  sender?: SimpleUser;
+};
+/**
+ * parent issue removed event
+ */
+export type WebhookSubIssuesParentIssueRemoved = {
+  action: 'parent_issue_removed';
+  /**
+   * The ID of the parent issue.
+   */
+  parent_issue_id: number;
+  parent_issue: Issue;
+  parent_issue_repo: Repository;
+  /**
+   * The ID of the sub-issue.
+   */
+  sub_issue_id: number;
+  sub_issue: Issue;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  repository?: RepositoryWebhooks;
+  sender?: SimpleUser;
+};
+/**
+ * sub-issue added event
+ */
+export type WebhookSubIssuesSubIssueAdded = {
+  action: 'sub_issue_added';
+  /**
+   * The ID of the sub-issue.
+   */
+  sub_issue_id: number;
+  sub_issue: Issue;
+  sub_issue_repo: Repository;
+  /**
+   * The ID of the parent issue.
+   */
+  parent_issue_id: number;
+  parent_issue: Issue;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  repository?: RepositoryWebhooks;
+  sender?: SimpleUser;
+};
+/**
+ * sub-issue removed event
+ */
+export type WebhookSubIssuesSubIssueRemoved = {
+  action: 'sub_issue_removed';
+  /**
+   * The ID of the sub-issue.
+   */
+  sub_issue_id: number;
+  sub_issue: Issue;
+  sub_issue_repo: Repository;
+  /**
+   * The ID of the parent issue.
+   */
+  parent_issue_id: number;
+  parent_issue: Issue;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  repository?: RepositoryWebhooks;
+  sender?: SimpleUser;
+};
+/**
  * team_add event
  */
 export type WebhookTeamAdd = {
@@ -60890,7 +63010,7 @@ export type WebhookTeamAdd = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   team: WebhooksTeam1;
 };
 /**
@@ -60950,7 +63070,7 @@ export type WebhookTeamAddedToRepository = {
      * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
      */
     custom_properties?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
     /**
      * The default branch of the repository.
@@ -61061,6 +63181,7 @@ export type WebhookTeamAddedToRepository = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     permissions?: {
       admin: boolean;
@@ -61097,7 +63218,7 @@ export type WebhookTeamAddedToRepository = {
     watchers: number;
     watchers_count: number;
   };
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
   team: WebhooksTeam1;
 };
 /**
@@ -61157,7 +63278,7 @@ export type WebhookTeamCreated = {
      * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
      */
     custom_properties?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
     /**
      * The default branch of the repository.
@@ -61268,6 +63389,7 @@ export type WebhookTeamCreated = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     permissions?: {
       admin: boolean;
@@ -61304,7 +63426,7 @@ export type WebhookTeamCreated = {
     watchers: number;
     watchers_count: number;
   };
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   team: WebhooksTeam1;
 };
 /**
@@ -61364,7 +63486,7 @@ export type WebhookTeamDeleted = {
      * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
      */
     custom_properties?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
     /**
      * The default branch of the repository.
@@ -61475,6 +63597,7 @@ export type WebhookTeamDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     permissions?: {
       admin: boolean;
@@ -61511,7 +63634,7 @@ export type WebhookTeamDeleted = {
     watchers: number;
     watchers_count: number;
   };
-  sender?: SimpleUserWebhooks;
+  sender?: SimpleUser;
   team: WebhooksTeam1;
 };
 /**
@@ -61618,7 +63741,7 @@ export type WebhookTeamEdited = {
      * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
      */
     custom_properties?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
     /**
      * The default branch of the repository.
@@ -61729,6 +63852,7 @@ export type WebhookTeamEdited = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     permissions?: {
       admin: boolean;
@@ -61765,7 +63889,7 @@ export type WebhookTeamEdited = {
     watchers: number;
     watchers_count: number;
   };
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   team: WebhooksTeam1;
 };
 /**
@@ -61825,7 +63949,7 @@ export type WebhookTeamRemovedFromRepository = {
      * The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values.
      */
     custom_properties?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
     /**
      * The default branch of the repository.
@@ -61936,6 +64060,7 @@ export type WebhookTeamRemovedFromRepository = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     permissions?: {
       admin: boolean;
@@ -61972,7 +64097,7 @@ export type WebhookTeamRemovedFromRepository = {
     watchers: number;
     watchers_count: number;
   };
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   team: WebhooksTeam1;
 };
 /**
@@ -61984,7 +64109,7 @@ export type WebhookWatchStarted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
 };
 /**
  * workflow_dispatch event
@@ -61992,13 +64117,13 @@ export type WebhookWatchStarted = {
 export type WebhookWorkflowDispatch = {
   enterprise?: EnterpriseWebhooks;
   inputs: {
-    [key: string]: any;
+    [key: string]: unknown;
   } | null;
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   ref: string;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow: string;
 };
 /**
@@ -62010,7 +64135,7 @@ export type WebhookWorkflowJobCompleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow_job: {
     check_run_url: string;
     completed_at: string | null;
@@ -62134,7 +64259,7 @@ export type WebhookWorkflowJobInProgress = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow_job: {
     check_run_url: string;
     completed_at: string | null;
@@ -62247,7 +64372,7 @@ export type WebhookWorkflowJobQueued = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow_job: {
     check_run_url: string;
     completed_at: string | null;
@@ -62302,7 +64427,7 @@ export type WebhookWorkflowJobWaiting = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow_job: {
     check_run_url: string;
     completed_at: string | null;
@@ -62357,7 +64482,7 @@ export type WebhookWorkflowRunCompleted = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow: WebhooksWorkflow;
   /**
    * Workflow Run
@@ -62388,6 +64513,7 @@ export type WebhookWorkflowRunCompleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     artifacts_url: string;
     cancel_url: string;
@@ -62404,6 +64530,7 @@ export type WebhookWorkflowRunCompleted = {
           | 'stale'
           | 'success'
           | 'timed_out'
+          | 'startup_failure'
         )
       | null;
     created_at: Date;
@@ -62513,6 +64640,7 @@ export type WebhookWorkflowRunCompleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * Whether the repository is private or public.
@@ -62643,6 +64771,7 @@ export type WebhookWorkflowRunCompleted = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * Whether the repository is private or public.
@@ -62695,6 +64824,7 @@ export type WebhookWorkflowRunCompleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     updated_at: Date;
     url: string;
@@ -62716,7 +64846,7 @@ export type WebhookWorkflowRunInProgress = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow: WebhooksWorkflow;
   /**
    * Workflow Run
@@ -63064,7 +65194,7 @@ export type WebhookWorkflowRunRequested = {
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
-  sender: SimpleUserWebhooks;
+  sender: SimpleUser;
   workflow: WebhooksWorkflow;
   /**
    * Workflow Run
@@ -63095,6 +65225,7 @@ export type WebhookWorkflowRunRequested = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     artifacts_url: string;
     cancel_url: string;
@@ -63222,6 +65353,7 @@ export type WebhookWorkflowRunRequested = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * Whether the repository is private or public.
@@ -63352,6 +65484,7 @@ export type WebhookWorkflowRunRequested = {
         subscriptions_url?: string;
         type?: 'Bot' | 'User' | 'Organization';
         url?: string;
+        user_view_type?: string;
       } | null;
       /**
        * Whether the repository is private or public.
@@ -63404,6 +65537,7 @@ export type WebhookWorkflowRunRequested = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null;
     updated_at: Date;
     url: string;
@@ -63419,7 +65553,15 @@ const $date_GlobalAdvisory = (): r.TransformField[] => [
   [['access', 'nvd_published_at'], ['this']],
   [['access', 'withdrawn_at'], ['this']],
 ];
+const $date_Enterprise = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
 const $date_Integration = (): r.TransformField[] => [
+  [
+    ['access', 'owner'],
+    ['select', [[['ref', $date_Enterprise]]]],
+  ],
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
 ];
@@ -63430,10 +65572,6 @@ const $date_HookDeliveryItem = (): r.TransformField[] => [
 const $date_HookDelivery = (): r.TransformField[] => [
   [['access', 'delivered_at'], ['this']],
   [['access', 'throttled_at'], ['this']],
-];
-const $date_Enterprise = (): r.TransformField[] => [
-  [['access', 'created_at'], ['this']],
-  [['access', 'updated_at'], ['this']],
 ];
 const $date_IntegrationInstallationRequest = (): r.TransformField[] => [
   [
@@ -63474,6 +65612,17 @@ const $date_ClassroomAcceptedAssignment = (): r.TransformField[] => [
   [
     ['access', 'assignment'],
     ['ref', $date_SimpleClassroomAssignment],
+  ],
+];
+const $date_CodeSecurityConfiguration = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_CodeSecurityDefaultConfigurations = (): r.TransformField[] => [
+  [
+    ['loop'],
+    ['access', 'configuration'],
+    ['ref', $date_CodeSecurityConfiguration],
   ],
 ];
 const $date_DependabotAlertSecurityAdvisory = (): r.TransformField[] => [
@@ -63532,6 +65681,10 @@ const $date_NullableMilestone = (): r.TransformField[] => [
   [['access', 'due_on'], ['this']],
 ];
 const $date_NullableIntegration = (): r.TransformField[] => [
+  [
+    ['access', 'owner'],
+    ['select', [[['ref', $date_Enterprise]]]],
+  ],
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
 ];
@@ -63581,7 +65734,6 @@ const $date_BaseGist = (): r.TransformField[] => [
 const $date_PublicUser = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
-  [['access', 'suspended_at'], ['this']],
 ];
 const $date_GistHistory = (): r.TransformField[] => [
   [['access', 'committed_at'], ['this']],
@@ -63624,6 +65776,9 @@ const $date_OrganizationFull = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
   [['access', 'archived_at'], ['this']],
+];
+const $date_ActionsHostedRunner = (): r.TransformField[] => [
+  [['access', 'last_active_on'], ['this']],
 ];
 const $date_AuthenticationToken = (): r.TransformField[] => [
   [['access', 'expires_at'], ['this']],
@@ -63669,14 +65824,14 @@ const $date_CodespacesOrgSecret = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
 ];
-const $date_Organization = (): r.TransformField[] => [
+const $date_EnterpriseTeam = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
 ];
 const $date_CopilotSeatDetails = (): r.TransformField[] => [
   [
-    ['access', 'assignee'],
-    ['select', [[['ref', $date_Organization]]]],
+    ['access', 'assigning_team'],
+    ['select', [[['ref', $date_EnterpriseTeam]]]],
   ],
   [['access', 'last_activity_at'], ['this']],
   [['access', 'created_at'], ['this']],
@@ -63720,6 +65875,15 @@ const $date_PackageVersion = (): r.TransformField[] => [
   [['access', 'updated_at'], ['this']],
   [['access', 'deleted_at'], ['this']],
 ];
+const $date_OrgPrivateRegistryConfiguration = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
+const $date_OrgPrivateRegistryConfigurationWithSelectedRepositories =
+  (): r.TransformField[] => [
+    [['access', 'created_at'], ['this']],
+    [['access', 'updated_at'], ['this']],
+  ];
 const $date_Project = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
@@ -63762,6 +65926,9 @@ const $date_RepositoryAdvisory = (): r.TransformField[] => [
   [['access', 'published_at'], ['this']],
   [['access', 'closed_at'], ['this']],
   [['access', 'withdrawn_at'], ['this']],
+];
+const $date_NetworkConfiguration = (): r.TransformField[] => [
+  [['access', 'created_on'], ['this']],
 ];
 const $date_TeamOrganization = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -63985,6 +66152,15 @@ const $date_CodeScanningAlert = (): r.TransformField[] => [
     ['ref', $date_AlertDismissedAt],
   ],
 ];
+const $date_CodeScanningAutofixStartedAt = (): r.TransformField[] => [
+  [['this']],
+];
+const $date_CodeScanningAutofix = (): r.TransformField[] => [
+  [
+    ['access', 'started_at'],
+    ['ref', $date_CodeScanningAutofixStartedAt],
+  ],
+];
 const $date_CodeScanningAnalysisCreatedAt = (): r.TransformField[] => [
   [['this']],
 ];
@@ -64022,6 +66198,12 @@ const $date_CodeScanningVariantAnalysis = (): r.TransformField[] => [
 ];
 const $date_CodeScanningDefaultSetup = (): r.TransformField[] => [
   [['access', 'updated_at'], ['this']],
+];
+const $date_CodeSecurityConfigurationForRepository = (): r.TransformField[] => [
+  [
+    ['access', 'configuration'],
+    ['ref', $date_CodeSecurityConfiguration],
+  ],
 ];
 const $date_RepoCodespacesSecret = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -64331,12 +66513,16 @@ const $date_PullRequest = (): r.TransformField[] => [
   [['access', 'updated_at'], ['this']],
   [['access', 'closed_at'], ['this']],
   [['access', 'merged_at'], ['this']],
-  [['access', 'head'], ['access', 'repo'], ['access', 'pushed_at'], ['this']],
-  [['access', 'head'], ['access', 'repo'], ['access', 'created_at'], ['this']],
-  [['access', 'head'], ['access', 'repo'], ['access', 'updated_at'], ['this']],
-  [['access', 'base'], ['access', 'repo'], ['access', 'pushed_at'], ['this']],
-  [['access', 'base'], ['access', 'repo'], ['access', 'created_at'], ['this']],
-  [['access', 'base'], ['access', 'repo'], ['access', 'updated_at'], ['this']],
+  [
+    ['access', 'head'],
+    ['access', 'repo'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'base'],
+    ['access', 'repo'],
+    ['ref', $date_Repository],
+  ],
 ];
 const $date_PullRequestReview = (): r.TransformField[] => [
   [['access', 'submitted_at'], ['this']],
@@ -64365,6 +66551,31 @@ const $date_SecretScanningAlert = (): r.TransformField[] => [
   ],
   [['access', 'resolved_at'], ['this']],
   [['access', 'push_protection_bypassed_at'], ['this']],
+];
+const $date_SecretScanningPushProtectionBypass = (): r.TransformField[] => [
+  [['access', 'expire_at'], ['this']],
+];
+const $date_SecretScanningScan = (): r.TransformField[] => [
+  [['access', 'completed_at'], ['this']],
+  [['access', 'started_at'], ['this']],
+];
+const $date_SecretScanningScanHistory = (): r.TransformField[] => [
+  [
+    ['access', 'incremental_scans'],
+    ['loop'],
+    ['ref', $date_SecretScanningScan],
+  ],
+  [
+    ['access', 'pattern_update_scans'],
+    ['loop'],
+    ['ref', $date_SecretScanningScan],
+  ],
+  [['access', 'backfill_scans'], ['loop'], ['ref', $date_SecretScanningScan]],
+  [
+    ['access', 'custom_pattern_backfill_scans'],
+    ['loop'],
+    ['select', [[['ref', $date_SecretScanningScan]]]],
+  ],
 ];
 const $date_Stargazer = (): r.TransformField[] => [
   [['access', 'starred_at'], ['this']],
@@ -64430,7 +66641,6 @@ const $date_UserSearchResultItem = (): r.TransformField[] => [
 const $date_PrivateUser = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
-  [['access', 'suspended_at'], ['this']],
 ];
 const $date_CodespacesSecret = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -64606,6 +66816,10 @@ const $date_ProjectsV2Item = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
   [['access', 'archived_at'], ['this']],
+];
+const $date_ProjectsV2StatusUpdate = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
 ];
 const $date_PullRequestWebhook = (): r.TransformField[] => [
   [['select', [[['ref', $date_PullRequest]]]]],
@@ -67216,6 +69430,24 @@ const $date_WebhookProjectsV2ProjectReopened = (): r.TransformField[] => [
     ['ref', $date_ProjectsV2],
   ],
 ];
+const $date_WebhookProjectsV2StatusUpdateCreated = (): r.TransformField[] => [
+  [
+    ['access', 'projects_v2_status_update'],
+    ['ref', $date_ProjectsV2StatusUpdate],
+  ],
+];
+const $date_WebhookProjectsV2StatusUpdateDeleted = (): r.TransformField[] => [
+  [
+    ['access', 'projects_v2_status_update'],
+    ['ref', $date_ProjectsV2StatusUpdate],
+  ],
+];
+const $date_WebhookProjectsV2StatusUpdateEdited = (): r.TransformField[] => [
+  [
+    ['access', 'projects_v2_status_update'],
+    ['ref', $date_ProjectsV2StatusUpdate],
+  ],
+];
 const $date_WebhookPublic = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
@@ -69623,6 +71855,21 @@ const $date_WebhookSecretScanningAlertLocationCreated =
       ['ref', $date_RepositoryWebhooks],
     ],
   ];
+const $date_WebhookSecretScanningAlertPubliclyLeaked =
+  (): r.TransformField[] => [
+    [
+      ['access', 'alert'],
+      ['ref', $date_SecretScanningAlertWebhook],
+    ],
+    [
+      ['access', 'enterprise'],
+      ['ref', $date_EnterpriseWebhooks],
+    ],
+    [
+      ['access', 'repository'],
+      ['ref', $date_RepositoryWebhooks],
+    ],
+  ];
 const $date_WebhookSecretScanningAlertReopened = (): r.TransformField[] => [
   [
     ['access', 'alert'],
@@ -69651,7 +71898,7 @@ const $date_WebhookSecretScanningAlertResolved = (): r.TransformField[] => [
     ['ref', $date_RepositoryWebhooks],
   ],
 ];
-const $date_WebhookSecretScanningAlertRevoked = (): r.TransformField[] => [
+const $date_WebhookSecretScanningAlertValidated = (): r.TransformField[] => [
   [
     ['access', 'alert'],
     ['ref', $date_SecretScanningAlertWebhook],
@@ -69665,18 +71912,16 @@ const $date_WebhookSecretScanningAlertRevoked = (): r.TransformField[] => [
     ['ref', $date_RepositoryWebhooks],
   ],
 ];
-const $date_WebhookSecretScanningAlertValidated = (): r.TransformField[] => [
+const $date_WebhookSecretScanningScanCompleted = (): r.TransformField[] => [
+  [['access', 'started_at'], ['this']],
+  [['access', 'completed_at'], ['this']],
   [
-    ['access', 'alert'],
-    ['ref', $date_SecretScanningAlertWebhook],
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
   ],
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
-  ],
-  [
-    ['access', 'repository'],
-    ['ref', $date_RepositoryWebhooks],
   ],
 ];
 const $date_WebhookSecurityAdvisoryPublished = (): r.TransformField[] => [
@@ -69815,6 +72060,78 @@ const $date_WebhookStatus = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
+const $date_WebhookSubIssuesParentIssueAdded = (): r.TransformField[] => [
+  [
+    ['access', 'parent_issue'],
+    ['ref', $date_Issue],
+  ],
+  [
+    ['access', 'parent_issue_repo'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'sub_issue'],
+    ['ref', $date_Issue],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
+const $date_WebhookSubIssuesParentIssueRemoved = (): r.TransformField[] => [
+  [
+    ['access', 'parent_issue'],
+    ['ref', $date_Issue],
+  ],
+  [
+    ['access', 'parent_issue_repo'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'sub_issue'],
+    ['ref', $date_Issue],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
+const $date_WebhookSubIssuesSubIssueAdded = (): r.TransformField[] => [
+  [
+    ['access', 'sub_issue'],
+    ['ref', $date_Issue],
+  ],
+  [
+    ['access', 'sub_issue_repo'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'parent_issue'],
+    ['ref', $date_Issue],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
+const $date_WebhookSubIssuesSubIssueRemoved = (): r.TransformField[] => [
+  [
+    ['access', 'sub_issue'],
+    ['ref', $date_Issue],
+  ],
+  [
+    ['access', 'sub_issue_repo'],
+    ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'parent_issue'],
+    ['ref', $date_Issue],
   ],
   [
     ['access', 'repository'],
@@ -70148,11 +72465,13 @@ export async function securityAdvisoriesListGlobalAdvisories<
     published?: string;
     updated?: string;
     modified?: string;
+    epss_percentage?: string;
+    epss_percentile?: string;
     before?: string;
     after?: string;
     direction?: 'asc' | 'desc';
     per_page?: number;
-    sort?: 'updated' | 'published';
+    sort?: 'updated' | 'published' | 'epss_percentage' | 'epss_percentile';
   },
   opts?: FetcherData,
 ): Promise<
@@ -70176,6 +72495,8 @@ export async function securityAdvisoriesListGlobalAdvisories<
       'published',
       'updated',
       'modified',
+      'epss_percentage',
+      'epss_percentile',
       'before',
       'after',
       'direction',
@@ -70286,7 +72607,7 @@ export async function appsCreateFromManifest<
           webhook_secret: string | null;
           pem: string;
         } & {
-          [key: string]: any;
+          [key: string]: unknown;
         })
     >
   | r.StatusResponse<404, BasicError>
@@ -70384,7 +72705,6 @@ export async function appsListWebhookDeliveries<
   params: {
     per_page?: number;
     cursor?: string;
-    redelivery?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -70396,7 +72716,7 @@ export async function appsListWebhookDeliveries<
     path: '/app/hook/deliveries',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'cursor', 'redelivery'],
+    queryParams: ['per_page', 'cursor'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(
@@ -70638,13 +72958,6 @@ export async function appsDeleteInstallation<
  * installation access token will have all of the permissions that were granted to the app. The installation access token
  * cannot be granted permissions that the app was not granted.
  *
- * When using the repository or permission parameters to
- * reduce the access of the token, the complexity of the token is increased due to both the number of permissions in the
- * request and the number of repositories the token will have access to. If the complexity is too large, the token will
- * fail to be issued. If this occurs, the error message will indicate the maximum number of repositories that should be
- * requested. For the average application requesting 8 permissions, this limit is around 5000 repositories. With fewer
- * permissions requested, more repositories are supported.
- *
  * You must use a
  * [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app)
  * to access this endpoint.
@@ -70754,14 +73067,12 @@ export async function appsUnsuspendInstallation<
 }
 /**
  * Delete an app authorization
- * OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must use [Basic
- * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
- * when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and
- * password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner
- * will be deleted.
- * Deleting an application's grant will also delete all OAuth tokens associated with the application for
- * the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the
- * application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
+ * OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must provide a
+ * valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+ * Deleting an
+ * application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the
+ * application will have no access to the user's account and will no longer be listed on [the application authorizations
+ * settings screen within GitHub](https://github.com/settings/applications#authorized).
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#delete-an-app-authorization}
  * Tags: apps
  */
@@ -70795,10 +73106,7 @@ export async function appsDeleteAuthorization<
  * Check a token
  * OAuth applications and GitHub applications with OAuth authorizations can use this API method for checking OAuth token
  * validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this
- * particular endpoint. You must use [Basic
- * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
- * to use this endpoint, where the username is the application `client_id` and the password is its `client_secret`. Invalid
- * tokens will return `404 NOT FOUND`.
+ * particular endpoint. Invalid tokens will return `404 NOT FOUND`.
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#check-a-token}
  * Tags: apps
  */
@@ -70838,10 +73146,7 @@ export async function appsCheckToken<FetcherData extends r.BaseFetcherData>(
  * Reset a token
  * OAuth applications and GitHub applications with OAuth authorizations can use this API method to reset a valid OAuth
  * token without end-user involvement. Applications must save the "token" property in the response because changes take
- * effect immediately. You must use [Basic
- * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
- * when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password.
- * Invalid tokens will return `404 NOT FOUND`.
+ * effect immediately. Invalid tokens will return `404 NOT FOUND`.
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#reset-a-token}
  * Tags: apps
  */
@@ -70878,9 +73183,7 @@ export async function appsResetToken<FetcherData extends r.BaseFetcherData>(
 /**
  * Delete an app token
  * OAuth  or GitHub application owners can revoke a single token for an OAuth application or a GitHub application with an
- * OAuth authorization. You must use [Basic
- * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
- * when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password.
+ * OAuth authorization.
  * Learn more at {@link https://docs.github.com/rest/apps/oauth-applications#delete-an-app-token}
  * Tags: apps
  */
@@ -70917,12 +73220,6 @@ export async function appsDeleteToken<FetcherData extends r.BaseFetcherData>(
  *
  * Invalid tokens will
  * return `404 NOT FOUND`.
- *
- * You must use [Basic
- * Authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication)
- * when
- * accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App
- * as the username and password.
  * Learn more at {@link https://docs.github.com/rest/apps/apps#create-a-scoped-access-token}
  * Tags: apps
  */
@@ -70986,7 +73283,8 @@ export async function appsScopeToken<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Get an app
- * **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for
+ * > [!NOTE]
+ * > The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for
  * your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
  * Learn more at {@link https://docs.github.com/rest/apps/apps#get-an-app}
  * Tags: apps
@@ -71055,7 +73353,7 @@ export async function classroomGetAnAssignment<
  * Learn more at {@link https://docs.github.com/rest/classroom/classroom#list-accepted-assignments-for-an-assignment}
  * Tags: classroom
  */
-export async function classroomListAcceptedAssigmentsForAnAssignment<
+export async function classroomListAcceptedAssignmentsForAnAssignment<
   FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
@@ -71279,55 +73577,563 @@ export async function emojisGet<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Get a summary of Copilot usage for enterprise members
- * **Note**: This endpoint is in beta and is subject to change.
+ * Get code security configurations for an enterprise
+ * Lists all code security configurations available in an enterprise.
  *
- * You can use this endpoint to see a daily breakdown of
- * aggregated usage metrics for Copilot completions and Copilot Chat in the IDE
- * for all users across organizations with
- * access to Copilot within your enterprise, with a further breakdown of suggestions, acceptances,
- * and number of active
- * users by editor and language for each day. See the response schema tab for detailed metrics definitions.
+ * The authenticated user must be an administrator of
+ * the enterprise in order to use this endpoint.
  *
- * The response
- * contains metrics for the prior 28 days. Usage metrics are processed once per day for the previous day,
- * and the response
- * will only include data up until yesterday. In order for an end user to be counted towards these metrics,
- * they must have
- * telemetry enabled in their IDE.
- *
- * Only owners and billing managers can view Copilot usage metrics for the
- * enterprise.
- *
- * OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or
- * `read:enterprise` scopes to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-enterprise-members}
- * Tags: copilot
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-code-security-configurations-for-an-enterprise}
+ * Tags: code-security
  */
-export async function copilotUsageMetricsForEnterprise<
+export async function codeSecurityGetConfigurationsForEnterprise<
   FetcherData extends r.BaseFetcherData,
 >(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     enterprise: string;
-    since?: string;
-    until?: string;
-    page?: number;
     per_page?: number;
+    before?: string;
+    after?: string;
   },
   opts?: FetcherData,
 ): Promise<
-  | r.StatusResponse<200, CopilotUsageMetrics[]>
-  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<200, CodeSecurityConfiguration[]>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
-  | r.StatusResponse<500, BasicError>
 > {
   const req = await ctx.createRequest({
-    path: '/enterprises/{enterprise}/copilot/usage',
+    path: '/enterprises/{enterprise}/code-security/configurations',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['since', 'until', 'page', 'per_page'],
+    queryParams: ['per_page', 'before', 'after'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_CodeSecurityConfiguration]]],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Create a code security configuration for an enterprise
+ * Creates a code security configuration in an enterprise.
+ *
+ * The authenticated user must be an administrator of the
+ * enterprise in order to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `admin:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#create-a-code-security-configuration-for-an-enterprise}
+ * Tags: code-security
+ */
+export async function codeSecurityCreateConfigurationForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+  },
+  body: {
+    /**
+     * The name of the code security configuration. Must be unique within the enterprise.
+     */
+    name: string;
+    /**
+     * A description of the code security configuration
+     */
+    description: string;
+    /**
+     * The enablement status of GitHub Advanced Security
+     * @defaultValue "disabled"
+     */
+    advanced_security?: 'enabled' | 'disabled';
+    /**
+     * The enablement status of Dependency Graph
+     * @defaultValue "enabled"
+     */
+    dependency_graph?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Automatic dependency submission
+     * @defaultValue "disabled"
+     */
+    dependency_graph_autosubmit_action?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * Feature options for Automatic dependency submission
+     */
+    dependency_graph_autosubmit_action_options?: {
+      /**
+       * Whether to use runners labeled with 'dependency-submission' or standard GitHub runners.
+       */
+      labeled_runners?: boolean;
+    };
+    /**
+     * The enablement status of Dependabot alerts
+     * @defaultValue "disabled"
+     */
+    dependabot_alerts?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Dependabot security updates
+     * @defaultValue "disabled"
+     */
+    dependabot_security_updates?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of code scanning default setup
+     * @defaultValue "disabled"
+     */
+    code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
+    code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
+    /**
+     * The enablement status of secret scanning
+     * @defaultValue "disabled"
+     */
+    secret_scanning?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning push protection
+     * @defaultValue "disabled"
+     */
+    secret_scanning_push_protection?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning validity checks
+     * @defaultValue "disabled"
+     */
+    secret_scanning_validity_checks?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning non provider patterns
+     * @defaultValue "disabled"
+     */
+    secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of private vulnerability reporting
+     * @defaultValue "disabled"
+     */
+    private_vulnerability_reporting?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enforcement status for a security configuration
+     * @defaultValue "enforced"
+     */
+    enforcement?: 'enforced' | 'unenforced';
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<201, CodeSecurityConfiguration>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '201': {
+        transforms: { date: [[['ref', $date_CodeSecurityConfiguration]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get default code security configurations for an enterprise
+ * Lists the default code security configurations for an enterprise.
+ *
+ * The authenticated user must be an administrator of
+ * the enterprise in order to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-default-code-security-configurations-for-an-enterprise}
+ * Tags: code-security
+ */
+export async function codeSecurityGetDefaultConfigurationsForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, CodeSecurityDefaultConfigurations>> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations/defaults',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['ref', $date_CodeSecurityDefaultConfigurations]]],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Retrieve a code security configuration of an enterprise
+ * Gets a code security configuration available in an enterprise.
+ *
+ * The authenticated user must be an administrator of the
+ * enterprise in order to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `read:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#retrieve-a-code-security-configuration-of-an-enterprise}
+ * Tags: code-security
+ */
+export async function codeSecurityGetSingleConfigurationForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+    configuration_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfiguration>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations/{configuration_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_CodeSecurityConfiguration]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Update a custom code security configuration for an enterprise
+ * Updates a code security configuration in an enterprise.
+ *
+ * The authenticated user must be an administrator of the
+ * enterprise in order to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `admin:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#update-a-custom-code-security-configuration-for-an-enterprise}
+ * Tags: code-security
+ */
+export async function codeSecurityUpdateEnterpriseConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+    configuration_id: number;
+  },
+  body: {
+    /**
+     * The name of the code security configuration. Must be unique across the enterprise.
+     */
+    name?: string;
+    /**
+     * A description of the code security configuration
+     */
+    description?: string;
+    /**
+     * The enablement status of GitHub Advanced Security. Must be set to enabled if you want to enable any GHAS settings.
+     */
+    advanced_security?: 'enabled' | 'disabled';
+    /**
+     * The enablement status of Dependency Graph
+     */
+    dependency_graph?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Automatic dependency submission
+     */
+    dependency_graph_autosubmit_action?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * Feature options for Automatic dependency submission
+     */
+    dependency_graph_autosubmit_action_options?: {
+      /**
+       * Whether to use runners labeled with 'dependency-submission' or standard GitHub runners.
+       */
+      labeled_runners?: boolean;
+    };
+    /**
+     * The enablement status of Dependabot alerts
+     */
+    dependabot_alerts?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Dependabot security updates
+     */
+    dependabot_security_updates?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of code scanning default setup
+     */
+    code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
+    code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
+    /**
+     * The enablement status of secret scanning
+     */
+    secret_scanning?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning push protection
+     */
+    secret_scanning_push_protection?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning validity checks
+     */
+    secret_scanning_validity_checks?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning non-provider patterns
+     */
+    secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of private vulnerability reporting
+     */
+    private_vulnerability_reporting?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enforcement status for a security configuration
+     */
+    enforcement?: 'enforced' | 'unenforced';
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfiguration>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations/{configuration_id}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_CodeSecurityConfiguration]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Delete a code security configuration for an enterprise
+ * Deletes a code security configuration from an enterprise.
+ * Repositories attached to the configuration will retain their
+ * settings but will no longer be associated with
+ * the configuration.
+ *
+ * The authenticated user must be an administrator for
+ * the enterprise to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:enterprise`
+ * scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#delete-a-code-security-configuration-for-an-enterprise}
+ * Tags: code-security
+ */
+export async function codeSecurityDeleteConfigurationForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+    configuration_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations/{configuration_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Attach an enterprise configuration to repositories
+ * Attaches an enterprise code security configuration to repositories. If the repositories specified are already attached
+ * to a configuration, they will be re-attached to the provided configuration.
+ *
+ * If insufficient GHAS licenses are available
+ * to attach the configuration to a repository, only free features will be enabled.
+ *
+ * The authenticated user must be an
+ * administrator for the enterprise to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `admin:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#attach-an-enterprise-configuration-to-repositories}
+ * Tags: code-security
+ */
+export async function codeSecurityAttachEnterpriseConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+    configuration_id: number;
+  },
+  body: {
+    /**
+     * The type of repositories to attach the configuration to.
+     */
+    scope: 'all' | 'all_without_configurations';
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations/{configuration_id}/attach',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Set a code security configuration as a default for an enterprise
+ * Sets a code security configuration as a default to be applied to new repositories in your enterprise.
+ *
+ * This
+ * configuration will be applied by default to the matching repository type when created, but only for organizations within
+ * the enterprise that do not already have a default code security configuration set.
+ *
+ * The authenticated user must be an
+ * administrator for the enterprise to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `admin:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-enterprise}
+ * Tags: code-security
+ */
+export async function codeSecuritySetConfigurationAsDefaultForEnterprise<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+    configuration_id: number;
+  },
+  body: {
+    /**
+     * Specify which types of repository this security configuration should be applied to by default.
+     */
+    default_for_new_repos?: 'all' | 'none' | 'private_and_internal' | 'public';
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Specifies which types of repository this security configuration is applied to by default.
+         */
+        default_for_new_repos?:
+          | 'all'
+          | 'none'
+          | 'private_and_internal'
+          | 'public';
+        configuration?: CodeSecurityConfiguration;
+      }
+    >
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations/{configuration_id}/defaults',
+    params,
+    method: r.HttpMethod.PUT,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'configuration'],
+              ['ref', $date_CodeSecurityConfiguration],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get repositories associated with an enterprise code security configuration
+ * Lists the repositories associated with an enterprise code security configuration in an organization.
+ *
+ * The authenticated
+ * user must be an administrator of the enterprise in order to use this endpoint.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `read:enterprise` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-repositories-associated-with-an-enterprise-code-security-configuration}
+ * Tags: code-security
+ */
+export async function codeSecurityGetRepositoriesForEnterpriseConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    enterprise: string;
+    configuration_id: number;
+    per_page?: number;
+    before?: string;
+    after?: string;
+    status?: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfigurationRepositories[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/enterprises/{enterprise}/code-security/configurations/{configuration_id}/repositories',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'before', 'after', 'status'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
@@ -71359,8 +74165,9 @@ export async function dependabotListAlertsForEnterprise<
     severity?: string;
     ecosystem?: string;
     package?: string;
+    epss_percentage?: string;
     scope?: 'development' | 'runtime';
-    sort?: 'created' | 'updated';
+    sort?: 'created' | 'updated' | 'epss_percentage';
     direction?: 'asc' | 'desc';
     before?: string;
     after?: string;
@@ -71385,6 +74192,7 @@ export async function dependabotListAlertsForEnterprise<
       'severity',
       'ecosystem',
       'package',
+      'epss_percentage',
       'scope',
       'sort',
       'direction',
@@ -71439,6 +74247,8 @@ export async function secretScanningListAlertsForEnterprise<
     before?: string;
     after?: string;
     validity?: string;
+    is_publicly_leaked?: boolean;
+    is_multi_repo?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -71467,6 +74277,8 @@ export async function secretScanningListAlertsForEnterprise<
       'before',
       'after',
       'validity',
+      'is_publicly_leaked',
+      'is_multi_repo',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -71484,8 +74296,9 @@ export async function secretScanningListAlertsForEnterprise<
 }
 /**
  * List public events
- * We delay the public events feed by five minutes, which means the most recent event returned by the public events API
- * actually occurred at least five minutes ago.
+ * > [!NOTE]
+ * > This API is not built to serve real-time use cases. Depending on the time of day, event latency can be
+ * anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events}
  * Tags: activity
  */
@@ -71548,11 +74361,11 @@ export async function activityListPublicEvents<
  *
  * By default, timeline resources are returned in JSON. You can specify the
  * `application/atom+xml` type in the `Accept` header to return timeline resources in Atom format. For more information,
- * see "[Media
- * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ * see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
- * **Note**:
- * Private feeds are only returned when [authenticating via Basic
+ * >
+ * [!NOTE]
+ * > Private feeds are only returned when [authenticating via Basic
  * Auth](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) since
  * current feed URIs use the older, non revocable auth tokens.
  * Learn more at {@link https://docs.github.com/rest/activity/feeds#get-feeds}
@@ -71609,7 +74422,8 @@ export async function gistsList<FetcherData extends r.BaseFetcherData>(
  * Create a gist
  * Allows you to add a new gist with one or more files.
  *
- * **Note:** Don't name your files "gistfile" with a numerical
+ * > [!NOTE]
+ * > Don't name your files "gistfile" with a numerical
  * suffix. This is the format of the automatic naming scheme that Gist uses internally.
  * Learn more at {@link https://docs.github.com/rest/gists/gists#create-a-gist}
  * Tags: gists
@@ -72476,13 +75290,11 @@ export async function appsRevokeInstallationAccessToken<
  * not
  * necessarily assigned to you.
  *
- * **Note**: GitHub's REST API considers every pull request an issue, but not every issue
- * is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull requests in the response. You can
- * identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues"
- * endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List pull
+ * > [!NOTE]
+ * > GitHub's REST API considers every pull request an issue, but not every
+ * issue is a pull request. For this reason, "Issues" endpoints may return both issues and pull requests in the response.
+ * You can identify pull requests by the `pull_request` key. Be aware that the `id` of a pull request returned from
+ * "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List pull
  * requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
  *
  * This endpoint supports the following
@@ -72902,7 +75714,8 @@ export async function appsListAccountsForPlanStubbed<
  * The values shown in the documentation's response are example values. You must
  * always query the API directly to get the latest values.
  *
- * **Note:** This endpoint returns both IPv4 and IPv6 addresses.
+ * > [!NOTE]
+ * > This endpoint returns both IPv4 and IPv6 addresses.
  * However, not all features support IPv6. You should refer to the specific documentation for each feature to determine if
  * IPv6 is supported.
  * Learn more at {@link https://docs.github.com/rest/meta/meta#get-apiname-meta-information}
@@ -72925,6 +75738,9 @@ export async function metaGet<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * List public events for a network of repositories
+ * > [!NOTE]
+ * > This API is not built to serve real-time use cases. Depending on the time of day, event latency can be
+ * anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events-for-a-network-of-repositories}
  * Tags: activity
  */
@@ -73287,7 +76103,8 @@ export async function metaGetOctocat<FetcherData extends r.BaseFetcherData>(
  * List organizations
  * Lists all organizations, in the order that they were created.
  *
- * **Note:** Pagination is powered exclusively by the
+ * > [!NOTE]
+ * > Pagination is powered exclusively by the
  * `since` parameter. Use the [Link
  * header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the
  * next page of organizations.
@@ -73314,6 +76131,52 @@ export async function orgsList<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * Get billing usage report for an organization
+ * Gets a report of the total usage for an organization. To use this endpoint, you must be an administrator of an
+ * organization within an enterprise or an organization account.
+ *
+ * **Note:** This endpoint is only available to
+ * organizations with access to the enhanced billing platform. For more information, see "[About the enhanced billing
+ * platform](https://docs.github.com/billing/using-the-new-billing-platform)."
+ * Learn more at {@link https://docs.github.com/rest/billing/enhanced-billing#get-billing-usage-report-for-an-organization}
+ * Tags: billing
+ */
+export async function billingGetGithubBillingUsageReportOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    year?: number;
+    month?: number;
+    day?: number;
+    hour?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, BillingUsageReport>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<500, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/organizations/{org}/settings/billing/usage',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['year', 'month', 'day', 'hour'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * Get an organization
  * Gets information about an organization.
  *
@@ -73324,30 +76187,11 @@ export async function orgsList<FetcherData extends r.BaseFetcherData>(
  * To see the
  * full details about an organization, the authenticated user must be an organization owner.
  *
- * The values returned by this
- * endpoint are set by the "Update an organization" endpoint. If your organization set a default security configuration
- * (beta), the following values retrieved from the "Update an organization" endpoint have been overwritten by that
- * configuration:
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to see the full details about an organization.
  *
- * - advanced_security_enabled_for_new_repositories
- * - dependabot_alerts_enabled_for_new_repositories
- * -
- * dependabot_security_updates_enabled_for_new_repositories
- * - dependency_graph_enabled_for_new_repositories
- * -
- * secret_scanning_enabled_for_new_repositories
- * - secret_scanning_push_protection_enabled_for_new_repositories
- *
- * For more
- * information on security configurations, see "[Enabling security features at
- * scale](https://docs.github.com/code-security/securing-your-organization/introduction-to-securing-your-organization-at-scale/about-enabling-security-features-at-scale)."
- *
- * OAuth
- * app tokens and personal access tokens (classic) need the `admin:org` scope to see the full details about an
- * organization.
- *
- * To see information about an organization's GitHub plan, GitHub Apps need the `Organization plan`
- * permission.
+ * To see information
+ * about an organization's GitHub plan, GitHub Apps need the `Organization plan` permission.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#get-an-organization}
  * Tags: orgs
  */
@@ -73376,40 +76220,29 @@ export async function orgsGet<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Update an organization
- * **Parameter Deprecation Notice:** GitHub will replace and discontinue `members_allowed_repository_creation_type` in
- * favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`,
+ * > [!WARNING]
+ * > **Closing down notice:** GitHub will replace and discontinue `members_allowed_repository_creation_type`
+ * in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`,
  * `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for
  * organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For
- * more information, see the [blog
- * post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
+ * more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
  *
- * Updates the organization's profile
- * and member privileges.
+ * >
+ * [!WARNING]
+ * > **Closing down notice:** Code security product enablement for new repositories through the organization API
+ * is closing down. Please use [code security
+ * configurations](https://docs.github.com/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-organization)
+ * to set defaults instead. For more information on setting a default security configuration, see the
+ * [changelog](https://github.blog/changelog/2024-07-09-sunsetting-security-settings-defaults-parameters-in-the-organizations-rest-api/).
  *
- * With security configurations (beta), your organization can choose a default security
- * configuration which will automatically apply a set of security enablement settings to new repositories in your
- * organization based on their visibility. For targeted repositories, the following attributes will be overridden by the
- * default security configuration:
+ * Updates
+ * the organization's profile and member privileges.
  *
- * - advanced_security_enabled_for_new_repositories
- * -
- * dependabot_alerts_enabled_for_new_repositories
- * - dependabot_security_updates_enabled_for_new_repositories
- * -
- * dependency_graph_enabled_for_new_repositories
- * - secret_scanning_enabled_for_new_repositories
- * -
- * secret_scanning_push_protection_enabled_for_new_repositories
+ * The authenticated user must be an organization owner to use this
+ * endpoint.
  *
- * For more information on setting a default security
- * configuration, see "[Enabling security features at
- * scale](https://docs.github.com/code-security/securing-your-organization/introduction-to-securing-your-organization-at-scale/about-enabling-security-features-at-scale)."
- *
- * The
- * authenticated user must be an organization owner to use this endpoint.
- *
- * OAuth app tokens and personal access tokens
- * (classic) need the `admin:org` or `repo` scope to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` or `repo` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#update-an-organization}
  * Tags: orgs
  */
@@ -73479,7 +76312,7 @@ export async function orgsUpdate<FetcherData extends r.BaseFetcherData>(
     members_can_create_public_repositories?: boolean;
     /**
      * Specifies which types of repositories non-admin organization members can create. `private` is only available to repositories that are part of an organization on GitHub Enterprise Cloud.
-     * **Note:** This parameter is deprecated and will be removed in the future. Its return value ignores internal repositories. Using this parameter overrides values set in `members_can_create_repositories`. See the parameter deprecation notice in the operation description for details.
+     * **Note:** This parameter is closing down and will be removed in the future. Its return value ignores internal repositories. Using this parameter overrides values set in `members_can_create_repositories`. See the parameter deprecation notice in the operation description for details.
      */
     members_allowed_repository_creation_type?: 'all' | 'private' | 'none';
     /**
@@ -73510,51 +76343,69 @@ export async function orgsUpdate<FetcherData extends r.BaseFetcherData>(
      */
     blog?: string;
     /**
-     * Whether GitHub Advanced Security is automatically enabled for new repositories.
+     * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+     *
+     * Whether GitHub Advanced Security is automatically enabled for new repositories and repositories transferred to this organization.
      *
      * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
      *
      * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+     * @deprecated
      */
     advanced_security_enabled_for_new_repositories?: boolean;
     /**
-     * Whether Dependabot alerts is automatically enabled for new repositories.
+     * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+     *
+     * Whether Dependabot alerts are automatically enabled for new repositories and repositories transferred to this organization.
      *
      * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
      *
      * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+     * @deprecated
      */
     dependabot_alerts_enabled_for_new_repositories?: boolean;
     /**
-     * Whether Dependabot security updates is automatically enabled for new repositories.
+     * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+     *
+     * Whether Dependabot security updates are automatically enabled for new repositories and repositories transferred to this organization.
      *
      * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
      *
      * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+     * @deprecated
      */
     dependabot_security_updates_enabled_for_new_repositories?: boolean;
     /**
-     * Whether dependency graph is automatically enabled for new repositories.
+     * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+     *
+     * Whether dependency graph is automatically enabled for new repositories and repositories transferred to this organization.
      *
      * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
      *
      * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+     * @deprecated
      */
     dependency_graph_enabled_for_new_repositories?: boolean;
     /**
-     * Whether secret scanning is automatically enabled for new repositories.
+     * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+     *
+     * Whether secret scanning is automatically enabled for new repositories and repositories transferred to this organization.
      *
      * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
      *
      * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+     * @deprecated
      */
     secret_scanning_enabled_for_new_repositories?: boolean;
     /**
-     * Whether secret scanning push protection is automatically enabled for new repositories.
+     * **Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead.
+     *
+     * Whether secret scanning push protection is automatically enabled for new repositories and repositories transferred to this organization.
      *
      * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
      *
      * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+     * @deprecated
      */
     secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
     /**
@@ -73565,6 +76416,10 @@ export async function orgsUpdate<FetcherData extends r.BaseFetcherData>(
      * If `secret_scanning_push_protection_custom_link_enabled` is true, the URL that will be displayed to contributors who are blocked from pushing a secret.
      */
     secret_scanning_push_protection_custom_link?: string;
+    /**
+     * Controls whether or not deploy keys may be added and used for repositories in the organization.
+     */
+    deploy_keys_enabled_for_repositories?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -73686,6 +76541,395 @@ export async function actionsGetActionsCacheUsageByRepoForOrg<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
+}
+/**
+ * List GitHub-hosted runners for an organization
+ * Lists all GitHub-hosted runners configured in an organization.
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `manage_runner:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#list-github-hosted-runners-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsListHostedRunnersForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runners: ActionsHostedRunner[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'runners'],
+              ['loop'],
+              ['ref', $date_ActionsHostedRunner],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Create a GitHub-hosted runner for an organization
+ * Creates a GitHub-hosted runner for an organization.
+ * OAuth tokens and personal access tokens (classic) need the
+ * `manage_runners:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#create-a-github-hosted-runner-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsCreateHostedRunnerForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * Name of the runner. Must be between 1 and 64 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'.
+     */
+    name: string;
+    /**
+     * The image of runner. To list all available images, use `GET /actions/hosted-runners/images/github-owned` or `GET /actions/hosted-runners/images/partner`.
+     */
+    image: {
+      /**
+       * The unique identifier of the runner image.
+       */
+      id?: string;
+      /**
+       * The source of the runner image.
+       */
+      source?: 'github' | 'partner' | 'custom';
+      /**
+       * The version of the runner image to deploy. This is relevant only for runners using custom images.
+       */
+      version?: string | null;
+    };
+    /**
+     * The machine size of the runner. To list available sizes, use `GET actions/hosted-runners/machine-sizes`
+     */
+    size: string;
+    /**
+     * The existing runner group to add this runner to.
+     */
+    runner_group_id: number;
+    /**
+     * The maximum amount of runners to scale up to. Runners will not auto-scale above this number. Use this setting to limit your cost.
+     */
+    maximum_runners?: number;
+    /**
+     * Whether this runner should be created with a static public IP. Note limit on account. To list limits on account, use `GET actions/hosted-runners/limits`
+     */
+    enable_static_ip?: boolean;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<201, ActionsHostedRunner>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_ActionsHostedRunner]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Get GitHub-owned images for GitHub-hosted runners in an organization
+ * Get the list of GitHub-owned images available for GitHub-hosted runners for an organization.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#get-github-owned-images-for-github-hosted-runners-in-an-organization}
+ * Tags: actions
+ */
+export async function actionsGetHostedRunnersGithubOwnedImagesForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      images: ActionsHostedRunnerImage[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/images/github-owned',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get partner images for GitHub-hosted runners in an organization
+ * Get the list of partner images available for GitHub-hosted runners for an organization.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#get-partner-images-for-github-hosted-runners-in-an-organization}
+ * Tags: actions
+ */
+export async function actionsGetHostedRunnersPartnerImagesForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      images: ActionsHostedRunnerImage[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/images/partner',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get limits on GitHub-hosted runners for an organization
+ * Get the GitHub-hosted runners limits for an organization.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#get-limits-on-github-hosted-runners-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsGetHostedRunnersLimitsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ActionsHostedRunnerLimits>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/limits',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get GitHub-hosted runners machine specs for an organization
+ * Get the list of machine specs available for GitHub-hosted runners for an organization.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#get-github-hosted-runners-machine-specs-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsGetHostedRunnersMachineSpecsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      machine_specs: ActionsHostedRunnerMachineSpec[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/machine-sizes',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get platforms for GitHub-hosted runners in an organization
+ * Get the list of platforms available for GitHub-hosted runners for an organization.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#get-platforms-for-github-hosted-runners-in-an-organization}
+ * Tags: actions
+ */
+export async function actionsGetHostedRunnersPlatformsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      platforms: string[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/platforms',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get a GitHub-hosted runner for an organization
+ * Gets a GitHub-hosted runner configured in an organization.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `manage_runners:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#get-a-github-hosted-runner-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsGetHostedRunnerForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    hosted_runner_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ActionsHostedRunner>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/{hosted_runner_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ActionsHostedRunner]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Update a GitHub-hosted runner for an organization
+ * Updates a GitHub-hosted runner for an organization.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `manage_runners:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#update-a-github-hosted-runner-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsUpdateHostedRunnerForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    hosted_runner_id: number;
+  },
+  body: {
+    /**
+     * Name of the runner. Must be between 1 and 64 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'.
+     */
+    name?: string;
+    /**
+     * The existing runner group to add this runner to.
+     */
+    runner_group_id?: number;
+    /**
+     * The maximum amount of runners to scale up to. Runners will not auto-scale above this number. Use this setting to limit your cost.
+     */
+    maximum_runners?: number;
+    /**
+     * Whether this runner should be updated with a static public IP. Note limit on account. To list limits on account, use `GET actions/hosted-runners/limits`
+     */
+    enable_static_ip?: boolean;
+    /**
+     * The version of the runner image to deploy. This is relevant only for runners using custom images.
+     */
+    image_version?: string | null;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ActionsHostedRunner>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/{hosted_runner_id}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_ActionsHostedRunner]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Delete a GitHub-hosted runner for an organization
+ * Deletes a GitHub-hosted runner for an organization.
+ * Learn more at {@link https://docs.github.com/rest/actions/hosted-runners#delete-a-github-hosted-runner-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsDeleteHostedRunnerForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    hosted_runner_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<202, ActionsHostedRunner>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/hosted-runners/{hosted_runner_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '202': { transforms: { date: [[['ref', $date_ActionsHostedRunner]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get the customization template for an OIDC subject claim for an organization
@@ -74072,6 +77316,544 @@ export async function actionsSetGithubActionsDefaultWorkflowPermissionsOrganizat
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * List self-hosted runner groups for an organization
+ * Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#list-self-hosted-runner-groups-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsListSelfHostedRunnerGroupsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    per_page?: number;
+    page?: number;
+    visible_to_repository?: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runner_groups: RunnerGroupsOrg[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page', 'visible_to_repository'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Create a self-hosted runner group for an organization
+ * Creates a new self-hosted runner group for an organization.
+ *
+ * OAuth tokens and personal access tokens (classic) need the
+ * `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#create-a-self-hosted-runner-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsCreateSelfHostedRunnerGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * Name of the runner group.
+     */
+    name: string;
+    /**
+     * Visibility of a runner group. You can select all repositories, select individual repositories, or limit access to private repositories.
+     * @defaultValue "all"
+     */
+    visibility?: 'selected' | 'all' | 'private';
+    /**
+     * List of repository IDs that can access the runner group.
+     */
+    selected_repository_ids?: number[];
+    /**
+     * List of runner IDs to add to the runner group.
+     */
+    runners?: number[];
+    /**
+     * Whether the runner group can be used by `public` repositories.
+     */
+    allows_public_repositories?: boolean;
+    /**
+     * If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.
+     */
+    restricted_to_workflows?: boolean;
+    /**
+     * List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.
+     */
+    selected_workflows?: string[];
+    /**
+     * The identifier of a hosted compute network configuration.
+     */
+    network_configuration_id?: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<201, RunnerGroupsOrg>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get a self-hosted runner group for an organization
+ * Gets a specific self-hosted runner group for an organization.
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#get-a-self-hosted-runner-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsGetSelfHostedRunnerGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, RunnerGroupsOrg>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Update a self-hosted runner group for an organization
+ * Updates the `name` and `visibility` of a self-hosted runner group in an organization.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#update-a-self-hosted-runner-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsUpdateSelfHostedRunnerGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+  },
+  body: {
+    /**
+     * Name of the runner group.
+     */
+    name: string;
+    /**
+     * Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories.
+     */
+    visibility?: 'selected' | 'all' | 'private';
+    /**
+     * Whether the runner group can be used by `public` repositories.
+     */
+    allows_public_repositories?: boolean;
+    /**
+     * If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.
+     */
+    restricted_to_workflows?: boolean;
+    /**
+     * List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.
+     */
+    selected_workflows?: string[];
+    /**
+     * The identifier of a hosted compute network configuration.
+     */
+    network_configuration_id?: string | null;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, RunnerGroupsOrg>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Delete a self-hosted runner group from an organization
+ * Deletes a self-hosted runner group for an organization.
+ *
+ * OAuth tokens and personal access tokens (classic) need the
+ * `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#delete-a-self-hosted-runner-group-from-an-organization}
+ * Tags: actions
+ */
+export async function actionsDeleteSelfHostedRunnerGroupFromOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * List GitHub-hosted runners in a group for an organization
+ * Lists the GitHub-hosted runners in an organization group.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#list-github-hosted-runners-in-a-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsListGithubHostedRunnersInGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runners: ActionsHostedRunner[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/hosted-runners',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'runners'],
+              ['loop'],
+              ['ref', $date_ActionsHostedRunner],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * List repository access to a self-hosted runner group in an organization
+ * Lists the repositories with access to a self-hosted runner group configured in an organization.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#list-repository-access-to-a-self-hosted-runner-group-in-an-organization}
+ * Tags: actions
+ */
+export async function actionsListRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+    page?: number;
+    per_page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      repositories: MinimalRepository[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['page', 'per_page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'repositories'],
+              ['loop'],
+              ['ref', $date_MinimalRepository],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Set repository access for a self-hosted runner group in an organization
+ * Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#set-repository-access-for-a-self-hosted-runner-group-in-an-organization}
+ * Tags: actions
+ */
+export async function actionsSetRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+  },
+  body: {
+    /**
+     * List of repository IDs that can access the runner group.
+     */
+    selected_repository_ids: number[];
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories',
+    params,
+    method: r.HttpMethod.PUT,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Add repository access to a self-hosted runner group in an organization
+ * Adds a repository to the list of repositories that can access a self-hosted runner group. The runner group must have
+ * `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an
+ * organization](#create-a-self-hosted-runner-group-for-an-organization)."
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#add-repository-access-to-a-self-hosted-runner-group-in-an-organization}
+ * Tags: actions
+ */
+export async function actionsAddRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+    repository_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}',
+    params,
+    method: r.HttpMethod.PUT,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Remove repository access to a self-hosted runner group in an organization
+ * Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group
+ * must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an
+ * organization](#create-a-self-hosted-runner-group-for-an-organization)."
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#remove-repository-access-to-a-self-hosted-runner-group-in-an-organization}
+ * Tags: actions
+ */
+export async function actionsRemoveRepoAccessToSelfHostedRunnerGroupInOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+    repository_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * List self-hosted runners in a group for an organization
+ * Lists self-hosted runners that are in a specific organization group.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#list-self-hosted-runners-in-a-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsListSelfHostedRunnersInGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      runners: Runner[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Set self-hosted runners in a group for an organization
+ * Replaces the list of self-hosted runners that are part of an organization runner group.
+ *
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#set-self-hosted-runners-in-a-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsSetSelfHostedRunnersInGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+  },
+  body: {
+    /**
+     * List of runner IDs to add to the runner group.
+     */
+    runners: number[];
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners',
+    params,
+    method: r.HttpMethod.PUT,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Add a self-hosted runner to a group for an organization
+ * Adds a self-hosted runner to a runner group configured in an organization.
+ *
+ * OAuth tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#add-a-self-hosted-runner-to-a-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsAddSelfHostedRunnerToGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+    runner_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
+    params,
+    method: r.HttpMethod.PUT,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Remove a self-hosted runner from a group for an organization
+ * Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default
+ * group.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/actions/self-hosted-runner-groups#remove-a-self-hosted-runner-from-a-group-for-an-organization}
+ * Tags: actions
+ */
+export async function actionsRemoveSelfHostedRunnerFromGroupForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    runner_group_id: number;
+    runner_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * List self-hosted runners for an organization
  * Lists all self-hosted runners configured in an organization.
  *
@@ -74193,6 +77975,7 @@ export async function actionsGenerateRunnerJitconfigForOrg<
       }
     >
   | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
   | r.StatusResponse<422, ValidationErrorSimple>
 > {
   const req = await ctx.createRequest({
@@ -74733,11 +78516,11 @@ export async function actionsCreateOrUpdateOrgSecret<
     /**
      * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/rest/actions/secrets#get-an-organization-public-key) endpoint.
      */
-    encrypted_value?: string;
+    encrypted_value: string;
     /**
      * ID of the key you used to encrypt the secret.
      */
-    key_id?: string;
+    key_id: string;
     /**
      * Which type of organization repositories have access to the organization secret. `selected` means only the repositories specified by `selected_repository_ids` can access the secret.
      */
@@ -75360,6 +79143,70 @@ export async function actionsRemoveSelectedRepoFromOrgVariable<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * List attestations
+ * List a collection of artifact attestations with a given subject digest that are associated with repositories owned by an
+ * organization.
+ *
+ * The collection of attestations returned by this endpoint is filtered according to the authenticated
+ * user's permissions; if the authenticated user cannot read a repository, the attestations associated with that repository
+ * will not be included in the response. In addition, when using a fine-grained access token the `attestations:read`
+ * permission is required.
+ *
+ * **Please note:** in order to offer meaningful security benefits, an attestation's signature and
+ * timestamps **must** be cryptographically verified, and the identity of the attestation signer **must** be validated.
+ * Attestations can be verified using the [GitHub CLI `attestation verify`
+ * command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use
+ * artifact attestations to establish a build's
+ * provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
+ * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-attestations}
+ * Tags: orgs
+ */
+export async function orgsListAttestations<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    per_page?: number;
+    before?: string;
+    after?: string;
+    org: string;
+    subject_digest: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      attestations?: {
+        /**
+         * The attestation's Sigstore Bundle.
+         * Refer to the [Sigstore Bundle Specification](https://github.com/sigstore/protobuf-specs/blob/main/protos/sigstore_bundle.proto) for more information.
+         */
+        bundle?: {
+          mediaType?: string;
+          verificationMaterial?: {
+            [key: string]: unknown;
+          };
+          dsseEnvelope?: {
+            [key: string]: unknown;
+          };
+        };
+        repository_id?: number;
+        bundle_url?: string;
+      }[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/attestations/{subject_digest}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'before', 'after'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * List users blocked by an organization
  * List the users blocked by an organization.
  * Learn more at {@link https://docs.github.com/rest/orgs/blocking#list-users-blocked-by-an-organization}
@@ -75532,6 +79379,658 @@ export async function codeScanningListAlertsForOrg<
     },
     true,
   );
+}
+/**
+ * Get code security configurations for an organization
+ * Lists all code security configurations available in an organization.
+ *
+ * The authenticated user must be an administrator or
+ * security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-code-security-configurations-for-an-organization}
+ * Tags: code-security
+ */
+export async function codeSecurityGetConfigurationsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    target_type?: 'global' | 'all';
+    per_page?: number;
+    before?: string;
+    after?: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfiguration[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['target_type', 'per_page', 'before', 'after'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['loop'], ['ref', $date_CodeSecurityConfiguration]]],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Create a code security configuration
+ * Creates a code security configuration in an organization.
+ *
+ * The authenticated user must be an administrator or security
+ * manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#create-a-code-security-configuration}
+ * Tags: code-security
+ */
+export async function codeSecurityCreateConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * The name of the code security configuration. Must be unique within the organization.
+     */
+    name: string;
+    /**
+     * A description of the code security configuration
+     */
+    description: string;
+    /**
+     * The enablement status of GitHub Advanced Security
+     * @defaultValue "disabled"
+     */
+    advanced_security?: 'enabled' | 'disabled';
+    /**
+     * The enablement status of Dependency Graph
+     * @defaultValue "enabled"
+     */
+    dependency_graph?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Automatic dependency submission
+     * @defaultValue "disabled"
+     */
+    dependency_graph_autosubmit_action?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * Feature options for Automatic dependency submission
+     */
+    dependency_graph_autosubmit_action_options?: {
+      /**
+       * Whether to use runners labeled with 'dependency-submission' or standard GitHub runners.
+       */
+      labeled_runners?: boolean;
+    };
+    /**
+     * The enablement status of Dependabot alerts
+     * @defaultValue "disabled"
+     */
+    dependabot_alerts?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Dependabot security updates
+     * @defaultValue "disabled"
+     */
+    dependabot_security_updates?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of code scanning default setup
+     * @defaultValue "disabled"
+     */
+    code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
+    code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
+    /**
+     * The enablement status of secret scanning
+     * @defaultValue "disabled"
+     */
+    secret_scanning?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning push protection
+     * @defaultValue "disabled"
+     */
+    secret_scanning_push_protection?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning delegated bypass
+     * @defaultValue "disabled"
+     */
+    secret_scanning_delegated_bypass?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * Feature options for secret scanning delegated bypass
+     */
+    secret_scanning_delegated_bypass_options?: {
+      /**
+       * The bypass reviewers for secret scanning delegated bypass
+       */
+      reviewers?: {
+        /**
+         * The ID of the team or role selected as a bypass reviewer
+         */
+        reviewer_id: number;
+        /**
+         * The type of the bypass reviewer
+         */
+        reviewer_type: 'TEAM' | 'ROLE';
+      }[];
+    };
+    /**
+     * The enablement status of secret scanning validity checks
+     * @defaultValue "disabled"
+     */
+    secret_scanning_validity_checks?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning non provider patterns
+     * @defaultValue "disabled"
+     */
+    secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of private vulnerability reporting
+     * @defaultValue "disabled"
+     */
+    private_vulnerability_reporting?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enforcement status for a security configuration
+     * @defaultValue "enforced"
+     */
+    enforcement?: 'enforced' | 'unenforced';
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<201, CodeSecurityConfiguration>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '201': {
+        transforms: { date: [[['ref', $date_CodeSecurityConfiguration]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get default code security configurations
+ * Lists the default code security configurations for an organization.
+ *
+ * The authenticated user must be an administrator or
+ * security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-default-code-security-configurations}
+ * Tags: code-security
+ */
+export async function codeSecurityGetDefaultConfigurations<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityDefaultConfigurations>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/defaults',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['ref', $date_CodeSecurityDefaultConfigurations]]],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Detach configurations from repositories
+ * Detach code security configuration(s) from a set of repositories.
+ * Repositories will retain their settings but will no
+ * longer be associated with the configuration.
+ *
+ * The authenticated user must be an administrator or security manager for
+ * the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `write:org` scope
+ * to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#detach-configurations-from-repositories}
+ * Tags: code-security
+ */
+export async function codeSecurityDetachConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * An array of repository IDs to detach from configurations.
+     */
+    selected_repository_ids?: number[];
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/detach',
+    params,
+    method: r.HttpMethod.DELETE,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get a code security configuration
+ * Gets a code security configuration available in an organization.
+ *
+ * The authenticated user must be an administrator or
+ * security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-a-code-security-configuration}
+ * Tags: code-security
+ */
+export async function codeSecurityGetConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    configuration_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfiguration>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/{configuration_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_CodeSecurityConfiguration]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Update a code security configuration
+ * Updates a code security configuration in an organization.
+ *
+ * The authenticated user must be an administrator or security
+ * manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#update-a-code-security-configuration}
+ * Tags: code-security
+ */
+export async function codeSecurityUpdateConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    configuration_id: number;
+  },
+  body: {
+    /**
+     * The name of the code security configuration. Must be unique within the organization.
+     */
+    name?: string;
+    /**
+     * A description of the code security configuration
+     */
+    description?: string;
+    /**
+     * The enablement status of GitHub Advanced Security
+     */
+    advanced_security?: 'enabled' | 'disabled';
+    /**
+     * The enablement status of Dependency Graph
+     */
+    dependency_graph?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Automatic dependency submission
+     */
+    dependency_graph_autosubmit_action?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * Feature options for Automatic dependency submission
+     */
+    dependency_graph_autosubmit_action_options?: {
+      /**
+       * Whether to use runners labeled with 'dependency-submission' or standard GitHub runners.
+       */
+      labeled_runners?: boolean;
+    };
+    /**
+     * The enablement status of Dependabot alerts
+     */
+    dependabot_alerts?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Dependabot security updates
+     */
+    dependabot_security_updates?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of code scanning default setup
+     */
+    code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
+    code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
+    /**
+     * The enablement status of secret scanning
+     */
+    secret_scanning?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning push protection
+     */
+    secret_scanning_push_protection?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning delegated bypass
+     */
+    secret_scanning_delegated_bypass?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * Feature options for secret scanning delegated bypass
+     */
+    secret_scanning_delegated_bypass_options?: {
+      /**
+       * The bypass reviewers for secret scanning delegated bypass
+       */
+      reviewers?: {
+        /**
+         * The ID of the team or role selected as a bypass reviewer
+         */
+        reviewer_id: number;
+        /**
+         * The type of the bypass reviewer
+         */
+        reviewer_type: 'TEAM' | 'ROLE';
+      }[];
+    };
+    /**
+     * The enablement status of secret scanning validity checks
+     */
+    secret_scanning_validity_checks?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning non-provider patterns
+     */
+    secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of private vulnerability reporting
+     */
+    private_vulnerability_reporting?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enforcement status for a security configuration
+     */
+    enforcement?: 'enforced' | 'unenforced';
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfiguration>
+  | r.StatusResponse<204, unknown>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/{configuration_id}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_CodeSecurityConfiguration]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Delete a code security configuration
+ * Deletes the desired code security configuration from an organization.
+ * Repositories attached to the configuration will
+ * retain their settings but will no longer be associated with
+ * the configuration.
+ *
+ * The authenticated user must be an
+ * administrator or security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#delete-a-code-security-configuration}
+ * Tags: code-security
+ */
+export async function codeSecurityDeleteConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    configuration_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/{configuration_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Attach a configuration to repositories
+ * Attach a code security configuration to a set of repositories. If the repositories specified are already attached to a
+ * configuration, they will be re-attached to the provided configuration.
+ *
+ * If insufficient GHAS licenses are available to
+ * attach the configuration to a repository, only free features will be enabled.
+ *
+ * The authenticated user must be an
+ * administrator or security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#attach-a-configuration-to-repositories}
+ * Tags: code-security
+ */
+export async function codeSecurityAttachConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    configuration_id: number;
+  },
+  body: {
+    /**
+     * The type of repositories to attach the configuration to. `selected` means the configuration will be attached to only the repositories specified by `selected_repository_ids`
+     */
+    scope:
+      | 'all'
+      | 'all_without_configurations'
+      | 'public'
+      | 'private_or_internal'
+      | 'selected';
+    /**
+     * An array of repository IDs to attach the configuration to. You can only provide a list of repository ids when the `scope` is set to `selected`.
+     */
+    selected_repository_ids?: number[];
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<202, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/{configuration_id}/attach',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Set a code security configuration as a default for an organization
+ * Sets a code security configuration as a default to be applied to new repositories in your organization.
+ *
+ * This
+ * configuration will be applied to the matching repository type (all, none, public, private and internal) by default when
+ * they are created.
+ *
+ * The authenticated user must be an administrator or security manager for the organization to use this
+ * endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-organization}
+ * Tags: code-security
+ */
+export async function codeSecuritySetConfigurationAsDefault<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    configuration_id: number;
+  },
+  body: {
+    /**
+     * Specify which types of repository this security configuration should be applied to by default.
+     */
+    default_for_new_repos?: 'all' | 'none' | 'private_and_internal' | 'public';
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * Specifies which types of repository this security configuration is applied to by default.
+         */
+        default_for_new_repos?:
+          | 'all'
+          | 'none'
+          | 'private_and_internal'
+          | 'public';
+        configuration?: CodeSecurityConfiguration;
+      }
+    >
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/{configuration_id}/defaults',
+    params,
+    method: r.HttpMethod.PUT,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'configuration'],
+              ['ref', $date_CodeSecurityConfiguration],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get repositories associated with a code security configuration
+ * Lists the repositories associated with a code security configuration in an organization.
+ *
+ * The authenticated user must be
+ * an administrator or security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `write:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration}
+ * Tags: code-security
+ */
+export async function codeSecurityGetRepositoriesForConfiguration<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    configuration_id: number;
+    per_page?: number;
+    before?: string;
+    after?: string;
+    status?: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfigurationRepositories[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/code-security/configurations/{configuration_id}/repositories',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'before', 'after', 'status'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * List codespaces for the organization
@@ -76096,20 +80595,22 @@ export async function codespacesRemoveSelectedRepoFromOrgSecret<
 }
 /**
  * Get Copilot seat information and settings for an organization
- * **Note**: This endpoint is in beta and is subject to change.
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
  *
- * Gets information about an organization's Copilot
- * subscription, including seat breakdown
- * and code matching policies. To configure these settings, go to your
+ * Gets information about an organization's
+ * Copilot subscription, including seat breakdown
+ * and feature policies. To configure these settings, go to your
  * organization's settings on GitHub.com.
  * For more information, see "[Managing policies for Copilot in your
- * organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-copilot-business-in-your-organization)".
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-copilot-business-in-your-organization)."
  *
  * Only
- * organization owners can configure and view details about the organization's Copilot Business subscription.
+ * organization owners can view details about the organization's Copilot Business or Copilot Enterprise
+ * subscription.
  *
- * OAuth app
- * tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or
+ * `read:org` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-information-and-settings-for-an-organization}
  * Tags: copilot
  */
@@ -76139,17 +80640,23 @@ export async function copilotGetCopilotOrganizationDetails<
 }
 /**
  * List all Copilot seat assignments for an organization
- * **Note**: This endpoint is in beta and is subject to change.
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
  *
- * Lists all Copilot seat assignments for an organization
- * that are currently being billed (either active or pending cancellation at the start of the next billing cycle).
+ * Lists all Copilot seats for which an
+ * organization with a Copilot Business or Copilot Enterprise subscription is currently being billed.
+ * Only organization
+ * owners can view assigned seats.
  *
- * Only
- * organization owners can configure and view details about the organization's Copilot Business or Enterprise
- * subscription.
+ * Each seat object contains information about the assigned user's most recent Copilot
+ * activity. Users must have telemetry enabled in their IDE for Copilot in the IDE activity to be reflected in
+ * `last_activity_at`.
+ * For more information about activity data, see "[Reviewing user activity data for Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-activity-related-to-github-copilot-in-your-organization/reviewing-user-activity-data-for-copilot-in-your-organization)."
  *
- * OAuth app tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this
- * endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `read:org` scopes to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#list-all-copilot-seat-assignments-for-an-organization}
  * Tags: copilot
  */
@@ -76202,29 +80709,31 @@ export async function copilotListCopilotSeats<
 }
 /**
  * Add teams to the Copilot subscription for an organization
- * **Note**: This endpoint is in beta and is subject to change.
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
  *
- * Purchases a GitHub Copilot seat for all users within each
- * specified team.
- * The organization will be billed accordingly. For more information about Copilot pricing, see "[Pricing
- * for GitHub
- * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
+ * Purchases a GitHub Copilot seat for all users
+ * within each specified team.
+ * The organization will be billed for each seat based on the organization's Copilot plan. For
+ * more information about Copilot pricing, see "[About billing for GitHub Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/about-billing-for-github-copilot-in-your-organization)."
  *
  * Only
- * organization owners can configure GitHub Copilot in their organization.
- *
- * In order for an admin to use this endpoint, the
- * organization must have a Copilot Business or Enterprise subscription and a configured suggestion matching policy.
+ * organization owners can purchase Copilot seats for their organization members. The organization must have a Copilot
+ * Business or Copilot Enterprise subscription and a configured suggestion matching policy.
+ * For more information about
+ * setting up a Copilot subscription, see "[Subscribing to Copilot for your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/subscribing-to-copilot-for-your-organization)."
  * For
- * more information about setting up a Copilot subscription, see "[Setting up a Copilot subscription for your
- * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise)".
- * For
- * more information about setting a suggestion matching policy, see "[Configuring suggestion matching policies for GitHub
- * Copilot in your
- * organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-github-copilot-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
+ * more information about setting a suggestion matching policy, see "[Managing policies for Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/setting-policies-for-copilot-in-your-organization/managing-policies-for-copilot-in-your-organization#policies-for-suggestion-matching)."
  *
- * OAuth
- * app tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * The
+ * response contains the total number of new seats that were created and existing seats that were refreshed.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `admin:org` scopes to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#add-teams-to-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
@@ -76266,27 +80775,25 @@ export async function copilotAddCopilotSeatsForTeams<
 }
 /**
  * Remove teams from the Copilot subscription for an organization
- * **Note**: This endpoint is in beta and is subject to change.
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
  *
- * Cancels the Copilot seat assignment for all members of
- * each team specified.
- * This will cause the members of the specified team(s) to lose access to GitHub Copilot at the end of
- * the current billing cycle, and the organization will not be billed further for those users.
- *
- * For more information about
- * Copilot pricing, see "[Pricing for GitHub
- * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
- *
- * For
- * more information about disabling access to Copilot Business or Enterprise, see "[Revoking access to GitHub Copilot for
- * specific users in your
- * organization](https://docs.github.com/copilot/managing-copilot/managing-access-for-copilot-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
+ * Sets seats for all members of each team
+ * specified to "pending cancellation".
+ * This will cause the members of the specified team(s) to lose access to GitHub
+ * Copilot at the end of the current billing cycle unless they retain access through another team.
+ * For more information
+ * about disabling access to Copilot, see "[Revoking access to Copilot for members of your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-access-to-github-copilot-in-your-organization/revoking-access-to-copilot-for-members-of-your-organization)."
  *
  * Only
- * organization owners can configure GitHub Copilot in their organization.
+ * organization owners can cancel Copilot seats for their organization members.
  *
- * OAuth app tokens and personal access tokens
- * (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * The response contains the total number of
+ * seats set to "pending cancellation".
+ *
+ * OAuth app tokens and personal access tokens (classic) need either the
+ * `manage_billing:copilot` or `admin:org` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#remove-teams-from-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
@@ -76328,29 +80835,31 @@ export async function copilotCancelCopilotSeatAssignmentForTeams<
 }
 /**
  * Add users to the Copilot subscription for an organization
- * **Note**: This endpoint is in beta and is subject to change.
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
  *
  * Purchases a GitHub Copilot seat for each user
  * specified.
- * The organization will be billed accordingly. For more information about Copilot pricing, see "[Pricing for
- * GitHub
- * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
+ * The organization will be billed for each seat based on the organization's Copilot plan. For more information
+ * about Copilot pricing, see "[About billing for GitHub Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/about-billing-for-github-copilot-in-your-organization)."
  *
  * Only
- * organization owners can configure GitHub Copilot in their organization.
- *
- * In order for an admin to use this endpoint, the
- * organization must have a Copilot Business or Enterprise subscription and a configured suggestion matching policy.
+ * organization owners can purchase Copilot seats for their organization members. The organization must have a Copilot
+ * Business or Copilot Enterprise subscription and a configured suggestion matching policy.
+ * For more information about
+ * setting up a Copilot subscription, see "[Subscribing to Copilot for your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/subscribing-to-copilot-for-your-organization)."
  * For
- * more information about setting up a Copilot subscription, see "[Setting up a Copilot subscription for your
- * organization](https://docs.github.com/billing/managing-billing-for-github-copilot/managing-your-github-copilot-subscription-for-your-organization-or-enterprise)".
- * For
- * more information about setting a suggestion matching policy, see "[Configuring suggestion matching policies for GitHub
- * Copilot in your
- * organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-github-copilot-in-your-organization#configuring-suggestion-matching-policies-for-github-copilot-in-your-organization)".
+ * more information about setting a suggestion matching policy, see "[Managing policies for Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/setting-policies-for-copilot-in-your-organization/managing-policies-for-copilot-in-your-organization#policies-for-suggestion-matching)."
  *
- * OAuth
- * app tokens and personal access tokens (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * The
+ * response contains the total number of new seats that were created and existing seats that were refreshed.
+ *
+ * OAuth app
+ * tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `admin:org` scopes to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#add-users-to-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
@@ -76392,27 +80901,25 @@ export async function copilotAddCopilotSeatsForUsers<
 }
 /**
  * Remove users from the Copilot subscription for an organization
- * **Note**: This endpoint is in beta and is subject to change.
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
  *
- * Cancels the Copilot seat assignment for each user
- * specified.
- * This will cause the specified users to lose access to GitHub Copilot at the end of the current billing cycle,
- * and the organization will not be billed further for those users.
- *
- * For more information about Copilot pricing, see
- * "[Pricing for GitHub
- * Copilot](https://docs.github.com/billing/managing-billing-for-github-copilot/about-billing-for-github-copilot#about-billing-for-github-copilot)".
- *
- * For
- * more information about disabling access to Copilot Business or Enterprise, see "[Revoking access to GitHub Copilot for
- * specific users in your
- * organization](https://docs.github.com/copilot/managing-copilot/managing-access-for-copilot-in-your-organization#revoking-access-to-github-copilot-for-specific-users-in-your-organization)".
+ * Sets seats for all users specified to "pending
+ * cancellation".
+ * This will cause the specified users to lose access to GitHub Copilot at the end of the current billing
+ * cycle unless they retain access through team membership.
+ * For more information about disabling access to Copilot, see
+ * "[Revoking access to Copilot for members of your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-access-to-github-copilot-in-your-organization/revoking-access-to-copilot-for-members-of-your-organization)."
  *
  * Only
- * organization owners can configure GitHub Copilot in their organization.
+ * organization owners can cancel Copilot seats for their organization members.
  *
- * OAuth app tokens and personal access tokens
- * (classic) need the `manage_billing:copilot` scope to use this endpoint.
+ * The response contains the total number of
+ * seats set to "pending cancellation".
+ *
+ * OAuth app tokens and personal access tokens (classic) need either the
+ * `manage_billing:copilot` or `admin:org` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#remove-users-from-the-copilot-subscription-for-an-organization}
  * Tags: copilot
  */
@@ -76453,28 +80960,83 @@ export async function copilotCancelCopilotSeatAssignmentForUsers<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Get a summary of Copilot usage for organization members
- * **Note**: This endpoint is in beta and is subject to change.
+ * Get Copilot metrics for an organization
+ * Use this endpoint to see a breakdown of aggregated metrics for various GitHub Copilot features. See the response schema
+ * tab for detailed metrics definitions.
  *
- * You can use this endpoint to see a daily breakdown of
- * aggregated usage metrics for Copilot completions and Copilot Chat in the IDE
- * across an organization, with a further
- * breakdown of suggestions, acceptances, and number of active users by editor and language for each day.
- * See the response
- * schema tab for detailed metrics definitions.
+ * > [!NOTE]
+ * > This endpoint will only return results for a given day if the
+ * organization contained **five or more members with active Copilot licenses** on that day, as evaluated at the end of
+ * that day.
  *
- * The response contains metrics for the prior 28 days. Usage metrics are
- * processed once per day for the previous day,
- * and the response will only include data up until yesterday. In order for an
- * end user to be counted towards these metrics,
+ * The response contains metrics for up to 28 days prior. Metrics are processed once per day for the previous
+ * day,
+ * and the response will only include data up until yesterday. In order for an end user to be counted towards these
+ * metrics,
  * they must have telemetry enabled in their IDE.
  *
- * Organization owners, and
- * owners and billing managers of the parent enterprise, can view Copilot usage metrics.
+ * To access this endpoint, the Copilot Metrics API access policy
+ * must be enabled for the organization.
+ * Only organization owners and owners and billing managers of the parent enterprise
+ * can view Copilot metrics.
  *
- * OAuth app tokens and personal
- * access tokens (classic) need either the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this
- * endpoint.
+ * OAuth app tokens and personal access tokens (classic) need either the
+ * `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-metrics#get-copilot-metrics-for-an-organization}
+ * Tags: copilot
+ */
+export async function copilotCopilotMetricsForOrganization<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    since?: string;
+    until?: string;
+    page?: number;
+    per_page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CopilotUsageMetricsDay[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/copilot/metrics',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['since', 'until', 'page', 'per_page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get a summary of Copilot usage for organization members
+ * > [!NOTE]
+ * > This endpoint is closing down. It will be accessible throughout February 2025, but will not return any new
+ * data after February 1st.
+ *
+ * You can use this endpoint to see a daily breakdown of aggregated usage metrics for Copilot
+ * completions and Copilot Chat in the IDE
+ * across an organization, with a further breakdown of suggestions, acceptances,
+ * and number of active users by editor and language for each day.
+ * See the response schema tab for detailed metrics
+ * definitions.
+ *
+ * The response contains metrics for up to 28 days prior. Usage metrics are processed once per day for the
+ * previous day,
+ * and the response will only include data up until yesterday. In order for an end user to be counted towards
+ * these metrics,
+ * they must have telemetry enabled in their IDE.
+ *
+ * Organization owners, and owners and billing managers of
+ * the parent enterprise, can view Copilot usage metrics.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * either the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-organization-members}
  * Tags: copilot
  */
@@ -76529,8 +81091,9 @@ export async function dependabotListAlertsForOrg<
     severity?: string;
     ecosystem?: string;
     package?: string;
+    epss_percentage?: string;
     scope?: 'development' | 'runtime';
-    sort?: 'created' | 'updated';
+    sort?: 'created' | 'updated' | 'epss_percentage';
     direction?: 'asc' | 'desc';
     before?: string;
     after?: string;
@@ -76556,6 +81119,7 @@ export async function dependabotListAlertsForOrg<
       'severity',
       'ecosystem',
       'package',
+      'epss_percentage',
       'scope',
       'sort',
       'direction',
@@ -76969,6 +81533,9 @@ export async function packagesListDockerMigrationConflictingPackagesForOrganizat
 }
 /**
  * List public organization events
+ * > [!NOTE]
+ * > This API is not built to serve real-time use cases. Depending on the time of day, event latency can be
+ * anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-organization-events}
  * Tags: activity
  */
@@ -77030,12 +81597,14 @@ export async function orgsListFailedInvitations<
 }
 /**
  * List organization webhooks
- * You must be an organization owner to use this endpoint.
+ * List webhooks for an organization.
  *
- * OAuth app tokens and personal access tokens (classic) need
- * `admin:org_hook` scope. OAuth apps cannot list, view, or edit
- * webhooks that they did not create and users cannot list,
- * view, or edit webhooks that were created by OAuth apps.
+ * The authenticated user must be an organization owner to use this endpoint.
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or
+ * edit
+ * webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps.
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#list-organization-webhooks}
  * Tags: orgs
  */
@@ -77256,12 +81825,14 @@ export async function orgsUpdateWebhook<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Delete an organization webhook
- * You must be an organization owner to use this endpoint.
+ * Delete a webhook for an organization.
  *
- * OAuth app tokens and personal access tokens (classic) need
- * `admin:org_hook` scope. OAuth apps cannot list, view, or edit
- * webhooks that they did not create and users cannot list,
- * view, or edit webhooks that were created by OAuth apps.
+ * The authenticated user must be an organization owner to use this endpoint.
+ *
+ * OAuth
+ * app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or
+ * edit
+ * webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps.
  * Learn more at {@link https://docs.github.com/rest/orgs/webhooks#delete-an-organization-webhook}
  * Tags: orgs
  */
@@ -77377,7 +81948,6 @@ export async function orgsListWebhookDeliveries<
     hook_id: number;
     per_page?: number;
     cursor?: string;
-    redelivery?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -77389,7 +81959,7 @@ export async function orgsListWebhookDeliveries<
     path: '/orgs/{org}/hooks/{hook_id}/deliveries',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'cursor', 'redelivery'],
+    queryParams: ['per_page', 'cursor'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(
@@ -77509,6 +82079,329 @@ export async function orgsPingWebhook<FetcherData extends r.BaseFetcherData>(
     path: '/orgs/{org}/hooks/{hook_id}/pings',
     params,
     method: r.HttpMethod.POST,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get route stats by actor
+ * Get API request count statistics for an actor broken down by route within a specified time frame.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-route-stats-by-actor}
+ * Tags: orgs
+ */
+export async function apiInsightsGetRouteStatsByActor<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    actor_type:
+      | 'installation'
+      | 'classic_pat'
+      | 'fine_grained_pat'
+      | 'oauth_app'
+      | 'github_app_user_to_server';
+    actor_id: number;
+    min_timestamp: string;
+    max_timestamp?: string;
+    page?: number;
+    per_page?: number;
+    direction?: 'asc' | 'desc';
+    sort?: (
+      | 'last_rate_limited_timestamp'
+      | 'last_request_timestamp'
+      | 'rate_limited_request_count'
+      | 'http_method'
+      | 'api_route'
+      | 'total_request_count'
+    )[];
+    api_route_substring?: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsRouteStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/route-stats/{actor_type}/{actor_id}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: [
+      'min_timestamp',
+      'max_timestamp',
+      'page',
+      'per_page',
+      'direction',
+      'sort',
+      'api_route_substring',
+    ],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get subject stats
+ * Get API request statistics for all subjects within an organization within a specified time frame. Subjects can be users
+ * or GitHub Apps.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-subject-stats}
+ * Tags: orgs
+ */
+export async function apiInsightsGetSubjectStats<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    min_timestamp: string;
+    max_timestamp?: string;
+    page?: number;
+    per_page?: number;
+    direction?: 'asc' | 'desc';
+    sort?: (
+      | 'last_rate_limited_timestamp'
+      | 'last_request_timestamp'
+      | 'rate_limited_request_count'
+      | 'subject_name'
+      | 'total_request_count'
+    )[];
+    subject_name_substring?: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsSubjectStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/subject-stats',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: [
+      'min_timestamp',
+      'max_timestamp',
+      'page',
+      'per_page',
+      'direction',
+      'sort',
+      'subject_name_substring',
+    ],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get summary stats
+ * Get overall statistics of API requests made within an organization by all users and apps within a specified time frame.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-summary-stats}
+ * Tags: orgs
+ */
+export async function apiInsightsGetSummaryStats<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    min_timestamp: string;
+    max_timestamp?: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsSummaryStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/summary-stats',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['min_timestamp', 'max_timestamp'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get summary stats by user
+ * Get overall statistics of API requests within the organization for a user.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-summary-stats-by-user}
+ * Tags: orgs
+ */
+export async function apiInsightsGetSummaryStatsByUser<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    user_id: string;
+    min_timestamp: string;
+    max_timestamp?: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsSummaryStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/summary-stats/users/{user_id}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['min_timestamp', 'max_timestamp'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get summary stats by actor
+ * Get overall statistics of API requests within the organization made by a specific actor. Actors can be GitHub App
+ * installations, OAuth apps or other tokens on behalf of a user.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-summary-stats-by-actor}
+ * Tags: orgs
+ */
+export async function apiInsightsGetSummaryStatsByActor<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    min_timestamp: string;
+    max_timestamp?: string;
+    actor_type:
+      | 'installation'
+      | 'classic_pat'
+      | 'fine_grained_pat'
+      | 'oauth_app'
+      | 'github_app_user_to_server';
+    actor_id: number;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsSummaryStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/summary-stats/{actor_type}/{actor_id}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['min_timestamp', 'max_timestamp'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get time stats
+ * Get the number of API requests and rate-limited requests made within an organization over a specified time period.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-time-stats}
+ * Tags: orgs
+ */
+export async function apiInsightsGetTimeStats<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    min_timestamp: string;
+    max_timestamp?: string;
+    timestamp_increment: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsTimeStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/time-stats',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['min_timestamp', 'max_timestamp', 'timestamp_increment'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get time stats by user
+ * Get the number of API requests and rate-limited requests made within an organization by a specific user over a specified
+ * time period.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-time-stats-by-user}
+ * Tags: orgs
+ */
+export async function apiInsightsGetTimeStatsByUser<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    user_id: string;
+    min_timestamp: string;
+    max_timestamp?: string;
+    timestamp_increment: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsTimeStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/time-stats/users/{user_id}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['min_timestamp', 'max_timestamp', 'timestamp_increment'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get time stats by actor
+ * Get the number of API requests and rate-limited requests made within an organization by a specific actor within a
+ * specified time period.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-time-stats-by-actor}
+ * Tags: orgs
+ */
+export async function apiInsightsGetTimeStatsByActor<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    actor_type:
+      | 'installation'
+      | 'classic_pat'
+      | 'fine_grained_pat'
+      | 'oauth_app'
+      | 'github_app_user_to_server';
+    actor_id: number;
+    min_timestamp: string;
+    max_timestamp?: string;
+    timestamp_increment: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsTimeStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/time-stats/{actor_type}/{actor_id}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['min_timestamp', 'max_timestamp', 'timestamp_increment'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get user stats
+ * Get API usage statistics within an organization for a user broken down by the type of access.
+ * Learn more at {@link https://docs.github.com/rest/orgs/api-insights#get-user-stats}
+ * Tags: orgs
+ */
+export async function apiInsightsGetUserStats<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    user_id: string;
+    min_timestamp: string;
+    max_timestamp?: string;
+    page?: number;
+    per_page?: number;
+    direction?: 'asc' | 'desc';
+    sort?: (
+      | 'last_rate_limited_timestamp'
+      | 'last_request_timestamp'
+      | 'rate_limited_request_count'
+      | 'subject_name'
+      | 'total_request_count'
+    )[];
+    actor_name_substring?: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, ApiInsightsUserStats>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/insights/api/user-stats/{user_id}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: [
+      'min_timestamp',
+      'max_timestamp',
+      'page',
+      'per_page',
+      'direction',
+      'sort',
+      'actor_name_substring',
+    ],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
@@ -77864,13 +82757,11 @@ export async function orgsListInvitationTeams<
  * List organization issues assigned to the authenticated user
  * List issues in an organization assigned to the authenticated user.
  *
- * **Note**: GitHub's REST API considers every pull
- * request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and
- * pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a
- * pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List
+ * > [!NOTE]
+ * > GitHub's REST API considers every pull
+ * request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and
+ * pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware that the `id` of a
+ * pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List
  * pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
  *
  * This endpoint supports the
@@ -78147,16 +83038,24 @@ export async function codespacesStopInOrganization<
 }
 /**
  * Get Copilot seat assignment details for a user
- * **Note**: This endpoint is in beta and is subject to change.
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
  *
- * Gets the GitHub Copilot seat assignment details for a
+ * Gets the GitHub Copilot seat details for a
  * member of an organization who currently has access to GitHub Copilot.
  *
- * Organization owners can view GitHub Copilot seat
- * assignment details for members in their organization.
+ * The seat object contains information about the
+ * user's most recent Copilot activity. Users must have telemetry enabled in their IDE for Copilot in the IDE activity to
+ * be reflected in `last_activity_at`.
+ * For more information about activity data, see "[Reviewing user activity data for
+ * Copilot in your
+ * organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-activity-related-to-github-copilot-in-your-organization/reviewing-user-activity-data-for-copilot-in-your-organization)."
  *
- * OAuth app tokens and personal access tokens (classic) need the
- * `manage_billing:copilot` scope to use this endpoint.
+ * Only
+ * organization owners can view Copilot seat assignment details for members of their organization.
+ *
+ * OAuth app tokens and
+ * personal access tokens (classic) need either the `manage_billing:copilot` or `read:org` scopes to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-assignment-details-for-a-user}
  * Tags: copilot
  */
@@ -78237,9 +83136,9 @@ export async function orgsGetMembershipForUser<
  *
  * **Rate limits**
  *
- * To prevent abuse, the authenticated user is limited to 50 organization invitations per 24 hour
- * period. If the organization is more than one month old or on a paid plan, the limit is 500 invitations per 24 hour
- * period.
+ * To prevent abuse, organization owners are limited to creating 50 organization invitations for an
+ * organization within a 24 hour period. If the organization is more than one month old or on a paid plan, the limit is 500
+ * invitations per 24 hour period.
  * Learn more at {@link https://docs.github.com/rest/orgs/members#set-organization-membership-for-a-user}
  * Tags: orgs
  */
@@ -78577,54 +83476,10 @@ export async function migrationsListReposForOrg<
   );
 }
 /**
- * List organization fine-grained permissions for an organization
- * Lists the fine-grained permissions that can be used in custom organization roles for an organization. For more
- * information, see "[Managing people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
- *
- * To
- * list the fine-grained permissions that can be used in custom repository roles for an organization, see "[List repository
- * fine-grained permissions for an
- * organization](https://docs.github.com/rest/orgs/organization-roles#list-repository-fine-grained-permissions-for-an-organization)."
- *
- * To
- * use this endpoint, the authenticated user must be one of:
- *
- * - An administrator for the organization.
- * - A user, or a user
- * on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
- *
- * OAuth app
- * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#list-organization-fine-grained-permissions-for-an-organization}
- * Tags: orgs
- */
-export async function orgsListOrganizationFineGrainedPermissions<
-  FetcherData extends r.BaseFetcherData,
->(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    org: string;
-  },
-  opts?: FetcherData,
-): Promise<
-  | r.StatusResponse<200, OrganizationFineGrainedPermission[]>
-  | r.StatusResponse<404, BasicError>
-  | r.StatusResponse<422, ValidationError>
-> {
-  const req = await ctx.createRequest({
-    path: '/orgs/{org}/organization-fine-grained-permissions',
-    params,
-    method: r.HttpMethod.GET,
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
-}
-/**
  * Get all organization roles for an organization
- * Lists the organization roles available in this organization. For more information on organization roles, see "[Managing
- * people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Lists the organization roles available in this organization. For more information on organization roles, see "[Using
+ * organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * To
  * use this endpoint, the authenticated user must be one of:
@@ -78682,72 +83537,10 @@ export async function orgsListOrgRoles<FetcherData extends r.BaseFetcherData>(
   );
 }
 /**
- * Create a custom organization role
- * Creates a custom organization role that can be assigned to users and teams, granting them specific permissions over the
- * organization. For more information on custom organization roles, see "[Managing people's access to your organization
- * with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
- *
- * To
- * use this endpoint, the authenticated user must be one of:
- *
- * - An administrator for the organization.
- * - A user, or a user
- * on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
- *
- * OAuth app
- * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#create-a-custom-organization-role}
- * Tags: orgs
- */
-export async function orgsCreateCustomOrganizationRole<
-  FetcherData extends r.BaseFetcherData,
->(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    org: string;
-  },
-  body: {
-    /**
-     * The name of the custom role.
-     */
-    name: string;
-    /**
-     * A short description about the intended usage of this role or what permissions it grants.
-     */
-    description?: string;
-    /**
-     * A list of additional permissions included in this role.
-     */
-    permissions: string[];
-  },
-  opts?: FetcherData,
-): Promise<
-  | r.StatusResponse<201, OrganizationRole>
-  | r.StatusResponse<404, BasicError>
-  | r.StatusResponse<409, BasicError>
-  | r.StatusResponse<422, ValidationError>
-> {
-  const req = await ctx.createRequest({
-    path: '/orgs/{org}/organization-roles',
-    params,
-    method: r.HttpMethod.POST,
-    body,
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(
-    res,
-    {
-      '201': { transforms: { date: [[['ref', $date_OrganizationRole]]] } },
-    },
-    true,
-  );
-}
-/**
  * Remove all organization roles for a team
- * Removes all assigned organization roles from a team. For more information on organization roles, see "[Managing people's
- * access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Removes all assigned organization roles from a team. For more information on organization roles, see "[Using
+ * organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * The
  * authenticated user must be an administrator for the organization to use this endpoint.
@@ -78777,9 +83570,9 @@ export async function orgsRevokeAllOrgRolesTeam<
 }
 /**
  * Assign an organization role to a team
- * Assigns an organization role to a team in an organization. For more information on organization roles, see "[Managing
- * people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Assigns an organization role to a team in an organization. For more information on organization roles, see "[Using
+ * organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * The
  * authenticated user must be an administrator for the organization to use this endpoint.
@@ -78814,9 +83607,8 @@ export async function orgsAssignTeamToOrgRole<
 }
 /**
  * Remove an organization role from a team
- * Removes an organization role from a team. For more information on organization roles, see "[Managing people's access to
- * your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Removes an organization role from a team. For more information on organization roles, see "[Using organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * The
  * authenticated user must be an administrator for the organization to use this endpoint.
@@ -78847,9 +83639,9 @@ export async function orgsRevokeOrgRoleTeam<
 }
 /**
  * Remove all organization roles for a user
- * Revokes all assigned organization roles from a user. For more information on organization roles, see "[Managing people's
- * access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Revokes all assigned organization roles from a user. For more information on organization roles, see "[Using
+ * organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * The
  * authenticated user must be an administrator for the organization to use this endpoint.
@@ -78879,9 +83671,9 @@ export async function orgsRevokeAllOrgRolesUser<
 }
 /**
  * Assign an organization role to a user
- * Assigns an organization role to a member of an organization. For more information on organization roles, see "[Managing
- * people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Assigns an organization role to a member of an organization. For more information on organization roles, see "[Using
+ * organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * The
  * authenticated user must be an administrator for the organization to use this endpoint.
@@ -78916,9 +83708,8 @@ export async function orgsAssignUserToOrgRole<
 }
 /**
  * Remove an organization role from a user
- * Remove an organization role from a user. For more information on organization roles, see "[Managing people's access to
- * your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Remove an organization role from a user. For more information on organization roles, see "[Using organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * The
  * authenticated user must be an administrator for the organization to use this endpoint.
@@ -78950,8 +83741,8 @@ export async function orgsRevokeOrgRoleUser<
 /**
  * Get an organization role
  * Gets an organization role that is available to this organization. For more information on organization roles, see
- * "[Managing people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * "[Using organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * To
  * use this endpoint, the authenticated user must be one of:
@@ -78992,109 +83783,10 @@ export async function orgsGetOrgRole<FetcherData extends r.BaseFetcherData>(
   );
 }
 /**
- * Update a custom organization role
- * Updates an existing custom organization role. Permission changes will apply to all assignees. For more information on
- * custom organization roles, see "[Managing people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
- *
- *
- * To
- * use this endpoint, the authenticated user must be one of:
- *
- * - An administrator for the organization.
- * - A user, or a user
- * on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
- *
- * OAuth app
- * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#update-a-custom-organization-role}
- * Tags: orgs
- */
-export async function orgsPatchCustomOrganizationRole<
-  FetcherData extends r.BaseFetcherData,
->(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    org: string;
-    role_id: number;
-  },
-  body: {
-    /**
-     * The name of the custom role.
-     */
-    name?: string;
-    /**
-     * A short description about the intended usage of this role or what permissions it grants.
-     */
-    description?: string;
-    /**
-     * A list of additional permissions included in this role.
-     */
-    permissions?: string[];
-  },
-  opts?: FetcherData,
-): Promise<
-  | r.StatusResponse<200, OrganizationRole>
-  | r.StatusResponse<404, BasicError>
-  | r.StatusResponse<409, BasicError>
-  | r.StatusResponse<422, ValidationError>
-> {
-  const req = await ctx.createRequest({
-    path: '/orgs/{org}/organization-roles/{role_id}',
-    params,
-    method: r.HttpMethod.PATCH,
-    body,
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(
-    res,
-    {
-      '200': { transforms: { date: [[['ref', $date_OrganizationRole]]] } },
-    },
-    true,
-  );
-}
-/**
- * Delete a custom organization role.
- * Deletes a custom organization role. For more information on custom organization roles, see "[Managing people's access to
- * your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
- *
- * To
- * use this endpoint, the authenticated user must be one of:
- *
- * - An administrator for the organization.
- * - A user, or a user
- * on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
- *
- * OAuth app
- * tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/orgs/organization-roles#delete-a-custom-organization-role}
- * Tags: orgs
- */
-export async function orgsDeleteCustomOrganizationRole<
-  FetcherData extends r.BaseFetcherData,
->(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    org: string;
-    role_id: number;
-  },
-  opts?: FetcherData,
-): Promise<r.StatusResponse<204, unknown>> {
-  const req = await ctx.createRequest({
-    path: '/orgs/{org}/organization-roles/{role_id}',
-    params,
-    method: r.HttpMethod.DELETE,
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
-}
-/**
  * List teams that are assigned to an organization role
- * Lists the teams that are assigned to an organization role. For more information on organization roles, see "[Managing
- * people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * Lists the teams that are assigned to an organization role. For more information on organization roles, see "[Using
+ * organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * To
  * use this endpoint, you must be an administrator for the organization.
@@ -79116,7 +83808,7 @@ export async function orgsListOrgRoleTeams<
   },
   opts?: FetcherData,
 ): Promise<
-  | r.StatusResponse<200, Team[]>
+  | r.StatusResponse<200, TeamRoleAssignment[]>
   | r.StatusResponse<404, unknown>
   | r.StatusResponse<422, unknown>
 > {
@@ -79132,8 +83824,8 @@ export async function orgsListOrgRoleTeams<
 /**
  * List users that are assigned to an organization role
  * Lists organization members that are assigned to an organization role. For more information on organization roles, see
- * "[Managing people's access to your organization with
- * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles)."
+ * "[Using organization
+ * roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
  *
  * To
  * use this endpoint, you must be an administrator for the organization.
@@ -79155,7 +83847,7 @@ export async function orgsListOrgRoleUsers<
   },
   opts?: FetcherData,
 ): Promise<
-  | r.StatusResponse<200, SimpleUser[]>
+  | r.StatusResponse<200, UserRoleAssignment[]>
   | r.StatusResponse<404, unknown>
   | r.StatusResponse<422, unknown>
 > {
@@ -79275,9 +83967,7 @@ export async function orgsRemoveOutsideCollaborator<
  * Lists packages in an organization readable by the user.
  *
  * OAuth app tokens and personal access tokens (classic) need the
- * `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
- * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
- * permissions for GitHub
+ * `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-an-organization}
  * Tags: packages
@@ -79326,9 +84016,7 @@ export async function packagesListPackagesForOrganization<
  * Gets a specific package in an organization.
  *
  * OAuth app tokens and personal access tokens (classic) need the
- * `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
- * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
- * permissions for GitHub
+ * `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-an-organization}
  * Tags: packages
@@ -79377,8 +84065,7 @@ export async function packagesGetPackageForOrganization<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-an-organization}
  * Tags: packages
@@ -79432,8 +84119,7 @@ export async function packagesDeletePackageForOrg<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-an-organization}
  * Tags: packages
@@ -79475,8 +84161,7 @@ export async function packagesRestorePackageForOrg<
  * Lists package versions for a package owned by an organization.
  *
  * OAuth app tokens and personal access tokens (classic)
- * need the `repo` scope to use this endpoint if the `package_type` belongs to a GitHub Packages registry that only
- * supports repository-scoped permissions. For the list of these registries, see "[About permissions for GitHub
+ * need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-an-organization}
  * Tags: packages
@@ -79528,9 +84213,7 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByOrg<
  * Gets a specific package version in an organization.
  *
  * OAuth app tokens and personal access tokens (classic) need the
- * `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
- * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
- * permissions for GitHub
+ * `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-an-organization}
  * Tags: packages
@@ -79580,8 +84263,7 @@ export async function packagesGetPackageVersionForOrganization<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-package-version-for-an-organization}
  * Tags: packages
@@ -79637,8 +84319,7 @@ export async function packagesDeletePackageVersionForOrg<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-package-version-for-an-organization}
  * Tags: packages
@@ -80037,9 +84718,346 @@ export async function orgsListPatGrantRepositories<
   );
 }
 /**
+ * List private registries for an organization
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
+ *
+ * Lists all private registry configurations
+ * available at the organization-level without revealing their encrypted
+ * values.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#list-private-registries-for-an-organization}
+ * Tags: private-registries
+ */
+export async function privateRegistriesListOrgPrivateRegistries<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        total_count: number;
+        configurations: OrgPrivateRegistryConfiguration[];
+      }
+    >
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/private-registries',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'configurations'],
+              ['loop'],
+              ['ref', $date_OrgPrivateRegistryConfiguration],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Create a private registry for an organization
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
+ *
+ * Creates a private registry configuration with
+ * an encrypted value for an organization. Encrypt your secret using
+ * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
+ * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#create-a-private-registry-for-an-organization}
+ * Tags: private-registries
+ */
+export async function privateRegistriesCreateOrgPrivateRegistry<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * The registry type.
+     */
+    registry_type: 'maven_repository';
+    /**
+     * The username to use when authenticating with the private registry. This field should be omitted if the private registry does not require a username for authentication.
+     */
+    username?: string | null;
+    /**
+     * The value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get private registries public key for an organization](https://docs.github.com/rest/private-registries/organization-configurations#get-private-registries-public-key-for-an-organization) endpoint.
+     */
+    encrypted_value: string;
+    /**
+     * The ID of the key you used to encrypt the secret.
+     */
+    key_id: string;
+    /**
+     * Which type of organization repositories have access to the private registry. `selected` means only the repositories specified by `selected_repository_ids` can access the private registry.
+     */
+    visibility: 'all' | 'private' | 'selected';
+    /**
+     * An array of repository IDs that can access the organization private registry. You can only provide a list of repository IDs when `visibility` is set to `selected`. You can manage the list of selected repositories using the [Update a private registry for an organization](https://docs.github.com/rest/private-registries/organization-configurations#update-a-private-registry-for-an-organization) endpoint. This field should be omitted if `visibility` is set to `all` or `private`.
+     */
+    selected_repository_ids?: number[];
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      201,
+      OrgPrivateRegistryConfigurationWithSelectedRepositories
+    >
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/private-registries',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '201': {
+        transforms: {
+          date: [
+            [
+              [
+                'ref',
+                $date_OrgPrivateRegistryConfigurationWithSelectedRepositories,
+              ],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get private registries public key for an organization
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
+ *
+ * Gets the org public key, which is needed to
+ * encrypt private registry secrets. You need to encrypt a secret before you can create or update secrets.
+ *
+ * OAuth tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#get-private-registries-public-key-for-an-organization}
+ * Tags: private-registries
+ */
+export async function privateRegistriesGetOrgPublicKey<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        /**
+         * The identifier for the key.
+         * @example "012345678912345678"
+         */
+        key_id: string;
+        /**
+         * The Base64 encoded public key.
+         * @example "2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234"
+         */
+        key: string;
+      }
+    >
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/private-registries/public-key',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get a private registry for an organization
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
+ *
+ * Get the configuration of a single private
+ * registry defined for an organization, omitting its encrypted value.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#get-a-private-registry-for-an-organization}
+ * Tags: private-registries
+ */
+export async function privateRegistriesGetOrgPrivateRegistry<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    secret_name: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, OrgPrivateRegistryConfiguration>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/private-registries/{secret_name}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['ref', $date_OrgPrivateRegistryConfiguration]]],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Update a private registry for an organization
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
+ *
+ * Updates a private registry configuration with
+ * an encrypted value for an organization. Encrypt your secret using
+ * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
+ * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+ *
+ * OAuth app tokens
+ * and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#update-a-private-registry-for-an-organization}
+ * Tags: private-registries
+ */
+export async function privateRegistriesUpdateOrgPrivateRegistry<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    secret_name: string;
+  },
+  body: {
+    /**
+     * The registry type.
+     */
+    registry_type?: 'maven_repository';
+    /**
+     * The username to use when authenticating with the private registry. This field should be omitted if the private registry does not require a username for authentication.
+     */
+    username?: string | null;
+    /**
+     * The value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get private registries public key for an organization](https://docs.github.com/rest/private-registries/organization-configurations#get-private-registries-public-key-for-an-organization) endpoint.
+     */
+    encrypted_value?: string;
+    /**
+     * The ID of the key you used to encrypt the secret.
+     */
+    key_id?: string;
+    /**
+     * Which type of organization repositories have access to the private registry. `selected` means only the repositories specified by `selected_repository_ids` can access the private registry.
+     */
+    visibility?: 'all' | 'private' | 'selected';
+    /**
+     * An array of repository IDs that can access the organization private registry. You can only provide a list of repository IDs when `visibility` is set to `selected`. This field should be omitted if `visibility` is set to `all` or `private`.
+     */
+    selected_repository_ids?: number[];
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/private-registries/{secret_name}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Delete a private registry for an organization
+ * > [!NOTE]
+ * > This endpoint is in public preview and is subject to change.
+ *
+ * Delete a private registry configuration at the
+ * organization-level.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this
+ * endpoint.
+ * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#delete-a-private-registry-for-an-organization}
+ * Tags: private-registries
+ */
+export async function privateRegistriesDeleteOrgPrivateRegistry<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    secret_name: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/private-registries/{secret_name}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * List organization projects
- * Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If
- * you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#list-organization-projects}
  * Tags: projects
  */
@@ -80073,9 +85091,12 @@ export async function projectsListForOrg<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Create an organization project
- * Creates an organization project board. Returns a `410 Gone` status if projects are disabled in the organization or if
- * the organization does not have existing classic projects. If you do not have sufficient privileges to perform this
- * action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#create-an-organization-project}
  * Tags: projects
  */
@@ -80136,7 +85157,7 @@ export async function orgsGetAllCustomProperties<
   },
   opts?: FetcherData,
 ): Promise<
-  | r.StatusResponse<200, OrgCustomProperty[]>
+  | r.StatusResponse<200, CustomProperty[]>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
 > {
@@ -80171,11 +85192,11 @@ export async function orgsCreateOrUpdateCustomProperties<
     /**
      * The array of custom properties to create or update.
      */
-    properties: OrgCustomProperty[];
+    properties: CustomProperty[];
   },
   opts?: FetcherData,
 ): Promise<
-  | r.StatusResponse<200, OrgCustomProperty[]>
+  | r.StatusResponse<200, CustomProperty[]>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
 > {
@@ -80205,7 +85226,7 @@ export async function orgsGetCustomProperty<
   },
   opts?: FetcherData,
 ): Promise<
-  | r.StatusResponse<200, OrgCustomProperty>
+  | r.StatusResponse<200, CustomProperty>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
 > {
@@ -80237,33 +85258,10 @@ export async function orgsCreateOrUpdateCustomProperty<
     org: string;
     custom_property_name: string;
   },
-  body: {
-    /**
-     * The type of the value for the property
-     * @example "single_select"
-     */
-    value_type: 'string' | 'single_select';
-    /**
-     * Whether the property is required.
-     */
-    required?: boolean;
-    /**
-     * Default value of the property
-     */
-    default_value?: (string | string[]) | null;
-    /**
-     * Short description of the property
-     */
-    description?: string | null;
-    /**
-     * An ordered list of the allowed values of the property.
-     * The property can have up to 200 allowed values.
-     */
-    allowed_values?: string[] | null;
-  },
+  body: CustomPropertySetPayload,
   opts?: FetcherData,
 ): Promise<
-  | r.StatusResponse<200, OrgCustomProperty>
+  | r.StatusResponse<200, CustomProperty>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
 > {
@@ -80503,7 +85501,8 @@ export async function orgsRemovePublicMembershipForAuthenticatedUser<
  * List organization repositories
  * Lists repositories for the specified organization.
  *
- * **Note:** In order to see the `security_and_analysis` block for a
+ * > [!NOTE]
+ * > In order to see the `security_and_analysis` block for a
  * repository you must have admin permissions for the repository or be an owner or security manager for the organization
  * that owns the repository. For more information, see "[Managing security managers in your
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
@@ -80640,11 +85639,13 @@ export async function reposCreateInOrg<FetcherData extends r.BaseFetcherData>(
      */
     delete_branch_on_merge?: boolean;
     /**
-     * Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+     * Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property is closing down. Please use `squash_merge_commit_title` instead.
      * @deprecated
      */
     use_squash_pr_title_as_default?: boolean;
     /**
+     * Required when using `squash_merge_commit_message`.
+     *
      * The default value for a squash merge commit title:
      *
      * - `PR_TITLE` - default to the pull request's title.
@@ -80660,6 +85661,8 @@ export async function reposCreateInOrg<FetcherData extends r.BaseFetcherData>(
      */
     squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
     /**
+     * Required when using `merge_commit_message`.
+     *
      * The default value for a merge commit title.
      *
      * - `PR_TITLE` - default to the pull request's title.
@@ -80678,7 +85681,7 @@ export async function reposCreateInOrg<FetcherData extends r.BaseFetcherData>(
      * The custom properties for the new repository. The keys are the custom property names, and the values are the corresponding custom property values.
      */
     custom_properties?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
   },
   opts?: FetcherData,
@@ -80716,6 +85719,7 @@ export async function reposGetOrgRulesets<
     org: string;
     per_page?: number;
     page?: number;
+    targets?: string;
   },
   opts?: FetcherData,
 ): Promise<
@@ -80727,7 +85731,7 @@ export async function reposGetOrgRulesets<
     path: '/orgs/{org}/rulesets',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page'],
+    queryParams: ['per_page', 'page', 'targets'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(
@@ -80760,10 +85764,9 @@ export async function reposCreateOrgRuleset<
     name: string;
     /**
      * The target of the ruleset
-     *
-     * **Note**: The `push` target is in beta and is subject to change.
+     * @defaultValue "branch"
      */
-    target?: 'branch' | 'tag' | 'push';
+    target?: 'branch' | 'tag' | 'push' | 'repository';
     enforcement: RepositoryRuleEnforcement;
     /**
      * The actors that can bypass the rules in this ruleset
@@ -80811,7 +85814,8 @@ export async function reposGetOrgRuleSuites<
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
-    repository_name?: number;
+    ref?: string;
+    repository_name?: string;
     time_period?: 'hour' | 'day' | 'week' | 'month';
     actor_name?: string;
     rule_suite_result?: 'pass' | 'fail' | 'bypass' | 'all';
@@ -80829,6 +85833,7 @@ export async function reposGetOrgRuleSuites<
     params,
     method: r.HttpMethod.GET,
     queryParams: [
+      'ref',
       'repository_name',
       'time_period',
       'actor_name',
@@ -80886,6 +85891,10 @@ export async function reposGetOrgRuleSuite<
 /**
  * Get an organization repository ruleset
  * Get a repository ruleset for an organization.
+ *
+ * **Note:** To prevent leaking sensitive information, the `bypass_actors`
+ * property is only returned if the user
+ * making the API request has write access to the ruleset.
  * Learn more at {@link https://docs.github.com/rest/orgs/rules#get-an-organization-repository-ruleset}
  * Tags: repos
  */
@@ -80936,10 +85945,8 @@ export async function reposUpdateOrgRuleset<
     name?: string;
     /**
      * The target of the ruleset
-     *
-     * **Note**: The `push` target is in beta and is subject to change.
      */
-    target?: 'branch' | 'tag' | 'push';
+    target?: 'branch' | 'tag' | 'push' | 'repository';
     enforcement?: RepositoryRuleEnforcement;
     /**
      * The actors that can bypass the rules in this ruleset
@@ -81029,6 +86036,8 @@ export async function secretScanningListAlertsForOrg<
     before?: string;
     after?: string;
     validity?: string;
+    is_publicly_leaked?: boolean;
+    is_multi_repo?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -81058,6 +86067,8 @@ export async function secretScanningListAlertsForOrg<
       'before',
       'after',
       'validity',
+      'is_publicly_leaked',
+      'is_multi_repo',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -81123,15 +86134,10 @@ export async function securityAdvisoriesListOrgRepositoryAdvisories<
 }
 /**
  * List security manager teams
- * Lists teams that are security managers for an organization. For more information, see "[Managing security managers in
- * your
- * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
- *
- * The
- * authenticated user must be an administrator or security manager for the organization to use this endpoint.
- *
- * OAuth app
- * tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint.
+ * > [!WARNING]
+ * > **Closing down notice:** This operation is closing down and will be removed starting January 1, 2026.
+ * Please use the "[Organization Roles](https://docs.github.com/rest/orgs/organization-roles)" endpoints instead.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#list-security-manager-teams}
  * Tags: orgs
  */
@@ -81154,14 +86160,10 @@ export async function orgsListSecurityManagerTeams<
 }
 /**
  * Add a security manager team
- * Adds a team as a security manager for an organization. For more information, see "[Managing security for an
- * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)
- * for an organization."
- *
- * The authenticated user must be an administrator for the organization to use this endpoint.
- *
- * OAuth
- * app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+ * > [!WARNING]
+ * > **Closing down notice:** This operation is closing down and will be removed starting January 1, 2026.
+ * Please use the "[Organization Roles](https://docs.github.com/rest/orgs/organization-roles)" endpoints instead.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#add-a-security-manager-team}
  * Tags: orgs
  */
@@ -81174,7 +86176,7 @@ export async function orgsAddSecurityManagerTeam<
     team_slug: string;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<204, unknown> | r.StatusResponse<409, unknown>> {
+): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/security-managers/teams/{team_slug}',
     params,
@@ -81185,15 +86187,10 @@ export async function orgsAddSecurityManagerTeam<
 }
 /**
  * Remove a security manager team
- * Removes the security manager role from a team for an organization. For more information, see "[Managing security
- * managers in your
- * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)
- * team from an organization."
- *
- * The authenticated user must be an administrator for the organization to use this
- * endpoint.
- *
- * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * > [!WARNING]
+ * > **Closing down notice:** This operation is closing down and will be removed starting January 1, 2026.
+ * Please use the "[Organization Roles](https://docs.github.com/rest/orgs/organization-roles)" endpoints instead.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/orgs/security-managers#remove-a-security-manager-team}
  * Tags: orgs
  */
@@ -81308,6 +86305,358 @@ export async function billingGetSharedStorageBillingOrg<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * List hosted compute network configurations for an organization
+ * Lists all hosted compute network configurations configured in an organization.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `read:network_configurations` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/network-configurations#list-hosted-compute-network-configurations-for-an-organization}
+ * Tags: hosted-compute
+ */
+export async function hostedComputeListNetworkConfigurationsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      total_count: number;
+      network_configurations: NetworkConfiguration[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/settings/network-configurations',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              ['access', 'network_configurations'],
+              ['loop'],
+              ['ref', $date_NetworkConfiguration],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Create a hosted compute network configuration for an organization
+ * Creates a hosted compute network configuration for an organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `write:network_configurations` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/network-configurations#create-a-hosted-compute-network-configuration-for-an-organization}
+ * Tags: hosted-compute
+ */
+export async function hostedComputeCreateNetworkConfigurationForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * Name of the network configuration. Must be between 1 and 100 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'.
+     */
+    name: string;
+    /**
+     * The hosted compute service to use for the network configuration.
+     */
+    compute_service?: 'none' | 'actions';
+    /**
+     * The identifier of the network settings to use for the network configuration. Exactly one network settings must be specified.
+     */
+    network_settings_ids: string[];
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<201, NetworkConfiguration>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/settings/network-configurations',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_NetworkConfiguration]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Get a hosted compute network configuration for an organization
+ * Gets a hosted compute network configuration configured in an organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `read:network_configurations` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/network-configurations#get-a-hosted-compute-network-configuration-for-an-organization}
+ * Tags: hosted-compute
+ */
+export async function hostedComputeGetNetworkConfigurationForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    network_configuration_id: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, NetworkConfiguration>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/settings/network-configurations/{network_configuration_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_NetworkConfiguration]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Update a hosted compute network configuration for an organization
+ * Updates a hosted compute network configuration for an organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `write:network_configurations` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/network-configurations#update-a-hosted-compute-network-configuration-for-an-organization}
+ * Tags: hosted-compute
+ */
+export async function hostedComputeUpdateNetworkConfigurationForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    network_configuration_id: string;
+  },
+  body: {
+    /**
+     * Name of the network configuration. Must be between 1 and 100 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'.
+     */
+    name?: string;
+    /**
+     * The hosted compute service to use for the network configuration.
+     */
+    compute_service?: 'none' | 'actions';
+    /**
+     * The identifier of the network settings to use for the network configuration. Exactly one network settings must be specified.
+     */
+    network_settings_ids?: string[];
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, NetworkConfiguration>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/settings/network-configurations/{network_configuration_id}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_NetworkConfiguration]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Delete a hosted compute network configuration from an organization
+ * Deletes a hosted compute network configuration from an organization.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `write:network_configurations` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/network-configurations#delete-a-hosted-compute-network-configuration-from-an-organization}
+ * Tags: hosted-compute
+ */
+export async function hostedComputeDeleteNetworkConfigurationFromOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    network_configuration_id: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<204, unknown>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/settings/network-configurations/{network_configuration_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get a hosted compute network settings resource for an organization
+ * Gets a hosted compute network settings resource configured for an organization.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `read:network_configurations` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/network-configurations#get-a-hosted-compute-network-settings-resource-for-an-organization}
+ * Tags: hosted-compute
+ */
+export async function hostedComputeGetNetworkSettingsForOrg<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    network_settings_id: string;
+  },
+  opts?: FetcherData,
+): Promise<r.StatusResponse<200, NetworkSettings>> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/settings/network-settings/{network_settings_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get Copilot metrics for a team
+ * Use this endpoint to see a breakdown of aggregated metrics for various GitHub Copilot features. See the response schema
+ * tab for detailed metrics definitions.
+ *
+ * > [!NOTE]
+ * > This endpoint will only return results for a given day if the team
+ * had **five or more members with active Copilot licenses** on that day, as evaluated at the end of that day.
+ *
+ * The
+ * response contains metrics for up to 28 days prior. Metrics are processed once per day for the previous day,
+ * and the
+ * response will only include data up until yesterday. In order for an end user to be counted towards these metrics,
+ * they
+ * must have telemetry enabled in their IDE.
+ *
+ * To access this endpoint, the Copilot Metrics API access policy must be
+ * enabled for the organization containing the team within GitHub settings.
+ * Only organization owners for the organization
+ * that contains this team and owners and billing managers of the parent enterprise can view Copilot metrics for a
+ * team.
+ *
+ * OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot`, `read:org`, or
+ * `read:enterprise` scopes to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-metrics#get-copilot-metrics-for-a-team}
+ * Tags: copilot
+ */
+export async function copilotCopilotMetricsForTeam<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    team_slug: string;
+    since?: string;
+    until?: string;
+    page?: number;
+    per_page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CopilotUsageMetricsDay[]>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/team/{team_slug}/copilot/metrics',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['since', 'until', 'page', 'per_page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get a summary of Copilot usage for a team
+ * > [!NOTE]
+ * > This endpoint is closing down. It will be accessible throughout February 2025, but will not return any new
+ * data after February 1st.
+ *
+ * You can use this endpoint to see a daily breakdown of aggregated usage metrics for Copilot
+ * completions and Copilot Chat in the IDE
+ * for users within a team, with a further breakdown of suggestions, acceptances,
+ * and number of active users by editor and language for each day.
+ * See the response schema tab for detailed metrics
+ * definitions.
+ *
+ * The response contains metrics for up to 28 days prior. Usage metrics are processed once per day for the
+ * previous day,
+ * and the response will only include data up until yesterday. In order for an end user to be counted towards
+ * these metrics,
+ * they must have telemetry enabled in their IDE.
+ *
+ * > [!NOTE]
+ * > This endpoint will only return results for a
+ * given day if the team had five or more members with active Copilot licenses, as evaluated at the end of that
+ * day.
+ *
+ * Organization owners for the organization that contains this team, and owners and billing managers of the parent
+ * enterprise can view Copilot usage metrics for a team.
+ *
+ * OAuth app tokens and personal access tokens (classic) need either
+ * the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-a-team}
+ * Tags: copilot
+ */
+export async function copilotUsageMetricsForTeam<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    team_slug: string;
+    since?: string;
+    until?: string;
+    page?: number;
+    per_page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CopilotUsageMetrics[]>
+  | r.StatusResponse<401, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/team/{team_slug}/copilot/usage',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['since', 'until', 'page', 'per_page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * List teams
  * Lists all teams in an organization that are visible to the authenticated user.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-teams}
@@ -81386,7 +86735,7 @@ export async function teamsCreate<FetcherData extends r.BaseFetcherData>(
      */
     notification_setting?: 'notifications_enabled' | 'notifications_disabled';
     /**
-     * **Deprecated**. The permission that new repositories will be added to the team with when none is specified.
+     * **Closing down notice**. The permission that new repositories will be added to the team with when none is specified.
      * @defaultValue "pull"
      */
     permission?: 'pull' | 'push';
@@ -81422,7 +86771,8 @@ export async function teamsCreate<FetcherData extends r.BaseFetcherData>(
  * changes all words to lowercase, and replaces spaces with a `-` separator. For example, `"My TEam Näme"` would become
  * `my-team-name`.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/{org_id}/team/{team_id}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#get-a-team-by-name}
  * Tags: teams
@@ -81455,7 +86805,8 @@ export async function teamsGetByName<FetcherData extends r.BaseFetcherData>(
  * Update a team
  * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
  *
- * **Note:** You can
+ * > [!NOTE]
+ * > You can
  * also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#update-a-team}
  * Tags: teams
@@ -81491,7 +86842,7 @@ export async function teamsUpdateInOrg<FetcherData extends r.BaseFetcherData>(
      */
     notification_setting?: 'notifications_enabled' | 'notifications_disabled';
     /**
-     * **Deprecated**. The permission that new repositories will be added to the team with when none is specified.
+     * **Closing down notice**. The permission that new repositories will be added to the team with when none is specified.
      * @defaultValue "pull"
      */
     permission?: 'pull' | 'push' | 'admin';
@@ -81531,7 +86882,8 @@ export async function teamsUpdateInOrg<FetcherData extends r.BaseFetcherData>(
  * If you are an organization
  * owner, deleting a parent team will delete all of its child teams as well.
  *
- * **Note:** You can also specify a team by
+ * > [!NOTE]
+ * > You can also specify a team by
  * `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#delete-a-team}
  * Tags: teams
@@ -81556,11 +86908,12 @@ export async function teamsDeleteInOrg<FetcherData extends r.BaseFetcherData>(
  * List discussions
  * List all discussions on a team's page.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route
- * `GET /organizations/{org_id}/team/{team_id}/discussions`.
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the
+ * route `GET /organizations/{org_id}/team/{team_id}/discussions`.
  *
- * OAuth app tokens and personal access tokens (classic) need
- * the `read:discussion` scope to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#list-discussions}
  * Tags: teams
  */
@@ -81604,14 +86957,15 @@ export async function teamsListDiscussionsInOrg<
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
  * limits for the
  * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
- * "[Best practices for using the REST
- * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * **Note:** You can also specify a team
- * by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
+ * >
+ * [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `POST
+ * /organizations/{org_id}/team/{team_id}/discussions`.
  *
- * OAuth app tokens
- * and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#create-a-discussion}
  * Tags: teams
  */
@@ -81658,7 +87012,8 @@ export async function teamsCreateDiscussionInOrg<
  * Get a discussion
  * Get a specific discussion on a team's page.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the
  * route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
  *
  * OAuth app tokens and personal
@@ -81695,8 +87050,9 @@ export async function teamsGetDiscussionInOrg<
  * Update a discussion
  * Edits the title and body text of a discussion post. Only the parameters you provide are updated.
  *
- * **Note:** You can also
- * specify a team by `org_id` and `team_id` using the route `PATCH
+ * > [!NOTE]
+ * > You can
+ * also specify a team by `org_id` and `team_id` using the route `PATCH
  * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
  *
  * OAuth app tokens and personal access tokens
@@ -81744,11 +87100,12 @@ export async function teamsUpdateDiscussionInOrg<
  * Delete a discussion
  * Delete a discussion from a team's page.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route
- * `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the
+ * route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
  *
- * OAuth app tokens and personal access
- * tokens (classic) need the `write:discussion` scope to use this endpoint.
+ * OAuth app tokens and personal
+ * access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#delete-a-discussion}
  * Tags: teams
  */
@@ -81775,11 +87132,12 @@ export async function teamsDeleteDiscussionInOrg<
  * List discussion comments
  * List all comments on a team discussion.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route
- * `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the
+ * route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
  *
- * OAuth app tokens and personal
- * access tokens (classic) need the `read:discussion` scope to use this endpoint.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments}
  * Tags: teams
  */
@@ -81825,11 +87183,11 @@ export async function teamsListDiscussionCommentsInOrg<
  * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
  * limits for the
  * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
- * "[Best practices for using the REST
- * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ * "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * **Note:** You can also specify a team
- * by `org_id` and `team_id` using the route `POST
+ * >
+ * [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `POST
  * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
  *
  * OAuth app tokens and personal access
@@ -81873,11 +87231,12 @@ export async function teamsCreateDiscussionCommentInOrg<
  * Get a discussion comment
  * Get a specific comment on a team discussion.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the
- * route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using
+ * the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
  *
- * OAuth app
- * tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment}
  * Tags: teams
  */
@@ -81911,11 +87270,13 @@ export async function teamsGetDiscussionCommentInOrg<
  * Update a discussion comment
  * Edits the body text of a discussion comment.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the
- * route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using
+ * the route `PATCH
+ * /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
  *
- * OAuth
- * app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
+ * OAuth app tokens and
+ * personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment}
  * Tags: teams
  */
@@ -81956,11 +87317,12 @@ export async function teamsUpdateDiscussionCommentInOrg<
  * Delete a discussion comment
  * Deletes a comment on a team discussion.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route
- * `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the
+ * route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
  *
- * OAuth app
- * tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment}
  * Tags: teams
  */
@@ -81989,7 +87351,8 @@ export async function teamsDeleteDiscussionCommentInOrg<
  * List the reactions to a [team discussion
  * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
  *
- * **Note:** You can also
+ * > [!NOTE]
+ * > You can also
  * specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
  *
@@ -82044,7 +87407,8 @@ export async function reactionsListForTeamDiscussionCommentInOrg<
  * A response with an HTTP
  * `200` status means that you already added the reaction type to this team discussion comment.
  *
- * **Note:** You can also
+ * > [!NOTE]
+ * > You can also
  * specify a team by `org_id` and `team_id` using the route `POST
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
  *
@@ -82097,7 +87461,8 @@ export async function reactionsCreateForTeamDiscussionCommentInOrg<
 }
 /**
  * Delete team discussion comment reaction
- * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE
+ * > [!NOTE]
+ * > You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
  *
  * Delete
@@ -82134,7 +87499,8 @@ export async function reactionsDeleteForTeamDiscussionComment<
  * List reactions for a team discussion
  * List the reactions to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
  *
- * **Note:**
+ * > [!NOTE]
+ * >
  * You can also specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
  *
@@ -82187,7 +87553,8 @@ export async function reactionsListForTeamDiscussionInOrg<
  * A response
  * with an HTTP `200` status means that you already added the reaction type to this team discussion.
  *
- * **Note:** You can
+ * > [!NOTE]
+ * > You can
  * also specify a team by `org_id` and `team_id` using the route `POST
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
  *
@@ -82239,7 +87606,8 @@ export async function reactionsCreateForTeamDiscussionInOrg<
 }
 /**
  * Delete team discussion reaction
- * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE
+ * > [!NOTE]
+ * > You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE
  * /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
  *
  * Delete a reaction to a
@@ -82276,7 +87644,8 @@ export async function reactionsDeleteForTeamDiscussion<
  * following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a
  * GitHub member, the `login` field in the return hash will be `null`.
  *
- * **Note:** You can also specify a team by `org_id`
+ * > [!NOTE]
+ * > You can also specify a team by `org_id`
  * and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/invitations`.
  * Learn more at {@link https://docs.github.com/rest/teams/members#list-pending-team-invitations}
  * Tags: teams
@@ -82340,11 +87709,12 @@ export async function teamsListMembersInOrg<
  * To get a user's membership with a team, the team must be visible
  * to the authenticated user.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/{org_id}/team/{team_id}/memberships/{username}`.
  *
- * **Note:**
- * The response contains the `state` of the
+ * > [!NOTE]
+ * > The response contains the `state` of the
  * membership and the member's `role`.
  *
  * The `role` for organization owners is set to `maintainer`. For more information
@@ -82382,7 +87752,8 @@ export async function teamsGetMembershipForUserInOrg<
  * information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the
  * GitHub Help documentation.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's
+ * > [!NOTE]
+ * > When you have team synchronization set up for a team with your organization's
  * identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's
  * membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through
  * your identity provider, which automatically adds and removes team members in an organization. For more information, see
@@ -82399,7 +87770,8 @@ export async function teamsGetMembershipForUserInOrg<
  * already a member of the team, this endpoint will update the role of the team member's role. To update the membership of
  * a team member, the authenticated user must be an organization owner or a team maintainer.
  *
- * **Note:** You can also
+ * > [!NOTE]
+ * > You can also
  * specify a team by `org_id` and `team_id` using the route `PUT
  * /organizations/{org_id}/team/{team_id}/memberships/{username}`.
  * Learn more at {@link https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user}
@@ -82447,14 +87819,16 @@ export async function teamsAddOrUpdateMembershipForUserInOrg<
  * products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help
  * documentation.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity
+ * > [!NOTE]
+ * > When you have team synchronization set up for a team with your organization's identity
  * provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you
  * have access to manage group membership in your IdP, you can manage GitHub team membership through your identity
  * provider, which automatically adds and removes team members in an organization. For more information, see
  * "[Synchronizing teams between your identity provider and
  * GitHub](https://docs.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
  *
- * **Note:**
+ * > [!NOTE]
+ * >
  * You can also specify a team by `org_id` and `team_id` using the route `DELETE
  * /organizations/{org_id}/team/{team_id}/memberships/{username}`.
  * Learn more at {@link https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user}
@@ -82483,7 +87857,8 @@ export async function teamsRemoveMembershipForUserInOrg<
  * List team projects
  * Lists the organization projects for a team.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the
  * route `GET /organizations/{org_id}/team/{team_id}/projects`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-projects}
  * Tags: teams
@@ -82514,8 +87889,9 @@ export async function teamsListProjectsInOrg<
  * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes
  * projects inherited from a parent team.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route
- * `GET /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the
+ * route `GET /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project}
  * Tags: teams
  */
@@ -82546,7 +87922,8 @@ export async function teamsCheckPermissionsForProjectInOrg<
  * authenticated user must have `admin` permissions for the project. The project and team must be part of the same
  * organization.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `PUT
  * /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions}
  * Tags: teams
@@ -82593,7 +87970,8 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg<
  * the team and project, or `admin` access to the team or project. This endpoint removes the project from the team, but
  * does not delete the project.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `DELETE
  * /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team}
  * Tags: teams
@@ -82621,7 +87999,8 @@ export async function teamsRemoveProjectInOrg<
  * List team repositories
  * Lists a team's repositories visible to the authenticated user.
  *
- * **Note:** You can also specify a team by `org_id` and
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and
  * `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-repositories}
  * Tags: teams
@@ -82672,7 +88051,8 @@ export async function teamsListReposInOrg<
  * for that repository, and your token must have the `repo` or `admin:org` scope. Otherwise, you will receive a `404 Not
  * Found` response status.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `GET
  * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository}
  * Tags: teams
@@ -82716,7 +88096,8 @@ export async function teamsCheckPermissionsForRepoInOrg<
  * parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see
  * "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
  *
- * **Note:** You can
+ * > [!NOTE]
+ * > You can
  * also specify a team by `org_id` and `team_id` using the route `PUT
  * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  *
@@ -82739,7 +88120,6 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg<
   body: {
     /**
      * The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
-     * @defaultValue "push"
      */
     permission?: string;
   },
@@ -82758,10 +88138,11 @@ export async function teamsAddOrUpdateRepoPermissionsInOrg<
  * Remove a repository from a team
  * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team.
  * To remove a repository from a team as an organization member, the authenticated user must have admin access to the
- * repository and must be able to see the team. This does not delete the repository, it just removes it from the
- * team.
+ * repository and must be able to see the team. This does not delete the repository, it just removes it from the team.
  *
- * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE
+ * >
+ * [!NOTE]
+ * > You can also specify a team by `org_id` and `team_id` using the route `DELETE
  * /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-repository-from-a-team}
  * Tags: teams
@@ -82790,7 +88171,8 @@ export async function teamsRemoveRepoInOrg<
  * List child teams
  * Lists the child teams of the team specified by `{team_slug}`.
  *
- * **Note:** You can also specify a team by `org_id` and
+ * > [!NOTE]
+ * > You can also specify a team by `org_id` and
  * `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/teams`.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-child-teams}
  * Tags: teams
@@ -82818,15 +88200,24 @@ export async function teamsListChildInOrg<
 }
 /**
  * Enable or disable a security feature for an organization
- * Enables or disables the specified security feature for all eligible repositories in an organization. For more
- * information, see "[Managing security managers in your
+ * > [!WARNING]
+ * > **Closing down notice:** The ability to enable or disable a security feature for all eligible
+ * repositories in an organization is closing down. Please use [code security
+ * configurations](https://docs.github.com/rest/code-security/configurations) instead. For more information, see the
+ * [changelog](https://github.blog/changelog/2024-07-22-deprecation-of-api-endpoint-to-enable-or-disable-a-security-feature-for-an-organization/).
+ *
+ * Enables
+ * or disables the specified security feature for all eligible repositories in an organization. For more information, see
+ * "[Managing security managers in your
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
  *
  * The
  * authenticated user must be an organization owner or be member of a team with the security manager role to use this
  * endpoint.
  *
- * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org`, `write:org`, or `repo` scopes to
+ * use this endpoint.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#enable-or-disable-a-security-feature-for-an-organization}
  * Tags: orgs
  */
@@ -82860,7 +88251,12 @@ export async function orgsEnableOrDisableSecurityProductOnAllOrgRepos<
 }
 /**
  * Get a project card
- * Gets information about a project card.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/cards#get-a-project-card}
  * Tags: projects
  */
@@ -82893,6 +88289,12 @@ export async function projectsGetCard<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Update an existing project card
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/cards#update-an-existing-project-card}
  * Tags: projects
  */
@@ -82938,7 +88340,12 @@ export async function projectsUpdateCard<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Delete a project card
- * Deletes a project card
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/cards#delete-a-project-card}
  * Tags: projects
  */
@@ -82972,6 +88379,12 @@ export async function projectsDeleteCard<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Move a project card
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/cards#move-a-project-card}
  * Tags: projects
  */
@@ -83035,7 +88448,12 @@ export async function projectsMoveCard<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Get a project column
- * Gets information about a project column.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/columns#get-a-project-column}
  * Tags: projects
  */
@@ -83068,6 +88486,12 @@ export async function projectsGetColumn<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Update an existing project column
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/columns#update-an-existing-project-column}
  * Tags: projects
  */
@@ -83109,7 +88533,12 @@ export async function projectsUpdateColumn<
 }
 /**
  * Delete a project column
- * Deletes a project column.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/columns#delete-a-project-column}
  * Tags: projects
  */
@@ -83137,7 +88566,12 @@ export async function projectsDeleteColumn<
 }
 /**
  * List project cards
- * Lists the project cards in a project.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/cards#list-project-cards}
  * Tags: projects
  */
@@ -83173,6 +88607,12 @@ export async function projectsListCards<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Create a project card
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/cards#create-a-project-card}
  * Tags: projects
  */
@@ -83238,6 +88678,12 @@ export async function projectsCreateCard<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Move a project column
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/columns#move-a-project-column}
  * Tags: projects
  */
@@ -83272,8 +88718,12 @@ export async function projectsMoveColumn<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Get a project
- * Gets a project by its `id`. Returns a `404 Not Found` status if projects are disabled. If you do not have sufficient
- * privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#get-a-project}
  * Tags: projects
  */
@@ -83305,8 +88755,12 @@ export async function projectsGet<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Update a project
- * Updates a project board's information. Returns a `404 Not Found` status if projects are disabled. If you do not have
- * sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#update-a-project}
  * Tags: projects
  */
@@ -83374,7 +88828,12 @@ export async function projectsUpdate<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Delete a project
- * Deletes a project board. Returns a `404 Not Found` status if projects are disabled.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#delete-a-project}
  * Tags: projects
  */
@@ -83409,10 +88868,12 @@ export async function projectsDelete<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * List project collaborators
- * Lists the collaborators for an organization project. For a project, the list of collaborators includes outside
- * collaborators, organization members that are direct collaborators, organization members with access through team
- * memberships, organization members with access through default organization permissions, and organization owners. You
- * must be an organization owner or a project `admin` to list collaborators.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#list-project-collaborators}
  * Tags: projects
  */
@@ -83446,8 +88907,12 @@ export async function projectsListCollaborators<
 }
 /**
  * Add project collaborator
- * Adds a collaborator to an organization project and sets their permission level. You must be an organization owner or a
- * project `admin` to add a collaborator.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#add-project-collaborator}
  * Tags: projects
  */
@@ -83487,8 +88952,12 @@ export async function projectsAddCollaborator<
 }
 /**
  * Remove user as a collaborator
- * Removes a collaborator from an organization project. You must be an organization owner or a project `admin` to remove a
- * collaborator.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#remove-user-as-a-collaborator}
  * Tags: projects
  */
@@ -83519,9 +88988,12 @@ export async function projectsRemoveCollaborator<
 }
 /**
  * Get project permission for a user
- * Returns the collaborator's permission level for an organization project. Possible values for the `permission` key:
- * `admin`, `write`, `read`, `none`. You must be an organization owner or a project `admin` to review a user's permission
- * level.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/collaborators#get-project-permission-for-a-user}
  * Tags: projects
  */
@@ -83552,7 +89024,12 @@ export async function projectsGetPermissionForUser<
 }
 /**
  * List project columns
- * Lists the project columns in a project.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/columns#list-project-columns}
  * Tags: projects
  */
@@ -83591,7 +89068,12 @@ export async function projectsListColumns<
 }
 /**
  * Create a project column
- * Creates a new project column.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/columns#create-a-project-column}
  * Tags: projects
  */
@@ -83634,7 +89116,8 @@ export async function projectsCreateColumn<
 }
 /**
  * Get rate limit status for the authenticated user
- * **Note:** Accessing this endpoint does not count against your REST API rate limit.
+ * > [!NOTE]
+ * > Accessing this endpoint does not count against your REST API rate limit.
  *
  * Some categories of endpoints have
  * custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the
@@ -83669,9 +89152,10 @@ export async function projectsCreateColumn<
  * For more information about API versions, see "[API
  * Versions](https://docs.github.com/rest/about-the-rest-api/api-versions)."
  *
- * **Note:** The `rate` object is deprecated. If
- * you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate`
- * object. The `core` object contains the same information that is present in the `rate` object.
+ * > [!NOTE]
+ * > The `rate` object is closing
+ * down. If you're writing new API client code or updating existing code, you should use the `core` object instead of the
+ * `rate` object. The `core` object contains the same information that is present in the `rate` object.
  * Learn more at {@link https://docs.github.com/rest/rate-limit/rate-limit#get-rate-limit-status-for-the-authenticated-user}
  * Tags: rate-limit
  */
@@ -83697,9 +89181,11 @@ export async function rateLimitGet<FetcherData extends r.BaseFetcherData>(
  * The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository
  * was forked from, `source` is the ultimate source for the network.
  *
- * **Note:** In order to see the `security_and_analysis`
- * block for a repository you must have admin permissions for the repository or be an owner or security manager for the
- * organization that owns the repository. For more information, see "[Managing security managers in your
+ * > [!NOTE]
+ * > In order to see the
+ * `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or
+ * security manager for the organization that owns the repository. For more information, see "[Managing security managers
+ * in your
  * organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
  * Learn more at {@link https://docs.github.com/rest/repos/repos#get-a-repository}
  * Tags: repos
@@ -83804,6 +89290,24 @@ export async function reposUpdate<FetcherData extends r.BaseFetcherData>(
          */
         status?: string;
       };
+      /**
+       * Use the `status` property to enable or disable secret scanning AI detection for this repository. For more information, see "[Responsible detection of generic secrets with AI](https://docs.github.com/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/generic-secret-detection/responsible-ai-generic-secrets)."
+       */
+      secret_scanning_ai_detection?: {
+        /**
+         * Can be `enabled` or `disabled`.
+         */
+        status?: string;
+      };
+      /**
+       * Use the `status` property to enable or disable secret scanning non-provider patterns for this repository. For more information, see "[Supported secret scanning patterns](/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets)."
+       */
+      secret_scanning_non_provider_patterns?: {
+        /**
+         * Can be `enabled` or `disabled`.
+         */
+        status?: string;
+      };
     } | null;
     /**
      * Either `true` to enable issues for this repository or `false` to disable them.
@@ -83856,11 +89360,13 @@ export async function reposUpdate<FetcherData extends r.BaseFetcherData>(
      */
     allow_update_branch?: boolean;
     /**
-     * Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+     * Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property is closing down. Please use `squash_merge_commit_title` instead.
      * @deprecated
      */
     use_squash_pr_title_as_default?: boolean;
     /**
+     * Required when using `squash_merge_commit_message`.
+     *
      * The default value for a squash merge commit title:
      *
      * - `PR_TITLE` - default to the pull request's title.
@@ -83876,6 +89382,8 @@ export async function reposUpdate<FetcherData extends r.BaseFetcherData>(
      */
     squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
     /**
+     * Required when using `merge_commit_message`.
+     *
      * The default value for a merge commit title.
      *
      * - `PR_TITLE` - default to the pull request's title.
@@ -84909,6 +90417,7 @@ export async function actionsGenerateRunnerJitconfigForRepo<
       }
     >
   | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
   | r.StatusResponse<422, ValidationErrorSimple>
 > {
   const req = await ctx.createRequest({
@@ -85307,8 +90816,8 @@ export async function actionsRemoveCustomLabelFromSelfHostedRunnerForRepo<
  * OAuth app tokens and personal access tokens (classic) need the `repo` scope to
  * use this endpoint with a private repository.
  *
- * This API will return up to 1,000 results for each search when using the
- * following parameters: `actor`, `branch`, `check_suite_id`, `created`, `event`, `head_sha`, `status`.
+ * This endpoint will return up to 1,000 results for each search when using
+ * the following parameters: `actor`, `branch`, `check_suite_id`, `created`, `event`, `head_sha`, `status`.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-repository}
  * Tags: actions
  */
@@ -85742,10 +91251,10 @@ export async function actionsCancelWorkflowRun<
  * see "[Using environments for
  * deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
  *
- * **Note:**
- * GitHub Apps can only review their own custom deployment protection rules.
- * To approve or reject pending deployments that
- * are waiting for review from a specific person or team, see [`POST
+ * >
+ * [!NOTE]
+ * > GitHub Apps can only review their own custom deployment protection rules. To approve or reject pending
+ * deployments that are waiting for review from a specific person or team, see [`POST
  * /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments`](/rest/actions/workflow-runs#review-pending-deployments-for-a-workflow-run).
  *
  * OAuth
@@ -86282,11 +91791,11 @@ export async function actionsCreateOrUpdateRepoSecret<
     /**
      * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/rest/actions/secrets#get-a-repository-public-key) endpoint.
      */
-    encrypted_value?: string;
+    encrypted_value: string;
     /**
      * ID of the key you used to encrypt the secret.
      */
-    key_id?: string;
+    key_id: string;
   },
   opts?: FetcherData,
 ): Promise<
@@ -86683,7 +92192,7 @@ export async function actionsCreateWorkflowDispatch<
      * Input keys and values configured in the workflow file. The maximum number of properties is 10. Any default properties configured in the workflow file will be used when `inputs` are omitted.
      */
     inputs?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
   },
   opts?: FetcherData,
@@ -86737,6 +92246,9 @@ export async function actionsEnableWorkflow<
  *
  * OAuth app tokens and personal access tokens (classic) need the `repo` scope to
  * use this endpoint with a private repository.
+ *
+ * This endpoint will return up to 1,000 results for each search when using
+ * the following parameters: `actor`, `branch`, `check_suite_id`, `created`, `event`, `head_sha`, `status`.
  * Learn more at {@link https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-workflow}
  * Tags: actions
  */
@@ -86979,6 +92491,129 @@ export async function issuesCheckUserCanBeAssigned<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * Create an attestation
+ * Store an artifact attestation and associate it with a repository.
+ *
+ * The authenticated user must have write permission to
+ * the repository and, if using a fine-grained access token, the `attestations:write` permission is required.
+ *
+ * Artifact
+ * attestations are meant to be created using the [attest action](https://github.com/actions/attest). For more information,
+ * see our guide on [using artifact attestations to establish a build's
+ * provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
+ * Learn more at {@link https://docs.github.com/rest/repos/repos#create-an-attestation}
+ * Tags: repos
+ */
+export async function reposCreateAttestation<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+  },
+  body: {
+    /**
+     * The attestation's Sigstore Bundle.
+     * Refer to the [Sigstore Bundle Specification](https://github.com/sigstore/protobuf-specs/blob/main/protos/sigstore_bundle.proto) for more information.
+     */
+    bundle: {
+      mediaType?: string;
+      verificationMaterial?: {
+        [key: string]: unknown;
+      };
+      dsseEnvelope?: {
+        [key: string]: unknown;
+      };
+    };
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      201,
+      {
+        /**
+         * The ID of the attestation.
+         */
+        id?: number;
+      }
+    >
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/attestations',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * List attestations
+ * List a collection of artifact attestations with a given subject digest that are associated with a repository.
+ *
+ * The
+ * authenticated user making the request must have read access to the repository. In addition, when using a fine-grained
+ * access token the `attestations:read` permission is required.
+ *
+ * **Please note:** in order to offer meaningful security
+ * benefits, an attestation's signature and timestamps **must** be cryptographically verified, and the identity of the
+ * attestation signer **must** be validated. Attestations can be verified using the [GitHub CLI `attestation verify`
+ * command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use
+ * artifact attestations to establish a build's
+ * provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
+ * Learn more at {@link https://docs.github.com/rest/repos/repos#list-attestations}
+ * Tags: repos
+ */
+export async function reposListAttestations<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    per_page?: number;
+    before?: string;
+    after?: string;
+    subject_digest: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<
+    200,
+    {
+      attestations?: {
+        /**
+         * The attestation's Sigstore Bundle.
+         * Refer to the [Sigstore Bundle Specification](https://github.com/sigstore/protobuf-specs/blob/main/protos/sigstore_bundle.proto) for more information.
+         */
+        bundle?: {
+          mediaType?: string;
+          verificationMaterial?: {
+            [key: string]: unknown;
+          };
+          dsseEnvelope?: {
+            [key: string]: unknown;
+          };
+        };
+        repository_id?: number;
+        bundle_url?: string;
+      }[];
+    }
+  >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/attestations/{subject_digest}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'before', 'after'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * Get all autolinks of a repository
  * Gets all autolinks that are configured for a repository.
  *
@@ -87102,11 +92737,11 @@ export async function reposDeleteAutolink<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Check if automated security fixes are enabled for a repository
- * Shows whether automated security fixes are enabled, disabled or paused for a repository. The authenticated user must
- * have admin read access to the repository. For more information, see "[Configuring automated security
- * fixes](https://docs.github.com/articles/configuring-automated-security-fixes)".
- * Learn more at {@link https://docs.github.com/rest/repos/repos#check-if-automated-security-fixes-are-enabled-for-a-repository}
+ * Check if Dependabot security updates are enabled for a repository
+ * Shows whether Dependabot security updates are enabled, disabled or paused for a repository. The authenticated user must
+ * have admin read access to the repository. For more information, see "[Configuring Dependabot security
+ * updates](https://docs.github.com/articles/configuring-automated-security-fixes)".
+ * Learn more at {@link https://docs.github.com/rest/repos/repos#check-if-dependabot-security-updates-are-enabled-for-a-repository}
  * Tags: repos
  */
 export async function reposCheckAutomatedSecurityFixes<
@@ -87131,11 +92766,11 @@ export async function reposCheckAutomatedSecurityFixes<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Enable automated security fixes
- * Enables automated security fixes for a repository. The authenticated user must have admin access to the repository. For
- * more information, see "[Configuring automated security
- * fixes](https://docs.github.com/articles/configuring-automated-security-fixes)".
- * Learn more at {@link https://docs.github.com/rest/repos/repos#enable-automated-security-fixes}
+ * Enable Dependabot security updates
+ * Enables Dependabot security updates for a repository. The authenticated user must have admin access to the repository.
+ * For more information, see "[Configuring Dependabot security
+ * updates](https://docs.github.com/articles/configuring-automated-security-fixes)".
+ * Learn more at {@link https://docs.github.com/rest/repos/repos#enable-dependabot-security-updates}
  * Tags: repos
  */
 export async function reposEnableAutomatedSecurityFixes<
@@ -87157,11 +92792,11 @@ export async function reposEnableAutomatedSecurityFixes<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Disable automated security fixes
- * Disables automated security fixes for a repository. The authenticated user must have admin access to the repository. For
- * more information, see "[Configuring automated security
- * fixes](https://docs.github.com/articles/configuring-automated-security-fixes)".
- * Learn more at {@link https://docs.github.com/rest/repos/repos#disable-automated-security-fixes}
+ * Disable Dependabot security updates
+ * Disables Dependabot security updates for a repository. The authenticated user must have admin access to the repository.
+ * For more information, see "[Configuring Dependabot security
+ * updates](https://docs.github.com/articles/configuring-automated-security-fixes)".
+ * Learn more at {@link https://docs.github.com/rest/repos/repos#disable-dependabot-security-updates}
  * Tags: repos
  */
 export async function reposDisableAutomatedSecurityFixes<
@@ -87274,11 +92909,13 @@ export async function reposGetBranchProtection<
  *
  * Protecting a branch requires admin or owner permissions to the repository.
  *
- * **Note**:
- * Passing new arrays of `users` and `teams` replaces their previous values.
+ * >
+ * [!NOTE]
+ * > Passing new arrays of `users` and `teams` replaces their previous values.
  *
- * **Note**: The list of users, apps, and teams
- * in total is limited to 100 items.
+ * > [!NOTE]
+ * > The list of users,
+ * apps, and teams in total is limited to 100 items.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#update-branch-protection}
  * Tags: repos
  */
@@ -87301,8 +92938,7 @@ export async function reposUpdateBranchProtection<
        */
       strict: boolean;
       /**
-       * **Deprecated**: The list of status checks to require in order to merge into this branch. If any of these checks have recently been set by a particular GitHub App, they will be required to come from that app in future for the branch to merge. Use `checks` instead of `contexts` for more fine-grained control.
-       *
+       * **Closing down notice**: The list of status checks to require in order to merge into this branch. If any of these checks have recently been set by a particular GitHub App, they will be required to come from that app in future for the branch to merge. Use `checks` instead of `contexts` for more fine-grained control.
        * @deprecated
        */
       contexts: string[];
@@ -87613,7 +93249,8 @@ export async function reposGetPullRequestReviewProtection<
  * Updating pull request review enforcement requires admin or owner permissions to the
  * repository and branch protection to be enabled.
  *
- * **Note**: Passing new arrays of `users` and `teams` replaces their
+ * > [!NOTE]
+ * > Passing new arrays of `users` and `teams` replaces their
  * previous values.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#update-pull-request-review-protection}
  * Tags: repos
@@ -87743,7 +93380,8 @@ export async function reposDeletePullRequestReviewProtection<
  * commits on this branch. For more information, see [Signing commits with
  * GPG](https://docs.github.com/articles/signing-commits-with-gpg) in GitHub Help.
  *
- * **Note**: You must enable branch
+ * > [!NOTE]
+ * > You must enable branch
  * protection to require signed commits.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-commit-signature-protection}
  * Tags: repos
@@ -87893,8 +93531,7 @@ export async function reposUpdateStatusCheckProtection<
      */
     strict?: boolean;
     /**
-     * **Deprecated**: The list of status checks to require in order to merge into this branch. If any of these checks have recently been set by a particular GitHub App, they will be required to come from that app in future for the branch to merge. Use `checks` instead of `contexts` for more fine-grained control.
-     *
+     * **Closing down notice**: The list of status checks to require in order to merge into this branch. If any of these checks have recently been set by a particular GitHub App, they will be required to come from that app in future for the branch to merge. Use `checks` instead of `contexts` for more fine-grained control.
      * @deprecated
      */
     contexts?: string[];
@@ -88118,7 +93755,8 @@ export async function reposRemoveStatusCheckContexts<
  *
  * Lists who has access to this protected branch.
  *
- * **Note**: Users, apps, and teams
+ * > [!NOTE]
+ * > Users, apps, and teams
  * `restrictions` are only available for organization-owned repositories.
  * Learn more at {@link https://docs.github.com/rest/branches/branch-protection#get-access-restrictions}
  * Tags: repos
@@ -88237,14 +93875,12 @@ export async function reposAddAppAccessRestrictions<
     repo: string;
     branch: string;
   },
-  body:
-    | {
-        /**
-         * The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items.
-         */
-        apps: string[];
-      }
-    | string[],
+  body: {
+    /**
+     * The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items.
+     */
+    apps: string[];
+  },
   opts?: FetcherData,
 ): Promise<
   r.StatusResponse<200, Integration[]> | r.StatusResponse<422, ValidationError>
@@ -88287,14 +93923,12 @@ export async function reposSetAppAccessRestrictions<
     repo: string;
     branch: string;
   },
-  body:
-    | {
-        /**
-         * The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items.
-         */
-        apps: string[];
-      }
-    | string[],
+  body: {
+    /**
+     * The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items.
+     */
+    apps: string[];
+  },
   opts?: FetcherData,
 ): Promise<
   r.StatusResponse<200, Integration[]> | r.StatusResponse<422, ValidationError>
@@ -88336,14 +93970,12 @@ export async function reposRemoveAppAccessRestrictions<
     repo: string;
     branch: string;
   },
-  body:
-    | {
-        /**
-         * The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items.
-         */
-        apps: string[];
-      }
-    | string[],
+  body: {
+    /**
+     * The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items.
+     */
+    apps: string[];
+  },
   opts?: FetcherData,
 ): Promise<
   r.StatusResponse<200, Integration[]> | r.StatusResponse<422, ValidationError>
@@ -88581,14 +94213,12 @@ export async function reposAddUserAccessRestrictions<
     repo: string;
     branch: string;
   },
-  body:
-    | {
-        /**
-         * The username for users
-         */
-        users: string[];
-      }
-    | string[],
+  body: {
+    /**
+     * The username for users
+     */
+    users: string[];
+  },
   opts?: FetcherData,
 ): Promise<
   r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<422, ValidationError>
@@ -88631,14 +94261,12 @@ export async function reposSetUserAccessRestrictions<
     repo: string;
     branch: string;
   },
-  body:
-    | {
-        /**
-         * The username for users
-         */
-        users: string[];
-      }
-    | string[],
+  body: {
+    /**
+     * The username for users
+     */
+    users: string[];
+  },
   opts?: FetcherData,
 ): Promise<
   r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<422, ValidationError>
@@ -88681,14 +94309,12 @@ export async function reposRemoveUserAccessRestrictions<
     repo: string;
     branch: string;
   },
-  body:
-    | {
-        /**
-         * The username for users
-         */
-        users: string[];
-      }
-    | string[],
+  body: {
+    /**
+     * The username for users
+     */
+    users: string[];
+  },
   opts?: FetcherData,
 ): Promise<
   r.StatusResponse<200, SimpleUser[]> | r.StatusResponse<422, ValidationError>
@@ -88706,9 +94332,10 @@ export async function reposRemoveUserAccessRestrictions<
  * Rename a branch
  * Renames a branch in a repository.
  *
- * **Note:** Although the API responds immediately, the branch rename process might take
- * some extra time to complete in the background. You won't be able to push to the old branch name while the rename process
- * is in progress. For more information, see "[Renaming a
+ * > [!NOTE]
+ * > Although the API responds immediately, the branch rename process might
+ * take some extra time to complete in the background. You won't be able to push to the old branch name while the rename
+ * process is in progress. For more information, see "[Renaming a
  * branch](https://docs.github.com/github/administering-a-repository/renaming-a-branch)".
  *
  * The authenticated user must have
@@ -88760,7 +94387,8 @@ export async function reposRenameBranch<FetcherData extends r.BaseFetcherData>(
  * runs with the same name to 1000. Once these check runs exceed 1000, GitHub will start to automatically delete older
  * check runs.
  *
- * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were
+ * > [!NOTE]
+ * > The Checks API only looks for pushes in the repository where the check suite or check run were
  * created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#create-a-check-run}
  * Tags: checks
@@ -88771,7 +94399,148 @@ export async function checksCreate<FetcherData extends r.BaseFetcherData>(
     owner: string;
     repo: string;
   },
-  body: unknown | unknown,
+  body: {
+    /**
+     * The name of the check. For example, "code-coverage".
+     */
+    name: string;
+    /**
+     * The SHA of the commit.
+     */
+    head_sha: string;
+    /**
+     * The URL of the integrator's site that has the full details of the check. If the integrator does not provide this, then the homepage of the GitHub app is used.
+     */
+    details_url?: string;
+    /**
+     * A reference for the run on the integrator's system.
+     */
+    external_id?: string;
+    /**
+     * The current status of the check run. Only GitHub Actions can set a status of `waiting`, `pending`, or `requested`.
+     * @defaultValue "queued"
+     */
+    status?:
+      | 'queued'
+      | 'in_progress'
+      | 'completed'
+      | 'waiting'
+      | 'requested'
+      | 'pending';
+    /**
+     * The time that the check run began. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    started_at?: Date;
+    /**
+     * **Required if you provide `completed_at` or a `status` of `completed`**. The final conclusion of the check.
+     * **Note:** Providing `conclusion` will automatically set the `status` parameter to `completed`. You cannot change a check run conclusion to `stale`, only GitHub can set this.
+     */
+    conclusion?:
+      | 'action_required'
+      | 'cancelled'
+      | 'failure'
+      | 'neutral'
+      | 'success'
+      | 'skipped'
+      | 'stale'
+      | 'timed_out';
+    /**
+     * The time the check completed. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    completed_at?: Date;
+    /**
+     * Check runs can accept a variety of data in the `output` object, including a `title` and `summary` and can optionally provide descriptive details about the run.
+     */
+    output?: {
+      /**
+       * The title of the check run.
+       */
+      title: string;
+      /**
+       * The summary of the check run. This parameter supports Markdown. **Maximum length**: 65535 characters.
+       */
+      summary: string;
+      /**
+       * The details of the check run. This parameter supports Markdown. **Maximum length**: 65535 characters.
+       */
+      text?: string;
+      /**
+       * Adds information from your analysis to specific lines of code. Annotations are visible on GitHub in the **Checks** and **Files changed** tab of the pull request. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/rest/checks/runs#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. GitHub Actions are limited to 10 warning annotations and 10 error annotations per step. For details about how you can view annotations on GitHub, see "[About status checks](https://docs.github.com/articles/about-status-checks#checks)".
+       */
+      annotations?: {
+        /**
+         * The path of the file to add an annotation to. For example, `assets/css/main.css`.
+         */
+        path: string;
+        /**
+         * The start line of the annotation. Line numbers start at 1.
+         */
+        start_line: number;
+        /**
+         * The end line of the annotation.
+         */
+        end_line: number;
+        /**
+         * The start column of the annotation. Annotations only support `start_column` and `end_column` on the same line. Omit this parameter if `start_line` and `end_line` have different values. Column numbers start at 1.
+         */
+        start_column?: number;
+        /**
+         * The end column of the annotation. Annotations only support `start_column` and `end_column` on the same line. Omit this parameter if `start_line` and `end_line` have different values.
+         */
+        end_column?: number;
+        /**
+         * The level of the annotation.
+         */
+        annotation_level: 'notice' | 'warning' | 'failure';
+        /**
+         * A short description of the feedback for these lines of code. The maximum size is 64 KB.
+         */
+        message: string;
+        /**
+         * The title that represents the annotation. The maximum size is 255 characters.
+         */
+        title?: string;
+        /**
+         * Details about this annotation. The maximum size is 64 KB.
+         */
+        raw_details?: string;
+      }[];
+      /**
+       * Adds images to the output displayed in the GitHub pull request UI.
+       */
+      images?: {
+        /**
+         * The alternative text for the image.
+         */
+        alt: string;
+        /**
+         * The full URL of the image.
+         */
+        image_url: string;
+        /**
+         * A short image description.
+         */
+        caption?: string;
+      }[];
+    };
+    /**
+     * Displays a button on GitHub that can be clicked to alert your app to do additional tasks. For example, a code linting app can display a button that automatically fixes detected errors. The button created in this object is displayed after the check run completes. When a user clicks the button, GitHub sends the [`check_run.requested_action` webhook](https://docs.github.com/webhooks/event-payloads/#check_run) to your app. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/rest/guides/using-the-rest-api-to-interact-with-checks#check-runs-and-requested-actions)."
+     */
+    actions?: {
+      /**
+       * The text to be displayed on a button in the web UI. The maximum size is 20 characters.
+       */
+      label: string;
+      /**
+       * A short explanation of what this action would do. The maximum size is 40 characters.
+       */
+      description: string;
+      /**
+       * A reference for the action on the integrator's system. The maximum size is 20 characters.
+       */
+      identifier: string;
+    }[];
+  } & (unknown | unknown),
   opts?: FetcherData,
 ): Promise<r.StatusResponse<201, CheckRun>> {
   const req = await ctx.createRequest({
@@ -88793,7 +94562,8 @@ export async function checksCreate<FetcherData extends r.BaseFetcherData>(
  * Get a check run
  * Gets a single check run using its `id`.
  *
- * **Note:** The Checks API only looks for pushes in the repository where the
+ * > [!NOTE]
+ * > The Checks API only looks for pushes in the repository where the
  * check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty
  * `pull_requests` array.
  *
@@ -88829,7 +94599,8 @@ export async function checksGet<FetcherData extends r.BaseFetcherData>(
  * Update a check run
  * Updates a check run for a specific commit in a repository.
  *
- * **Note:** The endpoints to manage checks only look for
+ * > [!NOTE]
+ * > The endpoints to manage checks only look for
  * pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are
  * not detected and return an empty `pull_requests` array.
  *
@@ -88845,7 +94616,143 @@ export async function checksUpdate<FetcherData extends r.BaseFetcherData>(
     repo: string;
     check_run_id: number;
   },
-  body: unknown | unknown,
+  body: {
+    /**
+     * The name of the check. For example, "code-coverage".
+     */
+    name?: string;
+    /**
+     * The URL of the integrator's site that has the full details of the check.
+     */
+    details_url?: string;
+    /**
+     * A reference for the run on the integrator's system.
+     */
+    external_id?: string;
+    /**
+     * This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    started_at?: Date;
+    /**
+     * The current status of the check run. Only GitHub Actions can set a status of `waiting`, `pending`, or `requested`.
+     */
+    status?:
+      | 'queued'
+      | 'in_progress'
+      | 'completed'
+      | 'waiting'
+      | 'requested'
+      | 'pending';
+    /**
+     * **Required if you provide `completed_at` or a `status` of `completed`**. The final conclusion of the check.
+     * **Note:** Providing `conclusion` will automatically set the `status` parameter to `completed`. You cannot change a check run conclusion to `stale`, only GitHub can set this.
+     */
+    conclusion?:
+      | 'action_required'
+      | 'cancelled'
+      | 'failure'
+      | 'neutral'
+      | 'success'
+      | 'skipped'
+      | 'stale'
+      | 'timed_out';
+    /**
+     * The time the check completed. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    completed_at?: Date;
+    /**
+     * Check runs can accept a variety of data in the `output` object, including a `title` and `summary` and can optionally provide descriptive details about the run.
+     */
+    output?: {
+      /**
+       * **Required**.
+       */
+      title?: string;
+      /**
+       * Can contain Markdown.
+       */
+      summary: string;
+      /**
+       * Can contain Markdown.
+       */
+      text?: string;
+      /**
+       * Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/rest/checks/runs#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. GitHub Actions are limited to 10 warning annotations and 10 error annotations per step. For details about annotations in the UI, see "[About status checks](https://docs.github.com/articles/about-status-checks#checks)".
+       */
+      annotations?: {
+        /**
+         * The path of the file to add an annotation to. For example, `assets/css/main.css`.
+         */
+        path: string;
+        /**
+         * The start line of the annotation. Line numbers start at 1.
+         */
+        start_line: number;
+        /**
+         * The end line of the annotation.
+         */
+        end_line: number;
+        /**
+         * The start column of the annotation. Annotations only support `start_column` and `end_column` on the same line. Omit this parameter if `start_line` and `end_line` have different values. Column numbers start at 1.
+         */
+        start_column?: number;
+        /**
+         * The end column of the annotation. Annotations only support `start_column` and `end_column` on the same line. Omit this parameter if `start_line` and `end_line` have different values.
+         */
+        end_column?: number;
+        /**
+         * The level of the annotation.
+         */
+        annotation_level: 'notice' | 'warning' | 'failure';
+        /**
+         * A short description of the feedback for these lines of code. The maximum size is 64 KB.
+         */
+        message: string;
+        /**
+         * The title that represents the annotation. The maximum size is 255 characters.
+         */
+        title?: string;
+        /**
+         * Details about this annotation. The maximum size is 64 KB.
+         */
+        raw_details?: string;
+      }[];
+      /**
+       * Adds images to the output displayed in the GitHub pull request UI.
+       */
+      images?: {
+        /**
+         * The alternative text for the image.
+         */
+        alt: string;
+        /**
+         * The full URL of the image.
+         */
+        image_url: string;
+        /**
+         * A short image description.
+         */
+        caption?: string;
+      }[];
+    };
+    /**
+     * Possible further actions the integrator can perform, which a user may trigger. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/rest/guides/using-the-rest-api-to-interact-with-checks#check-runs-and-requested-actions)."
+     */
+    actions?: {
+      /**
+       * The text to be displayed on a button in the web UI. The maximum size is 20 characters.
+       */
+      label: string;
+      /**
+       * A short explanation of what this action would do. The maximum size is 40 characters.
+       */
+      description: string;
+      /**
+       * A reference for the action on the integrator's system. The maximum size is 20 characters.
+       */
+      identifier: string;
+    }[];
+  } & (unknown | unknown),
   opts?: FetcherData,
 ): Promise<r.StatusResponse<200, CheckRun>> {
   const req = await ctx.createRequest({
@@ -88938,7 +94845,8 @@ export async function checksRerequestRun<FetcherData extends r.BaseFetcherData>(
  * when you've disabled automatic creation using "[Update repository preferences for check
  * suites](https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites)".
  *
- * **Note:** The
+ * > [!NOTE]
+ * > The
  * Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch
  * in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
  * `head_branch`.
@@ -89034,7 +94942,8 @@ export async function checksSetSuitesPreferences<
  * Get a check suite
  * Gets a single check suite using its `id`.
  *
- * **Note:** The Checks API only looks for pushes in the repository where the
+ * > [!NOTE]
+ * > The Checks API only looks for pushes in the repository where the
  * check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty
  * `pull_requests` array and a `null` value for `head_branch`.
  *
@@ -89070,12 +94979,13 @@ export async function checksGetSuite<FetcherData extends r.BaseFetcherData>(
  * List check runs in a check suite
  * Lists check runs for a check suite using its `id`.
  *
- * **Note:** The endpoints to manage checks only look for pushes in the
- * repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected
- * and return an empty `pull_requests` array.
+ * > [!NOTE]
+ * > The endpoints to manage checks only look for pushes in
+ * the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not
+ * detected and return an empty `pull_requests` array.
  *
- * OAuth app tokens and personal access tokens (classic) need the `repo` scope
- * to use this endpoint on a private repository.
+ * OAuth app tokens and personal access tokens (classic) need the
+ * `repo` scope to use this endpoint on a private repository.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#list-check-runs-in-a-check-suite}
  * Tags: checks
  */
@@ -89177,7 +95087,10 @@ export async function codeScanningListAlertsForRepo<
     page?: number;
     per_page?: number;
     ref?: CodeScanningRef;
+    pr?: number;
     direction?: 'asc' | 'desc';
+    before?: string;
+    after?: string;
     sort?: 'created' | 'updated';
     state?: CodeScanningAlertStateQuery;
     severity?: CodeScanningAlertSeverity;
@@ -89207,7 +95120,10 @@ export async function codeScanningListAlertsForRepo<
       'page',
       'per_page',
       'ref',
+      'pr',
       'direction',
+      'before',
+      'after',
       'sort',
       'state',
       'severity',
@@ -89327,6 +95243,159 @@ export async function codeScanningUpdateAlert<
   );
 }
 /**
+ * Get the status of an autofix for a code scanning alert
+ * Gets the status and description of an autofix for a code scanning alert.
+ *
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the
+ * `public_repo` scope to use this endpoint with only public repositories.
+ * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-the-status-of-an-autofix-for-a-code-scanning-alert}
+ * Tags: code-scanning
+ */
+export async function codeScanningGetAutofix<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    alert_number: AlertNumber;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeScanningAutofix>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CodeScanningAutofix]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Create an autofix for a code scanning alert
+ * Creates an autofix for a code scanning alert.
+ *
+ * If a new autofix is to be created as a result of this request or is
+ * currently being generated, then this endpoint will return a 202 Accepted response.
+ *
+ * If an autofix already exists for a
+ * given alert, then this endpoint will return a 200 OK response.
+ *
+ * OAuth app tokens and personal access tokens (classic)
+ * need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to
+ * use this endpoint with only public repositories.
+ * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#create-an-autofix-for-a-code-scanning-alert}
+ * Tags: code-scanning
+ */
+export async function codeScanningCreateAutofix<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    alert_number: AlertNumber;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeScanningAutofix>
+  | r.StatusResponse<202, CodeScanningAutofix>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix',
+    params,
+    method: r.HttpMethod.POST,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CodeScanningAutofix]]] } },
+      '202': { transforms: { date: [[['ref', $date_CodeScanningAutofix]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Commit an autofix for a code scanning alert
+ * Commits an autofix for a code scanning alert.
+ *
+ * If an autofix is commited as a result of this request, then this endpoint
+ * will return a 201 Created response.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use
+ * this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public
+ * repositories.
+ * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#commit-an-autofix-for-a-code-scanning-alert}
+ * Tags: code-scanning
+ */
+export async function codeScanningCommitAutofix<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    alert_number: AlertNumber;
+  },
+  body: CodeScanningAutofixCommits,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<201, CodeScanningAutofixCommitsResponse>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix/commits',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * List instances of a code scanning alert
  * Lists all instances of the specified code scanning alert.
  *
@@ -89347,6 +95416,7 @@ export async function codeScanningListAlertInstances<
     page?: number;
     per_page?: number;
     ref?: CodeScanningRef;
+    pr?: number;
   },
   opts?: FetcherData,
 ): Promise<
@@ -89366,7 +95436,7 @@ export async function codeScanningListAlertInstances<
     path: '/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['page', 'per_page', 'ref'],
+    queryParams: ['page', 'per_page', 'ref', 'pr'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
@@ -89387,13 +95457,13 @@ export async function codeScanningListAlertInstances<
  * For very old analyses this data is not available,
  * and `0` is returned in this field.
  *
- * **Deprecation
- * notice**:
- * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint.
- * The example response reflects this change. The tool name can now be found inside the `tool` field.
+ * > [!WARNING]
+ * > **Closing
+ * down notice:** The `tool_name` field is closing down and will, in future, not be included in the response for this
+ * endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
  *
- * OAuth app tokens and
- * personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public
+ * OAuth app
+ * tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public
  * repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository}
  * Tags: code-scanning
@@ -89409,6 +95479,7 @@ export async function codeScanningListRecentAnalyses<
     tool_guid?: CodeScanningAnalysisToolGuid;
     page?: number;
     per_page?: number;
+    pr?: number;
     ref?: CodeScanningRef;
     sarif_id?: CodeScanningAnalysisSarifId;
     direction?: 'asc' | 'desc';
@@ -89437,6 +95508,7 @@ export async function codeScanningListRecentAnalyses<
       'tool_guid',
       'page',
       'per_page',
+      'pr',
       'ref',
       'sarif_id',
       'direction',
@@ -89658,8 +95730,8 @@ export async function codeScanningDeleteAnalysis<
  * Lists the CodeQL databases that are available in a repository.
  *
  * OAuth app tokens and personal access tokens (classic)
- * need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to
- * use this endpoint with only public repositories.
+ * need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this
+ * endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#list-codeql-databases-for-a-repository}
  * Tags: code-scanning
  */
@@ -89717,9 +95789,8 @@ export async function codeScanningListCodeqlDatabases<
  * to make a second request to
  * get the redirect URL.
  *
- * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use
- * this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public
- * repositories.
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint
+ * with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#get-a-codeql-database-for-a-repository}
  * Tags: code-scanning
  */
@@ -89764,6 +95835,47 @@ export async function codeScanningGetCodeqlDatabase<
   );
 }
 /**
+ * Delete a CodeQL database
+ * Deletes a CodeQL database for a language in a repository.
+ *
+ * OAuth app tokens and personal access tokens (classic) need
+ * the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this
+ * endpoint with only public repositories.
+ * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#delete-a-codeql-database}
+ * Tags: code-scanning
+ */
+export async function codeScanningDeleteCodeqlDatabase<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    language: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/code-scanning/codeql/databases/{language}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * Create a CodeQL variant analysis
  * Creates a new CodeQL variant analysis, which will run a CodeQL query against one or more repositories.
  *
@@ -89789,7 +95901,25 @@ export async function codeScanningCreateVariantAnalysis<
     owner: string;
     repo: string;
   },
-  body: unknown | unknown | unknown,
+  body: {
+    language: CodeScanningVariantAnalysisLanguage;
+    /**
+     * A Base64-encoded tarball containing a CodeQL query and all its dependencies
+     */
+    query_pack: string;
+    /**
+     * List of repository names (in the form `owner/repo-name`) to run the query against. Precisely one property from `repositories`, `repository_lists` and `repository_owners` is required.
+     */
+    repositories?: string[];
+    /**
+     * List of repository lists to run the query against. Precisely one property from `repositories`, `repository_lists` and `repository_owners` is required.
+     */
+    repository_lists?: string[];
+    /**
+     * List of organization or user names whose repositories the query should be run against. Precisely one property from `repositories`, `repository_lists` and `repository_owners` is required.
+     */
+    repository_owners?: string[];
+  } & (unknown | unknown | unknown),
   opts?: FetcherData,
 ): Promise<
   | r.StatusResponse<201, CodeScanningVariantAnalysis>
@@ -90175,6 +96305,52 @@ export async function codeScanningGetSarif<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * Get the code security configuration associated with a repository
+ * Get the code security configuration that manages a repository's code security settings.
+ *
+ * The authenticated user must be
+ * an administrator or security manager for the organization to use this endpoint.
+ *
+ * OAuth app tokens and personal access
+ * tokens (classic) need the `repo` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/code-security/configurations#get-the-code-security-configuration-associated-with-a-repository}
+ * Tags: code-security
+ */
+export async function codeSecurityGetConfigurationForRepository<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CodeSecurityConfigurationForRepository>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<304, unknown>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/code-security-configuration',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['ref', $date_CodeSecurityConfigurationForRepository]]],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
  * List CODEOWNERS errors
  * List any syntax errors that are detected in the CODEOWNERS
  * file.
@@ -90289,7 +96465,7 @@ export async function codespacesCreateWithRepoForAuthenticatedUser<
      */
     location?: string;
     /**
-     * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is being deprecated.
+     * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is closing down.
      */
     geo?: 'EuropeWest' | 'SoutheastAsia' | 'UsEast' | 'UsWest';
     /**
@@ -90600,10 +96776,8 @@ export async function codespacesListRepoSecrets<
  * encrypt a secret before you can create or update
  * secrets.
  *
- * Anyone with read access to the repository can use this endpoint.
- *
- * If the repository is private, OAuth app
- * tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+ * If the repository is private, OAuth app tokens and personal access tokens (classic) need the `repo` scope to
+ * use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-public-key}
  * Tags: codespaces
  */
@@ -90921,7 +97095,8 @@ export async function reposAddCollaborator<
  *  - If the user still has read access to the repository, open pull
  * requests by this user from a fork will be denied.
  *
- * **Note**: A user can still have access to the repository through
+ * > [!NOTE]
+ * > A user can still have access to the repository through
  * organization permissions like base repository permissions.
  *
  * Although the API responds immediately, the additional
@@ -91269,7 +97444,8 @@ export async function reactionsCreateForCommitComment<
 }
 /**
  * Delete a commit comment reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE
+ * > [!NOTE]
+ * > You can also specify a repository by `repository_id` using the route `DELETE
  * /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
  *
  * Delete a reaction to a [commit
@@ -91314,36 +97490,37 @@ export async function reactionsDeleteForCommitComment<
  * | `signature` | `string` | The signature that was extracted from the commit.
  * |
  * | `payload` | `string` | The value that was signed. |
+ * | `verified_at` | `string` | The date the signature was verified
+ * by GitHub. |
  *
- * These are the possible values for `reason` in the
- * `verification` object:
+ * These are the possible values for `reason` in the `verification` object:
  *
  * | Value | Description |
- * | ----- | ----------- |
- * | `expired_key` | The key that made the
- * signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
- * the signature. |
- * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * | -----
+ * | ----------- |
+ * | `expired_key` | The key that made the signature is expired. |
+ * | `not_signing_key` | The "signing" flag
+ * is not among the usage flags in the GPG key that made the signature. |
+ * | `gpgverify_error` | There was an error
+ * communicating with the signature verification service. |
+ * | `gpgverify_unavailable` | The signature verification service
+ * is currently unavailable. |
+ * | `unsigned` | The object does not include a signature. |
+ * | `unknown_signature_type` | A
+ * non-PGP signature was found in the commit. |
+ * | `no_user` | No user was associated with the `committer` email address in
+ * the commit. |
+ * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the
+ * email address is not verified on their account. |
+ * | `bad_email` | The `committer` email address in the commit is not
+ * included in the identities of the PGP key that made the signature. |
+ * | `unknown_key` | The key that made the signature
+ * has not been registered with any user's account. |
+ * | `malformed_signature` | There was an error parsing the signature.
  * |
- * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does
- * not include a signature. |
- * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No
- * user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email
- * address in the commit was associated with a user, but the email address is not verified on their account. |
- * |
- * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the
  * signature. |
- * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * |
- * `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be
- * cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors
- * applied, so the signature is considered to be verified. |
+ * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/commits/commits#list-commits}
  * Tags: repos
  */
@@ -91525,7 +97702,7 @@ export async function reposCreateCommitComment<
      */
     position?: number;
     /**
-     * **Deprecated**. Use **position** parameter instead. Line number in the file to comment on.
+     * **Closing down notice**. Use **position** parameter instead. Line number in the file to comment on.
      */
     line?: number;
   },
@@ -91597,7 +97774,8 @@ export async function reposListPullRequestsAssociatedWithCommit<
  * Returns the contents of a single commit reference. You must have `read` access for the repository to use this
  * endpoint.
  *
- * **Note:** If there are more than 300 files in the commit diff and the default JSON media type is requested,
+ * > [!NOTE]
+ * > If there are more than 300 files in the commit diff and the default JSON media type is requested,
  * the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page
  * contains the static commit information, and the only changes are to the file listing.
  *
@@ -91630,36 +97808,37 @@ export async function reposListPullRequestsAssociatedWithCommit<
  * | `signature` | `string` | The signature that was extracted from the
  * commit. |
  * | `payload` | `string` | The value that was signed. |
+ * | `verified_at` | `string` | The date the signature was
+ * verified by GitHub. |
  *
- * These are the possible values for `reason` in the
- * `verification` object:
+ * These are the possible values for `reason` in the `verification` object:
  *
- * | Value | Description |
+ * | Value | Description
+ * |
  * | ----- | ----------- |
- * | `expired_key` | The key that made the
- * signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
- * the signature. |
- * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * | `expired_key` | The key that made the signature is expired. |
+ * | `not_signing_key` | The
+ * "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * | `gpgverify_error` | There was an
+ * error communicating with the signature verification service. |
+ * | `gpgverify_unavailable` | The signature verification
+ * service is currently unavailable. |
+ * | `unsigned` | The object does not include a signature. |
+ * | `unknown_signature_type`
+ * | A non-PGP signature was found in the commit. |
+ * | `no_user` | No user was associated with the `committer` email address
+ * in the commit. |
+ * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the
+ * email address is not verified on their account. |
+ * | `bad_email` | The `committer` email address in the commit is not
+ * included in the identities of the PGP key that made the signature. |
+ * | `unknown_key` | The key that made the signature
+ * has not been registered with any user's account. |
+ * | `malformed_signature` | There was an error parsing the signature.
  * |
- * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does
- * not include a signature. |
- * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No
- * user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email
- * address in the commit was associated with a user, but the email address is not verified on their account. |
- * |
- * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the
  * signature. |
- * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * |
- * `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be
- * cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors
- * applied, so the signature is considered to be verified. |
+ * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/commits/commits#get-a-commit}
  * Tags: repos
  */
@@ -91701,7 +97880,8 @@ export async function reposGetCommit<FetcherData extends r.BaseFetcherData>(
  * List check runs for a Git reference
  * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name.
  *
- * **Note:** The endpoints to
+ * > [!NOTE]
+ * > The endpoints to
  * manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch
  * in a forked repository are not detected and return an empty `pull_requests` array.
  *
@@ -91770,7 +97950,8 @@ export async function checksListForRef<FetcherData extends r.BaseFetcherData>(
  * List check suites for a Git reference
  * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name.
  *
- * **Note:** The endpoints to
+ * > [!NOTE]
+ * > The endpoints to
  * manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch
  * in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for
  * `head_branch`.
@@ -92012,36 +98193,37 @@ export async function reposGetCommunityProfileMetrics<
  * | `signature` | `string` | The signature that was extracted from the commit. |
  * | `payload` | `string` | The
  * value that was signed. |
+ * | `verified_at` | `string` | The date the signature was verified by GitHub. |
  *
- * These are the possible values for `reason` in the `verification` object:
+ * These are the
+ * possible values for `reason` in the `verification` object:
  *
- * | Value |
- * Description |
+ * | Value | Description |
  * | ----- | ----------- |
- * | `expired_key` | The key that made the signature is expired. |
  * |
- * `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * `expired_key` | The key that made the signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the
+ * usage flags in the GPG key that made the signature. |
+ * | `gpgverify_error` | There was an error communicating with the
+ * signature verification service. |
+ * | `gpgverify_unavailable` | The signature verification service is currently
+ * unavailable. |
+ * | `unsigned` | The object does not include a signature. |
+ * | `unknown_signature_type` | A non-PGP
+ * signature was found in the commit. |
+ * | `no_user` | No user was associated with the `committer` email address in the
+ * commit. |
+ * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email
+ * address is not verified on their account. |
+ * | `bad_email` | The `committer` email address in the commit is not included
+ * in the identities of the PGP key that made the signature. |
+ * | `unknown_key` | The key that made the signature has not
+ * been registered with any user's account. |
+ * | `malformed_signature` | There was an error parsing the signature. |
  * |
- * `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature.
  * |
- * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does
- * not include a signature. |
- * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No
- * user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email
- * address in the commit was associated with a user, but the email address is not verified on their account. |
- * |
- * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
- * signature. |
- * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * |
- * `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be
- * cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors
- * applied, so the signature is considered to be verified. |
+ * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/commits/commits#compare-two-commits}
  * Tags: repos
  */
@@ -92150,6 +98332,7 @@ export async function reposGetContent<FetcherData extends r.BaseFetcherData>(
       ContentDirectory | ContentFile | ContentSymlink | ContentSubmodule
     >
   | r.StatusResponse<302, unknown>
+  | r.StatusResponse<304, unknown>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
 > {
@@ -92166,8 +98349,9 @@ export async function reposGetContent<FetcherData extends r.BaseFetcherData>(
  * Create or update file contents
  * Creates a new file or replaces an existing file in a repository.
  *
- * **Note:** If you use this endpoint and the "[Delete a
- * file](https://docs.github.com/rest/repos/contents/#delete-a-file)" endpoint in parallel, the concurrent requests will
+ * > [!NOTE]
+ * > If you use this endpoint and the "[Delete
+ * a file](https://docs.github.com/rest/repos/contents/#delete-a-file)" endpoint in parallel, the concurrent requests will
  * conflict and you will receive errors. You must use these endpoints serially instead.
  *
  * OAuth app tokens and personal
@@ -92242,7 +98426,7 @@ export async function reposCreateOrUpdateFileContents<
   | r.StatusResponse<200, FileCommit>
   | r.StatusResponse<201, FileCommit>
   | r.StatusResponse<404, BasicError>
-  | r.StatusResponse<409, BasicError>
+  | r.StatusResponse<409, BasicError | RepositoryRuleViolationError>
   | r.StatusResponse<422, ValidationError>
 > {
   const req = await ctx.createRequest({
@@ -92266,10 +98450,11 @@ export async function reposCreateOrUpdateFileContents<
  * `committer` information is omitted, the authenticated user's information is used.
  *
  * You must provide values for both
- * `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status
- * code.
+ * `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
  *
- * **Note:** If you use this endpoint and the "[Create or update file
+ * >
+ * [!NOTE]
+ * > If you use this endpoint and the "[Create or update file
  * contents](https://docs.github.com/rest/repos/contents/#create-or-update-file-contents)" endpoint in parallel, the
  * concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
  * Learn more at {@link https://docs.github.com/rest/repos/contents#delete-a-file}
@@ -92405,8 +98590,9 @@ export async function dependabotListAlertsForRepo<
     ecosystem?: string;
     package?: string;
     manifest?: string;
+    epss_percentage?: string;
     scope?: 'development' | 'runtime';
-    sort?: 'created' | 'updated';
+    sort?: 'created' | 'updated' | 'epss_percentage';
     direction?: 'asc' | 'desc';
     page?: number;
     per_page?: number;
@@ -92434,6 +98620,7 @@ export async function dependabotListAlertsForRepo<
       'ecosystem',
       'package',
       'manifest',
+      'epss_percentage',
       'scope',
       'sort',
       'direction',
@@ -93000,7 +99187,7 @@ export async function reposCreateDeployment<
     required_contexts?: string[];
     payload?:
       | {
-          [key: string]: any;
+          [key: string]: unknown;
         }
       | string;
     /**
@@ -93192,7 +99379,10 @@ export async function reposCreateDeploymentStatus<
       | 'pending'
       | 'success';
     /**
-     * The target URL to associate with this status. This URL should contain output to keep the user updated while the task is running or serve as historical information for what happened in the deployment. **Note:** It's recommended to use the `log_url` parameter, which replaces `target_url`.
+     * The target URL to associate with this status. This URL should contain output to keep the user updated while the task is running or serve as historical information for what happened in the deployment.
+     *
+     * > [!NOTE]
+     * > It's recommended to use the `log_url` parameter, which replaces `target_url`.
      */
     target_url?: string;
     /**
@@ -93304,10 +99494,10 @@ export async function reposCreateDispatchEvent<
      */
     event_type: string;
     /**
-     * JSON payload with extra information about the webhook event that your action or workflow may use. The maximum number of top-level properties is 10.
+     * JSON payload with extra information about the webhook event that your action or workflow may use. The maximum number of top-level properties is 10. The total size of the JSON payload must be less than 64KB.
      */
     client_payload?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
   },
   opts?: FetcherData,
@@ -93383,7 +99573,8 @@ export async function reposGetAllEnvironments<
 }
 /**
  * Get an environment
- * **Note:** To get information about name patterns that branches must match in order to deploy to this environment, see
+ * > [!NOTE]
+ * > To get information about name patterns that branches must match in order to deploy to this environment, see
  * "[Get a deployment branch policy](/rest/deployments/branch-policies#get-a-deployment-branch-policy)."
  *
  * Anyone with read
@@ -93422,18 +99613,19 @@ export async function reposGetEnvironment<
 /**
  * Create or update an environment
  * Create or update an environment with protection rules, such as required reviewers. For more information about
- * environment protection rules, see
- * "[Environments](/actions/reference/environments#environment-protection-rules)."
+ * environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
  *
- * **Note:** To create or update name
- * patterns that branches must match in order to deploy to this environment, see "[Deployment branch
- * policies](/rest/deployments/branch-policies)."
+ * >
+ * [!NOTE]
+ * > To create or update name patterns that branches must match in order to deploy to this environment, see
+ * "[Deployment branch policies](/rest/deployments/branch-policies)."
  *
- * **Note:** To create or update secrets for an environment, see "[GitHub
- * Actions secrets](/rest/actions/secrets)."
+ * > [!NOTE]
+ * > To create or update secrets for an
+ * environment, see "[GitHub Actions secrets](/rest/actions/secrets)."
  *
- * OAuth app tokens and personal access tokens (classic) need the `repo` scope
- * to use this endpoint.
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/environments#create-or-update-an-environment}
  * Tags: repos
  */
@@ -93770,10 +99962,13 @@ export async function reposCreateDeploymentProtectionRule<
 }
 /**
  * List custom deployment rule integrations available for an environment
- * Gets all custom deployment protection rule integrations that are available for an environment. Anyone with read access
- * to the repository can use this endpoint.
+ * Gets all custom deployment protection rule integrations that are available for an environment.
  *
- * For more information about environments, see "[Using environments for
+ * The authenticated user
+ * must have admin or owner permissions to the repository to use this endpoint.
+ *
+ * For more information about environments,
+ * see "[Using environments for
  * deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
  *
  * For
@@ -94301,7 +100496,8 @@ export async function actionsDeleteEnvironmentVariable<
 }
 /**
  * List repository events
- * **Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be
+ * > [!NOTE]
+ * > This API is not built to serve real-time use cases. Depending on the time of day, event latency can be
  * anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-repository-events}
  * Tags: activity
@@ -94372,12 +100568,14 @@ export async function reposListForks<FetcherData extends r.BaseFetcherData>(
  * Create a fork
  * Create a fork for the authenticated user.
  *
- * **Note**: Forking a Repository happens asynchronously. You may have to wait a
- * short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact
+ * > [!NOTE]
+ * > Forking a Repository happens asynchronously. You may have to wait
+ * a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact
  * [GitHub Support](https://support.github.com/contact?tags=dotcom-rest-api).
  *
- * **Note**: Although this endpoint works with
- * GitHub Apps, the GitHub App must be installed on the destination account with access to all repositories and on the
+ * > [!NOTE]
+ * > Although this endpoint works
+ * with GitHub Apps, the GitHub App must be installed on the destination account with access to all repositories and on the
  * source account with access to the source repository.
  * Learn more at {@link https://docs.github.com/rest/repos/forks#create-a-fork}
  * Tags: repos
@@ -94453,7 +100651,7 @@ export async function gitCreateBlob<FetcherData extends r.BaseFetcherData>(
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
   | r.StatusResponse<409, BasicError>
-  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<422, ValidationError | RepositoryRuleViolationError>
 > {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/blobs',
@@ -94525,36 +100723,37 @@ export async function gitGetBlob<FetcherData extends r.BaseFetcherData>(
  * | `signature` | `string` | The signature that was extracted from the commit. |
  * | `payload` | `string`
  * | The value that was signed. |
+ * | `verified_at` | `string` | The date the signature was verified by GitHub. |
  *
- * These are the possible values for `reason` in the `verification` object:
+ * These are
+ * the possible values for `reason` in the `verification` object:
  *
- * | Value |
- * Description |
+ * | Value | Description |
  * | ----- | ----------- |
- * | `expired_key` | The key that made the signature is expired. |
  * |
- * `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+ * `expired_key` | The key that made the signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the
+ * usage flags in the GPG key that made the signature. |
+ * | `gpgverify_error` | There was an error communicating with the
+ * signature verification service. |
+ * | `gpgverify_unavailable` | The signature verification service is currently
+ * unavailable. |
+ * | `unsigned` | The object does not include a signature. |
+ * | `unknown_signature_type` | A non-PGP
+ * signature was found in the commit. |
+ * | `no_user` | No user was associated with the `committer` email address in the
+ * commit. |
+ * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email
+ * address is not verified on their account. |
+ * | `bad_email` | The `committer` email address in the commit is not included
+ * in the identities of the PGP key that made the signature. |
+ * | `unknown_key` | The key that made the signature has not
+ * been registered with any user's account. |
+ * | `malformed_signature` | There was an error parsing the signature. |
  * |
- * `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature.
  * |
- * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does
- * not include a signature. |
- * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No
- * user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email
- * address in the commit was associated with a user, but the email address is not verified on their account. |
- * |
- * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
- * signature. |
- * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * |
- * `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be
- * cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors
- * applied, so the signature is considered to be verified. |
+ * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/git/commits#create-a-commit}
  * Tags: git
  */
@@ -94574,7 +100773,7 @@ export async function gitCreateCommit<FetcherData extends r.BaseFetcherData>(
      */
     tree: string;
     /**
-     * The SHAs of the commits that were the parents of this commit. If omitted or empty, the commit will be written as a root commit. For a single parent, an array of one SHA should be provided; for a merge commit, an array of more than one should be provided.
+     * The full SHAs of the commits that were the parents of this commit. If omitted or empty, the commit will be written as a root commit. For a single parent, an array of one SHA should be provided; for a merge commit, an array of more than one should be provided.
      */
     parents?: string[];
     /**
@@ -94660,36 +100859,38 @@ export async function gitCreateCommit<FetcherData extends r.BaseFetcherData>(
  * | `signature` | `string` | The
  * signature that was extracted from the commit. |
  * | `payload` | `string` | The value that was signed. |
+ * | `verified_at` |
+ * `string` | The date the signature was verified by GitHub. |
  *
- * These are the
- * possible values for `reason` in the `verification` object:
+ * These are the possible values for `reason` in the
+ * `verification` object:
  *
  * | Value | Description |
  * | ----- | ----------- |
+ * | `expired_key` | The key that made the
+ * signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
+ * the signature. |
+ * | `gpgverify_error` | There was an error communicating with the signature verification service. |
  * |
- * `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the
- * usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error communicating with the
- * signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently
- * unavailable. |
- * | `unsigned` | The object does not include a signature. |
- * | `unknown_signature_type` | A non-PGP
- * signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the
- * commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email
- * address is not verified on their account. |
- * | `bad_email` | The `committer` email address in the commit is not included
- * in the identities of the PGP key that made the signature. |
- * | `unknown_key` | The key that made the signature has not
- * been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
+ * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on their account. |
  * |
- * `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature.
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * signature. |
+ * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
  * |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/git/commits#get-a-commit-object}
  * Tags: git
  */
@@ -94730,7 +100931,8 @@ export async function gitGetCommit<FetcherData extends r.BaseFetcherData>(
  * providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if
  * they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
  *
- * **Note:** You need to
+ * > [!NOTE]
+ * > You need to
  * explicitly [request a pull request](https://docs.github.com/rest/pulls/pulls#get-a-pull-request) to trigger a test merge
  * commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull
  * requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
@@ -94767,7 +100969,8 @@ export async function gitListMatchingRefs<
  * Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for
  * branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
  *
- * **Note:**
+ * > [!NOTE]
+ * >
  * You need to explicitly [request a pull request](https://docs.github.com/rest/pulls/pulls#get-a-pull-request) to trigger
  * a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability
  * of pull
@@ -94923,36 +101126,38 @@ export async function gitDeleteRef<FetcherData extends r.BaseFetcherData>(
  * | `signature` | `string` | The
  * signature that was extracted from the commit. |
  * | `payload` | `string` | The value that was signed. |
+ * | `verified_at` |
+ * `string` | The date the signature was verified by GitHub. |
  *
- * These are the
- * possible values for `reason` in the `verification` object:
+ * These are the possible values for `reason` in the
+ * `verification` object:
  *
  * | Value | Description |
  * | ----- | ----------- |
+ * | `expired_key` | The key that made the
+ * signature is expired. |
+ * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
+ * the signature. |
+ * | `gpgverify_error` | There was an error communicating with the signature verification service. |
  * |
- * `expired_key` | The key that made the signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the
- * usage flags in the GPG key that made the signature. |
- * | `gpgverify_error` | There was an error communicating with the
- * signature verification service. |
- * | `gpgverify_unavailable` | The signature verification service is currently
- * unavailable. |
- * | `unsigned` | The object does not include a signature. |
- * | `unknown_signature_type` | A non-PGP
- * signature was found in the commit. |
- * | `no_user` | No user was associated with the `committer` email address in the
- * commit. |
- * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email
- * address is not verified on their account. |
- * | `bad_email` | The `committer` email address in the commit is not included
- * in the identities of the PGP key that made the signature. |
- * | `unknown_key` | The key that made the signature has not
- * been registered with any user's account. |
- * | `malformed_signature` | There was an error parsing the signature. |
+ * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+ * | `unsigned` | The object does
+ * not include a signature. |
+ * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+ * | `no_user` | No
+ * user was associated with the `committer` email address in the commit. |
+ * | `unverified_email` | The `committer` email
+ * address in the commit was associated with a user, but the email address is not verified on their account. |
  * |
- * `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature.
+ * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * signature. |
+ * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
  * |
- * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+ * `malformed_signature` | There was an error parsing the signature. |
+ * | `invalid` | The signature could not be
+ * cryptographically verified using the key whose key-id was found in the signature. |
+ * | `valid` | None of the above errors
+ * applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/git/tags#create-a-tag-object}
  * Tags: git
  */
@@ -95029,36 +101234,37 @@ export async function gitCreateTag<FetcherData extends r.BaseFetcherData>(
  * | `signature` | `string` | The signature that was extracted from the commit.
  * |
  * | `payload` | `string` | The value that was signed. |
+ * | `verified_at` | `string` | The date the signature was verified
+ * by GitHub. |
  *
- * These are the possible values for `reason` in the
- * `verification` object:
+ * These are the possible values for `reason` in the `verification` object:
  *
  * | Value | Description |
- * | ----- | ----------- |
- * | `expired_key` | The key that made the
- * signature is expired. |
- * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made
- * the signature. |
- * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+ * | -----
+ * | ----------- |
+ * | `expired_key` | The key that made the signature is expired. |
+ * | `not_signing_key` | The "signing" flag
+ * is not among the usage flags in the GPG key that made the signature. |
+ * | `gpgverify_error` | There was an error
+ * communicating with the signature verification service. |
+ * | `gpgverify_unavailable` | The signature verification service
+ * is currently unavailable. |
+ * | `unsigned` | The object does not include a signature. |
+ * | `unknown_signature_type` | A
+ * non-PGP signature was found in the commit. |
+ * | `no_user` | No user was associated with the `committer` email address in
+ * the commit. |
+ * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the
+ * email address is not verified on their account. |
+ * | `bad_email` | The `committer` email address in the commit is not
+ * included in the identities of the PGP key that made the signature. |
+ * | `unknown_key` | The key that made the signature
+ * has not been registered with any user's account. |
+ * | `malformed_signature` | There was an error parsing the signature.
  * |
- * `gpgverify_unavailable` | The signature verification service is currently unavailable. |
- * | `unsigned` | The object does
- * not include a signature. |
- * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
- * | `no_user` | No
- * user was associated with the `committer` email address in the commit. |
- * | `unverified_email` | The `committer` email
- * address in the commit was associated with a user, but the email address is not verified on their account. |
- * |
- * `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the
+ * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the
  * signature. |
- * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
- * |
- * `malformed_signature` | There was an error parsing the signature. |
- * | `invalid` | The signature could not be
- * cryptographically verified using the key whose key-id was found in the signature. |
- * | `valid` | None of the above errors
- * applied, so the signature is considered to be verified. |
+ * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
  * Learn more at {@link https://docs.github.com/rest/git/tags#get-a-tag}
  * Tags: git
  */
@@ -95166,8 +101372,8 @@ export async function gitCreateTree<FetcherData extends r.BaseFetcherData>(
  * number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive
  * method of fetching trees, and fetch one sub-tree at a time.
  *
- *
- * **Note**: The limit for the `tree` array is 100,000
+ * > [!NOTE]
+ * > The limit for the `tree` array is 100,000
  * entries with a maximum size of 7 MB when using the `recursive` parameter.
  * Learn more at {@link https://docs.github.com/rest/git/trees#get-a-tree}
  * Tags: git
@@ -95384,6 +101590,10 @@ export async function reposUpdateWebhook<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Delete a repository webhook
+ * Delete a webhook for an organization.
+ *
+ * The authenticated user must be a repository owner, or have admin access in the
+ * repository, to delete the webhook.
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#delete-a-repository-webhook}
  * Tags: repos
  */
@@ -95485,7 +101695,6 @@ export async function reposListWebhookDeliveries<
     hook_id: number;
     per_page?: number;
     cursor?: string;
-    redelivery?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -95497,7 +101706,7 @@ export async function reposListWebhookDeliveries<
     path: '/repos/{owner}/{repo}/hooks/{hook_id}/deliveries',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'cursor', 'redelivery'],
+    queryParams: ['per_page', 'cursor'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(
@@ -95602,10 +101811,11 @@ export async function reposPingWebhook<FetcherData extends r.BaseFetcherData>(
 /**
  * Test the push repository webhook
  * This will trigger the hook with the latest push to the current repository if the hook is subscribed to `push` events. If
- * the hook is not subscribed to `push` events, the server will respond with 204 but no test POST will be
- * generated.
+ * the hook is not subscribed to `push` events, the server will respond with 204 but no test POST will be generated.
  *
- * **Note**: Previously `/repos/:owner/:repo/hooks/:hook_id/test`
+ * >
+ * [!NOTE]
+ * > Previously `/repos/:owner/:repo/hooks/:hook_id/test`
  * Learn more at {@link https://docs.github.com/rest/repos/webhooks#test-the-push-repository-webhook}
  * Tags: repos
  */
@@ -95632,38 +101842,39 @@ export async function reposTestPushWebhook<
  * Get an import status
  * View the progress of an import.
  *
- * **Warning:** Due to very low levels of usage and available alternatives, this endpoint
- * is deprecated and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see
- * the [changelog](https://gh.io/source-imports-api-deprecation).
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** Due to very low levels of usage and
+ * available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024.
+ * For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
  *
- * **Import status**
+ * **Import
+ * status**
  *
- * This section includes details about
- * the possible values of the `status` field of the Import Progress response.
+ * This section includes details about the possible values of the `status` field of the Import Progress
+ * response.
  *
- * An import that does not have errors will
- * progress through these steps:
+ * An import that does not have errors will progress through these steps:
  *
- * *   `detecting` - the "detection" step of the import is in progress because the request
- * did not include a `vcs` parameter. The import is identifying the type of source control present at the URL.
+ * *   `detecting` - the "detection"
+ * step of the import is in progress because the request did not include a `vcs` parameter. The import is identifying the
+ * type of source control present at the URL.
+ * *   `importing` - the "raw" step of the import is in progress. This is where
+ * commit data is fetched from the original repository. The import progress response will include `commit_count` (the total
+ * number of raw commits that will be imported) and `percent` (0 - 100, the current progress through the import).
  * *
- * `importing` - the "raw" step of the import is in progress. This is where commit data is fetched from the original
- * repository. The import progress response will include `commit_count` (the total number of raw commits that will be
- * imported) and `percent` (0 - 100, the current progress through the import).
- * *   `mapping` - the "rewrite" step of the
- * import is in progress. This is where SVN branches are converted to Git branches, and where author updates are applied.
- * The import progress response does not include progress information.
- * *   `pushing` - the "push" step of the import is in
- * progress. This is where the importer updates the repository on GitHub. The import progress response will include
- * `push_percent`, which is the percent value reported by `git push` when it is "Writing objects".
- * *   `complete` - the
- * import is complete, and the repository is ready on GitHub.
+ * `mapping` - the "rewrite" step of the import is in progress. This is where SVN branches are converted to Git branches,
+ * and where author updates are applied. The import progress response does not include progress information.
+ * *   `pushing`
+ * - the "push" step of the import is in progress. This is where the importer updates the repository on GitHub. The import
+ * progress response will include `push_percent`, which is the percent value reported by `git push` when it is "Writing
+ * objects".
+ * *   `complete` - the import is complete, and the repository is ready on GitHub.
  *
- * If there are problems, you will see one of these in the
- * `status` field:
+ * If there are problems, you
+ * will see one of these in the `status` field:
  *
- * *   `auth_failed` - the import requires authentication in order to connect to the original repository.
- * To update authentication for the import, please see the [Update an
+ * *   `auth_failed` - the import requires authentication in order to connect
+ * to the original repository. To update authentication for the import, please see the [Update an
  * import](https://docs.github.com/rest/migrations/source-imports#update-an-import) section.
  * *   `error` - the import
  * encountered an error. The import progress response will include the `failed_step` and an error message. Contact [GitHub
@@ -95735,9 +101946,10 @@ export async function migrationsGetImportStatus<
  * Actions enabled is not supported and will
  * return a status `422 Unprocessable Entity` response.
  *
- * **Warning:** Due to very
- * low levels of usage and available alternatives, this endpoint is deprecated and will no longer be available from 00:00
- * UTC on April 12, 2024. For more details and alternatives, see the
+ * > [!WARNING]
+ * >
+ * **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing
+ * down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the
  * [changelog](https://gh.io/source-imports-api-deprecation).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#start-an-import}
@@ -95802,9 +102014,11 @@ export async function migrationsStartImport<
  * You can select the project to import by providing
  * one of the objects in the `project_choices` array in the update request.
  *
- * **Warning:** Due to very low levels of usage
- * and available alternatives, this endpoint is deprecated and will no longer be available from 00:00 UTC on April 12,
- * 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
+ * > [!WARNING]
+ * > **Endpoint closing down
+ * notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer
+ * be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the
+ * [changelog](https://gh.io/source-imports-api-deprecation).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#update-an-import}
  * Tags: migrations
@@ -95852,9 +102066,10 @@ export async function migrationsUpdateImport<
  * Cancel an import
  * Stop an import for a repository.
  *
- * **Warning:** Due to very low levels of usage and available alternatives, this endpoint
- * is deprecated and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see
- * the [changelog](https://gh.io/source-imports-api-deprecation).
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** Due to very low levels of usage and
+ * available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024.
+ * For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#cancel-an-import}
  * Tags: migrations
@@ -95888,9 +102103,10 @@ export async function migrationsCancelImport<
  * author](https://docs.github.com/rest/migrations/source-imports#map-a-commit-author) endpoint allow you to provide
  * correct Git author information.
  *
- * **Warning:** Due to very low levels of usage and available alternatives, this endpoint
- * is deprecated and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see
- * the [changelog](https://gh.io/source-imports-api-deprecation).
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** Due to very low levels of usage and
+ * available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024.
+ * For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#get-commit-authors}
  * Tags: migrations
@@ -95925,9 +102141,10 @@ export async function migrationsGetCommitAuthors<
  * new
  * commits to the repository.
  *
- * **Warning:** Due to very low levels of usage and available alternatives, this endpoint is
- * deprecated and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the
- * [changelog](https://gh.io/source-imports-api-deprecation).
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** Due to very low levels of usage and
+ * available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024.
+ * For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#map-a-commit-author}
  * Tags: migrations
@@ -95971,9 +102188,10 @@ export async function migrationsMapCommitAuthor<
  * Get large files
  * List files larger than 100MB found during the import
  *
- * **Warning:** Due to very low levels of usage and available
- * alternatives, this endpoint is deprecated and will no longer be available from 00:00 UTC on April 12, 2024. For more
- * details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** Due to very low
+ * levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC
+ * on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#get-large-files}
  * Tags: migrations
@@ -96008,9 +102226,10 @@ export async function migrationsGetLargeFiles<
  * our help
  * site](https://docs.github.com/repositories/working-with-files/managing-large-files).
  *
- * **Warning:** Due to very
- * low levels of usage and available alternatives, this endpoint is deprecated and will no longer be available from 00:00
- * UTC on April 12, 2024. For more details and alternatives, see the
+ * > [!WARNING]
+ * > **Endpoint
+ * closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and
+ * will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the
  * [changelog](https://gh.io/source-imports-api-deprecation).
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/migrations/source-imports#update-git-lfs-preference}
@@ -96287,17 +102506,15 @@ export async function reposDeleteInvitation<
  * List repository issues
  * List issues in a repository. Only open issues will be listed.
  *
- * **Note**: GitHub's REST API considers every pull request
- * an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may return both issues and pull
- * requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware that the `id` of a pull
- * request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id, use the "[List pull
- * requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+ * > [!NOTE]
+ * > GitHub's REST API considers every pull
+ * request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and
+ * pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware that the `id` of a
+ * pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List
+ * pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
  *
- * This endpoint supports the following
- * custom media types. For more information, see "[Media
+ * This endpoint supports the
+ * following custom media types. For more information, see "[Media
  * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
  * -
@@ -96410,7 +102627,7 @@ export async function issuesCreate<FetcherData extends r.BaseFetcherData>(
      */
     body?: string;
     /**
-     * Login for the user that this issue should be assigned to. _NOTE: Only users with push access can set the assignee for new issues. The assignee is silently dropped otherwise. **This field is deprecated.**_
+     * Login for the user that this issue should be assigned to. _NOTE: Only users with push access can set the assignee for new issues. The assignee is silently dropped otherwise. **This field is closing down.**_
      */
     assignee?: string | null;
     milestone?: (string | number) | null;
@@ -96746,7 +102963,8 @@ export async function reactionsCreateForIssueComment<
 }
 /**
  * Delete an issue comment reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete
+ * > [!NOTE]
+ * > You can also specify a repository by `repository_id` using the route `DELETE delete
  * /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
  *
  * Delete a reaction to an [issue
@@ -96858,17 +103076,15 @@ export async function issuesGetEvent<FetcherData extends r.BaseFetcherData>(
  * subscribe
  * to the [`issues`](https://docs.github.com/webhooks/event-payloads/#issues) webhook.
  *
- * **Note**: GitHub's REST
- * API considers every pull request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints
- * may return both issues and pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be
- * aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the
- * pull
- * request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)"
- * endpoint.
+ * > [!NOTE]
+ * > GitHub's REST
+ * API considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints
+ * may return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key. Be
+ * aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
+ * request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
  *
- * This endpoint supports the following custom media types. For more information, see "[Media
+ * This
+ * endpoint supports the following custom media types. For more information, see "[Media
  * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
  * -
@@ -96914,10 +103130,10 @@ export async function issuesGet<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Update an issue
- * Issue owners and users with push access can edit an issue.
+ * Issue owners and users with push access or Triage role can edit an issue.
  *
- * This endpoint supports the following custom media types. For
- * more information, see "[Media
+ * This endpoint supports the following custom
+ * media types. For more information, see "[Media
  * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
  *
  * -
@@ -96949,7 +103165,7 @@ export async function issuesUpdate<FetcherData extends r.BaseFetcherData>(
      */
     body?: string | null;
     /**
-     * Username to assign to this issue. **This field is deprecated.**
+     * Username to assign to this issue. **This field is closing down.**
      */
     assignee?: string | null;
     /**
@@ -97630,7 +103846,8 @@ export async function reactionsCreateForIssue<
 }
 /**
  * Delete an issue reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE
+ * > [!NOTE]
+ * > You can also specify a repository by `repository_id` using the route `DELETE
  * /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
  *
  * Delete a reaction to an
@@ -97657,6 +103874,246 @@ export async function reactionsDeleteForIssue<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Remove sub-issue
+ * You can use the REST API to remove a sub-issue from an issue.
+ * Removing content too quickly using this endpoint may
+ * result in secondary rate limiting.
+ * For more information, see "[Rate limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass a specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * Learn more at {@link https://docs.github.com/rest/issues/sub-issues#remove-sub-issue}
+ * Tags: issues
+ */
+export async function issuesRemoveSubIssue<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    issue_number: number;
+  },
+  body: {
+    /**
+     * The id of the sub-issue to remove
+     */
+    sub_issue_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, Issue>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/issues/{issue_number}/sub_issue',
+    params,
+    method: r.HttpMethod.DELETE,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Issue]]] } },
+    },
+    true,
+  );
+}
+/**
+ * List sub-issues
+ * You can use the REST API to list the sub-issues on an issue.
+ *
+ * This endpoint supports the following custom media types.
+ * For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * Learn more at {@link https://docs.github.com/rest/issues/sub-issues#list-sub-issues}
+ * Tags: issues
+ */
+export async function issuesListSubIssues<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    issue_number: number;
+    per_page?: number;
+    page?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, Issue[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/issues/{issue_number}/sub_issues',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_Issue]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Add sub-issue
+ * You can use the REST API to add sub-issues to issues.
+ *
+ * Creating content too quickly using this endpoint may result in
+ * secondary rate limiting.
+ * For more information, see "[Rate limits for the
+ * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+ * and
+ * "[Best practices for using the REST
+ * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+ *
+ * This endpoint supports the following
+ * custom media types. For more information, see "[Media
+ * types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+ *
+ * -
+ * **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default
+ * if you do not pass any specific media type.
+ * - **`application/vnd.github.text+json`**: Returns a text only representation
+ * of the markdown body. Response will include `body_text`.
+ * - **`application/vnd.github.html+json`**: Returns HTML rendered
+ * from the body's markdown. Response will include `body_html`.
+ * - **`application/vnd.github.full+json`**: Returns raw,
+ * text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+ * Learn more at {@link https://docs.github.com/rest/issues/sub-issues#add-sub-issue}
+ * Tags: issues
+ */
+export async function issuesAddSubIssue<FetcherData extends r.BaseFetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    issue_number: number;
+  },
+  body: {
+    /**
+     * The id of the sub-issue to add. The sub-issue must belong to the same repository as the parent issue
+     */
+    sub_issue_id: number;
+    /**
+     * Option that, when true, instructs the operation to replace the sub-issues current parent issue
+     */
+    replace_parent?: boolean;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<201, Issue>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<410, BasicError>
+  | r.StatusResponse<422, ValidationError>
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/issues/{issue_number}/sub_issues',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_Issue]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Reprioritize sub-issue
+ * You can use the REST API to reprioritize a sub-issue to a different position in the parent list.
+ * Learn more at {@link https://docs.github.com/rest/issues/sub-issues#reprioritize-sub-issue}
+ * Tags: issues
+ */
+export async function issuesReprioritizeSubIssue<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    issue_number: number;
+  },
+  body: {
+    /**
+     * The id of the sub-issue to reprioritize
+     */
+    sub_issue_id: number;
+    /**
+     * The id of the sub-issue to be prioritized after (either positional argument after OR before should be specified).
+     */
+    after_id?: number;
+    /**
+     * The id of the sub-issue to be prioritized before (either positional argument after OR before should be specified).
+     */
+    before_id?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, Issue>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/issues/{issue_number}/sub_issues/priority',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_Issue]]] } },
+    },
+    true,
+  );
 }
 /**
  * List timeline events for an issue
@@ -98471,7 +104928,28 @@ export async function reposCreatePagesSite<
     owner: string;
     repo: string;
   },
-  body: (unknown | unknown) | null,
+  body:
+    | ({
+        /**
+         * The process in which the Page will be built. Possible values are `"legacy"` and `"workflow"`.
+         */
+        build_type?: 'legacy' | 'workflow';
+        /**
+         * The source branch and directory used to publish your Pages site.
+         */
+        source?: {
+          /**
+           * The repository branch used to publish your site's source files.
+           */
+          branch: string;
+          /**
+           * The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`. Default: `/`
+           * @defaultValue "/"
+           */
+          path?: '/' | '/docs';
+        };
+      } & (unknown | unknown))
+    | null,
   opts?: FetcherData,
 ): Promise<
   | r.StatusResponse<201, Page>
@@ -98514,7 +104992,32 @@ export async function reposUpdateInformationAboutPagesSite<
     owner: string;
     repo: string;
   },
-  body: unknown | unknown | unknown | unknown | unknown,
+  body: {
+    /**
+     * Specify a custom domain for the repository. Sending a `null` value will remove the custom domain. For more about custom domains, see "[Using a custom domain with GitHub Pages](https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site)."
+     */
+    cname?: string | null;
+    /**
+     * Specify whether HTTPS should be enforced for the repository.
+     */
+    https_enforced?: boolean;
+    /**
+     * The process by which the GitHub Pages site will be built. `workflow` means that the site is built by a custom GitHub Actions workflow. `legacy` means that the site is built by GitHub when changes are pushed to a specific branch.
+     */
+    build_type?: 'legacy' | 'workflow';
+    source?:
+      | ('gh-pages' | 'master' | 'master /docs')
+      | {
+          /**
+           * The repository branch used to publish your site's source files.
+           */
+          branch: string;
+          /**
+           * The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`.
+           */
+          path: '/' | '/docs';
+        };
+  } & (unknown | unknown | unknown | unknown | unknown),
   opts?: FetcherData,
 ): Promise<
   | r.StatusResponse<204, unknown>
@@ -98944,8 +105447,12 @@ export async function reposDisablePrivateVulnerabilityReporting<
 }
 /**
  * List repository projects
- * Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you
- * do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#list-repository-projects}
  * Tags: projects
  */
@@ -98986,9 +105493,12 @@ export async function projectsListForRepo<
 }
 /**
  * Create a repository project
- * Creates a repository project board. Returns a `410 Gone` status if projects are disabled in the repository or if the
- * repository does not have existing classic projects. If you do not have sufficient privileges to perform this action, a
- * `401 Unauthorized` or `410 Gone` status is returned.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#create-a-repository-project}
  * Tags: projects
  */
@@ -99565,7 +106075,8 @@ export async function reactionsCreateForPullRequestReviewComment<
 }
 /**
  * Delete a pull request comment reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE
+ * > [!NOTE]
+ * > You can also specify a repository by `repository_id` using the route `DELETE
  * /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
  *
  * Delete a reaction to a [pull request
@@ -99793,7 +106304,7 @@ export async function codespacesCreateWithPrForAuthenticatedUser<
      */
     location?: string;
     /**
-     * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is being deprecated.
+     * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is closing down.
      */
     geo?: 'EuropeWest' | 'SoutheastAsia' | 'UsEast' | 'UsWest';
     /**
@@ -99927,7 +106438,7 @@ export async function pullsListReviewComments<
  * applies to more than one line in the pull request diff, you should use the parameters `line`, `side`, and optionally
  * `start_line` and `start_side` in your request.
  *
- * The `position` parameter is deprecated. If you use `position`, the
+ * The `position` parameter is closing down. If you use `position`, the
  * `line`, `side`, `start_line`, and `start_side` parameters are not required.
  *
  * This endpoint triggers
@@ -99979,7 +106490,7 @@ export async function pullsCreateReviewComment<
      */
     path: string;
     /**
-     * **This parameter is deprecated. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+     * **This parameter is closing down. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
      * @deprecated
      */
     position?: number;
@@ -100149,9 +106660,9 @@ export async function pullsListCommits<FetcherData extends r.BaseFetcherData>(
  * List pull requests files
  * Lists the files in a specified pull request.
  *
- * **Note:** Responses include a maximum of 3000 files. The paginated
- * response
- * returns 30 files per page by default.
+ * > [!NOTE]
+ * > Responses include a maximum of 3000 files. The paginated
+ * response returns 30 files per page by default.
  *
  * This endpoint supports the following custom media types. For more
  * information, see "[Media
@@ -100340,7 +106851,16 @@ export async function pullsRequestReviewers<
     repo: string;
     pull_number: number;
   },
-  body: unknown | unknown,
+  body: {
+    /**
+     * An array of user `login`s that will be requested.
+     */
+    reviewers?: string[];
+    /**
+     * An array of team `slug`s that will be requested.
+     */
+    team_reviewers?: string[];
+  } & (unknown | unknown),
   opts?: FetcherData,
 ): Promise<
   | r.StatusResponse<201, PullRequestSimple>
@@ -100474,7 +106994,8 @@ export async function pullsListReviews<FetcherData extends r.BaseFetcherData>(
  * review, see "[Submit a review for a pull
  * request](https://docs.github.com/rest/pulls/reviews#submit-a-review-for-a-pull-request)."
  *
- * **Note:** To comment on a
+ * > [!NOTE]
+ * > To comment on a
  * specific line in a file, you need to first determine the position of that line in the diff. To see a pull request diff,
  * add the `application/vnd.github.v3.diff` media type to the `Accept` header of a call to the [Get a pull
  * request](https://docs.github.com/rest/pulls/pulls#get-a-pull-request) endpoint.
@@ -100787,11 +107308,10 @@ export async function pullsListCommentsForReview<
  * Dismiss a review for a pull request
  * Dismisses a specified review on a pull request.
  *
- * **Note:** To dismiss a pull request review on a [protected
- * branch](https://docs.github.com/rest/branches/branch-protection),
- * you must be a repository administrator or be included
- * in the list of people or teams
- * who can dismiss pull request reviews.
+ * > [!NOTE]
+ * > To dismiss a pull request review on a [protected
+ * branch](https://docs.github.com/rest/branches/branch-protection), you must be a repository administrator or be included
+ * in the list of people or teams who can dismiss pull request reviews.
  *
  * This endpoint supports the following custom media
  * types. For more information, see "[Media
@@ -100916,6 +107436,8 @@ export async function pullsSubmitReview<FetcherData extends r.BaseFetcherData>(
  * Update a pull request branch
  * Updates the pull request branch with the latest upstream changes by merging HEAD from the base branch into the pull
  * request branch.
+ * Note: If making a request on behalf of a GitHub App you must also have permissions to write the contents
+ * of the head repository.
  * Learn more at {@link https://docs.github.com/rest/pulls/pulls#update-a-pull-request-branch}
  * Tags: pulls
  */
@@ -100979,6 +107501,7 @@ export async function reposGetReadme<FetcherData extends r.BaseFetcherData>(
   opts?: FetcherData,
 ): Promise<
   | r.StatusResponse<200, ContentFile>
+  | r.StatusResponse<304, unknown>
   | r.StatusResponse<404, BasicError>
   | r.StatusResponse<422, ValidationError>
 > {
@@ -101124,7 +107647,7 @@ export async function reposCreateRelease<FetcherData extends r.BaseFetcherData>(
     generate_release_notes?: boolean;
     /**
      * Specifies whether this release should be set as the latest release for the repository. Drafts and prereleases cannot be set as latest. Defaults to `true` for newly published releases. `legacy` specifies that the latest release should be determined based on the release creation date and higher semantic version.
-     * @defaultValue true
+     * @defaultValue "true"
      */
     make_latest?: 'true' | 'false' | 'legacy';
   },
@@ -101151,10 +107674,15 @@ export async function reposCreateRelease<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Get a release asset
- * To download the asset's binary content, set the `Accept` header of the request to
+ * To download the asset's binary content:
+ *
+ * - If within a browser, fetch the location specified in the
+ * `browser_download_url` key provided in the response.
+ * - Alternatively, set the `Accept` header of the request to
  * [`application/octet-stream`](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
- * The API will either redirect the client to the location, or stream it directly if possible. API clients should handle
- * both a `200` or `302` response.
+ * The API will either redirect the client to the location, or stream it directly if possible.
+ *   API clients should
+ * handle both a `200` or `302` response.
  * Learn more at {@link https://docs.github.com/rest/releases/assets#get-a-release-asset}
  * Tags: repos
  */
@@ -101374,10 +107902,9 @@ export async function reposGetReleaseByTag<
  * Get a release
  * Gets a public release with the specified release ID.
  *
- * **Note:** This returns an `upload_url` key corresponding to the
- * endpoint
- * for uploading release assets. This key is a hypermedia resource. For more information, see
- * "[Getting started
+ * > [!NOTE]
+ * > This returns an `upload_url` key corresponding to the
+ * endpoint for uploading release assets. This key is a hypermedia resource. For more information, see "[Getting started
  * with the REST API](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
  * Learn more at {@link https://docs.github.com/rest/releases/releases#get-a-release}
  * Tags: repos
@@ -101685,7 +108212,8 @@ export async function reactionsCreateForRelease<
 }
 /**
  * Delete a release reaction
- * **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete
+ * > [!NOTE]
+ * > You can also specify a repository by `repository_id` using the route `DELETE delete
  * /repositories/:repository_id/releases/:release_id/reactions/:reaction_id`.
  *
  * Delete a reaction to a
@@ -101763,6 +108291,7 @@ export async function reposGetRepoRulesets<
     per_page?: number;
     page?: number;
     includes_parents?: boolean;
+    targets?: string;
   },
   opts?: FetcherData,
 ): Promise<
@@ -101774,7 +108303,7 @@ export async function reposGetRepoRulesets<
     path: '/repos/{owner}/{repo}/rulesets',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'page', 'includes_parents'],
+    queryParams: ['per_page', 'page', 'includes_parents', 'targets'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(
@@ -101808,8 +108337,7 @@ export async function reposCreateRepoRuleset<
     name: string;
     /**
      * The target of the ruleset
-     *
-     * **Note**: The `push` target is in beta and is subject to change.
+     * @defaultValue "branch"
      */
     target?: 'branch' | 'tag' | 'push';
     enforcement: RepositoryRuleEnforcement;
@@ -101935,6 +108463,10 @@ export async function reposGetRepoRuleSuite<
 /**
  * Get a repository ruleset
  * Get a ruleset for a repository.
+ *
+ * **Note:** To prevent leaking sensitive information, the `bypass_actors` property is
+ * only returned if the user
+ * making the API request has write access to the ruleset.
  * Learn more at {@link https://docs.github.com/rest/repos/rules#get-a-repository-ruleset}
  * Tags: repos
  */
@@ -101991,8 +108523,6 @@ export async function reposUpdateRepoRuleset<
     name?: string;
     /**
      * The target of the ruleset
-     *
-     * **Note**: The `push` target is in beta and is subject to change.
      */
     target?: 'branch' | 'tag' | 'push';
     enforcement?: RepositoryRuleEnforcement;
@@ -102086,6 +108616,8 @@ export async function secretScanningListAlertsForRepo<
     before?: string;
     after?: string;
     validity?: string;
+    is_publicly_leaked?: boolean;
+    is_multi_repo?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -102115,6 +108647,8 @@ export async function secretScanningListAlertsForRepo<
       'before',
       'after',
       'validity',
+      'is_publicly_leaked',
+      'is_multi_repo',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -102280,6 +108814,111 @@ export async function secretScanningListLocationsForAlert<
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Create a push protection bypass
+ * Creates a bypass for a previously push protected secret.
+ *
+ * The authenticated user must be the original author of the
+ * committed secret.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#create-a-push-protection-bypass}
+ * Tags: secret-scanning
+ */
+export async function secretScanningCreatePushProtectionBypass<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+  },
+  body: {
+    reason: SecretScanningPushProtectionBypassReason;
+    placeholder_id: SecretScanningPushProtectionBypassPlaceholderId;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, SecretScanningPushProtectionBypass>
+  | r.StatusResponse<403, unknown>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<422, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/secret-scanning/push-protection-bypasses',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [[['ref', $date_SecretScanningPushProtectionBypass]]],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get secret scanning scan history for a repository
+ * Lists the latest default incremental and backfill scans by type for a repository. Scans from Copilot Secret Scanning are
+ * not included.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use
+ * this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope
+ * instead.
+ * Learn more at {@link https://docs.github.com/rest/secret-scanning/secret-scanning#get-secret-scanning-scan-history-for-a-repository}
+ * Tags: secret-scanning
+ */
+export async function secretScanningGetScanHistory<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, SecretScanningScanHistory>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/secret-scanning/scan-history',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_SecretScanningScanHistory]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * List repository security advisories
@@ -102555,8 +109194,9 @@ export async function securityAdvisoriesCreateRepositoryAdvisoryCveRequest<
  * Create a temporary private fork
  * Create a temporary private fork to collaborate on fixing a security vulnerability in your repository.
  *
- * **Note**: Forking
- * a repository happens asynchronously. You may have to wait up to 5 minutes before you can access the fork.
+ * > [!NOTE]
+ * >
+ * Forking a repository happens asynchronously. You may have to wait up to 5 minutes before you can access the fork.
  * Learn more at {@link https://docs.github.com/rest/security-advisories/repository-advisories#create-a-temporary-private-fork}
  * Tags: security-advisories
  */
@@ -102642,9 +109282,9 @@ export async function activityListStargazersForRepo<
  * Get the weekly commit activity
  * Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
  *
- * **Note:** This endpoint
- * can only be used for repositories with fewer than 10,000 commits. If the repository contains
- * 10,000 or more commits, a
+ * > [!NOTE]
+ * > This endpoint
+ * can only be used for repositories with fewer than 10,000 commits. If the repository contains 10,000 or more commits, a
  * 422 status code will be returned.
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-the-weekly-commit-activity}
  * Tags: repos
@@ -102713,8 +109353,9 @@ export async function reposGetCommitActivityStats<
  * *   `c`
  * - Number of commits
  *
- * **Note:** This endpoint will return `0` values for all addition and deletion counts in repositories
- * with 10,000 or more commits.
+ * > [!NOTE]
+ * > This endpoint will return `0` values for all addition and deletion counts in
+ * repositories with 10,000 or more commits.
  * Learn more at {@link https://docs.github.com/rest/metrics/statistics#get-all-contributor-commit-activity}
  * Tags: repos
  */
@@ -103017,17 +109658,18 @@ export async function reposListTags<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Deprecated - List tag protection states for a repository
- * **Note**: This operation is deprecated and will be removed after August 30th 2024
- * Use the "[Repository
- * Rulesets](https://docs.github.com/rest/repos/rules#get-all-repository-rulesets)" endpoint instead.
+ * Closing down - List tag protection states for a repository
+ * > [!WARNING]
+ * > **Closing down notice:** This operation is closing down and will be removed after August 30, 2024. Use
+ * the "[Repository Rulesets](https://docs.github.com/rest/repos/rules#get-all-repository-rulesets)" endpoint
+ * instead.
  *
- * This returns the tag
- * protection states of a repository.
+ * This returns the tag protection states of a repository.
  *
- * This information is only available to repository administrators.
+ * This information is only available to repository
+ * administrators.
  * @deprecated
- * Learn more at {@link https://docs.github.com/rest/repos/tags#deprecated---list-tag-protection-states-for-a-repository}
+ * Learn more at {@link https://docs.github.com/rest/repos/tags#closing-down---list-tag-protection-states-for-a-repository}
  * Tags: repos
  */
 export async function reposListTagProtection<
@@ -103053,16 +109695,17 @@ export async function reposListTagProtection<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Deprecated - Create a tag protection state for a repository
- * **Note**: This operation is deprecated and will be removed after August 30th 2024
- * Use the "[Repository
- * Rulesets](https://docs.github.com/rest/repos/rules#create-a-repository-ruleset)" endpoint instead.
+ * Closing down - Create a tag protection state for a repository
+ * > [!WARNING]
+ * > **Closing down notice:** This operation is closing down and will be removed after August 30, 2024. Use
+ * the "[Repository Rulesets](https://docs.github.com/rest/repos/rules#create-a-repository-ruleset)" endpoint
+ * instead.
  *
- * This creates a tag
- * protection state for a repository.
- * This endpoint is only available to repository administrators.
+ * This creates a tag protection state for a repository.
+ * This endpoint is only available to repository
+ * administrators.
  * @deprecated
- * Learn more at {@link https://docs.github.com/rest/repos/tags#deprecated---create-a-tag-protection-state-for-a-repository}
+ * Learn more at {@link https://docs.github.com/rest/repos/tags#closing-down---create-a-tag-protection-state-for-a-repository}
  * Tags: repos
  */
 export async function reposCreateTagProtection<
@@ -103095,16 +109738,17 @@ export async function reposCreateTagProtection<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Deprecated - Delete a tag protection state for a repository
- * **Note**: This operation is deprecated and will be removed after August 30th 2024
- * Use the "[Repository
- * Rulesets](https://docs.github.com/rest/repos/rules#delete-a-repository-ruleset)" endpoint instead.
+ * Closing down - Delete a tag protection state for a repository
+ * > [!WARNING]
+ * > **Closing down notice:** This operation is closing down and will be removed after August 30, 2024. Use
+ * the "[Repository Rulesets](https://docs.github.com/rest/repos/rules#delete-a-repository-ruleset)" endpoint
+ * instead.
  *
- * This deletes a tag
- * protection state for a repository.
- * This endpoint is only available to repository administrators.
+ * This deletes a tag protection state for a repository.
+ * This endpoint is only available to repository
+ * administrators.
  * @deprecated
- * Learn more at {@link https://docs.github.com/rest/repos/tags#deprecated---delete-a-tag-protection-state-for-a-repository}
+ * Learn more at {@link https://docs.github.com/rest/repos/tags#closing-down---delete-a-tag-protection-state-for-a-repository}
  * Tags: repos
  */
 export async function reposDeleteTagProtection<
@@ -103137,7 +109781,9 @@ export async function reposDeleteTagProtection<
  * `main`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need
  * to use
  * the `Location` header to make a second `GET` request.
- * **Note**: For private repositories, these links are
+ *
+ * > [!NOTE]
+ * > For private repositories, these links are
  * temporary and expire after five minutes.
  * Learn more at {@link https://docs.github.com/rest/repos/contents#download-a-repository-archive-tar}
  * Tags: repos
@@ -103232,7 +109878,7 @@ export async function reposReplaceAllTopics<
   },
   body: {
     /**
-     * An array of topics to add to the repository. Pass one or more topics to _replace_ the set of existing topics. Send an empty array (`[]`) to clear all topics from the repository. **Note:** Topic `names` cannot contain uppercase letters.
+     * An array of topics to add to the repository. Pass one or more topics to _replace_ the set of existing topics. Send an empty array (`[]`) to clear all topics from the repository. **Note:** Topic `names` will be saved as lowercase.
      */
     names: string[];
   },
@@ -103501,7 +110147,8 @@ export async function reposDisableVulnerabilityAlerts<
  * to use
  * the `Location` header to make a second `GET` request.
  *
- * **Note**: For private repositories, these links are
+ * > [!NOTE]
+ * > For private repositories, these links are
  * temporary and expire after five minutes. If the repository is empty, you will receive a 404 when you follow the
  * redirect.
  * Learn more at {@link https://docs.github.com/rest/repos/contents#download-a-repository-archive-zip}
@@ -103810,7 +110457,8 @@ export async function searchCommits<FetcherData extends r.BaseFetcherData>(
  * Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the
  * search results.
  *
- * **Note:** For requests made by GitHub Apps with a user access token, you can't retrieve a combination
+ * > [!NOTE]
+ * > For requests made by GitHub Apps with a user access token, you can't retrieve a combination
  * of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier
  * will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must
  * send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only
@@ -104172,9 +110820,10 @@ export async function searchUsers<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Get a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the [Get a team by name](https://docs.github.com/rest/teams/teams#get-a-team-by-name)
- * endpoint.
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the [Get a team by
+ * name](https://docs.github.com/rest/teams/teams#get-a-team-by-name) endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#get-a-team-legacy}
  * Tags: teams
@@ -104204,14 +110853,17 @@ export async function teamsGetLegacy<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Update a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Update a team](https://docs.github.com/rest/teams/teams#update-a-team) endpoint.
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Update a
+ * team](https://docs.github.com/rest/teams/teams#update-a-team) endpoint.
  *
- * To
- * edit a team, the authenticated user must either be an organization owner or a team maintainer.
+ * To edit a team, the authenticated user must
+ * either be an organization owner or a team maintainer.
  *
- * **Note:** With nested
- * teams, the `privacy` for parent teams cannot be `secret`.
+ * > [!NOTE]
+ * > With nested teams, the `privacy` for parent teams
+ * cannot be `secret`.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#update-a-team-legacy}
  * Tags: teams
@@ -104246,7 +110898,7 @@ export async function teamsUpdateLegacy<FetcherData extends r.BaseFetcherData>(
      */
     notification_setting?: 'notifications_enabled' | 'notifications_disabled';
     /**
-     * **Deprecated**. The permission that new repositories will be added to the team with when none is specified.
+     * **Closing down notice**. The permission that new repositories will be added to the team with when none is specified.
      * @defaultValue "pull"
      */
     permission?: 'pull' | 'push' | 'admin';
@@ -104281,14 +110933,16 @@ export async function teamsUpdateLegacy<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Delete a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Delete a team](https://docs.github.com/rest/teams/teams#delete-a-team) endpoint.
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Delete a
+ * team](https://docs.github.com/rest/teams/teams#delete-a-team) endpoint.
  *
- * To
- * delete a team, the authenticated user must be an organization owner or team maintainer.
+ * To delete a team, the authenticated user must
+ * be an organization owner or team maintainer.
  *
- * If you are an organization
- * owner, deleting a parent team will delete all of its child teams as well.
+ * If you are an organization owner, deleting a parent team will delete all
+ * of its child teams as well.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#delete-a-team-legacy}
  * Tags: teams
@@ -104314,14 +110968,16 @@ export async function teamsDeleteLegacy<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * List discussions (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`List discussions`](https://docs.github.com/rest/teams/discussions#list-discussions)
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`List
+ * discussions`](https://docs.github.com/rest/teams/discussions#list-discussions) endpoint.
+ *
+ * List all discussions on a
+ * team's page.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this
  * endpoint.
- *
- * List all discussions on a team's page.
- *
- * OAuth app tokens and personal access tokens (classic) need the
- * `read:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#list-discussions-legacy}
  * Tags: teams
@@ -104357,8 +111013,9 @@ export async function teamsListDiscussionsLegacy<
 }
 /**
  * Create a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`Create a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`Create a
  * discussion`](https://docs.github.com/rest/teams/discussions#create-a-discussion) endpoint.
  *
  * Creates a new discussion
@@ -104418,14 +111075,16 @@ export async function teamsCreateDiscussionLegacy<
 }
 /**
  * Get a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Get a discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion)
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Get a
+ * discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion) endpoint.
+ *
+ * Get a specific discussion on a
+ * team's page.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this
  * endpoint.
- *
- * Get a specific discussion on a team's page.
- *
- * OAuth app tokens and personal access tokens (classic) need the
- * `read:discussion` scope to use this endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/discussions#get-a-discussion-legacy}
  * Tags: teams
@@ -104456,8 +111115,9 @@ export async function teamsGetDiscussionLegacy<
 }
 /**
  * Update a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Update a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Update a
  * discussion](https://docs.github.com/rest/teams/discussions#update-a-discussion) endpoint.
  *
  * Edits the title and body text
@@ -104506,8 +111166,9 @@ export async function teamsUpdateDiscussionLegacy<
 }
 /**
  * Delete a discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`Delete a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`Delete a
  * discussion`](https://docs.github.com/rest/teams/discussions#delete-a-discussion) endpoint.
  *
  * Delete a discussion from a
@@ -104539,8 +111200,9 @@ export async function teamsDeleteDiscussionLegacy<
 }
 /**
  * List discussion comments (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [List discussion
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [List discussion
  * comments](https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments) endpoint.
  *
  * List all comments
@@ -104586,8 +111248,9 @@ export async function teamsListDiscussionCommentsLegacy<
 }
 /**
  * Create a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Create a discussion
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Create a discussion
  * comment](https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment) endpoint.
  *
  * Creates a new
@@ -104640,8 +111303,9 @@ export async function teamsCreateDiscussionCommentLegacy<
 }
 /**
  * Get a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Get a discussion
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Get a discussion
  * comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment) endpoint.
  *
  * Get a specific
@@ -104680,8 +111344,9 @@ export async function teamsGetDiscussionCommentLegacy<
 }
 /**
  * Update a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Update a discussion
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Update a discussion
  * comment](https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment) endpoint.
  *
  * Edits the body
@@ -104727,8 +111392,9 @@ export async function teamsUpdateDiscussionCommentLegacy<
 }
 /**
  * Delete a discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Delete a discussion
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Delete a discussion
  * comment](https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment) endpoint.
  *
  * Deletes a
@@ -104761,8 +111427,9 @@ export async function teamsDeleteDiscussionCommentLegacy<
 }
 /**
  * List reactions for a team discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`List reactions for a team discussion
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`List reactions for a team discussion
  * comment`](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
  *
  * List
@@ -104814,8 +111481,9 @@ export async function reactionsListForTeamDiscussionCommentLegacy<
 }
 /**
  * Create reaction for a team discussion comment (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new "[Create reaction for a team discussion
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion
  * comment](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment)"
  * endpoint.
  *
@@ -104873,8 +111541,9 @@ export async function reactionsCreateForTeamDiscussionCommentLegacy<
 }
 /**
  * List reactions for a team discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`List reactions for a team
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`List reactions for a team
  * discussion`](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion) endpoint.
  *
  * List the
@@ -104924,8 +111593,9 @@ export async function reactionsListForTeamDiscussionLegacy<
 }
 /**
  * Create reaction for a team discussion (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`Create reaction for a team
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`Create reaction for a team
  * discussion`](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion) endpoint.
  *
  * Create a
@@ -104981,8 +111651,9 @@ export async function reactionsCreateForTeamDiscussionLegacy<
 }
 /**
  * List pending team invitations (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`List pending team
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`List pending team
  * invitations`](https://docs.github.com/rest/teams/members#list-pending-team-invitations) endpoint.
  *
  * The return hash
@@ -105015,11 +111686,13 @@ export async function teamsListPendingInvitationsLegacy<
 }
 /**
  * List team members (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`List team members`](https://docs.github.com/rest/teams/members#list-team-members)
- * endpoint.
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`List team
+ * members`](https://docs.github.com/rest/teams/members#list-team-members) endpoint.
  *
- * Team members will include the members of child teams.
+ * Team members will include the members
+ * of child teams.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/members#list-team-members-legacy}
  * Tags: teams
@@ -105049,7 +111722,7 @@ export async function teamsListMembersLegacy<
 }
 /**
  * Get team member (Legacy)
- * The "Get team member" endpoint (described below) is deprecated.
+ * The "Get team member" endpoint (described below) is closing down.
  *
  * We recommend using the [Get team membership for a
  * user](https://docs.github.com/rest/teams/members#get-team-membership-for-a-user) endpoint instead. It allows you to get
@@ -105080,7 +111753,7 @@ export async function teamsGetMemberLegacy<
 }
 /**
  * Add team member (Legacy)
- * The "Add team member" endpoint (described below) is deprecated.
+ * The "Add team member" endpoint (described below) is closing down.
  *
  * We recommend using the [Add or update team membership
  * for a user](https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint instead. It
@@ -105094,7 +111767,8 @@ export async function teamsGetMemberLegacy<
  * To add someone to a team, the authenticated user must be an organization owner or a team maintainer in
  * the team they're changing. The person being added to the team must be a member of the team's organization.
  *
- * **Note:**
+ * > [!NOTE]
+ * >
  * When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an
  * error if you attempt to use the API for making changes to the team's membership. If you have access to manage group
  * membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds
@@ -105134,10 +111808,10 @@ export async function teamsAddMemberLegacy<
 }
 /**
  * Remove team member (Legacy)
- * The "Remove team member" endpoint (described below) is deprecated.
+ * The "Remove team member" endpoint (described below) is closing down.
  *
- * We recommend using the [Remove team membership for a
- * user](https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user) endpoint instead. It allows you to
+ * We recommend using the [Remove team membership for
+ * a user](https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user) endpoint instead. It allows you to
  * remove both active and pending memberships.
  *
  * Team synchronization is available for organizations using GitHub Enterprise
@@ -105149,7 +111823,8 @@ export async function teamsAddMemberLegacy<
  * of the org that the team is associated with. Removing a team member does not delete the user, it just removes them from
  * the team.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity provider
+ * > [!NOTE]
+ * > When you have team synchronization set up for a team with your organization's identity provider
  * (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have
  * access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider,
  * which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams
@@ -105179,8 +111854,9 @@ export async function teamsRemoveMemberLegacy<
 }
 /**
  * Get team membership for a user (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Get team membership for a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Get team membership for a
  * user](https://docs.github.com/rest/teams/members#get-team-membership-for-a-user) endpoint.
  *
  * Team members will include
@@ -105221,8 +111897,9 @@ export async function teamsGetMembershipForUserLegacy<
 }
 /**
  * Add or update team membership for a user (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Add or update team membership for a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Add or update team membership for a
  * user](https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint.
  *
  * Team
@@ -105234,7 +111911,8 @@ export async function teamsGetMembershipForUserLegacy<
  * To add a membership between an organization member and a team, the authenticated user must be an organization owner or a
  * team maintainer.
  *
- * **Note:** When you have team synchronization set up for a team with your organization's identity
+ * > [!NOTE]
+ * > When you have team synchronization set up for a team with your organization's identity
  * provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you
  * have access to manage group membership in your IdP, you can manage GitHub team membership through your identity
  * provider, which automatically adds and removes team members in an organization. For more information, see
@@ -105287,8 +111965,9 @@ export async function teamsAddOrUpdateMembershipForUserLegacy<
 }
 /**
  * Remove team membership for a user (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Remove team membership for a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Remove team membership for a
  * user](https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user) endpoint.
  *
  * Team synchronization is
@@ -105300,7 +111979,8 @@ export async function teamsAddOrUpdateMembershipForUserLegacy<
  * to the team or be an owner of the organization that the team is associated with. Removing team membership does not
  * delete the user, it just removes their membership from the team.
  *
- * **Note:** When you have team synchronization set up
+ * > [!NOTE]
+ * > When you have team synchronization set up
  * for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for
  * making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage
  * GitHub team membership through your identity provider, which automatically adds and removes team members in an
@@ -105330,11 +112010,13 @@ export async function teamsRemoveMembershipForUserLegacy<
 }
 /**
  * List team projects (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`List team projects`](https://docs.github.com/rest/teams/teams#list-team-projects)
- * endpoint.
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`List team
+ * projects`](https://docs.github.com/rest/teams/teams#list-team-projects) endpoint.
  *
- * Lists the organization projects for a team.
+ * Lists the organization projects for a
+ * team.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-projects-legacy}
  * Tags: teams
@@ -105363,8 +112045,9 @@ export async function teamsListProjectsLegacy<
 }
 /**
  * Check team permissions for a project (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Check team permissions for a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Check team permissions for a
  * project](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project) endpoint.
  *
  * Checks whether a team
@@ -105396,8 +112079,9 @@ export async function teamsCheckPermissionsForProjectLegacy<
 }
 /**
  * Add or update team project permissions (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Add or update team project
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Add or update team project
  * permissions](https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions) endpoint.
  *
  * Adds an
@@ -105446,8 +112130,9 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<
 }
 /**
  * Remove a project from a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Remove a project from a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Remove a project from a
  * team](https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team) endpoint.
  *
  * Removes an organization project
@@ -105482,8 +112167,9 @@ export async function teamsRemoveProjectLegacy<
 }
 /**
  * List team repositories (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [List team
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [List team
  * repositories](https://docs.github.com/rest/teams/teams#list-team-repositories) endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-repositories-legacy}
@@ -105521,16 +112207,17 @@ export async function teamsListReposLegacy<
 }
 /**
  * Check team permissions for a repository (Legacy)
- * **Note**: Repositories inherited through a parent team will also be checked.
- *
- * **Deprecation Notice:** This endpoint
- * route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new
- * [Check team permissions for a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Check team permissions for a
  * repository](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository) endpoint.
  *
- * You can also
- * get information about the specified repository, including what permissions the team grants on it, by passing the
- * following custom [media
+ * > [!NOTE]
+ * >
+ * Repositories inherited through a parent team will also be checked.
+ *
+ * You can also get information about the specified
+ * repository, including what permissions the team grants on it, by passing the following custom [media
  * type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types/) via the `Accept`
  * header:
  * @deprecated
@@ -105568,8 +112255,9 @@ export async function teamsCheckPermissionsForRepoLegacy<
 }
 /**
  * Add or update team repository permissions (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new "[Add or update team repository
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new "[Add or update team repository
  * permissions](https://docs.github.com/rest/teams/teams#add-or-update-team-repository-permissions)" endpoint.
  *
  * To add a
@@ -105617,8 +112305,9 @@ export async function teamsAddOrUpdateRepoPermissionsLegacy<
 }
 /**
  * Remove a repository from a team (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [Remove a repository from a
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [Remove a repository from a
  * team](https://docs.github.com/rest/teams/teams#remove-a-repository-from-a-team) endpoint.
  *
  * If the authenticated user is
@@ -105650,9 +112339,10 @@ export async function teamsRemoveRepoLegacy<
 }
 /**
  * List child teams (Legacy)
- * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating
- * your existing code to use the new [`List child teams`](https://docs.github.com/rest/teams/teams#list-child-teams)
- * endpoint.
+ * > [!WARNING]
+ * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
+ * API. We recommend migrating your existing code to use the new [`List child
+ * teams`](https://docs.github.com/rest/teams/teams#list-child-teams) endpoint.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-child-teams-legacy}
  * Tags: teams
@@ -106003,7 +112693,7 @@ export async function codespacesCreateForAuthenticatedUser<
          */
         location?: string;
         /**
-         * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is being deprecated.
+         * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is closing down.
          */
         geo?: 'EuropeWest' | 'SoutheastAsia' | 'UsEast' | 'UsWest';
         /**
@@ -106058,7 +112748,7 @@ export async function codespacesCreateForAuthenticatedUser<
          */
         location?: string;
         /**
-         * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is being deprecated.
+         * The geographic area for this codespace. If not specified, the value is assigned by IP. This property replaces `location`, which is closing down.
          */
         geo?: 'EuropeWest' | 'SoutheastAsia' | 'UsEast' | 'UsWest';
         /**
@@ -107151,6 +113841,7 @@ export async function usersFollow<FetcherData extends r.BaseFetcherData>(
   | r.StatusResponse<401, BasicError>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationError>
 > {
   const req = await ctx.createRequest({
     path: '/user/following/{username}',
@@ -107465,6 +114156,9 @@ export async function appsListInstallationReposForAuthenticatedUser<
 /**
  * Add a repository to an app installation
  * Add a single repository to an installation. The authenticated user must have admin access to the repository.
+ *
+ * This
+ * endpoint only works for PATs (classic) with the `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#add-a-repository-to-an-app-installation}
  * Tags: apps
  */
@@ -107495,6 +114189,9 @@ export async function appsAddRepoToInstallationForAuthenticatedUser<
  * Remove a repository from an app installation
  * Remove a single repository from an installation. The authenticated user must have admin access to the repository. The
  * installation must have the `repository_selection` of `selected`.
+ *
+ * This endpoint only works for PATs (classic) with the
+ * `repo` scope.
  * Learn more at {@link https://docs.github.com/rest/apps/installations#remove-a-repository-from-an-app-installation}
  * Tags: apps
  */
@@ -107617,13 +114314,11 @@ export async function interactionsRemoveRestrictionsForAuthenticatedUser<
  * List user account issues assigned to the authenticated user
  * List issues across owned and member repositories assigned to the authenticated user.
  *
- * **Note**: GitHub's REST API
- * considers every pull request an issue, but not every issue is a pull request. For this
- * reason, "Issues" endpoints may
- * return both issues and pull requests in the response. You can identify pull requests by
- * the `pull_request` key. Be aware
- * that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
- * request id,
+ * > [!NOTE]
+ * > GitHub's REST API
+ * considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may
+ * return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware
+ * that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id,
  * use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
  *
  * This endpoint
@@ -108356,6 +115051,10 @@ export async function migrationsListReposForAuthenticatedUser<
  * `read:org` scope, you can publicize your organization membership with `user` scope, etc.). Therefore, this API requires
  * at least `user` or `read:org` scope for OAuth app tokens and personal access tokens (classic). Requests with
  * insufficient scope will receive a `403 Forbidden` response.
+ *
+ * > [!NOTE]
+ * > Requests using a fine-grained access token will
+ * receive a `200 Success` response with an empty list.
  * Learn more at {@link https://docs.github.com/rest/orgs/orgs#list-organizations-for-the-authenticated-user}
  * Tags: orgs
  */
@@ -108388,9 +115087,7 @@ export async function orgsListForAuthenticatedUser<
  * Lists packages owned by the authenticated user within the user's namespace.
  *
  * OAuth app tokens and personal access tokens
- * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-the-authenticated-users-namespace}
  * Tags: packages
@@ -108433,9 +115130,7 @@ export async function packagesListPackagesForAuthenticatedUser<
  * Gets a specific package for a package owned by the authenticated user.
  *
  * OAuth app tokens and personal access tokens
- * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-the-authenticated-user}
  * Tags: packages
@@ -108476,9 +115171,8 @@ export async function packagesGetPackageForAuthenticatedUser<
  * more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
  *
  * OAuth app tokens and
- * personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. If the
- * `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions, `repo` scope is
- * also required. For the list these registries, see "[About permissions for GitHub
+ * personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more
+ * information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-the-authenticated-user}
  * Tags: packages
@@ -108524,9 +115218,7 @@ export async function packagesDeletePackageForAuthenticatedUser<
  * namespace first.
  *
  * OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages`
- * scopes to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports
- * repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
- * permissions for GitHub
+ * scopes to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-the-authenticated-user}
  * Tags: packages
@@ -108567,9 +115259,7 @@ export async function packagesRestorePackageForAuthenticatedUser<
  * Lists package versions for a package owned by the authenticated user.
  *
  * OAuth app tokens and personal access tokens
- * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-the-authenticated-user}
  * Tags: packages
@@ -108620,9 +115310,8 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByAuthenticate
  * Gets a specific package version for a package owned by the authenticated user.
  *
  * OAuth app tokens and personal access
- * tokens (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for
+ * GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-the-authenticated-user}
  * Tags: packages
@@ -108668,8 +115357,7 @@ export async function packagesGetPackageVersionForAuthenticatedUser<
  * endpoint.
  *
  * OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes
- * to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped
- * permissions, the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-version-for-the-authenticated-user}
  * Tags: packages
@@ -108717,9 +115405,7 @@ export async function packagesDeletePackageVersionForAuthenticatedUser<
  * deleted package's namespace first.
  *
  * OAuth app tokens and personal access tokens (classic) need the `read:packages` and
- * `write:packages` scopes to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that only
- * supports repository-scoped permissions, the `repo` scope is also required. For the list of these registries, see "[About
- * permissions for GitHub
+ * `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-version-for-the-authenticated-user}
  * Tags: packages
@@ -108756,8 +115442,12 @@ export async function packagesRestorePackageVersionForAuthenticatedUser<
 }
 /**
  * Create a user project
- * Creates a user project board. Returns a `410 Gone` status if the user does not have existing classic projects. If you do
- * not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#create-a-user-project}
  * Tags: projects
  */
@@ -108997,6 +115687,8 @@ export async function reposCreateForAuthenticatedUser<
      */
     delete_branch_on_merge?: boolean;
     /**
+     * Required when using `squash_merge_commit_message`.
+     *
      * The default value for a squash merge commit title:
      *
      * - `PR_TITLE` - default to the pull request's title.
@@ -109012,6 +115704,8 @@ export async function reposCreateForAuthenticatedUser<
      */
     squash_merge_commit_message?: 'PR_BODY' | 'COMMIT_MESSAGES' | 'BLANK';
     /**
+     * Required when using `merge_commit_message`.
+     *
      * The default value for a merge commit title.
      *
      * - `PR_TITLE` - default to the pull request's title.
@@ -109647,6 +116341,65 @@ export async function teamsListForAuthenticatedUser<
   );
 }
 /**
+ * Get a user using their ID
+ * Provides publicly available information about someone with a GitHub account. This method takes their durable user `ID`
+ * instead of their `login`, which can change over time.
+ *
+ * If you are requesting information about an [Enterprise Managed
+ * User](https://docs.github.com/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/about-enterprise-managed-users),
+ * or a GitHub App bot that is installed in an organization that uses Enterprise Managed Users, your requests must be
+ * authenticated as a user or GitHub App that has access to the organization to view that account's information. If you are
+ * not authorized, the request will return a `404 Not Found` status.
+ *
+ * The `email` key in the following response is the
+ * publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting up
+ * your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If
+ * you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible
+ * email addresses when authenticated with GitHub. For more information, see
+ * [Authentication](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#authentication).
+ *
+ * The Emails API
+ * enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more
+ * information, see [Emails API](https://docs.github.com/rest/users/emails).
+ * Learn more at {@link https://docs.github.com/rest/users/users#get-a-user-using-their-id}
+ * Tags: users
+ */
+export async function usersGetById<FetcherData extends r.BaseFetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    account_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, PrivateUser | PublicUser>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/user/{account_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: {
+          date: [
+            [
+              [
+                'select',
+                [[['ref', $date_PrivateUser]], [['ref', $date_PublicUser]]],
+              ],
+            ],
+          ],
+        },
+      },
+    },
+    true,
+  );
+}
+/**
  * List users
  * Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization
  * accounts.
@@ -109680,16 +116433,23 @@ export async function usersList<FetcherData extends r.BaseFetcherData>(
  * Get a user
  * Provides publicly available information about someone with a GitHub account.
  *
- * The `email` key in the following response
- * is the publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting
- * up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint.
- * If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible
+ * If you are requesting information about an
+ * [Enterprise Managed
+ * User](https://docs.github.com/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/about-enterprise-managed-users),
+ * or a GitHub App bot that is installed in an organization that uses Enterprise Managed Users, your requests must be
+ * authenticated as a user or GitHub App that has access to the organization to view that account's information. If you are
+ * not authorized, the request will return a `404 Not Found` status.
+ *
+ * The `email` key in the following response is the
+ * publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting up
+ * your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If
+ * you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible
  * email addresses when authenticated with GitHub. For more information, see
  * [Authentication](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#authentication).
  *
  * The Emails API
  * enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more
- * information, see "[Emails API](https://docs.github.com/rest/users/emails)".
+ * information, see [Emails API](https://docs.github.com/rest/users/emails).
  * Learn more at {@link https://docs.github.com/rest/users/users#get-a-user}
  * Tags: users
  */
@@ -109727,6 +116487,61 @@ export async function usersGetByUsername<FetcherData extends r.BaseFetcherData>(
     },
     true,
   );
+}
+/**
+ * List attestations
+ * List a collection of artifact attestations with a given subject digest that are associated with repositories owned by a
+ * user.
+ *
+ * The collection of attestations returned by this endpoint is filtered according to the authenticated user's
+ * permissions; if the authenticated user cannot read a repository, the attestations associated with that repository will
+ * not be included in the response. In addition, when using a fine-grained access token the `attestations:read` permission
+ * is required.
+ *
+ * **Please note:** in order to offer meaningful security benefits, an attestation's signature and timestamps
+ * **must** be cryptographically verified, and the identity of the attestation signer **must** be validated. Attestations
+ * can be verified using the [GitHub CLI `attestation verify`
+ * command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use
+ * artifact attestations to establish a build's
+ * provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
+ * Learn more at {@link https://docs.github.com/rest/users/attestations#list-attestations}
+ * Tags: users
+ */
+export async function usersListAttestations<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    per_page?: number;
+    before?: string;
+    after?: string;
+    username: string;
+    subject_digest: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<
+      200,
+      {
+        attestations?: {
+          bundle?: SigstoreBundle0;
+          repository_id?: number;
+          bundle_url?: string;
+        }[];
+      }
+    >
+  | r.StatusResponse<201, EmptyObject>
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/users/{username}/attestations/{subject_digest}',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'before', 'after'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
 }
 /**
  * Get list of conflicting packages during Docker migration for user
@@ -109768,6 +116583,12 @@ export async function packagesListDockerMigrationConflictingPackagesForUser<
 /**
  * List events for the authenticated user
  * If you are authenticated as the given user, you will see your private events. Otherwise, you'll only see public events.
+ * _Optional_: use the fine-grained token with following permission set to view private events: "Events" user permissions
+ * (read).
+ *
+ * > [!NOTE]
+ * > This API is not built to serve real-time use cases. Depending on the time of day, event latency can
+ * be anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-events-for-the-authenticated-user}
  * Tags: activity
  */
@@ -109800,6 +116621,10 @@ export async function activityListEventsForAuthenticatedUser<
 /**
  * List organization events for the authenticated user
  * This is the user's organization dashboard. You must be authenticated as the user to view this.
+ *
+ * > [!NOTE]
+ * > This API is
+ * not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-organization-events-for-the-authenticated-user}
  * Tags: activity
  */
@@ -109832,6 +116657,9 @@ export async function activityListOrgEventsForAuthenticatedUser<
 }
 /**
  * List public events for a user
+ * > [!NOTE]
+ * > This API is not built to serve real-time use cases. Depending on the time of day, event latency can be
+ * anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events-for-a-user}
  * Tags: activity
  */
@@ -110134,9 +116962,8 @@ export async function orgsListForUser<FetcherData extends r.BaseFetcherData>(
  * Lists all packages in a user's namespace for which the requesting user has access.
  *
  * OAuth app tokens and personal access
- * tokens (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for
+ * GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-packages-for-a-user}
  * Tags: packages
@@ -110185,9 +117012,7 @@ export async function packagesListPackagesForUser<
  * Gets a specific package metadata for a public package owned by a user.
  *
  * OAuth app tokens and personal access tokens
- * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-for-a-user}
  * Tags: packages
@@ -110235,8 +117060,7 @@ export async function packagesGetPackageForUser<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-a-package-for-a-user}
  * Tags: packages
@@ -110290,8 +117114,7 @@ export async function packagesDeletePackageForUser<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-a-package-for-a-user}
  * Tags: packages
@@ -110333,9 +117156,7 @@ export async function packagesRestorePackageForUser<
  * Lists package versions for a public package owned by a specified user.
  *
  * OAuth app tokens and personal access tokens
- * (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-a-user}
  * Tags: packages
@@ -110383,9 +117204,8 @@ export async function packagesGetAllPackageVersionsForPackageOwnedByUser<
  * Gets a specific package version for a public package owned by a specified user.
  *
  * OAuth app tokens and personal access
- * tokens (classic) need the `read:packages` scope to use this endpoint. If the `package_type` belongs to a GitHub Packages
- * registry that only supports repository-scoped permissions, the `repo` scope is also required. For the list of these
- * registries, see "[About permissions for GitHub
+ * tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for
+ * GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#get-a-package-version-for-a-user}
  * Tags: packages
@@ -110434,8 +117254,7 @@ export async function packagesGetPackageVersionForUser<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#delete-package-version-for-a-user}
  * Tags: packages
@@ -110490,8 +117309,7 @@ export async function packagesDeletePackageVersionForUser<
  *
  * OAuth
  * app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this
- * endpoint. If the `package_type` belongs to a GitHub Packages registry that only supports repository-scoped permissions,
- * the `repo` scope is also required. For the list of these registries, see "[About permissions for GitHub
+ * endpoint. For more information, see "[About permissions for GitHub
  * Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
  * Learn more at {@link https://docs.github.com/rest/packages/packages#restore-package-version-for-a-user}
  * Tags: packages
@@ -110529,7 +117347,12 @@ export async function packagesRestorePackageVersionForUser<
 }
 /**
  * List user projects
- * Lists projects for a user.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/projects/projects#list-user-projects}
  * Tags: projects
  */
@@ -110564,8 +117387,13 @@ export async function projectsListForUser<
 }
 /**
  * List events received by the authenticated user
- * These are events that you've received by watching repositories and following users. If you are authenticated as the
+ * These are events that you've received by watching repositories and following users. If you are authenticated as
+ * the
  * given user, you will see private events. Otherwise, you'll only see public events.
+ *
+ * > [!NOTE]
+ * > This API is not
+ * built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-events-received-by-the-authenticated-user}
  * Tags: activity
  */
@@ -110597,6 +117425,9 @@ export async function activityListReceivedEventsForUser<
 }
 /**
  * List public events received by a user
+ * > [!NOTE]
+ * > This API is not built to serve real-time use cases. Depending on the time of day, event latency can be
+ * anywhere from 30s to 6h.
  * Learn more at {@link https://docs.github.com/rest/activity/events#list-public-events-received-by-a-user}
  * Tags: activity
  */
