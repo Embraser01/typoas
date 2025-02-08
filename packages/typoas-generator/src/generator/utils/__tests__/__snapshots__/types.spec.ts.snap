@@ -10,7 +10,7 @@ exports[`create type from schema should handle integer schema 1`] = `"number"`;
 
 exports[`create type from schema should handle object schema without properties 1`] = `
 "{
-    [key: string]: any;
+    [key: string]: unknown;
 }"
 `;
 
@@ -54,7 +54,7 @@ exports[`create type from schema with complex object should allow additional pro
     a: string;
     b?: number;
 } & {
-    [key: string]: any;
+    [key: string]: unknown;
 }"
 `;
 
@@ -89,9 +89,51 @@ exports[`create type from schema with complex object should handle allOf 1`] = `
 
 exports[`create type from schema with complex object should handle anyOf 1`] = `"string | string[]"`;
 
+exports[`create type from schema with complex object should handle multiple patterns with patternProperties 1`] = `
+"{
+    [key: string]: number | string | {
+        a?: boolean;
+    };
+}"
+`;
+
 exports[`create type from schema with complex object should handle nullable props 1`] = `"number | null"`;
 
 exports[`create type from schema with complex object should handle oneOf 1`] = `"string | string[]"`;
+
+exports[`create type from schema with complex object should handle patternProperties 1`] = `
+"{
+    [key: string]: string;
+}"
+`;
+
+exports[`create type from schema with complex object should handle patternProperties with additionalProperties = schema 1`] = `
+"{
+    [key: string]: number | string;
+}"
+`;
+
+exports[`create type from schema with complex object should handle patternProperties with additionalProperties = true 1`] = `
+"{
+    [key: string]: unknown;
+}"
+`;
+
+exports[`create type from schema with complex object should handle unevaluatedProperties 1`] = `
+"{
+    [key: string]: number;
+} & ({
+    a?: string;
+})"
+`;
+
+exports[`create type from schema with complex object should handle unevaluatedProperties boolean 1`] = `
+"{
+    [key: string]: unknown;
+} & ({
+    a?: string;
+})"
+`;
 
 exports[`create type from schema with refs should work in nested properties 1`] = `
 "{

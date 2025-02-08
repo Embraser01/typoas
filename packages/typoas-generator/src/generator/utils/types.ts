@@ -73,18 +73,6 @@ export function createTypeFromSchema(
         })
         .map((e) => factory.createLiteralTypeNode(e)),
     );
-  } else if (schema.oneOf && schema.oneOf.length) {
-    node = factory.createUnionTypeNode(
-      schema.oneOf.map((s) => createTypeFromSchema(s, ctx)),
-    );
-  } else if (schema.anyOf && schema.anyOf.length) {
-    node = factory.createUnionTypeNode(
-      schema.anyOf.map((s) => createTypeFromSchema(s, ctx)),
-    );
-  } else if (schema.allOf && schema.allOf.length) {
-    node = factory.createIntersectionTypeNode(
-      schema.allOf.map((s) => createTypeFromSchema(s, ctx)),
-    );
   } else if (Array.isArray(schema.type)) {
     node = factory.createUnionTypeNode(
       schema.type.map((t) => createTypeFromSchema({ ...schema, type: t }, ctx)),
@@ -135,8 +123,53 @@ export function createTypeFromSchema(
             }),
           );
         }
-        if (schema.additionalProperties) {
-          const additionalPropsNode = factory.createTypeLiteralNode([
+
+        if (
+          schema.additionalProperties ||
+          schema.patternProperties ||
+          schema.unevaluatedProperties
+        ) {
+          const hasAnyShortcut =
+            schema.additionalProperties === true ||
+            schema.unevaluatedProperties === true;
+
+          const valueTypes: TypeNode[] = [];
+
+          if (!hasAnyShortcut) {
+            if (
+              schema.additionalProperties &&
+              schema.additionalProperties !== true // useless but TS doesn't know
+            ) {
+              valueTypes.push(
+                createTypeFromSchema(schema.additionalProperties, ctx),
+              );
+            }
+            if (schema.patternProperties) {
+              valueTypes.push(
+                ...Object.values(schema.patternProperties).map((s) =>
+                  createTypeFromSchema(s, ctx),
+                ),
+              );
+            }
+            if (
+              schema.unevaluatedProperties &&
+              schema.unevaluatedProperties !== true // useless but TS doesn't know
+            ) {
+              valueTypes.push(
+                createTypeFromSchema(schema.unevaluatedProperties, ctx),
+              );
+            }
+          } else {
+            valueTypes.push(
+              factory.createKeywordTypeNode(
+                ctx.generateAnyInsteadOfUnknown()
+                  ? SyntaxKind.AnyKeyword
+                  : SyntaxKind.UnknownKeyword,
+              ),
+            );
+          }
+
+          const indexSignature = factory.createTypeLiteralNode([
             factory.createIndexSignature(
               undefined,
               [
@@ -149,15 +182,13 @@ export function createTypeFromSchema(
                   undefined,
                 ),
               ],
-              schema.additionalProperties === true
-                ? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword)
-                : createTypeFromSchema(schema.additionalProperties, ctx),
+              factory.createUnionTypeNode(valueTypes),
             ),
           ]);
 
           node = hasProperties
-            ? factory.createIntersectionTypeNode([node, additionalPropsNode])
-            : additionalPropsNode;
+            ? factory.createIntersectionTypeNode([node, indexSignature])
+            : indexSignature;
         }
         break;
       }
@@ -169,6 +200,34 @@ export function createTypeFromSchema(
           createTypeFromSchema(schema.items, ctx),
         );
         break;
+    }
+  }
+
+  let subSchemaType: TypeNode | null = null;
+  if (schema.oneOf && schema.oneOf.length) {
+    subSchemaType = factory.createUnionTypeNode(
+      schema.oneOf.map((s) => createTypeFromSchema(s, ctx)),
+    );
+  } else if (schema.anyOf && schema.anyOf.length) {
+    subSchemaType = factory.createUnionTypeNode(
+      schema.anyOf.map((s) => createTypeFromSchema(s, ctx)),
+    );
+  } else if (schema.allOf && schema.allOf.length) {
+    subSchemaType = factory.createIntersectionTypeNode(
+      schema.allOf.map((s) => createTypeFromSchema(s, ctx)),
+    );
+  }
+
+  if (subSchemaType) {
+    // allOf/oneOf/anyOf can be used with a schema that has already a type
+    // In our case, we only care about 'object' types as others wouldn't add typings information
+    if (
+      schema.type === 'object' ||
+      (Array.isArray(schema.type) && schema.type.includes('object'))
+    ) {
+      node = factory.createIntersectionTypeNode([node, subSchemaType]);
+    } else {
+      node = subSchemaType;
     }
   }
 
