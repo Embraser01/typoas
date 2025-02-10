@@ -64,6 +64,7 @@ export type ContextOptions = {
   anyInsteadOfUnknown?: boolean;
   wrapLinesAt?: number;
   fullResponseMode?: boolean;
+  overrides?: { import: string; list: string[] };
 };
 
 export class Context {
@@ -177,5 +178,16 @@ export class Context {
 
   isFullResponseMode(): boolean {
     return this.opts.fullResponseMode !== false;
+  }
+
+  hasOverride(override: string): boolean {
+    if (!this.opts.overrides) {
+      return false;
+    }
+    return this.opts.overrides.list.includes(override);
+  }
+
+  getOverrideImport(): string | undefined {
+    return this.opts.overrides?.import;
   }
 }

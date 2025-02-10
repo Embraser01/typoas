@@ -28,4 +28,21 @@ describe('create full specs', () => {
 
     expect(getStringFromNode(node)).toMatchSnapshot();
   });
+
+  it('should allow overrides if possible', () => {
+    const specs = JSON.parse(
+      readFileSync(resolve(__dirname, './spec-with-overrides.json'), 'utf8'),
+    ) as OpenAPIObject;
+
+    const node = generateClient(specs, {
+      jsDoc: false,
+      generateEnums: true,
+      overrides: {
+        import: './overrides',
+        list: ['PetStatus'],
+      },
+    });
+
+    expect(getStringFromNode(node)).toMatchSnapshot();
+  });
 });

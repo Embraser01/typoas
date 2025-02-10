@@ -1,6 +1,10 @@
 import cli from '@typoas/cli';
 
-type Sample = { input: string; output: string };
+type Sample = {
+  input: string;
+  output: string;
+  args?: string[];
+};
 
 async function run() {
   const context = {
@@ -25,6 +29,16 @@ async function run() {
       input: 'https://petstore3.swagger.io/api/v3/openapi.json',
       output: 'petstore',
     },
+    {
+      input: 'https://petstore3.swagger.io/api/v3/openapi.json',
+      output: 'petstore-with-overrides',
+      args: [
+        '--override',
+        'Category',
+        '--override-import',
+        './petstore-overrides',
+      ],
+    },
   ];
 
   for (const sample of samples) {
@@ -37,6 +51,7 @@ async function run() {
         `./src/${sample.output}.ts`,
         '-e',
         '-p',
+        ...(sample.args || []),
       ],
       context,
     );
