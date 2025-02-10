@@ -135,6 +135,30 @@ export function MyComponent() {
 }
 ```
 
+### `getQueryFunctionKey`
+
+Sometimes you may need to use `queryClient.setQueryData` or `queryClient.invalidateQueries` with a query hook.
+In this case, you can use the `getQueryFunctionKey` function to get the queryKey matching the query:
+
+```tsx
+import {
+  getQueryFunctionKey,
+  createMutationHook,
+  createQueryHook,
+} from '@typoas/react-query';
+import { findPetsByStatus, addPet } from './generated/client';
+
+const useAddPetMutation = createMutationHook(addPet, {
+  onMutate() {
+    queryClient.invalidateQueries({
+      queryKey: [getQueryFunctionKey(findPetsByStatus)],
+    });
+  },
+});
+
+const useFindPetsByStatus = createQueryHook(findPetsByStatus, {});
+```
+
 ## Notes
 
 Each hook factory accepts a second argument which is the base options for the query/mutation. This also allows 2 additional options:

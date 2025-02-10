@@ -10,7 +10,7 @@ const names = new Set<string>();
  *
  * By default, will use the function name if not already used, and append a random ID if it is.
  */
-export function getUniqueFunctionName(func: Fun): string {
+export function getQueryFunctionKey(func: Fun): string {
   const name = funcNames.get(func);
   if (name) {
     return name;
