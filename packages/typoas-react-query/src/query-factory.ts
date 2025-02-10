@@ -15,7 +15,7 @@ import {
   SuccessfulStatus,
 } from '@typoas/runtime';
 import { useApiContext } from './api-context';
-import { getUniqueFunctionName } from './func-names';
+import { getQueryFunctionKey } from './func-names';
 import { TypoasFuncStatusType, TypoasReturnType } from './types';
 
 /**
@@ -86,7 +86,7 @@ export function createQueryHook<
   >,
   queryClient?: QueryClient,
 ) => UseQueryResult<TypoasReturnType<Func, S>, TError> {
-  const name = getUniqueFunctionName(func);
+  const name = getQueryFunctionKey(func);
 
   return (options, queryClient) => {
     const { context: localContext } = useApiContext();

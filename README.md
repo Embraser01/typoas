@@ -175,9 +175,12 @@ import { ServerConfiguration } from '@typoas/runtime';
 import { createContext } from './client';
 
 const ctx = createContext({
-  server: new ServerConfiguration('https://{env}.api.example.com', {
-    env: 'staging',
-  }),
+  serverConfiguration: new ServerConfiguration(
+    'https://{env}.api.example.com',
+    {
+      env: 'staging',
+    },
+  ),
 });
 ```
 
@@ -192,10 +195,15 @@ For example, you can use `axios` instead of the `fetch` API:
 
 ```typescript
 import axios, { AxiosError, AxiosResponse, Method } from 'axios';
-import { Fetcher, RequestContext, ResponseContext } from '@typoas/runtime';
+import {
+  Fetcher,
+  RequestContext,
+  ResponseContext,
+  BaseFetcherData,
+} from '@typoas/runtime';
 import { createContext } from './client';
 
-class AxiosHttpLibrary implements Fetcher {
+class AxiosHttpLibrary implements Fetcher<BaseFetcherData> {
   async send(request: RequestContext): Promise<ResponseContext> {
     let resp: AxiosResponse;
     try {

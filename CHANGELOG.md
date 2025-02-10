@@ -2,9 +2,18 @@
 
 ## Unreleased
 
-- Add support for `openIdConnect` security scheme type (fixes [#69](https://github.com/Embraser01/typoas/pull/69)) [#70](https://github.com/Embraser01/typoas/pull/70)
+- feat(react-query): Export getQueryFunctionKey helper [#75](https://github.com/Embraser01/typoas/pull/75)
+- fix(generator): Simplify sub schemas with type object [#74](https://github.com/Embraser01/typoas/pull/74)
+- feat(generator): Allow overrides during generation (fix [#71](https://github.com/Embraser01/typoas/issues/71)) [#73](https://github.com/Embraser01/typoas/pull/73)
+- fix(generator): Handle patternProperties & unevaluatedProperties [#72](https://github.com/Embraser01/typoas/pull/72)
 
 ---
+
+## 4.1.0 - 2024-09-09
+
+> All packages were updated to 4.1.0
+
+- Add support for `openIdConnect` security scheme type (fixes [#69](https://github.com/Embraser01/typoas/pull/69)) [#70](https://github.com/Embraser01/typoas/pull/70)
 
 ## 4.0.0 - 2024-08-21
 
