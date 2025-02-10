@@ -2778,7 +2778,7 @@ export type MinimalRepository = {
     maintain?: boolean;
     triage?: boolean;
   };
-  template_repository?: (unknown & Repository) | null;
+  template_repository?: Repository | null;
   temp_clone_token?: string;
   delete_branch_on_merge?: boolean;
   subscribers_count?: number;
@@ -4286,7 +4286,7 @@ export type TeamRepository = {
    * @defaultValue true
    */
   allow_rebase_merge?: boolean;
-  template_repository?: (unknown & Repository) | null;
+  template_repository?: Repository | null;
   temp_clone_token?: string;
   /**
    * Whether to allow squash merges for pull requests.
@@ -4746,7 +4746,7 @@ export type FullRepository = {
    * @example true
    */
   allow_rebase_merge?: boolean;
-  template_repository?: (unknown & Repository) | null;
+  template_repository?: Repository | null;
   temp_clone_token?: string | null;
   /**
    * @example true
@@ -8540,30 +8540,28 @@ export type TimelineUnassignedIssueEvent = {
  * Timeline Event
  * Timeline Event
  */
-export type TimelineIssueEvents = unknown &
-  (
-    | LabeledIssueEvent
-    | UnlabeledIssueEvent
-    | MilestonedIssueEvent
-    | DemilestonedIssueEvent
-    | RenamedIssueEvent
-    | ReviewRequestedIssueEvent
-    | ReviewRequestRemovedIssueEvent
-    | ReviewDismissedIssueEvent
-    | LockedIssueEvent
-    | AddedToProjectIssueEvent
-    | MovedColumnInProjectIssueEvent
-    | RemovedFromProjectIssueEvent
-    | ConvertedNoteToIssueIssueEvent
-    | TimelineCommentEvent
-    | TimelineCrossReferencedEvent
-    | TimelineCommittedEvent
-    | TimelineReviewedEvent
-    | TimelineLineCommentedEvent
-    | TimelineCommitCommentedEvent
-    | TimelineAssignedIssueEvent
-    | TimelineUnassignedIssueEvent
-  );
+export type TimelineIssueEvents =
+  | LabeledIssueEvent
+  | UnlabeledIssueEvent
+  | MilestonedIssueEvent
+  | DemilestonedIssueEvent
+  | RenamedIssueEvent
+  | ReviewRequestedIssueEvent
+  | ReviewRequestRemovedIssueEvent
+  | ReviewDismissedIssueEvent
+  | LockedIssueEvent
+  | AddedToProjectIssueEvent
+  | MovedColumnInProjectIssueEvent
+  | RemovedFromProjectIssueEvent
+  | ConvertedNoteToIssueIssueEvent
+  | TimelineCommentEvent
+  | TimelineCrossReferencedEvent
+  | TimelineCommittedEvent
+  | TimelineReviewedEvent
+  | TimelineLineCommentedEvent
+  | TimelineCommitCommentedEvent
+  | TimelineAssignedIssueEvent
+  | TimelineUnassignedIssueEvent;
 /**
  * Deploy Key
  * An SSH key granting access to a single repository.
