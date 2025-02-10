@@ -8179,18 +8179,13 @@ export type RepositoryRulesetConditionsRepositoryPropertyTarget = {
  * The push rulesets conditions object does not require the `ref_name` property.
  * For repository policy rulesets, the conditions object should only contain the `repository_name`, the `repository_id`, or the `repository_property`.
  */
-export type OrgRulesetConditions = unknown &
-  (
-    | (unknown &
-        (RepositoryRulesetConditions &
-          RepositoryRulesetConditionsRepositoryNameTarget))
-    | (unknown &
-        (RepositoryRulesetConditions &
-          RepositoryRulesetConditionsRepositoryIdTarget))
-    | (unknown &
-        (RepositoryRulesetConditions &
-          RepositoryRulesetConditionsRepositoryPropertyTarget))
-  );
+export type OrgRulesetConditions =
+  | (RepositoryRulesetConditions &
+      RepositoryRulesetConditionsRepositoryNameTarget)
+  | (RepositoryRulesetConditions &
+      RepositoryRulesetConditionsRepositoryIdTarget)
+  | (RepositoryRulesetConditions &
+      RepositoryRulesetConditionsRepositoryPropertyTarget);
 /**
  * creation
  * Only allow users with bypass permission to create matching refs.
@@ -8593,62 +8588,60 @@ export type RepositoryRuleCodeScanning = {
  * Repository Rule
  * A repository rule.
  */
-export type RepositoryRule = unknown &
-  (
-    | RepositoryRuleCreation
-    | RepositoryRuleUpdate
-    | RepositoryRuleDeletion
-    | RepositoryRuleRequiredLinearHistory
-    | RepositoryRuleMergeQueue
-    | RepositoryRuleRequiredDeployments
-    | RepositoryRuleRequiredSignatures
-    | RepositoryRulePullRequest
-    | RepositoryRuleRequiredStatusChecks
-    | RepositoryRuleNonFastForward
-    | RepositoryRuleCommitMessagePattern
-    | RepositoryRuleCommitAuthorEmailPattern
-    | RepositoryRuleCommitterEmailPattern
-    | RepositoryRuleBranchNamePattern
-    | RepositoryRuleTagNamePattern
-    | {
-        type: 'file_path_restriction';
-        parameters?: {
-          /**
-           * The file paths that are restricted from being pushed to the commit graph.
-           */
-          restricted_file_paths: string[];
-        };
-      }
-    | {
-        type: 'max_file_path_length';
-        parameters?: {
-          /**
-           * The maximum amount of characters allowed in file paths
-           */
-          max_file_path_length: number;
-        };
-      }
-    | {
-        type: 'file_extension_restriction';
-        parameters?: {
-          /**
-           * The file extensions that are restricted from being pushed to the commit graph.
-           */
-          restricted_file_extensions: string[];
-        };
-      }
-    | {
-        type: 'max_file_size';
-        parameters?: {
-          /**
-           * The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).
-           */
-          max_file_size: number;
-        };
-      }
-    | RepositoryRuleWorkflows
-    | RepositoryRuleCodeScanning
-  );
+export type RepositoryRule =
+  | RepositoryRuleCreation
+  | RepositoryRuleUpdate
+  | RepositoryRuleDeletion
+  | RepositoryRuleRequiredLinearHistory
+  | RepositoryRuleMergeQueue
+  | RepositoryRuleRequiredDeployments
+  | RepositoryRuleRequiredSignatures
+  | RepositoryRulePullRequest
+  | RepositoryRuleRequiredStatusChecks
+  | RepositoryRuleNonFastForward
+  | RepositoryRuleCommitMessagePattern
+  | RepositoryRuleCommitAuthorEmailPattern
+  | RepositoryRuleCommitterEmailPattern
+  | RepositoryRuleBranchNamePattern
+  | RepositoryRuleTagNamePattern
+  | {
+      type: 'file_path_restriction';
+      parameters?: {
+        /**
+         * The file paths that are restricted from being pushed to the commit graph.
+         */
+        restricted_file_paths: string[];
+      };
+    }
+  | {
+      type: 'max_file_path_length';
+      parameters?: {
+        /**
+         * The maximum amount of characters allowed in file paths
+         */
+        max_file_path_length: number;
+      };
+    }
+  | {
+      type: 'file_extension_restriction';
+      parameters?: {
+        /**
+         * The file extensions that are restricted from being pushed to the commit graph.
+         */
+        restricted_file_extensions: string[];
+      };
+    }
+  | {
+      type: 'max_file_size';
+      parameters?: {
+        /**
+         * The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).
+         */
+        max_file_size: number;
+      };
+    }
+  | RepositoryRuleWorkflows
+  | RepositoryRuleCodeScanning;
 /**
  * Repository ruleset
  * A set of rules to apply when specified conditions are met.
@@ -15499,31 +15492,29 @@ export type StateChangeIssueEvent = {
  * Timeline Event
  * Timeline Event
  */
-export type TimelineIssueEvents = unknown &
-  (
-    | LabeledIssueEvent
-    | UnlabeledIssueEvent
-    | MilestonedIssueEvent
-    | DemilestonedIssueEvent
-    | RenamedIssueEvent
-    | ReviewRequestedIssueEvent
-    | ReviewRequestRemovedIssueEvent
-    | ReviewDismissedIssueEvent
-    | LockedIssueEvent
-    | AddedToProjectIssueEvent
-    | MovedColumnInProjectIssueEvent
-    | RemovedFromProjectIssueEvent
-    | ConvertedNoteToIssueIssueEvent
-    | TimelineCommentEvent
-    | TimelineCrossReferencedEvent
-    | TimelineCommittedEvent
-    | TimelineReviewedEvent
-    | TimelineLineCommentedEvent
-    | TimelineCommitCommentedEvent
-    | TimelineAssignedIssueEvent
-    | TimelineUnassignedIssueEvent
-    | StateChangeIssueEvent
-  );
+export type TimelineIssueEvents =
+  | LabeledIssueEvent
+  | UnlabeledIssueEvent
+  | MilestonedIssueEvent
+  | DemilestonedIssueEvent
+  | RenamedIssueEvent
+  | ReviewRequestedIssueEvent
+  | ReviewRequestRemovedIssueEvent
+  | ReviewDismissedIssueEvent
+  | LockedIssueEvent
+  | AddedToProjectIssueEvent
+  | MovedColumnInProjectIssueEvent
+  | RemovedFromProjectIssueEvent
+  | ConvertedNoteToIssueIssueEvent
+  | TimelineCommentEvent
+  | TimelineCrossReferencedEvent
+  | TimelineCommittedEvent
+  | TimelineReviewedEvent
+  | TimelineLineCommentedEvent
+  | TimelineCommitCommentedEvent
+  | TimelineAssignedIssueEvent
+  | TimelineUnassignedIssueEvent
+  | StateChangeIssueEvent;
 /**
  * Deploy Key
  * An SSH key granting access to a single repository.
@@ -16348,26 +16339,24 @@ export type RepositoryRuleRulesetInfo = unknown;
  * Repository Rule
  * A repository rule with ruleset details.
  */
-export type RepositoryRuleDetailed = unknown &
-  (
-    | (RepositoryRuleCreation & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleUpdate & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleDeletion & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleRequiredLinearHistory & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleMergeQueue & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleRequiredDeployments & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleRequiredSignatures & RepositoryRuleRulesetInfo)
-    | (RepositoryRulePullRequest & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleRequiredStatusChecks & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleNonFastForward & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleCommitMessagePattern & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleCommitAuthorEmailPattern & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleCommitterEmailPattern & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleBranchNamePattern & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleTagNamePattern & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleWorkflows & RepositoryRuleRulesetInfo)
-    | (RepositoryRuleCodeScanning & RepositoryRuleRulesetInfo)
-  );
+export type RepositoryRuleDetailed =
+  | (RepositoryRuleCreation & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleUpdate & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleDeletion & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleRequiredLinearHistory & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleMergeQueue & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleRequiredDeployments & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleRequiredSignatures & RepositoryRuleRulesetInfo)
+  | (RepositoryRulePullRequest & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleRequiredStatusChecks & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleNonFastForward & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleCommitMessagePattern & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleCommitAuthorEmailPattern & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleCommitterEmailPattern & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleBranchNamePattern & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleTagNamePattern & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleWorkflows & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleCodeScanning & RepositoryRuleRulesetInfo);
 export type SecretScanningAlert = {
   number?: AlertNumber;
   created_at?: AlertCreatedAt;

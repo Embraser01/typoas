@@ -221,10 +221,18 @@ export function createTypeFromSchema(
   if (subSchemaType) {
     // allOf/oneOf/anyOf can be used with a schema that has already a type
     // In our case, we only care about 'object' types as others wouldn't add typings information
-    if (
+    // We also filter out the cases where the schema only defines the object type (no properties, etc.)
+
+    const isObject =
       schema.type === 'object' ||
-      (Array.isArray(schema.type) && schema.type.includes('object'))
-    ) {
+      (Array.isArray(schema.type) && schema.type.includes('object'));
+    const isComplexObject =
+      schema.properties ||
+      schema.additionalProperties ||
+      schema.patternProperties ||
+      schema.unevaluatedProperties;
+
+    if (isObject && isComplexObject) {
       node = factory.createIntersectionTypeNode([node, subSchemaType]);
     } else {
       node = subSchemaType;
