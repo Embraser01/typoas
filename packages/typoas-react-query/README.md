@@ -21,9 +21,9 @@ First, you will need to add the `ApiContextProvider` to your react application:
 
 ```tsx
 import { ApiContextProvider } from '@typoas/react-query';
-import { createClient } from './generated/client';
+import { createContext } from './generated/client';
 
-const client = createClient();
+const client = createContext();
 
 export function App() {
   return (
