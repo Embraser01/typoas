@@ -47,21 +47,9 @@ export interface ResponseBody {
   json(): Promise<unknown>;
 }
 
-/**
- * Represents an HTTP status code including the default
- * status codes and the 1XX, 4XX, 5XX ranges.
- */
-export type EnhancedHTTPStatus =
-  | 'default'
-  | '1XX'
-  | '2XX'
-  | '3XX'
-  | '4XX'
-  | '5XX'
-  | 100
-  | 101
-  | 102
-  | 103
+export type HTTPStatus1XX = 100 | 101 | 102 | 103;
+
+export type HTTPStatus2XX =
   | 200
   | 201
   | 202
@@ -71,16 +59,11 @@ export type EnhancedHTTPStatus =
   | 206
   | 207
   | 208
-  | 226
-  | 300
-  | 301
-  | 302
-  | 303
-  | 304
-  | 305
-  | 306
-  | 307
-  | 308
+  | 226;
+
+export type HTTPStatus3XX = 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 | 308;
+
+export type HTTPStatus4XX =
   | 400
   | 401
   | 402
@@ -111,7 +94,9 @@ export type EnhancedHTTPStatus =
   | 429
   | 430
   | 431
-  | 451
+  | 451;
+
+export type HTTPStatus5XX =
   | 500
   | 501
   | 502
@@ -126,32 +111,28 @@ export type EnhancedHTTPStatus =
   | 511;
 
 /**
+ * Represents an HTTP status code including the default
+ * status codes and the 1XX, 4XX, 5XX ranges.
+ */
+export type EnhancedHTTPStatus =
+  | 'default'
+  | '1XX'
+  | HTTPStatus1XX
+  | '2XX'
+  | HTTPStatus2XX
+  | '3XX'
+  | HTTPStatus3XX
+  | '4XX'
+  | HTTPStatus4XX
+  | '5XX'
+  | HTTPStatus5XX;
+
+/**
  * Extracts only the successful status codes of EnhancedHTTPStatus.
  */
 export type SuccessfulStatus = Extract<
   EnhancedHTTPStatus,
-  | 'default'
-  | '2XX'
-  | 200
-  | 201
-  | 202
-  | 203
-  | 204
-  | 205
-  | 206
-  | 207
-  | 208
-  | 226
-  | '3XX'
-  | 300
-  | 301
-  | 302
-  | 303
-  | 304
-  | 305
-  | 306
-  | 307
-  | 308
+  'default' | '2XX' | HTTPStatus2XX | '3XX' | HTTPStatus3XX
 >;
 
 /**
@@ -166,7 +147,19 @@ export type StatusResponse<
   headers: Record<string, string>;
   ok: S extends SuccessfulStatus ? true : S extends 'default' ? boolean : false;
   // When using ranges or default, we can't now the specific status code.
-  status: S extends string ? number : S;
+  status: S extends '1XX'
+    ? HTTPStatus1XX
+    : S extends '2XX'
+      ? HTTPStatus2XX
+      : S extends '3XX'
+        ? HTTPStatus3XX
+        : S extends '4XX'
+          ? HTTPStatus4XX
+          : S extends '5XX'
+            ? HTTPStatus5XX
+            : S extends 'default'
+              ? number
+              : S;
 };
 
 export type BaseFetcherData = {

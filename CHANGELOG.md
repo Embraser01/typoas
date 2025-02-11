@@ -6,8 +6,9 @@
 
 ## 4.2.0 - 2025-02-10
 
-> All packages were updated to 4.2.0 except runtime (still at 4.1.0)
+> All packages were updated to 4.2.0
 
+- fix(runtime): Enhance status response type to handle 5XX errors [#76](https://github.com/Embraser01/typoas/pull/76)
 - feat(react-query): Export getQueryFunctionKey helper [#75](https://github.com/Embraser01/typoas/pull/75)
 - fix(generator): Simplify sub schemas with type object [#74](https://github.com/Embraser01/typoas/pull/74)
 - feat(generator): Allow overrides during generation (fix [#71](https://github.com/Embraser01/typoas/issues/71)) [#73](https://github.com/Embraser01/typoas/pull/73)
