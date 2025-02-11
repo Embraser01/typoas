@@ -1,5 +1,0 @@
-releases:
-  "@typoas/runtime": minor
-
-declined:
-  - "@typoas/react-query"
