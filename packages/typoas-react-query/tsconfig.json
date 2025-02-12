@@ -2,12 +2,12 @@
   "compilerOptions": {
     "strict": true,
     "module": "commonjs",
+    "moduleResolution": "node",
     "target": "ES2019",
     "declaration": true,
     "lib": ["ES2019", "DOM"],
-    "outDir": "lib",
-    "jsx": "react-jsx",
-    "resolveJsonModule": true
+    "outDir": "lib/cjs",
+    "jsx": "react-jsx"
   },
   "exclude": ["node_modules", "lib"]
 }

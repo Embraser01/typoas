@@ -8,8 +8,9 @@
     "directory": "packages/typoas-react-query"
   },
   "main": "./src/index.ts",
+  "module": "./lib/esm/index.js",
   "scripts": {
-    "prepack": "tsc",
+    "prepack": "tsc --module esnext --outDir ./lib/esm && tsc --outDir ./lib/cjs",
     "start": "ts-node ./src/bin.ts",
     "test:types": "tsc --noEmit",
     "test:jest": "jest"
@@ -40,7 +41,8 @@
     "!/lib/**/__tests__/*"
   ],
   "publishConfig": {
-    "main": "./lib/index.js",
-    "types": "./lib/index.d.ts"
+    "main": "./lib/cjs/index.js",
+    "module": "./lib/esm/index.js",
+    "types": "./lib/esm/index.d.ts"
   }
 }
