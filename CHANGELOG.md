@@ -4,6 +4,12 @@
 
 ---
 
+## 4.2.2 - 2025-02-12
+
+> Only @typoas/react-query was updated to 4.2.2
+
+- fix(react-query): Override queryKey instead of queryHashKey [#78](https://github.com/Embraser01/typoas/pull/78)
+
 ## 4.2.1 - 2025-02-12
 
 > Only @typoas/react-query was updated to 4.2.1

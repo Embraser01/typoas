@@ -5,7 +5,6 @@ import {
   useQuery,
   UseQueryOptions,
   UseQueryResult,
-  hashKey,
   DefaultError,
 } from '@tanstack/react-query';
 import {
@@ -94,15 +93,8 @@ export function createQueryHook<
       {
         ...baseOptions,
         ...options,
-        // Override the query key hash function to include the name of the query
-        // This is the main way to ensure that the query key is unique
-        // Note that if a user provides a custom queryKeyHashFn,
-        // they will receive the name as the first argument.
-        queryKeyHashFn: (queryKey) => {
-          const hashFn =
-            options.queryKeyHashFn || baseOptions.queryKeyHashFn || hashKey;
-          return hashFn([name, ...queryKey]);
-        },
+        // Override the query key to differentiate between multiple typoas functions
+        queryKey: [name, ...options.queryKey],
         queryFn: () => {
           const ctx = localContext || context;
           if (!ctx) {

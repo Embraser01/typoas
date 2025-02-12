@@ -13,6 +13,7 @@ import {
 } from '@typoas/runtime';
 import { useApiContext } from './api-context';
 import { TypoasFuncStatusType, TypoasReturnType } from './types';
+import { getQueryFunctionKey } from './func-names';
 
 export type TypoasMutationVariables<
   Func extends TypoasMutationFunction<FetcherData>,
@@ -94,6 +95,10 @@ export function createMutationHook<
       {
         ...baseOptions,
         ...options,
+        // Override the mutation key to differentiate between multiple typoas functions
+        mutationKey: options.mutationKey
+          ? [getQueryFunctionKey(func), ...options.mutationKey]
+          : undefined,
         mutationFn: ([params, body]) => {
           const ctx = localContext || context;
           if (!ctx) {
