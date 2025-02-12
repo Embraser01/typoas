@@ -4,6 +4,12 @@
 
 ---
 
+## 4.2.1 - 2025-02-12
+
+> Only @typoas/react-query was updated to 4.2.1
+
+- fix(react-query): Build CJS and ESM version [#77](https://github.com/Embraser01/typoas/pull/77)
+
 ## 4.2.0 - 2025-02-10
 
 > All packages were updated to 4.2.0
