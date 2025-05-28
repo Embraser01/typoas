@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fix(generator): Correctly handle deep refs [#79](https://github.com/Embraser01/typoas/pull/79)
+
 ---
 
 ## 4.2.2 - 2025-02-12

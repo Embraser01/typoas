@@ -754,7 +754,7 @@ export type AppPermissions = {
    */
   contents?: 'read' | 'write';
   /**
-   * The leve of permission to grant the access token to manage Dependabot secrets.
+   * The level of permission to grant the access token to manage Dependabot secrets.
    */
   dependabot_secrets?: 'read' | 'write';
   /**
@@ -1497,6 +1497,13 @@ export type Repository = {
    * Whether anonymous git access is enabled for this repository
    */
   anonymous_access_enabled?: boolean;
+  /**
+   * The status of the code search index for this repository
+   */
+  code_search_index_status?: {
+    lexical_search_ok?: boolean;
+    lexical_commit_sha?: string;
+  };
 };
 /**
  * Installation Token
@@ -2033,7 +2040,11 @@ export type CodeSecurityConfiguration = {
   /**
    * The enablement status of GitHub Advanced Security
    */
-  advanced_security?: 'enabled' | 'disabled';
+  advanced_security?:
+    | 'enabled'
+    | 'disabled'
+    | 'code_security'
+    | 'secret_protection';
   /**
    * The enablement status of Dependency Graph
    */
@@ -2077,6 +2088,10 @@ export type CodeSecurityConfiguration = {
     runner_label?: string | null;
   } | null;
   /**
+   * The enablement status of code scanning delegated alert dismissal
+   */
+  code_scanning_delegated_alert_dismissal?: 'enabled' | 'disabled' | 'not_set';
+  /**
    * The enablement status of secret scanning
    */
   secret_scanning?: 'enabled' | 'disabled' | 'not_set';
@@ -2114,6 +2129,17 @@ export type CodeSecurityConfiguration = {
    * The enablement status of secret scanning non-provider patterns
    */
   secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * The enablement status of Copilot secret scanning
+   */
+  secret_scanning_generic_secrets?: 'enabled' | 'disabled' | 'not_set';
+  /**
+   * The enablement status of secret scanning delegated alert dismissal
+   */
+  secret_scanning_delegated_alert_dismissal?:
+    | 'enabled'
+    | 'disabled'
+    | 'not_set';
   /**
    * The enablement status of private vulnerability reporting
    */
@@ -2585,6 +2611,13 @@ export type DependabotAlertWithRepository = {
      * The execution scope of the vulnerable dependency.
      */
     scope?: ('development' | 'runtime') | null;
+    /**
+     * The vulnerable dependency's relationship to your project.
+     *
+     * > [!NOTE]
+     * > We are rolling out support for dependency relationship across ecosystems. This value will be "unknown" for all dependencies in unsupported ecosystems.
+     */
+    relationship?: ('unknown' | 'direct' | 'transitive') | null;
   };
   security_advisory: DependabotAlertSecurityAdvisory;
   security_vulnerability: DependabotAlertSecurityVulnerability;
@@ -2700,6 +2733,10 @@ export type OrganizationSecretScanningAlert = {
    * Whether the detected secret was found in multiple repositories in the same organization or enterprise.
    */
   multi_repo?: boolean | null;
+  /**
+   * A boolean value representing whether or not alert is base64 encoded
+   */
+  is_base64_encoded?: boolean | null;
 };
 /**
  * Actor
@@ -2783,6 +2820,55 @@ export type NullableMilestone = {
    * @example "2012-10-09T23:39:01Z"
    */
   due_on: Date | null;
+} | null;
+/**
+ * Issue Type
+ * The type of issue.
+ */
+export type IssueType = {
+  /**
+   * The unique identifier of the issue type.
+   */
+  id: number;
+  /**
+   * The node identifier of the issue type.
+   */
+  node_id: string;
+  /**
+   * The name of the issue type.
+   */
+  name: string;
+  /**
+   * The description of the issue type.
+   */
+  description: string | null;
+  /**
+   * The color of the issue type.
+   */
+  color?:
+    | (
+        | 'gray'
+        | 'blue'
+        | 'green'
+        | 'yellow'
+        | 'orange'
+        | 'red'
+        | 'pink'
+        | 'purple'
+      )
+    | null;
+  /**
+   * The time the issue type created.
+   */
+  created_at?: Date;
+  /**
+   * The time the issue type last updated.
+   */
+  updated_at?: Date;
+  /**
+   * The enabled state of the issue type.
+   */
+  is_enabled?: boolean;
 } | null;
 /**
  * GitHub app
@@ -2999,6 +3085,7 @@ export type Issue = {
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
+  type?: IssueType;
   repository?: Repository;
   performed_via_github_app?: NullableIntegration;
   author_association: AuthorAssociation;
@@ -3752,6 +3839,9 @@ export type SecurityAndAnalysis = {
   advanced_security?: {
     status?: 'enabled' | 'disabled';
   };
+  code_security?: {
+    status?: 'enabled' | 'disabled';
+  };
   /**
    * Enable or disable Dependabot security updates for the repository.
    */
@@ -4488,11 +4578,6 @@ export type NullableActionsHostedRunnerPoolImage = {
    * The image provider.
    */
   source: 'github' | 'partner' | 'custom';
-  /**
-   * The image version of the hosted runner pool.
-   * @example "latest"
-   */
-  version: string;
 } | null;
 /**
  * Github-owned VM details.
@@ -4777,12 +4862,12 @@ export type RunnerLabel = {
  */
 export type Runner = {
   /**
-   * The id of the runner.
+   * The ID of the runner.
    * @example 5
    */
   id: number;
   /**
-   * The id of the runner group.
+   * The ID of the runner group.
    * @example 1
    */
   runner_group_id?: number;
@@ -4942,6 +5027,174 @@ export type OrganizationActionsVariable = {
    * @example "https://api.github.com/organizations/org/variables/USERNAME/repositories"
    */
   selected_repositories_url?: string;
+};
+/**
+ * Campaign state
+ * Indicates whether a campaign is open or closed
+ */
+export enum CampaignState {
+  OPEN = 'open',
+  CLOSED = 'closed',
+}
+/**
+ * Team Simple
+ * Groups of organization members that gives permissions on specified repositories.
+ */
+export type NullableTeamSimple = {
+  /**
+   * Unique identifier of the team
+   * @example 1
+   */
+  id: number;
+  /**
+   * @example "MDQ6VGVhbTE="
+   */
+  node_id: string;
+  /**
+   * URL for the team
+   * @example "https://api.github.com/organizations/1/team/1"
+   */
+  url: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/members{/member}"
+   */
+  members_url: string;
+  /**
+   * Name of the team
+   * @example "Justice League"
+   */
+  name: string;
+  /**
+   * Description of the team
+   * @example "A great team."
+   */
+  description: string | null;
+  /**
+   * Permission that the team will have for its repositories
+   * @example "admin"
+   */
+  permission: string;
+  /**
+   * The level of privacy this team should have
+   * @example "closed"
+   */
+  privacy?: string;
+  /**
+   * The notification setting the team has set
+   * @example "notifications_enabled"
+   */
+  notification_setting?: string;
+  /**
+   * @example "https://github.com/orgs/rails/teams/core"
+   */
+  html_url: string;
+  /**
+   * @example "https://api.github.com/organizations/1/team/1/repos"
+   */
+  repositories_url: string;
+  /**
+   * @example "justice-league"
+   */
+  slug: string;
+  /**
+   * Distinguished Name (DN) that team maps to within LDAP environment
+   * @example "uid=example,ou=users,dc=github,dc=com"
+   */
+  ldap_dn?: string;
+} | null;
+/**
+ * Team
+ * Groups of organization members that gives permissions on specified repositories.
+ */
+export type Team = {
+  id: number;
+  node_id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  privacy?: string;
+  notification_setting?: string;
+  permission: string;
+  permissions?: {
+    pull: boolean;
+    triage: boolean;
+    push: boolean;
+    maintain: boolean;
+    admin: boolean;
+  };
+  url: string;
+  /**
+   * @example "https://github.com/orgs/rails/teams/core"
+   */
+  html_url: string;
+  members_url: string;
+  repositories_url: string;
+  parent: NullableTeamSimple;
+};
+/**
+ * Campaign summary
+ * The campaign metadata and alert stats.
+ */
+export type CampaignSummary = {
+  /**
+   * The number of the newly created campaign
+   */
+  number: number;
+  /**
+   * The date and time the campaign was created, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ.
+   */
+  created_at: Date;
+  /**
+   * The date and time the campaign was last updated, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ.
+   */
+  updated_at: Date;
+  /**
+   * The campaign name
+   */
+  name?: string;
+  /**
+   * The campaign description
+   */
+  description: string;
+  /**
+   * The campaign managers
+   */
+  managers: SimpleUser[];
+  /**
+   * The campaign team managers
+   */
+  team_managers?: Team[];
+  /**
+   * The date and time the campaign was published, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ.
+   */
+  published_at?: Date;
+  /**
+   * The date and time the campaign has ended, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ.
+   */
+  ends_at: Date;
+  /**
+   * The date and time the campaign was closed, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ. Will be null if the campaign is still open.
+   */
+  closed_at?: Date | null;
+  state: CampaignState;
+  /**
+   * The contact link of the campaign.
+   */
+  contact_link: string | null;
+  alert_stats?: {
+    /**
+     * The number of open alerts
+     */
+    open_count: number;
+    /**
+     * The number of closed alerts
+     */
+    closed_count: number;
+    /**
+     * The number of in-progress alerts
+     */
+    in_progress_count: number;
+  };
 };
 /**
  * The name of the tool used to generate the code scanning analysis.
@@ -5105,6 +5358,7 @@ export type CodeScanningOrganizationAlertItems = {
   tool: CodeScanningAnalysisTool;
   most_recent_instance: CodeScanningAlertInstance;
   repository: SimpleRepository;
+  dismissal_approved_by?: NullableSimpleUser;
 };
 /**
  * Codespace machine
@@ -5379,10 +5633,10 @@ export type CodespacesPublicKey = {
   created_at?: string;
 };
 /**
- * Copilot Business Seat Breakdown
+ * Copilot Seat Breakdown
  * The breakdown of Copilot Business seats for the organization.
  */
-export type CopilotSeatBreakdown = {
+export type CopilotOrganizationSeatBreakdown = {
   /**
    * The total number of seats being billed for the organization as of the current billing cycle.
    */
@@ -5396,7 +5650,7 @@ export type CopilotSeatBreakdown = {
    */
   pending_cancellation?: number;
   /**
-   * The number of seats that have been assigned to users that have not yet accepted an invitation to this organization.
+   * The number of users who have been invited to receive a Copilot seat through this organization.
    */
   pending_invitation?: number;
   /**
@@ -5413,21 +5667,21 @@ export type CopilotSeatBreakdown = {
  * Information about the seat breakdown and policies set for an organization with a Copilot Business or Copilot Enterprise subscription.
  */
 export type CopilotOrganizationDetails = {
-  seat_breakdown: CopilotSeatBreakdown;
+  seat_breakdown: CopilotOrganizationSeatBreakdown;
   /**
-   * The organization policy for allowing or disallowing Copilot to make suggestions that match public code.
+   * The organization policy for allowing or blocking suggestions matching public code (duplication detection filter).
    */
-  public_code_suggestions: 'allow' | 'block' | 'unconfigured' | 'unknown';
+  public_code_suggestions: 'allow' | 'block' | 'unconfigured';
   /**
-   * The organization policy for allowing or disallowing organization members to use Copilot Chat within their editor.
+   * The organization policy for allowing or disallowing Copilot Chat in the IDE.
    */
   ide_chat?: 'enabled' | 'disabled' | 'unconfigured';
   /**
-   * The organization policy for allowing or disallowing organization members to use Copilot features within github.com.
+   * The organization policy for allowing or disallowing Copilot features on GitHub.com.
    */
   platform_chat?: 'enabled' | 'disabled' | 'unconfigured';
   /**
-   * The organization policy for allowing or disallowing organization members to use Copilot within their CLI.
+   * The organization policy for allowing or disallowing Copilot in the CLI.
    */
   cli?: 'enabled' | 'disabled' | 'unconfigured';
   /**
@@ -5441,7 +5695,7 @@ export type CopilotOrganizationDetails = {
   /**
    * The Copilot plan of the organization, or the parent enterprise, when applicable.
    */
-  plan_type?: 'business' | 'enterprise' | 'unknown';
+  plan_type?: 'business' | 'enterprise';
 } & {
   [key: string]: unknown;
 };
@@ -5500,101 +5754,6 @@ export type NullableOrganizationSimple = {
   description: string | null;
 } | null;
 /**
- * Team Simple
- * Groups of organization members that gives permissions on specified repositories.
- */
-export type NullableTeamSimple = {
-  /**
-   * Unique identifier of the team
-   * @example 1
-   */
-  id: number;
-  /**
-   * @example "MDQ6VGVhbTE="
-   */
-  node_id: string;
-  /**
-   * URL for the team
-   * @example "https://api.github.com/organizations/1/team/1"
-   */
-  url: string;
-  /**
-   * @example "https://api.github.com/organizations/1/team/1/members{/member}"
-   */
-  members_url: string;
-  /**
-   * Name of the team
-   * @example "Justice League"
-   */
-  name: string;
-  /**
-   * Description of the team
-   * @example "A great team."
-   */
-  description: string | null;
-  /**
-   * Permission that the team will have for its repositories
-   * @example "admin"
-   */
-  permission: string;
-  /**
-   * The level of privacy this team should have
-   * @example "closed"
-   */
-  privacy?: string;
-  /**
-   * The notification setting the team has set
-   * @example "notifications_enabled"
-   */
-  notification_setting?: string;
-  /**
-   * @example "https://github.com/orgs/rails/teams/core"
-   */
-  html_url: string;
-  /**
-   * @example "https://api.github.com/organizations/1/team/1/repos"
-   */
-  repositories_url: string;
-  /**
-   * @example "justice-league"
-   */
-  slug: string;
-  /**
-   * Distinguished Name (DN) that team maps to within LDAP environment
-   * @example "uid=example,ou=users,dc=github,dc=com"
-   */
-  ldap_dn?: string;
-} | null;
-/**
- * Team
- * Groups of organization members that gives permissions on specified repositories.
- */
-export type Team = {
-  id: number;
-  node_id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  privacy?: string;
-  notification_setting?: string;
-  permission: string;
-  permissions?: {
-    pull: boolean;
-    triage: boolean;
-    push: boolean;
-    maintain: boolean;
-    admin: boolean;
-  };
-  url: string;
-  /**
-   * @example "https://github.com/orgs/rails/teams/core"
-   */
-  html_url: string;
-  members_url: string;
-  repositories_url: string;
-  parent: NullableTeamSimple;
-};
-/**
  * Enterprise Team
  * Group of enterprise owners and/or members
  */
@@ -5628,7 +5787,7 @@ export type EnterpriseTeam = {
  * Information about a Copilot Business seat assignment for a user, team, or organization.
  */
 export type CopilotSeatDetails = {
-  assignee: SimpleUser;
+  assignee?: NullableSimpleUser;
   organization?: NullableOrganizationSimple;
   /**
    * The team through which the assignee is granted access to GitHub Copilot, if applicable.
@@ -5916,85 +6075,6 @@ export type CopilotUsageMetricsDay = {
   copilot_dotcom_pull_requests?: CopilotDotcomPullRequests;
 } & {
   [key: string]: unknown;
-};
-/**
- * Copilot Usage Metrics
- * Summary of Copilot usage.
- */
-export type CopilotUsageMetrics = {
-  /**
-   * The date for which the usage metrics are reported, in `YYYY-MM-DD` format.
-   */
-  day: string;
-  /**
-   * The total number of Copilot code completion suggestions shown to users.
-   */
-  total_suggestions_count?: number;
-  /**
-   * The total number of Copilot code completion suggestions accepted by users.
-   */
-  total_acceptances_count?: number;
-  /**
-   * The total number of lines of code completions suggested by Copilot.
-   */
-  total_lines_suggested?: number;
-  /**
-   * The total number of lines of code completions accepted by users.
-   */
-  total_lines_accepted?: number;
-  /**
-   * The total number of users who were shown Copilot code completion suggestions during the day specified.
-   */
-  total_active_users?: number;
-  /**
-   * The total instances of users who accepted code suggested by Copilot Chat in the IDE (panel and inline).
-   */
-  total_chat_acceptances?: number;
-  /**
-   * The total number of chat turns (prompt and response pairs) sent between users and Copilot Chat in the IDE.
-   */
-  total_chat_turns?: number;
-  /**
-   * The total number of users who interacted with Copilot Chat in the IDE during the day specified.
-   */
-  total_active_chat_users?: number;
-  /**
-   * Breakdown of Copilot code completions usage by language and editor
-   */
-  breakdown:
-    | ({
-        /**
-         * The language in which Copilot suggestions were shown to users in the specified editor.
-         */
-        language?: string;
-        /**
-         * The editor in which Copilot suggestions were shown to users for the specified language.
-         */
-        editor?: string;
-        /**
-         * The number of Copilot suggestions shown to users in the editor specified during the day specified.
-         */
-        suggestions_count?: number;
-        /**
-         * The number of Copilot suggestions accepted by users in the editor specified during the day specified.
-         */
-        acceptances_count?: number;
-        /**
-         * The number of lines of code suggested by Copilot in the editor specified during the day specified.
-         */
-        lines_suggested?: number;
-        /**
-         * The number of lines of code accepted by users in the editor specified during the day specified.
-         */
-        lines_accepted?: number;
-        /**
-         * The number of users who were shown Copilot completion suggestions in the editor specified during the day specified.
-         */
-        active_users?: number;
-      } & {
-        [key: string]: unknown;
-      })[]
-    | null;
 };
 /**
  * Dependabot Secret for an Organization
@@ -6533,6 +6613,64 @@ export type InteractionLimit = {
   limit: InteractionGroup;
   expiry?: InteractionExpiry;
 };
+export type OrganizationCreateIssueType = {
+  /**
+   * Name of the issue type.
+   */
+  name: string;
+  /**
+   * Whether or not the issue type is enabled at the organization level.
+   */
+  is_enabled: boolean;
+  /**
+   * Description of the issue type.
+   */
+  description?: string | null;
+  /**
+   * Color for the issue type.
+   */
+  color?:
+    | (
+        | 'gray'
+        | 'blue'
+        | 'green'
+        | 'yellow'
+        | 'orange'
+        | 'red'
+        | 'pink'
+        | 'purple'
+      )
+    | null;
+};
+export type OrganizationUpdateIssueType = {
+  /**
+   * Name of the issue type.
+   */
+  name: string;
+  /**
+   * Whether or not the issue type is enabled at the organization level.
+   */
+  is_enabled: boolean;
+  /**
+   * Description of the issue type.
+   */
+  description?: string | null;
+  /**
+   * Color for the issue type.
+   */
+  color?:
+    | (
+        | 'gray'
+        | 'blue'
+        | 'green'
+        | 'yellow'
+        | 'orange'
+        | 'red'
+        | 'pink'
+        | 'purple'
+      )
+    | null;
+};
 /**
  * Org Membership
  * Org Membership
@@ -7049,7 +7187,7 @@ export type OrgPrivateRegistryConfiguration = {
   /**
    * The registry type.
    */
-  registry_type: 'maven_repository';
+  registry_type: 'maven_repository' | 'nuget_feed' | 'goproxy_server';
   /**
    * The username to use when authenticating with the private registry.
    * @example "monalisa"
@@ -7075,7 +7213,7 @@ export type OrgPrivateRegistryConfigurationWithSelectedRepositories = {
   /**
    * The registry type.
    */
-  registry_type: 'maven_repository';
+  registry_type: 'maven_repository' | 'nuget_feed' | 'goproxy_server';
   /**
    * The username to use when authenticating with the private registry.
    * @example "monalisa"
@@ -7231,6 +7369,11 @@ export type CustomPropertySetPayload = {
    * The property can have up to 200 allowed values.
    */
   allowed_values?: string[] | null;
+  /**
+   * Who can edit the values of the property
+   * @example "org_actors"
+   */
+  values_editable_by?: ('org_actors' | 'org_and_repo_actors') | null;
 };
 /**
  * Custom Property Value
@@ -7657,6 +7800,13 @@ export type NullableRepository = {
    * Whether anonymous git access is enabled for this repository
    */
   anonymous_access_enabled?: boolean;
+  /**
+   * The status of the code search index for this repository
+   */
+  code_search_index_status?: {
+    lexical_search_ok?: boolean;
+    lexical_commit_sha?: string;
+  };
 } | null;
 /**
  * Code Of Conduct Simple
@@ -8278,6 +8428,20 @@ export type RepositoryRuleRequiredSignatures = {
   type: 'required_signatures';
 };
 /**
+ * Reviewer
+ * A required reviewing team
+ */
+export type RepositoryRuleParamsReviewer = {
+  /**
+   * ID of the reviewer which must review changes to matching files.
+   */
+  id: number;
+  /**
+   * The type of the reviewer
+   */
+  type: 'Team';
+};
+/**
  * RequiredReviewerConfiguration
  * A reviewing team, and file patterns describing which files they must approve changes to.
  */
@@ -8290,10 +8454,7 @@ export type RepositoryRuleParamsRequiredReviewerConfiguration = {
    * Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional.
    */
   minimum_approvals: number;
-  /**
-   * Node ID of the team which must review changes to matching files.
-   */
-  reviewer_id: string;
+  reviewer: RepositoryRuleParamsReviewer;
 };
 /**
  * pull_request
@@ -8303,9 +8464,13 @@ export type RepositoryRulePullRequest = {
   type: 'pull_request';
   parameters?: {
     /**
-     * When merging pull requests, you can allow any combination of merge commits, squashing, or rebasing. At least one option must be enabled.
+     * Array of allowed merge methods. Allowed values include `merge`, `squash`, and `rebase`. At least one option must be enabled.
      */
-    allowed_merge_methods?: string[];
+    allowed_merge_methods?: ('merge' | 'squash' | 'rebase')[];
+    /**
+     * Automatically request review from Copilot for new pull requests, if the author has access to Copilot code review.
+     */
+    automatic_copilot_code_review_enabled?: boolean;
     /**
      * New, reviewable commits pushed will dismiss previous pull request review approvals.
      */
@@ -8496,6 +8661,58 @@ export type RepositoryRuleTagNamePattern = {
   };
 };
 /**
+ * file_path_restriction
+ * Prevent commits that include changes in specified file and folder paths from being pushed to the commit graph. This includes absolute paths that contain file names.
+ */
+export type RepositoryRuleFilePathRestriction = {
+  type: 'file_path_restriction';
+  parameters?: {
+    /**
+     * The file paths that are restricted from being pushed to the commit graph.
+     */
+    restricted_file_paths: string[];
+  };
+};
+/**
+ * max_file_path_length
+ * Prevent commits that include file paths that exceed the specified character limit from being pushed to the commit graph.
+ */
+export type RepositoryRuleMaxFilePathLength = {
+  type: 'max_file_path_length';
+  parameters?: {
+    /**
+     * The maximum amount of characters allowed in file paths.
+     */
+    max_file_path_length: number;
+  };
+};
+/**
+ * file_extension_restriction
+ * Prevent commits that include files with specified file extensions from being pushed to the commit graph.
+ */
+export type RepositoryRuleFileExtensionRestriction = {
+  type: 'file_extension_restriction';
+  parameters?: {
+    /**
+     * The file extensions that are restricted from being pushed to the commit graph.
+     */
+    restricted_file_extensions: string[];
+  };
+};
+/**
+ * max_file_size
+ * Prevent commits with individual files that exceed the specified limit from being pushed to the commit graph.
+ */
+export type RepositoryRuleMaxFileSize = {
+  type: 'max_file_size';
+  parameters?: {
+    /**
+     * The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).
+     */
+    max_file_size: number;
+  };
+};
+/**
  * RestrictedCommits
  * Restricted commit
  */
@@ -8604,42 +8821,10 @@ export type RepositoryRule =
   | RepositoryRuleCommitterEmailPattern
   | RepositoryRuleBranchNamePattern
   | RepositoryRuleTagNamePattern
-  | {
-      type: 'file_path_restriction';
-      parameters?: {
-        /**
-         * The file paths that are restricted from being pushed to the commit graph.
-         */
-        restricted_file_paths: string[];
-      };
-    }
-  | {
-      type: 'max_file_path_length';
-      parameters?: {
-        /**
-         * The maximum amount of characters allowed in file paths
-         */
-        max_file_path_length: number;
-      };
-    }
-  | {
-      type: 'file_extension_restriction';
-      parameters?: {
-        /**
-         * The file extensions that are restricted from being pushed to the commit graph.
-         */
-        restricted_file_extensions: string[];
-      };
-    }
-  | {
-      type: 'max_file_size';
-      parameters?: {
-        /**
-         * The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS).
-         */
-        max_file_size: number;
-      };
-    }
+  | RepositoryRuleFilePathRestriction
+  | RepositoryRuleMaxFilePathLength
+  | RepositoryRuleFileExtensionRestriction
+  | RepositoryRuleMaxFileSize
   | RepositoryRuleWorkflows
   | RepositoryRuleCodeScanning;
 /**
@@ -8831,6 +9016,30 @@ export type RuleSuite = {
      */
     details?: string | null;
   }[];
+};
+/**
+ * Ruleset version
+ * The historical version of a ruleset
+ */
+export type RulesetVersion = {
+  /**
+   * The ID of the previous version of the ruleset
+   */
+  version_id: number;
+  /**
+   * The actor who updated the ruleset
+   */
+  actor: {
+    id?: number;
+    type?: string;
+  };
+  updated_at: Date;
+};
+export type RulesetVersionWithState = RulesetVersion & {
+  /**
+   * The state of the ruleset version
+   */
+  state: unknown;
 };
 /**
  * A product affected by the vulnerability detailed in a repository security advisory.
@@ -10148,6 +10357,11 @@ export type Artifact = {
   created_at: Date | null;
   expires_at: Date | null;
   updated_at: Date | null;
+  /**
+   * The SHA256 digest of the artifact. This field will only be populated on artifacts uploaded with upload-artifact v4 or newer. For older versions, this field will be null.
+   * @example "sha256:cfc3236bdad15b5898bca8408945c9e19e1917da8704adc20eaa618444290a8c"
+   */
+  digest?: string | null;
   workflow_run?: {
     /**
      * @example 10
@@ -12030,6 +12244,7 @@ export type CodeScanningAlertItems = {
   rule: CodeScanningAlertRuleSummary;
   tool: CodeScanningAnalysisTool;
   most_recent_instance: CodeScanningAlertInstance;
+  dismissal_approved_by?: NullableSimpleUser;
 };
 export type CodeScanningAlertRule = {
   /**
@@ -12085,6 +12300,7 @@ export type CodeScanningAlert = {
   rule: CodeScanningAlertRule;
   tool: CodeScanningAnalysisTool;
   most_recent_instance: CodeScanningAlertInstance;
+  dismissal_approved_by?: NullableSimpleUser;
 };
 /**
  * Sets the state of the code scanning alert. You must provide `dismissed_reason` when you set the state to `dismissed`.
@@ -12093,6 +12309,10 @@ export enum CodeScanningAlertSetState {
   OPEN = 'open',
   DISMISSED = 'dismissed',
 }
+/**
+ * If `true`, attempt to create an alert dismissal request.
+ */
+export type CodeScanningAlertCreateRequest = boolean;
 /**
  * The status of an autofix.
  */
@@ -12260,6 +12480,7 @@ export enum CodeScanningVariantAnalysisLanguage {
   JAVASCRIPT = 'javascript',
   PYTHON = 'python',
   RUBY = 'ruby',
+  RUST = 'rust',
   SWIFT = 'swift',
 }
 /**
@@ -13296,6 +13517,7 @@ export type ContentTree = {
       self: string;
     };
   }[];
+  encoding?: string;
   _links: {
     git: string | null;
     html: string | null;
@@ -13520,6 +13742,13 @@ export type DependabotAlert = {
      * The execution scope of the vulnerable dependency.
      */
     scope?: ('development' | 'runtime') | null;
+    /**
+     * The vulnerable dependency's relationship to your project.
+     *
+     * > [!NOTE]
+     * > We are rolling out support for dependency relationship across ecosystems. This value will be "unknown" for all dependencies in unsupported ecosystems.
+     */
+    relationship?: ('unknown' | 'direct' | 'transitive') | null;
   };
   security_advisory: DependabotAlertSecurityAdvisory;
   security_vulnerability: DependabotAlertSecurityVulnerability;
@@ -14334,7 +14563,7 @@ export type GitTag = {
  */
 export type GitTree = {
   sha: string;
-  url: string;
+  url?: string;
   truncated: boolean;
   /**
    * Objects specifying a tree structure
@@ -14346,35 +14575,7 @@ export type GitTree = {
    *     "type": "blob",
    *     "size": 30,
    *     "sha": "44b4fc6d56897b048c772eb4087f854f46256132",
-   *     "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/44b4fc6d56897b048c772eb4087f854f46256132",
-   *     "properties": {
-   *       "path": {
-   *         "type": "string"
-   *       },
-   *       "mode": {
-   *         "type": "string"
-   *       },
-   *       "type": {
-   *         "type": "string"
-   *       },
-   *       "size": {
-   *         "type": "integer"
-   *       },
-   *       "sha": {
-   *         "type": "string"
-   *       },
-   *       "url": {
-   *         "type": "string"
-   *       }
-   *     },
-   *     "required": [
-   *       "path",
-   *       "mode",
-   *       "type",
-   *       "sha",
-   *       "url",
-   *       "size"
-   *     ]
+   *     "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/44b4fc6d56897b048c772eb4087f854f46256132"
    *   }
    * ]
    */
@@ -14382,19 +14583,19 @@ export type GitTree = {
     /**
      * @example "test/file.rb"
      */
-    path?: string;
+    path: string;
     /**
      * @example "040000"
      */
-    mode?: string;
+    mode: string;
     /**
      * @example "tree"
      */
-    type?: string;
+    type: string;
     /**
      * @example "23f6827669e43831def8a7ad935069c8bd418261"
      */
-    sha?: string;
+    sha: string;
     /**
      * @example 12
      */
@@ -14629,6 +14830,7 @@ export type NullableIssue = {
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
+  type?: IssueType;
   repository?: Repository;
   performed_via_github_app?: NullableIntegration;
   author_association: AuthorAssociation;
@@ -16264,6 +16466,7 @@ export type ReleaseAsset = {
   state: 'uploaded' | 'open';
   content_type: string;
   size: number;
+  digest: string | null;
   download_count: number;
   created_at: Date;
   updated_at: Date;
@@ -16355,6 +16558,10 @@ export type RepositoryRuleDetailed =
   | (RepositoryRuleCommitterEmailPattern & RepositoryRuleRulesetInfo)
   | (RepositoryRuleBranchNamePattern & RepositoryRuleRulesetInfo)
   | (RepositoryRuleTagNamePattern & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleFilePathRestriction & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleMaxFilePathLength & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleFileExtensionRestriction & RepositoryRuleRulesetInfo)
+  | (RepositoryRuleMaxFileSize & RepositoryRuleRulesetInfo)
   | (RepositoryRuleWorkflows & RepositoryRuleRulesetInfo)
   | (RepositoryRuleCodeScanning & RepositoryRuleRulesetInfo);
 export type SecretScanningAlert = {
@@ -16425,9 +16632,13 @@ export type SecretScanningAlert = {
    * Whether the detected secret was found in multiple repositories under the same organization or enterprise.
    */
   multi_repo?: boolean | null;
+  /**
+   * A boolean value representing whether or not alert is base64 encoded
+   */
+  is_base64_encoded?: boolean | null;
 };
 /**
- * An optional comment when closing an alert. Cannot be updated or deleted. Must be `null` when changing `state` to `open`.
+ * An optional comment when closing or reopening an alert. Cannot be updated or deleted.
  */
 export type SecretScanningAlertResolutionComment = string | null;
 /**
@@ -17293,6 +17504,7 @@ export type IssueSearchResultItem = {
   body_html?: string;
   body_text?: string;
   timeline_url?: string;
+  type?: IssueType;
   performed_via_github_app?: NullableIntegration;
   reactions?: ReactionRollup;
 };
@@ -18115,45 +18327,6 @@ export type StarredRepository = {
   repo: Repository;
 };
 /**
- * Sigstore Bundle v0.1
- * Sigstore Bundle v0.1
- */
-export type SigstoreBundle0 = {
-  mediaType?: string;
-  verificationMaterial?: {
-    x509CertificateChain?: {
-      certificates?: {
-        rawBytes?: string;
-      }[];
-    };
-    tlogEntries?: {
-      logIndex?: string;
-      logId?: {
-        keyId?: string;
-      };
-      kindVersion?: {
-        kind?: string;
-        version?: string;
-      };
-      integratedTime?: string;
-      inclusionPromise?: {
-        signedEntryTimestamp?: string;
-      };
-      inclusionProof?: string | null;
-      canonicalizedBody?: string;
-    }[];
-    timestampVerificationData?: string | null;
-  };
-  dsseEnvelope?: {
-    payload?: string;
-    payloadType?: string;
-    signatures?: {
-      sig?: string;
-      keyid?: string;
-    }[];
-  };
-};
-/**
  * Hovercard
  * Hovercard
  */
@@ -18170,6 +18343,50 @@ export type Hovercard = {
 export type KeySimple = {
   id: number;
   key: string;
+};
+export type BillingUsageReportUser = {
+  usageItems?: {
+    /**
+     * Date of the usage line item.
+     */
+    date: string;
+    /**
+     * Product name.
+     */
+    product: string;
+    /**
+     * SKU name.
+     */
+    sku: string;
+    /**
+     * Quantity of the usage line item.
+     */
+    quantity: number;
+    /**
+     * Unit type of the usage line item.
+     */
+    unitType: string;
+    /**
+     * Price per unit of the usage line item.
+     */
+    pricePerUnit: number;
+    /**
+     * Gross amount of the usage line item.
+     */
+    grossAmount: number;
+    /**
+     * Discount amount of the usage line item.
+     */
+    discountAmount: number;
+    /**
+     * Net amount of the usage line item.
+     */
+    netAmount: number;
+    /**
+     * Name of the repository.
+     */
+    repositoryName?: string;
+  }[];
 };
 /**
  * Enterprise
@@ -19916,6 +20133,7 @@ export type WebhooksIssue = {
    * Title of the issue
    */
   title: string;
+  type?: IssueType;
   updated_at: Date;
   /**
    * URL for the issue
@@ -20351,6 +20569,7 @@ export type WebhooksIssue2 = {
    * Title of the issue
    */
   title: string;
+  type?: IssueType;
   updated_at: Date;
   /**
    * URL for the issue
@@ -22867,6 +23086,7 @@ export type WebhooksRelease = {
     name: string;
     node_id: string;
     size: number;
+    digest: string | null;
     /**
      * State of the release asset.
      */
@@ -22990,6 +23210,7 @@ export type WebhooksRelease1 = {
     name: string;
     node_id: string;
     size: number;
+    digest: string | null;
     /**
      * State of the release asset.
      */
@@ -24752,6 +24973,33 @@ export type WebhookCodeScanningAlertClosedByUser = {
       version: string | null;
     };
     url: string;
+    /**
+     * User
+     */
+    dismissal_approved_by?: {
+      avatar_url?: string;
+      deleted?: boolean;
+      email?: string | null;
+      events_url?: string;
+      followers_url?: string;
+      following_url?: string;
+      gists_url?: string;
+      gravatar_id?: string;
+      html_url?: string;
+      id: number;
+      login: string;
+      name?: string;
+      node_id?: string;
+      organizations_url?: string;
+      received_events_url?: string;
+      repos_url?: string;
+      site_admin?: boolean;
+      starred_url?: string;
+      subscriptions_url?: string;
+      type?: 'Bot' | 'User' | 'Organization';
+      url?: string;
+      user_view_type?: string;
+    } | null;
   };
   commit_oid: WebhooksCodeScanningCommitOid;
   enterprise?: EnterpriseWebhooks;
@@ -24873,6 +25121,7 @@ export type WebhookCodeScanningAlertCreated = {
     } | null;
     updated_at?: string | null;
     url: string;
+    dismissal_approved_by?: unknown | null;
   };
   commit_oid: WebhooksCodeScanningCommitOid;
   enterprise?: EnterpriseWebhooks;
@@ -25417,6 +25666,17 @@ export type WebhookCustomPropertyDeleted = {
      */
     property_name: string;
   };
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  organization?: OrganizationSimpleWebhooks;
+  sender?: SimpleUser;
+};
+/**
+ * custom property promoted to business event
+ */
+export type WebhookCustomPropertyPromotedToEnterprise = {
+  action: 'promote_to_enterprise';
+  definition: CustomProperty;
   enterprise?: EnterpriseWebhooks;
   installation?: SimpleInstallation;
   organization?: OrganizationSimpleWebhooks;
@@ -28947,6 +29207,7 @@ export type WebhookIssueCommentCreated = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -29440,6 +29701,7 @@ export type WebhookIssueCommentDeleted = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -29937,6 +30199,7 @@ export type WebhookIssueCommentEdited = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -30451,6 +30714,7 @@ export type WebhookIssuesClosed = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -30611,6 +30875,7 @@ export type WebhookIssuesDeleted = {
       subscriptions_url?: string;
       type?: 'Bot' | 'User' | 'Organization';
       url?: string;
+      user_view_type?: string;
     } | null)[];
     /**
      * AuthorAssociation
@@ -30899,6 +31164,7 @@ export type WebhookIssuesDeleted = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -31286,6 +31552,7 @@ export type WebhookIssuesDemilestoned = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -31691,6 +31958,7 @@ export type WebhookIssuesEdited = {
     state?: 'open' | 'closed';
     state_reason?: string | null;
     timeline_url?: string;
+    type?: IssueType;
     /**
      * Title of the issue
      */
@@ -32082,6 +32350,7 @@ export type WebhookIssuesLabeled = {
     state?: 'open' | 'closed';
     state_reason?: string | null;
     timeline_url?: string;
+    type?: IssueType;
     /**
      * Title of the issue
      */
@@ -32474,6 +32743,7 @@ export type WebhookIssuesLocked = {
     state?: 'open' | 'closed';
     state_reason?: string | null;
     timeline_url?: string;
+    type?: IssueType;
     /**
      * Title of the issue
      */
@@ -32866,6 +33136,7 @@ export type WebhookIssuesMilestoned = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -32915,7 +33186,7 @@ export type WebhookIssuesOpened = {
      * The [issue](https://docs.github.com/rest/issues/issues#get-an-issue) itself.
      */
     old_issue: {
-      active_lock_reason:
+      active_lock_reason?:
         | ('resolved' | 'off-topic' | 'too heated' | 'spam' | null)
         | null;
       /**
@@ -32945,7 +33216,7 @@ export type WebhookIssuesOpened = {
         url?: string;
         user_view_type?: string;
       } | null;
-      assignees: ({
+      assignees?: ({
         avatar_url?: string;
         deleted?: boolean;
         email?: string | null;
@@ -32973,7 +33244,7 @@ export type WebhookIssuesOpened = {
        * AuthorAssociation
        * How the author is associated with the repository.
        */
-      author_association:
+      author_association?:
         | 'COLLABORATOR'
         | 'CONTRIBUTOR'
         | 'FIRST_TIMER'
@@ -32985,14 +33256,14 @@ export type WebhookIssuesOpened = {
       /**
        * Contents of the issue
        */
-      body: string | null;
-      closed_at: Date | null;
-      comments: number;
-      comments_url: string;
-      created_at: Date;
+      body?: string | null;
+      closed_at?: Date | null;
+      comments?: number;
+      comments_url?: string;
+      created_at?: Date;
       draft?: boolean;
-      events_url: string;
-      html_url: string;
+      events_url?: string;
+      html_url?: string;
       id: number;
       labels?: {
         /**
@@ -33012,13 +33283,13 @@ export type WebhookIssuesOpened = {
          */
         url: string;
       }[];
-      labels_url: string;
+      labels_url?: string;
       locked?: boolean;
       /**
        * Milestone
        * A collection of related issues and pull requests.
        */
-      milestone: {
+      milestone?: {
         closed_at: Date | null;
         closed_issues: number;
         created_at: Date;
@@ -33071,7 +33342,7 @@ export type WebhookIssuesOpened = {
         updated_at: Date;
         url: string;
       } | null;
-      node_id: string;
+      node_id?: string;
       number: number;
       /**
        * App
@@ -33224,7 +33495,7 @@ export type WebhookIssuesOpened = {
       /**
        * Reactions
        */
-      reactions: {
+      reactions?: {
         '+1': number;
         '-1': number;
         confused: number;
@@ -33236,7 +33507,7 @@ export type WebhookIssuesOpened = {
         total_count: number;
         url: string;
       };
-      repository_url: string;
+      repository_url?: string;
       /**
        * Sub-issues Summary
        */
@@ -33254,16 +33525,16 @@ export type WebhookIssuesOpened = {
       /**
        * Title of the issue
        */
-      title: string;
-      updated_at: Date;
+      title?: string;
+      updated_at?: Date;
       /**
        * URL for the issue
        */
-      url: string;
+      url?: string;
       /**
        * User
        */
-      user: {
+      user?: {
         avatar_url?: string;
         deleted?: boolean;
         email?: string | null;
@@ -33287,6 +33558,7 @@ export type WebhookIssuesOpened = {
         url?: string;
         user_view_type?: string;
       } | null;
+      type?: IssueType;
     } | null;
     /**
      * Repository
@@ -33844,6 +34116,7 @@ export type WebhookIssuesOpened = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -34277,6 +34550,7 @@ export type WebhookIssuesReopened = {
       url?: string;
       user_view_type?: string;
     } | null;
+    type?: IssueType;
   };
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
@@ -34633,6 +34907,7 @@ export type WebhookIssuesTransferred = {
        * Title of the issue
        */
       title: string;
+      type?: IssueType;
       updated_at: Date;
       /**
        * URL for the issue
@@ -34875,6 +35150,19 @@ export type WebhookIssuesTransferred = {
   enterprise?: EnterpriseWebhooks;
   installation?: SimpleInstallation;
   issue: WebhooksIssue2;
+  organization?: OrganizationSimpleWebhooks;
+  repository: RepositoryWebhooks;
+  sender: SimpleUser;
+};
+/**
+ * issues typed event
+ */
+export type WebhookIssuesTyped = {
+  action: 'typed';
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  issue: WebhooksIssue;
+  type: IssueType;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   sender: SimpleUser;
@@ -35260,6 +35548,7 @@ export type WebhookIssuesUnlocked = {
      * Title of the issue
      */
     title: string;
+    type?: IssueType;
     updated_at: Date;
     /**
      * URL for the issue
@@ -35305,6 +35594,19 @@ export type WebhookIssuesUnpinned = {
   enterprise?: EnterpriseWebhooks;
   installation?: SimpleInstallation;
   issue: WebhooksIssue2;
+  organization?: OrganizationSimpleWebhooks;
+  repository: RepositoryWebhooks;
+  sender: SimpleUser;
+};
+/**
+ * issues untyped event
+ */
+export type WebhookIssuesUntyped = {
+  action: 'untyped';
+  enterprise?: EnterpriseWebhooks;
+  installation?: SimpleInstallation;
+  issue: WebhooksIssue;
+  type: IssueType;
   organization?: OrganizationSimpleWebhooks;
   repository: RepositoryWebhooks;
   sender: SimpleUser;
@@ -61779,6 +62081,12 @@ export type WebhookReleaseEdited = {
        */
       from: string;
     };
+    tag_name?: {
+      /**
+       * The previous version of the tag_name if the action was `edited`.
+       */
+      from: string;
+    };
     make_latest?: {
       /**
        * Whether this release was explicitly `edited` to be the latest.
@@ -61819,6 +62127,7 @@ export type WebhookReleasePrereleased = {
       name: string;
       node_id: string;
       size: number;
+      digest: string | null;
       /**
        * State of the release asset.
        */
@@ -65669,6 +65978,10 @@ const $date_NullableMilestone = (): r.TransformField[] => [
   [['access', 'closed_at'], ['this']],
   [['access', 'due_on'], ['this']],
 ];
+const $date_IssueType = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+];
 const $date_NullableIntegration = (): r.TransformField[] => [
   [
     ['access', 'owner'],
@@ -65686,6 +65999,10 @@ const $date_Issue = (): r.TransformField[] => [
   [['access', 'closed_at'], ['this']],
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
+  [
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
   [
     ['access', 'repository'],
     ['ref', $date_Repository],
@@ -65780,6 +66097,13 @@ const $date_OrganizationActionsSecret = (): r.TransformField[] => [
 const $date_OrganizationActionsVariable = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
+];
+const $date_CampaignSummary = (): r.TransformField[] => [
+  [['access', 'created_at'], ['this']],
+  [['access', 'updated_at'], ['this']],
+  [['access', 'published_at'], ['this']],
+  [['access', 'ends_at'], ['this']],
+  [['access', 'closed_at'], ['this']],
 ];
 const $date_CodeScanningOrganizationAlertItems = (): r.TransformField[] => [
   [
@@ -65908,6 +66232,12 @@ const $date_RuleSuites = (): r.TransformField[] => [
 ];
 const $date_RuleSuite = (): r.TransformField[] => [
   [['access', 'pushed_at'], ['this']],
+];
+const $date_RulesetVersion = (): r.TransformField[] => [
+  [['access', 'updated_at'], ['this']],
+];
+const $date_RulesetVersionWithState = (): r.TransformField[] => [
+  [['select', [[['ref', $date_RulesetVersion]]]]],
 ];
 const $date_RepositoryAdvisory = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
@@ -66042,6 +66372,24 @@ const $date_ProtectedBranchPullRequestReview = (): r.TransformField[] => [
     ['access', 'apps'],
     ['loop'],
     ['ref', $date_Integration],
+  ],
+];
+const $date_BranchProtection = (): r.TransformField[] => [
+  [
+    ['access', 'required_pull_request_reviews'],
+    ['ref', $date_ProtectedBranchPullRequestReview],
+  ],
+];
+const $date_ShortBranch = (): r.TransformField[] => [
+  [
+    ['access', 'protection'],
+    ['ref', $date_BranchProtection],
+  ],
+];
+const $date_BranchWithProtection = (): r.TransformField[] => [
+  [
+    ['access', 'protection'],
+    ['ref', $date_BranchProtection],
   ],
 ];
 const $date_ProtectedBranch = (): r.TransformField[] => [
@@ -66184,6 +66532,21 @@ const $date_CodeScanningVariantAnalysis = (): r.TransformField[] => [
     ['access', 'repository'],
     ['ref', $date_CodeScanningVariantAnalysisRepository],
   ],
+  [
+    ['access', 'skipped_repositories'],
+    ['access', 'access_mismatch_repos'],
+    ['ref', $date_CodeScanningVariantAnalysisSkippedRepoGroup],
+  ],
+  [
+    ['access', 'skipped_repositories'],
+    ['access', 'no_codeql_db_repos'],
+    ['ref', $date_CodeScanningVariantAnalysisSkippedRepoGroup],
+  ],
+  [
+    ['access', 'skipped_repositories'],
+    ['access', 'over_limit_repos'],
+    ['ref', $date_CodeScanningVariantAnalysisSkippedRepoGroup],
+  ],
 ];
 const $date_CodeScanningDefaultSetup = (): r.TransformField[] => [
   [['access', 'updated_at'], ['this']],
@@ -66306,6 +66669,10 @@ const $date_NullableIssue = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
   [
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
+  [
     ['access', 'repository'],
     ['ref', $date_Repository],
   ],
@@ -66415,6 +66782,30 @@ const $date_ConvertedNoteToIssueIssueEvent = (): r.TransformField[] => [
     ['ref', $date_Integration],
   ],
 ];
+const $date_IssueEventForIssue = (): r.TransformField[] => [
+  [
+    [
+      'select',
+      [
+        [['ref', $date_LabeledIssueEvent]],
+        [['ref', $date_UnlabeledIssueEvent]],
+        [['ref', $date_AssignedIssueEvent]],
+        [['ref', $date_UnassignedIssueEvent]],
+        [['ref', $date_MilestonedIssueEvent]],
+        [['ref', $date_DemilestonedIssueEvent]],
+        [['ref', $date_RenamedIssueEvent]],
+        [['ref', $date_ReviewRequestedIssueEvent]],
+        [['ref', $date_ReviewRequestRemovedIssueEvent]],
+        [['ref', $date_ReviewDismissedIssueEvent]],
+        [['ref', $date_LockedIssueEvent]],
+        [['ref', $date_AddedToProjectIssueEvent]],
+        [['ref', $date_MovedColumnInProjectIssueEvent]],
+        [['ref', $date_RemovedFromProjectIssueEvent]],
+        [['ref', $date_ConvertedNoteToIssueIssueEvent]],
+      ],
+    ],
+  ],
+];
 const $date_TimelineCommentEvent = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
@@ -66472,10 +66863,28 @@ const $date_TimelineIssueEvents = (): r.TransformField[] => [
     [
       'select',
       [
+        [['ref', $date_LabeledIssueEvent]],
+        [['ref', $date_UnlabeledIssueEvent]],
+        [['ref', $date_MilestonedIssueEvent]],
+        [['ref', $date_DemilestonedIssueEvent]],
+        [['ref', $date_RenamedIssueEvent]],
+        [['ref', $date_ReviewRequestedIssueEvent]],
+        [['ref', $date_ReviewRequestRemovedIssueEvent]],
+        [['ref', $date_ReviewDismissedIssueEvent]],
+        [['ref', $date_LockedIssueEvent]],
+        [['ref', $date_AddedToProjectIssueEvent]],
+        [['ref', $date_MovedColumnInProjectIssueEvent]],
+        [['ref', $date_RemovedFromProjectIssueEvent]],
+        [['ref', $date_ConvertedNoteToIssueIssueEvent]],
         [['ref', $date_TimelineCommentEvent]],
         [['ref', $date_TimelineCrossReferencedEvent]],
         [['ref', $date_TimelineCommittedEvent]],
         [['ref', $date_TimelineReviewedEvent]],
+        [['ref', $date_TimelineLineCommentedEvent]],
+        [['ref', $date_TimelineCommitCommentedEvent]],
+        [['ref', $date_TimelineAssignedIssueEvent]],
+        [['ref', $date_TimelineUnassignedIssueEvent]],
+        [['ref', $date_StateChangeIssueEvent]],
       ],
     ],
   ],
@@ -66607,6 +67016,10 @@ const $date_IssueSearchResultItem = (): r.TransformField[] => [
   [
     ['access', 'repository'],
     ['ref', $date_Repository],
+  ],
+  [
+    ['access', 'type'],
+    ['ref', $date_IssueType],
   ],
   [
     ['access', 'performed_via_github_app'],
@@ -66742,6 +67155,10 @@ const $date_WebhooksIssue = (): r.TransformField[] => [
   [['access', 'performed_via_github_app'], ['access', 'created_at'], ['this']],
   [['access', 'performed_via_github_app'], ['access', 'updated_at'], ['this']],
   [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+  [
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
   [['access', 'updated_at'], ['this']],
 ];
 const $date_WebhooksMilestone = (): r.TransformField[] => [
@@ -66760,6 +67177,10 @@ const $date_WebhooksIssue2 = (): r.TransformField[] => [
   [['access', 'performed_via_github_app'], ['access', 'created_at'], ['this']],
   [['access', 'performed_via_github_app'], ['access', 'updated_at'], ['this']],
   [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+  [
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
   [['access', 'updated_at'], ['this']],
 ];
 const $date_MergeGroup = (): r.TransformField[] => [
@@ -67203,6 +67624,13 @@ const $date_WebhookCustomPropertyDeleted = (): r.TransformField[] => [
     ['ref', $date_EnterpriseWebhooks],
   ],
 ];
+const $date_WebhookCustomPropertyPromotedToEnterprise =
+  (): r.TransformField[] => [
+    [
+      ['access', 'enterprise'],
+      ['ref', $date_EnterpriseWebhooks],
+    ],
+  ];
 const $date_WebhookCustomPropertyUpdated = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
@@ -67231,6 +67659,10 @@ const $date_WebhookDelete = (): r.TransformField[] => [
 ];
 const $date_WebhookDependabotAlertAutoDismissed = (): r.TransformField[] => [
   [
+    ['access', 'alert'],
+    ['ref', $date_DependabotAlert],
+  ],
+  [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
   ],
@@ -67240,6 +67672,10 @@ const $date_WebhookDependabotAlertAutoDismissed = (): r.TransformField[] => [
   ],
 ];
 const $date_WebhookDependabotAlertAutoReopened = (): r.TransformField[] => [
+  [
+    ['access', 'alert'],
+    ['ref', $date_DependabotAlert],
+  ],
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
@@ -67251,6 +67687,10 @@ const $date_WebhookDependabotAlertAutoReopened = (): r.TransformField[] => [
 ];
 const $date_WebhookDependabotAlertCreated = (): r.TransformField[] => [
   [
+    ['access', 'alert'],
+    ['ref', $date_DependabotAlert],
+  ],
+  [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
   ],
@@ -67260,6 +67700,10 @@ const $date_WebhookDependabotAlertCreated = (): r.TransformField[] => [
   ],
 ];
 const $date_WebhookDependabotAlertDismissed = (): r.TransformField[] => [
+  [
+    ['access', 'alert'],
+    ['ref', $date_DependabotAlert],
+  ],
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
@@ -67271,6 +67715,10 @@ const $date_WebhookDependabotAlertDismissed = (): r.TransformField[] => [
 ];
 const $date_WebhookDependabotAlertFixed = (): r.TransformField[] => [
   [
+    ['access', 'alert'],
+    ['ref', $date_DependabotAlert],
+  ],
+  [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
   ],
@@ -67281,6 +67729,10 @@ const $date_WebhookDependabotAlertFixed = (): r.TransformField[] => [
 ];
 const $date_WebhookDependabotAlertReintroduced = (): r.TransformField[] => [
   [
+    ['access', 'alert'],
+    ['ref', $date_DependabotAlert],
+  ],
+  [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
   ],
@@ -67290,6 +67742,10 @@ const $date_WebhookDependabotAlertReintroduced = (): r.TransformField[] => [
   ],
 ];
 const $date_WebhookDependabotAlertReopened = (): r.TransformField[] => [
+  [
+    ['access', 'alert'],
+    ['ref', $date_DependabotAlert],
+  ],
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
@@ -67895,6 +68351,10 @@ const $date_WebhookIssueCommentCreated = (): r.TransformField[] => [
           ['this'],
         ],
         [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+        [
+          ['access', 'type'],
+          ['ref', $date_IssueType],
+        ],
         [['access', 'updated_at'], ['this']],
       ],
     ],
@@ -67935,6 +68395,10 @@ const $date_WebhookIssueCommentDeleted = (): r.TransformField[] => [
           ['this'],
         ],
         [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+        [
+          ['access', 'type'],
+          ['ref', $date_IssueType],
+        ],
         [['access', 'updated_at'], ['this']],
       ],
     ],
@@ -67975,6 +68439,10 @@ const $date_WebhookIssueCommentEdited = (): r.TransformField[] => [
           ['this'],
         ],
         [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+        [
+          ['access', 'type'],
+          ['ref', $date_IssueType],
+        ],
         [['access', 'updated_at'], ['this']],
       ],
     ],
@@ -68025,6 +68493,10 @@ const $date_WebhookIssuesClosed = (): r.TransformField[] => [
           ['this'],
         ],
         [['access', 'pull_request'], ['access', 'merged_at'], ['this']],
+        [
+          ['access', 'type'],
+          ['ref', $date_IssueType],
+        ],
         [['access', 'updated_at'], ['this']],
       ],
     ],
@@ -68083,6 +68555,11 @@ const $date_WebhookIssuesDeleted = (): r.TransformField[] => [
     ['access', 'merged_at'],
     ['this'],
   ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
     ['access', 'repository'],
@@ -68137,6 +68614,11 @@ const $date_WebhookIssuesDemilestoned = (): r.TransformField[] => [
     ['access', 'pull_request'],
     ['access', 'merged_at'],
     ['this'],
+  ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
   ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
@@ -68197,6 +68679,11 @@ const $date_WebhookIssuesEdited = (): r.TransformField[] => [
     ['access', 'merged_at'],
     ['this'],
   ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
     ['access', 'repository'],
@@ -68251,6 +68738,11 @@ const $date_WebhookIssuesLabeled = (): r.TransformField[] => [
     ['access', 'pull_request'],
     ['access', 'merged_at'],
     ['this'],
+  ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
   ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
@@ -68307,6 +68799,11 @@ const $date_WebhookIssuesLocked = (): r.TransformField[] => [
     ['access', 'merged_at'],
     ['this'],
   ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
     ['access', 'repository'],
@@ -68361,6 +68858,11 @@ const $date_WebhookIssuesMilestoned = (): r.TransformField[] => [
     ['access', 'pull_request'],
     ['access', 'merged_at'],
     ['this'],
+  ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
   ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
@@ -68442,6 +68944,12 @@ const $date_WebhookIssuesOpened = (): r.TransformField[] => [
   ],
   [
     ['access', 'changes'],
+    ['access', 'old_issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
+  [
+    ['access', 'changes'],
     ['access', 'old_repository'],
     ['access', 'created_at'],
     ['select', [[['this']]]],
@@ -68505,6 +69013,11 @@ const $date_WebhookIssuesOpened = (): r.TransformField[] => [
     ['access', 'pull_request'],
     ['access', 'merged_at'],
     ['this'],
+  ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
   ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
@@ -68577,6 +69090,11 @@ const $date_WebhookIssuesReopened = (): r.TransformField[] => [
   ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
+  [
     ['access', 'repository'],
     ['ref', $date_RepositoryWebhooks],
   ],
@@ -68646,6 +69164,12 @@ const $date_WebhookIssuesTransferred = (): r.TransformField[] => [
   [
     ['access', 'changes'],
     ['access', 'new_issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
+  [
+    ['access', 'changes'],
+    ['access', 'new_issue'],
     ['access', 'updated_at'],
     ['this'],
   ],
@@ -68674,6 +69198,24 @@ const $date_WebhookIssuesTransferred = (): r.TransformField[] => [
   [
     ['access', 'issue'],
     ['ref', $date_WebhooksIssue2],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
+const $date_WebhookIssuesTyped = (): r.TransformField[] => [
+  [
+    ['access', 'enterprise'],
+    ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'issue'],
+    ['ref', $date_WebhooksIssue],
+  ],
+  [
+    ['access', 'type'],
+    ['ref', $date_IssueType],
   ],
   [
     ['access', 'repository'],
@@ -68757,6 +69299,11 @@ const $date_WebhookIssuesUnlocked = (): r.TransformField[] => [
     ['access', 'merged_at'],
     ['this'],
   ],
+  [
+    ['access', 'issue'],
+    ['access', 'type'],
+    ['ref', $date_IssueType],
+  ],
   [['access', 'issue'], ['access', 'updated_at'], ['this']],
   [
     ['access', 'repository'],
@@ -68771,6 +69318,24 @@ const $date_WebhookIssuesUnpinned = (): r.TransformField[] => [
   [
     ['access', 'issue'],
     ['ref', $date_WebhooksIssue2],
+  ],
+  [
+    ['access', 'repository'],
+    ['ref', $date_RepositoryWebhooks],
+  ],
+];
+const $date_WebhookIssuesUntyped = (): r.TransformField[] => [
+  [
+    ['access', 'enterprise'],
+    ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'issue'],
+    ['ref', $date_WebhooksIssue],
+  ],
+  [
+    ['access', 'type'],
+    ['ref', $date_IssueType],
   ],
   [
     ['access', 'repository'],
@@ -68911,11 +69476,19 @@ const $date_WebhookMembershipRemoved = (): r.TransformField[] => [
 ];
 const $date_WebhookMergeGroupChecksRequested = (): r.TransformField[] => [
   [
+    ['access', 'merge_group'],
+    ['ref', $date_MergeGroup],
+  ],
+  [
     ['access', 'repository'],
     ['ref', $date_RepositoryWebhooks],
   ],
 ];
 const $date_WebhookMergeGroupDestroyed = (): r.TransformField[] => [
+  [
+    ['access', 'merge_group'],
+    ['ref', $date_MergeGroup],
+  ],
   [
     ['access', 'repository'],
     ['ref', $date_RepositoryWebhooks],
@@ -69693,6 +70266,10 @@ const $date_WebhookPullRequestClosed = (): r.TransformField[] => [
     ['ref', $date_EnterpriseWebhooks],
   ],
   [
+    ['access', 'pull_request'],
+    ['ref', $date_PullRequestWebhook],
+  ],
+  [
     ['access', 'repository'],
     ['ref', $date_RepositoryWebhooks],
   ],
@@ -69701,6 +70278,10 @@ const $date_WebhookPullRequestConvertedToDraft = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'pull_request'],
+    ['ref', $date_PullRequestWebhook],
   ],
   [
     ['access', 'repository'],
@@ -69809,6 +70390,10 @@ const $date_WebhookPullRequestEdited = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'pull_request'],
+    ['ref', $date_PullRequestWebhook],
   ],
   [
     ['access', 'repository'],
@@ -70079,6 +70664,10 @@ const $date_WebhookPullRequestOpened = (): r.TransformField[] => [
     ['ref', $date_EnterpriseWebhooks],
   ],
   [
+    ['access', 'pull_request'],
+    ['ref', $date_PullRequestWebhook],
+  ],
+  [
     ['access', 'repository'],
     ['ref', $date_RepositoryWebhooks],
   ],
@@ -70089,6 +70678,10 @@ const $date_WebhookPullRequestReadyForReview = (): r.TransformField[] => [
     ['ref', $date_EnterpriseWebhooks],
   ],
   [
+    ['access', 'pull_request'],
+    ['ref', $date_PullRequestWebhook],
+  ],
+  [
     ['access', 'repository'],
     ['ref', $date_RepositoryWebhooks],
   ],
@@ -70097,6 +70690,10 @@ const $date_WebhookPullRequestReopened = (): r.TransformField[] => [
   [
     ['access', 'enterprise'],
     ['ref', $date_EnterpriseWebhooks],
+  ],
+  [
+    ['access', 'pull_request'],
+    ['ref', $date_PullRequestWebhook],
   ],
   [
     ['access', 'repository'],
@@ -73539,6 +74136,55 @@ export async function codesOfConductGetConductCode<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * Revoke a list of credentials
+ * Submit a list of credentials to be revoked. This endpoint is intended to revoke credentials the caller does not own and
+ * may have found exposed on GitHub.com or elsewhere. It can also be used for credentials associated with an old user
+ * account that you no longer have access to. Credential owners will be notified of the revocation.
+ *
+ * This endpoint
+ * currently accepts the following credential types:
+ * - Personal access tokens (classic)
+ * - Fine-grained personal access
+ * tokens
+ *
+ * Revoked credentials may impact users on GitHub Free, Pro, & Team and GitHub Enterprise Cloud, and GitHub
+ * Enterprise Cloud with Enterprise Managed Users.
+ * GitHub cannot reactivate any credentials that have been revoked; new
+ * credentials will need to be generated.
+ *
+ * To prevent abuse, this API is limited to only 60 unauthenticated requests per
+ * hour and a max of 1000 tokens per API request.
+ *
+ * > [!NOTE]
+ * > Any authenticated requests will return a 403.
+ * Learn more at {@link https://docs.github.com/rest/credentials/revoke#revoke-a-list-of-credentials}
+ * Tags: credentials
+ */
+export async function credentialsRevoke<FetcherData extends r.BaseFetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {},
+  body: {
+    /**
+     * A list of credentials to be revoked, up to 1000 per request.
+     */
+    credentials: string[];
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<202, unknown>
+  | r.StatusResponse<422, ValidationErrorSimple>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/credentials/revoke',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * Get emojis
  * Lists all the emojis available to use on GitHub.
  * Learn more at {@link https://docs.github.com/rest/emojis/emojis#get-emojis}
@@ -73641,10 +74287,14 @@ export async function codeSecurityCreateConfigurationForEnterprise<
      */
     description: string;
     /**
-     * The enablement status of GitHub Advanced Security
+     * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
      * @defaultValue "disabled"
      */
-    advanced_security?: 'enabled' | 'disabled';
+    advanced_security?:
+      | 'enabled'
+      | 'disabled'
+      | 'code_security'
+      | 'secret_protection';
     /**
      * The enablement status of Dependency Graph
      * @defaultValue "enabled"
@@ -73681,6 +74331,14 @@ export async function codeSecurityCreateConfigurationForEnterprise<
     code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
     code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
     /**
+     * The enablement status of code scanning delegated alert dismissal
+     * @defaultValue "disabled"
+     */
+    code_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
+    /**
      * The enablement status of secret scanning
      * @defaultValue "disabled"
      */
@@ -73700,6 +74358,19 @@ export async function codeSecurityCreateConfigurationForEnterprise<
      * @defaultValue "disabled"
      */
     secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Copilot secret scanning
+     * @defaultValue "disabled"
+     */
+    secret_scanning_generic_secrets?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning delegated alert dismissal
+     * @defaultValue "disabled"
+     */
+    secret_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
     /**
      * The enablement status of private vulnerability reporting
      * @defaultValue "disabled"
@@ -73847,9 +74518,13 @@ export async function codeSecurityUpdateEnterpriseConfiguration<
      */
     description?: string;
     /**
-     * The enablement status of GitHub Advanced Security. Must be set to enabled if you want to enable any GHAS settings.
+     * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
      */
-    advanced_security?: 'enabled' | 'disabled';
+    advanced_security?:
+      | 'enabled'
+      | 'disabled'
+      | 'code_security'
+      | 'secret_protection';
     /**
      * The enablement status of Dependency Graph
      */
@@ -73881,6 +74556,14 @@ export async function codeSecurityUpdateEnterpriseConfiguration<
     code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
     code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
     /**
+     * The enablement status of code scanning delegated alert dismissal
+     * @defaultValue "disabled"
+     */
+    code_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
+    /**
      * The enablement status of secret scanning
      */
     secret_scanning?: 'enabled' | 'disabled' | 'not_set';
@@ -73896,6 +74579,19 @@ export async function codeSecurityUpdateEnterpriseConfiguration<
      * The enablement status of secret scanning non-provider patterns
      */
     secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Copilot secret scanning
+     * @defaultValue "disabled"
+     */
+    secret_scanning_generic_secrets?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning delegated alert dismissal
+     * @defaultValue "disabled"
+     */
+    secret_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
     /**
      * The enablement status of private vulnerability reporting
      */
@@ -74155,6 +74851,7 @@ export async function dependabotListAlertsForEnterprise<
     ecosystem?: string;
     package?: string;
     epss_percentage?: string;
+    has?: string | 'patch'[];
     scope?: 'development' | 'runtime';
     sort?: 'created' | 'updated' | 'epss_percentage';
     direction?: 'asc' | 'desc';
@@ -74182,6 +74879,7 @@ export async function dependabotListAlertsForEnterprise<
       'ecosystem',
       'package',
       'epss_percentage',
+      'has',
       'scope',
       'sort',
       'direction',
@@ -74238,6 +74936,7 @@ export async function secretScanningListAlertsForEnterprise<
     validity?: string;
     is_publicly_leaked?: boolean;
     is_multi_repo?: boolean;
+    hide_secret?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -74268,6 +74967,7 @@ export async function secretScanningListAlertsForEnterprise<
       'validity',
       'is_publicly_leaked',
       'is_multi_repo',
+      'hide_secret',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -76170,7 +76870,8 @@ export async function billingGetGithubBillingUsageReportOrg<
  * Gets information about an organization.
  *
  * When the value of `two_factor_requirement_enabled` is `true`, the organization
- * requires all members, billing managers, and outside collaborators to enable [two-factor
+ * requires all members, billing managers, outside collaborators, guest collaborators, repository collaborators, or
+ * everyone with access to any repository within the organization to enable [two-factor
  * authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
  *
  * To see the
@@ -76616,10 +77317,6 @@ export async function actionsCreateHostedRunnerForOrg<
        * The source of the runner image.
        */
       source?: 'github' | 'partner' | 'custom';
-      /**
-       * The version of the runner image to deploy. This is relevant only for runners using custom images.
-       */
-      version?: string | null;
     };
     /**
      * The machine size of the runner. To list available sizes, use `GET actions/hosted-runners/machine-sizes`
@@ -76868,10 +77565,6 @@ export async function actionsUpdateHostedRunnerForOrg<
      * Whether this runner should be updated with a static public IP. Note limit on account. To list limits on account, use `GET actions/hosted-runners/limits`
      */
     enable_static_ip?: boolean;
-    /**
-     * The version of the runner image to deploy. This is relevant only for runners using custom images.
-     */
-    image_version?: string | null;
   },
   opts?: FetcherData,
 ): Promise<r.StatusResponse<200, ActionsHostedRunner>> {
@@ -78117,7 +78810,9 @@ export async function actionsDeleteSelfHostedRunnerFromOrg<
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<204, unknown>> {
+): Promise<
+  r.StatusResponse<204, unknown> | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/actions/runners/{runner_id}',
     params,
@@ -79160,6 +79855,7 @@ export async function orgsListAttestations<
     after?: string;
     org: string;
     subject_digest: string;
+    predicate_type?: string;
   },
   opts?: FetcherData,
 ): Promise<
@@ -79190,7 +79886,7 @@ export async function orgsListAttestations<
     path: '/orgs/{org}/attestations/{subject_digest}',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'before', 'after'],
+    queryParams: ['per_page', 'before', 'after', 'predicate_type'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
@@ -79287,6 +79983,323 @@ export async function orgsUnblockUser<FetcherData extends r.BaseFetcherData>(
 ): Promise<r.StatusResponse<204, unknown>> {
   const req = await ctx.createRequest({
     path: '/orgs/{org}/blocks/{username}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * List campaigns for an organization
+ * Lists campaigns in an organization.
+ *
+ * The authenticated user must be an owner or security manager for the organization to
+ * use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this
+ * endpoint.
+ * Learn more at {@link https://docs.github.com/rest/campaigns/campaigns#list-campaigns-for-an-organization}
+ * Tags: campaigns
+ */
+export async function campaignsListOrgCampaigns<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    page?: number;
+    per_page?: number;
+    direction?: 'asc' | 'desc';
+    state?: CampaignState;
+    sort?: 'created' | 'updated' | 'ends_at' | 'published';
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CampaignSummary[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/campaigns',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['page', 'per_page', 'direction', 'state', 'sort'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_CampaignSummary]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Create a campaign for an organization
+ * Create a campaign for an organization.
+ *
+ * The authenticated user must be an owner or security manager for the organization
+ * to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use
+ * this endpoint.
+ *
+ * Fine-grained tokens must have the "Code scanning alerts" repository permissions (read) on all
+ * repositories included
+ * in the campaign.
+ * Learn more at {@link https://docs.github.com/rest/campaigns/campaigns#create-a-campaign-for-an-organization}
+ * Tags: campaigns
+ */
+export async function campaignsCreateCampaign<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: {
+    /**
+     * The name of the campaign
+     */
+    name: string;
+    /**
+     * A description for the campaign
+     */
+    description: string;
+    /**
+     * The logins of the users to set as the campaign managers. At this time, only a single manager can be supplied.
+     */
+    managers?: string[];
+    /**
+     * The slugs of the teams to set as the campaign managers.
+     */
+    team_managers?: string[];
+    /**
+     * The end date and time of the campaign. The date must be in the future.
+     */
+    ends_at: Date;
+    /**
+     * The contact link of the campaign. Must be a URI.
+     */
+    contact_link?: string | null;
+    /**
+     * The code scanning alerts to include in this campaign
+     */
+    code_scanning_alerts: {
+      /**
+       * The repository id
+       */
+      repository_id: number;
+      /**
+       * The alert numbers
+       */
+      alert_numbers: number[];
+    }[];
+    /**
+     * If true, will automatically generate issues for the campaign. The default is false.
+     */
+    generate_issues?: boolean;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CampaignSummary>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, BasicError>
+  | r.StatusResponse<429, unknown>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/campaigns',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CampaignSummary]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Get a campaign for an organization
+ * Gets a campaign for an organization.
+ *
+ * The authenticated user must be an owner or security manager for the organization
+ * to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use
+ * this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/campaigns/campaigns#get-a-campaign-for-an-organization}
+ * Tags: campaigns
+ */
+export async function campaignsGetCampaignSummary<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    campaign_number: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CampaignSummary>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/campaigns/{campaign_number}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CampaignSummary]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Update a campaign
+ * Updates a campaign in an organization.
+ *
+ * The authenticated user must be an owner or security manager for the organization
+ * to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use
+ * this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/campaigns/campaigns#update-a-campaign}
+ * Tags: campaigns
+ */
+export async function campaignsUpdateCampaign<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    campaign_number: number;
+  },
+  body: {
+    /**
+     * The name of the campaign
+     */
+    name?: string;
+    /**
+     * A description for the campaign
+     */
+    description?: string;
+    /**
+     * The logins of the users to set as the campaign managers. At this time, only a single manager can be supplied.
+     */
+    managers?: string[];
+    /**
+     * The slugs of the teams to set as the campaign managers.
+     */
+    team_managers?: string[];
+    /**
+     * The end date and time of the campaign, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ.
+     */
+    ends_at?: Date;
+    /**
+     * The contact link of the campaign. Must be a URI.
+     */
+    contact_link?: string | null;
+    state?: CampaignState;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, CampaignSummary>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/campaigns/{campaign_number}',
+    params,
+    method: r.HttpMethod.PATCH,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_CampaignSummary]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Delete a campaign for an organization
+ * Deletes a campaign in an organization.
+ *
+ * The authenticated user must be an owner or security manager for the organization
+ * to use this endpoint.
+ *
+ * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use
+ * this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/campaigns/campaigns#delete-a-campaign-for-an-organization}
+ * Tags: campaigns
+ */
+export async function campaignsDeleteCampaign<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    campaign_number: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/campaigns/{campaign_number}',
     params,
     method: r.HttpMethod.DELETE,
   });
@@ -79446,10 +80459,14 @@ export async function codeSecurityCreateConfiguration<
      */
     description: string;
     /**
-     * The enablement status of GitHub Advanced Security
+     * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
      * @defaultValue "disabled"
      */
-    advanced_security?: 'enabled' | 'disabled';
+    advanced_security?:
+      | 'enabled'
+      | 'disabled'
+      | 'code_security'
+      | 'secret_protection';
     /**
      * The enablement status of Dependency Graph
      * @defaultValue "enabled"
@@ -79485,6 +80502,14 @@ export async function codeSecurityCreateConfiguration<
      */
     code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
     code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
+    /**
+     * The enablement status of code scanning delegated alert dismissal
+     * @defaultValue "not_set"
+     */
+    code_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
     /**
      * The enablement status of secret scanning
      * @defaultValue "disabled"
@@ -79528,6 +80553,18 @@ export async function codeSecurityCreateConfiguration<
      * @defaultValue "disabled"
      */
     secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Copilot secret scanning
+     * @defaultValue "disabled"
+     */
+    secret_scanning_generic_secrets?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning delegated alert dismissal
+     */
+    secret_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
     /**
      * The enablement status of private vulnerability reporting
      * @defaultValue "disabled"
@@ -79719,9 +80756,13 @@ export async function codeSecurityUpdateConfiguration<
      */
     description?: string;
     /**
-     * The enablement status of GitHub Advanced Security
+     * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
      */
-    advanced_security?: 'enabled' | 'disabled';
+    advanced_security?:
+      | 'enabled'
+      | 'disabled'
+      | 'code_security'
+      | 'secret_protection';
     /**
      * The enablement status of Dependency Graph
      */
@@ -79752,6 +80793,14 @@ export async function codeSecurityUpdateConfiguration<
      */
     code_scanning_default_setup?: 'enabled' | 'disabled' | 'not_set';
     code_scanning_default_setup_options?: CodeScanningDefaultSetupOptions;
+    /**
+     * The enablement status of code scanning delegated alert dismissal
+     * @defaultValue "disabled"
+     */
+    code_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
     /**
      * The enablement status of secret scanning
      */
@@ -79790,6 +80839,17 @@ export async function codeSecurityUpdateConfiguration<
      * The enablement status of secret scanning non-provider patterns
      */
     secret_scanning_non_provider_patterns?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of Copilot secret scanning
+     */
+    secret_scanning_generic_secrets?: 'enabled' | 'disabled' | 'not_set';
+    /**
+     * The enablement status of secret scanning delegated alert dismissal
+     */
+    secret_scanning_delegated_alert_dismissal?:
+      | 'enabled'
+      | 'disabled'
+      | 'not_set';
     /**
      * The enablement status of private vulnerability reporting
      */
@@ -81003,61 +82063,6 @@ export async function copilotCopilotMetricsForOrganization<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Get a summary of Copilot usage for organization members
- * > [!NOTE]
- * > This endpoint is closing down. It will be accessible throughout February 2025, but will not return any new
- * data after February 1st.
- *
- * You can use this endpoint to see a daily breakdown of aggregated usage metrics for Copilot
- * completions and Copilot Chat in the IDE
- * across an organization, with a further breakdown of suggestions, acceptances,
- * and number of active users by editor and language for each day.
- * See the response schema tab for detailed metrics
- * definitions.
- *
- * The response contains metrics for up to 28 days prior. Usage metrics are processed once per day for the
- * previous day,
- * and the response will only include data up until yesterday. In order for an end user to be counted towards
- * these metrics,
- * they must have telemetry enabled in their IDE.
- *
- * Organization owners, and owners and billing managers of
- * the parent enterprise, can view Copilot usage metrics.
- *
- * OAuth app tokens and personal access tokens (classic) need
- * either the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-organization-members}
- * Tags: copilot
- */
-export async function copilotUsageMetricsForOrg<
-  FetcherData extends r.BaseFetcherData,
->(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    org: string;
-    since?: string;
-    until?: string;
-    page?: number;
-    per_page?: number;
-  },
-  opts?: FetcherData,
-): Promise<
-  | r.StatusResponse<200, CopilotUsageMetrics[]>
-  | r.StatusResponse<401, BasicError>
-  | r.StatusResponse<403, BasicError>
-  | r.StatusResponse<404, BasicError>
-  | r.StatusResponse<500, BasicError>
-> {
-  const req = await ctx.createRequest({
-    path: '/orgs/{org}/copilot/usage',
-    params,
-    method: r.HttpMethod.GET,
-    queryParams: ['since', 'until', 'page', 'per_page'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
-}
-/**
  * List Dependabot alerts for an organization
  * Lists Dependabot alerts for an organization.
  *
@@ -81081,6 +82086,7 @@ export async function dependabotListAlertsForOrg<
     ecosystem?: string;
     package?: string;
     epss_percentage?: string;
+    has?: string | 'patch'[];
     scope?: 'development' | 'runtime';
     sort?: 'created' | 'updated' | 'epss_percentage';
     direction?: 'asc' | 'desc';
@@ -81109,6 +82115,7 @@ export async function dependabotListAlertsForOrg<
       'ecosystem',
       'package',
       'epss_percentage',
+      'has',
       'scope',
       'sort',
       'direction',
@@ -82743,6 +83750,159 @@ export async function orgsListInvitationTeams<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * List issue types for an organization
+ * Lists all issue types for an organization. OAuth app tokens and personal access tokens (classic) need the read:org scope
+ * to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/issue-types#list-issue-types-for-an-organization}
+ * Tags: orgs
+ */
+export async function orgsListIssueTypes<FetcherData extends r.BaseFetcherData>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  opts?: FetcherData,
+): Promise<
+  r.StatusResponse<200, IssueType[]> | r.StatusResponse<404, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/issue-types',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_IssueType]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Create issue type for an organization
+ * Create a new issue type for an organization.
+ *
+ * You can find out more about issue types in [Managing issue types in an
+ * organization](https://docs.github.com/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization).
+ *
+ * To
+ * use this endpoint, the authenticated user must be an administrator for the organization. OAuth app tokens and
+ * personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/issue-types#create-issue-type-for-an-organization}
+ * Tags: orgs
+ */
+export async function orgsCreateIssueType<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+  },
+  body: OrganizationCreateIssueType,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssueType>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/issue-types',
+    params,
+    method: r.HttpMethod.POST,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_IssueType]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Update issue type for an organization
+ * Updates an issue type for an organization.
+ *
+ * You can find out more about issue types in [Managing issue types in an
+ * organization](https://docs.github.com/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization).
+ *
+ * To
+ * use this endpoint, the authenticated user must be an administrator for the organization. OAuth app tokens and
+ * personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/issue-types#update-issue-type-for-an-organization}
+ * Tags: orgs
+ */
+export async function orgsUpdateIssueType<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    issue_type_id: number;
+  },
+  body: OrganizationUpdateIssueType,
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, IssueType>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/issue-types/{issue_type_id}',
+    params,
+    method: r.HttpMethod.PUT,
+    body,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_IssueType]]] } },
+    },
+    true,
+  );
+}
+/**
+ * Delete issue type for an organization
+ * Deletes an issue type for an organization.
+ *
+ * You can find out more about issue types in [Managing issue types in an
+ * organization](https://docs.github.com/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization).
+ *
+ * To
+ * use this endpoint, the authenticated user must be an administrator for the organization. OAuth app tokens and
+ * personal
+ * access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * Learn more at {@link https://docs.github.com/rest/orgs/issue-types#delete-issue-type-for-an-organization}
+ * Tags: orgs
+ */
+export async function orgsDeleteIssueType<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    issue_type_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<204, unknown>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, ValidationErrorSimple>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/issue-types/{issue_type_id}',
+    params,
+    method: r.HttpMethod.DELETE,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
  * List organization issues assigned to the authenticated user
  * List issues in an organization assigned to the authenticated user.
  *
@@ -82782,6 +83942,7 @@ export async function issuesListForOrg<FetcherData extends r.BaseFetcherData>(
       | 'all';
     state?: 'open' | 'closed' | 'all';
     labels?: string;
+    type?: string;
     sort?: 'created' | 'updated' | 'comments';
     direction?: 'asc' | 'desc';
     since?: Date;
@@ -82798,6 +83959,7 @@ export async function issuesListForOrg<FetcherData extends r.BaseFetcherData>(
       'filter',
       'state',
       'labels',
+      'type',
       'sort',
       'direction',
       'since',
@@ -82825,7 +83987,7 @@ export async function orgsListMembers<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
-    filter?: '2fa_disabled' | 'all';
+    filter?: '2fa_disabled' | '2fa_insecure' | 'all';
     role?: 'all' | 'admin' | 'member';
     per_page?: number;
     page?: number;
@@ -83861,7 +85023,7 @@ export async function orgsListOutsideCollaborators<
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
     org: string;
-    filter?: '2fa_disabled' | 'all';
+    filter?: '2fa_disabled' | '2fa_insecure' | 'all';
     per_page?: number;
     page?: number;
   },
@@ -84368,6 +85530,7 @@ export async function orgsListPatGrantRequests<
     permission?: string;
     last_used_before?: Date;
     last_used_after?: Date;
+    token_id?: string[];
   },
   opts?: FetcherData,
 ): Promise<
@@ -84391,6 +85554,7 @@ export async function orgsListPatGrantRequests<
       'permission',
       'last_used_before',
       'last_used_after',
+      'token_id',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -84552,6 +85716,7 @@ export async function orgsListPatGrants<FetcherData extends r.BaseFetcherData>(
     permission?: string;
     last_used_before?: Date;
     last_used_after?: Date;
+    token_id?: string[];
   },
   opts?: FetcherData,
 ): Promise<
@@ -84575,6 +85740,7 @@ export async function orgsListPatGrants<FetcherData extends r.BaseFetcherData>(
       'permission',
       'last_used_before',
       'last_used_after',
+      'token_id',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -84708,15 +85874,12 @@ export async function orgsListPatGrantRepositories<
 }
 /**
  * List private registries for an organization
- * > [!NOTE]
- * > This endpoint is in public preview and is subject to change.
- *
- * Lists all private registry configurations
- * available at the organization-level without revealing their encrypted
+ * Lists all private registry configurations available at the organization-level without revealing their
+ * encrypted
  * values.
  *
- * OAuth app tokens and personal access
- * tokens (classic) need the `admin:org` scope to use this endpoint.
+ * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#list-private-registries-for-an-organization}
  * Tags: private-registries
  */
@@ -84768,11 +85931,7 @@ export async function privateRegistriesListOrgPrivateRegistries<
 }
 /**
  * Create a private registry for an organization
- * > [!NOTE]
- * > This endpoint is in public preview and is subject to change.
- *
- * Creates a private registry configuration with
- * an encrypted value for an organization. Encrypt your secret using
+ * Creates a private registry configuration with an encrypted value for an organization. Encrypt your secret using
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
@@ -84792,7 +85951,7 @@ export async function privateRegistriesCreateOrgPrivateRegistry<
     /**
      * The registry type.
      */
-    registry_type: 'maven_repository';
+    registry_type: 'maven_repository' | 'nuget_feed' | 'goproxy_server';
     /**
      * The username to use when authenticating with the private registry. This field should be omitted if the private registry does not require a username for authentication.
      */
@@ -84851,14 +86010,11 @@ export async function privateRegistriesCreateOrgPrivateRegistry<
 }
 /**
  * Get private registries public key for an organization
- * > [!NOTE]
- * > This endpoint is in public preview and is subject to change.
+ * Gets the org public key, which is needed to encrypt private registry secrets. You need to encrypt a secret before you
+ * can create or update secrets.
  *
- * Gets the org public key, which is needed to
- * encrypt private registry secrets. You need to encrypt a secret before you can create or update secrets.
- *
- * OAuth tokens
- * and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+ * OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this
+ * endpoint.
  * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#get-private-registries-public-key-for-an-organization}
  * Tags: private-registries
  */
@@ -84898,14 +86054,10 @@ export async function privateRegistriesGetOrgPublicKey<
 }
 /**
  * Get a private registry for an organization
- * > [!NOTE]
- * > This endpoint is in public preview and is subject to change.
+ * Get the configuration of a single private registry defined for an organization, omitting its encrypted value.
  *
- * Get the configuration of a single private
- * registry defined for an organization, omitting its encrypted value.
- *
- * OAuth app tokens and personal access tokens
- * (classic) need the `admin:org` scope to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#get-a-private-registry-for-an-organization}
  * Tags: private-registries
  */
@@ -84942,11 +86094,7 @@ export async function privateRegistriesGetOrgPrivateRegistry<
 }
 /**
  * Update a private registry for an organization
- * > [!NOTE]
- * > This endpoint is in public preview and is subject to change.
- *
- * Updates a private registry configuration with
- * an encrypted value for an organization. Encrypt your secret using
+ * Updates a private registry configuration with an encrypted value for an organization. Encrypt your secret using
  * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
@@ -84967,7 +86115,7 @@ export async function privateRegistriesUpdateOrgPrivateRegistry<
     /**
      * The registry type.
      */
-    registry_type?: 'maven_repository';
+    registry_type?: 'maven_repository' | 'nuget_feed' | 'goproxy_server';
     /**
      * The username to use when authenticating with the private registry. This field should be omitted if the private registry does not require a username for authentication.
      */
@@ -85006,14 +86154,10 @@ export async function privateRegistriesUpdateOrgPrivateRegistry<
 }
 /**
  * Delete a private registry for an organization
- * > [!NOTE]
- * > This endpoint is in public preview and is subject to change.
+ * Delete a private registry configuration at the organization-level.
  *
- * Delete a private registry configuration at the
- * organization-level.
- *
- * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this
- * endpoint.
+ * OAuth app tokens and personal access tokens
+ * (classic) need the `admin:org` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/private-registries/organization-configurations#delete-a-private-registry-for-an-organization}
  * Tags: private-registries
  */
@@ -85162,11 +86306,18 @@ export async function orgsGetAllCustomProperties<
  * Create or update custom properties for an organization
  * Creates new or updates existing custom properties defined for an organization in a batch.
  *
- * To use this endpoint, the
- * authenticated user must be one of:
+ * If the property already
+ * exists, the existing property will be replaced with the new values.
+ * Missing optional values will fall back to default
+ * values, previous values will be overwritten.
+ * E.g. if a property exists with `values_editable_by: org_and_repo_actors`
+ * and it's updated without specifying `values_editable_by`, it will be updated to default value `org_actors`.
+ *
+ * To use this
+ * endpoint, the authenticated user must be one of:
  *   - An administrator for the organization.
- *   - A user, or a user on a team, with the
- * fine-grained permission of `custom_properties_org_definitions_manager` in the organization.
+ *   - A user, or a user on a
+ * team, with the fine-grained permission of `custom_properties_org_definitions_manager` in the organization.
  * Learn more at {@link https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization}
  * Tags: orgs
  */
@@ -85997,6 +87148,82 @@ export async function reposDeleteOrgRuleset<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * Get organization ruleset history
+ * Get the history of an organization ruleset.
+ * Learn more at {@link https://docs.github.com/rest/orgs/rules#get-organization-ruleset-history}
+ * Tags: orgs
+ */
+export async function orgsGetOrgRulesetHistory<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    per_page?: number;
+    page?: number;
+    ruleset_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, RulesetVersion[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/rulesets/{ruleset_id}/history',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_RulesetVersion]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get organization ruleset version
+ * Get a version of an organization ruleset.
+ * Learn more at {@link https://docs.github.com/rest/orgs/rules#get-organization-ruleset-version}
+ * Tags: orgs
+ */
+export async function orgsGetOrgRulesetVersion<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    org: string;
+    ruleset_id: number;
+    version_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, RulesetVersionWithState>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/orgs/{org}/rulesets/{ruleset_id}/history/{version_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_RulesetVersionWithState]]] },
+      },
+    },
+    true,
+  );
+}
+/**
  * List secret scanning alerts for an organization
  * Lists secret scanning alerts for eligible repositories in an organization, from newest to oldest.
  *
@@ -86027,6 +87254,7 @@ export async function secretScanningListAlertsForOrg<
     validity?: string;
     is_publicly_leaked?: boolean;
     is_multi_repo?: boolean;
+    hide_secret?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -86058,6 +87286,7 @@ export async function secretScanningListAlertsForOrg<
       'validity',
       'is_publicly_leaked',
       'is_multi_repo',
+      'hide_secret',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -86585,67 +87814,6 @@ export async function copilotCopilotMetricsForTeam<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Get a summary of Copilot usage for a team
- * > [!NOTE]
- * > This endpoint is closing down. It will be accessible throughout February 2025, but will not return any new
- * data after February 1st.
- *
- * You can use this endpoint to see a daily breakdown of aggregated usage metrics for Copilot
- * completions and Copilot Chat in the IDE
- * for users within a team, with a further breakdown of suggestions, acceptances,
- * and number of active users by editor and language for each day.
- * See the response schema tab for detailed metrics
- * definitions.
- *
- * The response contains metrics for up to 28 days prior. Usage metrics are processed once per day for the
- * previous day,
- * and the response will only include data up until yesterday. In order for an end user to be counted towards
- * these metrics,
- * they must have telemetry enabled in their IDE.
- *
- * > [!NOTE]
- * > This endpoint will only return results for a
- * given day if the team had five or more members with active Copilot licenses, as evaluated at the end of that
- * day.
- *
- * Organization owners for the organization that contains this team, and owners and billing managers of the parent
- * enterprise can view Copilot usage metrics for a team.
- *
- * OAuth app tokens and personal access tokens (classic) need either
- * the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this endpoint.
- * Learn more at {@link https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-a-team}
- * Tags: copilot
- */
-export async function copilotUsageMetricsForTeam<
-  FetcherData extends r.BaseFetcherData,
->(
-  ctx: r.Context<AuthMethods, FetcherData>,
-  params: {
-    org: string;
-    team_slug: string;
-    since?: string;
-    until?: string;
-    page?: number;
-    per_page?: number;
-  },
-  opts?: FetcherData,
-): Promise<
-  | r.StatusResponse<200, CopilotUsageMetrics[]>
-  | r.StatusResponse<401, BasicError>
-  | r.StatusResponse<403, BasicError>
-  | r.StatusResponse<404, BasicError>
-  | r.StatusResponse<500, BasicError>
-> {
-  const req = await ctx.createRequest({
-    path: '/orgs/{org}/team/{team_slug}/copilot/usage',
-    params,
-    method: r.HttpMethod.GET,
-    queryParams: ['since', 'until', 'page', 'per_page'],
-  });
-  const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
-}
-/**
  * List teams
  * Lists all teams in an organization that are visible to the authenticated user.
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-teams}
@@ -86698,7 +87866,7 @@ export async function teamsCreate<FetcherData extends r.BaseFetcherData>(
      */
     description?: string;
     /**
-     * List GitHub IDs for organization members who will become team maintainers.
+     * List GitHub usernames for organization members who will become team maintainers.
      */
     maintainers?: string[];
     /**
@@ -87844,11 +89012,12 @@ export async function teamsRemoveMembershipForUserInOrg<
 }
 /**
  * List team projects
- * Lists the organization projects for a team.
- *
- * > [!NOTE]
- * > You can also specify a team by `org_id` and `team_id` using the
- * route `GET /organizations/{org_id}/team/{team_id}/projects`.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-projects}
  * Tags: teams
  */
@@ -87875,12 +89044,12 @@ export async function teamsListProjectsInOrg<
 }
 /**
  * Check team permissions for a project
- * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes
- * projects inherited from a parent team.
- *
- * > [!NOTE]
- * > You can also specify a team by `org_id` and `team_id` using the
- * route `GET /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project}
  * Tags: teams
  */
@@ -87907,13 +89076,12 @@ export async function teamsCheckPermissionsForProjectInOrg<
 }
 /**
  * Add or update team project permissions
- * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the
- * authenticated user must have `admin` permissions for the project. The project and team must be part of the same
- * organization.
- *
- * > [!NOTE]
- * > You can also specify a team by `org_id` and `team_id` using the route `PUT
- * /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions}
  * Tags: teams
  */
@@ -87954,14 +89122,12 @@ export async function teamsAddOrUpdateProjectPermissionsInOrg<
 }
 /**
  * Remove a project from a team
- * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the
- * team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both
- * the team and project, or `admin` access to the team or project. This endpoint removes the project from the team, but
- * does not delete the project.
- *
- * > [!NOTE]
- * > You can also specify a team by `org_id` and `team_id` using the route `DELETE
- * /organizations/{org_id}/team/{team_id}/projects/{project_id}`.
+ * > [!WARNING]
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team}
  * Tags: teams
  */
@@ -89262,6 +90428,15 @@ export async function reposUpdate<FetcherData extends r.BaseFetcherData>(
         status?: string;
       };
       /**
+       * Use the `status` property to enable or disable GitHub Code Security for this repository.
+       */
+      code_security?: {
+        /**
+         * Can be `enabled` or `disabled`.
+         */
+        status?: string;
+      };
+      /**
        * Use the `status` property to enable or disable secret scanning for this repository. For more information, see "[About secret scanning](/code-security/secret-security/about-secret-scanning)."
        */
       secret_scanning?: {
@@ -89454,6 +90629,7 @@ export async function reposDelete<FetcherData extends r.BaseFetcherData>(
       }
     >
   | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<409, BasicError>
 > {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}',
@@ -90559,7 +91735,9 @@ export async function actionsDeleteSelfHostedRunnerFromRepo<
     runner_id: number;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<204, unknown>> {
+): Promise<
+  r.StatusResponse<204, unknown> | r.StatusResponse<422, ValidationErrorSimple>
+> {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/actions/runners/{runner_id}',
     params,
@@ -91596,11 +92774,17 @@ export async function actionsReRunWorkflowFailedJobs<
 }
 /**
  * Get workflow run usage
- * Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to
- * workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner
- * operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the
- * multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see
- * "[Managing billing for GitHub
+ * > [!WARNING]
+ * > This endpoint is in the process of closing down. Refer to "[Actions Get workflow usage and Get workflow
+ * run usage endpoints closing
+ * down](https://github.blog/changelog/2025-02-02-actions-get-workflow-usage-and-get-workflow-run-usage-endpoints-closing-down/)"
+ * for more information.
+ *
+ * Gets the number of billable minutes and total run time for a specific workflow run. Billable
+ * minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each
+ * GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does
+ * not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more
+ * information, see "[Managing billing for GitHub
  * Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
  * Anyone
@@ -92318,11 +93502,17 @@ export async function actionsListWorkflowRuns<
 }
 /**
  * Get workflow usage
- * Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only
- * apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner
- * operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the
- * multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see
- * "[Managing billing for GitHub
+ * > [!WARNING]
+ * > This endpoint is in the process of closing down. Refer to "[Actions Get workflow usage and Get workflow
+ * run usage endpoints closing
+ * down](https://github.blog/changelog/2025-02-02-actions-get-workflow-usage-and-get-workflow-run-usage-endpoints-closing-down/)"
+ * for more information.
+ *
+ * Gets the number of billable minutes used by a specific workflow during the current billing cycle.
+ * Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for
+ * each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage
+ * does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For
+ * more information, see "[Managing billing for GitHub
  * Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
  *
  * You
@@ -92567,6 +93757,7 @@ export async function reposListAttestations<
     before?: string;
     after?: string;
     subject_digest: string;
+    predicate_type?: string;
   },
   opts?: FetcherData,
 ): Promise<
@@ -92597,7 +93788,7 @@ export async function reposListAttestations<
     path: '/repos/{owner}/{repo}/attestations/{subject_digest}',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'before', 'after'],
+    queryParams: ['per_page', 'before', 'after', 'predicate_type'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
@@ -92831,7 +94022,13 @@ export async function reposListBranches<FetcherData extends r.BaseFetcherData>(
     queryParams: ['protected', 'per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['loop'], ['ref', $date_ShortBranch]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get a branch
@@ -92857,7 +94054,13 @@ export async function reposGetBranch<FetcherData extends r.BaseFetcherData>(
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_BranchWithProtection]]] } },
+    },
+    true,
+  );
 }
 /**
  * Get branch protection
@@ -92887,7 +94090,13 @@ export async function reposGetBranchProtection<
     method: r.HttpMethod.GET,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': { transforms: { date: [[['ref', $date_BranchProtection]]] } },
+    },
+    true,
+  );
 }
 /**
  * Update branch protection
@@ -94363,7 +95572,13 @@ export async function reposRenameBranch<FetcherData extends r.BaseFetcherData>(
     body,
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
+  return ctx.handleResponse(
+    res,
+    {
+      '201': { transforms: { date: [[['ref', $date_BranchWithProtection]]] } },
+    },
+    true,
+  );
 }
 /**
  * Create a check run
@@ -94794,14 +96009,15 @@ export async function checksListAnnotations<
  * Rerequest a check run
  * Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger
  * the [`check_run` webhook](https://docs.github.com/webhooks/event-payloads/#check_run) event with the action
- * `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is
- * cleared.
+ * `rerequested`. When a check run is `rerequested`, the `status` of the check suite it belongs to is reset to `queued` and
+ * the `conclusion` is cleared. The check run itself is not updated. GitHub apps recieving the [`check_run`
+ * webhook](https://docs.github.com/webhooks/event-payloads/#check_run) with the `rerequested` action should then decide if
+ * the check run should be reset or updated and call the [update `check_run`
+ * endpoint](https://docs.github.com/rest/checks/runs#update-a-check-run) to update the check_run if desired.
  *
- * For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow
+ * For more
+ * information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow
  * run](https://docs.github.com/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)".
- *
- * OAuth apps and personal
- * access tokens (classic) cannot use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/checks/runs#rerequest-a-check-run}
  * Tags: checks
  */
@@ -95023,10 +96239,7 @@ export async function checksListForSuite<FetcherData extends r.BaseFetcherData>(
  * Rerequest a check suite
  * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will
  * trigger the [`check_suite` webhook](https://docs.github.com/webhooks/event-payloads/#check_suite) event with the action
- * `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is
- * cleared.
- *
- * OAuth apps and personal access tokens (classic) cannot use this endpoint.
+ * `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
  * Learn more at {@link https://docs.github.com/rest/checks/suites#rerequest-a-check-suite}
  * Tags: checks
  */
@@ -95201,10 +96414,12 @@ export async function codeScanningUpdateAlert<
     state: CodeScanningAlertSetState;
     dismissed_reason?: CodeScanningAlertDismissedReason;
     dismissed_comment?: CodeScanningAlertDismissedComment;
+    create_request?: CodeScanningAlertCreateRequest;
   },
   opts?: FetcherData,
 ): Promise<
   | r.StatusResponse<200, CodeScanningAlert>
+  | r.StatusResponse<400, BasicError>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
   | r.StatusResponse<
@@ -95340,12 +96555,12 @@ export async function codeScanningCreateAutofix<
  * Commit an autofix for a code scanning alert
  * Commits an autofix for a code scanning alert.
  *
- * If an autofix is commited as a result of this request, then this endpoint
- * will return a 201 Created response.
+ * If an autofix is committed as a result of this request, then this
+ * endpoint will return a 201 Created response.
  *
- * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use
- * this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public
- * repositories.
+ * OAuth app tokens and personal access tokens (classic) need the `repo`
+ * scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with
+ * only public repositories.
  * Learn more at {@link https://docs.github.com/rest/code-scanning/code-scanning#commit-an-autofix-for-a-code-scanning-alert}
  * Tags: code-scanning
  */
@@ -95562,6 +96777,7 @@ export async function codeScanningGetAnalysis<
   | r.StatusResponse<200, CodeScanningAnalysis>
   | r.StatusResponse<403, BasicError>
   | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<422, BasicError>
   | r.StatusResponse<
       503,
       {
@@ -96830,7 +98046,8 @@ export async function codespacesGetRepoSecret<
  * secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
  *
  * OAuth app tokens
- * and personal access tokens (classic) need the `repo` scope to use this endpoint.
+ * and personal access tokens (classic) need the `repo` scope to use this endpoint. The associated user must be a
+ * repository admin.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#create-or-update-a-repository-secret}
  * Tags: codespaces
  */
@@ -96871,7 +98088,7 @@ export async function codespacesCreateOrUpdateRepoSecret<
  * Deletes a development environment secret in a repository using the secret name.
  *
  * OAuth app tokens and personal access
- * tokens (classic) need the `repo` scope to use this endpoint.
+ * tokens (classic) need the `repo` scope to use this endpoint. The associated user must be a repository admin.
  * Learn more at {@link https://docs.github.com/rest/codespaces/repository-secrets#delete-a-repository-secret}
  * Tags: codespaces
  */
@@ -96899,16 +98116,20 @@ export async function codespacesDeleteRepoSecret<
  * For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that
  * are direct collaborators, organization members with access through team memberships, organization members with access
  * through default organization permissions, and organization owners.
- * Organization members with write, maintain, or admin
- * privileges on the organization-owned repository can use this endpoint.
+ * The `permissions` hash returned in the response
+ * contains the base role permissions of the collaborator. The `role_name` is the highest role assigned to the collaborator
+ * after considering all sources of grants, including: repo, teams, organization, and enterprise.
+ * There is presently not a
+ * way to differentiate between an organization level grant and a repository level grant from this endpoint response.
  *
- * Team members will include the members of child
- * teams.
+ * Team
+ * members will include the members of child teams.
  *
- * The authenticated user must have push access to the repository to use this endpoint.
- *
- * OAuth app tokens and
- * personal access tokens (classic) need the `read:org` and `repo` scopes to use this endpoint.
+ * The authenticated user must have write, maintain, or admin privileges
+ * on the repository to use this endpoint. For organization-owned repositories, the authenticated user needs to be a member
+ * of the organization.
+ * OAuth app tokens and personal access tokens (classic) need the `read:org` and `repo` scopes to use
+ * this endpoint.
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#list-repository-collaborators}
  * Tags: repos
  */
@@ -96974,23 +98195,29 @@ export async function reposCheckCollaborator<
 }
 /**
  * Add a repository collaborator
+ * Add a user to a repository with a specified level of access. If the repository is owned by an organization, this API
+ * does not add the user to the organization - a user that has repository access without being an organization member is
+ * called an "outside collaborator" (if they are not an Enterprise Managed User) or a "repository collaborator" if they are
+ * an Enterprise Managed User. These users are exempt from some organization policies - see "[Adding outside collaborators
+ * to
+ * repositories](https://docs.github.com/organizations/managing-user-access-to-your-organizations-repositories/managing-outside-collaborators/adding-outside-collaborators-to-repositories-in-your-organization)"
+ * to learn more about these collaborator types.
+ *
  * This endpoint triggers
  * [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
- * Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate
- * limits for the
- * API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and
- * "[Best practices for using the REST
- * API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
  *
- * Adding an outside collaborator may be
- * restricted by enterprise administrators. For more information, see "[Enforcing repository management policies in your
- * enterprise](https://docs.github.com/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)."
+ * Adding
+ * an outside collaborator may be restricted by enterprise and organization administrators. For more information, see
+ * "[Enforcing repository management policies in your
+ * enterprise](https://docs.github.com/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)"
+ * and "[Setting permissions for adding outside
+ * collaborators](https://docs.github.com/organizations/managing-organization-settings/setting-permissions-for-adding-outside-collaborators)"
+ * for organization settings.
  *
- * For
- * more information on permission levels, see "[Repository permission levels for an
+ * For more information on permission levels, see "[Repository permission levels for an
  * organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
  * There are restrictions on which permissions can be granted to organization members when an organization base role is in
- * place. In this case, the permission being given must be equal to or higher than the org base permission. Otherwise, the
+ * place. In this case, the role being given must be equal to or higher than the org base permission. Otherwise, the
  * request will fail with:
  *
  * ```
@@ -97006,18 +98233,22 @@ export async function reposCheckCollaborator<
  * this via the notifications page, the email they receive, or by using the
  * [API](https://docs.github.com/rest/collaborators/invitations).
  *
- * **Updating an existing collaborator's permission
- * level**
+ * For Enterprise Managed Users, this endpoint does not
+ * send invitations - these users are automatically added to organizations and repositories. Enterprise Managed Users can
+ * only be added to organizations and repositories within their enterprise.
  *
- * The endpoint can also be used to change the permissions of an existing collaborator without first removing and
- * re-adding the collaborator. To change the permissions, use the same endpoint and pass a different `permission`
- * parameter. The response will be a `204`, with no other indication that the permission level changed.
+ * **Updating an existing collaborator's
+ * permission level**
  *
- * **Rate
- * limits**
+ * The endpoint can also be used to change the permissions of an existing collaborator without first
+ * removing and re-adding the collaborator. To change the permissions, use the same endpoint and pass a different
+ * `permission` parameter. The response will be a `204`, with no other indication that the permission level
+ * changed.
  *
- * You are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you
- * are inviting organization members to an organization repository.
+ * **Rate limits**
+ *
+ * You are limited to sending 50 invitations to a repository per 24 hour period. Note there is
+ * no limit if you are inviting organization members to an organization repository.
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#add-a-repository-collaborator}
  * Tags: repos
  */
@@ -97067,32 +98298,32 @@ export async function reposAddCollaborator<
  * of the repository or target themselves for removal.
  *
  * This endpoint also:
- * - Cancels any outstanding invitations
- * -
- * Unasigns the user from any issues
- * - Removes access to organization projects if the user is not an organization member
- * and is not a collaborator on any other organization repositories.
+ * - Cancels any outstanding invitations sent by
+ * the collaborator
+ * - Unassigns the user from any issues
+ * - Removes access to organization projects if the user is not an
+ * organization member and is not a collaborator on any other organization repositories.
  * - Unstars the repository
- * - Updates access permissions
- * to packages
+ * - Updates
+ * access permissions to packages
  *
  * Removing a user as a collaborator has the following effects on forks:
- *  - If the user had access to a fork
- * through their membership to this repository, the user will also be removed from the fork.
- *  - If the user had their own
- * fork of the repository, the fork will be deleted.
- *  - If the user still has read access to the repository, open pull
- * requests by this user from a fork will be denied.
+ *  - If the user had
+ * access to a fork through their membership to this repository, the user will also be removed from the fork.
+ *  - If the
+ * user had their own fork of the repository, the fork will be deleted.
+ *  - If the user still has read access to the
+ * repository, open pull requests by this user from a fork will be denied.
  *
  * > [!NOTE]
- * > A user can still have access to the repository through
- * organization permissions like base repository permissions.
+ * > A user can still have access to the
+ * repository through organization permissions like base repository permissions.
  *
- * Although the API responds immediately, the additional
- * permission updates might take some extra time to complete in the background.
+ * Although the API responds immediately,
+ * the additional permission updates might take some extra time to complete in the background.
  *
- * For more information on fork permissions,
- * see "[About permissions and visibility of
+ * For more information on
+ * fork permissions, see "[About permissions and visibility of
  * forks](https://docs.github.com/pull-requests/collaborating-with-pull-requests/working-with-forks/about-permissions-and-visibility-of-forks)".
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#remove-a-repository-collaborator}
  * Tags: repos
@@ -97122,17 +98353,21 @@ export async function reposRemoveCollaborator<
 }
 /**
  * Get repository permissions for a user
- * Checks the repository permission of a collaborator. The possible repository
- * permissions are `admin`, `write`, `read`,
- * and `none`.
+ * Checks the repository permission and role of a collaborator.
  *
- * *Note*: The `permission` attribute provides the legacy base roles of `admin`, `write`, `read`, and `none`,
- * where the
- * `maintain` role is mapped to `write` and the `triage` role is mapped to `read`. To determine the role assigned
- * to the
- * collaborator, see the `role_name` attribute, which will provide the full role name, including custom roles.
- * The
- * `permissions` hash can also be used to determine which base level of access the collaborator has to the repository.
+ * The `permission` attribute provides the legacy base roles
+ * of `admin`, `write`, `read`, and `none`, where the
+ * `maintain` role is mapped to `write` and the `triage` role is mapped
+ * to `read`.
+ * The `role_name` attribute provides the name of the assigned role, including custom roles. The
+ * `permission`
+ * can also be used to determine which base level of access the collaborator has to the repository.
+ *
+ * The calculated
+ * permissions are the highest role assigned to the collaborator after considering all sources of grants, including: repo,
+ * teams, organization, and enterprise.
+ * There is presently not a way to differentiate between an organization level grant
+ * and a repository level grant from this endpoint response.
  * Learn more at {@link https://docs.github.com/rest/collaborators/collaborators#get-repository-permissions-for-a-user}
  * Tags: repos
  */
@@ -97719,10 +98954,10 @@ export async function reposCreateCommitComment<
 /**
  * List pull requests associated with a commit
  * Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default
- * branch, will only return open pull requests associated with the commit.
+ * branch, it will return merged and open pull requests associated with the commit.
  *
- * To list the open or merged pull requests
- * associated with a branch, you can set the `commit_sha` parameter to the branch name.
+ * To list the open or merged pull
+ * requests associated with a branch, you can set the `commit_sha` parameter to the branch name.
  * Learn more at {@link https://docs.github.com/rest/commits/commits#list-pull-requests-associated-with-a-commit}
  * Tags: repos
  */
@@ -98580,6 +99815,7 @@ export async function dependabotListAlertsForRepo<
     package?: string;
     manifest?: string;
     epss_percentage?: string;
+    has?: string | 'patch'[];
     scope?: 'development' | 'runtime';
     sort?: 'created' | 'updated' | 'epss_percentage';
     direction?: 'asc' | 'desc';
@@ -98610,6 +99846,7 @@ export async function dependabotListAlertsForRepo<
       'package',
       'manifest',
       'epss_percentage',
+      'has',
       'scope',
       'sort',
       'direction',
@@ -99916,10 +101153,12 @@ export async function reposGetAllDeploymentProtectionRules<
  *
  * For more information about the app that is providing this custom
  * deployment rule, see the [documentation for the `GET /apps/{app_slug}`
- * endpoint](https://docs.github.com/rest/apps/apps#get-an-app).
+ * endpoint](https://docs.github.com/rest/apps/apps#get-an-app), as well as the [guide to creating custom deployment
+ * protection
+ * rules](https://docs.github.com/actions/managing-workflow-runs-and-deployments/managing-deployments/creating-custom-deployment-protection-rules).
  *
- * OAuth app tokens and personal access tokens (classic)
- * need the `repo` scope to use this endpoint.
+ * OAuth
+ * app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
  * Learn more at {@link https://docs.github.com/rest/deployments/protection-rules#create-a-custom-deployment-protection-rule-on-an-environment}
  * Tags: repos
  */
@@ -101082,7 +102321,7 @@ export async function gitDeleteRef<FetcherData extends r.BaseFetcherData>(
 ): Promise<
   | r.StatusResponse<204, unknown>
   | r.StatusResponse<409, BasicError>
-  | r.StatusResponse<422, ValidationError>
+  | r.StatusResponse<422, unknown>
 > {
   const req = await ctx.createRequest({
     path: '/repos/{owner}/{repo}/git/refs/{ref}',
@@ -102526,6 +103765,7 @@ export async function issuesListForRepo<FetcherData extends r.BaseFetcherData>(
     milestone?: string;
     state?: 'open' | 'closed' | 'all';
     assignee?: string;
+    type?: string;
     creator?: string;
     mentioned?: string;
     labels?: string;
@@ -102550,6 +103790,7 @@ export async function issuesListForRepo<FetcherData extends r.BaseFetcherData>(
       'milestone',
       'state',
       'assignee',
+      'type',
       'creator',
       'mentioned',
       'labels',
@@ -102636,6 +103877,11 @@ export async function issuesCreate<FetcherData extends r.BaseFetcherData>(
      * Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._
      */
     assignees?: string[];
+    /**
+     * The name of the issue type to associate with this issue. _NOTE: Only users with push access can set the type for new issues. The type is silently dropped otherwise._
+     * @example "Epic"
+     */
+    type?: string | null;
   },
   opts?: FetcherData,
 ): Promise<
@@ -103183,6 +104429,11 @@ export async function issuesUpdate<FetcherData extends r.BaseFetcherData>(
      * Usernames to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this issue. Send an empty array (`[]`) to clear all assignees from the issue. Only users with push access can set assignees for new issues. Without push access to the repository, assignee changes are silently dropped.
      */
     assignees?: string[];
+    /**
+     * The name of the issue type to associate with this issue or use `null` to remove the current issue type. Only users with push access can set the type for issues. Without push access to the repository, type changes are silently dropped.
+     * @example "Epic"
+     */
+    type?: string | null;
   },
   opts?: FetcherData,
 ): Promise<
@@ -103474,7 +104725,15 @@ export async function issuesListEvents<FetcherData extends r.BaseFetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_IssueEventForIssue]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * List labels for an issue
@@ -104014,7 +105273,7 @@ export async function issuesAddSubIssue<FetcherData extends r.BaseFetcherData>(
   },
   body: {
     /**
-     * The id of the sub-issue to add. The sub-issue must belong to the same repository as the parent issue
+     * The id of the sub-issue to add. The sub-issue must belong to the same repository owner as the parent issue
      */
     sub_issue_id: number;
     /**
@@ -108576,6 +109835,84 @@ export async function reposDeleteRepoRuleset<
   return ctx.handleResponse(res, {}, true);
 }
 /**
+ * Get repository ruleset history
+ * Get the history of a repository ruleset.
+ * Learn more at {@link https://docs.github.com/rest/repos/rules#get-repository-ruleset-history}
+ * Tags: repos
+ */
+export async function reposGetRepoRulesetHistory<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    per_page?: number;
+    page?: number;
+    ruleset_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, RulesetVersion[]>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/rulesets/{ruleset_id}/history',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['per_page', 'page'],
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_RulesetVersion]]] },
+      },
+    },
+    true,
+  );
+}
+/**
+ * Get repository ruleset version
+ * Get a version of a repository ruleset.
+ * Learn more at {@link https://docs.github.com/rest/repos/rules#get-repository-ruleset-version}
+ * Tags: repos
+ */
+export async function reposGetRepoRulesetVersion<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    owner: string;
+    repo: string;
+    ruleset_id: number;
+    version_id: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, RulesetVersionWithState>
+  | r.StatusResponse<404, BasicError>
+  | r.StatusResponse<500, BasicError>
+> {
+  const req = await ctx.createRequest({
+    path: '/repos/{owner}/{repo}/rulesets/{ruleset_id}/history/{version_id}',
+    params,
+    method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['ref', $date_RulesetVersionWithState]]] },
+      },
+    },
+    true,
+  );
+}
+/**
  * List secret scanning alerts for a repository
  * Lists secret scanning alerts for an eligible repository, from newest to oldest.
  *
@@ -108607,6 +109944,7 @@ export async function secretScanningListAlertsForRepo<
     validity?: string;
     is_publicly_leaked?: boolean;
     is_multi_repo?: boolean;
+    hide_secret?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -108638,6 +109976,7 @@ export async function secretScanningListAlertsForRepo<
       'validity',
       'is_publicly_leaked',
       'is_multi_repo',
+      'hide_secret',
     ],
   });
   const res = await ctx.sendRequest(req, opts);
@@ -108672,6 +110011,7 @@ export async function secretScanningGetAlert<
     owner: string;
     repo: string;
     alert_number: AlertNumber;
+    hide_secret?: boolean;
   },
   opts?: FetcherData,
 ): Promise<
@@ -108691,6 +110031,7 @@ export async function secretScanningGetAlert<
     path: '/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}',
     params,
     method: r.HttpMethod.GET,
+    queryParams: ['hide_secret'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(
@@ -110426,33 +111767,12 @@ export async function searchCommits<FetcherData extends r.BaseFetcherData>(
 }
 /**
  * Search issues and pull requests
- * Find issues by state and keyword. This method returns up to 100 results [per
- * page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
- *
- * When searching for issues, you can get
- * text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the
- * `text-match` media type. For more details about how to receive highlighted
- * search results, see [Text match
- * metadata](https://docs.github.com/rest/search/search#text-match-metadata).
- *
- * For example, if you want to find the oldest
- * unresolved Python bugs on Windows. Your query might look something like
- * this.
- *
- * `q=windows+label:bug+language:python+state:open&sort=created&order=asc`
- *
- * This query searches for the keyword
- * `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is
- * Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the
- * search results.
- *
- * > [!NOTE]
- * > For requests made by GitHub Apps with a user access token, you can't retrieve a combination
- * of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier
- * will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must
- * send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only
- * issues or pull
- * requests](https://docs.github.com/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
+ * > [!WARNING]
+ * > **Notice:** Search for issues and pull requests will be overridden by advanced search on September 4,
+ * 2025.
+ * > You can read more about this change on [the GitHub
+ * blog](https://github.blog/changelog/2025-03-06-github-issues-projects-api-support-for-issues-advanced-search-and-more/).
+ * @deprecated
  * Learn more at {@link https://docs.github.com/rest/search/search#search-issues-and-pull-requests}
  * Tags: search
  */
@@ -110477,6 +111797,7 @@ export async function searchIssuesAndPullRequests<
     order?: 'desc' | 'asc';
     per_page?: number;
     page?: number;
+    advanced_search?: string;
   },
   opts?: FetcherData,
 ): Promise<
@@ -110504,7 +111825,7 @@ export async function searchIssuesAndPullRequests<
     path: '/search/issues',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['q', 'sort', 'order', 'per_page', 'page'],
+    queryParams: ['q', 'sort', 'order', 'per_page', 'page', 'advanced_search'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(
@@ -112000,12 +113321,10 @@ export async function teamsRemoveMembershipForUserLegacy<
 /**
  * List team projects (Legacy)
  * > [!WARNING]
- * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
- * API. We recommend migrating your existing code to use the new [`List team
- * projects`](https://docs.github.com/rest/teams/teams#list-team-projects) endpoint.
- *
- * Lists the organization projects for a
- * team.
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#list-team-projects-legacy}
  * Tags: teams
@@ -112035,13 +113354,10 @@ export async function teamsListProjectsLegacy<
 /**
  * Check team permissions for a project (Legacy)
  * > [!WARNING]
- * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
- * API. We recommend migrating your existing code to use the new [Check team permissions for a
- * project](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project) endpoint.
- *
- * Checks whether a team
- * has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a
- * parent team.
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project-legacy}
  * Tags: teams
@@ -112069,14 +113385,10 @@ export async function teamsCheckPermissionsForProjectLegacy<
 /**
  * Add or update team project permissions (Legacy)
  * > [!WARNING]
- * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
- * API. We recommend migrating your existing code to use the new [Add or update team project
- * permissions](https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions) endpoint.
- *
- * Adds an
- * organization project to a team. To add a project to a team or update the team's permission on a project, the
- * authenticated user must have `admin` permissions for the project. The project and team must be part of the same
- * organization.
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions-legacy}
  * Tags: teams
@@ -112120,14 +113432,10 @@ export async function teamsAddOrUpdateProjectPermissionsLegacy<
 /**
  * Remove a project from a team (Legacy)
  * > [!WARNING]
- * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams
- * API. We recommend migrating your existing code to use the new [Remove a project from a
- * team](https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team) endpoint.
- *
- * Removes an organization project
- * from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a
- * team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin`
- * access to the team or project. **Note:** This endpoint removes the project from the team, but does not delete it.
+ * > **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects
+ * experience.
+ * > See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more
+ * information.
  * @deprecated
  * Learn more at {@link https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team-legacy}
  * Tags: teams
@@ -116506,6 +117814,7 @@ export async function usersListAttestations<
     after?: string;
     username: string;
     subject_digest: string;
+    predicate_type?: string;
   },
   opts?: FetcherData,
 ): Promise<
@@ -116513,7 +117822,19 @@ export async function usersListAttestations<
       200,
       {
         attestations?: {
-          bundle?: SigstoreBundle0;
+          /**
+           * The attestation's Sigstore Bundle.
+           * Refer to the [Sigstore Bundle Specification](https://github.com/sigstore/protobuf-specs/blob/main/protos/sigstore_bundle.proto) for more information.
+           */
+          bundle?: {
+            mediaType?: string;
+            verificationMaterial?: {
+              [key: string]: unknown;
+            };
+            dsseEnvelope?: {
+              [key: string]: unknown;
+            };
+          };
           repository_id?: number;
           bundle_url?: string;
         }[];
@@ -116527,7 +117848,7 @@ export async function usersListAttestations<
     path: '/users/{username}/attestations/{subject_digest}',
     params,
     method: r.HttpMethod.GET,
-    queryParams: ['per_page', 'before', 'after'],
+    queryParams: ['per_page', 'before', 'after', 'predicate_type'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);
@@ -117569,6 +118890,50 @@ export async function billingGetSharedStorageBillingUser<
     path: '/users/{username}/settings/billing/shared-storage',
     params,
     method: r.HttpMethod.GET,
+  });
+  const res = await ctx.sendRequest(req, opts);
+  return ctx.handleResponse(res, {}, true);
+}
+/**
+ * Get billing usage report for a user
+ * Gets a report of the total usage for a user.
+ *
+ * **Note:** This endpoint is only available to users with access to the
+ * enhanced billing platform.
+ * Learn more at {@link https://docs.github.com/rest/billing/enhanced-billing#get-billing-usage-report-for-a-user}
+ * Tags: billing
+ */
+export async function billingGetGithubBillingUsageReportUser<
+  FetcherData extends r.BaseFetcherData,
+>(
+  ctx: r.Context<AuthMethods, FetcherData>,
+  params: {
+    username: string;
+    year?: number;
+    month?: number;
+    day?: number;
+    hour?: number;
+  },
+  opts?: FetcherData,
+): Promise<
+  | r.StatusResponse<200, BillingUsageReportUser>
+  | r.StatusResponse<400, BasicError>
+  | r.StatusResponse<403, BasicError>
+  | r.StatusResponse<500, BasicError>
+  | r.StatusResponse<
+      503,
+      {
+        code?: string;
+        message?: string;
+        documentation_url?: string;
+      }
+    >
+> {
+  const req = await ctx.createRequest({
+    path: '/users/{username}/settings/billing/usage',
+    params,
+    method: r.HttpMethod.GET,
+    queryParams: ['year', 'month', 'day', 'hour'],
   });
   const res = await ctx.sendRequest(req, opts);
   return ctx.handleResponse(res, {}, true);

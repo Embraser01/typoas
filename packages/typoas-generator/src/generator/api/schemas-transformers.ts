@@ -13,13 +13,37 @@ import {
 import { sanitizeTransformEntity } from '../utils/operation-name';
 import { createRuntimeRefType, ExportedRef } from '../utils/ref';
 
-function hasTransforms(fields: TransformField[]): boolean {
+function hasDirectTransforms(fields: TransformField[]): boolean {
   for (const field of fields) {
     const [t, val] = field[field.length - 1];
     if (t === TransformType.THIS) {
       return true;
     }
-    if (t === TransformType.SELECT && hasTransforms(val)) {
+    if (t === TransformType.SELECT && hasDirectTransforms(val)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function hasNewRefWithTransform(
+  name: string,
+  fields: TransformField[],
+  deepTransforms: Set<string>,
+): boolean {
+  if (deepTransforms.has(name)) {
+    return false;
+  }
+  for (const field of fields) {
+    const [t, val] = field[field.length - 1]; // Last item of transform
+    // Remove field if ref isn't used
+    if (t === TransformType.REF && deepTransforms.has(val)) {
+      return true;
+      // If select, recursive check each field set
+    } else if (
+      t === TransformType.SELECT &&
+      hasNewRefWithTransform(name, val, deepTransforms)
+    ) {
       return true;
     }
   }
@@ -32,18 +56,18 @@ function hasTransforms(fields: TransformField[]): boolean {
  */
 function filterUnknownRefs(
   fields: TransformField[],
-  simpleTransforms: Set<string>,
+  schemasWithTransforms: Set<string>,
 ): boolean {
   let changed = false;
   for (const field of fields) {
     const [t, val] = field[field.length - 1];
     // Remove field if ref isn't used
-    if (t === TransformType.REF && !simpleTransforms.has(val)) {
+    if (t === TransformType.REF && !schemasWithTransforms.has(val)) {
       changed = true;
       fields.splice(fields.indexOf(field), 1);
       // If select, recursive check each field set
     } else if (t === TransformType.SELECT) {
-      changed ||= filterUnknownRefs(val, simpleTransforms);
+      changed ||= filterUnknownRefs(val, schemasWithTransforms);
       if (!val.length) {
         fields.splice(fields.indexOf(field), 1);
       }
@@ -60,8 +84,8 @@ export function createAllSchemaTransforms(
 
   const transforms: Record<string, TransformField[]> = {};
   for (const type of Object.values(TransformerType)) {
-    // Set of $date_Pet like names that have a real transform (not just a ref)
-    const simpleTransforms = new Set<string>();
+    // Set of $date_Pet like names that have a transform (incl. $ref)
+    const deepTransforms = new Set<string>();
 
     // 1. Load all transforms for components schemas
     for (const [name, schema] of Object.entries(schemas)) {
@@ -70,27 +94,40 @@ export function createAllSchemaTransforms(
         const sanitizedName = sanitizeTransformEntity(type, name);
         transforms[sanitizedName] = res;
         ctx.transformSchemas.add(sanitizedName);
-        if (hasTransforms(res)) {
-          simpleTransforms.add(sanitizedName);
+        if (hasDirectTransforms(res)) {
+          deepTransforms.add(sanitizedName);
         }
       }
     }
 
-    // 2. Optimize transforms
-    let changed = true;
-    while (changed) {
+    // 2. Spread refs to parents
+    let changed;
+    do {
       changed = false;
       for (const [name, fields] of Object.entries(transforms)) {
-        changed ||= filterUnknownRefs(fields, simpleTransforms);
+        // Add name to deepTransforms if fields contains ref existing in deepTransforms
+        // Retry until we don't add anything
+        if (hasNewRefWithTransform(name, fields, deepTransforms)) {
+          deepTransforms.add(name);
+          changed = true;
+        }
+      }
+    } while (changed);
+
+    // 3. Remove transforms of refs without transforms
+    do {
+      changed = false;
+      for (const [name, fields] of Object.entries(transforms)) {
+        changed ||= filterUnknownRefs(fields, deepTransforms);
         if (!fields.length) {
           delete transforms[name];
           ctx.transformSchemas.delete(name);
         }
       }
-    }
+    } while (changed);
   }
 
-  // 3. Create remaining transforms
+  // 4. Create remaining transforms
   return Object.entries(transforms).map(([name, fields]) =>
     factory.createVariableStatement(
       undefined,

@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Spec deep refs transforms - OpenAPI 3.0",
+    "version": "1.0.5"
+  },
+  "servers": [{ "url": "/api/v3" }],
+  "paths": {
+    "/": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SchemaC" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SchemaA": { "type": "string", "format": "date-time" },
+      "SchemaB": { "$ref": "#/components/schemas/SchemaA" },
+      "SchemaC": { "$ref": "#/components/schemas/SchemaB" }
+    }
+  }
+}

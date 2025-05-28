@@ -45,4 +45,17 @@ describe('create full specs', () => {
 
     expect(getStringFromNode(node)).toMatchSnapshot();
   });
+
+  it('should handle deep refs transforms', () => {
+    const specs = JSON.parse(
+      readFileSync(resolve(__dirname, './spec-deep-refs.json'), 'utf8'),
+    ) as OpenAPIObject;
+
+    const node = generateClient(specs, {
+      jsDoc: false,
+      generateEnums: true,
+    });
+
+    expect(getStringFromNode(node)).toMatchSnapshot();
+  });
 });
