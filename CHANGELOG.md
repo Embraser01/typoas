@@ -2,8 +2,8 @@
 
 ## Unreleased
 
-
 ---
+
 ## 4.2.3 - 2025-05-28
 
 > Only @typoas/cli and @typoas/generator were updated to 4.2.3
