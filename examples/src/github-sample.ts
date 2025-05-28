@@ -11154,6 +11154,30 @@ const $date_ConvertedNoteToIssueIssueEvent = (): r.TransformField[] => [
     ['ref', $date_Integration],
   ],
 ];
+const $date_IssueEventForIssue = (): r.TransformField[] => [
+  [
+    [
+      'select',
+      [
+        [['ref', $date_LabeledIssueEvent]],
+        [['ref', $date_UnlabeledIssueEvent]],
+        [['ref', $date_AssignedIssueEvent]],
+        [['ref', $date_UnassignedIssueEvent]],
+        [['ref', $date_MilestonedIssueEvent]],
+        [['ref', $date_DemilestonedIssueEvent]],
+        [['ref', $date_RenamedIssueEvent]],
+        [['ref', $date_ReviewRequestedIssueEvent]],
+        [['ref', $date_ReviewRequestRemovedIssueEvent]],
+        [['ref', $date_ReviewDismissedIssueEvent]],
+        [['ref', $date_LockedIssueEvent]],
+        [['ref', $date_AddedToProjectIssueEvent]],
+        [['ref', $date_MovedColumnInProjectIssueEvent]],
+        [['ref', $date_RemovedFromProjectIssueEvent]],
+        [['ref', $date_ConvertedNoteToIssueIssueEvent]],
+      ],
+    ],
+  ],
+];
 const $date_TimelineCommentEvent = (): r.TransformField[] => [
   [['access', 'created_at'], ['this']],
   [['access', 'updated_at'], ['this']],
@@ -11205,10 +11229,27 @@ const $date_TimelineIssueEvents = (): r.TransformField[] => [
     [
       'select',
       [
+        [['ref', $date_LabeledIssueEvent]],
+        [['ref', $date_UnlabeledIssueEvent]],
+        [['ref', $date_MilestonedIssueEvent]],
+        [['ref', $date_DemilestonedIssueEvent]],
+        [['ref', $date_RenamedIssueEvent]],
+        [['ref', $date_ReviewRequestedIssueEvent]],
+        [['ref', $date_ReviewRequestRemovedIssueEvent]],
+        [['ref', $date_ReviewDismissedIssueEvent]],
+        [['ref', $date_LockedIssueEvent]],
+        [['ref', $date_AddedToProjectIssueEvent]],
+        [['ref', $date_MovedColumnInProjectIssueEvent]],
+        [['ref', $date_RemovedFromProjectIssueEvent]],
+        [['ref', $date_ConvertedNoteToIssueIssueEvent]],
         [['ref', $date_TimelineCommentEvent]],
         [['ref', $date_TimelineCrossReferencedEvent]],
         [['ref', $date_TimelineCommittedEvent]],
         [['ref', $date_TimelineReviewedEvent]],
+        [['ref', $date_TimelineLineCommentedEvent]],
+        [['ref', $date_TimelineCommitCommentedEvent]],
+        [['ref', $date_TimelineAssignedIssueEvent]],
+        [['ref', $date_TimelineUnassignedIssueEvent]],
       ],
     ],
   ],
@@ -31978,7 +32019,15 @@ export async function issuesListEvents<FetcherData extends r.BaseFetcherData>(
     queryParams: ['per_page', 'page'],
   });
   const res = await ctx.sendRequest(req, opts);
-  return ctx.handleResponse(res, {}, true);
+  return ctx.handleResponse(
+    res,
+    {
+      '200': {
+        transforms: { date: [[['loop'], ['ref', $date_IssueEventForIssue]]] },
+      },
+    },
+    true,
+  );
 }
 /**
  * List labels for an issue

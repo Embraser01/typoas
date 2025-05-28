@@ -19,6 +19,7 @@ async function main() {
   try {
     const pets = await ok(
       findPetsByStatus(petstoreCtx, { status: 'available' }),
+      200,
     );
     console.log(`Found ${pets.length} pets available`);
   } catch (e) {

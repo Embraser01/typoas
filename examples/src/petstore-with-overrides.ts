@@ -21,35 +21,6 @@ export type Order = {
   status?: 'placed' | 'approved' | 'delivered';
   complete?: boolean;
 };
-export type Customer = {
-  /**
-   * @example 100000
-   */
-  id?: number;
-  /**
-   * @example "fehguy"
-   */
-  username?: string;
-  address?: Address[];
-};
-export type Address = {
-  /**
-   * @example "437 Lytton"
-   */
-  street?: string;
-  /**
-   * @example "Palo Alto"
-   */
-  city?: string;
-  /**
-   * @example "CA"
-   */
-  state?: string;
-  /**
-   * @example "94301"
-   */
-  zip?: string;
-};
 export type User = {
   /**
    * @example 10
@@ -143,8 +114,8 @@ export function createContext<FetcherData extends r.BaseFetcherData>(
   });
 }
 /**
- * Update an existing pet
- * Update an existing pet by Id
+ * Update an existing pet.
+ * Update an existing pet by Id.
  * Tags: pet
  */
 export async function updatePet<FetcherData extends r.BaseFetcherData>(
@@ -156,7 +127,8 @@ export async function updatePet<FetcherData extends r.BaseFetcherData>(
   | r.StatusResponse<200, Pet>
   | r.StatusResponse<400, unknown>
   | r.StatusResponse<404, unknown>
-  | r.StatusResponse<405, unknown>
+  | r.StatusResponse<422, unknown>
+  | r.StatusResponse<'default', unknown>
 > {
   const req = await ctx.createRequest({
     path: '/pet',
@@ -169,8 +141,8 @@ export async function updatePet<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Add a new pet to the store
- * Add a new pet to the store
+ * Add a new pet to the store.
+ * Add a new pet to the store.
  * Tags: pet
  */
 export async function addPet<FetcherData extends r.BaseFetcherData>(
@@ -178,7 +150,12 @@ export async function addPet<FetcherData extends r.BaseFetcherData>(
   params: {},
   body: Pet,
   opts?: FetcherData,
-): Promise<r.StatusResponse<200, Pet> | r.StatusResponse<405, unknown>> {
+): Promise<
+  | r.StatusResponse<200, Pet>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<422, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet',
     params,
@@ -190,8 +167,8 @@ export async function addPet<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Finds Pets by status
- * Multiple status values can be provided with comma separated strings
+ * Finds Pets by status.
+ * Multiple status values can be provided with comma separated strings.
  * Tags: pet
  */
 export async function findPetsByStatus<FetcherData extends r.BaseFetcherData>(
@@ -200,7 +177,11 @@ export async function findPetsByStatus<FetcherData extends r.BaseFetcherData>(
     status?: 'available' | 'pending' | 'sold';
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<200, Pet[]> | r.StatusResponse<400, unknown>> {
+): Promise<
+  | r.StatusResponse<200, Pet[]>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet/findByStatus',
     params,
@@ -212,7 +193,7 @@ export async function findPetsByStatus<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Finds Pets by tags
+ * Finds Pets by tags.
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  * Tags: pet
  */
@@ -222,7 +203,11 @@ export async function findPetsByTags<FetcherData extends r.BaseFetcherData>(
     tags?: string[];
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<200, Pet[]> | r.StatusResponse<400, unknown>> {
+): Promise<
+  | r.StatusResponse<200, Pet[]>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet/findByTags',
     params,
@@ -234,8 +219,8 @@ export async function findPetsByTags<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Find pet by ID
- * Returns a single pet
+ * Find pet by ID.
+ * Returns a single pet.
  * Tags: pet
  */
 export async function getPetById<FetcherData extends r.BaseFetcherData>(
@@ -248,6 +233,7 @@ export async function getPetById<FetcherData extends r.BaseFetcherData>(
   | r.StatusResponse<200, Pet>
   | r.StatusResponse<400, unknown>
   | r.StatusResponse<404, unknown>
+  | r.StatusResponse<'default', unknown>
 > {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
@@ -259,7 +245,8 @@ export async function getPetById<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Updates a pet in the store with form data
+ * Updates a pet in the store with form data.
+ * Updates a pet resource based on the form data.
  * Tags: pet
  */
 export async function updatePetWithForm<FetcherData extends r.BaseFetcherData>(
@@ -270,7 +257,11 @@ export async function updatePetWithForm<FetcherData extends r.BaseFetcherData>(
     status?: string;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<405, unknown>> {
+): Promise<
+  | r.StatusResponse<200, Pet>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
     params,
@@ -282,7 +273,8 @@ export async function updatePetWithForm<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Deletes a pet
+ * Deletes a pet.
+ * Delete a pet.
  * Tags: pet
  */
 export async function deletePet<FetcherData extends r.BaseFetcherData>(
@@ -292,7 +284,11 @@ export async function deletePet<FetcherData extends r.BaseFetcherData>(
     petId: number;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<400, unknown>> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}',
     params,
@@ -303,7 +299,8 @@ export async function deletePet<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * uploads an image
+ * Uploads an image.
+ * Upload image of the pet.
  * Tags: pet
  */
 export async function uploadFile<FetcherData extends r.BaseFetcherData>(
@@ -314,7 +311,12 @@ export async function uploadFile<FetcherData extends r.BaseFetcherData>(
   },
   body: Blob,
   opts?: FetcherData,
-): Promise<r.StatusResponse<200, ApiResponse>> {
+): Promise<
+  | r.StatusResponse<200, ApiResponse>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/pet/{petId}/uploadImage',
     params,
@@ -327,8 +329,8 @@ export async function uploadFile<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Returns pet inventories by status
- * Returns a map of status codes to quantities
+ * Returns pet inventories by status.
+ * Returns a map of status codes to quantities.
  * Tags: store
  */
 export async function getInventory<FetcherData extends r.BaseFetcherData>(
@@ -336,12 +338,13 @@ export async function getInventory<FetcherData extends r.BaseFetcherData>(
   params: {},
   opts?: FetcherData,
 ): Promise<
-  r.StatusResponse<
-    200,
-    {
-      [key: string]: number;
-    }
-  >
+  | r.StatusResponse<
+      200,
+      {
+        [key: string]: number;
+      }
+    >
+  | r.StatusResponse<'default', unknown>
 > {
   const req = await ctx.createRequest({
     path: '/store/inventory',
@@ -353,8 +356,8 @@ export async function getInventory<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Place an order for a pet
- * Place a new order in the store
+ * Place an order for a pet.
+ * Place a new order in the store.
  * Tags: store
  */
 export async function placeOrder<FetcherData extends r.BaseFetcherData>(
@@ -362,7 +365,12 @@ export async function placeOrder<FetcherData extends r.BaseFetcherData>(
   params: {},
   body: Order,
   opts?: FetcherData,
-): Promise<r.StatusResponse<200, Order> | r.StatusResponse<405, unknown>> {
+): Promise<
+  | r.StatusResponse<200, Order>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<422, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/store/order',
     params,
@@ -379,7 +387,7 @@ export async function placeOrder<FetcherData extends r.BaseFetcherData>(
   );
 }
 /**
- * Find purchase order by ID
+ * Find purchase order by ID.
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  * Tags: store
  */
@@ -393,6 +401,7 @@ export async function getOrderById<FetcherData extends r.BaseFetcherData>(
   | r.StatusResponse<200, Order>
   | r.StatusResponse<400, unknown>
   | r.StatusResponse<404, unknown>
+  | r.StatusResponse<'default', unknown>
 > {
   const req = await ctx.createRequest({
     path: '/store/order/{orderId}',
@@ -409,8 +418,8 @@ export async function getOrderById<FetcherData extends r.BaseFetcherData>(
   );
 }
 /**
- * Delete purchase order by ID
- * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
+ * Delete purchase order by identifier.
+ * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
  * Tags: store
  */
 export async function deleteOrder<FetcherData extends r.BaseFetcherData>(
@@ -419,7 +428,12 @@ export async function deleteOrder<FetcherData extends r.BaseFetcherData>(
     orderId: number;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/store/order/{orderId}',
     params,
@@ -429,7 +443,7 @@ export async function deleteOrder<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Create user
+ * Create user.
  * This can only be done by the logged in user.
  * Tags: user
  */
@@ -438,7 +452,7 @@ export async function createUser<FetcherData extends r.BaseFetcherData>(
   params: {},
   body: User,
   opts?: FetcherData,
-): Promise<r.StatusResponse<'default', User>> {
+): Promise<r.StatusResponse<200, User> | r.StatusResponse<'default', unknown>> {
   const req = await ctx.createRequest({
     path: '/user',
     params,
@@ -449,8 +463,8 @@ export async function createUser<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Creates list of users with given input array
- * Creates list of users with given input array
+ * Creates list of users with given input array.
+ * Creates list of users with given input array.
  * Tags: user
  */
 export async function createUsersWithListInput<
@@ -471,7 +485,8 @@ export async function createUsersWithListInput<
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Logs user into the system
+ * Logs user into the system.
+ * Log into the system.
  * Tags: user
  */
 export async function loginUser<FetcherData extends r.BaseFetcherData>(
@@ -481,7 +496,11 @@ export async function loginUser<FetcherData extends r.BaseFetcherData>(
     password?: string;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<200, string> | r.StatusResponse<400, unknown>> {
+): Promise<
+  | r.StatusResponse<200, string>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/user/login',
     params,
@@ -492,14 +511,17 @@ export async function loginUser<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Logs out current logged in user session
+ * Logs out current logged in user session.
+ * Log user out of the system.
  * Tags: user
  */
 export async function logoutUser<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {},
   opts?: FetcherData,
-): Promise<r.StatusResponse<'default', unknown>> {
+): Promise<
+  r.StatusResponse<200, unknown> | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/user/logout',
     params,
@@ -509,7 +531,8 @@ export async function logoutUser<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Get user by user name
+ * Get user by user name.
+ * Get user detail based on username.
  * Tags: user
  */
 export async function getUserByName<FetcherData extends r.BaseFetcherData>(
@@ -522,6 +545,7 @@ export async function getUserByName<FetcherData extends r.BaseFetcherData>(
   | r.StatusResponse<200, User>
   | r.StatusResponse<400, unknown>
   | r.StatusResponse<404, unknown>
+  | r.StatusResponse<'default', unknown>
 > {
   const req = await ctx.createRequest({
     path: '/user/{username}',
@@ -532,7 +556,7 @@ export async function getUserByName<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Update user
+ * Update user resource.
  * This can only be done by the logged in user.
  * Tags: user
  */
@@ -543,7 +567,12 @@ export async function updateUser<FetcherData extends r.BaseFetcherData>(
   },
   body: User,
   opts?: FetcherData,
-): Promise<r.StatusResponse<'default', unknown>> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,
@@ -554,7 +583,7 @@ export async function updateUser<FetcherData extends r.BaseFetcherData>(
   return ctx.handleResponse(res, {}, true);
 }
 /**
- * Delete user
+ * Delete user resource.
  * This can only be done by the logged in user.
  * Tags: user
  */
@@ -564,7 +593,12 @@ export async function deleteUser<FetcherData extends r.BaseFetcherData>(
     username: string;
   },
   opts?: FetcherData,
-): Promise<r.StatusResponse<400, unknown> | r.StatusResponse<404, unknown>> {
+): Promise<
+  | r.StatusResponse<200, unknown>
+  | r.StatusResponse<400, unknown>
+  | r.StatusResponse<404, unknown>
+  | r.StatusResponse<'default', unknown>
+> {
   const req = await ctx.createRequest({
     path: '/user/{username}',
     params,

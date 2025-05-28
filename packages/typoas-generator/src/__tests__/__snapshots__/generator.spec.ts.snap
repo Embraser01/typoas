@@ -362,3 +362,31 @@ export function createContext<FetcherData extends r.BaseFetcherData>(params?: r.
 }); }
 "
 `;
+
+exports[`create full specs should handle deep refs transforms 1`] = `
+"import * as r from '@typoas/runtime';
+export type SchemaA = Date;
+export type SchemaB = SchemaA;
+export type SchemaC = SchemaB;
+const $date_SchemaA = (): r.TransformField[] => [[['this']]];
+const $date_SchemaB = (): r.TransformField[] => [[['ref', $date_SchemaA]]];
+const $date_SchemaC = (): r.TransformField[] => [[['ref', $date_SchemaB]]];
+export type AuthMethods = {};
+export function createContext<FetcherData extends r.BaseFetcherData>(params?: r.CreateContextParams<AuthMethods, FetcherData>): r.Context<AuthMethods, FetcherData> { return new r.Context<AuthMethods, FetcherData>({
+    serverConfiguration: new r.ServerConfiguration('/api/v3', {}),
+    authMethods: {},
+    ...params
+}); }
+export async function get<FetcherData extends r.BaseFetcherData>(ctx: r.Context<AuthMethods, FetcherData>, params: {}, opts?: FetcherData): Promise<r.StatusResponse<'default', SchemaC>> {
+    const req = await ctx.createRequest({
+        path: '/',
+        params,
+        method: r.HttpMethod.GET
+    });
+    const res = await ctx.sendRequest(req, opts);
+    return ctx.handleResponse(res, {
+        'default': { transforms: { date: [[['ref', $date_SchemaC]]] } }
+    }, true);
+}
+"
+`;
