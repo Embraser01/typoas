@@ -2,8 +2,8 @@ import type {
   AuthProvider,
   BaseFlowConfig,
   SecurityAuthentication,
-} from './base';
-import type { RequestContext } from '../fetcher';
+} from './base.js';
+import type { RequestContext } from '../fetcher/index.js';
 
 // We don't actually need to have any configuration for OAuth2
 // because we only use the already generated accessToken.

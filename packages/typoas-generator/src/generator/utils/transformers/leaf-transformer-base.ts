@@ -3,7 +3,7 @@ import {
   ReferenceObject,
   SchemaObject,
 } from 'openapi3-ts/oas31';
-import { sanitizeTransformEntity } from '../operation-name';
+import { sanitizeTransformEntity } from '../operation-name.js';
 
 // Here we duplicate the code from runtime.
 // It only concerns:

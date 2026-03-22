@@ -1,9 +1,9 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
-import { getStringFromNode } from '../ts-node';
-import { createTypeFromSchema } from '../types';
-import { Context } from '../../../context';
+import { getStringFromNode } from '../ts-node.js';
+import { createTypeFromSchema } from '../types.js';
+import { Context } from '../../../context.js';
 
 describe('create type from schema', () => {
   it('should handle integer schema', () => {

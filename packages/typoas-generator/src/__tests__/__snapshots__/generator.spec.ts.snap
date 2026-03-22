@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`create full specs should allow overrides if possible 1`] = `
+exports[`create full specs > should allow overrides if possible 1`] = `
 "import * as r from '@typoas/runtime';
 import type { PetStatus } from './overrides';
 export type Order = {
@@ -26,7 +26,7 @@ export function createContext<FetcherData extends r.BaseFetcherData>(params?: r.
 "
 `;
 
-exports[`create full specs should generate client 1`] = `
+exports[`create full specs > should generate client 1`] = `
 "import * as r from '@typoas/runtime';
 export type Order = {
     id?: number;
@@ -333,7 +333,7 @@ export async function deleteUser<FetcherData extends r.BaseFetcherData>(ctx: r.C
 "
 `;
 
-exports[`create full specs should generate enums if possible 1`] = `
+exports[`create full specs > should generate enums if possible 1`] = `
 "import * as r from '@typoas/runtime';
 export type Order = {
     id?: number;
@@ -363,7 +363,7 @@ export function createContext<FetcherData extends r.BaseFetcherData>(params?: r.
 "
 `;
 
-exports[`create full specs should handle deep refs transforms 1`] = `
+exports[`create full specs > should handle deep refs transforms 1`] = `
 "import * as r from '@typoas/runtime';
 export type SchemaA = Date;
 export type SchemaB = SchemaA;

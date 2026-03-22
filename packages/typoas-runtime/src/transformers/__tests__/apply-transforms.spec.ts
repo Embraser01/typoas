@@ -1,5 +1,5 @@
-import { describe, expect, it } from '@jest/globals';
-import { applyTransform, DateTransformer, TransformField } from '../';
+import { describe, expect, it } from 'vitest';
+import { applyTransform, DateTransformer, TransformField } from '../index.js';
 
 describe('apply transforms', () => {
   const transform = DateTransformer;

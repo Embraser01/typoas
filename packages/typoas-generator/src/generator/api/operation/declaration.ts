@@ -11,25 +11,25 @@ import {
   SyntaxKind,
   TypeReferenceNode,
 } from 'typescript';
-import { isEqual, uniqWith } from 'lodash';
-import { Context } from '../../../context';
+import { isEqual, uniqWith } from 'es-toolkit';
+import { Context } from '../../../context.js';
 import {
   createRuntimeRefType,
   ExportedRef,
   FETCHER_DATA_NAME,
-} from '../../utils/ref';
+} from '../../utils/ref.js';
 import {
   createSchemaTypeFromParameters,
   getParameterName,
   isParameterRequired,
-} from '../../components/parameters';
-import { isInvalidES6IdentifierName } from '../../utils/operation-name';
-import { createSchemaTypeFromRequestBody } from '../../components/request-bodies';
-import { GlobalParameters } from './types';
-import { createSchemaTypeFromResponse } from '../../components/responses';
-import { getSuccessResponses } from './response-processor';
-import { AUTH_TYPE_NAME } from '../security';
-import { getContentTypeSchema } from '../../utils/content-type';
+} from '../../components/parameters.js';
+import { isInvalidES6IdentifierName } from '../../utils/operation-name.js';
+import { createSchemaTypeFromRequestBody } from '../../components/request-bodies.js';
+import { GlobalParameters } from './types.js';
+import { createSchemaTypeFromResponse } from '../../components/responses.js';
+import { getSuccessResponses } from './response-processor.js';
+import { AUTH_TYPE_NAME } from '../security.js';
+import { getContentTypeSchema } from '../../utils/content-type.js';
 
 export function createOperationDeclaration(
   operation: OperationObject,

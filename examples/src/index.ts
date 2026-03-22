@@ -1,9 +1,9 @@
 import { ok, ServerConfiguration, wrapApi } from '@typoas/runtime';
-import { pullsList, createContext as createGithubContext } from './github';
+import { pullsList, createContext as createGithubContext } from './github.js';
 import {
   findPetsByStatus,
   createContext as createPetstoreContext,
-} from './petstore';
+} from './petstore.js';
 
 const petstoreCtx = createPetstoreContext({
   serverConfiguration: new ServerConfiguration(

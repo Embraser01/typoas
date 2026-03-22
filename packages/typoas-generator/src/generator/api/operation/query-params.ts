@@ -4,7 +4,7 @@ import {
   isReferenceObject,
 } from 'openapi3-ts/oas31';
 import { factory, StringLiteral } from 'typescript';
-import { Context } from '../../../context';
+import { Context } from '../../../context.js';
 
 export function getQueryParams(
   parametersOrRefs: (ParameterObject | ReferenceObject)[],

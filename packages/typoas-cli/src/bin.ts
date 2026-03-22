@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Cli } from 'clipanion';
-import cli from './index';
+import cli from './index.js';
 
 const [, , ...args] = process.argv;
 

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+> All packages will be released to v5
+
+- **BREAKING**: Drop support for Node.js 18 and lower [#81](https://github.com/Embraser01/typoas/pull/81)
+  - Those versions may work but are not tested anymore
+  - This change follow an upgrade of the building tools used.
+
 ---
 
 ## 4.2.3 - 2025-05-28

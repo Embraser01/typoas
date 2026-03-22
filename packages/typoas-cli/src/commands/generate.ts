@@ -1,10 +1,10 @@
 import { Command, Option, Usage } from 'clipanion';
 import * as t from 'typanion';
-import { writeFile } from 'fs/promises';
-import * as path from 'path';
+import { writeFile } from 'node:fs/promises';
+import * as path from 'node:path';
 import { format, resolveConfig } from 'prettier';
 import { generateClient, getStringFromSourceFile } from '@typoas/generator';
-import { loadSpec } from '../utils/load-spec';
+import { loadSpec } from '../utils/load-spec.js';
 
 export class GenerateCommand extends Command {
   static paths = [[`generate`], [`g`]];

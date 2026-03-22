@@ -15,10 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - 14
-          - 16
-          - 18
-          - 19
+          - 20
+          - 24
+          - 25
         platform:
           - ubuntu-latest
           - windows-latest
@@ -28,10 +27,10 @@ jobs:
           - npx
 
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node }}
 
       - name: Enable corepack
         run: corepack enable && yarn set version berry
@@ -41,5 +40,6 @@ jobs:
 
       - name: Run E2E - Stripe - with ${{matrix.manager}}
         run: ${{matrix.manager}} @typoas/cli generate -i https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json -o test.ts
+
 #      - name: Run E2E - Github - with ${{matrix.manager}}
 #        run: ${{matrix.manager}} @typoas/cli generate -i https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.yaml -o test.ts

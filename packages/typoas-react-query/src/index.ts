@@ -1,5 +1,5 @@
-export * from './api-context';
-export * from './infinite-query-factory';
-export * from './mutation-factory';
-export * from './query-factory';
-export { getQueryFunctionKey } from './func-names';
+export * from './api-context.js';
+export * from './infinite-query-factory.js';
+export * from './mutation-factory.js';
+export * from './query-factory.js';
+export { getQueryFunctionKey } from './func-names.js';

@@ -1,4 +1,4 @@
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 import { OpenAPIObject } from 'openapi3-ts/oas31';
 import { Block, factory, FunctionDeclaration, SyntaxKind } from 'typescript';
 import {
@@ -6,8 +6,8 @@ import {
   createRuntimeRefType,
   ExportedRef,
   FETCHER_DATA_NAME,
-} from '../utils/ref';
-import { AUTH_TYPE_NAME } from './security';
+} from '../utils/ref.js';
+import { AUTH_TYPE_NAME } from './security.js';
 
 export function createContextFactory(
   specs: OpenAPIObject,

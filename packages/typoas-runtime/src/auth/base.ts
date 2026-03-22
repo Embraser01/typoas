@@ -1,4 +1,4 @@
-import type { RequestContext } from '../fetcher';
+import type { RequestContext } from '../fetcher/index.js';
 
 /**
  * Base class authentication schemes.

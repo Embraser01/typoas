@@ -7,42 +7,54 @@
     "url": "https://github.com/embraser01/typoas",
     "directory": "packages/typoas-react-query"
   },
-  "main": "./src/index.ts",
-  "module": "./lib/esm/index.js",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "import": {
+      "types": "./dist/index.d.mts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
   "scripts": {
-    "prepack": "tsc --module esnext --outDir ./lib/esm && tsc --outDir ./lib/cjs",
-    "start": "ts-node ./src/bin.ts",
-    "test:types": "tsc --noEmit",
-    "test:jest": "jest"
+    "prepack": "pkgroll",
+    "test": "vitest",
+    "test:types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
     "@tanstack/react-query": "^5.35.5",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.0.0",
-    "@types/node": "^20.16.1",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^24.12.0",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
     "@typoas/runtime": "workspace:^",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "happy-dom": "^20.8.4",
+    "pkgroll": "^2.27.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "ts-jest": "^29.2.4",
-    "typescript": "~5.5.4"
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.35.5",
-    "@typoas/runtime": "workspace:^"
+    "@types/react": "^18 || ^19",
+    "@typoas/runtime": "workspace:^",
+    "react": "^18 || ^19"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
   },
   "files": [
-    "/lib/**/*.js",
-    "/lib/**/*.d.ts",
-    "!/lib/**/__tests__/*"
-  ],
-  "publishConfig": {
-    "main": "./lib/cjs/index.js",
-    "module": "./lib/esm/index.js",
-    "types": "./lib/esm/index.d.ts"
-  }
+    "dist"
+  ]
 }

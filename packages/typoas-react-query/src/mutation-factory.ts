@@ -11,9 +11,9 @@ import {
   ok,
   SuccessfulStatus,
 } from '@typoas/runtime';
-import { useApiContext } from './api-context';
-import { TypoasFuncStatusType, TypoasReturnType } from './types';
-import { getQueryFunctionKey } from './func-names';
+import { useApiContext } from './api-context.js';
+import { TypoasFuncStatusType, TypoasReturnType } from './types.js';
+import { getQueryFunctionKey } from './func-names.js';
 
 export type TypoasMutationVariables<
   Func extends TypoasMutationFunction<FetcherData>,

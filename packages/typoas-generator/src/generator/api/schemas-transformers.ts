@@ -1,17 +1,17 @@
 import { factory, NodeFlags, Statement, SyntaxKind } from 'typescript';
 import { OpenAPIObject } from 'openapi3-ts/oas31';
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 import {
   TransformerType,
   TransformField,
   TransformType,
-} from '../utils/transformers/leaf-transformer-base';
+} from '../utils/transformers/leaf-transformer-base.js';
 import {
   createFromRawTransforms,
   getSchemaTransforms,
-} from '../utils/transformers';
-import { sanitizeTransformEntity } from '../utils/operation-name';
-import { createRuntimeRefType, ExportedRef } from '../utils/ref';
+} from '../utils/transformers/index.js';
+import { sanitizeTransformEntity } from '../utils/operation-name.js';
+import { createRuntimeRefType, ExportedRef } from '../utils/ref.js';
 
 function hasDirectTransforms(fields: TransformField[]): boolean {
   for (const field of fields) {

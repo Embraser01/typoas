@@ -1,6 +1,6 @@
-import { describe, expect, it } from '@jest/globals';
-import { getSchemaTransforms } from '../index';
-import { TransformerType, TransformType } from '../leaf-transformer-base';
+import { describe, expect, it } from 'vitest';
+import { getSchemaTransforms } from '../index.js';
+import { TransformerType, TransformType } from '../leaf-transformer-base.js';
 
 describe('getSchemaTransforms', () => {
   it('should handle simple date', () => {

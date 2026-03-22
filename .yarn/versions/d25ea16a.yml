@@ -1,0 +1,5 @@
+releases:
+  "@typoas/cli": major
+  "@typoas/generator": major
+  "@typoas/react-query": major
+  "@typoas/runtime": major

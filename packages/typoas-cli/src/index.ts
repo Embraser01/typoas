@@ -1,16 +1,11 @@
 import { Builtins, Cli } from 'clipanion';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { GenerateCommand } from './commands/generate';
+import pkgJson from '../package.json' with { type: 'json' };
+import { GenerateCommand } from './commands/generate.js';
 
 const cli = new Cli({
   binaryLabel: `Typoas cli`,
   binaryName: `@typoas/cli`,
-  binaryVersion: (
-    JSON.parse(
-      readFileSync(join(__dirname, '../package.json'), 'utf8'),
-    ) as Record<string, unknown>
-  ).version as string,
+  binaryVersion: pkgJson.version,
 });
 
 cli.register(GenerateCommand);

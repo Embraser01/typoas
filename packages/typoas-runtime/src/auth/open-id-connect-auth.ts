@@ -2,16 +2,14 @@ import type {
   AuthProvider,
   BaseFlowConfig,
   SecurityAuthentication,
-} from './base';
-import type { RequestContext } from '../fetcher';
+} from './base.js';
+import type { RequestContext } from '../fetcher/index.js';
 
 // We don't actually need to have any configuration for OpenIdConnect
 // because we only use the already generated accessToken.
 export type OpenIdConnectConfiguration = Record<string, never>;
 
-export class OpenIdConnectSecurityAuthentication
-  implements SecurityAuthentication
-{
+export class OpenIdConnectSecurityAuthentication implements SecurityAuthentication {
   constructor(
     private config: OpenIdConnectConfiguration,
     private provider?: AuthProvider<BaseFlowConfig>,

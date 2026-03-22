@@ -13,9 +13,9 @@ import {
   ok,
   SuccessfulStatus,
 } from '@typoas/runtime';
-import { useApiContext } from './api-context';
-import { getQueryFunctionKey } from './func-names';
-import { TypoasFuncStatusType, TypoasReturnType } from './types';
+import { useApiContext } from './api-context.js';
+import { getQueryFunctionKey } from './func-names.js';
+import { TypoasFuncStatusType, TypoasReturnType } from './types.js';
 
 /**
  * Combined options usable in useQuery hook.

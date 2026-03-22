@@ -3,7 +3,7 @@ import {
   ReferenceObject,
   SchemaObject,
 } from 'openapi3-ts/oas31';
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 
 // This key is a simple hack for the createTypeFromSchema function
 // for it to generate a Blob type that does not exist by default in json schema.

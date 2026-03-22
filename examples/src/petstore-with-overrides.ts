@@ -1,5 +1,5 @@
 import * as r from '@typoas/runtime';
-import type { Category } from './petstore-overrides';
+import type { Category } from './petstore-overrides.js';
 export type Order = {
   /**
    * @example 10
@@ -174,7 +174,7 @@ export async function addPet<FetcherData extends r.BaseFetcherData>(
 export async function findPetsByStatus<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
-    status?: 'available' | 'pending' | 'sold';
+    status: 'available' | 'pending' | 'sold';
   },
   opts?: FetcherData,
 ): Promise<
@@ -200,7 +200,7 @@ export async function findPetsByStatus<FetcherData extends r.BaseFetcherData>(
 export async function findPetsByTags<FetcherData extends r.BaseFetcherData>(
   ctx: r.Context<AuthMethods, FetcherData>,
   params: {
-    tags?: string[];
+    tags: string[];
   },
   opts?: FetcherData,
 ): Promise<

@@ -1,10 +1,10 @@
-import { Context, ContextOptions } from './context';
+import { Context, ContextOptions } from './context.js';
 import {
   ComponentsObject,
   isSchemaObject,
   OpenAPIObject,
 } from 'openapi3-ts/oas31';
-import './libs';
+import './libs.js';
 import {
   createPrinter,
   factory,
@@ -14,22 +14,22 @@ import {
   Statement,
   SyntaxKind,
 } from 'typescript';
-import { addJSDocToNode } from './generator/comments/fields';
-import { getJSDocFromSchema } from './generator/comments/schema';
+import { addJSDocToNode } from './generator/comments/fields.js';
+import { getJSDocFromSchema } from './generator/comments/schema.js';
 import {
   canConvertSchemaToEnum,
   createEnumMembersFromSchema,
-} from './generator/utils/enums';
-import { IMPORT_RUNTIME } from './generator/utils/ref';
-import { createTypeFromSchema } from './generator/components/schemas';
-import { sanitizeTypeIdentifier } from './generator/utils/operation-name';
+} from './generator/utils/enums.js';
+import { IMPORT_RUNTIME } from './generator/utils/ref.js';
+import { createTypeFromSchema } from './generator/components/schemas.js';
+import { sanitizeTypeIdentifier } from './generator/utils/operation-name.js';
 import {
   createAuthMethodsType,
   createConfigureAuthFunction,
-} from './generator/api/security';
-import { createOperationList } from './generator/api/operation-list';
-import { createContextFactory } from './generator/api/context-factory';
-import { createAllSchemaTransforms } from './generator/api/schemas-transformers';
+} from './generator/api/security.js';
+import { createOperationList } from './generator/api/operation-list.js';
+import { createContextFactory } from './generator/api/context-factory.js';
+import { createAllSchemaTransforms } from './generator/api/schemas-transformers.js';
 
 export function createSchemaComponents(
   schemas: Exclude<ComponentsObject['schemas'], undefined>,

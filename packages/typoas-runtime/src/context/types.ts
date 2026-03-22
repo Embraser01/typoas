@@ -3,15 +3,14 @@ import {
   Fetcher,
   HttpMethod,
   SerializerOptions,
-} from '../fetcher';
-import type { TransformEntity } from '../transformers';
+} from '../fetcher/index.js';
+import type { TransformEntity, Transform } from '../transformers/index.js';
 import {
   AuthProvider,
   OpenIdConnectSecurityAuthentication,
   SecurityAuthentication,
-} from '../auth';
-import type { Transform } from '../transformers';
-import type { BaseServerConfiguration } from '../configuration';
+} from '../auth/index.js';
+import type { BaseServerConfiguration } from '../configuration.js';
 import type {
   ApiKeySecurityAuthentication,
   BaseFlowConfig,
@@ -20,7 +19,7 @@ import type {
   HttpBasicSecurityAuthentication,
   HttpBearerSecurityAuthentication,
   OAuth2SecurityAuthentication,
-} from '../auth';
+} from '../auth/index.js';
 
 export type CreateRequestParams = {
   /**

@@ -5,7 +5,7 @@ import {
   ObjectLiteralElementLike,
   TypeNode,
 } from 'typescript';
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 import {
   isReferenceObject,
   ReferenceObject,
@@ -15,7 +15,7 @@ import {
   createRuntimeRefProperty,
   createRuntimeRefType,
   ExportedRef,
-} from '../utils/ref';
+} from '../utils/ref.js';
 
 export function createConfigTypeFromSecurityScheme(
   securitySchemeOrRef: SecuritySchemeObject | ReferenceObject,

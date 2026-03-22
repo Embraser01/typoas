@@ -1,9 +1,12 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { SchemaObject } from 'openapi3-ts/oas31';
 import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
 import { factory, SyntaxKind } from 'typescript';
-import { canConvertSchemaToEnum, createEnumMembersFromSchema } from '../enums';
-import { getStringFromNode } from '../ts-node';
+import {
+  canConvertSchemaToEnum,
+  createEnumMembersFromSchema,
+} from '../enums.js';
+import { getStringFromNode } from '../ts-node.js';
 
 describe('canConvertSchemaToEnum', () => {
   it('should handle string schema', () => {

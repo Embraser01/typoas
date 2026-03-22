@@ -1,9 +1,9 @@
-import { readFileSync } from 'fs';
-import { describe, expect, it } from '@jest/globals';
-import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
+import { describe, expect, it } from 'vitest';
+import { resolve } from 'node:path';
 import { OpenAPIObject } from 'openapi3-ts/oas31';
-import { getStringFromNode } from '../generator/utils/ts-node';
-import { generateClient } from '../index';
+import { getStringFromNode } from '../generator/utils/ts-node.js';
+import { generateClient } from '../index.js';
 
 describe('create full specs', () => {
   it('should generate client', () => {

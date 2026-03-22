@@ -1,4 +1,4 @@
-import { Transform } from './transform';
+import { Transform } from './transform.js';
 
 // Typing here is only for information purposes
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents

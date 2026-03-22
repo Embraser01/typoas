@@ -1,4 +1,4 @@
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 import { ReferenceObject, SecuritySchemeObject } from 'openapi3-ts/oas31';
 import {
   factory,
@@ -6,12 +6,12 @@ import {
   SyntaxKind,
   TypeAliasDeclaration,
 } from 'typescript';
-import { createRuntimeRefType, ExportedRef } from '../utils/ref';
+import { createRuntimeRefType, ExportedRef } from '../utils/ref.js';
 import {
   createConfigTypeFromSecurityScheme,
   createRuntimeSecurityClass,
-} from '../components/security-scheme';
-import { isInvalidES6IdentifierName } from '../utils/operation-name';
+} from '../components/security-scheme.js';
+import { isInvalidES6IdentifierName } from '../utils/operation-name.js';
 
 export const AUTH_TYPE_NAME = 'AuthMethods';
 
