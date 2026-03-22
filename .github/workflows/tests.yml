@@ -14,10 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - 14
-          - 16
-          - 18
-          - 19
+          - 20
+          - 24
+          - 25
         platform:
           - ubuntu-latest
           - windows-latest
@@ -25,12 +24,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node }}
+
+      - name: Yarn install
+        run: yarn
 
       - name: Run tests
-        run: yarn test:jest
+        run: yarn test:vitest

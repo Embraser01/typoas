@@ -1,18 +1,18 @@
 import { OperationObject } from 'openapi3-ts/oas31';
 import { factory, FunctionDeclaration, SyntaxKind } from 'typescript';
-import { Context } from '../../../context';
-import { sanitizeOperationIdName } from '../../utils/operation-name';
+import { Context } from '../../../context.js';
+import { sanitizeOperationIdName } from '../../utils/operation-name.js';
 import {
   createOperationDeclaration,
   createOperationReturnType,
-} from './declaration';
-import { createOperationBody } from './function-body';
-import { GlobalParameters } from './types';
+} from './declaration.js';
+import { createOperationBody } from './function-body.js';
+import { GlobalParameters } from './types.js';
 import {
   createRuntimeRefType,
   ExportedRef,
   FETCHER_DATA_NAME,
-} from '../../utils/ref';
+} from '../../utils/ref.js';
 
 export function createOperation(
   operation: OperationObject,

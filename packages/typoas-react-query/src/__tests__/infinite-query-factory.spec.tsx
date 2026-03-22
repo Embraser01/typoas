@@ -1,11 +1,11 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PropsWithChildren } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
-import { createContext, findPetsByStatus, Pet } from './sample-client';
-import { ApiContextProvider } from '../api-context';
-import { MockFetcher } from './mock-fetcher';
-import { createInfiniteQueryHook } from '../infinite-query-factory';
+import { createContext, findPetsByStatus, Pet } from './sample-client.js';
+import { ApiContextProvider } from '../api-context.js';
+import { MockFetcher } from './mock-fetcher.js';
+import { createInfiniteQueryHook } from '../infinite-query-factory.js';
 
 describe('createInfiniteQueryHook', () => {
   const queryClient = new QueryClient();

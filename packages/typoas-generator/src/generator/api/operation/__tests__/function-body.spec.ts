@@ -1,7 +1,7 @@
-import { describe, expect, it } from '@jest/globals';
-import { createOperationResponseHandlers } from '../function-body';
-import { getStringFromNode } from '../../../utils/ts-node';
-import { Context } from '../../../../context';
+import { describe, expect, it } from 'vitest';
+import { createOperationResponseHandlers } from '../function-body.js';
+import { getStringFromNode } from '../../../utils/ts-node.js';
+import { Context } from '../../../../context.js';
 import { factory } from 'typescript';
 
 describe('create operation response handlers', () => {

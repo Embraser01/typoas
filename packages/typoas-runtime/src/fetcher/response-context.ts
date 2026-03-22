@@ -1,4 +1,4 @@
-import type { HttpFile, ResponseBody } from './types';
+import type { HttpFile, ResponseBody } from './types.js';
 
 export class ResponseContext {
   public constructor(

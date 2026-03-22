@@ -1,5 +1,5 @@
 import { generateClient } from '@typoas/generator';
-import { existsSync } from 'fs';
+import { existsSync } from 'node:fs';
 import { readFile } from 'fs/promises';
 import { load } from 'js-yaml';
 import { URL } from 'url';

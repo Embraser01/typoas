@@ -1,12 +1,12 @@
 import { TypeNode } from 'typescript';
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 import {
   ReferenceObject,
   ResponseObject,
   isReferenceObject,
 } from 'openapi3-ts/oas31';
-import { createTypeFromSchema } from '../utils/types';
-import { getContentTypeSchema } from '../utils/content-type';
+import { createTypeFromSchema } from '../utils/types.js';
+import { getContentTypeSchema } from '../utils/content-type.js';
 
 export function createSchemaTypeFromResponse(
   response: ResponseObject | ReferenceObject,

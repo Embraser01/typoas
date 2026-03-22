@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from '@jest/globals';
-import { _resetFuncNames, getQueryFunctionKey } from '../func-names';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { _resetFuncNames, getQueryFunctionKey } from '../func-names.js';
 
 describe('getUniqueFunctionName', () => {
   beforeEach(() => _resetFuncNames());

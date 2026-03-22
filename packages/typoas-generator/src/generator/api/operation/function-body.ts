@@ -1,7 +1,7 @@
-import { Context } from '../../../context';
-import { getQueryParams } from './query-params';
-import { createRuntimeRefProperty, ExportedRef } from '../../utils/ref';
-import { GlobalParameters } from './types';
+import { Context } from '../../../context.js';
+import { getQueryParams } from './query-params.js';
+import { createRuntimeRefProperty, ExportedRef } from '../../utils/ref.js';
+import { GlobalParameters } from './types.js';
 import {
   isReferenceObject,
   OperationObject,
@@ -15,8 +15,8 @@ import {
   ObjectLiteralElementLike,
   Statement,
 } from 'typescript';
-import { createSchemaTransforms } from '../../utils/transformers';
-import { getContentTypeSchema } from '../../utils/content-type';
+import { createSchemaTransforms } from '../../utils/transformers/index.js';
+import { getContentTypeSchema } from '../../utils/content-type.js';
 
 export function createOperationBody(
   operation: OperationObject,

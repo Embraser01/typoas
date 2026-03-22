@@ -1,11 +1,9 @@
-import type { AuthProvider, SecurityAuthentication } from './base';
-import type { RequestContext } from '../fetcher';
+import type { AuthProvider, SecurityAuthentication } from './base.js';
+import type { RequestContext } from '../fetcher/index.js';
 
 export type BearerAuthConfig = string | { token: string; prefixName?: string };
 
-export class HttpBearerSecurityAuthentication
-  implements SecurityAuthentication
-{
+export class HttpBearerSecurityAuthentication implements SecurityAuthentication {
   constructor(private provider?: AuthProvider<BearerAuthConfig>) {}
 
   async applySecurityAuthentication(context: RequestContext): Promise<void> {

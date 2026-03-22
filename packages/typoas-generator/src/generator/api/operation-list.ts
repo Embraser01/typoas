@@ -1,7 +1,7 @@
-import { createOperation } from './operation';
-import { addJSDocToNode } from '../comments/fields';
-import { getJSDocFromOperation } from '../comments/operation';
-import { Context } from '../../context';
+import { createOperation } from './operation/index.js';
+import { addJSDocToNode } from '../comments/fields.js';
+import { getJSDocFromOperation } from '../comments/operation.js';
+import { Context } from '../../context.js';
 import {
   OpenAPIObject,
   OperationObject,

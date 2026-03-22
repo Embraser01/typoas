@@ -1,13 +1,13 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`createEnumMembersFromSchema should handle enum with special chars in it 1`] = `
+exports[`createEnumMembersFromSchema > should handle enum with special chars in it 1`] = `
 "export enum Test {
     MY_COMPLEX_ENUM = 'my:complex:enum',
     AND_THIS_ONE = 'and:this/one'
 }"
 `;
 
-exports[`createEnumMembersFromSchema should handle string schema 1`] = `
+exports[`createEnumMembersFromSchema > should handle string schema 1`] = `
 "export enum Test {
     DOG_AND_CAT = 'dog-and-cat',
     DOG = 'dog',

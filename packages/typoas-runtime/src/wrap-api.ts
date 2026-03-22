@@ -1,6 +1,6 @@
-import { Context } from './context';
-import { SecurityAuthentication } from './auth';
-import { BaseFetcherData } from './fetcher';
+import { Context } from './context/index.js';
+import { SecurityAuthentication } from './auth/index.js';
+import { BaseFetcherData } from './fetcher/index.js';
 
 type ApiFunction<
   AuthModes extends Record<string, SecurityAuthentication>,

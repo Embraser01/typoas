@@ -5,7 +5,7 @@ import {
 } from 'openapi3-ts/oas31';
 import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
 import { factory, EnumMember } from 'typescript';
-import { screamingSnakeCase } from './operation-name';
+import { screamingSnakeCase } from './operation-name.js';
 
 export function canConvertSchemaToEnum(
   schema: SchemaObject | SchemaObjectOAS30 | ReferenceObject,

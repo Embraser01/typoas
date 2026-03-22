@@ -1,5 +1,5 @@
-import type { AuthProvider, SecurityAuthentication } from './base';
-import type { RequestContext } from '../fetcher';
+import type { AuthProvider, SecurityAuthentication } from './base.js';
+import type { RequestContext } from '../fetcher/index.js';
 
 export type ApiKeyLocation = 'query' | 'header' | 'cookie';
 

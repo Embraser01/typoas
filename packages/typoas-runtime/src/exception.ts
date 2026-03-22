@@ -2,7 +2,7 @@ import {
   SuccessfulStatus,
   StatusResponse,
   EnhancedHTTPStatus,
-} from './fetcher';
+} from './fetcher/index.js';
 
 /**
  * Represents an error caused by an api call i.e. it has attributes for a HTTP status code

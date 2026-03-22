@@ -2,12 +2,15 @@ import type {
   ContextParams,
   CreateRequestParams,
   ResponseHandler,
-} from './types';
-import type { SecurityAuthentication } from '../auth';
-import type { BaseServerConfiguration } from '../configuration';
-import { ApiException } from '../exception';
-import { applyTransform, Transform } from '../transformers';
-import { DateTransformer } from '../transformers';
+} from './types.js';
+import type { SecurityAuthentication } from '../auth/index.js';
+import type { BaseServerConfiguration } from '../configuration.js';
+import { ApiException } from '../exception.js';
+import {
+  applyTransform,
+  Transform,
+  DateTransformer,
+} from '../transformers/index.js';
 import {
   BaseFetcherData,
   EnhancedHTTPStatus,
@@ -17,7 +20,7 @@ import {
   ResponseContext,
   SerializerOptions,
   StatusResponse,
-} from '../fetcher';
+} from '../fetcher/index.js';
 import {
   applyTemplating,
   isBlob,
@@ -26,7 +29,7 @@ import {
   isURLSearchParams,
   serializeHeader,
   serializeParameter,
-} from '../utils';
+} from '../utils.js';
 
 const CONTENT_TYPE_HEADER = 'content-type';
 

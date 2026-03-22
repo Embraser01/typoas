@@ -1,10 +1,10 @@
-import { camelCase, snakeCase, upperFirst } from 'lodash';
-import { TransformerType } from './transformers/leaf-transformer-base';
+import { camelCase, snakeCase, upperFirst } from 'es-toolkit';
+import { TransformerType } from './transformers/leaf-transformer-base.js';
 import {
   es6IdentifierRegexp,
   identifierPartRegexp,
   identifierStartRegexp,
-} from './identifier-regexps';
+} from './identifier-regexps.js';
 
 function pascalCase(str: string): string {
   return upperFirst(camelCase(str));

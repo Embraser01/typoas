@@ -1,4 +1,4 @@
-import { applyTemplating } from './utils';
+import { applyTemplating } from './utils.js';
 
 export interface BaseServerConfiguration {
   getURL(endpoint: string): string;
@@ -10,9 +10,9 @@ export interface BaseServerConfiguration {
  * url template and variable configuration based on the url.
  *
  */
-export class ServerConfiguration<T extends Record<string, string>>
-  implements BaseServerConfiguration
-{
+export class ServerConfiguration<
+  T extends Record<string, string>,
+> implements BaseServerConfiguration {
   public constructor(
     private url: string,
     private variableConfiguration: T,

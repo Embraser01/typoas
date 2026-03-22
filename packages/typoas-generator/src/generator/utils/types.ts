@@ -6,14 +6,14 @@ import {
 } from 'openapi3-ts/oas31';
 import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
 import { factory, TypeNode, SyntaxKind } from 'typescript';
-import { Context } from '../../context';
-import { addJSDocToNode } from '../comments/fields';
-import { getJSDocFromSchema } from '../comments/schema';
+import { Context } from '../../context.js';
+import { addJSDocToNode } from '../comments/fields.js';
+import { getJSDocFromSchema } from '../comments/schema.js';
 import {
   isInvalidES6IdentifierName,
   sanitizeTypeIdentifier,
-} from './operation-name';
-import { TYPOAS_BLOB_TYPE_KEY } from './content-type';
+} from './operation-name.js';
+import { TYPOAS_BLOB_TYPE_KEY } from './content-type.js';
 
 export function createTypeFromSchema(
   schemaOrRef: SchemaObjectOAS30 | SchemaObject | ReferenceObject | undefined,

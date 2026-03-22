@@ -1,5 +1,5 @@
-import { describe, expect, it } from '@jest/globals';
-import { applyTemplating } from '../utils';
+import { describe, expect, it } from 'vitest';
+import { applyTemplating } from '../utils.js';
 
 describe('apply templating', () => {
   it('should replace variables in string', () => {

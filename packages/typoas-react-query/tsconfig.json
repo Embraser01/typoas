@@ -1,13 +1,16 @@
 {
+  "$schema": "https://www.schemastore.org/tsconfig",
+  "extends": ["../../tsconfig.base.json"],
   "compilerOptions": {
-    "strict": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "ES2019",
-    "declaration": true,
-    "lib": ["ES2019", "DOM"],
-    "outDir": "lib/cjs",
+    "lib": [
+      "ES2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Error",
+      "ESNext.Iterator",
+      "ESNext.Promise",
+      "DOM"
+    ],
     "jsx": "react-jsx"
-  },
-  "exclude": ["node_modules", "lib"]
+  }
 }

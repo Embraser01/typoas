@@ -1,19 +1,20 @@
 {
   "name": "@typoas/examples",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "tsx --conditions=development src/index.ts",
     "test:types": "tsc --noEmit",
-    "generate": "ts-node scripts/generate.ts"
+    "generate": "tsx --conditions=development scripts/generate.ts"
   },
   "dependencies": {
     "@typoas/runtime": "workspace:^"
   },
   "devDependencies": {
-    "@types/node": "^20.16.1",
+    "@types/node": "^24.12.0",
     "@typoas/cli": "workspace:^",
-    "prettier": "^3.3.3",
-    "ts-node": "^10.9.2",
-    "typescript": "~5.5.4"
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "~5.9.3"
   }
 }

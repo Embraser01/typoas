@@ -6,8 +6,8 @@ import {
   ObjectLiteralExpression,
 } from 'typescript';
 import { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
-import { Context } from '../../../context';
-import { isTransformableLeafDate } from './date';
+import { Context } from '../../../context.js';
+import { isTransformableLeafDate } from './date.js';
 import {
   findLeafTransforms,
   TransformField,
@@ -15,8 +15,8 @@ import {
   TransformerType,
   SkipRefCb,
   IsTransformableLeafCb,
-} from './leaf-transformer-base';
-import { sanitizeTransformEntity } from '../operation-name';
+} from './leaf-transformer-base.js';
+import { sanitizeTransformEntity } from '../operation-name.js';
 
 export function getSchemaTransforms(
   type: TransformerType,

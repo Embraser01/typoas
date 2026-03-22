@@ -1,5 +1,5 @@
 import { OperationObject } from 'openapi3-ts/oas31';
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 
 function wrapJSDocLine(text: string, maxWidth: number): string {
   if (maxWidth <= 0 || ' * '.length + text.length < maxWidth) {

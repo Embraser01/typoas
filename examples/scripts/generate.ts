@@ -36,7 +36,7 @@ async function run() {
         '--override',
         'Category',
         '--override-import',
-        './petstore-overrides',
+        './petstore-overrides.js',
       ],
     },
   ];

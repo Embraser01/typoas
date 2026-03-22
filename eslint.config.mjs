@@ -1,6 +1,6 @@
 // @ts-check
 import js from '@eslint/js';
-import jest from 'eslint-plugin-jest';
+import vitest from '@vitest/eslint-plugin';
 import tseslint from 'typescript-eslint';
 
 /**
@@ -14,7 +14,7 @@ const config = [
       '.pnp.cjs',
       '.pnp.loader.mjs',
       'examples/src/',
-      '**/lib/',
+      '**/dist/',
       'packages/typoas-react-query/src/__tests__/sample-client.ts',
     ],
   },
@@ -43,10 +43,7 @@ const config = [
   },
   {
     files: ['**/__tests__/**/*'],
-    ...jest.configs['flat/recommended'],
-    settings: {
-      jest: { version: 29 },
-    },
+    ...vitest.configs.recommended,
   },
 ];
 

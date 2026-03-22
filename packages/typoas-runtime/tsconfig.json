@@ -1,12 +1,15 @@
 {
+  "$schema": "https://www.schemastore.org/tsconfig",
+  "extends": ["../../tsconfig.base.json"],
   "compilerOptions": {
-    "strict": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "ES2018",
-    "declaration": true,
-    "lib": ["ES2018", "DOM"],
-    "outDir": "lib/cjs"
-  },
-  "exclude": ["node_modules", "lib"]
+    "lib": [
+      "ES2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Error",
+      "ESNext.Iterator",
+      "ESNext.Promise",
+      "DOM"
+    ]
+  }
 }

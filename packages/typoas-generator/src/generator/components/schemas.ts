@@ -1,1 +1,1 @@
-export { createTypeFromSchema } from '../utils/types';
+export { createTypeFromSchema } from '../utils/types.js';

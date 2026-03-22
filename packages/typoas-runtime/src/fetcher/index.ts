@@ -1,8 +1,8 @@
-import { RequestContext } from './request-context';
-import { ResponseContext } from './response-context';
-import { BaseFetcherData } from './types';
+import { RequestContext } from './request-context.js';
+import { ResponseContext } from './response-context.js';
+import { BaseFetcherData } from './types.js';
 
-export * from './types';
+export * from './types.js';
 
 export { RequestContext, ResponseContext };
 
@@ -12,8 +12,7 @@ export interface Fetcher<T extends BaseFetcherData> {
 
 export class IsomorphicFetchHttpLibrary<
   T extends BaseFetcherData = BaseFetcherData,
-> implements Fetcher<T>
-{
+> implements Fetcher<T> {
   public async send(
     request: RequestContext,
     options: T,

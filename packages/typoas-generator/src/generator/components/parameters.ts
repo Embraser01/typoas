@@ -1,11 +1,11 @@
 import { TypeNode } from 'typescript';
-import { Context } from '../../context';
+import { Context } from '../../context.js';
 import {
   isReferenceObject,
   ParameterObject,
   ReferenceObject,
 } from 'openapi3-ts/oas31';
-import { createTypeFromSchema } from '../utils/types';
+import { createTypeFromSchema } from '../utils/types.js';
 
 export function createSchemaTypeFromParameters(
   parameter: ParameterObject | ReferenceObject,

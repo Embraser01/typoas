@@ -1,6 +1,6 @@
 import * as queryString from 'query-string';
 import type { ParsedQuery, ParsedUrl, StringifyOptions } from 'query-string';
-import type { HttpMethod, RequestBody, SerializerOptions } from './types';
+import type { HttpMethod, RequestBody, SerializerOptions } from './types.js';
 
 /**
  * Represents an HTTP request context
