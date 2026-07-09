@@ -5,7 +5,7 @@ import {
   SchemaObject,
 } from 'openapi3-ts/oas31';
 import { SchemaObject as SchemaObjectOAS30 } from 'openapi3-ts/oas30';
-import { factory, TypeNode, SyntaxKind } from 'typescript';
+import { factory, SyntaxKind, TypeNode } from 'typescript';
 import { Context } from '../../context.js';
 import { addJSDocToNode } from '../comments/fields.js';
 import { getJSDocFromSchema } from '../comments/schema.js';
@@ -133,6 +133,7 @@ export function createTypeFromSchema(
             schema.additionalProperties === true ||
             schema.unevaluatedProperties === true;
 
+          // Define possible value types
           const valueTypes: TypeNode[] = [];
 
           if (!hasAnyShortcut) {
@@ -169,26 +170,93 @@ export function createTypeFromSchema(
             );
           }
 
-          const indexSignature = factory.createTypeLiteralNode([
-            factory.createIndexSignature(
-              undefined,
-              [
-                factory.createParameterDeclaration(
-                  undefined,
-                  undefined,
-                  factory.createIdentifier('key'),
-                  undefined,
-                  factory.createKeywordTypeNode(SyntaxKind.StringKeyword),
-                  undefined,
-                ),
-              ],
-              factory.createUnionTypeNode(valueTypes),
-            ),
-          ]);
+          // Define possible key types, most of the time, just a string type
+          let mappedType: TypeNode | undefined;
 
+          // propertyNames can be handled in 3 ways:
+          // - If it is a $ref, create a mapped type for the related ref
+          // - If it defines enums (or const), create the equivalent object
+          // - Else, keep the existing mapped type
+          //
+          // Note that propertyNames should always link to a string type (as JSON keys are always string).
+          // We don't do complete check here so it may break TS (but that's bad JSON schema anyway).
+          const { propertyNames } = schema;
+          if (propertyNames && isReferenceObject(propertyNames)) {
+            const ref = ctx.resolveReference('schemas', propertyNames.$ref);
+            if (!ref) {
+              throw new Error(`$ref '${propertyNames.$ref}' wasn't found`);
+            }
+
+            const isOptionalMappedType =
+              ref.spec.enum?.every((e) =>
+                schema.required?.includes(e as string),
+              ) || false;
+
+            // Create a [key in Type]: <valueTypes>
+            mappedType = factory.createMappedTypeNode(
+              undefined,
+              factory.createTypeParameterDeclaration(
+                undefined,
+                factory.createIdentifier('key'),
+                factory.createTypeReferenceNode(
+                  factory.createIdentifier(sanitizeTypeIdentifier(ref.name)),
+                ),
+                undefined,
+              ),
+              undefined,
+              isOptionalMappedType
+                ? factory.createToken(SyntaxKind.QuestionToken)
+                : undefined,
+              factory.createUnionTypeNode(valueTypes),
+              undefined,
+            );
+          } else if (
+            !hasProperties &&
+            (propertyNames?.enum || propertyNames?.const)
+          ) {
+            // This case can be translated to a simple object with known properties
+            // If properties exists, we don't specify key type and will fall back to a string type.
+            const names = propertyNames.enum || [propertyNames.const];
+            if (names.every((n) => typeof n === 'string')) {
+              mappedType = factory.createTypeLiteralNode(
+                names.map((key) =>
+                  factory.createPropertySignature(
+                    undefined,
+                    isInvalidES6IdentifierName(key)
+                      ? factory.createStringLiteral(key, true)
+                      : factory.createIdentifier(key),
+                    schema.required?.includes(key)
+                      ? undefined
+                      : factory.createToken(SyntaxKind.QuestionToken),
+                    factory.createUnionTypeNode(valueTypes),
+                  ),
+                ),
+              );
+            }
+          }
+
+          // By default create a { [key: string]: <valueTypes> }
+          if (!mappedType) {
+            mappedType = factory.createTypeLiteralNode([
+              factory.createIndexSignature(
+                undefined,
+                [
+                  factory.createParameterDeclaration(
+                    undefined,
+                    undefined,
+                    factory.createIdentifier('key'),
+                    undefined,
+                    factory.createKeywordTypeNode(SyntaxKind.StringKeyword),
+                    undefined,
+                  ),
+                ],
+                factory.createUnionTypeNode(valueTypes),
+              ),
+            ]);
+          }
           node = hasProperties
-            ? factory.createIntersectionTypeNode([node, indexSignature])
-            : indexSignature;
+            ? factory.createIntersectionTypeNode([node, mappedType])
+            : mappedType;
         }
         break;
       }
