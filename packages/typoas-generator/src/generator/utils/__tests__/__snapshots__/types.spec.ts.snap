@@ -135,6 +135,32 @@ exports[`create type from schema > with complex object > should handle unevaluat
 })"
 `;
 
+exports[`create type from schema > with propertyNames keyword > should handle object with no additionalProperties (unknown value) 1`] = `
+"{
+    a: unknown;
+    b: unknown;
+}"
+`;
+
+exports[`create type from schema > with propertyNames keyword > should handle object with pattern string 1`] = `
+"{
+    [key: string]: number;
+}"
+`;
+
+exports[`create type from schema > with propertyNames keyword > should handle object without required fields 1`] = `
+"{
+    a?: number;
+    b?: number;
+}"
+`;
+
+exports[`create type from schema > with propertyNames keyword > should handle simple enum record 1`] = `
+"{
+    a: number;
+}"
+`;
+
 exports[`create type from schema > with refs > should work in nested properties 1`] = `
 "{
     a?: BaseItem;
@@ -142,3 +168,9 @@ exports[`create type from schema > with refs > should work in nested properties 
 `;
 
 exports[`create type from schema > with refs > should work referencing ref 1`] = `"BaseItem"`;
+
+exports[`create type from schema > with refs > should work referencing ref with propertyNames 1`] = `
+"{
+    [key in BaseItem]: number;
+}"
+`;

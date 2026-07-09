@@ -145,6 +145,54 @@ describe('create type from schema', () => {
     expect(getStringFromNode(node)).toMatchSnapshot();
   });
 
+  describe('with propertyNames keyword', () => {
+    it('should handle simple enum record', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        required: ['a'],
+        propertyNames: { type: 'string', enum: ['a'] },
+        additionalProperties: { type: 'number' },
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle object with no additionalProperties (unknown value)', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        required: ['a', 'b'],
+        propertyNames: { type: 'string', enum: ['a', 'b'] },
+        additionalProperties: true,
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle object with pattern string', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        propertyNames: { pattern: '^Event' },
+        additionalProperties: { type: 'number' },
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should handle object without required fields', () => {
+      const schema: SchemaObject = {
+        type: 'object',
+        propertyNames: { type: 'string', enum: ['a', 'b'] },
+        additionalProperties: { type: 'number' },
+      };
+
+      const node = createTypeFromSchema(schema, new Context());
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+  });
+
   describe('with complex object', () => {
     it('should create nested objects', () => {
       const schema: SchemaObject = {
@@ -340,6 +388,20 @@ describe('create type from schema', () => {
       ctx.initComponents({ schemas: { BaseItem: { type: 'string' } } });
 
       const schema: ReferenceObject = { $ref: '#/components/schemas/BaseItem' };
+
+      const node = createTypeFromSchema(schema, ctx);
+      expect(getStringFromNode(node)).toMatchSnapshot();
+    });
+
+    it('should work referencing ref with propertyNames', () => {
+      const ctx = new Context();
+      ctx.initComponents({ schemas: { BaseItem: { type: 'string' } } });
+
+      const schema: SchemaObject = {
+        type: 'object',
+        propertyNames: { $ref: '#/components/schemas/BaseItem' },
+        additionalProperties: { type: 'number' },
+      };
 
       const node = createTypeFromSchema(schema, ctx);
       expect(getStringFromNode(node)).toMatchSnapshot();

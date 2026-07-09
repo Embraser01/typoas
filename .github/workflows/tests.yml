@@ -16,7 +16,7 @@ jobs:
         node:
           - 20
           - 24
-          - 25
+          - 26
         platform:
           - ubuntu-latest
           - windows-latest
