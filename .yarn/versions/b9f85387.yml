@@ -1,0 +1,5 @@
+releases:
+  "@typoas/cli": patch
+  "@typoas/generator": patch
+  "@typoas/react-query": patch
+  "@typoas/runtime": patch
