@@ -1,5 +1,11 @@
 # CHANGELOG.md
 
+## 5.0.2 - 2026-08-27
+
+> Only @typoas/react-query were updated to v5.0.2
+
+- fix(react-query): Export types from types.ts to consumers [#86](https://github.com/Embraser01/typoas/pull/86)
+
 ## 5.0.1 - 2026-08-07
 
 > All packages will have been released to v5.0.1
